@@ -6,6 +6,14 @@ disable-model-invocation: true
 
 # Clore une session
 
+0. **Les quatre questions anti-spaghetti**, à répondre honnêtement dans le compte rendu :
+   - Qu'est-ce que j'ai **supprimé** (ce que l'étape remplace) ?
+   - Y a-t-il maintenant **deux façons de faire la même chose**, ou deux copies d'une même donnée ?
+   - Pour chaque donnée neuve : **qui en est le propriétaire** (la seule vérité) ?
+   - Quelle **flèche de dépendance** entre assemblages l'étape a-t-elle ajoutée (aucune, idéalement) ?
+   Et : un fichier a-t-il dépassé 200 lignes ? Si oui, il est découpé avant le commit.
+   **Toutes les cinq étapes environ**, la prochaine étape est une **session de ménage** sur un seul système : le relire
+   en entier, corriger ce qui a dérivé, sans agent. `ETAT.md` le rappelle.
 1. **Les décisions** prises pendant la session ont leur numéro dans `Docs/DECISIONS.md` (datées, avec leur raison), et
    le GDD ou l'architecture sont **réécrits** là où elles changent la vérité (pas de rature, pas de note datée).
 2. **Ce qui a été remplacé est supprimé** : code, données, tests, lignes de documents.
