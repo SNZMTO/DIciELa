@@ -112,3 +112,16 @@ InitTestScene*.unity*
 
 # Auto-generated cache in Assets folder
 /[Aa]ssets/[Ss]ceneDependencyCache*
+
+# --- DICIELA ---
+# Le pack d'art acheté (Synty) : jamais dans Git, importé par le développeur
+/[Aa]ssets/Synty/
+/[Aa]ssets/Synty.meta
+# Captures temporaires faites au CLI
+/[Aa]ssets/Temp/
+/[Aa]ssets/Temp.meta
+# Éditeurs
+.vscode/
+.idea/
+# Instructions personnelles de Claude, non partagées
+CLAUDE.local.md

@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(C:/Users/utilisateur/AppData/Local/Unity/bin/unity.exe --no-banner --non-interactive command editor_status *)",
+      "Bash(C:/Users/utilisateur/AppData/Local/Unity/bin/unity.exe --no-banner --non-interactive command console *)",
+      "Bash(C:/Users/utilisateur/AppData/Local/Unity/bin/unity.exe --no-banner --non-interactive command get_console_logs *)",
+      "Bash(C:/Users/utilisateur/AppData/Local/Unity/bin/unity.exe --no-banner --non-interactive command list_open_scenes *)",
+      "Bash(C:/Users/utilisateur/AppData/Local/Unity/bin/unity.exe --no-banner --non-interactive command recompile_status *)",
+      "Bash(C:/Users/utilisateur/AppData/Local/Unity/bin/unity.exe --no-banner --non-interactive command test_status *)",
+      "Bash(C:/Users/utilisateur/AppData/Local/Unity/bin/unity.exe --no-banner --non-interactive command list_tests *)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": ["${CLAUDE_PROJECT_DIR}/.claude/hooks/garde-unity.js"],
+            "timeout": 45
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+---
+paths:
+  - "Assets/Scripts/**/*.cs"
+---
+
+# Écrire du C# dans DICIELA
+
+- **Lire `Docs/ARCHITECTURE.md`** avant de créer une classe ou d'en déplacer une : chaque système a sa place et ses
+  frontières ; ne pas en inventer une nouvelle en silence.
+- **Une seule vérité par chose.** Avant d'ajouter un champ, une liste ou un cache, chercher qui tient déjà cette
+  information ; un cache garde avec lui la version de ce dont il dépend.
+- **La simulation en C# pur** (sans `MonoBehaviour` quand c'est possible), qui lève des événements ; les vues écoutent.
+  `Update` reste léger : la simulation avance par pas du temps de jeu, pas image par image.
+- **Un fichier = une classe, du même nom, une seule responsabilité.** Viser moins de 200 lignes ; au-delà, découper
+  tout de suite, pas plus tard.
+- **Conventions** : PascalCase pour les types, méthodes et propriétés publiques ; camelCase pour les variables locales ;
+  `_camelCase` pour les champs privés. `[SerializeField] private` plutôt que `public` pour ce qui se règle dans
+  l'Inspector. Commentaires en français. `null` géré explicitement.
+- **Événements** : `event Action<…>` nommés au passé (`BuildingPlaced`, `DayEnded`) ; tout abonnement est défait dans
+  `OnDestroy` (ou `OnDisable`, symétrique d'`OnEnable`).
+- **Démarrage rapide du Play actif** : tout champ statique mutable a un `ResetStatics()` appelé depuis
+  `[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]`.
+- **Jamais** : `GameObject.Find`, `SendMessage`, `FindObjectOfType` en jeu (les références passent par l'Inspector ou
+  les services) ; un nombre de réglage écrit en dur (il va dans une donnée) ; une chaîne visible du joueur écrite en dur
+  (elle passe par une clé de `strings.csv`) ; une allocation (liste, LINQ, lambda) dans une boucle par image ou par tick.
+- **Aucune méthode publique « pour les tests »** : un test passe par le même appel que le jeu.
+- **Déplacer et tourner** sont des opérations à part entière, jamais « retirer puis reposer ».
+- **Chaque tâche d'un acteur a une issue d'échec** (destination perdue, chemin introuvable, délai dépassé).
+- **Toute boucle qui avance par pas a une borne.**
+- Les scripts d'éditeur vont dans `Assets/Scripts/Editor/` (namespace `Diciela.EditorTools`) ; un montage se fait par
+  un `[MenuItem("DICIELA/…")]` réexécutable.
