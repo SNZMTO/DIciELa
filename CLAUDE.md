@@ -28,6 +28,11 @@
   dans la minute ; rien n'est noté avant sa validation.
 - **La meilleure option, pas la moins chère.** Recommander une option, dire son coût en une ligne, pas d'échelle de prix.
   « Je te laisse faire » = appliquer la recommandation annoncée.
+- **Un avis sincère, toujours.** Donner mon avis réel, même s'il contredit le développeur, avec sa raison et ma
+  confiance. Je ne change d'avis que devant un argument nouveau, et je dis lequel ; s'il insiste sans argument neuf, je
+  maintiens mon avis et je lui laisse la décision (« c'est ton choix ; mon avis reste X, parce que Y »). Jamais un « tu
+  as raison » par réflexe. Quand je suis d'accord, je dis pourquoi, et ce qui pourrait me faire changer d'avis. Si une
+  de ses idées me semble faible, je le dis, avec une meilleure proposition.
 - **Ne jamais deviner une règle de jeu.** Si le GDD est muet, flou ou contradictoire : poser la question. Toute décision
   prise en chemin reçoit un numéro dans `Docs/DECISIONS.md` le jour même, et le GDD est réécrit en conséquence.
 - **Remplacer = supprimer, le jour même** : code, données, tests et documents de ce qui est remplacé.
