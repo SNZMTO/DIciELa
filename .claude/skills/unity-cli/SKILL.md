@@ -54,8 +54,8 @@ En cas de doute, `unity list` (les outils du paquet `com.unity.pipeline`) ou la 
 
 ## Le Play, la console, les captures
 
-- **Play au CLI** : `editor_play`, attendre 5 s, `simulate_key --key Digit3` pour ×3 (`--key 3` est lu comme un index,
-  écrire `Digit3` ; il ne prend qu'après 5 s), attendre, `console --tail 400` vers un fichier, `editor_stop` (le sien).
+- **Play au CLI** : `editor_play`, attendre, `console --tail 400` vers un fichier, `editor_stop` (le sien). `simulate_key`
+  ne prend qu'après 5 s de Play ; une touche chiffre s'écrit `Digit3` (`--key 3` est lu comme un index).
 - `simulate_key` n'atteint que les actions branchées par `action.performed +=`, jamais celles sondées par
   `WasPressedThisFrame` : pour qu'un geste soit jouable au CLI, lui donner un menu `DICIELA/…`.
 - **La console garde un tampon qui survit aux compilations** : ne lire que les entrées dont le `seq` dépasse le dernier vu
@@ -64,8 +64,8 @@ En cas de doute, `unity list` (les outils du paquet `com.unity.pipeline`) ou la 
   objet complet (c'est ce que fait `console_after.js`).
 - **Ne jamais conclure d'un Play muet** : vérifier que la simulation a vraiment travaillé (des lignes de journal).
 - **Captures** : `capture_game_view --source screen --width 1600 --height 900 --save_path Assets/Temp/x.png` (en Play ;
-  la source `camera` manque l'UI Toolkit), puis supprimer `Assets/Temp` et son `.meta`. Une capture seulement si c'est le
-  seul moyen de vérifier.
+  la source `camera` manque l'UI Toolkit), puis supprimer `Assets/Temp` et son `.meta`. Pour vérifier, une capture seulement si
+  c'est le seul moyen ; pour l'album, voir `Docs/ALBUM.md`.
 
 ## Menus, scènes, assets
 

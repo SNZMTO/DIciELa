@@ -18,6 +18,10 @@ jamais un bâtiment ni un décor de sa propre initiative ; les choix d'art sont 
   `Demo_Terrain.asset`, `Volume_01.asset` (profil de filtres de la démo).
 - **L'outil de recherche du code saute ce dossier** (ignoré par Git) : chercher par son chemin exact, ou par
   PowerShell (`Get-ChildItem -Recurse | Select-String`).
+- **Lister le pack sans l'importer** : il est dans le cache de l'Asset Store (`%APPDATA%\Unity\Asset Store-5.x\Synty
+  Studios\…\POLYGON - Fantasy Village - Art by Synty.unitypackage`, 317 Mo). En Git Bash,
+  `tar -xzf "<paquet>" --wildcards '*/pathname' --to-command='cat; echo' > liste.txt` écrit le chemin de ses 9 910
+  fichiers sans rien extraire.
 
 ## La démo, la référence
 
@@ -39,6 +43,30 @@ jamais un bâtiment ni un décor de sa propre initiative ; les choix d'art sont 
 - Tous les personnages sont **riggés** (SkinnedMeshRenderer) mais **le pack n'a aucune animation** : un pack
   d'animations compatible est à acheter par le développeur.
 - **Les corps sont d'un seul tenant** : pas de tête d'une bête sur le corps d'une autre sans retoucher les modèles.
+
+## Ce que le pack a, et ce qui lui manque
+
+- **Bâtiments tout faits** (`Prefabs/Buildings/Preset/`) : fermes (2), maisons (4), remises (`Shed`, 4), silo, forge
+  (`Smithy`), taverne, tour, entrepôt (`Warehouse`), moulin à vent. Le reste se compose avec les pièces modulaires
+  (murs, toits, auvent).
+- **Accessoires utiles** : roue à eau (`SM_Prop_WaterWheel_01`), ponts (`SM_Bld_Bridge_01` à `03`), lanternes (3),
+  bancs, fontaines, puits, enclume, établis, brouette, charrettes (`Vehicles/`, 4), bûches, souches, piles de bois et de
+  rochers, planches, haches, pioche, étendoirs, bottes de foin.
+- **Pas de modèle tout fait** pour la tente, l'étal, la scierie, le moulin à eau (seulement sa roue), l'atelier de tissu
+  (ni métier à tisser ni rouet), la carrière, les échafaudages : le développeur les compose, sinon un remplaçant simple.
+- **Cultures** : des plants de citrouilles (`SM_Env_Pumpkin_Leaves_01`, `02`), des feuillages
+  (`SM_Env_Plant_Leaves_01`, `02`), des vignes (`SM_Env_Vine_*`), des fleurs sauvages, un buisson, des jardinières
+  (`SM_Prop_Planter_*`) et des légumes géants (`Carrot_Giant`, `Watermelon_Giant`, `Zucchini_Giant`, dans
+  `Props/SM_Prop_Food_*`) ; le sol labouré est le calque `Village_Dirt_Farm_01`. Pas de blé en modèle (seulement une
+  texture `Wheat_01`), ni lin, ni moutons. Beaucoup de fruits et légumes en objets (`Props/SM_Prop_Food_*` : pomme,
+  carotte, poireau, laitue, pomme de terre, tomate, citrouille, fraise, cerise, citron, orange, champignon, ail…).
+- **Saisons** : aucun modèle d'hiver (ni toits enneigés, ni arbres nus). Seulement de la neige qui tombe
+  (`FX_Snow_01`), une texture de sol enneigé (`Snow_01`, sans calque), un rocher enneigé, un arbre (`Tree_04`) en
+  quatre couleurs d'automne, et un masque de neige dans les shaders partagés
+  (`PolygonGeneric/Shaders/SubGraphs/SnowMask`), peut-être pour enneiger n'importe quel modèle : à vérifier dans
+  l'éditeur.
+- **Calques de sol** (`Materials/Terrain/`) : deux herbes, fleurs, chemin, terre, terre de ferme, boue, galets de
+  rivière, sol planté.
 
 ## Pièges
 

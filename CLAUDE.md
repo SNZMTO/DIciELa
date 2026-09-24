@@ -17,7 +17,7 @@
 - `Docs/ARCHITECTURE.md` : les systèmes, leurs frontières, leurs règles. Le lire avant de créer ou déplacer du code.
 - `Docs/DECISIONS.md` : les décisions numérotées, avec leur date et leur raison.
 - `Docs/SAVOIR.md` : les solutions éprouvées et les pièges connus, à lire quand on conçoit le système concerné.
-- `Docs/ENTRETIEN.md` : les réponses de l'entretien fondateur ; il disparaît une fois le GDD écrit.
+- `Docs/ALBUM.md` : l'évolution du jeu en captures, la plus récente en haut ; il dit comment on le tient.
 - Les procédures (`.claude/skills/`) : `unity-cli`, `verifier`, `fin-de-session`, `pack-synty`. Les règles par dossier
   (`.claude/rules/`) se chargent seules quand on touche ces fichiers.
 
@@ -50,8 +50,10 @@
 - **Agents et workflows : jamais sans son accord explicite pour ce lancement**, avec un plafond de jetons annoncé et tenu
   (compter ~400 k jetons par agent Opus qui lit du code, ~80 k par agent Sonnet en effort moyen à budget serré). Ce qui
   tient en quelques lectures se fait soi-même. Le code s'écrit et se compile dans la session principale.
+- **Des captures, souvent** : à chaque étape qui change ce qu'on voit, et dès qu'un changement visible le mérite, des
+  captures dans l'album (`Docs/ALBUM.md`), envoyées au développeur.
 - **Économie de contexte** : une étape par session (deux au plus), retouches par Edit plutôt que réécritures, une seule
-  passe de vérification par étape, une capture d'écran seulement si c'est le seul moyen de vérifier.
+  passe de vérification par étape ; pour vérifier, une capture seulement si c'est le seul moyen (l'album est à part).
 
 ## Unity CLI : l'essentiel (tout le reste dans la procédure `unity-cli`)
 
