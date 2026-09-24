@@ -14,8 +14,8 @@ de chaque commande. Les sorties vont dans le dossier scratchpad de la session, j
 3. **EditMode** : `run_tests --timeout 300 --mode EditMode` vers un fichier, `node Tools/testreport.js <fichier>`.
 4. **PlayMode** : `bash Tools/playtests.sh <dossier déjà créé>`. Zéro test lancé alors que `list_tests` en voit →
    demander au développeur de redémarrer Unity.
-5. **Play court** (si l'étape touche le jeu) : la console avant, `editor_play`, ×3, les menus `DICIELA/…` de l'étape,
-   20 à 40 s, la console après, `editor_stop`, puis `node Tools/console_after.js apres.txt avant.txt` : zéro erreur neuve,
+5. **Play court** (si l'étape touche le jeu) : la console avant, `editor_play`, les menus `DICIELA/…` de l'étape,
+   20 à 40 s, les captures de l'album si l'étape change ce qu'on voit (`Docs/ALBUM.md`), la console après, `editor_stop`, puis `node Tools/console_after.js apres.txt avant.txt` : zéro erreur neuve,
    et la preuve que la simulation a travaillé.
 6. **`git status`** : ne committer que ce qui est à l'étape ; dire ce qui est au développeur (il travaille dans
    l'éditeur en même temps).

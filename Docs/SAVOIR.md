@@ -93,21 +93,20 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 - **L'aller-retour** : sauvegarder, recharger, resauvegarder, comparer les deux fichiers sans tenir compte de l'ordre des
   listes. Un script le fait en une commande.
 
-### 2.4 La génération déterministe
+### 2.4 Le hasard déterministe
 
-- **Le hasard du terrain en entiers** : un hachage (graine, position) → un nombre qui a l'air tiré au hasard mais qui est
+- **Le hasard en entiers** : un hachage (graine, position ou numéro) → un nombre qui a l'air tiré au hasard mais qui est
   toujours le même. Jamais `UnityEngine.Random`, `System.Random` ni `Mathf.PerlinNoise` : une mise à jour ou une autre
   machine pourrait les faire bouger d'un bit.
-- **Un fichier d'or** : un test compare la sortie du générateur à un fichier de référence. Toute retouche qui change le
-  rendu monte le numéro de version du générateur et refait le fichier d'or, volontairement.
-- **La pose de chaque élément naturel** (style, rotation, taille, décalage) se tire du hachage de sa position, puis
-  **se sauvegarde** : une retouche du générateur ne fait pas bouger les arbres d'une partie en cours.
+- **Ce qu'on tire pour un monde** (les plantes de ses champs sauvages, la pose de chaque élément semé : style,
+  rotation, taille, décalage) se tire du hachage, puis **se sauvegarde** : une retouche du tirage ne change pas une
+  partie en cours.
 
 ### 2.5 Le sol peint
 
-- **Un Terrain Unity construit en mémoire** au lancement, **jamais écrit en asset** (en sérialisation texte, il pèserait
-  des dizaines de Mo dans Git). Ses calques (TerrainLayer) sont faits des textures du pack ; ses cartes de poids
-  (alphamaps) viennent de cartes tirées de la graine.
+- **Piège : un Terrain en asset texte pèse des dizaines de Mo dans Git.** Le premier prototype le construisait en
+  mémoire depuis une graine ; la carte peinte à la main (GDD, section 2) demande une autre façon de le ranger, à
+  choisir à l'étape 2. Ses calques (TerrainLayer) sont ceux du pack.
 - **On repeint par lot** : une route ou un coup de pinceau marque un rectangle sale, et le sol ne se repeint qu'à l'image
   suivante, sur ce seul rectangle, une seule fois même si dix changements arrivent dans la même image.
 - **Les touffes et petites fleurs** sont des objets combinés en lots statiques ; des milliers d'objets séparés font

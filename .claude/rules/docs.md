@@ -13,6 +13,8 @@ paths:
   (un chiffre de départ qu'on ajustera) ou un **À toi** (à trancher par le développeur ; ne jamais le trancher seul).
 - **`DECISIONS.md`** : une décision par numéro, datée, avec sa raison en une ou deux phrases. Une décision qui en
   remplace une autre le dit (« remplace la 12 ») et l'ancienne est marquée « remplacée par la N ».
+- **`ALBUM.md`** : l'évolution du jeu en captures, la plus récente en haut ; avec `DECISIONS.md`, le seul document qui
+  garde son histoire. Son en-tête dit comment on le tient.
 - **`ETAT.md`** : 30 lignes au plus : branche, étape, ce qui marche, ce qui est à vérifier par le développeur, la
   prochaine étape, le prompt de la session suivante.
 - **`CLAUDE.md`** : moins de 200 lignes, seulement des règles qui s'appliquent à chaque session. Une procédure va dans
