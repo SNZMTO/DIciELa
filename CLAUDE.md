@@ -32,6 +32,10 @@
   prise en chemin reçoit un numéro dans `Docs/DECISIONS.md` le jour même, et le GDD est réécrit en conséquence.
 - **Remplacer = supprimer, le jour même** : code, données, tests et documents de ce qui est remplacé.
 - **Une seule vérité par chose** ; tout le reste en est déduit (détail dans `ARCHITECTURE.md`).
+- **Contre le spaghetti** : les dépendances ne vont que dans un sens (les assemblages l'imposent) ; on généralise au
+  deuxième cas, pas avant ; un fichier qui dépasse 200 lignes est découpé dans l'étape ; chaque fin d'étape répond aux
+  quatre questions de la procédure `fin-de-session` (supprimé ? deux façons ? propriétaire ? flèche ajoutée ?) ; les
+  signaux d'alerte sont dans `.claude/rules/csharp.md` : devant l'un d'eux, s'arrêter et le dire.
 - **Les documents se réécrivent, ils ne se raturent pas** : au présent, sans historique ; l'histoire est dans
   `DECISIONS.md` et dans Git.
 - **Automatiser le montage** plutôt que le dicter : un script d'éditeur `[MenuItem("DICIELA/…")]`, sinon une commande du

@@ -29,3 +29,20 @@ paths:
 - **Toute boucle qui avance par pas a une borne.**
 - Les scripts d'éditeur vont dans `Assets/Scripts/Editor/` (namespace `Diciela.EditorTools`) ; un montage se fait par
   un `[MenuItem("DICIELA/…")]` réexécutable.
+- **Les dépendances ne vont que dans un sens**, fixé par les assemblages (`.asmdef`) de `ARCHITECTURE.md` : la
+  simulation ne connaît ni la vue ni l'interface. Ajouter une référence entre assemblages est un changement
+  d'architecture : le proposer, jamais le faire en passant.
+- **Généraliser au deuxième cas**, pas avant : on écrit le cas simple, et au deuxième cas semblable on en fait un
+  système. Exceptions connues d'avance : les modificateurs et les postes et tâches, génériques dès le départ.
+
+## Signaux d'alerte : s'arrêter et le dire au développeur
+
+- un cas particulier par nom (« si c'est l'Architecte, alors… ») au lieu d'une propriété dans la fiche ;
+- deux fonctions aux noms presque pareils, ou deux façons de faire la même chose ;
+- un commentaire « gardé pour… », « temporaire », « pour les tests » ;
+- un booléen ajouté pour contourner une règle (`ignorerLaRègle`, `modeSpécial`) ;
+- une correction « à côté » qui n'est pas dans l'étape ;
+- une donnée copiée « pour aller plus vite » au lieu d'être lue chez son propriétaire ;
+- un fichier qui dépasse 200 lignes ou qui fait deux métiers ;
+- un code difficile à tester par le geste du joueur : c'est qu'il est emmêlé ; on le démêle, on n'ajoute pas de porte
+  dérobée.

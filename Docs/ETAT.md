@@ -17,8 +17,12 @@ société à son nom, produit `DICIELA`), avec son accord (ce sont des réglages
 **Prochaines étapes, dans l'ordre**
 1. Écrire `Docs/GDD.md` depuis `ENTRETIEN.md`, en un passage, puis le faire valider section par section ; numéroter les
    choix dans `DECISIONS.md` ; supprimer `ENTRETIEN.md`.
-2. Écrire `Docs/ARCHITECTURE.md` (systèmes, frontières, assemblages et namespaces, simulation à pas fixe, événements,
-   modificateurs, postes et tâches, données, sauvegarde, tests), validé par lui.
+2. Écrire `Docs/ARCHITECTURE.md`, validé par lui : les systèmes et leurs frontières ; **les assemblages (`.asmdef`) et
+   le sens unique de leurs dépendances** (données ← simulation ← vue et interface ; l'éditeur à part), pour qu'une
+   flèche interdite ne compile pas ; **un tableau « qui possède quoi »** (la seule vérité de chaque donnée) ; la
+   simulation à pas fixe et ses événements ; les modificateurs ; les postes et tâches ; les données ; la sauvegarde ;
+   les tests. Références : les livres gratuits de Unity « Create modular game architecture with ScriptableObjects »
+   (édition Unity 6) et « Level up your code with design patterns and SOLID ».
 3. Nettoyer le modèle Unity, régler nom et société, décider du démarrage rapide du Play ; il importe le pack ; puis la
    première étape de code.
 
