@@ -63,12 +63,8 @@ namespace Diciela.Game
         private IEnumerator LoadMapThenCreateWorld()
         {
             yield return _map.Load(this);
-            if (_map.Description == null || !TryCreateWorld())
-            {
+            if (_map.Description == null || !TryCreateWorld() || !TryCompose())
                 enabled = false;
-                yield break;
-            }
-            Compose();
         }
 
         /// <summary>Le monde et la table des textes ; une fiche mal réglée s'écrit dans la console.</summary>
@@ -91,16 +87,28 @@ namespace Diciela.Game
             }
         }
 
-        /// <summary>Montre le monde et lui relie les gestes.</summary>
-        private void Compose()
+        /// <summary>
+        /// Montre le monde et lui relie les gestes ; un échec (une interface qui ne trouve pas ses éléments) s'écrit dans
+        /// la console, et le monde ne tourne pas à moitié monté.
+        /// </summary>
+        private bool TryCompose()
         {
-            _journal = new SimulationJournal(_world);
-            _cameraRig.Show(_world.Map.Relief);
-            _structureViews.Show(_world.Structures, _world.Map.Relief);
-            _placementTool = new PlacementTool(_world, _cameraRig.Camera, _placementPreview, _placementSettings);
-            _buildBar.Show(_catalog, _texts, _placementTool);
-            _cameraControls.Bind(_buildBar);
-            _placementControls.Bind(_placementTool, _buildBar);
+            try
+            {
+                _journal = new SimulationJournal(_world);
+                _cameraRig.Show(_world.Map.Relief);
+                _structureViews.Show(_world.Structures, _world.Map.Relief);
+                _placementTool = new PlacementTool(_world, _cameraRig.Camera, _placementPreview, _placementSettings);
+                _buildBar.Show(_catalog, _texts, _placementTool);
+                _cameraControls.Bind(_buildBar);
+                _placementControls.Bind(_placementTool, _buildBar);
+                return true;
+            }
+            catch (Exception exception)
+            {
+                Debug.LogException(exception, this);
+                return false;
+            }
         }
 
         private void Update()
@@ -121,13 +129,18 @@ namespace Diciela.Game
             StopAllCoroutines();
             Application.quitting -= OnQuitting;
 
-            if (_placementTool != null)
+            // Tout ce qui a pu être montré, même par une composition interrompue : chaque Hide accepte de n'avoir
+            // rien à cacher.
+            if (_world != null)
             {
                 _placementControls.Bind(null, null);
                 _cameraControls.Bind(null);
                 _buildBar.Hide();
-                _placementTool.Cancel();
-                _placementTool.Dispose();
+                if (_placementTool != null)
+                {
+                    _placementTool.Cancel();
+                    _placementTool.Dispose();
+                }
                 _cameraRig.Hide();
                 _structureViews.Hide();
             }

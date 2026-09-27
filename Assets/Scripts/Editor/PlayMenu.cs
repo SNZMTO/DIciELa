@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 namespace Diciela.EditorTools
 {
     /// <summary>
-    /// Jouer depuis n'importe où dans l'éditeur : ouvre la scène Jeu, puis lance le Play. On ne fixe jamais la scène
+    /// Jouer depuis n'importe où dans l'éditeur : ouvre la scène Jeu, seule, puis lance le Play. On ne fixe jamais la scène
     /// de départ du Play en permanence (SAVOIR, section 3).
     /// </summary>
     public static class PlayMenu
@@ -18,7 +18,8 @@ namespace Diciela.EditorTools
             if (EditorApplication.isPlayingOrWillChangePlaymode)
                 return;
 
-            if (SceneManager.GetActiveScene().path != ScenePaths.Game)
+            // Jeu seule : une carte ouverte à côté serait chargée deux fois.
+            if (SceneManager.GetActiveScene().path != ScenePaths.Game || SceneManager.sceneCount > 1)
             {
                 if (!EditorAssets.Exists(ScenePaths.Game))
                 {

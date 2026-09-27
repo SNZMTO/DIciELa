@@ -13,7 +13,7 @@ namespace Diciela.EditorTools
     /// <summary>
     /// Monte les scènes du jeu : les fiches et les actions qui manquent, la carte de test, la carte (si elle n'existe
     /// pas), puis les deux scènes racines, Jeu et JeuTest, chacune avec son démarrage et sa caméra reliés à leurs
-    /// fiches. Réexécutable : ce qui existe n'est pas touché, un réglage fait à la main n'est pas écrasé. Finit sur la
+    /// fiches, et sans soleil. Réexécutable : ce qui existe n'est pas touché, un réglage fait à la main n'est pas écrasé. Finit sur la
     /// scène Jeu.
     /// </summary>
     public static class GameSceneBuilder
@@ -64,6 +64,7 @@ namespace Diciela.EditorTools
             // La scène d'abord : l'ouvrir en mode Single décharge les assets que rien ne tient, et une fiche lue avant
             // deviendrait un objet détruit (SAVOIR, section 3).
             Scene scene = OpenOrCreate(scenePath);
+            RemoveSuns(scene);
             var settings = EditorAssets.Load<SimulationSettings>(DataAssetBuilder.SimulationSettingsPath);
             var session = EditorAssets.Load<SessionSettings>(sessionPath);
 
@@ -91,6 +92,20 @@ namespace Diciela.EditorTools
 
             EditorAssets.EnsureFolder(scenePath.Substring(0, scenePath.LastIndexOf('/')));
             return EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
+        }
+
+        /// <summary>
+        /// Le soleil est celui de la carte (ARCHITECTURE, section 10) : une scène racine n'en garde aucun, pas même celui
+        /// qu'Unity pose dans une scène neuve, sinon deux soleils éclairent la carte.
+        /// </summary>
+        private static void RemoveSuns(Scene scene)
+        {
+            foreach (GameObject root in scene.GetRootGameObjects())
+            {
+                Light light = root.GetComponent<Light>();
+                if (light != null && light.type == LightType.Directional)
+                    Object.DestroyImmediate(root);
+            }
         }
 
         private static void EnsureInBuild(string scenePath)
