@@ -42,6 +42,7 @@ namespace Diciela.Controls
         private InputAction _pointer;
         private DragGesture _dragGesture;
         private DragGesture _orbitGesture;
+        private EdgeScroll _edgeScroll;
         private IInterfaceArea _interfaceArea;
 
         /// <summary>Relie les gestes à l'interface du jeu : sur elle, la ville ne défile, ne zoome ni ne se tire.</summary>
@@ -77,6 +78,7 @@ namespace Diciela.Controls
             _map = null;
             _dragGesture = default;
             _orbitGesture = default;
+            _edgeScroll = default;
         }
 
         private void Update()
@@ -88,7 +90,9 @@ namespace Diciela.Controls
             Vector2 pointer = _pointer.ReadValue<Vector2>();
             bool onInterface = _interfaceArea != null && _interfaceArea.Contains(pointer);
 
-            Vector2 move = _move.ReadValue<Vector2>() + (onInterface ? Vector2.zero : EdgeDirection(pointer));
+            Vector2 edge = _edgeScroll.Update(pointer, new Vector2(Screen.width, Screen.height),
+                _settings.EdgeScrollPixels, Application.isFocused);
+            Vector2 move = _move.ReadValue<Vector2>() + (onInterface ? Vector2.zero : edge);
             if (move != Vector2.zero)
                 _rig.Pan(Vector2.ClampMagnitude(move, 1f), deltaSeconds);
 
@@ -111,27 +115,6 @@ namespace Diciela.Controls
             _orbitGesture.Update(_orbit.IsPressed(), pointer, threshold, onInterface);
             if (_orbitGesture.IsDragging && _orbitGesture.Delta.x != 0f)
                 _rig.Rotate(_orbitGesture.Delta.x * _settings.OrbitDegreesPerPixel);
-        }
-
-        /// <summary>La direction de défilement quand le pointeur touche un bord de la fenêtre, si elle a le focus.</summary>
-        private Vector2 EdgeDirection(Vector2 pointer)
-        {
-            float margin = _settings.EdgeScrollPixels;
-            if (!(margin > 0f) || !Application.isFocused)
-                return Vector2.zero;
-            if (pointer.x < 0f || pointer.y < 0f || pointer.x > Screen.width || pointer.y > Screen.height)
-                return Vector2.zero;
-
-            var direction = Vector2.zero;
-            if (pointer.x <= margin)
-                direction.x -= 1f;
-            else if (pointer.x >= Screen.width - margin)
-                direction.x += 1f;
-            if (pointer.y <= margin)
-                direction.y -= 1f;
-            else if (pointer.y >= Screen.height - margin)
-                direction.y += 1f;
-            return direction;
         }
     }
 }

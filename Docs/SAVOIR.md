@@ -168,6 +168,9 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   tout le lissage du zoom, jusqu'à ce qu'un autre geste (déplacer, tourner, tirer) prenne la main.
 - **Un seul suivi du clic ou glisser** (`DragGesture`) pour tous les boutons : un appui vu pour la première fois part
   de là où on le voit, sinon un bouton enfoncé pendant un chargement fait sauter la vue.
+- **Au lancement, le pointeur vaut (0 ; 0) tant qu'il n'est pas entré dans la vue** : un coin, et le défilement au
+  bord ferait filer la vue toute seule. Il ne s'arme qu'une fois le pointeur passé loin des bords ; perdre le focus
+  le désarme (`EdgeScroll`).
 
 ### 2.9 Poser un modèle du pack
 
