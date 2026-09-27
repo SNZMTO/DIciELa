@@ -27,6 +27,10 @@ En cas de doute, `unity list` (les outils du paquet `com.unity.pipeline`) ou la 
 - **Le pipeline peut se figer** (toute commande expire, `editor_status` compris) : seul un redémarrage d'Unity, par le
   développeur, débloque. Le lui dire, ne pas insister.
 - `list_open_scenes` dit quelle scène est ouverte et si elle est sale, avant tout `open_scene` ou `menu --path`.
+- **Une fenêtre modale fige aussi toutes les commandes** (« Main thread operation timed out »), alors que le journal
+  d'Unity continue de s'écrire (« Scanning for USB devices ») sans plus rien importer. Exemple : `SyntyPackageHelper`
+  (procédure `pack-synty`). Seul un clic du développeur débloque ; ne pas boucler sur `editor_status` en attendant :
+  chaque appel écrit une erreur dans la console.
 
 ## Recompiler
 

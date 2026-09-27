@@ -149,4 +149,7 @@ Packages/packages-lock.json linguist-generated
 *.skel.bytes            lfs
 # Exceptions for .asset files such as lightning pre-baking
 LightingData.asset     binary
+# DICIELA : le TerrainData de la carte reste binaire même en Force Text ; la règle *.asset (plus haut) l'abîmerait.
+# Cette règle vient après elle, donc l'emporte (décision 41, SAVOIR 2.5).
+Assets/Terrain/*.asset  lfs
 * !text !filter !merge !diff

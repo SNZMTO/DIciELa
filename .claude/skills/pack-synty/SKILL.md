@@ -14,14 +14,20 @@ jamais un bâtiment ni un décor de sa propre initiative ; les choix d'art sont 
 - `Assets/Synty/` (hors Git, 1,5 Go, importé par le développeur) : `PolygonFantasyVillage/` (le pack), `PolygonGeneric/`
   et `PNB_Core/` (matériaux et shaders partagés des packs Synty), `SyntyPackageHelper/` (outil d'import).
 - `PolygonFantasyVillage/Prefabs/` : `Buildings`, `Characters`, `Environment`, `FX`, `Props`, `Vehicles`.
-- `PolygonFantasyVillage/Scenes/` : `Demo.unity` (la référence de beauté), `Overview.unity`, `Buildings.unity`,
-  `Demo_Terrain.asset`, `Volume_01.asset` (profil de filtres de la démo).
+- `PolygonFantasyVillage/Scenes/` : `Demo.unity` (la référence de beauté), `Demo_BIRP.unity` (la même pour l'ancien
+  pipeline, inutile ici), `Overview.unity`, `Buildings.unity`, `Demo_Terrain.asset`, `Volume_01.asset` (profil de
+  filtres de la démo).
 - **L'outil de recherche du code saute ce dossier** (ignoré par Git) : chercher par son chemin exact, ou par
   PowerShell (`Get-ChildItem -Recurse | Select-String`).
-- **Lister le pack sans l'importer** : il est dans le cache de l'Asset Store (`%APPDATA%\Unity\Asset Store-5.x\Synty
-  Studios\…\POLYGON - Fantasy Village - Art by Synty.unitypackage`, 317 Mo). En Git Bash,
-  `tar -xzf "<paquet>" --wildcards '*/pathname' --to-command='cat; echo' > liste.txt` écrit le chemin de ses 9 910
-  fichiers sans rien extraire.
+- **Le paquet** est dans le cache de l'Asset Store (`%APPDATA%\Unity\Asset Store-5.x\Synty Studios\3D
+  ModelsEnvironmentsFantasy\POLYGON - Fantasy Village - Art by Synty.unitypackage`, 316 Mo, version du 27/09/2026 :
+  4 955 entrées). C'est une archive tar gzip : un dossier par GUID, avec `pathname` (le chemin dans le projet),
+  `asset` (absent pour un dossier) et `asset.meta`.
+- **Le lire sans l'importer** : `gzip -dc "<paquet>" | tar -xf -` dans le dossier scratchpad (le `tar -xzf` direct a
+  échoué une fois), puis un petit script Node qui lit chaque `pathname` (une boucle Bash sur 5 000 dossiers est trop
+  lente).
+- **L'installer sans la fenêtre d'import** : copier chaque `asset` à son `pathname` et `asset.meta` à côté (le GUID
+  suit), puis `menu --path "Assets/Refresh"`. Tout doit tomber sous `Assets/Synty/` ; sinon, s'arrêter.
 
 ## La démo, la référence
 
@@ -77,4 +83,14 @@ jamais un bâtiment ni un décor de sa propre initiative ; les choix d'art sont 
 - **L'échelle** : les packs Synty sont faits pour un mètre par unité (un humain mesure environ 1,8 unité), à vérifier
   sur un personnage à l'import. Le jeu utilise le pack à ×1 : on n'écrase jamais le pack pour le faire entrer dans une
   grille (une échelle forcée a obligé à retoucher chaque modèle et chaque effet).
-- **Importer le pack** est une opération du développeur (jamais au CLI : la modale d'import fige l'éditeur).
+- **La fenêtre d'import** fige l'éditeur si elle est ouverte par le CLI : jamais d'import de `.unitypackage` au CLI ;
+  soit le développeur importe, soit on copie les fichiers de l'archive (plus haut).
+- **`SyntyPackageHelper` ouvre une fenêtre modale au premier changement du projet** (« requires the package
+  com.unity.shadergraph… Install / Skip ») : elle fige le CLI jusqu'à un clic du développeur. Shader Graph vient
+  déjà avec URP ; l'outil ne lit que le texte de `manifest.json`. Répondre **Install** (il déclare le paquet).
+- **Le pack demande les modules intégrés Terrain et TerrainPhysics** (`com.unity.modules.terrain`, `terrainphysics`) :
+  sans eux, `PNB_Core/Scripts/HeightMapAssigner.cs` ne compile pas (`CS1069`), et la démo perd son Terrain.
+- **Les autres packs Synty ne vont pas avec celui-ci** : le Sampler Pack (Adventure, City, Knights, Prototype,
+  Starter) est dans un vieux format que Unity 6.6 ne lit qu'avec 3 700 avertissements, ses matériaux utilisent le
+  shader Standard de l'ancien pipeline (roses en URP), et il s'installe dans `Assets/SyntyStudios/`, que Git
+  n'ignore pas. Il a été retiré le 27/09/2026 (il reste dans le cache de l'Asset Store).

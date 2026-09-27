@@ -68,7 +68,8 @@
      souvent en Play) ; jamais d'`editor_stop` sur son Play ;
   3. jamais de `git checkout`, `switch` (sauf `-c`), `stash` ni `reset --hard` : ils rechargent une scène ouverte ;
      fusionner par `git fetch . <branche>:main` ;
-  4. jamais d'import de `.unitypackage` par le CLI (une modale fige l'éditeur) ; l'`eval` reste fermé sans sa demande.
+  4. jamais d'import de `.unitypackage` par le CLI (une modale fige l'éditeur) ; copier les fichiers de l'archive est
+     permis (procédure `pack-synty`) ; l'`eval` reste fermé sans sa demande.
 - Une commande destructrice sur ce qui n'est pas dans Git (le pack, les sauvegardes, les réglages) : je propose, il
   exécute. Un fichier suivi par Git et couvert par un plan accepté : je le supprime moi-même et je le dis.
 
