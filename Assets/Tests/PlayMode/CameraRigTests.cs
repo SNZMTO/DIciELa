@@ -86,6 +86,34 @@ namespace Diciela.Tests.PlayMode
             Assert.That(Vector3.Distance(MapCenter, LookedAtGround()), Is.LessThan(0.01f));
         }
 
+        /// <summary>
+        /// On tire le sol : le point saisi reste sous le pointeur. L'attendu vient de la projection inverse
+        /// (WorldToScreenPoint), pas du rayon qui sert à la caméra.
+        /// </summary>
+        [UnityTest]
+        public IEnumerator DraggingKeepsTheGrabbedGroundUnderThePointer()
+        {
+            Camera camera = _cameraObject.GetComponent<Camera>();
+            var grabbed = new Vector3(45f, 10f, 56f);
+            Vector2 pressed = camera.WorldToScreenPoint(grabbed);
+            Vector2 released = pressed + new Vector2(80f, -60f);
+
+            Assert.IsTrue(_rig.BeginDrag(pressed));
+            _rig.DragTo(released);
+            yield return null;
+
+            Vector2 nowOnScreen = camera.WorldToScreenPoint(grabbed);
+            Assert.That(Vector2.Distance(released, nowOnScreen), Is.LessThan(1f));
+        }
+
+        [Test]
+        public void TheSkyCannotBeGrabbed()
+        {
+            var farAboveTheScreen = new Vector2(Screen.width * 0.5f, Screen.height * 3f);
+
+            Assert.IsFalse(_rig.BeginDrag(farAboveTheScreen));
+        }
+
         [UnityTest]
         public IEnumerator PanningNeverLeavesTheMap()
         {

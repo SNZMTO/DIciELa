@@ -1,20 +1,18 @@
 using Diciela.Data;
-using UnityEngine;
 
 namespace Diciela.Simulation.Land
 {
     /// <summary>
-    /// Une construction posée sur la carte : sa sorte, sa place, son angle, son état (ARCHITECTURE, section 4). C'est la
-    /// vérité ; le maillage en est déduit.
+    /// Une construction posée sur la carte : sa sorte, sa place et son angle, son état (ARCHITECTURE, section 4). C'est
+    /// la vérité ; le maillage en est déduit.
     /// </summary>
     public sealed class Structure
     {
-        internal Structure(int id, StructureDefinition definition, Vector2 center, float rotationDegrees)
+        internal Structure(int id, StructureDefinition definition, Placement placement)
         {
             Id = id;
             Definition = definition;
-            Center = center;
-            RotationDegrees = rotationDegrees;
+            Placement = placement;
             State = StructureState.Planned;
         }
 
@@ -23,10 +21,8 @@ namespace Diciela.Simulation.Land
 
         public StructureDefinition Definition { get; }
 
-        /// <summary>Le centre de l'empreinte, en mètres sur le plan XZ.</summary>
-        public Vector2 Center { get; }
-
-        public float RotationDegrees { get; }
+        /// <summary>Sa place et son angle.</summary>
+        public Placement Placement { get; }
 
         public StructureState State { get; }
     }
