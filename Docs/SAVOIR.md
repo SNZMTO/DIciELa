@@ -47,8 +47,9 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 
 - **Le maillage** : un quadrillage invisible, plus fin que le mètre (4 mailles par mètre), où tout ce qui se pose
   s'inscrit. Une maille porte au plus un objet : c'est la vérité pour « rien ne se chevauche » et pour le passage.
-  C# pur. Une maille a un coût d'entrée : bloquée, route (1), herbe (plus chère pour les piétons, interdite aux
-  charrettes). Un objet posé s'y **trame** : son empreinte (un rectangle tourné) marque les mailles qu'elle couvre,
+  C# pur. Une maille a un coût d'entrée par façon de se déplacer, en entiers, lu dans les fiches : un piéton paie le
+  même prix partout où l'on passe ; une charrette paie plus cher l'herbe que la terre, et la terre que les pavés
+  (GDD, section 9). Une maille peut être bloquée. Un objet posé s'y **trame** : son empreinte (un rectangle tourné) marque les mailles qu'elle couvre,
   avec un écart minimal entre deux objets.
 - **Le A\*** : huit voisines ; un pas droit coûte 10, un pas en diagonale 14, multipliés par le coût de la maille où
   l'on entre. **Une diagonale ne coupe jamais un coin** : elle n'est permise que si les deux mailles droites qu'elle
@@ -61,7 +62,9 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   tas ; les coûts doivent être égaux.
 - **Le lissage** : le A* rend un escalier de mailles ; on le tend comme une ficelle. Deux points se relient en ligne
   droite si toutes les mailles que la ligne touche (coins compris) sont franchissables **au même coût** que le bout de
-  chemin remplacé : une charrette reste sur sa route, un piéton ne coupe pas par l'herbe pour raccourcir une route.
+  chemin remplacé : une charrette reste sur sa route.
+- **Savoir tout de suite qu'un chemin est introuvable** : une étiquette de composante connexe par façon de se déplacer,
+  recalculée à chaque changement de topologie. Sans elle, un A* vers une cible coupée parcourt toute la carte.
 - **La marche** : un chemin est une polyligne ; l'avancement se compte en distance. L'allure se relit **à chaque mètre
   parcouru** et à chaque sommet, pas seulement aux sommets : une lanterne au milieu d'un long segment doit compter.
   Sans allocation par tick.
@@ -85,9 +88,10 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 - **Rien ne lance d'exception** au chargement : fichier absent, tronqué, écrit par une version future ou modifié à la
   main → « pas de partie à charger », jamais un écran noir.
 - **Un numéro de version** dans le fichier ; les champs neufs sont **additifs** (absents d'un vieux fichier = valeur par
-  défaut sûre) ; une conversion par version, testée sur un vrai vieux fichier.
-- **Un compte rendu de chargement** : ce qui ne tient plus à sa place part en réserve avec tout ce qu'il portait, rien ne
-  se perd ; ce qu'on ne sait pas relire (un identifiant inconnu) est compté. Si le compte rendu n'est pas parfait, le
+  défaut sûre, ou déduite quand le GDD le dit : une sous-statistique ajoutée reçoit la statistique globale calculée sur
+  les autres) ; une conversion par version, faite sur le JSON lui-même, testée sur un vrai vieux fichier.
+- **Un compte rendu de chargement** : un bâtiment qui ne tient plus à sa place part en réserve avec tout ce qu'il
+  portait, un tracé qui ne tient plus s'efface en rendant ses matériaux, rien ne se perd ; ce qu'on ne sait pas relire (un identifiant inconnu) est compté. Si le compte rendu n'est pas parfait, le
   fichier est mis de côté, daté, avant d'être écrasé.
 - **Les tests de sauvegarde** écrivent dans un dossier temporaire, choisi **avant** de charger la scène.
 - **L'aller-retour** : sauvegarder, recharger, resauvegarder, comparer les deux fichiers sans tenir compte de l'ordre des
@@ -104,9 +108,14 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 
 ### 2.5 Le sol peint
 
-- **Piège : un Terrain en asset texte pèse des dizaines de Mo dans Git.** Le premier prototype le construisait en
-  mémoire depuis une graine ; la carte peinte à la main (GDD, section 2) demande une autre façon de le ranger, à
-  choisir à l'étape 2. Ses calques (TerrainLayer) sont ceux du pack.
+- **Piège : un TerrainData reste binaire, même en Force Text**, et pèse des Mo à chaque version. La règle `*.asset`
+  du `.gitattributes` (fins de ligne normalisées) l'abîmerait : le dossier du Terrain a sa propre règle (`lfs`, sinon
+  `binary`), placée **après** `*.asset` (la dernière règle l'emporte), avant son premier commit. Vérifier que LFS agit
+  (`git lfs ls-files` non vide) sur un fichier d'essai. Ses calques (TerrainLayer) sont ceux du pack.
+- **Piège : modifier un Terrain en Play modifie l'asset pour de bon** (`SetHeights`, `SetAlphamaps`, arbres), et il
+  s'écrit au prochain enregistrement du projet. Le jeu travaille sur une copie en mémoire
+  (`Object.Instantiate(terrainData)`), donnée au `Terrain` **et** au `TerrainCollider`, jamais enregistrée ; un test
+  PlayMode vérifie que l'asset n'a pas bougé.
 - **On repeint par lot** : une route ou un coup de pinceau marque un rectangle sale, et le sol ne se repeint qu'à l'image
   suivante, sur ce seul rectangle, une seule fois même si dix changements arrivent dans la même image.
 - **Les touffes et petites fleurs** sont des objets combinés en lots statiques ; des milliers d'objets séparés font
@@ -166,10 +175,17 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 
 - **En EditMode, `Awake` et `OnEnable` ne se déclenchent pas** : un composant créé dans un test n'est pas abonné. La
   logique va dans des classes C# pures, testables sans scène.
-- **Démarrage rapide du Play** (Enter Play Mode Options, le domaine n'est pas rechargé ; actif dans ce projet) : les
-  champs statiques et les abonnements survivent à la sortie du Play. Chaque service statique a un `ResetStatics()` appelé
-  depuis `[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]`, et tout abonnement est
-  défait dans `OnDestroy`. Un bug qui n'apparaît qu'au deuxième lancement vient presque toujours de là.
+- **Démarrage rapide du Play** (Enter Play Mode Options, actif dans ce projet : ni le domaine ni la scène ne sont
+  rechargés) : les champs statiques, les abonnements et les champs non sérialisés des composants et des fiches
+  survivent à la sortie du Play. Chaque statique restant a un `ResetStatics()` appelé depuis
+  `[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]`, tout abonnement est défait dans
+  `OnDestroy`, et les actions d'entrée générées sont désactivées puis libérées (`Disable`, `Dispose`). Un bug qui
+  n'apparaît qu'au deuxième lancement vient presque toujours de là.
+- **Ne jamais fixer `EditorSceneManager.playModeStartScene` en permanence** : le Test Runner ne peut plus charger sa
+  scène, et les tests PlayMode attendent jusqu'au délai. Pour jouer depuis la scène de jeu, un menu l'ouvre puis lance
+  le Play.
+- **Une scène chargée en additif n'apporte sa lumière que si elle devient la scène active**
+  (`SceneManager.SetActiveScene`) : ciel, lumière ambiante, brouillard, reflets.
 - **Un composant détruit, tenu par une interface, n'est pas `null`** : le `== null` d'Unity ne joue que sur le type
   `Object`. Tester `(cible as Object) == null`.
 - **Un `ScriptableObject` modifié dans l'Inspector n'est pas écrit par Ctrl+S** (qui sauve la scène) : `File/Save
