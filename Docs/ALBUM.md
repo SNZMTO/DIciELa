@@ -15,6 +15,18 @@
 
 ## Les captures
 
+### 27/09/2026 — ménage 4 : la revue, un seul soleil et la nouvelle caméra
+
+La vue témoin, reprise : la caméra part plus près (57 m, à mi-chemin des crans de molette), un peu moins inclinée, et
+la carte n'est plus éclairée que par le soleil du pack. La scène de jeu gardait la lumière par défaut d'Unity, qui
+doublait la sienne : l'herbe est plus sombre et son relief ressort. La pose de l'étape 8b, sous ce seul soleil, à
+comparer avec l'entrée d'en dessous. Les ombres suivent désormais le zoom ; elles se verront avec les premiers
+modèles, les fantômes n'en font pas.
+
+![La vue de départ, un seul soleil](Album/2026-09-27_menage-4_vue-de-depart.jpg)
+
+![Trois cabanes posées et l'aperçu vert, un seul soleil](Album/2026-09-27_menage-4_pose-un-soleil.jpg)
+
 ### 27/09/2026 — étape 8b : poser une cabane
 
 La pose devient visible, depuis la vue de départ rapprochée du centre. En bas, la barre de construction : la famille
