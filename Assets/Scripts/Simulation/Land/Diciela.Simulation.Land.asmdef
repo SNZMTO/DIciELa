@@ -1,0 +1,17 @@
+{
+    "name": "Diciela.Simulation.Land",
+    "rootNamespace": "Diciela.Simulation.Land",
+    "references": [
+        "Diciela.Data",
+        "Diciela.Simulation.Core"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

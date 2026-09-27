@@ -4,6 +4,7 @@
     "references": [
         "Diciela.Data",
         "Diciela.Simulation.Core",
+        "Diciela.Simulation.Land",
         "Diciela.Simulation",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"

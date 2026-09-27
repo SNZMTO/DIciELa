@@ -2,6 +2,7 @@
     "name": "Diciela.Tests.PlayMode",
     "rootNamespace": "Diciela.Tests.PlayMode",
     "references": [
+        "Diciela.Simulation.Land",
         "Diciela.Game",
         "UnityEngine.TestRunner"
     ],
