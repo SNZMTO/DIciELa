@@ -203,6 +203,12 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 - **Un réglage en `float` n'est pas le décimal qu'on croit** : 0,1f vaut 0,100000001 une fois en `double`, et un
   temps de 0,1 tout juste n'atteint pas un pas de 0,1f. Un test choisit ses temps loin des frontières entre deux
   pas, et une vérité qui doit rester exacte se compte en entiers (le temps est un nombre de pas).
+- **Ouvrir les `internal` d'un assemblage à un autre** : `[assembly: InternalsVisibleTo("Diciela.Simulation")]` dans un
+  `AssemblyInfo.cs` posé à côté du `.asmdef`, avec le nom exact de l'assemblage visé. Une interface ne peut pas avoir
+  de membre `internal` : une classe abstraite, si (`internal abstract`), et personne d'autre ne peut alors l'appeler.
+- **Un parcours sans allocation** : `foreach` accepte toute structure qui a `GetEnumerator()`, `MoveNext()` et
+  `Current` ; une structure qui se rend elle-même ne crée rien sur le tas, même appelée à chaque image (les mailles
+  d'un rectangle, `CoveredCells`). Borner sa boucle et rendre un parcours vide hors du maillage.
 - **Une énumération sérialisée à trou** (une valeur retirée au milieu) : un script d'éditeur écrit `intValue`, jamais
   `enumValueIndex`. Mieux : ne jamais retirer une valeur du milieu d'une énumération sérialisée.
 - **Le Input System lie par position physique, en disposition US** : un raccourci mnémonique (M, I, G…) se lie au

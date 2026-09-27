@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Diciela.Data;
+using Diciela.Simulation.Core;
 using UnityEngine;
 
 namespace Diciela.Simulation.Land
@@ -64,8 +65,11 @@ namespace Diciela.Simulation.Land
             return PlacementResult.Ok;
         }
 
-        /// <summary>Pose la construction si c'est permis ; sinon, lève <see cref="PlacementRefused"/>.</summary>
-        public PlacementResult Place(StructureDefinition definition, Vector2 center, float rotationDegrees)
+        /// <summary>
+        /// Pose la construction si c'est permis ; sinon, lève <see cref="PlacementRefused"/>. Seul l'ordre « poser »
+        /// l'appelle, au début d'un pas ; au-dessus de la simulation, on vérifie avec <see cref="CheckPlacement"/>.
+        /// </summary>
+        internal PlacementResult Place(StructureDefinition definition, Vector2 center, float rotationDegrees)
         {
             PlacementResult result = CheckPlacement(definition, center, rotationDegrees);
             if (result != PlacementResult.Ok)
@@ -111,15 +115,11 @@ namespace Diciela.Simulation.Land
 
         private bool IsTooSteep(RotatedRect footprint)
         {
-            _grid.CellRange(footprint, out int minX, out int minZ, out int maxX, out int maxZ);
-            for (int z = minZ; z <= maxZ; z++)
+            foreach (Vector2Int cell in _grid.CellsCoveredBy(footprint))
             {
-                for (int x = minX; x <= maxX; x++)
-                {
-                    Vector2 cell = _grid.CellCenter(x, z);
-                    if (footprint.Contains(cell) && _relief.SlopeDegreesAt(cell.x, cell.y) > _maxSlopeDegrees)
-                        return true;
-                }
+                Vector2 point = _grid.CellCenter(cell);
+                if (_relief.SlopeDegreesAt(point.x, point.y) > _maxSlopeDegrees)
+                    return true;
             }
             return false;
         }
@@ -128,32 +128,22 @@ namespace Diciela.Simulation.Land
         private PlacementResult CheckFootprintCells(RotatedRect footprint)
         {
             bool blocksADoor = false;
-            _grid.CellRange(footprint, out int minX, out int minZ, out int maxX, out int maxZ);
-            for (int z = minZ; z <= maxZ; z++)
+            foreach (Vector2Int cell in _grid.CellsCoveredBy(footprint))
             {
-                for (int x = minX; x <= maxX; x++)
-                {
-                    if (!footprint.Contains(_grid.CellCenter(x, z)))
-                        continue;
-                    if (_grid.OccupantAt(x, z) != 0)
-                        return PlacementResult.Overlaps;
-                    if (_grid.IsDoorway(x, z))
-                        blocksADoor = true;
-                }
+                if (_grid.OccupantAt(cell) != 0)
+                    return PlacementResult.Overlaps;
+                if (_grid.IsDoorway(cell))
+                    blocksADoor = true;
             }
             return blocksADoor ? PlacementResult.BlocksADoor : PlacementResult.Ok;
         }
 
         private bool IsOccupied(RotatedRect rect)
         {
-            _grid.CellRange(rect, out int minX, out int minZ, out int maxX, out int maxZ);
-            for (int z = minZ; z <= maxZ; z++)
+            foreach (Vector2Int cell in _grid.CellsCoveredBy(rect))
             {
-                for (int x = minX; x <= maxX; x++)
-                {
-                    if (rect.Contains(_grid.CellCenter(x, z)) && _grid.OccupantAt(x, z) != 0)
-                        return true;
-                }
+                if (_grid.OccupantAt(cell) != 0)
+                    return true;
             }
             return false;
         }

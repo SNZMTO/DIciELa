@@ -8,9 +8,9 @@ namespace Diciela.Simulation
     /// L'ordre « poser » : une construction, sa place (le centre de son empreinte, en mètres sur le plan XZ) et son
     /// angle. Refusé, il ne change rien et les constructions disent pourquoi.
     /// </summary>
-    public sealed class PlaceStructureOrder : IOrder
+    public sealed class PlaceStructureCommand : Command
     {
-        public PlaceStructureOrder(StructureDefinition definition, Vector2 center, float rotationDegrees)
+        public PlaceStructureCommand(StructureDefinition definition, Vector2 center, float rotationDegrees)
         {
             if (ReferenceEquals(definition, null))
                 throw new ArgumentNullException(nameof(definition));
@@ -24,7 +24,7 @@ namespace Diciela.Simulation
         public Vector2 Center { get; }
         public float RotationDegrees { get; }
 
-        public void Execute(World world)
+        internal override void Execute(World world)
         {
             world.Structures.Place(Definition, Center, RotationDegrees);
         }
