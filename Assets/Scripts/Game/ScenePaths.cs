@@ -15,7 +15,7 @@ namespace Diciela.Game
         /// <summary>La scène racine des tests : elle charge la carte de test.</summary>
         public const string GameTest = "Assets/Scenes/Test/JeuTest.unity";
 
-        /// <summary>Une petite carte plate, pour les tests seulement.</summary>
+        /// <summary>Une petite carte plate, que charge la scène de test.</summary>
         public const string MapTest = "Assets/Scenes/Test/CarteTest.unity";
     }
 }
