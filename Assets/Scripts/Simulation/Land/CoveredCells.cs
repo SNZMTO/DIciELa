@@ -5,8 +5,9 @@ using UnityEngine;
 namespace Diciela.Simulation.Land
 {
     /// <summary>
-    /// Les mailles que couvre un rectangle : celles dont le milieu tombe dedans (SAVOIR, 2.1). Le seul parcours du
-    /// maillage par un rectangle, pour poser comme pour vérifier. C'est une structure qui se parcourt elle-même avec
+    /// Les mailles que couvre un rectangle : celles dont le milieu tombe dedans (SAVOIR, 2.1) ; un rectangle trop petit
+    /// pour couvrir un seul milieu couvre la maille de son centre. Le seul parcours du maillage par un rectangle, pour
+    /// poser comme pour vérifier. C'est une structure qui se parcourt elle-même avec
     /// <c>foreach</c>, comme l'énumérateur d'une <c>List</c> : le parcours n'alloue rien, même à chaque image.
     /// </summary>
     public struct CoveredCells
@@ -17,7 +18,11 @@ namespace Diciela.Simulation.Land
         private readonly int _minZ;
         private readonly int _columns;
         private readonly int _count;
+        private readonly Vector2Int _centerCell;
+        private readonly bool _centerInGrid;
         private int _next;
+        private bool _covered;
+        private bool _centerGiven;
         private Vector2Int _current;
 
         internal CoveredCells(NavGrid grid, RotatedRect rect)
@@ -46,7 +51,11 @@ namespace Diciela.Simulation.Land
             // Une boîte hors du maillage ne compte aucune maille : le parcours est vide.
             _columns = Math.Max(0, maxX - minX + 1);
             _count = _columns * Math.Max(0, maxZ - minZ + 1);
+            _centerCell = new Vector2Int(metrics.CellOf(rect.Center.x), metrics.CellOf(rect.Center.y));
+            _centerInGrid = grid.Contains(_centerCell);
             _next = 0;
+            _covered = false;
+            _centerGiven = false;
             _current = default;
         }
 
@@ -67,11 +76,19 @@ namespace Diciela.Simulation.Land
                 _next++;
                 if (_rect.Contains(_grid.CellCenter(cell)))
                 {
+                    _covered = true;
                     _current = cell;
                     return true;
                 }
             }
-            return false;
+
+            // Plus petit qu'une maille et tourné, un rectangle peut ne couvrir aucun milieu : il couvre alors la maille de
+            // son centre, pour que rien ne se pose sans marquer le maillage.
+            if (_covered || _centerGiven || !_centerInGrid)
+                return false;
+            _centerGiven = true;
+            _current = _centerCell;
+            return true;
         }
     }
 }

@@ -16,6 +16,8 @@ namespace Diciela.EditorTools
         private const string Folder = "Assets/Art/Remplacants";
         private const string BodyMaterialPath = Folder + "/Remplacant_Corps.mat";
         private const string DoorMaterialPath = Folder + "/Remplacant_Porte.mat";
+        private const string BodyName = "Corps";
+        private const string DoorName = "Porte";
 
         // La hauteur d'une boîte et de sa porte, en mètres : de quoi lire la taille et le sens, sans plus.
         private const float BoxHeight = 3f;
@@ -25,12 +27,21 @@ namespace Diciela.EditorTools
         private static readonly Color BodyColor = new Color(0.86f, 0.8f, 0.68f);
         private static readonly Color DoorColor = new Color(0.36f, 0.24f, 0.14f);
 
-        /// <summary>Le remplaçant de cette construction, créé s'il manque.</summary>
-        public static GameObject CreateBoxIfMissing(StructureDefinition definition)
+        /// <summary>Vrai si ce modèle est un remplaçant : il vit dans le dossier des remplaçants.</summary>
+        public static bool IsPlaceholder(GameObject model)
+        {
+            return model != null && AssetDatabase.GetAssetPath(model).StartsWith(Folder + "/");
+        }
+
+        /// <summary>
+        /// Le remplaçant de cette construction, à la taille de sa fiche : créé s'il manque, refait si la fiche a changé.
+        /// Le fichier reste le même, donc la fiche garde son modèle.
+        /// </summary>
+        public static GameObject EnsureBox(StructureDefinition definition)
         {
             string path = Folder + "/" + definition.name + "_Remplacant.prefab";
             GameObject existing = AssetDatabase.LoadAssetAtPath<GameObject>(path);
-            if (existing != null)
+            if (existing != null && Matches(existing, definition))
                 return existing;
 
             Material body = MaterialBuilder.OpaqueIfMissing(BodyMaterialPath, BodyColor);
@@ -40,23 +51,51 @@ namespace Diciela.EditorTools
             {
                 var root = new GameObject(definition.name + "_Remplacant");
                 SceneManager.MoveGameObjectToScene(root, preview);
-                float width = definition.WidthMeters, depth = definition.DepthMeters;
-                AddBox(root, "Corps", new Vector3(0f, BoxHeight * 0.5f, 0f), new Vector3(width, BoxHeight, depth), body);
+                AddBox(root, BodyName, BodyPosition(), BodySize(definition), body);
                 if (definition.HasDoor)
-                {
-                    AddBox(root, "Porte",
-                        new Vector3(definition.DoorOffsetMeters, DoorHeight * 0.5f, (depth + DoorThickness) * 0.5f),
-                        new Vector3(definition.DoorWidthMeters, DoorHeight, DoorThickness), door);
-                }
+                    AddBox(root, DoorName, DoorPosition(definition), DoorSize(definition), door);
 
                 GameObject prefab = PrefabUtility.SaveAsPrefabAsset(root, path);
-                Debug.Log("DICIELA : remplaçant créé : " + path + " (une boîte, en attendant le modèle).");
+                Debug.Log("DICIELA : remplaçant " + (existing != null ? "refait à la taille de sa fiche" : "créé") + " : " +
+                          path + " (une boîte, en attendant le modèle).");
                 return prefab;
             }
             finally
             {
                 EditorSceneManager.ClosePreviewScene(preview);
             }
+        }
+
+        /// <summary>Vrai si la boîte a encore la taille et la porte de la fiche.</summary>
+        private static bool Matches(GameObject box, StructureDefinition definition)
+        {
+            Transform body = box.transform.Find(BodyName);
+            Transform door = box.transform.Find(DoorName);
+            if (body == null || body.localPosition != BodyPosition() || body.localScale != BodySize(definition))
+                return false;
+            if (definition.HasDoor != (door != null))
+                return false;
+            return door == null || (door.localPosition == DoorPosition(definition) && door.localScale == DoorSize(definition));
+        }
+
+        private static Vector3 BodyPosition()
+        {
+            return new Vector3(0f, BoxHeight * 0.5f, 0f);
+        }
+
+        private static Vector3 BodySize(StructureDefinition definition)
+        {
+            return new Vector3(definition.WidthMeters, BoxHeight, definition.DepthMeters);
+        }
+
+        private static Vector3 DoorPosition(StructureDefinition definition)
+        {
+            return new Vector3(definition.DoorOffsetMeters, DoorHeight * 0.5f, (definition.DepthMeters + DoorThickness) * 0.5f);
+        }
+
+        private static Vector3 DoorSize(StructureDefinition definition)
+        {
+            return new Vector3(definition.DoorWidthMeters, DoorHeight, DoorThickness);
         }
 
         private static void AddBox(GameObject parent, string name, Vector3 position, Vector3 size, Material material)

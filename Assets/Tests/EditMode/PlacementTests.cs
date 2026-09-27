@@ -92,6 +92,34 @@ namespace Diciela.Tests.EditMode
         }
 
         [Test]
+        public void ADoorMustOpenInsideTheMap()
+        {
+            // En (10 ; 17,5), la cabane tient dans la carte (z de 15,5 à 19,5), mais le devant de sa porte irait jusqu'à
+            // 20,5 ; tournée vers l'est en (17,5 ; 10), de même en x. En (10 ; 17), il s'arrête pile sur le bord.
+            World world = NewWorld(TestData.SlopedMap(20, 0f));
+
+            Assert.AreEqual(PlacementResult.OutsideMap, world.PlacementRules.Check(_cabin, At(10f, 17.5f)));
+            Assert.AreEqual(PlacementResult.OutsideMap, world.PlacementRules.Check(_cabin, At(17.5f, 10f, 90f)));
+            Assert.AreEqual(PlacementResult.Ok, world.PlacementRules.Check(_cabin, At(10f, 17f)));
+        }
+
+        [Test]
+        public void ATinyTurnedStructureStillTakesItsCell()
+        {
+            // Une déco de 0,25 × 0,25 m tournée de 45° et centrée sur un coin de maille n'atteint que 0,18 m de son
+            // centre, et le milieu de maille le plus proche est à 0,35 m : elle prend la maille de son centre.
+            StructureDefinition lantern = Keep(TestData.Structure("lanterne", 0.25f, 0.25f, hasDoor: false));
+            World world = NewWorld(TestData.SlopedMap(20, 0f));
+            Place(world, _cabin, 10f, 10f);
+
+            Assert.AreEqual(PlacementResult.Overlaps, world.PlacementRules.Check(lantern, At(10f, 10f, 45f)));
+
+            Place(world, lantern, 15f, 5f, 45f);
+            Assert.AreEqual(2, world.Structures.All.Count);
+            Assert.AreEqual(2, world.Grid.OccupantAt(new Vector2Int(30, 10)));
+        }
+
+        [Test]
         public void RefusesASlopeSteeperThanTheLimit()
         {
             World steep = NewWorld(TestData.SlopedMap(20, 0.5f));

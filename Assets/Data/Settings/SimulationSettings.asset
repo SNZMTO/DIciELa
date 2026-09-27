@@ -17,3 +17,6 @@ MonoBehaviour:
   _dayLengthSeconds: 720
   _workFraction: 0.6666667
   _eveningFraction: 0.083333336
+  _cellsPerMeter: 4
+  _maxBuildSlopeDegrees: 15
+  _doorClearanceMeters: 1.5

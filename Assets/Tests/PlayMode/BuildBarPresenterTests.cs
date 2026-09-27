@@ -82,6 +82,7 @@ namespace Diciela.Tests.PlayMode
 
             _test.Tool.AimAt(_test.OnScreen(TestWorld.Center + new Vector3(0f, 0f, -20f)));
             Assert.AreEqual("", _view.Reason);
+            Assert.IsTrue(_test.Tool.Confirm(), "La place libre est visée, et la pose y est permise.");
         }
 
         [Test]

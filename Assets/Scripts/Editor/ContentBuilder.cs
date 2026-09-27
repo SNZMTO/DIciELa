@@ -22,8 +22,9 @@ namespace Diciela.EditorTools
                 EditorAssets.Property(fiche, "_id").stringValue = "cabane";
                 EditorAssets.Property(fiche, "_nameKey").stringValue = "construction.cabane";
             });
-            if (cabin.Model == null)
-                EditorAssets.AssignIfMissing(cabin, "_model", PlaceholderBuilder.CreateBoxIfMissing(cabin));
+            // Tant que la cabane n'a pas son modèle, sa boîte suit sa fiche ; un vrai modèle n'est jamais touché.
+            if (cabin.Model == null || PlaceholderBuilder.IsPlaceholder(cabin.Model))
+                EditorAssets.AssignIfMissing(cabin, "_model", PlaceholderBuilder.EnsureBox(cabin));
 
             StructureFamilyDefinition housing = EditorAssets.CreateIfMissing<StructureFamilyDefinition>(HousingPath,
                 fiche =>

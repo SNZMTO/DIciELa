@@ -15,6 +15,10 @@ namespace Diciela.Simulation.Land
         // Les divisions par deux qui affinent le point où un rayon touche le sol : 20 divisent l'écart par un million.
         private const int RaycastRefinements = 20;
 
+        // Une marge autour du plus haut et du plus bas du relief, en mètres : sans elle, un rayon qui touche le plus bas
+        // (tout le sol, sur une carte plate) s'arrêterait parfois un cheveu au-dessus, par arrondi, et le raterait.
+        private const float RaycastMarginMeters = 1e-3f;
+
         private readonly float[] _heights;
         private readonly float _stepX;
         private readonly float _stepZ;
@@ -93,8 +97,8 @@ namespace Diciela.Simulation.Land
             float from = 0f, to = maxDistance;
             if (dir.y < 0f)
             {
-                from = Math.Max(0f, (origin.y - _highest) / -dir.y);
-                to = Math.Min(to, (origin.y - _lowest) / -dir.y);
+                from = Math.Max(0f, (origin.y - (_highest + RaycastMarginMeters)) / -dir.y);
+                to = Math.Min(to, (origin.y - (_lowest - RaycastMarginMeters)) / -dir.y);
             }
             else if (origin.y > _highest)
                 return false;

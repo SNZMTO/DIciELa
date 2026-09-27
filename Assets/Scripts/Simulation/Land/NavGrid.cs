@@ -31,6 +31,12 @@ namespace Diciela.Simulation.Land
         public int Width { get; }
         public int Depth { get; }
 
+        /// <summary>Vrai si cette maille est dans le maillage.</summary>
+        public bool Contains(Vector2Int cell)
+        {
+            return cell.x >= 0 && cell.y >= 0 && cell.x < Width && cell.y < Depth;
+        }
+
         /// <summary>L'identifiant de ce qui occupe cette maille, ou 0 si elle est libre.</summary>
         public int OccupantAt(Vector2Int cell)
         {
@@ -73,8 +79,11 @@ namespace Diciela.Simulation.Land
             }
         }
 
+        /// <summary>La place de la maille dans les tableaux ; hors du maillage, une erreur, jamais la rangée voisine.</summary>
         private int IndexOf(Vector2Int cell)
         {
+            if (!Contains(cell))
+                throw new ArgumentOutOfRangeException(nameof(cell), "La maille " + cell + " est hors du maillage.");
             return cell.y * Width + cell.x;
         }
     }
