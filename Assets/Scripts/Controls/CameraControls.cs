@@ -34,8 +34,8 @@ namespace Diciela.Controls
         private InputAction _zoom;
         private InputAction _drag;
         private InputAction _pointer;
-        private Vector2 _dragStart;
-        private Vector2 _lastPointer;
+        private Vector2 _pressStart;
+        private bool _pressed;
         private bool _dragging;
 
         private void OnEnable()
@@ -61,6 +61,7 @@ namespace Diciela.Controls
             if (_map != null)
                 _map.Disable();
             _map = null;
+            _pressed = false;
             _dragging = false;
         }
 
@@ -88,32 +89,30 @@ namespace Diciela.Controls
         }
 
         /// <summary>
-        /// Le glisser ne commence qu'au-delà d'un seuil en pixels : un clic droit bref reste un clic (SAVOIR, 2.8).
+        /// Le glisser ne commence qu'au-delà d'un seuil en pixels : un clic droit bref reste un clic (SAVOIR, 2.8). Il
+        /// saisit alors le sol là où l'on a appuyé, et le tire jusqu'au pointeur.
         /// </summary>
         private void UpdateDrag(Vector2 pointer)
         {
             if (!_drag.IsPressed())
             {
+                _pressed = false;
                 _dragging = false;
                 return;
             }
 
-            if (_drag.WasPressedThisFrame())
+            // La première image où l'on voit le bouton enfoncé, même s'il l'était avant que la caméra montre la carte.
+            if (!_pressed)
             {
-                _dragStart = pointer;
-                _lastPointer = pointer;
+                _pressed = true;
+                _pressStart = pointer;
                 return;
             }
 
-            if (!_dragging && (pointer - _dragStart).magnitude >= _settings.DragThresholdPixels)
-            {
-                _dragging = true;
-                _lastPointer = _dragStart;
-            }
-
+            if (!_dragging && (pointer - _pressStart).magnitude >= _settings.DragThresholdPixels)
+                _dragging = _rig.BeginDrag(_pressStart);
             if (_dragging)
-                _rig.Drag(pointer - _lastPointer, Screen.height);
-            _lastPointer = pointer;
+                _rig.DragTo(pointer);
         }
 
         /// <summary>La direction de défilement quand le pointeur touche un bord de la fenêtre, si elle a le focus.</summary>

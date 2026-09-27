@@ -23,7 +23,8 @@ namespace Diciela.Simulation
             Clock = new Clock(settings);
             Map = map;
             Grid = new NavGrid(map.Relief, new GridMetrics(settings.CellsPerMeter));
-            Structures = new Structures(Grid, map.Relief, settings);
+            PlacementRules = new PlacementRules(Grid, map.Relief, settings);
+            Structures = new Structures(Grid, PlacementRules);
         }
 
         public Clock Clock { get; }
@@ -33,6 +34,9 @@ namespace Diciela.Simulation
 
         /// <summary>Le maillage : ce qui occupe le sol, déduit des constructions.</summary>
         public NavGrid Grid { get; }
+
+        /// <summary>Les règles de pose : la seule réponse à « peut-on poser ici ? », pour l'aperçu et l'ordre.</summary>
+        public PlacementRules PlacementRules { get; }
 
         public Structures Structures { get; }
 

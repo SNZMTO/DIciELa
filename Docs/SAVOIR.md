@@ -155,6 +155,11 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 - **Un panneau d'interface ouvert rend la ville muette** : aucun clic ne la traverse.
 - **Tourner** : une touche brève = un pas ; la touche tenue en bougeant la souris = au degré ; une touche de
   modification aimante.
+- **Tirer le sol, c'est garder sous le pointeur le point saisi** : un rayon depuis la caméra le trouve (sur le plan
+  du sol) à l'appui, puis à chaque image la vue se déplace pour qu'il y revienne. Des pixels convertis en mètres
+  glissent : le sol incliné fuit, trois fois plus vite que le pointeur à 20° sous l'horizon. Un rayon qui ne touche
+  pas le sol (au-dessus de l'horizon, au-delà de l'affichage) ne saisit rien. Le test compare à la projection
+  inverse (`WorldToScreenPoint`).
 
 ### 2.9 Poser un modèle du pack
 
@@ -189,6 +194,9 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   le Play.
 - **Une scène chargée en additif n'apporte sa lumière que si elle devient la scène active**
   (`SceneManager.SetActiveScene`) : ciel, lumière ambiante, brouillard, reflets.
+- **Arrêter une coroutine n'arrête pas le chargement qu'elle attendait** : une scène quittée pendant qu'elle charge
+  sa carte la laisserait orpheline. Garder l'`AsyncOperation` et, en partant, décharger la carte dans son
+  `completed` (appelé tout de suite si le chargement est déjà fini).
 - **Un composant détruit, tenu par une interface, n'est pas `null`** : le `== null` d'Unity ne joue que sur le type
   `Object`. Tester `(cible as Object) == null`.
 - **Un `ScriptableObject` modifié dans l'Inspector n'est pas écrit par Ctrl+S** (qui sauve la scène) : `File/Save
@@ -222,6 +230,8 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   rechargement du domaine).
 - **Project Settings → Editor** : Asset Serialization = Force Text, Version Control = Visible Meta Files ; ne jamais
   toucher un `.meta` à la main ; renommer un asset avec son `.meta` (le GUID suit).
+- **Deux restes du modèle URP restent, exprès** : `SampleSceneProfile` est le profil de filtres par défaut des
+  réglages URP (le supprimer les casse), et le niveau de qualité Mobile, que le CLI ne sait pas retirer.
 - **Modifier une scène ou un prefab à la main dans le texte est risqué** : un script de montage (`[MenuItem]`) est
   reproductible et versionné.
 - **L'outil de recherche du code saute les dossiers ignorés par Git** (le pack) : une recherche vide là-dedans ne prouve

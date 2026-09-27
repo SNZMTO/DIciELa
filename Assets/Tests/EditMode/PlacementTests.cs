@@ -8,10 +8,11 @@ using UnityEngine;
 namespace Diciela.Tests.EditMode
 {
     /// <summary>
-    /// La pose, par le chemin du joueur : un ordre envoyé au monde, un pas joué. Carte plate de 20 × 20 m, deux mailles
-    /// par mètre, pente maximale 15°, 1 m libre devant une porte. La cabane fait 4 × 4 m, sa porte 1 m de large au
-    /// milieu de sa façade nord. Posée en (10 ; 10) à 0°, elle couvre x et z de 8 à 12, et le devant de sa porte
-    /// x de 9,5 à 10,5, z de 12 à 13. Les positions voisines sont choisies d'après ces bornes.
+    /// La pose, par le chemin du joueur : un ordre envoyé au monde, un pas joué ; l'aperçu, par les règles de pose.
+    /// Carte plate de 20 × 20 m, deux mailles par mètre, pente maximale 15°, 1 m libre devant une porte. La cabane fait
+    /// 4 × 4 m, sa porte 1 m de large au milieu de sa façade nord. Posée en (10 ; 10) à 0°, elle couvre x et z de 8 à
+    /// 12, et le devant de sa porte x de 9,5 à 10,5, z de 12 à 13. Les positions voisines sont choisies d'après ces
+    /// bornes.
     /// </summary>
     public sealed class PlacementTests
     {
@@ -46,13 +47,18 @@ namespace Diciela.Tests.EditMode
         private World NewWorld(MapDescription map)
         {
             var world = new World(_settings, map);
-            world.Structures.PlacementRefused += (definition, center, rotation, reason) => _refusals.Add(reason);
+            world.Structures.PlacementRefused += (definition, placement, reason) => _refusals.Add(reason);
             return world;
+        }
+
+        private static Placement At(float x, float z, float rotation = 0f)
+        {
+            return new Placement(new Vector2(x, z), rotation);
         }
 
         private static void Place(World world, StructureDefinition definition, float x, float z, float rotation = 0f)
         {
-            world.Submit(new PlaceStructureCommand(definition, new Vector2(x, z), rotation));
+            world.Submit(new PlaceStructureCommand(definition, At(x, z, rotation)));
             world.Step();
         }
 
@@ -61,7 +67,7 @@ namespace Diciela.Tests.EditMode
         {
             World world = NewWorld(TestData.SlopedMap(20, 0f));
 
-            world.Submit(new PlaceStructureCommand(_cabin, new Vector2(10f, 10f), 0f));
+            world.Submit(new PlaceStructureCommand(_cabin, At(10f, 10f)));
             Assert.AreEqual(0, world.Structures.All.Count);
             world.Step();
 
@@ -69,7 +75,7 @@ namespace Diciela.Tests.EditMode
             Structure cabin = world.Structures.All[0];
             Assert.AreEqual(1, cabin.Id);
             Assert.AreSame(_cabin, cabin.Definition);
-            Assert.AreEqual(new Vector2(10f, 10f), cabin.Center);
+            Assert.AreEqual(new Vector2(10f, 10f), cabin.Placement.Center);
             Assert.AreEqual(StructureState.Planned, cabin.State);
         }
 
@@ -104,9 +110,8 @@ namespace Diciela.Tests.EditMode
             World world = NewWorld(TestData.SlopedMap(20, 0f));
             Place(world, _cabin, 10f, 10f);
 
-            Assert.AreEqual(PlacementResult.Overlaps,
-                world.Structures.CheckPlacement(_cabin, new Vector2(12f, 10f), 0f));
-            Assert.AreEqual(PlacementResult.Ok, world.Structures.CheckPlacement(_cabin, new Vector2(14f, 10f), 0f));
+            Assert.AreEqual(PlacementResult.Overlaps, world.PlacementRules.Check(_cabin, At(12f, 10f)));
+            Assert.AreEqual(PlacementResult.Ok, world.PlacementRules.Check(_cabin, At(14f, 10f)));
         }
 
         [Test]
@@ -115,9 +120,8 @@ namespace Diciela.Tests.EditMode
             World world = NewWorld(TestData.SlopedMap(20, 0f));
             Place(world, _cabin, 10f, 10f);
 
-            Assert.AreEqual(PlacementResult.BlocksADoor,
-                world.Structures.CheckPlacement(_cabin, new Vector2(10f, 14.5f), 0f));
-            Assert.AreEqual(PlacementResult.Ok, world.Structures.CheckPlacement(_cabin, new Vector2(10f, 15f), 0f));
+            Assert.AreEqual(PlacementResult.BlocksADoor, world.PlacementRules.Check(_cabin, At(10f, 14.5f)));
+            Assert.AreEqual(PlacementResult.Ok, world.PlacementRules.Check(_cabin, At(10f, 15f)));
         }
 
         [Test]
@@ -126,8 +130,7 @@ namespace Diciela.Tests.EditMode
             World world = NewWorld(TestData.SlopedMap(20, 0f));
             Place(world, _cabin, 10f, 14.5f);
 
-            Assert.AreEqual(PlacementResult.DoorBlocked,
-                world.Structures.CheckPlacement(_cabin, new Vector2(10f, 10f), 0f));
+            Assert.AreEqual(PlacementResult.DoorBlocked, world.PlacementRules.Check(_cabin, At(10f, 10f)));
         }
 
         [Test]
@@ -136,9 +139,8 @@ namespace Diciela.Tests.EditMode
             World world = NewWorld(TestData.SlopedMap(20, 0f));
             Place(world, _cabin, 10f, 10f, 90f);
 
-            Assert.AreEqual(PlacementResult.BlocksADoor,
-                world.Structures.CheckPlacement(_cabin, new Vector2(14.5f, 10f), 0f));
-            Assert.AreEqual(PlacementResult.Ok, world.Structures.CheckPlacement(_cabin, new Vector2(10f, 14.5f), 0f));
+            Assert.AreEqual(PlacementResult.BlocksADoor, world.PlacementRules.Check(_cabin, At(14.5f, 10f)));
+            Assert.AreEqual(PlacementResult.Ok, world.PlacementRules.Check(_cabin, At(10f, 14.5f)));
         }
 
         [Test]
@@ -151,7 +153,7 @@ namespace Diciela.Tests.EditMode
 
             Assert.AreEqual(1, world.Structures.All.Count);
             Assert.AreEqual(new[] { PlacementResult.Overlaps }, _refusals);
-            Assert.AreEqual(PlacementResult.Ok, world.Structures.CheckPlacement(_cabin, new Vector2(15f, 5f), 0f));
+            Assert.AreEqual(PlacementResult.Ok, world.PlacementRules.Check(_cabin, At(15f, 5f)));
         }
     }
 }
