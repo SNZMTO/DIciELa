@@ -60,7 +60,7 @@ Un assemblage naît avec son premier code ; tous sont en références explicites
 | UI | Controls, View, Persistence, Data, la simulation |
 | Game | tout ce qui précède |
 | Scenarios | Data, la simulation |
-| EditorTools | Data, la simulation, Persistence, View, Controls, Game, Scenarios ; Input System, URP (réglages de la caméra) |
+| EditorTools | Data, la simulation, Persistence, View, Controls, UI, Game, Scenarios ; Input System, URP (réglages de la caméra) |
 | Tests.EditMode | Data, la simulation, Persistence, Scenarios ; NUnit, Test Runner |
 | Tests.PlayMode | tout l'exécutable ; NUnit, Test Runner |
 
@@ -233,6 +233,8 @@ code.
 | savoir de la ville | `Knowledge` | monde | `World` | pastille | `StatusBadge` |
 | déroulé du départ | `Opening` | instantané | `Snapshot` | description de la carte | `MapDescription` |
 | place et angle | `Placement` | règles de pose | `PlacementRules` | aperçu ; fantôme (posé, pas bâti) | `Preview` ; `Planned` |
+| outil de pose | `PlacementTool` | barre de construction | `BuildBar` | famille ; catalogue | `StructureFamilyDefinition` ; `Catalog` |
+| table des textes | `TextTable` | zone de l'interface | `IInterfaceArea` | routine de pose | `ModelPose` |
 
 ## 10. La carte, les scènes et la sauvegarde
 
@@ -272,7 +274,8 @@ code.
 - **Les gestes** : un seul asset d'actions, monté par un script d'éditeur. Les raccourcis se lient au caractère, le
   déplacement à la position (SAVOIR 3). Un geste appartient à la ville ou à l'interface dès l'enfoncement ; clic ou
   glisser se décide au relâchement (SAVOIR 2.8). Un panneau ouvert rend la ville muette ; les conteneurs plein écran
-  de l'interface ne captent pas le pointeur.
+  de l'interface ne captent pas le pointeur. Les gestes ne connaissent pas l'interface : elle leur dit seulement où
+  elle est (`IInterfaceArea`), et `Game` les relie.
 - **L'interface** suit le patron MVP : un présentateur écoute la simulation et remplit son panneau. Pour les écrans
   chargés (l'étal, la liste des habitants), la liaison de données de UI Toolkit reste possible.
 - **Aucun état statique modifiable** dans la simulation : le registre, le catalogue et les textes sont des objets

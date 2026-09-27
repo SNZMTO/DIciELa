@@ -1,30 +1,30 @@
 # DICIELA — état actuel
 
-**Branche** : `menage-3b-camera`, fusionnée dans `main`. **Étapes 6, 7 et 8a finies** (la carte, la caméra, la pose
-dans la simulation, sans image encore), puis des ménages : seule la simulation change la simulation (57), la place et
-les règles de pose (58), la caméra qui zoome vers le pointeur et tourne au bouton du milieu (59), trois bugs corrigés.
+**Branche** : `etape-8b-pose-visible`, fusionnée dans `main`. **Étapes 6 à 8b finies** : la carte, la caméra de
+gestion, et la pose des constructions, visible (décisions 60 à 64), après des ménages du code (57 à 59).
 
-**Ce qui marche** : EditMode 40/40, PlayMode 14/14, Play court sans erreur. **DICIELA > Scènes > Monter les scènes**
-monte tout, sans jamais toucher une carte existante. `Jeu` charge `Carte` (relief vierge de 500 m), que le monde lit et
-que la caméra montre. La pose suit le GDD (dans la carte, 15° au plus, sans chevaucher, rien devant une porte).
+**Ce qui marche** : EditMode 49/49, PlayMode 27/27, Play court sans erreur. **DICIELA > Scènes > Monter les scènes**
+monte tout, sans jamais toucher une carte existante. En jeu : la barre en bas (Logement, Cabane) ; l'aperçu suit la
+souris, vert ou rouge avec sa raison ; R tourne ; le clic gauche pose un fantôme ; un clic droit bref ou Échap range
+l'outil. Les captures de l'album se mettent en scène par **DICIELA > Album > …**, en Play.
 
-**À vérifier par lui** (**DICIELA > Jouer**) : ZQSD ou les flèches, A et E, la molette (vers le pointeur), le clic
-droit glissé (le sol suit la souris), le bouton du milieu glissé (la vue tourne), la souris au bord.
+**À vérifier par lui** (**DICIELA > Jouer**) : poser, tourner, refuser, ranger l'outil ; un clic sur la barre ne pose
+rien. Le sens de la rotation au bouton du milieu (fiche `CameraSettings`) et les couleurs de l'aperçu et du fantôme
+(fiche `PlacementSettings`) se règlent en jouant.
 
-**Questions pour toi** (les trois premières avant l'étape 8b, la pose visible) :
-1. La touche qui tourne une construction (GDD 9 : brève = 15°, tenue = au degré). Ma reco : R.
-2. Comment choisir quoi construire (le plan de l'interface est un « À toi »). Ma reco : une barre en bas, par famille.
-3. Le modèle de la cabane (et de la tente, que le pack n'a pas) : ton choix d'art. En attendant, une boîte simple.
-4. **Avant de peindre la carte** : sa taille (« À toi », GDD 2).
+**Questions pour toi** :
+1. Le modèle de la cabane (et de la tente, que le pack n'a pas) : ton choix d'art. En attendant, une boîte.
+2. La taille de la carte, avant de la peindre (« À toi », GDD 2).
+3. La suite. Ma reco : étape 9, les chemins : l'A* sur le maillage (SAVOIR 2.1), vérifié contre un Dijkstra, sans
+   rien de visible encore ; puis la Chimère qui marche jusqu'à son poste.
 
-**À savoir** : 34 « À toi » dans le GDD, chacun avec ma reco. À surveiller : la file d'événements « en fin de couche »
+**À savoir** : 35 « À toi » dans le GDD, chacun avec ma reco. À surveiller : la file d'événements « en fin de couche »
 (33), à coder avant le premier système qui en écoute un autre ; la caméra qui monte quand une colline cache le point
-visé, à coder quand la carte aura ses collines ; suivre un habitant, quand il y en aura.
+visé, quand la carte aura ses collines ; suivre un habitant, quand il y en aura.
 
-**Prochaine étape** : 8b. Poser un bâtiment, visible : la visée sur le sol, l'aperçu vert ou rouge (les règles de
-pose, comme l'ordre), tourner, poser au clic, le modèle posé (une seule routine de pose, SAVOIR 2.9), une fiche.
+**Prochaine étape** : 9, les chemins sur le maillage, si tu valides la question 3.
 
 **Prompt de la session suivante**
 
-> Lis CLAUDE.md et Docs/ETAT.md. Réponds d'abord aux questions d'ETAT avec moi, puis étape 8b : montre-moi le plan
-> court, attends mon accord, code-la, vérifie-la, captures pour l'album.
+> Lis CLAUDE.md et Docs/ETAT.md. Réponds d'abord aux questions d'ETAT avec moi, puis la prochaine étape : montre-moi
+> le plan court, attends mon accord, code-la, vérifie-la, captures pour l'album.

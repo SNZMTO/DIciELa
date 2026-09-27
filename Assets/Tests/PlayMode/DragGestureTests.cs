@@ -16,9 +16,9 @@ namespace Diciela.Tests.PlayMode
         {
             var gesture = new DragGesture();
 
-            gesture.Update(true, new Vector2(100f, 100f), Threshold);
-            bool started = gesture.Update(true, new Vector2(103f, 102f), Threshold);
-            gesture.Update(false, new Vector2(103f, 102f), Threshold);
+            gesture.Update(true, new Vector2(100f, 100f), Threshold, false);
+            bool started = gesture.Update(true, new Vector2(103f, 102f), Threshold, false);
+            gesture.Update(false, new Vector2(103f, 102f), Threshold, false);
 
             Assert.IsFalse(started);
             Assert.IsFalse(gesture.IsDragging);
@@ -28,12 +28,12 @@ namespace Diciela.Tests.PlayMode
         public void BeyondTheThresholdItDragsWithTheWholeMove()
         {
             var gesture = new DragGesture();
-            gesture.Update(true, new Vector2(100f, 100f), Threshold);
+            gesture.Update(true, new Vector2(100f, 100f), Threshold, false);
 
-            Assert.IsTrue(gesture.Update(true, new Vector2(110f, 100f), Threshold));
+            Assert.IsTrue(gesture.Update(true, new Vector2(110f, 100f), Threshold, false));
             Assert.AreEqual(new Vector2(10f, 0f), gesture.Delta);
 
-            Assert.IsFalse(gesture.Update(true, new Vector2(115f, 98f), Threshold));
+            Assert.IsFalse(gesture.Update(true, new Vector2(115f, 98f), Threshold, false));
             Assert.IsTrue(gesture.IsDragging);
             Assert.AreEqual(new Vector2(5f, -2f), gesture.Delta);
             Assert.AreEqual(new Vector2(100f, 100f), gesture.Start);
@@ -44,13 +44,12 @@ namespace Diciela.Tests.PlayMode
         {
             var gesture = new DragGesture();
 
-            gesture.Update(true, new Vector2(100f, 100f), Threshold);
-            Assert.IsTrue(gesture.Began);
-            gesture.Update(true, new Vector2(102f, 101f), Threshold);
+            gesture.Update(true, new Vector2(100f, 100f), Threshold, false);
+            gesture.Update(true, new Vector2(102f, 101f), Threshold, false);
             Assert.IsFalse(gesture.Clicked);
-            gesture.Update(false, new Vector2(102f, 101f), Threshold);
+            gesture.Update(false, new Vector2(102f, 101f), Threshold, false);
             Assert.IsTrue(gesture.Clicked);
-            gesture.Update(false, new Vector2(102f, 101f), Threshold);
+            gesture.Update(false, new Vector2(102f, 101f), Threshold, false);
             Assert.IsFalse(gesture.Clicked);
         }
 
@@ -59,10 +58,25 @@ namespace Diciela.Tests.PlayMode
         {
             var gesture = new DragGesture();
 
-            gesture.Update(true, new Vector2(100f, 100f), Threshold);
-            gesture.Update(true, new Vector2(130f, 100f), Threshold);
-            gesture.Update(false, new Vector2(130f, 100f), Threshold);
+            gesture.Update(true, new Vector2(100f, 100f), Threshold, false);
+            gesture.Update(true, new Vector2(130f, 100f), Threshold, false);
+            gesture.Update(false, new Vector2(130f, 100f), Threshold, false);
 
+            Assert.IsFalse(gesture.Clicked);
+        }
+
+        [Test]
+        public void APressThatBeginsOnTheInterfaceBelongsToIt()
+        {
+            var gesture = new DragGesture();
+
+            // Il commence sur la barre, puis quitte l'interface : ni glisser, ni clic pour la ville.
+            gesture.Update(true, new Vector2(100f, 20f), Threshold, true);
+            bool started = gesture.Update(true, new Vector2(160f, 300f), Threshold, false);
+            gesture.Update(false, new Vector2(160f, 300f), Threshold, false);
+
+            Assert.IsFalse(started);
+            Assert.IsFalse(gesture.IsDragging);
             Assert.IsFalse(gesture.Clicked);
         }
 
@@ -73,8 +87,8 @@ namespace Diciela.Tests.PlayMode
 
             // Le bouton était déjà enfoncé quand on le regarde pour la première fois (la carte se chargeait) : pas de
             // saut depuis une vieille position.
-            gesture.Update(true, new Vector2(500f, 300f), Threshold);
-            bool started = gesture.Update(true, new Vector2(502f, 300f), Threshold);
+            gesture.Update(true, new Vector2(500f, 300f), Threshold, false);
+            bool started = gesture.Update(true, new Vector2(502f, 300f), Threshold, false);
 
             Assert.AreEqual(new Vector2(500f, 300f), gesture.Start);
             Assert.IsFalse(started);

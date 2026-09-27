@@ -27,7 +27,7 @@ namespace Diciela.Controls
         [Tooltip("La fiche des réglages des gestes : le seuil du clic ou glisser (Assets/Data/Settings).")]
         [SerializeField] private GestureSettings _gestures;
 
-        private PlacementTool _tool;
+        private IInterfaceArea _interfaceArea;
         private InputActionMap _map;
         private InputAction _place;
         private InputAction _rotate;
@@ -38,10 +38,17 @@ namespace Diciela.Controls
         private DragGesture _rotateGesture;
         private DragGesture _secondaryGesture;
 
-        /// <summary>Relie les gestes à l'outil du monde qui vient de naître ; null les rend muets.</summary>
-        public void Bind(PlacementTool tool)
+        /// <summary>L'outil que ces gestes pilotent ; null tant qu'aucun monde n'est né.</summary>
+        public PlacementTool Tool { get; private set; }
+
+        /// <summary>
+        /// Relie les gestes à l'outil du monde qui vient de naître, et à l'interface, sur laquelle ils se taisent ; null
+        /// les rend muets.
+        /// </summary>
+        public void Bind(PlacementTool tool, IInterfaceArea interfaceArea)
         {
-            _tool = tool;
+            Tool = tool;
+            _interfaceArea = interfaceArea;
             ResetGestures();
         }
 
@@ -73,7 +80,7 @@ namespace Diciela.Controls
 
         private void Update()
         {
-            if (_tool == null || !_tool.IsActive)
+            if (Tool == null || !Tool.IsActive)
             {
                 ResetGestures();
                 return;
@@ -81,23 +88,29 @@ namespace Diciela.Controls
 
             Vector2 pointer = _pointer.ReadValue<Vector2>();
             float threshold = _gestures.DragThresholdPixels;
+            bool onInterface = _interfaceArea != null && _interfaceArea.Contains(pointer);
 
             // R : bref, un cran au relâchement ; tenu en bougeant la souris, au degré, la visée attendant.
-            _rotateGesture.Update(_rotate.IsPressed(), pointer, threshold);
+            _rotateGesture.Update(_rotate.IsPressed(), pointer, threshold, false);
             if (_rotateGesture.IsDragging)
-                _tool.RotateBy(_rotateGesture.Delta.x * _settings.RotationDegreesPerPixel);
+                Tool.RotateBy(_rotateGesture.Delta.x * _settings.RotationDegreesPerPixel);
             else if (_rotateGesture.Clicked)
-                _tool.RotateStep();
+                Tool.RotateStep();
             if (!_rotate.IsPressed())
-                _tool.AimAt(pointer);
+            {
+                if (onInterface)
+                    Tool.LoseAim();
+                else
+                    Tool.AimAt(pointer);
+            }
 
-            _placeGesture.Update(_place.IsPressed(), pointer, threshold);
+            _placeGesture.Update(_place.IsPressed(), pointer, threshold, onInterface);
             if (_placeGesture.Clicked)
-                _tool.Confirm();
+                Tool.Confirm();
 
-            _secondaryGesture.Update(_secondary.IsPressed(), pointer, threshold);
+            _secondaryGesture.Update(_secondary.IsPressed(), pointer, threshold, onInterface);
             if (_secondaryGesture.Clicked || _cancel.WasPressedThisFrame())
-                _tool.Cancel();
+                Tool.Cancel();
         }
 
         private void ResetGestures()
