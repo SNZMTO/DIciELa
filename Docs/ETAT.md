@@ -1,30 +1,29 @@
 # DICIELA — état actuel
 
-**Branche** : `etape-6-carte`, fusionnée dans `main`. **Étape 6 finie** : la carte existe et le monde la reçoit.
+**Branche** : `etape-7-camera`, fusionnée dans `main`. **Étapes 6 et 7 finies** : la carte existe, le monde la reçoit,
+et la caméra de gestion la montre. Première capture dans l'album.
 
-**Ce qui marche** : EditMode 29/29, PlayMode 3/3, Play court sans erreur. **DICIELA > Scènes > Monter les scènes**
-monte tout (réexécutable, ne touche jamais une carte existante). La scène `Carte` est née de la démo du pack (soleil,
-filtres, Terrain) avec un relief vierge : 500 m, 1025 points, sol à 20 m, calques du pack. `Jeu` la charge et en fait
-la scène active ; le monde reçoit son relief (hauteur et pente). `JeuTest` charge `CarteTest` (plate, 64 m) : les tests
-ne touchent jamais la vraie carte.
+**Ce qui marche** : EditMode 29/29, PlayMode 7/7, Play court sans erreur. **DICIELA > Scènes > Monter les scènes**
+monte tout (réexécutable ; ne touche jamais une carte existante). `Carte` : née de la démo du pack (soleil, filtres,
+Terrain), relief vierge de 500 m. `Jeu` la charge ; le monde reçoit son relief ; la caméra la montre, filtres actifs.
+`JeuTest` charge `CarteTest` (64 m) : les tests ne touchent jamais la vraie carte.
 
-**À vérifier par lui** : ouvrir `Assets/Scenes/Carte.unity` : un grand terrain d'herbe, la lumière et les filtres de
-la démo. **Avant de peindre** : la taille (« À toi », GDD section 2) ; pour en changer, supprimer `Carte.unity` et
-`Assets/Terrain/Carte.asset`, régler `Assets/Data/Settings/CarteNeuve.asset`, relancer le menu. Puis peindre : relief,
-calques du pack. **DICIELA > Jouer** : la console dit « carte de 500 × 500 m ».
+**À vérifier par lui** (**DICIELA > Jouer**) : ZQSD ou les flèches déplacent, A et E tournent, la molette zoome en
+abaissant la vue, le clic droit glissé tire le sol, la souris au bord de l'écran fait défiler ; on ne sort jamais de la
+carte. Les réglages sont dans `Assets/Data/Settings/CameraSettings.asset`. **Avant de peindre la carte** : sa taille
+(« À toi », GDD 2) ; pour en changer, supprimer `Carte.unity` et `Assets/Terrain/Carte.asset`, régler
+`CarteNeuve.asset`, relancer le menu.
 
 **À savoir**
-- Le Terrain (19 Mo) passe par LFS. Le profil de filtres de la carte est une copie dans `Assets/Art` (le pack ne
-  s'écrit jamais).
-- Restent du modèle, par choix : l'asset d'actions (retiré à l'étape des gestes), le niveau de qualité Mobile, et
-  `SampleSceneProfile` (le profil de filtres des réglages de rendu URP).
-- 33 « À toi » dans le GDD, chacun avec ma reco (« je te laisse faire » applique les recos).
+- L'asset d'actions du modèle est retiré ; celui du jeu est `Assets/Input/Diciela.inputactions`.
+- Restent du modèle, par choix : le niveau de qualité Mobile et `SampleSceneProfile` (les filtres des réglages URP).
+- 34 « À toi » dans le GDD, chacun avec ma reco (« je te laisse faire » applique les recos) ; nouveau : les touches de
+  la caméra et le bouton du glisser.
 
-**Prochaine étape** : 7. La caméra de gestion (GDD, section 16) : perspective à 40°, déplacer (clavier, bords, clic
-glissé), tourner (Q/E), zoomer à la molette en s'abaissant ; l'asset d'actions du jeu remplace celui du modèle ; les
-premières captures de l'album.
+**Prochaine étape** : 8. Poser un bâtiment : le maillage (SAVOIR 2.1), les constructions et leur pose (pente, eau,
+chevauchement), l'ordre « poser » et son aperçu (fantôme), la visée (SAVOIR 2.7) ; une première fiche de bâtiment.
 
 **Prompt de la session suivante**
 
-> Lis CLAUDE.md et Docs/ETAT.md. Étape 7 : la caméra de gestion. Montre-moi le plan court, attends mon accord, puis
-> code-la et vérifie-la ; fais les premières captures de l'album.
+> Lis CLAUDE.md et Docs/ETAT.md. Étape 8 : poser un bâtiment. Montre-moi le plan court, attends mon accord, puis
+> code-le et vérifie-le ; des captures pour l'album.

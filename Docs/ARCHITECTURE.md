@@ -59,7 +59,7 @@ Un assemblage naît avec son premier code ; tous sont en références explicites
 | UI | Controls, View, Persistence, Data, la simulation |
 | Game | tout ce qui précède |
 | Scenarios | Data, la simulation |
-| EditorTools | Data, la simulation, Persistence, View, Game, Scenarios |
+| EditorTools | Data, la simulation, Persistence, View, Controls, Game, Scenarios ; Input System, URP (réglages de la caméra) |
 | Tests.EditMode | Data, la simulation, Persistence, Scenarios ; NUnit, Test Runner |
 | Tests.PlayMode | tout l'exécutable ; NUnit, Test Runner |
 
@@ -261,6 +261,9 @@ code.
 
 - **La vue** écoute les événements et ne photographie jamais : elle se construit à partir de l'état au chargement,
   puis suit les événements, par la même routine de pose (SAVOIR 2.9). Chaque abonnement est défait dans `OnDestroy`.
+- **La caméra de gestion** : la vue la tient (`CameraRig` : un point visé sur la carte, qui suit le relief de la
+  simulation, et une distance qui règle l'inclinaison) ; les gestes la commandent (`CameraControls`) ; ses chiffres
+  sont dans une fiche.
 - **Les gestes** : un seul asset d'actions, monté par un script d'éditeur. Les raccourcis se lient au caractère, le
   déplacement à la position (SAVOIR 3). Un geste appartient à la ville ou à l'interface dès l'enfoncement ; clic ou
   glisser se décide au relâchement (SAVOIR 2.8). Un panneau ouvert rend la ville muette ; les conteneurs plein écran

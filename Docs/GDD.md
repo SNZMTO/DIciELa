@@ -454,6 +454,9 @@
 - **Règle.** Caméra en perspective, comme la démo (champ de vision autour de 40°). Caméra de gestion à main invisible :
   se déplacer (clavier, bords de l'écran, clic glissé), tourner (Q/E), zoomer à la molette. En zoomant, elle s'abaisse
   doucement : de loin, la ville en maquette ; de près, les habitants presque de face.
+- **À toi.** Les touches de la caméra et son glisser. Ma reco (c'est ce qui est codé) : des touches liées à leur place
+  sur le clavier, pour que tout clavier ait la même main (en AZERTY : ZQSD pour se déplacer, A et E pour tourner) ; le
+  glisser au clic droit, le clic droit bref restant « reculer d'un cran ».
 - **Règle.** Quand on pose ou qu'on peint, le jeu montre ce qui ne se voit pas : l'eau qui irrigue, la portée des
   lanternes, le réseau de force.
 - **Règle.** Les habitants ordinaires sont les humains du pack ; les maîtres, ses animaux humanoïdes, distingués par

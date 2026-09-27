@@ -4,6 +4,7 @@ using Diciela.Data;
 using Diciela.Simulation;
 using Diciela.Simulation.Core;
 using Diciela.Simulation.Land;
+using Diciela.View;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -22,6 +23,9 @@ namespace Diciela.Game
         [Tooltip("La fiche de session : quelle carte charger.")]
         [SerializeField] private SessionSettings _session;
 
+        [Tooltip("La caméra de gestion, qui montre la carte quand le monde naît.")]
+        [SerializeField] private CameraRig _cameraRig;
+
         private World _world;
         private FixedStepAccumulator _accumulator;
         private SimulationJournal _journal;
@@ -30,10 +34,10 @@ namespace Diciela.Game
 
         private void OnEnable()
         {
-            if (_settings == null || _session == null)
+            if (_settings == null || _session == null || _cameraRig == null)
             {
-                Debug.LogError("DICIELA : le démarrage n'a pas ses fiches (réglages et session) ; le monde ne tourne pas.",
-                    this);
+                Debug.LogError("DICIELA : le démarrage n'a pas ses fiches (réglages, session) ou sa caméra ; le monde " +
+                               "ne tourne pas.", this);
                 enabled = false;
                 return;
             }
@@ -83,6 +87,7 @@ namespace Diciela.Game
             }
 
             _journal = new SimulationJournal(_world);
+            _cameraRig.Show(_world.Map.Relief);
             return true;
         }
 
