@@ -21,8 +21,8 @@ MonoBehaviour:
   _farClipPlane: 1500
   _panSpeedPerDistance: 0.9
   _rotateDegreesPerSecond: 90
+  _orbitDegreesPerPixel: 0.25
   _zoomStepPerNotch: 0.15
   _scrollPerNotch: 1
   _zoomSmoothing: 0.12
   _edgeScrollPixels: 12
-  _dragThresholdPixels: 6

@@ -28,7 +28,15 @@ namespace Diciela.Tests.PlayMode
                 SceneManager.UnloadSceneAsync(scene);
             }
 
+            bool mapWasLoaded = false;
+            void NoteMap(Scene scene, LoadSceneMode mode)
+            {
+                if (scene.path == ScenePaths.MapTest)
+                    mapWasLoaded = true;
+            }
+
             SceneManager.sceneLoaded += LeaveAtOnce;
+            SceneManager.sceneLoaded += NoteMap;
             try
             {
 #if UNITY_EDITOR
@@ -39,6 +47,7 @@ namespace Diciela.Tests.PlayMode
                 for (int frame = 0; frame < MaxFrames && Time.realtimeSinceStartup - start < WaitSeconds; frame++)
                     yield return null;
 
+                Assert.IsTrue(mapWasLoaded, "La carte de test a fini de se charger avant de partir.");
                 Assert.IsFalse(SceneManager.GetSceneByPath(ScenePaths.GameTest).isLoaded, "La scène de test est quittée.");
                 Assert.IsFalse(SceneManager.GetSceneByPath(ScenePaths.MapTest).isLoaded,
                     "La carte doit partir avec son démarrage, même quitté pendant qu'elle se charge.");
@@ -46,6 +55,7 @@ namespace Diciela.Tests.PlayMode
             finally
             {
                 SceneManager.sceneLoaded -= LeaveAtOnce;
+                SceneManager.sceneLoaded -= NoteMap;
                 if (SceneManager.GetSceneByPath(ScenePaths.MapTest).isLoaded)
                     SceneManager.UnloadSceneAsync(ScenePaths.MapTest);
             }
