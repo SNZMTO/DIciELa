@@ -7,7 +7,7 @@ namespace Diciela.Controls
 {
     /// <summary>
     /// Les gestes de la caméra (GDD, section 16) : se déplacer (clavier, bords de l'écran, clic droit glissé qui tire le
-    /// sol), tourner (clavier, ou bouton du milieu glissé), zoomer à la molette vers le pointeur. Il lit les actions et
+    /// sol), tourner (clavier, ou bouton du milieu glissé, qui incline aussi), zoomer à la molette vers le pointeur. Il lit les actions et
     /// appelle la caméra ; les touches sont liées à leur position sur le clavier, pour que ZQSD tombe juste en AZERTY
     /// (SAVOIR, section 3).
     /// </summary>
@@ -20,6 +20,7 @@ namespace Diciela.Controls
         public const string DragAction = "Drag";
         public const string OrbitAction = "Orbit";
         public const string PointerAction = "Pointer";
+        public const string LookAction = "Look";
 
         [Tooltip("L'asset d'actions du jeu (Assets/Input).")]
         [SerializeField] private InputActionAsset _actions;
@@ -40,8 +41,10 @@ namespace Diciela.Controls
         private InputAction _drag;
         private InputAction _orbit;
         private InputAction _pointer;
+        private InputAction _look;
         private DragGesture _dragGesture;
         private DragGesture _orbitGesture;
+        private CursorGrip _orbitGrip;
         private EdgeScroll _edgeScroll;
         private IInterfaceArea _interfaceArea;
 
@@ -68,6 +71,7 @@ namespace Diciela.Controls
             _drag = _map.FindAction(DragAction, true);
             _orbit = _map.FindAction(OrbitAction, true);
             _pointer = _map.FindAction(PointerAction, true);
+            _look = _map.FindAction(LookAction, true);
             _map.Enable();
         }
 
@@ -76,6 +80,7 @@ namespace Diciela.Controls
             if (_map != null)
                 _map.Disable();
             _map = null;
+            _orbitGrip.Release();
             _dragGesture = default;
             _orbitGesture = default;
             _edgeScroll = default;
@@ -90,9 +95,11 @@ namespace Diciela.Controls
             Vector2 pointer = _pointer.ReadValue<Vector2>();
             bool onInterface = _interfaceArea != null && _interfaceArea.Contains(pointer);
 
+            // Pendant un glisser, le bord de l'écran ne fait pas défiler : on tire ou on tourne, on ne se déplace pas.
+            bool holding = _drag.IsPressed() || _orbit.IsPressed();
             Vector2 edge = _edgeScroll.Update(pointer, new Vector2(Screen.width, Screen.height),
                 _settings.EdgeScrollPixels, Application.isFocused);
-            Vector2 move = _move.ReadValue<Vector2>() + (onInterface ? Vector2.zero : edge);
+            Vector2 move = _move.ReadValue<Vector2>() + (onInterface || holding ? Vector2.zero : edge);
             if (move != Vector2.zero)
                 _rig.Pan(Vector2.ClampMagnitude(move, 1f), deltaSeconds);
 
@@ -111,10 +118,20 @@ namespace Diciela.Controls
             if (_dragGesture.IsDragging)
                 _rig.DragTo(pointer);
 
-            // Bouton du milieu glissé : la vue tourne, de gauche à droite.
-            _orbitGesture.Update(_orbit.IsPressed(), pointer, threshold, onInterface);
-            if (_orbitGesture.IsDragging && _orbitGesture.Delta.x != 0f)
-                _rig.Rotate(_orbitGesture.Delta.x * _settings.OrbitDegreesPerPixel);
+            // Bouton du milieu glissé : la vue tourne de gauche à droite et s'incline de haut en bas. Le curseur est tenu :
+            // on lit le déplacement de la souris, qui ne bute jamais sur le bord, et le curseur revient où il était.
+            bool orbitStarts = _orbitGesture.Update(_orbit.IsPressed(), pointer, threshold, onInterface);
+            if (_orbitGesture.IsDragging)
+            {
+                Vector2 turn = orbitStarts ? _orbitGesture.Delta : _look.ReadValue<Vector2>();
+                _orbitGrip.Hold(_orbitGesture.Start);
+                if (turn.x != 0f)
+                    _rig.Rotate(turn.x * _settings.OrbitDegreesPerPixel);
+                if (turn.y != 0f)
+                    _rig.Tilt(turn.y * _settings.TiltDegreesPerPixel);
+            }
+            else
+                _orbitGrip.Release();
         }
     }
 }

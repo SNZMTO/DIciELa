@@ -10,8 +10,9 @@ namespace Diciela.EditorTools
 {
     /// <summary>
     /// L'asset d'actions du jeu (ARCHITECTURE, section 11) : il le crée s'il manque, lui ajoute les actions qui lui
-    /// manquent, et retire celui du modèle Unity, qu'il remplace. Une action qui existe n'est jamais touchée : ses
-    /// liaisons se règlent dans la fenêtre de l'Input System. Les touches sont liées à leur position sur un clavier
+    /// manquent, et retire celui du modèle Unity, qu'il remplace. Une action qui existe n'est pas touchée (ses liaisons
+    /// se règlent dans la fenêtre de l'Input System), sauf la position du pointeur, lue telle quelle (voir plus bas).
+    /// Les touches sont liées à leur position sur un clavier
     /// QWERTY : ZQSD tombe juste en AZERTY, et la rotation (Q/E en QWERTY) tombe sur A/E.
     /// </summary>
     internal static class InputActionsBuilder
@@ -37,7 +38,8 @@ namespace Diciela.EditorTools
                         AddIfMissing(camera, CameraControls.ZoomAction, AddZoom) +
                         AddButtonIfMissing(camera, CameraControls.DragAction, "<Mouse>/rightButton") +
                         AddButtonIfMissing(camera, CameraControls.OrbitAction, "<Mouse>/middleButton") +
-                        AddPointerIfMissing(camera, CameraControls.PointerAction);
+                        AddPointerIfMissing(camera, CameraControls.PointerAction) +
+                        AddLookIfMissing(camera, CameraControls.LookAction);
 
             // La pose : R, un raccourci mnémonique, se lie au caractère (SAVOIR, section 3).
             InputActionMap placement = asset.FindActionMap(PlacementControls.MapName) ??
@@ -46,14 +48,15 @@ namespace Diciela.EditorTools
                      AddButtonIfMissing(placement, PlacementControls.RotateAction, "<Keyboard>/#(r)") +
                      AddButtonIfMissing(placement, PlacementControls.SecondaryAction, "<Mouse>/rightButton") +
                      AddButtonIfMissing(placement, PlacementControls.CancelAction, "<Keyboard>/escape") +
-                     AddPointerIfMissing(placement, PlacementControls.PointerAction);
+                     AddPointerIfMissing(placement, PlacementControls.PointerAction) +
+                     AddLookIfMissing(placement, PlacementControls.LookAction);
 
             if (added > 0)
             {
                 EditorAssets.EnsureFolder("Assets/Input");
                 File.WriteAllText(ActionsPath, asset.ToJson());
                 AssetDatabase.ImportAsset(ActionsPath);
-                Debug.Log("DICIELA : " + added + " action(s) ajoutée(s) à " + ActionsPath + ".");
+                Debug.Log("DICIELA : " + added + " action(s) ajoutée(s) ou mise(s) à jour dans " + ActionsPath + ".");
             }
             Object.DestroyImmediate(asset);
         }
@@ -96,11 +99,26 @@ namespace Diciela.EditorTools
             return AddIfMissing(map, actionName, m => m.AddAction(actionName, InputActionType.Button, binding));
         }
 
-        /// <summary>La position du pointeur ; chaque carte a la sienne, pour vivre sans les autres.</summary>
+        /// <summary>
+        /// La position du pointeur ; chaque carte a la sienne, pour vivre sans les autres. Elle se lit telle quelle
+        /// (PassThrough) : une action « Value » départagerait la souris, le stylet et le doigt par leur grandeur, et
+        /// pourrait rester sur la dernière position d'un doigt. Une ancienne action « Value » est remplacée.
+        /// </summary>
         private static int AddPointerIfMissing(InputActionMap map, string actionName)
         {
+            InputAction existing = map.FindAction(actionName);
+            if (existing != null && existing.type == InputActionType.PassThrough)
+                return 0;
+            existing?.RemoveAction();
+            map.AddAction(actionName, InputActionType.PassThrough, "<Pointer>/position").expectedControlType = "Vector2";
+            return 1;
+        }
+
+        /// <summary>Le déplacement du pointeur à chaque image, qui continue quand le curseur est tenu (CursorGrip).</summary>
+        private static int AddLookIfMissing(InputActionMap map, string actionName)
+        {
             return AddIfMissing(map, actionName, m =>
-                m.AddAction(actionName, InputActionType.Value, "<Pointer>/position").expectedControlType = "Vector2");
+                m.AddAction(actionName, InputActionType.PassThrough, "<Pointer>/delta").expectedControlType = "Vector2");
         }
 
         private static void RemoveTemplateActions()

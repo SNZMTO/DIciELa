@@ -389,6 +389,7 @@ GameObject:
   - component: {fileID: 686625400}
   - component: {fileID: 686625402}
   - component: {fileID: 686625401}
+  - component: {fileID: 686625403}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -543,6 +544,19 @@ MonoBehaviour:
   _rig: {fileID: 686625400}
   _settings: {fileID: 11400000, guid: 346b6f6dbac1cca47b62e858481a0eac, type: 2}
   _gestures: {fileID: 11400000, guid: 9e430839a075b79499fb905491d5c58f, type: 2}
+--- !u!114 &686625403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 686625396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0951aa2afd8a30e41a269f0ae2770d65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Diciela.View::Diciela.View.CameraAtmosphere
+  _settings: {fileID: 11400000, guid: 346b6f6dbac1cca47b62e858481a0eac, type: 2}
 --- !u!1 &1553068374
 GameObject:
   m_ObjectHideFlags: 0

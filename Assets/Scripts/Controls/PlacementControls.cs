@@ -6,9 +6,11 @@ namespace Diciela.Controls
 {
     /// <summary>
     /// Les gestes de la pose (GDD, section 9 ; SAVOIR, 2.8) : le pointeur vise ; R bref tourne d'un cran, R tenu en
-    /// bougeant la souris tourne au degré (la visée attend pendant ce temps) ; un clic gauche pose ; un clic droit bref
-    /// ou Échap pose l'outil de côté. Il lit les actions et appelle l'outil, rien d'autre.
+    /// bougeant la souris tourne au degré (le curseur est tenu et la visée attend) ; un clic gauche pose ; un clic droit
+    /// bref ou Échap pose l'outil de côté. Il lit les actions et appelle l'outil, rien d'autre. Il passe après la caméra
+    /// (ordre 100) : la visée se fait avec la vue de l'image qu'on va voir, jamais celle d'avant.
     /// </summary>
+    [DefaultExecutionOrder(100)]
     public sealed class PlacementControls : MonoBehaviour
     {
         public const string MapName = "Placement";
@@ -17,6 +19,7 @@ namespace Diciela.Controls
         public const string SecondaryAction = "Secondary";
         public const string CancelAction = "Cancel";
         public const string PointerAction = "Pointer";
+        public const string LookAction = "Look";
 
         [Tooltip("L'asset d'actions du jeu (Assets/Input).")]
         [SerializeField] private InputActionAsset _actions;
@@ -34,6 +37,8 @@ namespace Diciela.Controls
         private InputAction _secondary;
         private InputAction _cancel;
         private InputAction _pointer;
+        private InputAction _look;
+        private CursorGrip _rotateGrip;
         private DragGesture _placeGesture;
         private DragGesture _rotateGesture;
         private DragGesture _secondaryGesture;
@@ -67,6 +72,7 @@ namespace Diciela.Controls
             _secondary = _map.FindAction(SecondaryAction, true);
             _cancel = _map.FindAction(CancelAction, true);
             _pointer = _map.FindAction(PointerAction, true);
+            _look = _map.FindAction(LookAction, true);
             _map.Enable();
         }
 
@@ -78,7 +84,7 @@ namespace Diciela.Controls
             ResetGestures();
         }
 
-        private void Update()
+        private void LateUpdate()
         {
             if (Tool == null || !Tool.IsActive)
             {
@@ -90,13 +96,24 @@ namespace Diciela.Controls
             float threshold = _gestures.DragThresholdPixels;
             bool onInterface = _interfaceArea != null && _interfaceArea.Contains(pointer);
 
-            // R : bref, un cran au relâchement ; tenu en bougeant la souris, au degré, la visée attendant.
-            _rotateGesture.Update(_rotate.IsPressed(), pointer, threshold, false);
+            // R : bref, un cran au relâchement ; tenu en bougeant la souris, au degré, le curseur tenu et la visée attendant.
+            bool gripWasHeld = _rotateGrip.IsHeld;
+            bool rotateStarts = _rotateGesture.Update(_rotate.IsPressed(), pointer, threshold, false);
             if (_rotateGesture.IsDragging)
-                Tool.RotateBy(_rotateGesture.Delta.x * _settings.RotationDegreesPerPixel);
-            else if (_rotateGesture.Clicked)
-                Tool.RotateStep();
-            if (!_rotate.IsPressed())
+            {
+                float turn = rotateStarts ? _rotateGesture.Delta.x : _look.ReadValue<Vector2>().x;
+                _rotateGrip.Hold(_rotateGesture.Start);
+                Tool.RotateBy(turn * _settings.RotationDegreesPerPixel);
+            }
+            else
+            {
+                _rotateGrip.Release();
+                if (_rotateGesture.Clicked)
+                    Tool.RotateStep();
+            }
+            // Le curseur rendu n'est à sa place qu'à l'image suivante : on ne vise pas avec l'ancienne position.
+            bool justReleased = gripWasHeld && !_rotateGrip.IsHeld;
+            if (!_rotate.IsPressed() && !justReleased)
             {
                 if (onInterface)
                     Tool.LoseAim();
@@ -115,6 +132,7 @@ namespace Diciela.Controls
 
         private void ResetGestures()
         {
+            _rotateGrip.Release();
             _placeGesture = default;
             _rotateGesture = default;
             _secondaryGesture = default;

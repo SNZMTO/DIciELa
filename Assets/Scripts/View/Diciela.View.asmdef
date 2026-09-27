@@ -3,7 +3,9 @@
     "rootNamespace": "Diciela.View",
     "references": [
         "Diciela.Data",
-        "Diciela.Simulation.Land"
+        "Diciela.Simulation.Land",
+        "Unity.RenderPipelines.Core.Runtime",
+        "Unity.RenderPipelines.Universal.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
