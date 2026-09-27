@@ -160,6 +160,10 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   glissent : le sol incliné fuit, trois fois plus vite que le pointeur à 20° sous l'horizon. Un rayon qui ne touche
   pas le sol (au-dessus de l'horizon, au-delà de l'affichage) ne saisit rien. Le test compare à la projection
   inverse (`WorldToScreenPoint`).
+- **Zoomer vers le pointeur, c'est la même prise** : le sol visé au cran de molette reste sous le pointeur pendant
+  tout le lissage du zoom, jusqu'à ce qu'un autre geste (déplacer, tourner, tirer) prenne la main.
+- **Un seul suivi du clic ou glisser** (`DragGesture`) pour tous les boutons : un appui vu pour la première fois part
+  de là où on le voit, sinon un bouton enfoncé pendant un chargement fait sauter la vue.
 
 ### 2.9 Poser un modèle du pack
 

@@ -8,11 +8,15 @@ namespace Diciela.View
     /// <summary>
     /// La caméra de gestion (GDD, section 16) : elle regarde un point du sol, qui reste sur la carte et suit son relief,
     /// d'une distance qui règle aussi l'inclinaison : de loin, la ville en maquette ; de près, les habitants presque de
-    /// face. Elle ne lit pas les touches : les gestes l'appellent.
+    /// face. Tirer le sol et zoomer gardent sous le pointeur le point du sol qu'il vise. Elle ne lit pas les touches :
+    /// les gestes l'appellent.
     /// </summary>
     [RequireComponent(typeof(Camera))]
     public sealed class CameraRig : MonoBehaviour
     {
+        // Le zoom est fini quand la distance est à moins d'un centimètre de sa cible.
+        private const float SettledMeters = 0.01f;
+
         [Tooltip("La fiche des réglages de la caméra (Assets/Data/Settings).")]
         [SerializeField] private CameraSettings _settings;
 
@@ -23,7 +27,11 @@ namespace Diciela.View
         private float _targetDistance;
         private float _distance;
         private float _distanceVelocity;
+        private bool _grabbing;
         private Vector3 _grabbedPoint;
+        private bool _zoomAnchored;
+        private Vector3 _zoomAnchor;
+        private Vector2 _zoomScreenPoint;
 
         /// <summary>Vrai quand la caméra montre une carte.</summary>
         public bool IsShowing => _relief != null;
@@ -47,6 +55,8 @@ namespace Diciela.View
             _targetDistance = (_settings.NearDistance + _settings.FarDistance) / 2f;
             _distance = _targetDistance;
             _distanceVelocity = 0f;
+            _grabbing = false;
+            _zoomAnchored = false;
             _camera.fieldOfView = _settings.FieldOfView;
             _camera.farClipPlane = _settings.FarClipPlane;
             Apply();
@@ -57,29 +67,30 @@ namespace Diciela.View
         {
             if (!IsShowing)
                 return;
+            _zoomAnchored = false;
             MovePivot(direction * (_distance * _settings.PanSpeedPerDistance * deltaSeconds));
         }
 
         /// <summary>
         /// Saisit le sol sous ce point de l'écran, pour le tirer ensuite avec <see cref="DragTo"/>. Faux si ce point ne
-        /// vise pas le sol (au-dessus de l'horizon, ou plus loin que ce que la caméra affiche).
+        /// vise pas le sol (au-dessus de l'horizon, ou plus loin que ce que la caméra affiche) : rien n'est saisi.
         /// </summary>
         public bool BeginDrag(Vector2 screenPoint)
         {
-            if (!IsShowing)
-                return false;
-            return TryGroundPoint(screenPoint, _relief.HeightAt(_pivot.x, _pivot.y), out _grabbedPoint);
+            _zoomAnchored = false;
+            _grabbing = IsShowing &&
+                        TryGroundPoint(screenPoint, _relief.HeightAt(_pivot.x, _pivot.y), out _grabbedPoint);
+            return _grabbing;
         }
 
         /// <summary>
-        /// Tire le sol saisi jusqu'à ce point de l'écran : le point visé se déplace pour que le sol saisi revienne sous
-        /// le pointeur, quelle que soit l'inclinaison de la vue (SAVOIR, 2.8).
+        /// Tire le sol saisi jusqu'à ce point de l'écran : il revient sous le pointeur, quelle que soit l'inclinaison de
+        /// la vue (SAVOIR, 2.8).
         /// </summary>
         public void DragTo(Vector2 screenPoint)
         {
-            if (!IsShowing || !TryGroundPoint(screenPoint, _grabbedPoint.y, out Vector3 underPointer))
-                return;
-            SetPivot(_pivot + new Vector2(_grabbedPoint.x - underPointer.x, _grabbedPoint.z - underPointer.z));
+            if (IsShowing && _grabbing)
+                BringUnder(_grabbedPoint, screenPoint);
         }
 
         /// <summary>Tourne autour du point visé ; un angle positif tourne la vue vers la droite.</summary>
@@ -87,16 +98,22 @@ namespace Diciela.View
         {
             if (!IsShowing)
                 return;
+            _zoomAnchored = false;
             _yawDegrees = Mathf.Repeat(_yawDegrees + degrees, 360f);
         }
 
-        /// <summary>Rapproche (crans positifs) ou éloigne (crans négatifs) la caméra, entre ses deux bornes.</summary>
-        public void Zoom(float notches)
+        /// <summary>
+        /// Rapproche (crans positifs) ou éloigne (crans négatifs) la caméra, entre ses deux bornes, vers le sol sous ce
+        /// point de l'écran : il reste sous le pointeur pendant tout le zoom. Au-dessus de l'horizon, vers le point visé.
+        /// </summary>
+        public void Zoom(float notches, Vector2 screenPoint)
         {
             if (!IsShowing)
                 return;
             float factor = Mathf.Pow(1f - _settings.ZoomStepPerNotch, notches);
             _targetDistance = Mathf.Clamp(_targetDistance * factor, _settings.NearDistance, _settings.FarDistance);
+            _zoomAnchored = TryGroundPoint(screenPoint, _relief.HeightAt(_pivot.x, _pivot.y), out _zoomAnchor);
+            _zoomScreenPoint = screenPoint;
         }
 
         private void LateUpdate()
@@ -108,6 +125,20 @@ namespace Diciela.View
                     Mathf.Infinity, Time.unscaledDeltaTime)
                 : _targetDistance;
             Apply();
+            if (!_zoomAnchored)
+                return;
+
+            BringUnder(_zoomAnchor, _zoomScreenPoint);
+            Apply();
+            if (Mathf.Abs(_distance - _targetDistance) < SettledMeters)
+                _zoomAnchored = false;
+        }
+
+        /// <summary>Déplace le point visé pour que ce point du sol revienne sous ce point de l'écran.</summary>
+        private void BringUnder(Vector3 groundPoint, Vector2 screenPoint)
+        {
+            if (TryGroundPoint(screenPoint, groundPoint.y, out Vector3 underPointer))
+                SetPivot(_pivot + new Vector2(groundPoint.x - underPointer.x, groundPoint.z - underPointer.z));
         }
 
         /// <summary>Déplace le point visé dans le repère de la vue (x à droite, y devant).</summary>
