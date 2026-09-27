@@ -10,9 +10,10 @@ using UnityEngine.SceneManagement;
 namespace Diciela.EditorTools
 {
     /// <summary>
-    /// Installe la caméra de gestion sur la caméra d'une scène racine : la caméra (vue), ses gestes (commandes), leurs
-    /// fiches et l'asset d'actions, et les filtres du rendu (le post-traitement d'URP), sans lesquels le rendu du pack
-    /// ne s'affiche pas. Réexécutable : ce qui est déjà réglé n'est pas touché.
+    /// Installe la caméra de gestion sur la caméra d'une scène racine : la caméra (vue), ses gestes (commandes), ses
+    /// ombres et son brouillard qui suivent le zoom, leurs fiches et l'asset d'actions, et les filtres du rendu (le
+    /// post-traitement d'URP), sans lesquels le rendu du pack ne s'affiche pas. Réexécutable : ce qui est déjà réglé
+    /// n'est pas touché.
     /// </summary>
     internal static class CameraBuilder
     {
@@ -38,6 +39,9 @@ namespace Diciela.EditorTools
             EditorAssets.AssignIfMissing(controls, "_rig", rig);
             EditorAssets.AssignIfMissing(controls, "_settings", settings);
             EditorAssets.AssignIfMissing(controls, "_gestures", gestures);
+
+            CameraAtmosphere atmosphere = EditorAssets.GetOrAdd<CameraAtmosphere>(camera.gameObject);
+            EditorAssets.AssignIfMissing(atmosphere, "_settings", settings);
 
             UniversalAdditionalCameraData renderData = camera.GetUniversalAdditionalCameraData();
             if (!renderData.renderPostProcessing)

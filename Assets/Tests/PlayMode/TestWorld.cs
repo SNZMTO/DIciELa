@@ -72,6 +72,7 @@ namespace Diciela.Tests.PlayMode
 
         public void Dispose()
         {
+            Tool.Dispose();
             Views.Hide();
             foreach (Object created in _created)
                 Object.Destroy(created);
@@ -86,6 +87,8 @@ namespace Diciela.Tests.PlayMode
             UnityEditor.SerializedProperty property = serialized.FindProperty(field);
             if (value is string text)
                 property.stringValue = text;
+            else if (value is float number)
+                property.floatValue = number;
             else
                 property.objectReferenceValue = (Object)value;
             serialized.ApplyModifiedPropertiesWithoutUndo();

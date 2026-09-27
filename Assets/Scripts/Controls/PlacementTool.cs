@@ -10,10 +10,11 @@ namespace Diciela.Controls
     /// <summary>
     /// L'outil de pose (GDD, section 9) : la construction choisie suit le pointeur sur le sol ; l'aperçu dit, par les
     /// règles de pose, la même fonction que l'ordre, si elle se pose là ; on tourne d'un cran ou au degré ; on pose par
-    /// l'ordre « poser », et l'outil reste prêt pour la suivante jusqu'à ce qu'on l'annule. Les gestes et les tests
-    /// l'appellent par les mêmes méthodes.
+    /// l'ordre « poser », et l'outil reste prêt pour la suivante jusqu'à ce qu'on l'annule. Un ordre envoyé attend d'être
+    /// joué avant le suivant ; posé ou refusé, l'aperçu se refait. Les gestes et les tests l'appellent par les mêmes
+    /// méthodes. Celui qui le crée le libère (Dispose).
     /// </summary>
-    public sealed class PlacementTool
+    public sealed class PlacementTool : IDisposable
     {
         private readonly World _world;
         private readonly Camera _camera;
@@ -21,6 +22,7 @@ namespace Diciela.Controls
         private readonly PlacementSettings _settings;
         private float _rotationDegrees;
         private bool _aimed;
+        private bool _sent;
         private Placement _aim;
 
         public PlacementTool(World world, Camera camera, PlacementPreview preview, PlacementSettings settings)
@@ -34,6 +36,14 @@ namespace Diciela.Controls
             _camera = camera;
             _preview = preview;
             _settings = settings;
+            _world.Structures.StructurePlaced += OnStructurePlaced;
+            _world.Structures.PlacementRefused += OnPlacementRefused;
+        }
+
+        public void Dispose()
+        {
+            _world.Structures.StructurePlaced -= OnStructurePlaced;
+            _world.Structures.PlacementRefused -= OnPlacementRefused;
         }
 
         /// <summary>Levé quand la construction en main change : choisie, ou posée de côté.</summary>
@@ -111,9 +121,10 @@ namespace Diciela.Controls
         /// <summary>Pose la construction visée, si les règles le permettent ; vrai si l'ordre est envoyé.</summary>
         public bool Confirm()
         {
-            if (!IsActive || !_aimed || Result != PlacementResult.Ok)
+            if (!IsActive || !_aimed || _sent || Result != PlacementResult.Ok)
                 return false;
             _world.Submit(new PlaceStructureCommand(Current, _aim));
+            _sent = true;
             return true;
         }
 
@@ -127,6 +138,24 @@ namespace Diciela.Controls
             _aimed = false;
             SetResult(PlacementResult.Ok);
             CurrentChanged?.Invoke();
+        }
+
+        private void OnStructurePlaced(Structure structure)
+        {
+            OnOrderPlayed();
+        }
+
+        private void OnPlacementRefused(StructureDefinition definition, Placement placement, PlacementResult reason)
+        {
+            OnOrderPlayed();
+        }
+
+        /// <summary>Un ordre a été joué : on peut en envoyer un autre, et la place visée n'est peut-être plus libre.</summary>
+        private void OnOrderPlayed()
+        {
+            _sent = false;
+            if (IsActive && _aimed)
+                Refresh();
         }
 
         /// <summary>Demande aux règles de pose si la place visée convient, et le montre.</summary>

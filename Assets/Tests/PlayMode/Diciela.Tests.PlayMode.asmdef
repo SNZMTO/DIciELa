@@ -9,7 +9,11 @@
         "Diciela.Game",
         "UnityEngine.TestRunner",
         "Diciela.Simulation",
-        "Diciela.UI"
+        "Diciela.UI",
+        "Unity.RenderPipelines.Core.Runtime",
+        "Unity.RenderPipelines.Universal.Runtime",
+        "Unity.InputSystem",
+        "Unity.InputSystem.TestFramework"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

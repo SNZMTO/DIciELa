@@ -74,6 +74,35 @@ namespace Diciela.Tests.PlayMode
             Assert.AreEqual(1, _test.World.Structures.All.Count);
         }
 
+        [Test]
+        public void OnceThePlacementIsPlayedTheAimTurnsRedWithoutMoving()
+        {
+            _test.Tool.Begin(_test.Cabin);
+            _test.Tool.AimAt(_test.OnScreen(TestWorld.Center));
+            _test.Tool.Confirm();
+
+            _test.World.Step();
+
+            Assert.AreEqual(PlacementResult.Overlaps, _test.Tool.Result, "Sans bouger, l'aperçu voit la cabane posée.");
+            Assert.IsFalse(_test.Tool.Confirm());
+        }
+
+        [Test]
+        public void ASecondClickBeforeTheStepSendsNothing()
+        {
+            var refusals = 0;
+            _test.World.Structures.PlacementRefused += (definition, placement, reason) => refusals++;
+            _test.Tool.Begin(_test.Cabin);
+            _test.Tool.AimAt(_test.OnScreen(TestWorld.Center));
+
+            Assert.IsTrue(_test.Tool.Confirm());
+            Assert.IsFalse(_test.Tool.Confirm(), "Un ordre attend déjà d'être joué.");
+            _test.World.Step();
+
+            Assert.AreEqual(1, _test.World.Structures.All.Count);
+            Assert.AreEqual(0, refusals);
+        }
+
         [UnityTest]
         public IEnumerator CancellingPutsTheToolAside()
         {
