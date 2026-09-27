@@ -103,6 +103,23 @@ namespace Diciela.Tests.PlayMode
             Assert.AreEqual(0, refusals);
         }
 
+        [Test]
+        public void ThePreviewDrawsOnlyTheMeshesOfItsModel()
+        {
+            GameObject model = _test.Keep(GameObject.CreatePrimitive(PrimitiveType.Cube));
+            new GameObject("Fumée", typeof(LineRenderer)).transform.SetParent(model.transform, false);
+#if UNITY_EDITOR
+            TestWorld.Fill(_test.Cabin, "_model", model);
+#endif
+            _test.Tool.Begin(_test.Cabin);
+            _test.Tool.AimAt(_test.OnScreen(TestWorld.Center));
+
+            var mesh = _test.Preview.GetComponentInChildren<MeshRenderer>();
+            Assert.AreSame(_test.Settings.TranslucentMaterial, mesh.sharedMaterial);
+            Assert.IsFalse(_test.Preview.GetComponentInChildren<LineRenderer>(true).enabled,
+                "Ce qui n'est pas un maillage (la fumée d'une cheminée) n'est pas dessiné.");
+        }
+
         [UnityTest]
         public IEnumerator CancellingPutsTheToolAside()
         {

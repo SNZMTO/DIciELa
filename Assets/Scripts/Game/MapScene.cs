@@ -28,6 +28,14 @@ namespace Diciela.Game
         /// <summary>Charge la carte, en fait la scène active et la lit ; une erreur s'écrit dans la console.</summary>
         public IEnumerator Load(Object context)
         {
+            // Une carte déjà ouverte (dans la Hiérarchie de l'éditeur, à côté de Jeu) serait chargée une seconde fois :
+            // deux Terrains, deux soleils, et la simulation lirait peut-être la copie qui n'est pas enregistrée.
+            if (SceneManager.GetSceneByPath(_path).isLoaded)
+            {
+                Debug.LogError("DICIELA : la carte « " + _path + " » est déjà ouverte ; la fermer avant le Play.", context);
+                yield break;
+            }
+
             _loading = SceneLoader.LoadAdditive(_path);
             if (_loading == null)
             {

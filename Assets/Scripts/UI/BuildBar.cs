@@ -45,15 +45,20 @@ namespace Diciela.UI
             Hide();
             VisualElement root = _document.rootVisualElement;
             root.pickingMode = PickingMode.Ignore;
-            _bar = root.Q(BarName);
-            _families = root.Q(FamiliesName);
-            _structures = root.Q(StructuresName);
-            _reason = root.Q<Label>(ReasonName);
-            if (_bar == null || _families == null || _structures == null || _reason == null)
+            // Tous les éléments d'abord, rangés seulement s'ils sont là : une barre à moitié trouvée ne se cache plus.
+            VisualElement bar = root.Q(BarName);
+            VisualElement families = root.Q(FamiliesName);
+            VisualElement structures = root.Q(StructuresName);
+            var reason = root.Q<Label>(ReasonName);
+            if (bar == null || families == null || structures == null || reason == null)
                 throw new InvalidOperationException("La barre de construction ne trouve pas ses éléments (UXML).");
 
-            _bar.RemoveFromClassList(HiddenBarClass);
+            _bar = bar;
+            _families = families;
+            _structures = structures;
+            _reason = reason;
             _presenter = new BuildBarPresenter(this, catalog, texts, tool);
+            _bar.RemoveFromClassList(HiddenBarClass);
         }
 
         /// <summary>Cache la barre et oublie le monde.</summary>
