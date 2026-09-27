@@ -81,7 +81,8 @@ la société, qui voit tout ce qui est en dessous.
 - **Le terrain.** La carte reçue au lancement (section 10) et son état : arbres et rochers retirés, champs sauvages
   (désigné, récolté, minuterie de repousse). Les emprises peintes (section 8). Les constructions : bâtiments, décos,
   la Place, la réserve. Le maillage (SAVOIR 2.1), avec son A* et ses distances par la route, écrits pour lui. L'eau :
-  canaux, relief creusé, zones irriguées. La force : réseaux et budget, un moulin bâti consommant qu'il travaille ou non.
+  canaux, relief creusé, zones irriguées. La force : réseaux et budget, un moulin bâti consommant qu'il travaille ou
+  non.
 - **L'économie.** Les stocks : portes des bâtiments, entrepôts, étagères de l'étal, charge d'un porteur, panier d'un
   visiteur, tas au sol ; chacun a son contenu et sa consigne. Une seule fonction crée ou détruit une marchandise, avec
   sa cause ; une seule fonction « rend à la ville ». Les réservations. Les ateliers (recette, avancement). La culture
@@ -93,7 +94,8 @@ la société, qui voit tout ce qui est en dessous.
   Le tirage des maîtres. L'étal (curseurs, souhaits, visiteurs, réputation). Le charme. Le savoir de la ville (ce qui
   est débloqué). La raison d'arrêt d'un lieu, une seule fonction lue par la vue et l'interface.
 - **Le monde.** `World` assemble les systèmes et les appelle dans l'ordre du pas, rien d'autre. À côté, chacune dans
-  sa classe : le traitement des ordres ; les déclencheurs (une condition mène à une récompense : idée, réplique, tenue) ;
+  sa classe : le traitement des ordres ; les déclencheurs (une condition mène à une récompense : idée, réplique,
+  tenue) ;
   le déroulé du départ ; les opérations qui touchent plusieurs couches (la maison de la Chimère qui remplace la tente),
   faites par des appels vers le bas dans un ordre écrit ; la capture et la restauration.
 
@@ -205,7 +207,8 @@ sauvegardé.
   rassemble ; le jeu ne charge que lui.
 - La fiche d'un bâtiment porte son empreinte et sa porte, mesurées sur le modèle par un menu `DICIELA/…` (SAVOIR 2.9).
 - Une fiche de réglages de la simulation tient le pas, la borne de pas par image, la durée de la journée et de ses
-  phases, les mailles par mètre et les bornes de boucle. Une fiche de session dit quelle carte charger et où ranger les sauvegardes.
+  phases, les mailles par mètre et les bornes de boucle. Une fiche de session dit quelle carte charger et où ranger
+  les sauvegardes.
 - La simulation lit les fiches sans jamais les écrire. Dans la simulation : jamais `.name`, jamais `== null` sur une
   fiche (`ReferenceEquals`), ni `AnimationCurve` ni `Gradient`, et aucun cache rangé dans une fiche.
 
@@ -229,15 +232,19 @@ code.
 ## 10. La carte, les scènes et la sauvegarde
 
 - **Les scènes.** `Carte` est au développeur : le Terrain, l'eau, la lumière, les filtres, et ce qu'il y pose (arbres,
-  rochers, champs sauvages, sortes d'eau, point d'arrivée). `Jeu` est montée par un menu : démarrage, caméra,
-  interface ; elle charge `Carte` et en fait la scène active, sinon la lumière du pack est perdue. `JeuTest`, montée par
-  le même menu, charge `CarteTest` (plate, éditeur seulement). Chaque scène racine a sa fiche de session, lue avant tout
-  chargement : les tests ne peuvent pas atteindre la vraie partie. On ne fixe jamais la scène de départ du Play ; un
-  menu `DICIELA/Jouer` ouvre `Jeu` et lance le Play.
-- **La carte entre dans la simulation en données pures.** Au lancement d'un monde, `Game` convertit la scène `Carte`
-  en une description : hauteurs en mètres, eaux et leur sorte, arbres, rochers, champs sauvages, point d'arrivée, avec
-  des identifiants tirés de la position arrondie. `World` la reçoit ; la ville témoin en fabrique une. L'empreinte de
-  la description est sauvegardée : si la carte a été repeinte, les poses sont revérifiées par la fonction des ordres.
+  rochers, champs sauvages, sortes d'eau, point d'arrivée). Elle naît d'une copie de la démo du pack dont le menu de
+  montage ne garde que le soleil, les filtres et le Terrain (relief vierge) ; il ne la touche plus ensuite. `Jeu` est
+  montée par le même menu : démarrage, caméra, interface ; elle charge `Carte` et en fait la scène active, sinon la
+  lumière du pack est perdue. `JeuTest`, montée par le même menu, charge `CarteTest` (plate, éditeur seulement). Chaque
+  scène racine a sa fiche de session, lue avant tout chargement : les tests ne peuvent pas atteindre la vraie partie. On
+  ne fixe jamais la scène de départ du Play ; un menu `DICIELA/Jouer` ouvre `Jeu` et lance le Play.
+- **La carte entre dans la simulation en données pures.** Au lancement d'un monde, `Game` convertit la scène `Carte` en
+  une description : hauteurs en mètres, eaux et leur sorte, arbres, rochers, champs sauvages, point d'arrivée, avec des
+  identifiants tirés de la position arrondie. Le relief entre le premier, lu sur le Terrain désigné par la racine de la
+  carte (`MapRoot`), posé à l'origine ; hauteur et pente se lisent sur une même surface, par interpolation bilinéaire.
+  Le reste entre avec les systèmes qui s'en servent. `World` reçoit la description ; la ville témoin en fabrique une.
+  L'empreinte de la description est sauvegardée : si la carte a été repeinte, les poses sont revérifiées par la fonction
+  des ordres.
 - **La copie de travail du Terrain.** La vue travaille sur une copie en mémoire (`Instantiate` du TerrainData, donnée
   au Terrain et au TerrainCollider), jamais enregistrée : modifier le Terrain en Play le modifierait pour de bon. Le
   rangement du Terrain dans Git est dans SAVOIR 2.5.

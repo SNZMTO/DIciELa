@@ -9,38 +9,28 @@ using UnityEngine.SceneManagement;
 namespace Diciela.EditorTools
 {
     /// <summary>
-    /// Monte la scène Jeu : une caméra, une lumière et l'objet « Démarrage », qui porte le GameRunner relié à la fiche
-    /// de réglages. Réexécutable : ce qui existe déjà n'est pas touché, un réglage fait à la main n'est pas écrasé.
+    /// Monte les scènes du jeu : les fiches qui manquent, la carte de test, la carte (si elle n'existe pas), puis les
+    /// deux scènes racines, Jeu et JeuTest, chacune avec son démarrage relié à ses fiches. Réexécutable : ce qui existe
+    /// n'est pas touché, un réglage fait à la main n'est pas écrasé. Finit sur la scène Jeu.
     /// </summary>
     public static class GameSceneBuilder
     {
-        internal const string ScenesFolder = "Assets/Scenes";
-        internal const string GameScenePath = ScenesFolder + "/" + SceneNames.Game + ".unity";
         private const string StartupObjectName = "Démarrage";
 
-        [MenuItem("DICIELA/Scènes/Monter la scène Jeu")]
-        public static void BuildGameScene()
+        [MenuItem("DICIELA/Scènes/Monter les scènes")]
+        public static void BuildScenes()
         {
             if (!CanChangeScenes())
                 return;
 
-            // La scène d'abord : l'ouvrir en mode Single décharge les assets que rien ne tient, et une fiche lue avant
-            // deviendrait un objet détruit (SAVOIR, section 3).
-            Scene scene = OpenOrCreateGameScene();
-
             DataAssetBuilder.CreateMissingAssets();
-            var settings = AssetDatabase.LoadAssetAtPath<SimulationSettings>(DataAssetBuilder.SimulationSettingsPath);
-            if (settings == null)
-            {
-                Debug.LogError("DICIELA : la fiche " + DataAssetBuilder.SimulationSettingsPath + " est introuvable.");
-                return;
-            }
-
-            GameRunner runner = FindOrCreateRunner(scene);
-            AssignSettingsIfMissing(runner, settings);
-            EditorSceneManager.SaveScene(scene, GameScenePath);
-            AddToBuildScenes(GameScenePath);
-            Debug.Log("DICIELA : scène " + GameScenePath + " montée.");
+            MapSceneBuilder.CreateTestMapIfMissing();
+            MapSceneBuilder.CreateMapIfMissing();
+            BuildRootScene(ScenePaths.GameTest, DataAssetBuilder.TestSessionPath);
+            BuildRootScene(ScenePaths.Game, DataAssetBuilder.GameSessionPath);
+            EnsureInBuild(ScenePaths.Game);
+            EnsureInBuild(ScenePaths.Map);
+            Debug.Log("DICIELA : scènes montées.");
         }
 
         /// <summary>Vrai si l'on peut ouvrir une autre scène sans rien perdre ; sinon, dit pourquoi dans la console.</summary>
@@ -65,13 +55,26 @@ namespace Diciela.EditorTools
             return true;
         }
 
-        private static Scene OpenOrCreateGameScene()
+        private static void BuildRootScene(string scenePath, string sessionPath)
         {
-            if (AssetDatabase.LoadAssetAtPath<SceneAsset>(GameScenePath) != null)
-                return EditorSceneManager.OpenScene(GameScenePath, OpenSceneMode.Single);
+            // La scène d'abord : l'ouvrir en mode Single décharge les assets que rien ne tient, et une fiche lue avant
+            // deviendrait un objet détruit (SAVOIR, section 3).
+            Scene scene = OpenOrCreate(scenePath);
+            var settings = EditorAssets.Load<SimulationSettings>(DataAssetBuilder.SimulationSettingsPath);
+            var session = EditorAssets.Load<SessionSettings>(sessionPath);
 
-            if (!AssetDatabase.IsValidFolder(ScenesFolder))
-                AssetDatabase.CreateFolder("Assets", "Scenes");
+            GameRunner runner = FindOrCreateRunner(scene);
+            EditorAssets.AssignIfMissing(runner, "_settings", settings);
+            EditorAssets.AssignIfMissing(runner, "_session", session);
+            EditorSceneManager.SaveScene(scene, scenePath);
+        }
+
+        private static Scene OpenOrCreate(string scenePath)
+        {
+            if (EditorAssets.Exists(scenePath))
+                return EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
+
+            EditorAssets.EnsureFolder(scenePath.Substring(0, scenePath.LastIndexOf('/')));
             return EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
         }
 
@@ -89,24 +92,12 @@ namespace Diciela.EditorTools
             return startup.AddComponent<GameRunner>();
         }
 
-        private static void AssignSettingsIfMissing(GameRunner runner, SimulationSettings settings)
-        {
-            var serialized = new SerializedObject(runner);
-            SerializedProperty property = serialized.FindProperty("_settings");
-            if (property.objectReferenceValue != null)
-                return;
-
-            property.objectReferenceValue = settings;
-            serialized.ApplyModifiedPropertiesWithoutUndo();
-            EditorUtility.SetDirty(runner);
-        }
-
-        private static void AddToBuildScenes(string path)
+        private static void EnsureInBuild(string scenePath)
         {
             var scenes = new List<EditorBuildSettingsScene>(EditorBuildSettings.scenes);
             foreach (EditorBuildSettingsScene listed in scenes)
             {
-                if (listed.path != path)
+                if (listed.path != scenePath)
                     continue;
                 if (!listed.enabled)
                 {
@@ -116,7 +107,7 @@ namespace Diciela.EditorTools
                 return;
             }
 
-            scenes.Add(new EditorBuildSettingsScene(path, true));
+            scenes.Add(new EditorBuildSettingsScene(scenePath, true));
             EditorBuildSettings.scenes = scenes.ToArray();
         }
     }
