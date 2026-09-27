@@ -194,8 +194,12 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 - **`ApplyModifiedPropertiesWithoutUndo` ne marque rien si la valeur ne change pas** : faire suivre d'un
   `EditorUtility.SetDirty`, sinon un champ neuf n'atteint jamais le disque.
 - **Ouvrir une scène en mode Single décharge les assets que rien ne tient** : un ScriptableObject chargé avant et gardé
-  en variable devient un objet détruit. Le relire après l'ouverture. Après `ImportAsset` ou `CreateAsset`, relire par
-  `LoadAssetAtPath`.
+  en variable devient un objet détruit, et une référence posée avec lui s'enregistre vide (`{fileID: 0}`), sans
+  erreur. Un monteur de scène ouvre donc la scène d'abord, puis lit ses fiches. Après `ImportAsset` ou `CreateAsset`,
+  relire par `LoadAssetAtPath`.
+- **Un réglage en `float` n'est pas le décimal qu'on croit** : 0,1f vaut 0,100000001 une fois en `double`, et un
+  temps de 0,1 tout juste n'atteint pas un pas de 0,1f. Un test choisit ses temps loin des frontières entre deux
+  pas, et une vérité qui doit rester exacte se compte en entiers (le temps est un nombre de pas).
 - **Une énumération sérialisée à trou** (une valeur retirée au milieu) : un script d'éditeur écrit `intValue`, jamais
   `enumValueIndex`. Mieux : ne jamais retirer une valeur du milieu d'une énumération sérialisée.
 - **Le Input System lie par position physique, en disposition US** : un raccourci mnémonique (M, I, G…) se lie au

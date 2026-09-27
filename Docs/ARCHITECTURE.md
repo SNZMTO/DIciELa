@@ -73,7 +73,8 @@ la société, qui voit tout ce qui est en dessous.
 
 ## 3. Les systèmes de la simulation
 
-- **Le socle.** Le temps (heures et jours de jeu, phases jour, soir, nuit). Le hasard par hachage (SAVOIR 2.4). Les
+- **Le socle.** Le temps (heures et jours de jeu, phases jour, soir, nuit), et l'accumulateur qui transforme le temps
+  réel en nombre de pas à jouer. Le hasard par hachage (SAVOIR 2.4). Les
   effets : leur type et leur formule ; le registre est un objet créé par le monde et passé à chaque système. La
   géométrie (mètres, plan XZ, rectangles tournés, polylignes). Les contrats du travail : un lieu de travail ouvre des
   postes ; une tâche à prendre dit où, quoi et quelle sous-statistique elle lit.
@@ -128,9 +129,11 @@ sauvegardé.
 
 - **Le pas fixe.** La simulation avance par pas de 0,1 s de temps réel (Défaut, à confirmer en jouant) et compte en
   heures de jeu ; une seule fonction convertit, à partir de la durée d'une journée. La vérité du temps est le nombre
-  de pas joués, et une journée compte un nombre entier de pas. `Game` accumule le temps réel et
-  fait au plus un nombre borné de pas par image. Une vitesse accélérée, si elle vient, fait plus de pas, jamais un pas
-  plus long. La vue lisse le mouvement entre les deux derniers pas : ce qui bouge garde sa position du pas précédent.
+  de pas joués, et une journée compte un nombre entier de pas. `Game` donne le temps réel de chaque image à
+  l'accumulateur du socle et joue au plus un nombre borné de pas par image ; quand la borne est atteinte, le retard
+  est abandonné (une image lente ralentit le jeu au lieu de le faire courir après lui-même). Une vitesse accélérée,
+  si elle vient, fait plus de pas, jamais un pas plus long. La vue lisse le mouvement entre les deux derniers pas : ce
+  qui bouge garde sa position du pas précédent.
 - **L'ordre du pas**, écrit dans `World` et nulle part ailleurs : les ordres en attente, puis le temps, le terrain,
   l'économie, la société, le monde.
 - **Les ordres** (le patron Commande) : chaque geste qui change la ville est un petit objet envoyé au monde : poser,

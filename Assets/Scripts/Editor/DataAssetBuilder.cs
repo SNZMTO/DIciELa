@@ -11,7 +11,7 @@ namespace Diciela.EditorTools
     public static class DataAssetBuilder
     {
         private const string SettingsFolder = "Assets/Data/Settings";
-        private const string SimulationSettingsPath = SettingsFolder + "/SimulationSettings.asset";
+        internal const string SimulationSettingsPath = SettingsFolder + "/SimulationSettings.asset";
 
         [MenuItem("DICIELA/Données/Créer les fiches manquantes")]
         public static void CreateMissingAssets()
