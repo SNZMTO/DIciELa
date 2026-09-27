@@ -1,29 +1,32 @@
 # DICIELA — état actuel
 
-**Branche** : `etape-1-gdd`, fusionnée dans `main`. **Étape 1 finie** : le GDD est écrit et validé.
+**Branche** : `etape-2-architecture`, fusionnée dans `main`. **Étape 2 finie** : `Docs/ARCHITECTURE.md` est écrit.
 
 **Ce qui existe** : un projet Unity 6.6 neuf (modèle Universal 3D, contenu d'exemple encore là), sans code ni test ;
-`Docs/GDD.md` (17 sections) ; `Docs/DECISIONS.md` (1 à 29) ; `Docs/ALBUM.md` (vide) ; `Docs/SAVOIR.md` ; `.claude/`.
+`Docs/GDD.md`, `Docs/ARCHITECTURE.md` (couches, qui possède quoi, règles de passage), `Docs/DECISIONS.md` (1 à 44),
+`Docs/SAVOIR.md`, `Docs/ALBUM.md` (vide), `.claude/`.
 
-**À vérifier par lui** : rien à la souris. Onze « À toi » restent ouverts dans le GDD ; le plus pressé est la taille de
-la carte, à fixer avant de la peindre.
+**Question ouverte, avant d'y toucher** : la tente n'a pas de stock ; c'est le logis de la Chimère, qu'on touche pour
+la faire dormir. Le GDD (sections 6 et 13) dit encore qu'elle garde le stock de départ, sert d'entrepôt et porte le
+poste « à tout faire ». Il faut savoir où va le stock de départ, qui tient ce poste et ce que fait « dormir ».
+
+**À vérifier par lui** : rien à la souris. 31 « À toi » dans le GDD, chacun avec ma reco ; le plus pressé reste la
+taille de la carte (et la résolution du Terrain), à fixer avant de la peindre.
 
 **À savoir**
-- Nom du produit `V2-DIciELa` et société `DefaultCompany` : ils décident du dossier des sauvegardes ; les changer avant
-  la première sauvegarde, avec son accord.
-- `SAVOIR.md` §2.5 : la carte peinte à la main demande de choisir comment ranger le Terrain (étape 2).
-- Le GDD dépasse 450 lignes, à resserrer lors d'une session de ménage (une toutes les cinq étapes environ).
+- Le `.gitattributes` abîmerait un TerrainData (règle `*.asset`) : ne rien committer du Terrain avant la règle de son
+  dossier (décision 41, SAVOIR 2.5).
+- LFS n'a pas agi au premier commit (`git lfs ls-files` vide, un PNG du modèle stocké en clair).
+- Le GDD dépasse 490 lignes : à resserrer à la session de ménage.
 
 **Prochaines étapes, dans l'ordre**
-1. `Docs/ARCHITECTURE.md`, validé par lui : systèmes et frontières ; assemblages (`.asmdef`) à dépendances à sens
-   unique ; « qui possède quoi » ; simulation à pas fixe et événements ; effets ; postes et tâches ; champs peints ;
-   données et fiches ; sauvegarde et rangement de la carte ; tests (dont une ville qui vit seule pour vérifier le
-   rythme) ; rapport d'équilibrage ; vue témoin de l'album. Références : les livres gratuits de Unity « Create modular
-   game architecture with ScriptableObjects » (Unity 6) et « Level up your code with design patterns and SOLID ».
-2. Nettoyer le modèle Unity, régler nom et société ; il importe le pack ; puis la première étape de code.
+1. **Ménage du projet, avec lui** : retirer le contenu d'exemple et l'asset d'actions du modèle ; paquets (déclarer
+   Newtonsoft, retirer AI Navigation et Collab après avoir vérifié la démo du pack) ; essai de LFS et règle du Terrain ;
+   nom du produit et société (ils décident du dossier des sauvegardes). Puis il importe le pack.
+2. La première étape de code : les assemblages de `ARCHITECTURE.md` et leurs garde-fous (test des références, test du
+   code de la simulation), le temps et le pas fixe, la fiche de réglages.
 
 **Prompt de la session suivante**
 
-> Lis CLAUDE.md et Docs/ETAT.md. Étape 2 : écris Docs/ARCHITECTURE.md à partir du GDD (lu par sections) et des
-> références d'ETAT. Montre-moi d'abord le plan (systèmes, assemblages, qui possède quoi) et tes questions, attends mon
-> accord, puis écris.
+> Lis CLAUDE.md et Docs/ETAT.md. Étape 3 : le ménage du projet (liste d'ETAT). Commence par la question de la tente,
+> puis montre-moi la liste de ce que tu retires, déclares ou règles, attends mon accord, puis fais-le.

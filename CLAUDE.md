@@ -7,8 +7,8 @@
   run roguelike viendra après le prototype de la simulation.
 - **Unity 6.6 (6000.6.0f1), C#, URP** ; tout l'art vient du pack POLYGON Fantasy Village (Synty), dans `Assets/Synty/`,
   hors Git, importé par le développeur.
-- **Développeur solo, débutant sur Unity et C#** (il vient de GameMaker). Explique chaque concept Unity ou C# la
-  première fois qu'il apparaît, en comparant avec GameMaker quand ça aide. **Réponds en français.**
+- **Développeur solo, débutant sur Unity et C#.** Explique chaque concept Unity ou C# la première fois qu'il apparaît.
+  **Réponds en français.**
 
 ## Où lire quoi
 
@@ -18,6 +18,7 @@
 - `Docs/DECISIONS.md` : les décisions numérotées, avec leur date et leur raison.
 - `Docs/SAVOIR.md` : les solutions éprouvées et les pièges connus, à lire quand on conçoit le système concerné.
 - `Docs/ALBUM.md` : l'évolution du jeu en captures, la plus récente en haut ; il dit comment on le tient.
+- `Docs/EQUILIBRAGE.md` : le rapport d'équilibrage, généré par un menu `DICIELA/…`, jamais retouché à la main.
 - Les procédures (`.claude/skills/`) : `unity-cli`, `verifier`, `fin-de-session`, `pack-synty`. Les règles par dossier
   (`.claude/rules/`) se chargent seules quand on touche ces fichiers.
 

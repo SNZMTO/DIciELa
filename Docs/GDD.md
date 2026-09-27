@@ -55,6 +55,8 @@
 - **Défaut.** Cinq champs sauvages. Le lin est garanti (le tissu en a besoin) ; les autres se tirent parmi le blé, la
   carotte, le poireau, la laitue, la pomme de terre, la tomate, la citrouille, la fraise et les fleurs. Un champ
   sauvage donne de quoi semer 400 m² ; ses graines vendues repoussent en trois jours.
+- **À toi.** Un champ sauvage récolté ne repousse-t-il qu'après une vente de ses graines ? Ma reco : oui, dès qu'on a
+  vendu ce qu'une de ses récoltes donne ; s'il y en a deux de la même plante, le premier récolté repousse.
 - **Règle.** Le menu liste les mondes ; chacun a sa sauvegarde, enregistrée toute seule à intervalle régulier et en
   quittant.
 - **Défaut.** Un enregistrement toutes les cinq minutes.
@@ -75,9 +77,11 @@
   - la maison de la Chimère vers la troisième heure ;
   - un habitant ordinaire atteint les trois quarts de son plafond en une vingtaine de jours de travail.
 - **Règle.** Le joueur ne reste jamais plus de quelques minutes sans rien à décider.
-- **Règle.** Tous les effets (bonheur, lanternes, charme, maîtres, irrigation, force…) passent par un seul système et se
-  cumulent de la même façon : d'abord les ajouts, puis les pourcentages. Un effet de zone ne se cumule pas avec
-  lui-même : deux lanternes éclairent un poste comme une seule.
+- **Règle.** Tous les effets (bonheur, lanternes, charme, maîtres, irrigation, force…) passent par un seul système.
+  Chacun vise une grandeur (cadence, récolte, heures du soir, vitesse de progression…), et tous se cumulent de la même
+  façon. Un effet de zone ne se cumule pas avec lui-même : deux lanternes éclairent un poste comme une seule (la plus
+  forte compte). Puis viennent les ajouts, puis les pourcentages, qui s'additionnent, et enfin la force, qui multiplie
+  (de 0 à 1). Exemple : un maître (+100 %) et le bonheur (+20 %) avec une force à moitié : × 2,2 × 0,5 = × 1,1.
 - **Règle.** La valeur d'une marchandise est le temps de travail qu'elle demande, ingrédients compris, compté sur sa
   recette de base, au lieu de travail le plus simple : ni les progrès des habitants, ni la force, ni le bonheur ne la
   changent. Si un Bois demande une demi-heure, et une Planche deux Bois plus une heure, la Planche vaut deux heures,
@@ -150,10 +154,13 @@
   effet du système d'effets), de meilleures statistiques, et progresse aussi. Comme tout arrivant, il lui faut un lit
   libre et de quoi manger, mais pas de poste libre. Une poignée au début, énormément plus tard.
 - **Défaut.** Un tirage par jour. Un maître commence à 40 dans son domaine et y plafonne à 100.
+- **À toi.** Un maître arrive alors qu'aucun poste de son domaine n'est libre. Ma reco : il prend le poste de son
+  domaine tenu par le moins bon, qui reprend le meilleur poste libre.
 - **À toi.** Énormément de maîtres, c'est autant de capacités à inventer et à équilibrer. Ma reco : des familles de
   capacités (un même effet, des forces différentes), comme les villageois d'Animal Crossing ont des caractères types.
 - **Règle.** Pour le décor seulement, les habitants troquent entre eux, fabriquent de petites choses chez eux et ont des
   possessions tirées au hasard, comme dans Animal Crossing ; aucune économie n'est simulée derrière.
+- **À toi.** Cette vie du village fait-elle partie du premier jouable ? Ma reco : non, elle vient après.
 
 ## 6. La Chimère
 
@@ -206,6 +213,16 @@
 - **Règle.** Le joueur peut fermer un poste : personne ne le prend, et celui qui l'occupait redevient libre.
 - **Règle.** Des bâtiments de service ouvrent les postes des métiers qui ne produisent rien : la loge des bâtisseurs
   (les ouvriers : chantiers, canaux, décos), l'entrepôt (les charretiers), la cabane du paysagiste (les paysagistes).
+- **À toi.** Un habitant en pleine tâche est-il interrompu par une tâche plus urgente ? Ma reco : non, il va au bout,
+  comme dans Oxygen Not Included.
+- **À toi.** Dans quel ordre le poste « à tout faire » choisit-il ses tâches ? Ma reco : porter, bâtir, récolter,
+  défricher.
+- **À toi.** La journée finit pendant une tâche. Ma reco : l'habitant finit l'étape en cours, dépose ce qu'il porte,
+  puis part en soirée.
+- **À toi.** Une pastille ou plusieurs quand un lieu cumule les pannes ? Ma reco : une seule, la plus urgente :
+  injoignable, pas de force, personne au poste, pas de graines ou d'ingrédients, stock plein.
+- **À toi.** Quel poste tient un premier habitant avant que son lieu de travail existe (voir 6) ? Ma reco : un poste
+  « à tout faire » ouvert pour lui, qui se ferme quand son lieu est bâti.
 
 ## 8. La production et la logistique
 
@@ -228,6 +245,10 @@
 - **Règle.** La récolte s'entasse au bord du champ le plus proche d'un entrepôt : c'est là que passent les charretiers.
 - **Règle.** Peindre ou effacer une plantation est immédiat : ce sont les fermiers qui labourent, sèment et récoltent.
   Un champ ne se range pas ; effacé, il rend au stock ses graines semées.
+- **Règle.** On ne pose rien et on ne trace rien sur une plantation : on l'efface d'abord.
+- **À toi.** La forme d'une plantation. Ma reco : le même pinceau que les routes, d'au moins 4 m de large.
+- **À toi.** Le tas de récolte quand l'entrepôt le plus proche change. Ma reco : il reste où il est jusqu'à ce qu'on
+  le vide ; les récoltes suivantes vont au nouveau bord.
 - **À toi.** La fertilité du sol et la rotation des cultures, comme dans Farthest Frontier ou Manor Lords ? Ma reco :
   pas au premier jouable, où la lisibilité passe avant ; à reconsidérer ensuite, pour les joueurs qui aiment optimiser.
 - **Règle.** Chaque bâtiment a deux petits stocks à sa porte : ses ingrédients et sa production. Sans ingrédients, il
@@ -238,6 +259,11 @@
 - **Règle.** Une liaison prioritaire, tirée par le joueur entre deux bâtiments, livre directement de l'un à l'autre sans
   passer par l'entrepôt : c'est l'outil pour optimiser.
 - **Défaut.** Chacun des deux petits stocks d'un bâtiment tient 10 marchandises ; un entrepôt en tient 200.
+- **À toi.** Où vont les marchandises rendues au stock quand les entrepôts sont pleins ? Ma reco : en tas au sol, sur
+  place, avec une pastille ; les charretiers les reprennent dès qu'il y a de la place.
+- **À toi.** Un entrepôt rangé compte-t-il dans le stock de la ville ? Ma reco : non ; il garde ses marchandises.
+- **À toi.** Que fait un charretier chargé quand on recharge la partie ? Ma reco : il dépose à l'entrepôt joignable le
+  plus proche.
 - **Règle.** Les récoltes de fruits et de légumes sont des marchandises : elles se troquent, et serviront plus tard à la
   cuisine.
 
@@ -252,9 +278,14 @@
 - **Règle.** Pose libre : aucune case pour le joueur, on parle en mètres. La porte d'un bâtiment reste dégagée : rien ne
   se pose devant. Un bâtiment qu'on ne peut plus atteindre le montre.
 - **Défaut.** Une touche brève tourne d'un cran de 15° ; tenue, on tourne au degré près.
+- **À toi.** Retirer un arbre ou en planter un passe-t-il par la file des chantiers ? Ma reco : non, ce sont des tâches
+  des paysagistes, dans l'ordre où le joueur les a désignées.
 - **Règle.** Ranger ou déplacer un bâtiment est un tout petit chantier : il se déconstruit en quelques secondes et se
   reconstruit de même, sans nouveaux matériaux. Pendant un déplacement, ses travailleurs gardent leur poste et
   attendent.
+- **À toi.** Les petits stocks d'un bâtiment déplacé voyagent-ils avec lui ? Ma reco : oui.
+- **À toi.** Peut-on ranger le dernier lieu qui ouvre des postes de bâtisseurs ? Ma reco : non, le jeu dit pourquoi ;
+  sinon plus personne ne pourrait le reposer.
 - **Règle.** On ne démolit pas, on range. La réserve n'a pas de limite. Ranger un bâtiment rend au stock ce que
   gardaient ses petits stocks ; un entrepôt rangé garde ses marchandises jusqu'à ce qu'on le repose.
 - **Règle.** Les bâtiments uniques sont la tente puis la maison de la Chimère, la Place et les grands projets. Ils se
@@ -287,7 +318,8 @@
 - **Règle.** Une roue donne plus de force sur une rivière rapide, moins sur un canal. Les roues à eau n'ont besoin de
   personne.
 - **Règle.** Un bâtiment hydraulique garde ses postes ; la force multiplie leur cadence. Sans force, il est à l'arrêt ;
-  avec trop peu, tout son réseau ralentit en proportion.
+  avec trop peu, tout son réseau ralentit en proportion. Un bâtiment hydraulique bâti consomme sa force, qu'il
+  travaille ou non.
 - **Défaut.** Une roue donne 10 de force sur le passage rapide, 6 sur la rivière, 3 sur un canal. La scierie hydraulique
   consomme 5 et va deux fois plus vite qu'une scierie.
 - **Règle.** L'irrigation : une plantation proche de l'eau (lac, rivière ou canal) donne plus de récolte, pas plus de
@@ -316,6 +348,11 @@
 - **Règle.** Chaque marchandise a un taux de base, déduit de sa valeur (voir 3). Pour chaque marchandise, le joueur
   règle ce qu'il en demande par rapport à ce taux : plus, la ville est radine ; moins, elle est généreuse.
 - **Défaut.** De 20 % en dessous à 20 % au-dessus du taux de base.
+- **À toi.** La valeur de ce que la ville ne fabrique pas (ressources étrangères, décos rares) et celle d'une récolte.
+  Ma reco : une valeur écrite dans la fiche pour ce qui n'a pas de recette en ville ; pour une récolte, le seul
+  travail des fermiers, sans le temps de pousse.
+- **À toi.** « Ce que la ville ne sait pas faire » (souhaits, paniers) : sans l'idée, ou sans atelier qui tourne ? Ma
+  reco : ce qu'aucune recette connue ne produit.
 - **Règle.** La réputation, une seule pour la ville, suit peu à peu la justesse des échanges : rien n'est instantané ni
   irrécupérable. Radine, moins de visiteurs et moins de rares ; généreuse, l'inverse.
 - **Défaut.** Elle met plusieurs jours à changer franchement. Deux à quatre visiteurs par jour au début.
@@ -338,6 +375,10 @@
 - **Défaut.** Chaque exemplaire de plus d'une même déco donne 10 % de charme de moins que le précédent.
 - **Règle.** Certaines décos ont en plus un effet à rayon : la lanterne prolonge le travail du soir des postes proches.
 - **Défaut.** Une lanterne donne deux heures de plus, à moins de 10 m.
+- **À toi.** La lanterne compte-t-elle la place du poste ou celle où l'on travaille (un ouvrier de la loge sur un
+  chantier) ? Ma reco : là où l'on travaille.
+- **À toi.** La Place donne du charme (voir 11) alors que le charme est « la somme des décos ». Ma reco : toute
+  construction dont la fiche porte du charme compte, la Place comprise.
 - **Règle.** Le joueur pose le fantôme d'un banc ou d'une lanterne ; un ouvrier de la loge vient l'installer avec les
   matériaux (sous-statistique aménagement).
 - **Règle.** Arbres et buissons se posent une fois la cabane du paysagiste bâtie ; les paysagistes les plantent. Ils ne
