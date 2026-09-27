@@ -3,7 +3,8 @@
     "rootNamespace": "Diciela.Simulation",
     "references": [
         "Diciela.Data",
-        "Diciela.Simulation.Core"
+        "Diciela.Simulation.Core",
+        "Diciela.Simulation.Land"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

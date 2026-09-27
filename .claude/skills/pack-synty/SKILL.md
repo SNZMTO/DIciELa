@@ -35,6 +35,10 @@ jamais un bâtiment ni un décor de sa propre initiative ; les choix d'art sont 
 - Un **Terrain** peint de calques du pack, le **profil de filtres** `Volume_01`, l'**eau** du pack (son shader marche en
   perspective ; il ne rend pas juste en orthographique).
 - Pour comparer une vue du jeu à la démo, photographier les deux sous la même caméra.
+- **La carte du jeu** (`Assets/Scenes/Carte.unity`) est née d'une copie de `Demo.unity` dont le menu
+  `DICIELA/Scènes/Monter les scènes` n'a gardé que le soleil, le volume de filtres (son profil copié dans
+  `Assets/Art/Carte_Filtres.asset`) et le Terrain, relié à un relief vierge (`Assets/Terrain/Carte.asset`). Ses calques
+  de sol restent ceux du pack : ne pas les retoucher dans le pack ; une retouche passe par une copie dans `Assets/Art`.
 
 ## Personnages et animaux
 

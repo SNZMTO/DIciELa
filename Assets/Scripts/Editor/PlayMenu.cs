@@ -1,3 +1,4 @@
+using Diciela.Game;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -17,17 +18,17 @@ namespace Diciela.EditorTools
             if (EditorApplication.isPlayingOrWillChangePlaymode)
                 return;
 
-            if (SceneManager.GetActiveScene().path != GameSceneBuilder.GameScenePath)
+            if (SceneManager.GetActiveScene().path != ScenePaths.Game)
             {
-                if (AssetDatabase.LoadAssetAtPath<SceneAsset>(GameSceneBuilder.GameScenePath) == null)
+                if (!EditorAssets.Exists(ScenePaths.Game))
                 {
-                    Debug.LogError("DICIELA : la scène Jeu n'existe pas encore : lancer « DICIELA/Scènes/Monter la " +
-                                   "scène Jeu ».");
+                    Debug.LogError("DICIELA : la scène Jeu n'existe pas encore : lancer « DICIELA/Scènes/Monter les " +
+                                   "scènes ».");
                     return;
                 }
                 if (!GameSceneBuilder.CanChangeScenes())
                     return;
-                EditorSceneManager.OpenScene(GameSceneBuilder.GameScenePath, OpenSceneMode.Single);
+                EditorSceneManager.OpenScene(ScenePaths.Game, OpenSceneMode.Single);
             }
 
             EditorApplication.EnterPlaymode();

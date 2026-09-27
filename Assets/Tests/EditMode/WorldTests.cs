@@ -25,7 +25,7 @@ namespace Diciela.Tests.EditMode
         [Test]
         public void AStepAdvancesTheClockByOneStep()
         {
-            var world = new World(_settings);
+            var world = new World(_settings, TestData.FlatMap());
 
             world.Step();
             world.Step();
@@ -34,9 +34,20 @@ namespace Diciela.Tests.EditMode
         }
 
         [Test]
-        public void RefusesMissingSettings()
+        public void KeepsTheMapItReceived()
         {
-            Assert.Throws<ArgumentNullException>(() => new World(null));
+            var map = TestData.FlatMap();
+
+            var world = new World(_settings, map);
+
+            Assert.AreSame(map, world.Map);
+        }
+
+        [Test]
+        public void RefusesMissingSettingsOrMap()
+        {
+            Assert.Throws<ArgumentNullException>(() => new World(null, TestData.FlatMap()));
+            Assert.Throws<ArgumentNullException>(() => new World(_settings, null));
         }
     }
 }

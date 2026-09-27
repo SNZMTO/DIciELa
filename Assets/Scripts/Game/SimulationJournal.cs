@@ -1,6 +1,7 @@
 using System;
 using Diciela.Simulation;
 using Diciela.Simulation.Core;
+using Diciela.Simulation.Land;
 using UnityEngine;
 
 namespace Diciela.Game
@@ -23,7 +24,10 @@ namespace Diciela.Game
             _world = world;
             _world.Clock.DayStarted += OnDayStarted;
             _world.Clock.PhaseChanged += OnPhaseChanged;
-            Debug.Log(Prefix + "monde créé, " + Describe(_world.Clock) + ".");
+            Relief relief = _world.Map.Relief;
+            Debug.Log(Prefix + "monde créé, carte de " + relief.SizeX.ToString("0") + " × " + relief.SizeZ.ToString("0") +
+                      " m (relief de " + relief.SamplesX + " × " + relief.SamplesZ + " points), " +
+                      Describe(_world.Clock) + ".");
         }
 
         /// <summary>Se désabonne du monde et écrit où il en était.</summary>

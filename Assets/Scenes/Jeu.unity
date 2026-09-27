@@ -276,6 +276,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Diciela.Game::Diciela.Game.GameRunner
   _settings: {fileID: 11400000, guid: 051fb01289143e44eb8a6080af577e51, type: 2}
+  _session: {fileID: 11400000, guid: 74a6b5786649b5848a33d28f0bca1d06, type: 2}
 --- !u!4 &1133228906
 Transform:
   m_ObjectHideFlags: 0

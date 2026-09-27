@@ -116,6 +116,9 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   s'écrit au prochain enregistrement du projet. Le jeu travaille sur une copie en mémoire
   (`Object.Instantiate(terrainData)`), donnée au `Terrain` **et** au `TerrainCollider`, jamais enregistrée ; un test
   PlayMode vérifie que l'asset n'a pas bougé.
+- **Un Terrain range ses hauteurs par marches de 1 / 32 766 de sa hauteur totale** (3 mm pour 100 m) : une pente lue
+  sur une maille de 1 m bouge de quelques centièmes de degré. Un test sur un Terrain tolère cet écart ; la
+  simulation lit le relief une fois, en mètres, au lancement.
 - **On repeint par lot** : une route ou un coup de pinceau marque un rectangle sale, et le sol ne se repeint qu'à l'image
   suivante, sur ce seul rectangle, une seule fois même si dix changements arrivent dans la même image.
 - **Les touffes et petites fleurs** sont des objets combinés en lots statiques ; des milliers d'objets séparés font
