@@ -3,7 +3,7 @@
 **Branche** : `etape-8b-pose-visible`, fusionnée dans `main`. **Étapes 6 à 8b finies** : la carte, la caméra de
 gestion, et la pose des constructions, visible (décisions 60 à 64), après des ménages du code (57 à 59).
 
-**Ce qui marche** : EditMode 49/49, PlayMode 27/27, Play court sans erreur. **DICIELA > Scènes > Monter les scènes**
+**Ce qui marche** : EditMode 49/49, PlayMode 30/30, Play court sans erreur. **DICIELA > Scènes > Monter les scènes**
 monte tout, sans jamais toucher une carte existante. En jeu : la barre en bas (Logement, Cabane) ; l'aperçu suit la
 souris, vert ou rouge avec sa raison ; R tourne ; le clic gauche pose un fantôme ; un clic droit bref ou Échap range
 l'outil. Les captures de l'album se mettent en scène par **DICIELA > Album > …**, en Play.
@@ -19,8 +19,8 @@ rien. Le sens de la rotation au bouton du milieu (fiche `CameraSettings`) et les
    rien de visible encore ; puis la Chimère qui marche jusqu'à son poste.
 
 **À savoir** : 35 « À toi » dans le GDD, chacun avec ma reco. À surveiller : la file d'événements « en fin de couche »
-(33), à coder avant le premier système qui en écoute un autre ; la caméra qui monte quand une colline cache le point
-visé, quand la carte aura ses collines ; suivre un habitant, quand il y en aura.
+(33), avant le premier système qui en écoute un autre ; `CameraRig` (194 lignes) se découpe au prochain changement
+de la caméra (la prise du sol à part) ; la caméra qui monte quand une colline cache le point visé ; suivre un habitant.
 
 **Prochaine étape** : 9, les chemins sur le maillage, si tu valides la question 3.
 
