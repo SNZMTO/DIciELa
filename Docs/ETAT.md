@@ -3,14 +3,10 @@
 **Branche** : `etape-2-architecture`, fusionnée dans `main`. **Étape 2 finie** : `Docs/ARCHITECTURE.md` est écrit.
 
 **Ce qui existe** : un projet Unity 6.6 neuf (modèle Universal 3D, contenu d'exemple encore là), sans code ni test ;
-`Docs/GDD.md`, `Docs/ARCHITECTURE.md` (couches, qui possède quoi, règles de passage), `Docs/DECISIONS.md` (1 à 44),
-`Docs/SAVOIR.md`, `Docs/ALBUM.md` (vide), `.claude/`.
+`Docs/GDD.md`, `Docs/ARCHITECTURE.md` (couches, qui possède quoi, règles de passage), `Docs/DECISIONS.md` (1 à 45),
+`Docs/SAVOIR.md`, `Docs/ALBUM.md` (vide), `.claude/`. La tente n'est que le logis de la Chimère (décision 45).
 
-**Question ouverte, avant d'y toucher** : la tente n'a pas de stock ; c'est le logis de la Chimère, qu'on touche pour
-la faire dormir. Le GDD (sections 6 et 13) dit encore qu'elle garde le stock de départ, sert d'entrepôt et porte le
-poste « à tout faire ». Il faut savoir où va le stock de départ, qui tient ce poste et ce que fait « dormir ».
-
-**À vérifier par lui** : rien à la souris. 31 « À toi » dans le GDD, chacun avec ma reco ; le plus pressé reste la
+**À vérifier par lui** : rien à la souris. 33 « À toi » dans le GDD, chacun avec ma reco ; le plus pressé reste la
 taille de la carte (et la résolution du Terrain), à fixer avant de la peindre.
 
 **À savoir**
@@ -28,5 +24,4 @@ taille de la carte (et la résolution du Terrain), à fixer avant de la peindre.
 
 **Prompt de la session suivante**
 
-> Lis CLAUDE.md et Docs/ETAT.md. Étape 3 : le ménage du projet (liste d'ETAT). Commence par la question de la tente,
-> puis montre-moi la liste de ce que tu retires, déclares ou règles, attends mon accord, puis fais-le.
+> Lis CLAUDE.md et Docs/ETAT.md. Étape 3 : le ménage du projet (liste d'ETAT). Montre-moi d'abord la liste de ce que tu retires, déclares ou règles, attends mon accord, puis fais-le.
