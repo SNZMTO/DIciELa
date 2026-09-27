@@ -109,9 +109,9 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 ### 2.5 Le sol peint
 
 - **Piège : un TerrainData reste binaire, même en Force Text**, et pèse des Mo à chaque version. La règle `*.asset`
-  du `.gitattributes` (fins de ligne normalisées) l'abîmerait : le dossier du Terrain a sa propre règle (`lfs`, sinon
-  `binary`), placée **après** `*.asset` (la dernière règle l'emporte), avant son premier commit. Vérifier que LFS agit
-  (`git lfs ls-files` non vide) sur un fichier d'essai. Ses calques (TerrainLayer) sont ceux du pack.
+  du `.gitattributes` (fins de ligne normalisées) l'abîmerait : `Assets/Terrain/*.asset` a sa propre règle `lfs`,
+  placée **après** `*.asset` (la dernière règle l'emporte). Un fichier d'essai a montré que LFS le garde à l'octet
+  près. Ses calques (TerrainLayer) sont ceux du pack.
 - **Piège : modifier un Terrain en Play modifie l'asset pour de bon** (`SetHeights`, `SetAlphamaps`, arbres), et il
   s'écrit au prochain enregistrement du projet. Le jeu travaille sur une copie en mémoire
   (`Object.Instantiate(terrainData)`), donnée au `Terrain` **et** au `TerrainCollider`, jamais enregistrée ; un test
