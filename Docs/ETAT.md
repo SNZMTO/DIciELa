@@ -8,10 +8,8 @@ jeu ; un second Play n'abonne rien en double). Assemblages `Data`, `Simulation.C
 au plus 10 pas par image et abandonne le retard au-delà ; le journal écrit dans la console « monde créé », les jours,
 les phases et « monde arrêté après N pas ».
 
-**À vérifier par lui** : menu **DICIELA > Jouer** (depuis n'importe quelle scène) : le Play démarre dans `Jeu` ; la
-console dit « DICIELA : monde créé, jour 1… » ; en quittant le Play, « monde arrêté après N pas » (environ dix pas par
-seconde de jeu). L'écran reste gris : il n'y a encore ni carte ni rien à voir. **DICIELA > Scènes > Monter la scène
-Jeu** peut se relancer sans rien changer.
+**À vérifier par lui** : **DICIELA > Jouer**, d'où qu'il soit : Play dans `Jeu`, console « monde créé, jour 1… », puis
+en quittant « monde arrêté après N pas » (dix pas par seconde). L'écran reste gris : rien à voir encore.
 
 **À savoir**
 - Restent du modèle, par choix : l'asset d'actions (retiré à l'étape des gestes), le niveau de qualité Mobile, et
