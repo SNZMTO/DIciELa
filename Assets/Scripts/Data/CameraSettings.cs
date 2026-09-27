@@ -38,6 +38,10 @@ namespace Diciela.Data
         [Tooltip("Vitesse de rotation, en degrés par seconde.")]
         [SerializeField, Min(0f)] private float _rotateDegreesPerSecond = 90f;
 
+        [Tooltip("Rotation au bouton du milieu glissé, en degrés par pixel. Positive, la vue tourne du côté où va la " +
+                 "souris, comme la touche E vers la droite ; négative, le sol suit la souris.")]
+        [SerializeField, Range(-2f, 2f)] private float _orbitDegreesPerPixel = 0.25f;
+
         [Tooltip("Rapprochement par cran de molette : 0,15 = 15 % plus près.")]
         [SerializeField, Range(0.01f, 0.9f)] private float _zoomStepPerNotch = 0.15f;
 
@@ -63,6 +67,7 @@ namespace Diciela.Data
         public float FarClipPlane => _farClipPlane;
         public float PanSpeedPerDistance => _panSpeedPerDistance;
         public float RotateDegreesPerSecond => _rotateDegreesPerSecond;
+        public float OrbitDegreesPerPixel => _orbitDegreesPerPixel;
         public float ZoomStepPerNotch => _zoomStepPerNotch;
         public float ScrollPerNotch => _scrollPerNotch;
         public float ZoomSmoothing => _zoomSmoothing;

@@ -453,8 +453,9 @@
   (de la terre sous un bâtiment, l'herbe écartée) ; les routes se peignent dans le sol. À regarder : Manor Lords et
   Foundation, deux jeux dont les villes bâties par les joueurs ressemblent à des maquettes.
 - **Règle.** Caméra en perspective, comme la démo (champ de vision autour de 40°). Caméra de gestion à main invisible :
-  se déplacer (clavier, bords de l'écran, clic glissé), tourner (Q/E), zoomer à la molette. En zoomant, elle s'abaisse
-  doucement : de loin, la ville en maquette ; de près, les habitants presque de face.
+  se déplacer (clavier, bords de l'écran, clic droit glissé qui tire le sol), tourner (Q/E, ou le bouton du milieu
+  glissé), zoomer à la molette, vers l'endroit que vise la souris. En zoomant, elle s'abaisse doucement : de loin, la
+  ville en maquette ; de près, les habitants presque de face.
 - **À toi.** Les touches de la caméra et son glisser. Ma reco (c'est ce qui est codé) : des touches liées à leur place
   sur le clavier, pour que tout clavier ait la même main (en AZERTY : ZQSD pour se déplacer, A et E pour tourner) ; le
   glisser au clic droit, le clic droit bref restant « reculer d'un cran ».

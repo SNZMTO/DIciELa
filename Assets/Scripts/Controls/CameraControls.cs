@@ -6,9 +6,10 @@ using UnityEngine.InputSystem;
 namespace Diciela.Controls
 {
     /// <summary>
-    /// Les gestes de la caméra (GDD, section 16) : se déplacer (clavier, bords de l'écran, glisser au clic droit),
-    /// tourner, zoomer à la molette. Il lit les actions et appelle la caméra ; les touches sont liées à leur position
-    /// sur le clavier, pour que ZQSD tombe juste en AZERTY (SAVOIR, section 3).
+    /// Les gestes de la caméra (GDD, section 16) : se déplacer (clavier, bords de l'écran, clic droit glissé qui tire le
+    /// sol), tourner (clavier, ou bouton du milieu glissé), zoomer à la molette vers le pointeur. Il lit les actions et
+    /// appelle la caméra ; les touches sont liées à leur position sur le clavier, pour que ZQSD tombe juste en AZERTY
+    /// (SAVOIR, section 3).
     /// </summary>
     public sealed class CameraControls : MonoBehaviour
     {
@@ -17,6 +18,7 @@ namespace Diciela.Controls
         public const string RotateAction = "Rotate";
         public const string ZoomAction = "Zoom";
         public const string DragAction = "Drag";
+        public const string OrbitAction = "Orbit";
         public const string PointerAction = "Pointer";
 
         [Tooltip("L'asset d'actions du jeu (Assets/Input).")]
@@ -33,10 +35,10 @@ namespace Diciela.Controls
         private InputAction _rotate;
         private InputAction _zoom;
         private InputAction _drag;
+        private InputAction _orbit;
         private InputAction _pointer;
-        private Vector2 _pressStart;
-        private bool _pressed;
-        private bool _dragging;
+        private DragGesture _dragGesture;
+        private DragGesture _orbitGesture;
 
         private void OnEnable()
         {
@@ -52,6 +54,7 @@ namespace Diciela.Controls
             _rotate = _map.FindAction(RotateAction, true);
             _zoom = _map.FindAction(ZoomAction, true);
             _drag = _map.FindAction(DragAction, true);
+            _orbit = _map.FindAction(OrbitAction, true);
             _pointer = _map.FindAction(PointerAction, true);
             _map.Enable();
         }
@@ -61,8 +64,8 @@ namespace Diciela.Controls
             if (_map != null)
                 _map.Disable();
             _map = null;
-            _pressed = false;
-            _dragging = false;
+            _dragGesture = default;
+            _orbitGesture = default;
         }
 
         private void Update()
@@ -83,36 +86,19 @@ namespace Diciela.Controls
 
             float scroll = _zoom.ReadValue<float>();
             if (scroll != 0f)
-                _rig.Zoom(scroll / _settings.ScrollPerNotch);
+                _rig.Zoom(scroll / _settings.ScrollPerNotch, pointer);
 
-            UpdateDrag(pointer);
-        }
-
-        /// <summary>
-        /// Le glisser ne commence qu'au-delà d'un seuil en pixels : un clic droit bref reste un clic (SAVOIR, 2.8). Il
-        /// saisit alors le sol là où l'on a appuyé, et le tire jusqu'au pointeur.
-        /// </summary>
-        private void UpdateDrag(Vector2 pointer)
-        {
-            if (!_drag.IsPressed())
-            {
-                _pressed = false;
-                _dragging = false;
-                return;
-            }
-
-            // La première image où l'on voit le bouton enfoncé, même s'il l'était avant que la caméra montre la carte.
-            if (!_pressed)
-            {
-                _pressed = true;
-                _pressStart = pointer;
-                return;
-            }
-
-            if (!_dragging && (pointer - _pressStart).magnitude >= _settings.DragThresholdPixels)
-                _dragging = _rig.BeginDrag(_pressStart);
-            if (_dragging)
+            // Clic droit glissé : on saisit le sol là où l'on a appuyé, et on le tire jusqu'au pointeur.
+            float threshold = _settings.DragThresholdPixels;
+            if (_dragGesture.Update(_drag.IsPressed(), pointer, threshold))
+                _rig.BeginDrag(_dragGesture.Start);
+            if (_dragGesture.IsDragging)
                 _rig.DragTo(pointer);
+
+            // Bouton du milieu glissé : la vue tourne, de gauche à droite.
+            _orbitGesture.Update(_orbit.IsPressed(), pointer, threshold);
+            if (_orbitGesture.IsDragging && _orbitGesture.Delta.x != 0f)
+                _rig.Rotate(_orbitGesture.Delta.x * _settings.OrbitDegreesPerPixel);
         }
 
         /// <summary>La direction de défilement quand le pointeur touche un bord de la fenêtre, si elle a le focus.</summary>

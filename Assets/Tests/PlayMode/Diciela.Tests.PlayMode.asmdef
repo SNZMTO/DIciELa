@@ -5,6 +5,7 @@
         "Diciela.Data",
         "Diciela.Simulation.Land",
         "Diciela.View",
+        "Diciela.Controls",
         "Diciela.Game",
         "UnityEngine.TestRunner"
     ],
