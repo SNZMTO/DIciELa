@@ -2,7 +2,8 @@
     "name": "Diciela.EditorTools",
     "rootNamespace": "Diciela.EditorTools",
     "references": [
-        "Diciela.Data"
+        "Diciela.Data",
+        "Diciela.Game"
     ],
     "includePlatforms": [
         "Editor"

@@ -1,0 +1,18 @@
+{
+    "name": "Diciela.Game",
+    "rootNamespace": "Diciela.Game",
+    "references": [
+        "Diciela.Data",
+        "Diciela.Simulation.Core",
+        "Diciela.Simulation"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
