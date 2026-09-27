@@ -66,12 +66,13 @@ namespace Diciela.EditorTools
             var settings = EditorAssets.Load<SimulationSettings>(DataAssetBuilder.SimulationSettingsPath);
             var session = EditorAssets.Load<SessionSettings>(sessionPath);
 
-            GameRunner runner = FindOrCreateRunner(scene);
+            GameRunner runner = EditorAssets.FindOrCreate<GameRunner>(scene, StartupObjectName);
             EditorAssets.AssignIfMissing(runner, "_settings", settings);
             EditorAssets.AssignIfMissing(runner, "_session", session);
             CameraRig rig = CameraBuilder.EnsureIn(scene);
             if (rig != null)
                 EditorAssets.AssignIfMissing(runner, "_cameraRig", rig);
+            PlacementBuilder.EnsureIn(scene, runner);
             EditorSceneManager.SaveScene(scene, scenePath);
         }
 
@@ -82,17 +83,6 @@ namespace Diciela.EditorTools
 
             EditorAssets.EnsureFolder(scenePath.Substring(0, scenePath.LastIndexOf('/')));
             return EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
-        }
-
-        private static GameRunner FindOrCreateRunner(Scene scene)
-        {
-            GameRunner existing = EditorAssets.FindInScene<GameRunner>(scene);
-            if (existing != null)
-                return existing;
-
-            var startup = new GameObject(StartupObjectName);
-            SceneManager.MoveGameObjectToScene(startup, scene);
-            return startup.AddComponent<GameRunner>();
         }
 
         private static void EnsureInBuild(string scenePath)
