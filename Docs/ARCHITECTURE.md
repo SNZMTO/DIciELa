@@ -165,9 +165,9 @@ sauvegardé.
 
 ## 7. Les postes et les tâches
 
-- Un seul système pour tous les métiers : un lieu de travail (bâtiment, champ, étal) ouvre des postes ; la fiche du
-  poste liste les sortes de tâches permises, avec leur priorité ; la fiche d'une sorte de tâche dit la sous-statistique
-  qu'elle lit.
+- Un seul système pour tous les métiers : un lieu de travail (bâtiment, champ, étal, tas de départ) ouvre des postes ;
+  la fiche du poste liste les sortes de tâches permises, avec leur priorité ; la fiche d'une sorte de tâche dit la
+  sous-statistique qu'elle lit.
 - L'économie publie les tâches à prendre (transporter, bâtir, semer, récolter, retirer un arbre…) ; l'étal publie le
   service des visiteurs. Un habitant ne prend qu'une tâche permise par son poste, au plus près ou dans l'ordre de la
   file des chantiers.
@@ -204,8 +204,8 @@ sauvegardé.
 - Chaque fiche a un identifiant texte stable, que la sauvegarde cite ; jamais le nom du fichier. Un catalogue racine les
   rassemble ; le jeu ne charge que lui.
 - La fiche d'un bâtiment porte son empreinte et sa porte, mesurées sur le modèle par un menu `DICIELA/…` (SAVOIR 2.9).
-- Une fiche de réglages de la simulation tient le pas, la borne de pas par image, les mailles par mètre et les bornes
-  de boucle. Une fiche de session dit quelle carte charger et où ranger les sauvegardes.
+- Une fiche de réglages de la simulation tient le pas, la borne de pas par image, la durée de la journée et de ses
+  phases, les mailles par mètre et les bornes de boucle. Une fiche de session dit quelle carte charger et où ranger les sauvegardes.
 - La simulation lit les fiches sans jamais les écrire. Dans la simulation : jamais `.name`, jamais `== null` sur une
   fiche (`ReferenceEquals`), ni `AnimationCurve` ni `Gradient`, et aucun cache rangé dans une fiche.
 
@@ -268,7 +268,8 @@ code.
 
 - **EditMode** pour toute la simulation, par les ordres. Les fiches des tests sont créées en mémoire et remplies par
   une seule fabrique de test (par `SerializedObject`, le chemin de l'Inspector), puis détruites.
-- **PlayMode** pour ce qui a besoin d'une scène : poser, tourner, déplacer, ranger par les mêmes appels que les gestes ;
+- **PlayMode** pour ce qui a besoin d'une scène : la scène `Jeu` crée le monde et le fait avancer (lu dans le journal) ;
+  poser, tourner, déplacer, ranger par les mêmes appels que les gestes ;
   l'asset du Terrain inchangé après un Play ; deux entrées en Play de suite sans abonné en double.
 - **Les tests qui rapportent le plus** sont dans SAVOIR 4. L'oracle du A* est un Dijkstra naïf écrit dans les tests,
   pas celui du jeu. Les fichiers témoins (or, vieilles sauvegardes) sont dans `Assets/Tests/Fixtures`, en lecture
