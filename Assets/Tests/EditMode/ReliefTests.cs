@@ -1,6 +1,7 @@
 using System;
 using Diciela.Simulation.Land;
 using NUnit.Framework;
+using UnityEngine;
 
 namespace Diciela.Tests.EditMode
 {
@@ -65,6 +66,44 @@ namespace Diciela.Tests.EditMode
             heights[3] = 100f;
 
             Assert.AreEqual(0f, relief.HeightAt(1f, 1f), Tolerance);
+        }
+
+        [Test]
+        public void ARayFromAboveHitsTheGroundBelow()
+        {
+            Assert.IsTrue(Plane(0f, 0f).TryRaycast(new Vector3(1.5f, 10f, 2.5f), Vector3.down, 100f, out Vector3 hit));
+
+            AssertNear(new Vector3(1.5f, 0f, 2.5f), hit);
+        }
+
+        [Test]
+        public void ASlantedRayFollowsTheSlope()
+        {
+            // Le sol monte d'un demi-mètre par mètre vers l'est ; le rayon part de (0 ; 4,5 ; 2) et descend à 45° vers
+            // l'est : il touche le sol là où 4,5 − x = 0,5 x, en x = 3, à 1,5 m de haut.
+            Relief slope = Plane(0.5f, 0f);
+
+            Assert.IsTrue(slope.TryRaycast(new Vector3(0f, 4.5f, 2f), new Vector3(1f, -1f, 0f), 100f, out Vector3 hit));
+
+            AssertNear(new Vector3(3f, 1.5f, 2f), hit);
+        }
+
+        [Test]
+        public void ARayThatDoesNotReachTheMapGroundHitsNothing()
+        {
+            Relief flat = Plane(0f, 0f);
+            var above = new Vector3(2f, 10f, 2f);
+
+            Assert.IsFalse(flat.TryRaycast(above, Vector3.up, 100f, out _));
+            Assert.IsFalse(flat.TryRaycast(above, Vector3.down, 5f, out _));
+            Assert.IsFalse(flat.TryRaycast(above, new Vector3(1f, -0.1f, 0f), 1000f, out _));
+        }
+
+        private static void AssertNear(Vector3 expected, Vector3 actual)
+        {
+            Assert.AreEqual(expected.x, actual.x, Tolerance);
+            Assert.AreEqual(expected.y, actual.y, Tolerance);
+            Assert.AreEqual(expected.z, actual.z, Tolerance);
         }
 
         [Test]

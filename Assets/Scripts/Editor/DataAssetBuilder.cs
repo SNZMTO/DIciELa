@@ -1,4 +1,3 @@
-using System;
 using Diciela.Data;
 using Diciela.Game;
 using UnityEditor;
@@ -7,8 +6,8 @@ using UnityEngine;
 namespace Diciela.EditorTools
 {
     /// <summary>
-    /// Crée les fiches qui manquent. Réexécutable : une fiche qui existe déjà n'est jamais touchée, pour ne pas
-    /// écraser un réglage fait à la main.
+    /// Crée les fiches qui manquent : les réglages, puis le contenu. Réexécutable : une fiche qui existe déjà n'est
+    /// jamais touchée, pour ne pas écraser un réglage fait à la main.
     /// </summary>
     public static class DataAssetBuilder
     {
@@ -19,20 +18,28 @@ namespace Diciela.EditorTools
         internal const string MapCreationPath = SettingsFolder + "/CarteNeuve.asset";
         internal const string TestMapCreationPath = SettingsFolder + "/CarteNeuve_Test.asset";
         internal const string CameraSettingsPath = SettingsFolder + "/CameraSettings.asset";
+        internal const string PlacementSettingsPath = SettingsFolder + "/PlacementSettings.asset";
+        internal const string InterfaceSettingsPath = SettingsFolder + "/InterfaceSettings.asset";
+        private const string TextsPath = "Assets/Localization/strings.csv";
+        private const string TranslucentMaterialPath = "Assets/Art/Vue/Translucide.mat";
 
         [MenuItem("DICIELA/Données/Créer les fiches manquantes")]
         public static void CreateMissingAssets()
         {
-            EditorAssets.EnsureFolder(SettingsFolder);
-
-            CreateIfMissing<SimulationSettings>(SimulationSettingsPath, null);
-            CreateIfMissing<SessionSettings>(GameSessionPath,
+            EditorAssets.CreateIfMissing<SimulationSettings>(SimulationSettingsPath, null);
+            EditorAssets.CreateIfMissing<SessionSettings>(GameSessionPath,
                 fiche => EditorAssets.Property(fiche, "_mapScenePath").stringValue = ScenePaths.Map);
-            CreateIfMissing<SessionSettings>(TestSessionPath,
+            EditorAssets.CreateIfMissing<SessionSettings>(TestSessionPath,
                 fiche => EditorAssets.Property(fiche, "_mapScenePath").stringValue = ScenePaths.MapTest);
-            CreateIfMissing<MapCreationSettings>(MapCreationPath, null);
-            CreateIfMissing<MapCreationSettings>(TestMapCreationPath, FillTestMapCreation);
-            CreateIfMissing<CameraSettings>(CameraSettingsPath, null);
+            EditorAssets.CreateIfMissing<MapCreationSettings>(MapCreationPath, null);
+            EditorAssets.CreateIfMissing<MapCreationSettings>(TestMapCreationPath, FillTestMapCreation);
+            EditorAssets.CreateIfMissing<CameraSettings>(CameraSettingsPath, null);
+            EditorAssets.CreateIfMissing<PlacementSettings>(PlacementSettingsPath, fiche =>
+                EditorAssets.Property(fiche, "_translucentMaterial").objectReferenceValue =
+                    MaterialBuilder.TranslucentIfMissing(TranslucentMaterialPath));
+            EditorAssets.CreateIfMissing<InterfaceSettings>(InterfaceSettingsPath, fiche =>
+                EditorAssets.Property(fiche, "_texts").objectReferenceValue = EditorAssets.Load<TextAsset>(TextsPath));
+            ContentBuilder.CreateMissing();
 
             AssetDatabase.SaveAssets();
         }
@@ -45,22 +52,6 @@ namespace Diciela.EditorTools
             EditorAssets.Property(fiche, "_groundHeightMeters").floatValue = 10f;
             EditorAssets.Property(fiche, "_heightmapResolution").intValue = 65;
             EditorAssets.Property(fiche, "_alphamapResolution").intValue = 64;
-        }
-
-        private static void CreateIfMissing<T>(string path, Action<SerializedObject> fill) where T : ScriptableObject
-        {
-            if (AssetDatabase.LoadAssetAtPath<T>(path) != null)
-                return;
-
-            T fiche = ScriptableObject.CreateInstance<T>();
-            if (fill != null)
-            {
-                var serialized = new SerializedObject(fiche);
-                fill(serialized);
-                serialized.ApplyModifiedPropertiesWithoutUndo();
-            }
-            AssetDatabase.CreateAsset(fiche, path);
-            Debug.Log("DICIELA : fiche créée : " + path + ".");
         }
     }
 }

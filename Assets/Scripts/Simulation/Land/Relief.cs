@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace Diciela.Simulation.Land
 {
@@ -11,9 +12,14 @@ namespace Diciela.Simulation.Land
     {
         private const float DegreesPerRadian = 180f / MathF.PI;
 
+        // Les divisions par deux qui affinent le point où un rayon touche le sol : 20 divisent l'écart par un million.
+        private const int RaycastRefinements = 20;
+
         private readonly float[] _heights;
         private readonly float _stepX;
         private readonly float _stepZ;
+        private readonly float _lowest;
+        private readonly float _highest;
 
         /// <param name="heightsMeters">Les hauteurs, rangée par rangée : l'indice est z × samplesX + x. Copiées.</param>
         public Relief(float sizeX, float sizeZ, int samplesX, int samplesZ, float[] heightsMeters)
@@ -34,6 +40,13 @@ namespace Diciela.Simulation.Land
             _heights = (float[])heightsMeters.Clone();
             _stepX = sizeX / (samplesX - 1);
             _stepZ = sizeZ / (samplesZ - 1);
+            _lowest = float.MaxValue;
+            _highest = float.MinValue;
+            foreach (float height in _heights)
+            {
+                _lowest = Math.Min(_lowest, height);
+                _highest = Math.Max(_highest, height);
+            }
         }
 
         public float SizeX { get; }
@@ -62,6 +75,71 @@ namespace Diciela.Simulation.Land
             float riseX = ((1f - tz) * (h10 - h00) + tz * (h11 - h01)) / _stepX;
             float riseZ = ((1f - tx) * (h01 - h00) + tx * (h11 - h10)) / _stepZ;
             return MathF.Atan(MathF.Sqrt(riseX * riseX + riseZ * riseZ)) * DegreesPerRadian;
+        }
+
+        /// <summary>
+        /// Le premier point où ce rayon touche le sol de la carte, à moins de <paramref name="maxDistance"/> mètres de
+        /// son départ : la visée du pointeur, qui suit le vrai relief, collines comprises (SAVOIR, 2.7). Faux si le
+        /// rayon ne touche pas le sol, ou le touche hors de la carte.
+        /// </summary>
+        public bool TryRaycast(Vector3 origin, Vector3 direction, float maxDistance, out Vector3 hit)
+        {
+            hit = default;
+            Vector3 dir = direction.normalized;
+            if (dir == Vector3.zero || !(maxDistance > 0f))
+                return false;
+
+            // Seule la tranche du rayon entre le plus haut et le plus bas du relief peut toucher le sol.
+            float from = 0f, to = maxDistance;
+            if (dir.y < 0f)
+            {
+                from = Math.Max(0f, (origin.y - _highest) / -dir.y);
+                to = Math.Min(to, (origin.y - _lowest) / -dir.y);
+            }
+            else if (origin.y > _highest)
+                return false;
+            if (from > to)
+                return false;
+            if (IsBelowGround(origin + dir * from))
+                return TryHitAt(origin + dir * from, out hit);
+
+            // Un pas d'une demi-maille du relief : on ne saute pas une bosse ; le nombre de pas borne la boucle.
+            float step = Math.Min(_stepX, _stepZ) * 0.5f;
+            int steps = (int)Math.Ceiling((to - from) / step);
+            float above = from;
+            for (int i = 1; i <= steps; i++)
+            {
+                float along = Math.Min(from + i * step, to);
+                if (IsBelowGround(origin + dir * along))
+                    return TryHitAt(Refine(origin, dir, above, along), out hit);
+                above = along;
+            }
+            return false;
+        }
+
+        private bool IsBelowGround(Vector3 point)
+        {
+            return point.y <= HeightAt(point.x, point.z);
+        }
+
+        /// <summary>Entre un point du rayon au-dessus du sol et un point dessous, le point où il le touche.</summary>
+        private Vector3 Refine(Vector3 origin, Vector3 dir, float above, float below)
+        {
+            for (int i = 0; i < RaycastRefinements; i++)
+            {
+                float middle = (above + below) * 0.5f;
+                if (IsBelowGround(origin + dir * middle))
+                    below = middle;
+                else
+                    above = middle;
+            }
+            return origin + dir * below;
+        }
+
+        private bool TryHitAt(Vector3 point, out Vector3 hit)
+        {
+            hit = new Vector3(point.x, HeightAt(point.x, point.z), point.z);
+            return Contains(point.x, point.z);
         }
 
         private float Sample(int ix, int iz)

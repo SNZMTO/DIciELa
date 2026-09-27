@@ -6,11 +6,35 @@ using UnityEngine.SceneManagement;
 namespace Diciela.EditorTools
 {
     /// <summary>
-    /// Les petits gestes communs des monteurs : dossiers, existence d'un asset, champs remplis par nom, composant
-    /// cherché dans une scène.
+    /// Les petits gestes communs des monteurs : dossiers, existence d'un asset, fiche créée si elle manque, champs
+    /// remplis par nom, composant cherché dans une scène.
     /// </summary>
     internal static class EditorAssets
     {
+        /// <summary>
+        /// La fiche à ce chemin ; si elle manque, elle est créée et remplie par <paramref name="fill"/>. Une fiche qui
+        /// existe n'est jamais touchée, pour ne pas écraser un réglage fait à la main.
+        /// </summary>
+        public static T CreateIfMissing<T>(string path, Action<SerializedObject> fill) where T : ScriptableObject
+        {
+            T existing = AssetDatabase.LoadAssetAtPath<T>(path);
+            if (existing != null)
+                return existing;
+
+            EnsureFolder(path.Substring(0, path.LastIndexOf('/')));
+            T fiche = ScriptableObject.CreateInstance<T>();
+            fiche.name = System.IO.Path.GetFileNameWithoutExtension(path);
+            if (fill != null)
+            {
+                var serialized = new SerializedObject(fiche);
+                fill(serialized);
+                serialized.ApplyModifiedPropertiesWithoutUndo();
+            }
+            AssetDatabase.CreateAsset(fiche, path);
+            Debug.Log("DICIELA : fiche créée : " + path + ".");
+            return fiche;
+        }
+
         /// <summary>Crée le dossier et ses parents s'ils manquent (chemin commençant par « Assets »).</summary>
         public static void EnsureFolder(string folder)
         {
