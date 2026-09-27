@@ -1,29 +1,29 @@
 # DICIELA — état actuel
 
-**Branche** : `etape-5-boucle`, fusionnée dans `main`. **Étape 5 finie** : la boucle de jeu tourne dans la scène `Jeu`.
+**Branche** : `menage-1-gdd`, fusionnée dans `main`. **Session de ménage finie** : le GDD resserré sans changer une
+règle ; l'architecture relue contre le code.
 
-**Ce qui marche** : EditMode 23/23, PlayMode 1/1, deux Play courts sans erreur (250 pas en 25 s, soit 50 minutes de
-jeu ; un second Play n'abonne rien en double). Assemblages `Data`, `Simulation.Core`, `Simulation`, `Game`,
-`EditorTools` et les deux de tests. `GameRunner` (scène `Jeu`, objet « Démarrage ») crée le monde à chaque Play, joue
-au plus 10 pas par image et abandonne le retard au-delà ; le journal écrit dans la console « monde créé », les jours,
-les phases et « monde arrêté après N pas ».
+**Ce qui marche** : EditMode 23/23, PlayMode 1/1 (inchangés : le ménage n'a touché aucun code). La boucle de jeu tourne
+dans la scène `Jeu` (**DICIELA > Jouer**) ; le journal raconte le monde dans la console.
 
-**À vérifier par lui** : **DICIELA > Jouer**, d'où qu'il soit : Play dans `Jeu`, console « monde créé, jour 1… », puis
-en quittant « monde arrêté après N pas » (dix pas par seconde). L'écran reste gris : rien à voir encore.
+**Le ménage** : GDD de 498 à 491 lignes (8 paires de règles réunies, redites retirées ; mêmes Défauts, mêmes chiffres,
+contrôle mécanique à l'appui) ; deux trous trouvés, ajoutés en « À toi » (qui récolte les champs sauvages ; qui retire
+les arbres entre la fin du tas de départ et la cabane du paysagiste). `ARCHITECTURE` : la fiche de réglages, le tas de
+départ comme lieu de travail, le test de scène. `SAVOIR` 2.5 au présent (la règle LFS du Terrain est en place).
+
+**À vérifier par lui** : rien à la souris. **33 « À toi »** dans le GDD, chacun avec ma reco (« je te laisse faire »
+applique les recos) ; le plus pressé : la taille de la carte et la résolution du Terrain, avant de la peindre.
 
 **À savoir**
 - Restent du modèle, par choix : l'asset d'actions (retiré à l'étape des gestes), le niveau de qualité Mobile, et
   `SampleSceneProfile` (le profil de filtres des réglages de rendu URP).
 - Le pack ouvre une fenêtre modale (`SyntyPackageHelper`) qui fige le CLI jusqu'à un clic (procédure `pack-synty`).
-- 31 « À toi » dans le GDD ; le plus pressé : la taille de la carte et la résolution du Terrain, avant de la peindre.
-- **La prochaine étape est la session de ménage** (une toutes les cinq étapes) : relire un système en entier ; le GDD
-  (plus de 490 lignes) est le candidat désigné.
+- Prochaine session de ménage : dans cinq étapes environ.
 
-**Prochaines étapes, dans l'ordre**
-1. Session de ménage : resserrer le GDD sans rien changer à ses règles ; relire l'architecture contre le code.
-2. La carte : sa taille et sa résolution (ses « À toi »), la scène `Carte`, sa description pure lue par `Game`.
+**Prochaine étape** : 6. La carte : sa taille et la résolution du Terrain (ses « À toi »), la scène `Carte` (à lui, dans
+`Assets/Terrain/` pour le TerrainData), et sa description pure lue par `Game` au lancement (ARCHITECTURE, section 10).
 
 **Prompt de la session suivante**
 
-> Lis CLAUDE.md et Docs/ETAT.md. Session de ménage : propose-moi comment resserrer le GDD sans changer une règle
-> (plan court, attends mon accord), puis fais-le.
+> Lis CLAUDE.md et Docs/ETAT.md. Étape 6 : la carte. Commence par les « À toi » de la taille de la carte et de la
+> résolution du Terrain, puis montre-moi le plan court, attends mon accord, puis code-la et vérifie-la.

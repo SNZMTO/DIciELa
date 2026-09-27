@@ -7,11 +7,10 @@
 
 ## 1. Le jeu
 
-- **Règle.** DICIELA est un Satisfactory fantasy et cozy : on bâtit des chaînes de production tenues par de petits
-  habitants, chacun à la tâche qu'on lui donne ; on troque à l'étal ; on décore en pose libre.
-- **Règle.** Le pitch : un village fantastique où chaque habitant a un métier. On bâtit des chaînes de production qu'ils
-  font tourner, on troque avec les visiteurs, et la Chimère, qui touche à tout, devient peu à peu la meilleure ouvrière
-  du pays… ou une redoutable capitaliste quand elle part en run.
+- **Règle.** DICIELA est un Satisfactory fantasy et cozy : un village fantastique où chaque habitant a un métier. On
+  bâtit des chaînes de production que les habitants font tourner, chacun à la tâche qu'on lui donne ; on troque à
+  l'étal avec les visiteurs ; on décore en pose libre. La Chimère, qui touche à tout, devient peu à peu la meilleure
+  ouvrière du pays… ou une redoutable capitaliste quand elle part en run.
 - **Règle.** Les sept piliers :
   1. **Des gens, pas des machines.** Tout ce qui travaille est un habitant qui a un métier et qui progresse ; seules
      les roues à eau tournent seules.
@@ -28,12 +27,10 @@
 ## 2. La carte et les mondes
 
 - **Règle.** Une seule carte, peinte à la main par le développeur sur le Terrain du pack ; la même pour chaque monde.
-- **Règle.** Ce qu'elle contient :
-  - des collines, avec des replats où bâtir ;
-  - un lac rejoint par une rivière, avec un passage rapide (voir 10, la force) ;
-  - un bord où arrive l'esquisse d'une route : c'est par là qu'arrivent les visiteurs et les nouveaux habitants ;
-  - des arbres, des rochers, et des champs sauvages près des replats où l'on bâtit ;
-  - assez de place pour une grande ville et ses canaux.
+  Elle a des collines avec des replats où bâtir ; un lac rejoint par une rivière, avec un passage rapide (voir 10, la
+  force) ; un bord où arrive l'esquisse d'une route, par où viennent les visiteurs et les nouveaux habitants ; des
+  arbres, des rochers, et des champs sauvages près des replats où l'on bâtit ; assez de place pour une grande ville et
+  ses canaux.
 - **Défaut.** Environ 500 m de côté.
 - **À toi.** La taille exacte, avant de peindre. Ma reco : la trouver en posant sur un Terrain nu les bâtiments d'une
   ville de fin de partie.
@@ -44,9 +41,8 @@
   peu de Pierre. Au début, la Chimère s'en charge, à son poste « à tout faire ».
 - **Règle.** Les ressources de base (bois, pierre, terre à cultiver) ne dépendent d'aucun gisement : un bûcheron ou une
   carrière produit où qu'on le pose.
-- **Règle.** Chaque monde tire au hasard ce qui pousse sur ses champs sauvages. Il garantit les plantes dont les
-  premières chaînes ont besoin et en tire deux ou trois autres ; celles qui manquent arrivent dans les paniers des
-  visiteurs.
+- **Règle.** Chaque monde tire au hasard ce qui pousse sur ses champs sauvages : il garantit les plantes des premières
+  chaînes et en tire deux ou trois autres ; celles qui manquent arrivent dans les paniers des visiteurs.
 - **Règle.** Récolter un champ sauvage donne des graines de sa plante, une marchandise. Le joueur désigne le champ une
   fois : on le récolte chaque fois qu'il a repoussé, la Chimère au début, les fermiers ensuite (sous-statistique
   culture).
@@ -57,6 +53,8 @@
   sauvage donne de quoi semer 400 m² ; ses graines vendues repoussent en trois jours.
 - **À toi.** Un champ sauvage récolté ne repousse-t-il qu'après une vente de ses graines ? Ma reco : oui, dès qu'on a
   vendu ce qu'une de ses récoltes donne ; s'il y en a deux de la même plante, le premier récolté repousse.
+- **À toi.** Quels fermiers récoltent les champs sauvages, qui n'ouvrent pas de poste ? Ma reco : ceux de n'importe
+  quel champ, au plus près, comme une tâche de plus de leur poste.
 - **Règle.** Le menu liste les mondes ; chacun a sa sauvegarde, enregistrée toute seule à intervalle régulier et en
   quittant.
 - **Défaut.** Un enregistrement toutes les cinq minutes.
@@ -103,8 +101,7 @@
 - **Règle.** Si la nourriture tombe sous la population, personne ne part : les arrivées s'arrêtent, rien de plus. La
   ville le montre (« les arrivées attendent de quoi manger ») ; pour les relancer, on met quelqu'un de plus aux champs.
 - **Règle.** Personne ne part, ne vieillit ni ne meurt ; la ville ne grandit que par les arrivées.
-- **Règle.** La Chimère compte dans la nourriture comme une habitante, mais elle dort chez elle : sa tente, puis sa
-  maison.
+- **Règle.** La Chimère compte dans la nourriture comme une habitante ; elle dort chez elle (sa tente, puis sa maison).
 - **Règle.** Le jeu loge chaque habitant au plus près de son poste ; les maîtres passent d'abord, dans les meilleures
   maisons. Un habitant qui change de poste déménage la nuit, si un lit se libère plus près.
 - **Règle.** Les maisons ont trois niveaux : cabane, maison, belle maison. Une meilleure maison loge plus de monde, rend
@@ -133,16 +130,15 @@
 - **Règle.** Travailler fait progresser la sous-statistique lue. Chaque heure de travail la rapproche de son plafond
   d'une petite part de l'écart restant : vite au début, puis de plus en plus lentement, sans jamais dépasser le
   plafond. Une seule courbe pour tous, tutoriel compris.
-- **Règle.** Chaque personnage a deux réglages : sa vitesse de progression et ses plafonds. Le bonheur augmente la
+- **Règle.** Chaque personnage a deux réglages : sa vitesse de progression et ses plafonds ; le bonheur augmente la
   vitesse.
 - **Règle.** Changer de poste ne fait rien perdre : on déplace un habitant pour qu'il apprenne ailleurs.
 - **Règle.** La plupart des habitants sont équilibrés, avec un léger point fort ; des profils existent (les marchands,
   meilleurs à l'Échange). Chaque habitant ordinaire a ses plafonds, plus hauts dans son point fort.
 - **Défaut.** Un arrivant commence entre 5 et 20 ; ses plafonds vont de 40 à 60, jusqu'à 80 dans son point fort.
 - **Règle.** La liste des habitants les montre tous, avec des filtres (statistique, poste, maîtres…) et des tris (par
-  n'importe quelle statistique), pour repérer qui déplacer et qui former.
-- **Règle.** La fiche d'un habitant montre ses statistiques, ses plafonds (un trait sur chaque barre), son poste et son
-  bonheur.
+  n'importe quelle statistique), pour repérer qui déplacer et qui former. La fiche d'un habitant montre ses
+  statistiques, ses plafonds (un trait sur chaque barre), son poste et son bonheur.
 - **Règle.** Le bonheur d'un habitant vient de sa maison, de ce qu'il obtient à l'étal et du charme de la ville rapporté
   au nombre d'habitants : une ville qui grandit doit s'embellir d'autant. Il ne donne que des bonus : heureux, on
   travaille et on progresse mieux ; malheureux, on perd ces bonus, rien de plus.
@@ -174,23 +170,22 @@
 - **Règle.** Selon où elle travaille, elle débloque des répliques, des tenues et des idées.
 - **Règle.** Personne ne la connaît. Elle arrive dans un lieu vide, avec des trous de mémoire et quelques idées.
 - **À toi.** Son histoire, que tu écriras.
-- **Règle.** La tente vient en premier, la Place en deuxième.
-- **Règle.** La tente est son logis de départ, et seulement cela : elle n'a ni stock ni poste.
+- **Règle.** La tente vient en premier, la Place en deuxième. La tente est son logis de départ, et seulement cela :
+  elle n'a ni stock ni poste.
 - **Règle.** La Chimère dort quand le joueur le veut : il touche son logis (la tente, puis sa maison), et elle va s'y
-  coucher.
-- **Règle.** Endormie, elle quitte son poste jusqu'à ce que le joueur la réveille ; son sommeil n'a pas d'autre effet.
-- **Règle.** Le stock de départ est un tas posé au sol près de la tente ; il sert d'entrepôt jusqu'au premier
-  entrepôt. Au début, la Chimère tient un poste « à tout faire » (porter, bâtir, récolter, défricher).
-- **Règle.** Ce poste appartient au tas de départ ; il disparaît avec lui, quand le tas est vide et que la loge et un
-  entrepôt sont bâtis.
+  coucher. Endormie, elle quitte son poste jusqu'à ce que le joueur la réveille ; son sommeil n'a pas d'autre effet.
+- **Règle.** Le stock de départ est un tas posé au sol près de la tente, qui sert d'entrepôt jusqu'au premier
+  entrepôt. Il porte un poste « à tout faire » (porter, bâtir, récolter, défricher), que tient la Chimère ; le poste
+  disparaît avec le tas, quand le tas est vide et que la loge et un entrepôt sont bâtis.
+- **À toi.** Entre la fin du tas de départ et la cabane du paysagiste, personne ne retire les arbres et les rochers.
+  Ma reco : le poste « à tout faire » dure jusqu'à ce que la cabane du paysagiste soit bâtie, elle aussi.
 - **Défaut.** Le tas de départ tient 50 marchandises. La Place, la cabane et les premiers bâtiments ne demandent que du
   Bois et de la Pierre ; le stock de départ suffit à la Place et à deux cabanes.
 - **Règle.** Les premiers habitants arrivent vite, un par un, à mesure que les lits le permettent. Chacun est fort dans
   une discipline, apporte l'idée de son lieu de travail et le bâtit avec la Chimère, avant même la loge. Ils restent en
   ville comme habitants ordinaires ; ce ne sont pas des maîtres.
-- **Règle.** Ils n'attendent ni poste libre, puisqu'ils apportent l'idée de ce qui l'ouvrira, ni de quoi manger,
-  puisqu'au début aucun champ ne tourne ; il leur faut seulement un lit. La règle de la nourriture vaut pour les
-  arrivées qui les suivent.
+- **Règle.** Ils n'attendent ni poste libre (ils apportent l'idée de ce qui l'ouvrira) ni de quoi manger (au début,
+  aucun champ ne tourne) : il leur faut seulement un lit. La règle de la nourriture vaut pour les arrivées suivantes.
 - **Défaut.** Ils commencent à 40 dans la sous-statistique de leur métier. Le déroulé :
   1. La Chimère plante sa tente ; le joueur choisit l'endroit. Elle connaît déjà la tente, la Place, la cabane, le
      chemin de terre, le pont, le bûcheron et la carrière.
@@ -238,10 +233,9 @@
   pinceau est une plantation d'une seule plante. Le sol devient de la terre labourée et les plantes poussent à vue.
 - **Règle.** Des plantations qui se touchent forment un champ, qui peut mêler plusieurs plantes ; un chemin entre deux
   plantations les sépare en deux champs.
-- **Règle.** Il n'y a pas de bâtiment « ferme » : le champ est le lieu de travail. Il ouvre des postes de fermiers,
-  d'autant plus qu'il est grand, et ses fermiers s'occupent de toutes ses plantations (sous-statistique culture).
-- **Règle.** Un champ ouvre un poste par tranche entière de sa surface ; plus petit qu'une tranche, il n'en ouvre
-  aucun, et le jeu dit de l'agrandir ou de le rejoindre à un autre.
+- **Règle.** Il n'y a pas de bâtiment « ferme » : le champ est le lieu de travail. Il ouvre un poste de fermier par
+  tranche entière de sa surface (plus petit qu'une tranche, il n'en ouvre aucun, et le jeu dit de l'agrandir ou de le
+  rejoindre à un autre) ; ses fermiers s'occupent de toutes ses plantations (sous-statistique culture).
 - **Défaut.** Une tranche fait 400 m² ; une plantation fait au moins 4 m de côté.
 - **Règle.** Les fermiers sèment, la plante pousse seule, puis ils récoltent et ressèment aussitôt, si le champ a ses
   graines. Une plante mûre attend qu'on la récolte : rien ne pourrit.
@@ -261,7 +255,8 @@
   attend ; quand sa production est pleine, il s'arrête.
 - **Règle.** Les charretiers vident ces stocks dans les entrepôts, où la ville conserve en gros, et y prennent ce dont
   les ateliers et les chantiers ont besoin. Tout passe par un entrepôt ; ils vont au plus près.
-- **Règle.** Le stock de la ville est ce que tiennent ses entrepôts (le tas de départ au début) : un chiffre par marchandise.
+- **Règle.** Le stock de la ville est ce que tiennent ses entrepôts (le tas de départ au début) : un chiffre par
+  marchandise.
 - **Règle.** Une liaison prioritaire, tirée par le joueur entre deux bâtiments, livre directement de l'un à l'autre sans
   passer par l'entrepôt : c'est l'outil pour optimiser.
 - **Défaut.** Chacun des deux petits stocks d'un bâtiment tient 10 marchandises ; un entrepôt en tient 200.
@@ -321,8 +316,7 @@
 - **Règle.** La force : toute roue à eau verse de la force dans son réseau, tout bâtiment hydraulique en puise. Un
   réseau, ce sont des roues et des bâtiments reliés par des arbres de transmission, posés comme une route courte ; ce
   qui n'est relié à rien ne partage rien. Le joueur gère un budget de force.
-- **Règle.** Une roue donne plus de force sur une rivière rapide, moins sur un canal. Les roues à eau n'ont besoin de
-  personne.
+- **Règle.** Une roue donne plus de force sur une rivière rapide, moins sur un canal ; elle n'a besoin de personne.
 - **Règle.** Un bâtiment hydraulique garde ses postes ; la force multiplie leur cadence. Sans force, il est à l'arrêt ;
   avec trop peu, tout son réseau ralentit en proportion. Un bâtiment hydraulique bâti consomme sa force, qu'il
   travaille ou non.
@@ -452,7 +446,7 @@
 ## 16. La présentation
 
 - **Règle.** Tout vient du pack POLYGON Fantasy Village (Synty), tel quel ; la caméra, la lumière et le rendu
-  s'adaptent à lui.
+  s'adaptent à lui. On garde son rendu : son sol peint, son eau, ses shaders, son profil de filtres, sa lumière.
 - **Règle.** Le but : une vraie partie, ville bâtie, aussi belle que la démo du pack. Pour y arriver, chaque bâtiment
   arrive habillé d'accessoires du pack, composés par le développeur ; le sol s'adapte sous et autour de ce qu'on pose
   (de la terre sous un bâtiment, l'herbe écartée) ; les routes se peignent dans le sol. À regarder : Manor Lords et
@@ -460,7 +454,6 @@
 - **Règle.** Caméra en perspective, comme la démo (champ de vision autour de 40°). Caméra de gestion à main invisible :
   se déplacer (clavier, bords de l'écran, clic glissé), tourner (Q/E), zoomer à la molette. En zoomant, elle s'abaisse
   doucement : de loin, la ville en maquette ; de près, les habitants presque de face.
-- **Règle.** Le rendu du pack tel quel : son sol peint, son eau, ses shaders, son profil de filtres, sa lumière.
 - **Règle.** Quand on pose ou qu'on peint, le jeu montre ce qui ne se voit pas : l'eau qui irrigue, la portée des
   lanternes, le réseau de force.
 - **Règle.** Les habitants ordinaires sont les humains du pack ; les maîtres, ses animaux humanoïdes, distingués par
