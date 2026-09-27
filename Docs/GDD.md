@@ -279,7 +279,11 @@
 - **Règle.** Pose libre : aucune case pour le joueur, on parle en mètres. La porte d'un bâtiment reste dégagée : rien ne
   se pose devant. Un bâtiment qu'on ne peut plus atteindre le montre.
 - **Défaut.** Devant une porte, 1,5 m restent libres, sur la largeur de la porte.
-- **Défaut.** Une touche brève tourne d'un cran de 15° ; tenue, on tourne au degré près.
+- **Règle.** Poser : la construction choisie suit le pointeur ; son aperçu est vert si elle se pose là, rouge sinon,
+  et la raison s'écrit. **R** la tourne : une touche brève d'un cran, tenue en bougeant la souris au degré près. Le
+  clic gauche pose ; l'outil reste en main pour la suivante ; un clic droit bref ou Échap le pose de côté.
+- **Défaut.** Le cran de rotation : 15°.
+- **Règle.** Une construction posée attend ses bâtisseurs en fantôme translucide.
 - **À toi.** Retirer un arbre ou en planter un passe-t-il par la file des chantiers ? Ma reco : non, ce sont des tâches
   des paysagistes, dans l'ordre où le joueur les a désignées.
 - **Règle.** Ranger ou déplacer un bâtiment est un tout petit chantier : il se déconstruit en quelques secondes et se
@@ -469,7 +473,12 @@
 - **Règle.** Le jeu n'a pas de saisons.
 - **À toi.** Des saisons, plus tard ? Le pack n'en a que des bouts, et aucun bâtiment ni arbre d'hiver (détail dans la
   procédure `pack-synty`).
-- **À toi.** Le plan d'ensemble de l'interface ; le son et la musique.
+- **Règle.** On choisit quoi construire dans une barre en bas de l'écran : les familles en onglets, puis leurs
+  constructions.
+- **Règle.** Tant que le modèle d'une construction n'est pas choisi, elle se voit en boîte à sa taille, sa porte
+  marquée.
+- **À toi.** Le modèle de la cabane, et celui de la tente, que le pack n'a pas.
+- **À toi.** Le reste du plan de l'interface ; le son et la musique.
 
 ## 17. Le premier jouable
 

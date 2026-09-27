@@ -36,8 +36,11 @@ namespace Diciela.Controls
             _settings = settings;
         }
 
-        /// <summary>Levé quand l'outil change : une construction choisie ou posée de côté, une réponse nouvelle.</summary>
-        public event Action Changed;
+        /// <summary>Levé quand la construction en main change : choisie, ou posée de côté.</summary>
+        public event Action CurrentChanged;
+
+        /// <summary>Levé quand la réponse des règles de pose à la place visée change.</summary>
+        public event Action ResultChanged;
 
         /// <summary>La construction en cours de pose ; null quand l'outil est au repos.</summary>
         public StructureDefinition Current { get; private set; }
@@ -58,8 +61,8 @@ namespace Diciela.Controls
             _preview.Clear();
             Current = definition;
             _aimed = false;
-            Result = PlacementResult.Ok;
-            Changed?.Invoke();
+            SetResult(PlacementResult.Ok);
+            CurrentChanged?.Invoke();
         }
 
         /// <summary>Vise le sol sous ce point de l'écran ; hors du sol, l'aperçu se cache.</summary>
@@ -122,8 +125,8 @@ namespace Diciela.Controls
             _preview.Clear();
             Current = null;
             _aimed = false;
-            Result = PlacementResult.Ok;
-            Changed?.Invoke();
+            SetResult(PlacementResult.Ok);
+            CurrentChanged?.Invoke();
         }
 
         /// <summary>Demande aux règles de pose si la place visée convient, et le montre.</summary>
@@ -138,7 +141,7 @@ namespace Diciela.Controls
             if (result == Result)
                 return;
             Result = result;
-            Changed?.Invoke();
+            ResultChanged?.Invoke();
         }
     }
 }

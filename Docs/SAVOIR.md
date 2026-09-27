@@ -146,6 +146,10 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   sur la boîte.
 - **Un menu de diagnostic** vise le centre de triangles tirés sur chaque modèle et compte les fautes : c'est la preuve
   que la visée tient.
+- **Viser le sol suit le relief** (`Relief.TryRaycast`) : on ne marche que dans la tranche du rayon entre le plus haut
+  et le plus bas de la carte, par demi-mailles, puis on affine par dichotomie ; la boucle est bornée. **Tirer le sol
+  avec la caméra** prend un plan à la hauteur du point visé : sur une colline, le relief ferait sauter la prise
+  pendant le glisser. Deux questions, deux réponses, chacune nommée pour son usage.
 
 ### 2.8 Les gestes à la souris
 
@@ -242,6 +246,18 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   rien ; lire un fichier du pack par son chemin exact.
 - **UI Toolkit** : une couleur se juge sur le fond où elle s'écrit ; un panneau mis à l'échelle sur la seule largeur
   rapetisse sur une fenêtre étroite ; un bouton dont le texte passe à la ligne double la hauteur d'une barre.
+- **Un `PanelSettings` créé par script n'a pas de thème**, et sans thème aucun texte ne s'affiche : un fichier `.tss`
+  d'une ligne, `@import url("unity-theme://default");`, lui en donne un.
+- **Le pointeur compte depuis le bas de l'écran, UI Toolkit depuis le haut** : retourner y avant
+  `RuntimePanelUtils.ScreenToPanel`, mettre la racine du document en `PickingMode.Ignore`, et vérifier que l'élément
+  trouvé par `panel.Pick` est bien dans la barre. Le test inverse la conversion d'UI Toolkit pour viser le milieu de
+  la barre.
+- **Un monteur qui fabrique un prefab** le monte dans une scène d'aperçu (`EditorSceneManager.NewPreviewScene`) : la
+  scène ouverte reste propre. **Un matériau URP translucide par script** reprend les réglages de l'Inspector
+  (`BaseShaderGUI`) : surface transparente, mélange SrcAlpha / OneMinusSrcAlpha, pas d'écriture de profondeur, passes
+  DepthOnly et ShadowCaster coupées, file 3000. Un fantôme qui fait de l'ombre se lit comme une maison bâtie.
+- **`FindFirstObjectByType` est obsolète en Unity 6.6** : `FindAnyObjectByType`, et seulement hors du jeu (menus,
+  tests).
 - **La localisation** : toute chaîne visible passe par des clés (`strings.csv`) ; un test vérifie que chaque clé citée
   par l'UXML et par le code existe.
 
