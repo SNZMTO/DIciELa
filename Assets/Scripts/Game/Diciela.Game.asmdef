@@ -6,7 +6,8 @@
         "Diciela.Simulation.Core",
         "Diciela.Simulation.Land",
         "Diciela.Simulation",
-        "Diciela.View"
+        "Diciela.View",
+        "Diciela.Controls"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

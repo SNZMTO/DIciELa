@@ -7,7 +7,8 @@
         "Diciela.View",
         "Diciela.Controls",
         "Diciela.Game",
-        "UnityEngine.TestRunner"
+        "UnityEngine.TestRunner",
+        "Diciela.Simulation"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -30,6 +30,9 @@ namespace Diciela.Controls
         [Tooltip("La fiche des réglages de la caméra (Assets/Data/Settings).")]
         [SerializeField] private CameraSettings _settings;
 
+        [Tooltip("La fiche des réglages des gestes : le seuil du clic ou glisser (Assets/Data/Settings).")]
+        [SerializeField] private GestureSettings _gestures;
+
         private InputActionMap _map;
         private InputAction _move;
         private InputAction _rotate;
@@ -42,9 +45,10 @@ namespace Diciela.Controls
 
         private void OnEnable()
         {
-            if (_actions == null || _rig == null || _settings == null)
+            if (_actions == null || _rig == null || _settings == null || _gestures == null)
             {
-                Debug.LogError("DICIELA : les gestes de la caméra n'ont pas leurs actions, leur caméra ou leur fiche.", this);
+                Debug.LogError("DICIELA : les gestes de la caméra n'ont pas leurs actions, leur caméra ou leurs fiches.",
+                    this);
                 enabled = false;
                 return;
             }
@@ -89,7 +93,7 @@ namespace Diciela.Controls
                 _rig.Zoom(scroll / _settings.ScrollPerNotch, pointer);
 
             // Clic droit glissé : on saisit le sol là où l'on a appuyé, et on le tire jusqu'au pointeur.
-            float threshold = _settings.DragThresholdPixels;
+            float threshold = _gestures.DragThresholdPixels;
             if (_dragGesture.Update(_drag.IsPressed(), pointer, threshold))
                 _rig.BeginDrag(_dragGesture.Start);
             if (_dragGesture.IsDragging)

@@ -32,13 +32,21 @@ namespace Diciela.EditorTools
                 : ScriptableObject.CreateInstance<InputActionAsset>();
             InputActionMap camera = asset.FindActionMap(CameraControls.MapName) ??
                                     asset.AddActionMap(CameraControls.MapName);
-
             int added = AddIfMissing(camera, CameraControls.MoveAction, AddMove) +
                         AddIfMissing(camera, CameraControls.RotateAction, AddRotate) +
                         AddIfMissing(camera, CameraControls.ZoomAction, AddZoom) +
-                        AddIfMissing(camera, CameraControls.DragAction, AddDrag) +
-                        AddIfMissing(camera, CameraControls.OrbitAction, AddOrbit) +
-                        AddIfMissing(camera, CameraControls.PointerAction, AddPointer);
+                        AddButtonIfMissing(camera, CameraControls.DragAction, "<Mouse>/rightButton") +
+                        AddButtonIfMissing(camera, CameraControls.OrbitAction, "<Mouse>/middleButton") +
+                        AddPointerIfMissing(camera, CameraControls.PointerAction);
+
+            // La pose : R, un raccourci mnémonique, se lie au caractère (SAVOIR, section 3).
+            InputActionMap placement = asset.FindActionMap(PlacementControls.MapName) ??
+                                       asset.AddActionMap(PlacementControls.MapName);
+            added += AddButtonIfMissing(placement, PlacementControls.PlaceAction, "<Mouse>/leftButton") +
+                     AddButtonIfMissing(placement, PlacementControls.RotateAction, "<Keyboard>/#(r)") +
+                     AddButtonIfMissing(placement, PlacementControls.SecondaryAction, "<Mouse>/rightButton") +
+                     AddButtonIfMissing(placement, PlacementControls.CancelAction, "<Keyboard>/escape") +
+                     AddPointerIfMissing(placement, PlacementControls.PointerAction);
 
             if (added > 0)
             {
@@ -83,20 +91,16 @@ namespace Diciela.EditorTools
             zoom.expectedControlType = "Axis";
         }
 
-        private static void AddDrag(InputActionMap map)
+        private static int AddButtonIfMissing(InputActionMap map, string actionName, string binding)
         {
-            map.AddAction(CameraControls.DragAction, InputActionType.Button, "<Mouse>/rightButton");
+            return AddIfMissing(map, actionName, m => m.AddAction(actionName, InputActionType.Button, binding));
         }
 
-        private static void AddOrbit(InputActionMap map)
+        /// <summary>La position du pointeur ; chaque carte a la sienne, pour vivre sans les autres.</summary>
+        private static int AddPointerIfMissing(InputActionMap map, string actionName)
         {
-            map.AddAction(CameraControls.OrbitAction, InputActionType.Button, "<Mouse>/middleButton");
-        }
-
-        private static void AddPointer(InputActionMap map)
-        {
-            InputAction pointer = map.AddAction(CameraControls.PointerAction, InputActionType.Value, "<Pointer>/position");
-            pointer.expectedControlType = "Vector2";
+            return AddIfMissing(map, actionName, m =>
+                m.AddAction(actionName, InputActionType.Value, "<Pointer>/position").expectedControlType = "Vector2");
         }
 
         private static void RemoveTemplateActions()

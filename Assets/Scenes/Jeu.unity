@@ -119,6 +119,67 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &497507848
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 497507851}
+  - component: {fileID: 497507850}
+  - component: {fileID: 497507849}
+  m_Layer: 0
+  m_Name: Pose
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &497507849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 497507848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ff10119fb2b7924fb9cf1e26f0cee76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Diciela.Controls::Diciela.Controls.PlacementControls
+  _actions: {fileID: -944628639613478452, guid: ce45850f9084e5e49a79d052550d59e4, type: 3}
+  _settings: {fileID: 11400000, guid: 204ab065def165f4086048326d8c8426, type: 2}
+  _gestures: {fileID: 11400000, guid: 9e430839a075b79499fb905491d5c58f, type: 2}
+--- !u!114 &497507850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 497507848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed66d04f2f911f047bdd03ac32d6aff0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Diciela.View::Diciela.View.PlacementPreview
+  _settings: {fileID: 11400000, guid: 204ab065def165f4086048326d8c8426, type: 2}
+--- !u!4 &497507851
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 497507848}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &825663682
 GameObject:
   m_ObjectHideFlags: 0
@@ -277,7 +338,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Diciela.Game::Diciela.Game.GameRunner
   _settings: {fileID: 11400000, guid: 051fb01289143e44eb8a6080af577e51, type: 2}
   _session: {fileID: 11400000, guid: 74a6b5786649b5848a33d28f0bca1d06, type: 2}
+  _placementSettings: {fileID: 11400000, guid: 204ab065def165f4086048326d8c8426, type: 2}
   _cameraRig: {fileID: 1331289335}
+  _structureViews: {fileID: 1553068375}
+  _placementPreview: {fileID: 497507850}
+  _placementControls: {fileID: 497507849}
 --- !u!4 &1133228906
 Transform:
   m_ObjectHideFlags: 0
@@ -460,6 +525,52 @@ MonoBehaviour:
   _actions: {fileID: -944628639613478452, guid: ce45850f9084e5e49a79d052550d59e4, type: 3}
   _rig: {fileID: 1331289335}
   _settings: {fileID: 11400000, guid: 346b6f6dbac1cca47b62e858481a0eac, type: 2}
+  _gestures: {fileID: 11400000, guid: 9e430839a075b79499fb905491d5c58f, type: 2}
+--- !u!1 &1553068374
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1553068376}
+  - component: {fileID: 1553068375}
+  m_Layer: 0
+  m_Name: Constructions
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1553068375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1553068374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85e3d74b36a4cf04c97bbcb4e0dbb329, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Diciela.View::Diciela.View.StructureViews
+  _settings: {fileID: 11400000, guid: 204ab065def165f4086048326d8c8426, type: 2}
+--- !u!4 &1553068376
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1553068374}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -467,3 +578,5 @@ SceneRoots:
   - {fileID: 1331289334}
   - {fileID: 825663685}
   - {fileID: 1133228906}
+  - {fileID: 1553068376}
+  - {fileID: 497507851}

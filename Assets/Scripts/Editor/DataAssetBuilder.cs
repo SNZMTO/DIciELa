@@ -18,6 +18,7 @@ namespace Diciela.EditorTools
         internal const string MapCreationPath = SettingsFolder + "/CarteNeuve.asset";
         internal const string TestMapCreationPath = SettingsFolder + "/CarteNeuve_Test.asset";
         internal const string CameraSettingsPath = SettingsFolder + "/CameraSettings.asset";
+        internal const string GestureSettingsPath = SettingsFolder + "/GestureSettings.asset";
         internal const string PlacementSettingsPath = SettingsFolder + "/PlacementSettings.asset";
         internal const string InterfaceSettingsPath = SettingsFolder + "/InterfaceSettings.asset";
         private const string TextsPath = "Assets/Localization/strings.csv";
@@ -34,6 +35,7 @@ namespace Diciela.EditorTools
             EditorAssets.CreateIfMissing<MapCreationSettings>(MapCreationPath, null);
             EditorAssets.CreateIfMissing<MapCreationSettings>(TestMapCreationPath, FillTestMapCreation);
             EditorAssets.CreateIfMissing<CameraSettings>(CameraSettingsPath, null);
+            EditorAssets.CreateIfMissing<GestureSettings>(GestureSettingsPath, null);
             EditorAssets.CreateIfMissing<PlacementSettings>(PlacementSettingsPath, fiche =>
                 EditorAssets.Property(fiche, "_translucentMaterial").objectReferenceValue =
                     MaterialBuilder.TranslucentIfMissing(TranslucentMaterialPath));
