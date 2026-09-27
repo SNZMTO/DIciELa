@@ -34,6 +34,8 @@ En cas de doute, `unity list` (les outils du paquet `com.unity.pipeline`) ou la 
 
 ## Recompiler
 
+- Juste après un échec, `recompile_status` répond encore `"compilationFailed":true` pendant qu'il recompile (le
+  drapeau de la fois d'avant) : n'attendre que `"status":"completed"` ou `"up_to_date"`, jamais ce drapeau.
 - `recompile`, puis `recompile_status` en boucle bornée (30 × 3 s) jusqu'à `completed` ou `up_to_date`, puis
   `editor_status` jusqu'à prêt : la commande qui suit une recompilation échoue sinon (`Network error`).
 - **Jamais pendant le Play** (le garde-fou le bloque) : un moniteur du Input System resterait périmé.

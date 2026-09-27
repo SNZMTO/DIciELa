@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Diciela.Controls;
 using Diciela.Data;
 using Diciela.Game;
 using Diciela.View;
@@ -69,10 +70,17 @@ namespace Diciela.EditorTools
             GameRunner runner = EditorAssets.FindOrCreate<GameRunner>(scene, StartupObjectName);
             EditorAssets.AssignIfMissing(runner, "_settings", settings);
             EditorAssets.AssignIfMissing(runner, "_session", session);
+            EditorAssets.AssignIfMissing(runner, "_interfaceSettings",
+                EditorAssets.Load<InterfaceSettings>(DataAssetBuilder.InterfaceSettingsPath));
+            EditorAssets.AssignIfMissing(runner, "_catalog", EditorAssets.Load<Catalog>(ContentBuilder.CatalogPath));
             CameraRig rig = CameraBuilder.EnsureIn(scene);
             if (rig != null)
+            {
                 EditorAssets.AssignIfMissing(runner, "_cameraRig", rig);
+                EditorAssets.AssignIfMissing(runner, "_cameraControls", rig.GetComponent<CameraControls>());
+            }
             PlacementBuilder.EnsureIn(scene, runner);
+            InterfaceBuilder.EnsureIn(scene, runner);
             EditorSceneManager.SaveScene(scene, scenePath);
         }
 

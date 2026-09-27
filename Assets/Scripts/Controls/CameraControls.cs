@@ -42,6 +42,13 @@ namespace Diciela.Controls
         private InputAction _pointer;
         private DragGesture _dragGesture;
         private DragGesture _orbitGesture;
+        private IInterfaceArea _interfaceArea;
+
+        /// <summary>Relie les gestes à l'interface du jeu : sur elle, la ville ne défile, ne zoome ni ne se tire.</summary>
+        public void Bind(IInterfaceArea interfaceArea)
+        {
+            _interfaceArea = interfaceArea;
+        }
 
         private void OnEnable()
         {
@@ -79,8 +86,9 @@ namespace Diciela.Controls
 
             float deltaSeconds = Time.unscaledDeltaTime;
             Vector2 pointer = _pointer.ReadValue<Vector2>();
+            bool onInterface = _interfaceArea != null && _interfaceArea.Contains(pointer);
 
-            Vector2 move = _move.ReadValue<Vector2>() + EdgeDirection(pointer);
+            Vector2 move = _move.ReadValue<Vector2>() + (onInterface ? Vector2.zero : EdgeDirection(pointer));
             if (move != Vector2.zero)
                 _rig.Pan(Vector2.ClampMagnitude(move, 1f), deltaSeconds);
 
@@ -89,18 +97,18 @@ namespace Diciela.Controls
                 _rig.Rotate(rotate * _settings.RotateDegreesPerSecond * deltaSeconds);
 
             float scroll = _zoom.ReadValue<float>();
-            if (scroll != 0f)
+            if (scroll != 0f && !onInterface)
                 _rig.Zoom(scroll / _settings.ScrollPerNotch, pointer);
 
             // Clic droit glissé : on saisit le sol là où l'on a appuyé, et on le tire jusqu'au pointeur.
             float threshold = _gestures.DragThresholdPixels;
-            if (_dragGesture.Update(_drag.IsPressed(), pointer, threshold))
+            if (_dragGesture.Update(_drag.IsPressed(), pointer, threshold, onInterface))
                 _rig.BeginDrag(_dragGesture.Start);
             if (_dragGesture.IsDragging)
                 _rig.DragTo(pointer);
 
             // Bouton du milieu glissé : la vue tourne, de gauche à droite.
-            _orbitGesture.Update(_orbit.IsPressed(), pointer, threshold);
+            _orbitGesture.Update(_orbit.IsPressed(), pointer, threshold, onInterface);
             if (_orbitGesture.IsDragging && _orbitGesture.Delta.x != 0f)
                 _rig.Rotate(_orbitGesture.Delta.x * _settings.OrbitDegreesPerPixel);
         }

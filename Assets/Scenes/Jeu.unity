@@ -119,6 +119,74 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &250348209
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 250348212}
+  - component: {fileID: 250348211}
+  - component: {fileID: 250348210}
+  m_Layer: 0
+  m_Name: Interface
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &250348210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250348209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa041ca4d3a0ce34aa9891799a803a24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Diciela.UI::Diciela.UI.BuildBar
+--- !u!114 &250348211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250348209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: bf6dd8f8b4c6b5b4fa39a4d3996c982f, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: 63f7ce2268a7eb5488f2ec70e370e433, type: 3}
+  m_SortingOrder: 0
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
+--- !u!4 &250348212
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250348209}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &497507848
 GameObject:
   m_ObjectHideFlags: 0
@@ -339,10 +407,14 @@ MonoBehaviour:
   _settings: {fileID: 11400000, guid: 051fb01289143e44eb8a6080af577e51, type: 2}
   _session: {fileID: 11400000, guid: 74a6b5786649b5848a33d28f0bca1d06, type: 2}
   _placementSettings: {fileID: 11400000, guid: 204ab065def165f4086048326d8c8426, type: 2}
+  _interfaceSettings: {fileID: 11400000, guid: 7ce8faf8898188c4cb1d113cf9c4d0f1, type: 2}
+  _catalog: {fileID: 11400000, guid: 143dbf655335a8f499d31e7443a77f4c, type: 2}
   _cameraRig: {fileID: 1331289335}
+  _cameraControls: {fileID: 1331289337}
   _structureViews: {fileID: 1553068375}
   _placementPreview: {fileID: 497507850}
   _placementControls: {fileID: 497507849}
+  _buildBar: {fileID: 250348210}
 --- !u!4 &1133228906
 Transform:
   m_ObjectHideFlags: 0
@@ -580,3 +652,4 @@ SceneRoots:
   - {fileID: 1133228906}
   - {fileID: 1553068376}
   - {fileID: 497507851}
+  - {fileID: 250348212}

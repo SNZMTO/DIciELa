@@ -62,8 +62,8 @@ namespace Diciela.Tests.EditMode.Architecture
             ["Diciela.EditorTools"] = new Rule
             {
                 Folder = "Assets/Scripts/Editor",
-                Diciela = With(Layers(5), "Diciela.Persistence", "Diciela.View", "Diciela.Controls", "Diciela.Game",
-                    "Diciela.Scenarios"),
+                Diciela = With(Layers(5), "Diciela.Persistence", "Diciela.View", "Diciela.Controls", "Diciela.UI",
+                    "Diciela.Game", "Diciela.Scenarios"),
                 External = new[]
                 {
                     "Unity.InputSystem", "Unity.RenderPipelines.Core.Runtime", "Unity.RenderPipelines.Universal.Runtime"
