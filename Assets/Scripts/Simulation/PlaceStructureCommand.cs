@@ -1,32 +1,30 @@
 using System;
 using Diciela.Data;
-using UnityEngine;
+using Diciela.Simulation.Land;
 
 namespace Diciela.Simulation
 {
     /// <summary>
-    /// L'ordre « poser » : une construction, sa place (le centre de son empreinte, en mètres sur le plan XZ) et son
-    /// angle. Refusé, il ne change rien et les constructions disent pourquoi.
+    /// L'ordre « poser » : une construction, sa place et son angle. Il se vérifie par les règles de pose, comme
+    /// l'aperçu ; refusé, il ne change rien et les constructions disent pourquoi.
     /// </summary>
     public sealed class PlaceStructureCommand : Command
     {
-        public PlaceStructureCommand(StructureDefinition definition, Vector2 center, float rotationDegrees)
+        public PlaceStructureCommand(StructureDefinition definition, Placement placement)
         {
             if (ReferenceEquals(definition, null))
                 throw new ArgumentNullException(nameof(definition));
 
             Definition = definition;
-            Center = center;
-            RotationDegrees = rotationDegrees;
+            Placement = placement;
         }
 
         public StructureDefinition Definition { get; }
-        public Vector2 Center { get; }
-        public float RotationDegrees { get; }
+        public Placement Placement { get; }
 
         internal override void Execute(World world)
         {
-            world.Structures.Place(Definition, Center, RotationDegrees);
+            world.Structures.Place(Definition, Placement);
         }
     }
 }

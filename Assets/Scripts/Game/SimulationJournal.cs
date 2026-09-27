@@ -55,15 +55,19 @@ namespace Diciela.Game
 
         private static void OnStructurePlaced(Structure structure)
         {
-            Debug.Log(Prefix + "construction n° " + structure.Id + " (" + structure.Definition.Id + ") posée en " +
-                      structure.Center + ", à " + structure.RotationDegrees + "°.");
+            Debug.Log(Prefix + "construction n° " + structure.Id + " (" + structure.Definition.Id + ") posée " +
+                      Describe(structure.Placement) + ".");
         }
 
-        private static void OnPlacementRefused(StructureDefinition definition, Vector2 center, float rotation,
+        private static void OnPlacementRefused(StructureDefinition definition, Placement placement,
             PlacementResult reason)
         {
-            Debug.Log(Prefix + "pose refusée (" + definition.Id + " en " + center + ", à " + rotation + "°) : " + reason +
-                      ".");
+            Debug.Log(Prefix + "pose refusée (" + definition.Id + " " + Describe(placement) + ") : " + reason + ".");
+        }
+
+        private static string Describe(Placement placement)
+        {
+            return "en " + placement.Center + ", à " + placement.RotationDegrees + "°";
         }
 
         private static string Describe(Clock clock)

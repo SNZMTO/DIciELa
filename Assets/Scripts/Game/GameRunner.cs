@@ -29,6 +29,8 @@ namespace Diciela.Game
         private World _world;
         private FixedStepAccumulator _accumulator;
         private SimulationJournal _journal;
+        private string _mapPath;
+        private AsyncOperation _mapLoading;
         private Scene _mapScene;
         private bool _quitting;
 
@@ -49,17 +51,18 @@ namespace Diciela.Game
 
         private IEnumerator LoadMapThenCreateWorld()
         {
-            string mapPath = _session.MapScenePath;
-            AsyncOperation loading = SceneLoader.LoadAdditive(mapPath);
-            if (loading == null)
+            _mapPath = _session.MapScenePath;
+            _mapLoading = SceneLoader.LoadAdditive(_mapPath);
+            if (_mapLoading == null)
             {
-                Debug.LogError("DICIELA : la carte « " + mapPath + " » ne se charge pas.", this);
+                Debug.LogError("DICIELA : la carte « " + _mapPath + " » ne se charge pas.", this);
                 enabled = false;
                 yield break;
             }
-            yield return loading;
+            yield return _mapLoading;
+            _mapLoading = null;
 
-            _mapScene = SceneManager.GetSceneByPath(mapPath);
+            _mapScene = SceneManager.GetSceneByPath(_mapPath);
             SceneManager.SetActiveScene(_mapScene);
             if (!TryCreateWorld(MapRoot.FindIn(_mapScene)))
                 enabled = false;
@@ -113,9 +116,22 @@ namespace Diciela.Game
             _world = null;
 
             // En quittant le Play, Unity décharge tout lui-même ; sinon, la carte part avec son démarrage.
-            if (!_quitting && _mapScene.IsValid() && _mapScene.isLoaded)
-                SceneManager.UnloadSceneAsync(_mapScene);
+            if (!_quitting)
+                UnloadMap();
+            _mapLoading = null;
             _mapScene = default;
+        }
+
+        /// <summary>Décharge la carte ; si elle se charge encore, elle partira à la fin de son chargement.</summary>
+        private void UnloadMap()
+        {
+            if (_mapLoading != null)
+            {
+                string mapPath = _mapPath;
+                _mapLoading.completed += _ => SceneManager.UnloadSceneAsync(mapPath);
+            }
+            else if (_mapScene.IsValid() && _mapScene.isLoaded)
+                SceneManager.UnloadSceneAsync(_mapScene);
         }
 
         private void OnQuitting()

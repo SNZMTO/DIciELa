@@ -23,6 +23,7 @@ namespace Diciela.View
         private float _targetDistance;
         private float _distance;
         private float _distanceVelocity;
+        private Vector3 _grabbedPoint;
 
         /// <summary>Vrai quand la caméra montre une carte.</summary>
         public bool IsShowing => _relief != null;
@@ -59,14 +60,26 @@ namespace Diciela.View
             MovePivot(direction * (_distance * _settings.PanSpeedPerDistance * deltaSeconds));
         }
 
-        /// <summary>Déplace le point visé comme si l'on tirait le sol avec le pointeur, d'un nombre de pixels.</summary>
-        public void Drag(Vector2 pixelDelta, float screenHeightPixels)
+        /// <summary>
+        /// Saisit le sol sous ce point de l'écran, pour le tirer ensuite avec <see cref="DragTo"/>. Faux si ce point ne
+        /// vise pas le sol (au-dessus de l'horizon, ou plus loin que ce que la caméra affiche).
+        /// </summary>
+        public bool BeginDrag(Vector2 screenPoint)
         {
-            if (!IsShowing || !(screenHeightPixels > 0f))
+            if (!IsShowing)
+                return false;
+            return TryGroundPoint(screenPoint, _relief.HeightAt(_pivot.x, _pivot.y), out _grabbedPoint);
+        }
+
+        /// <summary>
+        /// Tire le sol saisi jusqu'à ce point de l'écran : le point visé se déplace pour que le sol saisi revienne sous
+        /// le pointeur, quelle que soit l'inclinaison de la vue (SAVOIR, 2.8).
+        /// </summary>
+        public void DragTo(Vector2 screenPoint)
+        {
+            if (!IsShowing || !TryGroundPoint(screenPoint, _grabbedPoint.y, out Vector3 underPointer))
                 return;
-            float metersPerPixel = 2f * _distance * Mathf.Tan(_settings.FieldOfView * 0.5f * Mathf.Deg2Rad) /
-                                   screenHeightPixels;
-            MovePivot(-pixelDelta * metersPerPixel);
+            SetPivot(_pivot + new Vector2(_grabbedPoint.x - underPointer.x, _grabbedPoint.z - underPointer.z));
         }
 
         /// <summary>Tourne autour du point visé ; un angle positif tourne la vue vers la droite.</summary>
@@ -97,14 +110,36 @@ namespace Diciela.View
             Apply();
         }
 
-        /// <summary>Déplace le point visé dans le repère de la vue (x à droite, y devant), sans quitter la carte.</summary>
+        /// <summary>Déplace le point visé dans le repère de la vue (x à droite, y devant).</summary>
         private void MovePivot(Vector2 viewMeters)
         {
             float yaw = _yawDegrees * Mathf.Deg2Rad;
             var right = new Vector2(Mathf.Cos(yaw), -Mathf.Sin(yaw));
             var forward = new Vector2(Mathf.Sin(yaw), Mathf.Cos(yaw));
-            Vector2 moved = _pivot + right * viewMeters.x + forward * viewMeters.y;
-            _pivot = new Vector2(Mathf.Clamp(moved.x, 0f, _relief.SizeX), Mathf.Clamp(moved.y, 0f, _relief.SizeZ));
+            SetPivot(_pivot + right * viewMeters.x + forward * viewMeters.y);
+        }
+
+        /// <summary>Pose le point visé, en mètres sur le plan XZ, sans quitter la carte.</summary>
+        private void SetPivot(Vector2 pivot)
+        {
+            _pivot = new Vector2(Mathf.Clamp(pivot.x, 0f, _relief.SizeX), Mathf.Clamp(pivot.y, 0f, _relief.SizeZ));
+        }
+
+        /// <summary>
+        /// Le point où le rayon de ce point de l'écran touche le plan horizontal à cette hauteur ; faux s'il ne le touche
+        /// pas, ou plus loin que ce que la caméra affiche.
+        /// </summary>
+        private bool TryGroundPoint(Vector2 screenPoint, float height, out Vector3 point)
+        {
+            Ray ray = _camera.ScreenPointToRay(screenPoint);
+            var ground = new Plane(Vector3.up, new Vector3(0f, height, 0f));
+            if (ground.Raycast(ray, out float along) && along <= _camera.farClipPlane)
+            {
+                point = ray.GetPoint(along);
+                return true;
+            }
+            point = default;
+            return false;
         }
 
         private void Apply()

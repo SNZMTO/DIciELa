@@ -232,6 +232,7 @@ code.
 | déclencheur, récompense | `Trigger`, `Reward` | ordre | `Command` | roue, arbre de transmission | `Waterwheel`, `Shaft` |
 | savoir de la ville | `Knowledge` | monde | `World` | pastille | `StatusBadge` |
 | déroulé du départ | `Opening` | instantané | `Snapshot` | description de la carte | `MapDescription` |
+| place et angle | `Placement` | règles de pose | `PlacementRules` | aperçu ; fantôme (posé, pas bâti) | `Preview` ; `Planned` |
 
 ## 10. La carte, les scènes et la sauvegarde
 
