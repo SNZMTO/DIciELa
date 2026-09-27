@@ -468,8 +468,8 @@
 - **Règle.** Le bouton du milieu glissé de haut en bas incline la vue, en plus de ce que donne le zoom, et le zoom
   garde ce choix. Le haut de l'écran reste au moins 5° sous l'horizon, car la carte n'a pas de décor au-delà, et la
   vue ne dépasse pas 80°, une vue d'oiseau (Défauts).
-- **Règle.** Les ombres couvrent tout le sol visible, de près comme de loin ; le brouillard ne voile que le lointain et
-  recule quand la caméra s'éloigne.
+- **Règle.** Les ombres vont jusqu'au sol vu en haut de l'écran, de près comme de loin, dans une borne (50 à 300 m,
+  Défauts) ; le brouillard ne voile que le lointain et recule quand la caméra s'éloigne.
 - **À toi.** Les touches de la caméra et son glisser. Ma reco (c'est ce qui est codé) : des touches liées à leur place
   sur le clavier, pour que tout clavier ait la même main (en AZERTY : ZQSD pour se déplacer, A et E pour tourner) ; le
   glisser au clic droit, le clic droit bref restant « reculer d'un cran ».
