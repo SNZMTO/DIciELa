@@ -55,14 +55,14 @@ Un assemblage naît avec son premier code ; tous sont en références explicites
 | Simulation.Society | Data, Core, Land, Economy |
 | Simulation | Data, Core, Land, Economy, Society |
 | Persistence | Data et les cinq de la simulation ; Newtonsoft (seul à l'avoir) |
-| View | Data et les cinq de la simulation |
+| View | Data et les cinq de la simulation ; URP (les ombres et le brouillard qui suivent le zoom) |
 | Controls | View, Data, la simulation ; Input System |
 | UI | Controls, View, Persistence, Data, la simulation |
 | Game | tout ce qui précède |
 | Scenarios | Data, la simulation |
 | EditorTools | Data, la simulation, Persistence, View, Controls, UI, Game, Scenarios ; Input System, URP (réglages de la caméra) |
 | Tests.EditMode | Data, la simulation, Persistence, Scenarios ; NUnit, Test Runner |
-| Tests.PlayMode | tout l'exécutable ; NUnit, Test Runner |
+| Tests.PlayMode | tout l'exécutable ; NUnit, Test Runner, Input System et son banc d'essai, URP |
 
 **La règle de passage.** Le haut appelle le bas ; le bas lève des événements que le haut écoute ; un calcul qui a
 besoin de deux couches se fait dans la plus haute. Un système ne modifie que ce qu'il possède ; pour changer l'état
@@ -141,12 +141,12 @@ sauvegardé.
   l'économie, la société, le monde.
 - **Les ordres** (le patron Commande) : chaque geste qui change la ville est un petit objet envoyé au monde : poser,
   tracer, peindre, effacer, ranger, reposer, déplacer (angle compris), affecter, fermer un poste, régler. Chacun est
-  vérifié en entier avant d'agir, par la même fonction que l'aperçu du fantôme, et lève son propre événement. Déplacer
+  vérifié en entier avant d'agir, par la même fonction que l'aperçu, et lève son propre événement. Déplacer
   est une opération à part entière, jamais « retirer puis reposer ». Les ordres attendent le début du pas suivant.
 - **Seule la simulation change la simulation.** Ce qui modifie l'état d'un système (poser, faire avancer le temps,
   tenir le maillage) est `internal`, ouvert par `InternalsVisibleTo` aux seules couches de la simulation au-dessus de
   lui ; un ordre (`Command`) ne s'exécute que par le monde. Au-dessus, on lit, on écoute et on envoie des ordres.
-- **Les événements** : des `event Action<…>` nommés au passé (`BuildingPlaced`, `DayEnded`). Ceux levés pendant un pas
+- **Les événements** : des `event Action<…>` nommés au passé (`StructurePlaced`, `DayEnded`). Ceux levés pendant un pas
   sont mis en file et livrés à la fin de la couche, jamais au milieu d'une boucle. Dans la simulation, un système
   n'écoute que pour tenir à jour ce qu'il possède ou ce qu'il déduit.
 - **La topologie** : le maillage lève « topologie modifiée » avec un numéro de version à chaque pose, retrait ou tracé.
@@ -241,10 +241,11 @@ code.
 - **Les scènes.** `Carte` est au développeur : le Terrain, l'eau, la lumière, les filtres, et ce qu'il y pose (arbres,
   rochers, champs sauvages, sortes d'eau, point d'arrivée). Elle naît d'une copie de la démo du pack dont le menu de
   montage ne garde que le soleil, les filtres et le Terrain (relief vierge) ; il ne la touche plus ensuite. `Jeu` est
-  montée par le même menu : démarrage, caméra, interface ; elle charge `Carte` et en fait la scène active, sinon la
-  lumière du pack est perdue. `JeuTest`, montée par le même menu, charge `CarteTest` (plate, éditeur seulement). Chaque
-  scène racine a sa fiche de session, lue avant tout chargement : les tests ne peuvent pas atteindre la vraie partie. On
-  ne fixe jamais la scène de départ du Play ; un menu `DICIELA/Jouer` ouvre `Jeu` et lance le Play.
+  montée par le même menu : démarrage, caméra, interface, sans soleil à elle ; elle charge `Carte` (refusée si elle est
+  déjà ouverte dans l'éditeur) et en fait la scène active, sinon la lumière du pack est perdue. `JeuTest`, montée par
+  le même menu, charge `CarteTest` (plate, éditeur seulement). Chaque scène racine a sa fiche de session, lue avant
+  tout chargement : les tests ne peuvent pas atteindre la vraie partie. On ne fixe jamais la scène de départ du Play ;
+  un menu `DICIELA/Jouer` ouvre `Jeu`, seule, et lance le Play.
 - **La carte entre dans la simulation en données pures.** Au lancement d'un monde, `Game` convertit la scène `Carte` en
   une description : hauteurs en mètres, eaux et leur sorte, arbres, rochers, champs sauvages, point d'arrivée, avec des
   identifiants tirés de la position arrondie. Le relief entre le premier, lu sur le Terrain désigné par la racine de la
@@ -252,9 +253,9 @@ code.
   Le reste entre avec les systèmes qui s'en servent. `World` reçoit la description ; la ville témoin en fabrique une.
   L'empreinte de la description est sauvegardée : si la carte a été repeinte, les poses sont revérifiées par la fonction
   des ordres.
-- **La copie de travail du Terrain.** La vue travaille sur une copie en mémoire (`Instantiate` du TerrainData, donnée
-  au Terrain et au TerrainCollider), jamais enregistrée : modifier le Terrain en Play le modifierait pour de bon. Le
-  rangement du Terrain dans Git est dans SAVOIR 2.5.
+- **La copie de travail du Terrain.** Ce qui modifie le sol en jeu travaille sur une copie en mémoire (`Instantiate`
+  du TerrainData, donnée au Terrain et au TerrainCollider), jamais enregistrée : modifier le Terrain en Play le
+  modifierait pour de bon. Le rangement du Terrain dans Git est dans SAVOIR 2.5.
 - **La sauvegarde.** Chaque système donne et reprend son état sous forme d'instantanés, des données simples distinctes
   de ses classes vivantes et définies dans sa couche. `Persistence` en fait du JSON (Newtonsoft), l'écrit de façon
   atomique et convertit les vieux fichiers sur le JSON lui-même ; elle reçoit son dossier, elle ne le cherche pas. Le
@@ -269,8 +270,9 @@ code.
 - **La vue** écoute les événements et ne photographie jamais : elle se construit à partir de l'état au chargement,
   puis suit les événements, par la même routine de pose (SAVOIR 2.9). Chaque abonnement est défait dans `OnDestroy`.
 - **La caméra de gestion** : la vue la tient (`CameraRig` : un point visé sur la carte, qui suit le relief de la
-  simulation, et une distance qui règle l'inclinaison) ; les gestes la commandent (`CameraControls`) ; ses chiffres
-  sont dans une fiche.
+  simulation, et une distance qui règle l'inclinaison ; `CameraAtmosphere` : les ombres et le brouillard qui suivent
+  le zoom, sur une copie en mémoire des réglages du rendu, rendue à la sortie) ; les gestes la commandent
+  (`CameraControls`) ; ses chiffres sont dans une fiche. La visée de la pose passe après elle (SAVOIR 2.8).
 - **Les gestes** : un seul asset d'actions, monté par un script d'éditeur. Les raccourcis se lient au caractère, le
   déplacement à la position (SAVOIR 3). Un geste appartient à la ville ou à l'interface dès l'enfoncement ; clic ou
   glisser se décide au relâchement (SAVOIR 2.8). Un panneau ouvert rend la ville muette ; les conteneurs plein écran
@@ -279,16 +281,18 @@ code.
 - **L'interface** suit le patron MVP : un présentateur écoute la simulation et remplit son panneau. Pour les écrans
   chargés (l'étal, la liste des habitants), la liaison de données de UI Toolkit reste possible.
 - **Aucun état statique modifiable** dans la simulation : le registre, le catalogue et les textes sont des objets
-  créés par `Game`. Le Play de ce projet ne recharge ni le code ni la scène : `Game` crée le monde et les actions
-  d'entrée, et les libère à la sortie.
+  créés par `Game`. Le Play de ce projet ne recharge ni le code ni la scène : `Game` crée le monde, la table des textes
+  et l'outil de pose, et les libère à la sortie ; chaque composant de gestes active sa carte de l'asset d'actions dans
+  `OnEnable` et la désactive dans `OnDisable`.
 
 ## 12. Les tests et les garde-fous
 
 - **EditMode** pour toute la simulation, par les ordres. Les fiches des tests sont créées en mémoire et remplies par
   une seule fabrique de test (par `SerializedObject`, le chemin de l'Inspector), puis détruites.
-- **PlayMode** pour ce qui a besoin d'une scène : la scène `Jeu` crée le monde et le fait avancer (lu dans le journal) ;
-  poser, tourner, déplacer, ranger par les mêmes appels que les gestes ;
-  l'asset du Terrain inchangé après un Play ; deux entrées en Play de suite sans abonné en double.
+- **PlayMode** pour ce qui a besoin d'une scène : la scène `JeuTest` crée le monde sur sa carte plate et le fait
+  avancer (lu dans le journal) ; deux parties de suite y posent chacune une seule fois, et l'asset du Terrain en sort
+  inchangé ; poser, tourner, déplacer, ranger par les mêmes appels que les gestes ; les gestes eux-mêmes, joués par une
+  souris et un clavier simulés (le banc d'essai de l'Input System).
 - **Les tests qui rapportent le plus** sont dans SAVOIR 4. L'oracle du A* est un Dijkstra naïf écrit dans les tests,
   pas celui du jeu. Les fichiers témoins (or, vieilles sauvegardes) sont dans `Assets/Tests/Fixtures`, en lecture
   seule, régénérés par un menu seulement.

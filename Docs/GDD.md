@@ -433,12 +433,16 @@
 - **Règle.** Une expédition part vers un gisement : une caravane avec des marchandises et des habitants. Plus il est
   loin, plus elle met de temps ; plus il est gros, plus elle rapporte. Rien n'est jamais perdu, au pire un retard ou
   moins de ressources ; le vrai coût, ce sont les habitants absents de leur poste.
-- **À toi.** Ce qu'emporte une caravane, et si un gisement s'épuise.
+- **À toi.** Ce qu'emporte une caravane, et si un gisement s'épuise. Ma reco : la caravane emporte des vivres en
+  proportion de la distance, et les marchandises que le lieu demande, comme les expéditions d'Anno 1800 ; un gisement
+  ne s'épuise pas, puisque la règle met le vrai coût dans les habitants absents, et il n'y a pas de stock lointain à
+  compter.
 
 ## 15. La run
 
 - **Règle.** Elle se joue sur la Place, sous un autre angle de caméra.
-- **À toi.** Cet angle : en zoomant sur la Place, ou une autre vue ?
+- **À toi.** Cet angle : en zoomant sur la Place, ou une autre vue ? Ma reco : zoomer sur la Place et y figer la
+  caméra en vue de table, la ville autour : on voit qu'elle continue de tourner, et il n'y a qu'une scène.
 - **Règle.** Au tour par tour, avec une main de cartes, des dés et des contrats, en 20 à 30 minutes.
 - **Règle.** Le Fric n'existe que dans la run, pour ses parties et ses gags ; jamais en ville, jamais rapporté.
 - **Règle.** Elle rapporte à la ville des décos rares, des idées (des plans vus ailleurs), des lieux et des gisements
@@ -457,9 +461,15 @@
   (de la terre sous un bâtiment, l'herbe écartée) ; les routes se peignent dans le sol. À regarder : Manor Lords et
   Foundation, deux jeux dont les villes bâties par les joueurs ressemblent à des maquettes.
 - **Règle.** Caméra en perspective, comme la démo (champ de vision autour de 40°). Caméra de gestion à main invisible :
-  se déplacer (clavier, bords de l'écran, clic droit glissé qui tire le sol), tourner (Q/E, ou le bouton du milieu
-  glissé), zoomer à la molette, vers l'endroit que vise la souris. En zoomant, elle s'abaisse doucement : de loin, la
-  ville en maquette ; de près, les habitants presque de face.
+  se déplacer (clavier, bords de l'écran, clic droit glissé qui tire le sol), tourner (A et E en AZERTY, ou le bouton
+  du milieu glissé de gauche à droite), zoomer à la molette, vers l'endroit que vise la souris. En zoomant, elle
+  s'abaisse doucement, d'autant à chaque cran : de loin, la ville en maquette ; de près, les habitants presque de face.
+  On part à mi-chemin des crans.
+- **Règle.** Le bouton du milieu glissé de haut en bas incline la vue, en plus de ce que donne le zoom, et le zoom
+  garde ce choix. Le haut de l'écran reste au moins 5° sous l'horizon, car la carte n'a pas de décor au-delà, et la
+  vue ne dépasse pas 80°, une vue d'oiseau (Défauts).
+- **Règle.** Les ombres couvrent tout le sol visible, de près comme de loin ; le brouillard ne voile que le lointain et
+  recule quand la caméra s'éloigne.
 - **À toi.** Les touches de la caméra et son glisser. Ma reco (c'est ce qui est codé) : des touches liées à leur place
   sur le clavier, pour que tout clavier ait la même main (en AZERTY : ZQSD pour se déplacer, A et E pour tourner) ; le
   glisser au clic droit, le clic droit bref restant « reculer d'un cran ».
@@ -472,13 +482,16 @@
 - **Règle.** Le pack n'a pas d'animations : un pack d'animations est à acheter, par le développeur.
 - **Règle.** Le jeu n'a pas de saisons.
 - **À toi.** Des saisons, plus tard ? Le pack n'en a que des bouts, et aucun bâtiment ni arbre d'hiver (détail dans la
-  procédure `pack-synty`).
+  procédure `pack-synty`). Ma reco : non ; si le rythme en demande un jour, un événement du temps plutôt que quatre
+  décors, comme les sécheresses de Timberborn.
 - **Règle.** On choisit quoi construire dans une barre en bas de l'écran : les familles en onglets, puis leurs
   constructions.
 - **Règle.** Tant que le modèle d'une construction n'est pas choisi, elle se voit en boîte à sa taille, sa porte
   marquée.
 - **À toi.** Le modèle de la cabane, et celui de la tente, que le pack n'a pas.
-- **À toi.** Le reste du plan de l'interface ; le son et la musique.
+- **À toi.** Le reste du plan de l'interface ; le son et la musique. Ma reco : chaque panneau naît avec son système
+  (la liste des habitants avec eux, l'étal avec le troc), sur le côté, la ville visible derrière, comme dans
+  Timberborn ; le son et la musique après le premier jouable, avec un pack acheté, comme l'art.
 
 ## 17. Le premier jouable
 

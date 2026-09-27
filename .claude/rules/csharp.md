@@ -16,7 +16,7 @@ paths:
 - **Conventions** : PascalCase pour les types, méthodes et propriétés publiques ; camelCase pour les variables locales ;
   `_camelCase` pour les champs privés. `[SerializeField] private` plutôt que `public` pour ce qui se règle dans
   l'Inspector. Commentaires en français. `null` géré explicitement.
-- **Événements** : `event Action<…>` nommés au passé (`BuildingPlaced`, `DayEnded`) ; tout abonnement est défait dans
+- **Événements** : `event Action<…>` nommés au passé (`StructurePlaced`, `DayEnded`) ; tout abonnement est défait dans
   `OnDestroy` (ou `OnDisable`, symétrique d'`OnEnable`).
 - **Démarrage rapide du Play actif** : tout champ statique mutable a un `ResetStatics()` appelé depuis
   `[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]`.

@@ -113,9 +113,9 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   placée **après** `*.asset` (la dernière règle l'emporte). Un fichier d'essai a montré que LFS le garde à l'octet
   près. Ses calques (TerrainLayer) sont ceux du pack.
 - **Piège : modifier un Terrain en Play modifie l'asset pour de bon** (`SetHeights`, `SetAlphamaps`, arbres), et il
-  s'écrit au prochain enregistrement du projet. Le jeu travaille sur une copie en mémoire
+  s'écrit au prochain enregistrement du projet. Pour modifier le sol, le jeu prend une copie en mémoire
   (`Object.Instantiate(terrainData)`), donnée au `Terrain` **et** au `TerrainCollider`, jamais enregistrée ; un test
-  PlayMode vérifie que l'asset n'a pas bougé.
+  PlayMode (deux parties de suite) vérifie que les hauteurs de l'asset n'ont pas bougé.
 - **Un Terrain range ses hauteurs par marches de 1 / 32 766 de sa hauteur totale** (3 mm pour 100 m) : une pente lue
   sur une maille de 1 m bouge de quelques centièmes de degré. Un test sur un Terrain tolère cet écart ; la
   simulation lit le relief une fois, en mètres, au lancement.
@@ -159,13 +159,26 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 - **Un panneau d'interface ouvert rend la ville muette** : aucun clic ne la traverse.
 - **Tourner** : une touche brève = un pas ; la touche tenue en bougeant la souris = au degré ; une touche de
   modification aimante.
-- **Tirer le sol, c'est garder sous le pointeur le point saisi** : un rayon depuis la caméra le trouve (sur le plan
-  du sol) à l'appui, puis à chaque image la vue se déplace pour qu'il y revienne. Des pixels convertis en mètres
+- **Le curseur est tenu pendant qu'on tourne à la souris** (bouton du milieu, R tenu) : caché et bloqué, on lit son
+  déplacement (`<Pointer>/delta`), qui ne bute jamais sur le bord de l'écran, et il revient où il était au
+  relâchement (`CursorGrip`). À l'image du relâchement, le curseur rendu n'est pas encore à sa place : on n'y vise pas.
+- **La position du pointeur est une action « PassThrough »** : une action « Value » garde l'appareil qui l'a prise
+  (un stylet, un écran tactile) et peut y rester collée ; « PassThrough » lit le dernier qui a bougé.
+- **La visée passe après la caméra** (`LateUpdate`, ordre d'exécution 100) : sinon l'aperçu se calcule avec la vue
+  de l'image d'avant, et il traîne d'une image dès que la vue bouge.
+- **Tirer le sol, c'est garder sous le pointeur le point saisi** : un rayon depuis la caméra le trouve sur le relief
+  à l'appui, puis le garde sur le plan de sa hauteur (`GroundGrip`) ; à chaque image la vue se déplace pour qu'il y
+  revienne. Des pixels convertis en mètres
   glissent : le sol incliné fuit, trois fois plus vite que le pointeur à 20° sous l'horizon. Un rayon qui ne touche
   pas le sol (au-dessus de l'horizon, au-delà de l'affichage) ne saisit rien. Le test compare à la projection
   inverse (`WorldToScreenPoint`).
 - **Zoomer vers le pointeur, c'est la même prise** : le sol visé au cran de molette reste sous le pointeur pendant
-  tout le lissage du zoom, jusqu'à ce qu'un autre geste (déplacer, tourner, tirer) prenne la main.
+  tout le lissage du zoom, jusqu'à ce qu'un autre geste (déplacer, tourner) prenne la main ; un cran donné pendant
+  qu'on tire le sol suit la prise du glisser.
+- **L'inclinaison suit le logarithme de la distance** : un cran multiplie la distance, donc une inclinaison en
+  proportion de la distance basculerait dans les derniers crans. Le haut de l'écran reste sous l'horizon (au moins le
+  demi-champ de vision plus une marge) : sinon le sol visé près du bord haut est à des centaines de mètres, et tirer
+  ou zoomer y fait sauter la vue.
 - **Un seul suivi du clic ou glisser** (`DragGesture`) pour tous les boutons : un appui vu pour la première fois part
   de là où on le voit, sinon un bouton enfoncé pendant un chargement fait sauter la vue.
 - **Au lancement, le pointeur vaut (0 ; 0) tant qu'il n'est pas entré dans la vue** : un coin, et le défilement au
@@ -188,7 +201,11 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   en S, sans saut.
 - **Deux profils de filtres mêlés** : un profil de jour et un profil chaud posé par-dessus, dont le poids suit la chaleur
   du moment. Les profils de jeu sont des copies en mémoire : on ne touche jamais les assets en jeu.
-- **La distance des ombres doit couvrir la vue**, au zoom le plus éloigné : sinon, les ombres disparaissent au loin.
+- **La distance des ombres suit le zoom** : elle va jusqu'au sol vu au bord haut de l'écran, bornée ; une distance
+  fixe est soit trop courte de loin (pas d'ombre), soit trop longue de près (des ombres molles). Le brouillard de la
+  carte recule de même quand la caméra s'éloigne. Les deux se règlent sur une copie en mémoire de l'asset URP
+  (`Instantiate`, puis `QualitySettings.renderPipeline`) et dans `RenderSettings`, rendus à la sortie : le Play ne
+  recharge pas le domaine, et une copie oubliée survivrait d'un Play à l'autre (`CameraAtmosphere`).
 
 ## 3. Pièges de Unity et de C#
 
@@ -198,8 +215,9 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   rechargés) : les champs statiques, les abonnements et les champs non sérialisés des composants et des fiches
   survivent à la sortie du Play. Chaque statique restant a un `ResetStatics()` appelé depuis
   `[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]`, tout abonnement est défait dans
-  `OnDestroy`, et les actions d'entrée générées sont désactivées puis libérées (`Disable`, `Dispose`). Un bug qui
-  n'apparaît qu'au deuxième lancement vient presque toujours de là.
+  `OnDestroy`, et chaque composant de gestes désactive dans `OnDisable` la carte d'actions qu'il a activée (une classe
+  d'actions générée, si l'on en prend une, se libère aussi : `Disable`, `Dispose`). Un bug qui n'apparaît qu'au
+  deuxième lancement vient presque toujours de là ; le test des deux parties de suite le cherche.
 - **Ne jamais fixer `EditorSceneManager.playModeStartScene` en permanence** : le Test Runner ne peut plus charger sa
   scène, et les tests PlayMode attendent jusqu'au délai. Pour jouer depuis la scène de jeu, un menu l'ouvre puis lance
   le Play.
@@ -261,8 +279,22 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   DepthOnly et ShadowCaster coupées, file 3000. Un fantôme qui fait de l'ombre se lit comme une maison bâtie.
 - **`FindFirstObjectByType` est obsolète en Unity 6.6** : `FindAnyObjectByType`, et seulement hors du jeu (menus,
   tests).
-- **La localisation** : toute chaîne visible passe par des clés (`strings.csv`) ; un test vérifie que chaque clé citée
-  par l'UXML et par le code existe.
+- **La localisation** : toute chaîne visible passe par des clés (`strings.csv`) ; l'UXML n'écrit aucun texte, le
+  présentateur remplit les boutons. Un test vérifie, dans chaque langue, que chaque clé citée par le catalogue
+  (familles, constructions) et par les raisons de refus existe ; une nouvelle source de clés s'y ajoute.
+- **Un `yield return null` rend la main au test après les `Update` de l'image, avant ses `LateUpdate`** : ce qu'un
+  geste joue en `LateUpdate` (la visée, la caméra qui se place) ne se voit qu'une image plus tard. Le banc des tests des
+  gestes attend donc deux images (`GestureFixture`). Ce banc est l'`InputTestFixture` de l'Input System (le paquet
+  déclaré `testables` dans le manifest) : il coupe les vrais appareils, et dans un `[UnityTest]` un événement simulé
+  est lu au début de l'image suivante.
+- **Une fiche enregistrée avant l'ajout d'un champ n'a pas ce champ sur disque** : le jeu lit la valeur écrite dans le
+  code, et un champ retiré reste orphelin dans le fichier. Le montage réenregistre les fiches de réglages
+  (`AssetDatabase.ForceReserializeAssets`).
+- **Un module intégré non déclaré est coupé** : d'après la doc d'Unity, ses composants sont ignorés en Play. Le module
+  des particules ne l'est pas : la fumée des cheminées du pack ne joue pas (à vérifier quand une maison du pack entre
+  en jeu). L'aperçu et le fantôme ne dessinent de toute façon que les maillages.
+- **Un rayon vers un sol plat au niveau le plus bas du relief peut le rater d'un arrondi** : la tranche de recherche
+  déborde d'un millimètre au-dessus et au-dessous (`Relief.TryRaycast`).
 
 ## 4. Les tests qui rapportent le plus
 

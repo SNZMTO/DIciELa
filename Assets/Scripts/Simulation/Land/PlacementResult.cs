@@ -1,7 +1,7 @@
 namespace Diciela.Simulation.Land
 {
     /// <summary>
-    /// Pourquoi une construction se pose ou non ici. L'aperçu (le fantôme) et l'ordre lisent la même réponse, rendue par
+    /// Pourquoi une construction se pose ou non ici. L'aperçu et l'ordre lisent la même réponse, rendue par
     /// la même fonction (ARCHITECTURE, section 5). Les valeurs ne changent jamais de numéro.
     /// </summary>
     public enum PlacementResult
