@@ -12,6 +12,9 @@ namespace Diciela.Data
         [Tooltip("Identifiant stable, cité par les sauvegardes ; jamais le nom du fichier.")]
         [SerializeField] private string _id = "";
 
+        [Tooltip("La clé de son nom dans la table des textes (Assets/Localization/strings.csv).")]
+        [SerializeField] private string _nameKey = "";
+
         [Tooltip("Largeur de l'empreinte au sol, en mètres (d'ouest en est à l'angle 0).")]
         [SerializeField, Min(0.25f)] private float _widthMeters = 4f;
 
@@ -31,6 +34,7 @@ namespace Diciela.Data
         [SerializeField] private GameObject _model;
 
         public string Id => _id;
+        public string NameKey => _nameKey;
         public float WidthMeters => _widthMeters;
         public float DepthMeters => _depthMeters;
         public bool HasDoor => _hasDoor;
