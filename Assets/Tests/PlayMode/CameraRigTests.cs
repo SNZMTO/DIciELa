@@ -68,12 +68,32 @@ namespace Diciela.Tests.PlayMode
             float distanceBefore = Vector3.Distance(_cameraObject.transform.position, MapCenter);
             float pitchBefore = _cameraObject.transform.eulerAngles.x;
 
-            _rig.Zoom(3f);
+            _rig.Zoom(3f, _cameraObject.GetComponent<Camera>().pixelRect.center);
             yield return null;
 
             Assert.That(Vector3.Distance(_cameraObject.transform.position, MapCenter), Is.LessThan(distanceBefore));
             Assert.That(_cameraObject.transform.eulerAngles.x, Is.LessThan(pitchBefore));
             Assert.That(Vector3.Distance(MapCenter, LookedAtGround()), Is.LessThan(0.01f));
+        }
+
+        /// <summary>
+        /// La molette zoome vers le pointeur : le sol qu'il vise y reste, et la caméra s'en approche. L'attendu vient de
+        /// la projection inverse (WorldToScreenPoint).
+        /// </summary>
+        [UnityTest]
+        public IEnumerator ZoomingKeepsThePointedGroundUnderThePointer()
+        {
+            Camera camera = _cameraObject.GetComponent<Camera>();
+            var pointed = new Vector3(42f, 10f, 57f);
+            Vector2 pointer = camera.WorldToScreenPoint(pointed);
+            float distanceBefore = Vector3.Distance(_cameraObject.transform.position, pointed);
+
+            _rig.Zoom(3f, pointer);
+            yield return null;
+
+            Vector2 nowOnScreen = camera.WorldToScreenPoint(pointed);
+            Assert.That(Vector2.Distance(pointer, nowOnScreen), Is.LessThan(1f));
+            Assert.That(Vector3.Distance(_cameraObject.transform.position, pointed), Is.LessThan(distanceBefore));
         }
 
         [UnityTest]

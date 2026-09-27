@@ -26,7 +26,7 @@ namespace Diciela.EditorTools
                 return;
 
             DataAssetBuilder.CreateMissingAssets();
-            InputActionsBuilder.CreateIfMissing();
+            InputActionsBuilder.EnsureActions();
             MapSceneBuilder.CreateTestMapIfMissing();
             MapSceneBuilder.CreateMapIfMissing();
             BuildRootScene(ScenePaths.GameTest, DataAssetBuilder.TestSessionPath);
