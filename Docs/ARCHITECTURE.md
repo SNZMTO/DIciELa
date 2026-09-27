@@ -42,6 +42,8 @@ avec leurs fichiers témoins dans `Assets/Tests/Fixtures`. Les fiches vivent dan
 
 **Les références.** Elles ne sont pas transitives : un assemblage liste tous ceux dont il nomme un type. Un test
 compare les `.asmdef` à ce tableau ; ajouter une flèche est un changement d'architecture, jamais un geste en passant.
+Un assemblage naît avec son premier code ; tous sont en références explicites (`autoReferenced` faux,
+`overrideReferences` vrai : aucune DLL d'office).
 
 | Assemblage | Référence |
 |---|---|
@@ -125,7 +127,8 @@ sauvegardé.
 ## 5. Le pas, les ordres et les événements
 
 - **Le pas fixe.** La simulation avance par pas de 0,1 s de temps réel (Défaut, à confirmer en jouant) et compte en
-  heures de jeu ; une seule fonction convertit, à partir de la durée d'une journée. `Game` accumule le temps réel et
+  heures de jeu ; une seule fonction convertit, à partir de la durée d'une journée. La vérité du temps est le nombre
+  de pas joués, et une journée compte un nombre entier de pas. `Game` accumule le temps réel et
   fait au plus un nombre borné de pas par image. Une vitesse accélérée, si elle vient, fait plus de pas, jamais un pas
   plus long. La vue lisse le mouvement entre les deux derniers pas : ce qui bouge garde sa position du pas précédent.
 - **L'ordre du pas**, écrit dans `World` et nulle part ailleurs : les ordres en attente, puis le temps, le terrain,
