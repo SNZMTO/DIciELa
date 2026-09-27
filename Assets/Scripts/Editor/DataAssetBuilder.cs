@@ -44,7 +44,16 @@ namespace Diciela.EditorTools
             ContentBuilder.CreateMissing();
 
             AssetDatabase.SaveAssets();
+            // Réenregistrer les fiches de réglages : un champ ajouté au code y entre avec sa valeur, un champ retiré en
+            // sort. Sans cela, la fiche garde une vieille vérité et le jeu lit celle du code (SAVOIR, section 3).
+            AssetDatabase.ForceReserializeAssets(SettingsPaths);
         }
+
+        private static readonly string[] SettingsPaths =
+        {
+            SimulationSettingsPath, GameSessionPath, TestSessionPath, MapCreationPath, TestMapCreationPath,
+            CameraSettingsPath, GestureSettingsPath, PlacementSettingsPath, InterfaceSettingsPath
+        };
 
         /// <summary>La carte de test : petite, plate, vite chargée.</summary>
         private static void FillTestMapCreation(SerializedObject fiche)

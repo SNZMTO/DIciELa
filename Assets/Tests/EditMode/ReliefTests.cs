@@ -99,6 +99,48 @@ namespace Diciela.Tests.EditMode
             Assert.IsFalse(flat.TryRaycast(above, new Vector3(1f, -0.1f, 0f), 1000f, out _));
         }
 
+        /// <summary>
+        /// Un sol plat à 20 m, comme la carte neuve, visé comme par la caméra : des rayons obliques (de 20° à 70° sous
+        /// l'horizon, huit caps, trois hauteurs, des départs non entiers). Chacun doit toucher le sol, là où la droite
+        /// coupe le plan : l'attendu vient de cette intersection, pas de la marche le long du rayon.
+        /// </summary>
+        [Test]
+        public void ObliqueRaysAllHitAFlatGround()
+        {
+            const float ground = 20f;
+            var flat = new Relief(1000f, 1000f, 5, 5, Filled(25, ground));
+            var misses = new System.Collections.Generic.List<string>();
+
+            for (int pitch = 20; pitch <= 70; pitch += 5)
+            {
+                for (int heading = 0; heading < 360; heading += 45)
+                {
+                    for (int level = 0; level < 3; level++)
+                    {
+                        float p = pitch * Mathf.Deg2Rad, h = heading * Mathf.Deg2Rad;
+                        var direction = new Vector3(Mathf.Cos(p) * Mathf.Sin(h), -Mathf.Sin(p), Mathf.Cos(p) * Mathf.Cos(h));
+                        var origin = new Vector3(500.37f + heading * 0.013f, ground + 17.3f + level * 41.9f + pitch * 0.07f,
+                            499.91f - pitch * 0.029f);
+                        Vector3 expected = origin + direction * ((origin.y - ground) / Mathf.Sin(p));
+
+                        if (!flat.TryRaycast(origin, direction, 2000f, out Vector3 hit) ||
+                            Vector3.Distance(expected, hit) > 1e-2f)
+                            misses.Add(pitch + "° cap " + heading + "° hauteur " + origin.y);
+                    }
+                }
+            }
+
+            Assert.IsEmpty(misses, string.Join("\n", misses));
+        }
+
+        private static float[] Filled(int count, float value)
+        {
+            var values = new float[count];
+            for (int i = 0; i < count; i++)
+                values[i] = value;
+            return values;
+        }
+
         private static void AssertNear(Vector3 expected, Vector3 actual)
         {
             Assert.AreEqual(expected.x, actual.x, Tolerance);

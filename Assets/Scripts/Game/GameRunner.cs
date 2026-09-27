@@ -39,6 +39,7 @@ namespace Diciela.Game
         private SimulationJournal _journal;
         private PlacementTool _placementTool;
         private MapScene _map;
+        private double _lastRealtime;
         private bool _quitting;
 
         private void OnEnable()
@@ -77,6 +78,7 @@ namespace Diciela.Game
             {
                 _world = new World(_settings, _map.Description);
                 _accumulator = new FixedStepAccumulator(_settings);
+                _lastRealtime = Time.realtimeSinceStartupAsDouble;
                 _texts = TextTable.Parse(_interfaceSettings.Texts != null ? _interfaceSettings.Texts.text : null,
                     _interfaceSettings.Language);
                 return true;
@@ -106,7 +108,10 @@ namespace Diciela.Game
             if (_world == null)
                 return;
 
-            int steps = _accumulator.Accumulate(Time.deltaTime);
+            // Le temps réel, pas Time.deltaTime, qu'Unity plafonne : seule la fiche borne les pas d'une image (décision 65).
+            double now = Time.realtimeSinceStartupAsDouble;
+            int steps = _accumulator.Accumulate(now - _lastRealtime);
+            _lastRealtime = now;
             for (int i = 0; i < steps; i++)
                 _world.Step();
         }

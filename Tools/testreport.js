@@ -45,5 +45,19 @@ for (const r of results) {
     console.log(`ROUGE  ${name}\n       ${message.slice(0, 400)}`);
   }
 }
-console.log(`${passed}/${total} verts, ${failed} rouges${skipped ? `, ${skipped} ignorés` : ''}.`);
+// Les tests du projet (Diciela.*) se comptent à part de ceux des paquets rendus testables (l'Input System, pour ses
+// outils de test des gestes) : ceux-là, leur auteur en ignore parfois quelques-uns.
+const nameOf = r => String(r.FullName || r.fullName || r.Name || '');
+const statusOf = r => String(r.Status || r.status || '');
+const ours = results.filter(r => nameOf(r).startsWith('Diciela.'));
+if (results.length === 0 || ours.length === results.length) {
+  console.log(`${passed}/${total} verts, ${failed} rouges${skipped ? `, ${skipped} ignorés` : ''}.`);
+} else {
+  const count = (list, re) => list.filter(r => re.test(statusOf(r))).length;
+  const others = results.filter(r => !nameOf(r).startsWith('Diciela.'));
+  console.log(`${count(ours, /pass/i)}/${ours.length} verts, ${count(ours, /fail|error/i)} rouges` +
+    `${count(ours, /skip|ignor/i) ? `, ${count(ours, /skip|ignor/i)} ignorés` : ''} ` +
+    `(et ${others.length} tests de paquets : ${count(others, /pass/i)} verts, ${count(others, /fail|error/i)} rouges, ` +
+    `${count(others, /skip|ignor/i)} ignorés par leur auteur).`);
+}
 process.exit(failed === 0 && total > 0 ? 0 : 1);
