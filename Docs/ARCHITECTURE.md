@@ -290,9 +290,9 @@ code.
   seule, régénérés par un menu seulement.
 - **Les garde-fous** : un test lit le code de la simulation et refuse `MonoBehaviour`, `GameObject`, `Time`,
   `UnityEngine.Random`, `System.Random`, `Mathf.PerlinNoise`, `Debug`, `Resources`, `UnityEditor`, les statiques
-  modifiables et Newtonsoft ; un test compare les `.asmdef` au tableau de la section 2 ; un test refuse toute
-  ouverture des `internal` hors de la simulation (section 5) ; un test vérifie que les identifiants de fiches sont
-  uniques et que les clés de textes existent.
+  modifiables et Newtonsoft ; un test compare les `.asmdef` au tableau de la section 2 ; deux tests gardent la
+  section 5 (ce qui change l'état reste `internal`, aucune ouverture hors de la simulation) ; un test vérifie que les
+  identifiants de fiches sont uniques et que les clés de textes existent.
 - **Le journal** : `Game` écrit dans la console les événements clés (jour fini, arrivée, chantier fini), pour que le
   Play court de la procédure `verifier` prouve que la simulation travaille.
 

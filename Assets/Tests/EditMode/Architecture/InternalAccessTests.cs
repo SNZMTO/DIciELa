@@ -1,6 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text.RegularExpressions;
+using Diciela.Simulation;
+using Diciela.Simulation.Core;
+using Diciela.Simulation.Land;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -9,7 +14,7 @@ namespace Diciela.Tests.EditMode.Architecture
     /// <summary>
     /// Seule la simulation change la simulation (ARCHITECTURE, section 5) : ce qui modifie un système est internal, et
     /// seules les couches de la simulation ouvrent leurs internals, aux seules couches de la simulation. Ni la vue, ni
-    /// les gestes, ni les tests ne reçoivent de porte dérobée. Ce test lit le code, sans rien écrire.
+    /// les gestes, ni les tests ne reçoivent de porte dérobée. Ces tests lisent le code, sans rien écrire.
     /// </summary>
     public sealed class InternalAccessTests
     {
@@ -17,6 +22,33 @@ namespace Diciela.Tests.EditMode.Architecture
 
         private static readonly Regex Declaration = new Regex(
             @"\[\s*assembly\s*:\s*(?:System\.Runtime\.CompilerServices\.)?InternalsVisibleTo\s*\(\s*""([^""]+)""");
+
+        /// <summary>Ce qui change l'état de la simulation ; une méthode de ce genre qui naît s'ajoute ici.</summary>
+        private static readonly (Type Owner, string Method)[] Mutators =
+        {
+            (typeof(Clock), "Advance"),
+            (typeof(NavGrid), "SetOccupant"),
+            (typeof(NavGrid), "AddDoorway"),
+            (typeof(Structures), "Place"),
+            (typeof(Command), "Execute"),
+        };
+
+        [Test]
+        public void WhatChangesTheSimulationStaysInternal()
+        {
+            var faults = new List<string>();
+            foreach ((Type owner, string name) in Mutators)
+            {
+                MethodInfo method = owner.GetMethod(name,
+                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                if (method == null)
+                    faults.Add(owner.Name + "." + name + " est introuvable.");
+                else if (!method.IsAssembly)
+                    faults.Add(owner.Name + "." + name + " doit rester internal : au-dessus, on envoie des ordres.");
+            }
+
+            Assert.IsEmpty(faults, string.Join("\n", faults));
+        }
 
         [Test]
         public void OnlyTheSimulationOpensItsInternalsAndOnlyToItself()

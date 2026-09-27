@@ -3,7 +3,7 @@
 **Branche** : `menage-2-spaghetti`, fusionnée dans `main`. **Étapes 6, 7 et 8a finies** (la carte, la caméra, la pose
 dans la simulation, sans image encore), puis un ménage du code : seule la simulation change la simulation (57).
 
-**Ce qui marche** : EditMode 39/39, PlayMode 7/7, Play court sans erreur. **DICIELA > Scènes > Monter les scènes**
+**Ce qui marche** : EditMode 40/40, PlayMode 7/7, Play court sans erreur. **DICIELA > Scènes > Monter les scènes**
 monte tout, sans jamais toucher une carte existante. `Jeu` charge `Carte` (relief vierge de 500 m), que le monde lit et
 que la caméra montre. La pose suit le GDD (dans la carte, 15° au plus, sans chevaucher, rien devant une porte).
 
