@@ -278,6 +278,7 @@
 - **Défaut.** Trois ouvriers au plus sur un chantier ; les chantiers se servent dans l'ordre de la file.
 - **Règle.** Pose libre : aucune case pour le joueur, on parle en mètres. La porte d'un bâtiment reste dégagée : rien ne
   se pose devant. Un bâtiment qu'on ne peut plus atteindre le montre.
+- **Défaut.** Devant une porte, 1,5 m restent libres, sur la largeur de la porte.
 - **Défaut.** Une touche brève tourne d'un cran de 15° ; tenue, on tourne au degré près.
 - **À toi.** Retirer un arbre ou en planter un passe-t-il par la file des chantiers ? Ma reco : non, ce sont des tâches
   des paysagistes, dans l'ordre où le joueur les a désignées.

@@ -24,7 +24,19 @@ namespace Diciela.Data
         [Tooltip("Part de la journée passée en soirée, après le travail ; la nuit est le reste.")]
         [SerializeField, Range(0f, 1f)] private float _eveningFraction = 1f / 12f;
 
+        [Tooltip("Mailles du maillage par mètre : le maillage marque ce qui occupe le sol (SAVOIR, 2.1).")]
+        [SerializeField, Min(1)] private int _cellsPerMeter = 4;
+
+        [Tooltip("Pente maximale du sol sous un bâtiment, en degrés (GDD, section 2).")]
+        [SerializeField, Range(0f, 89f)] private float _maxBuildSlopeDegrees = 15f;
+
+        [Tooltip("Profondeur laissée libre devant une porte, en mètres (GDD, section 9).")]
+        [SerializeField, Min(0f)] private float _doorClearanceMeters = 1.5f;
+
         public float StepSeconds => _stepSeconds;
+        public int CellsPerMeter => _cellsPerMeter;
+        public float MaxBuildSlopeDegrees => _maxBuildSlopeDegrees;
+        public float DoorClearanceMeters => _doorClearanceMeters;
         public int MaxStepsPerFrame => _maxStepsPerFrame;
         public float DayLengthSeconds => _dayLengthSeconds;
         public float WorkFraction => _workFraction;

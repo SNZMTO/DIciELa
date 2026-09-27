@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Diciela.Data;
 using Diciela.Simulation.Core;
 using Diciela.Simulation.Land;
@@ -10,6 +11,8 @@ namespace Diciela.Simulation
     /// </summary>
     public sealed class World
     {
+        private readonly Queue<IOrder> _pendingOrders = new Queue<IOrder>();
+
         public World(SimulationSettings settings, MapDescription map)
         {
             if (ReferenceEquals(settings, null))
@@ -19,6 +22,8 @@ namespace Diciela.Simulation
 
             Clock = new Clock(settings);
             Map = map;
+            Grid = new NavGrid(map.Relief, new GridMetrics(settings.CellsPerMeter));
+            Structures = new Structures(Grid, map.Relief, settings);
         }
 
         public Clock Clock { get; }
@@ -26,13 +31,35 @@ namespace Diciela.Simulation
         /// <summary>La carte reçue au lancement : elle ne change pas pendant la partie.</summary>
         public MapDescription Map { get; }
 
+        /// <summary>Le maillage : ce qui occupe le sol, déduit des constructions.</summary>
+        public NavGrid Grid { get; }
+
+        public Structures Structures { get; }
+
+        /// <summary>Envoie un ordre ; il s'applique au début du pas suivant.</summary>
+        public void Submit(IOrder order)
+        {
+            if (ReferenceEquals(order, null))
+                throw new ArgumentNullException(nameof(order));
+            _pendingOrders.Enqueue(order);
+        }
+
         /// <summary>
         /// Joue un pas. L'ordre du pas, écrit ici et nulle part ailleurs : les ordres en attente, puis le temps,
-        /// le terrain, l'économie, la société, le monde. Seul le temps existe pour l'instant.
+        /// le terrain, l'économie, la société, le monde. Seuls les ordres et le temps existent pour l'instant.
         /// </summary>
         public void Step()
         {
+            ApplyPendingOrders();
             Clock.Advance();
+        }
+
+        /// <summary>Les ordres envoyés pendant l'application attendent le pas suivant : la boucle est bornée.</summary>
+        private void ApplyPendingOrders()
+        {
+            int count = _pendingOrders.Count;
+            for (int i = 0; i < count; i++)
+                _pendingOrders.Dequeue().Execute(this);
         }
     }
 }
