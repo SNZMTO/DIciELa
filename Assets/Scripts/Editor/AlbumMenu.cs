@@ -15,8 +15,8 @@ namespace Diciela.EditorTools
     /// </summary>
     public static class AlbumMenu
     {
-        // Les crans de molette vers le centre, puis les temps laissés à la caméra et au monde, en secondes.
-        private const float ZoomNotches = 6f;
+        // Les crans de molette vers le centre, puis les temps laissés à la caméra et au monde (par pose), en secondes.
+        private const float ZoomNotches = 2f;
         private const double ZoomSeconds = 0.8;
         private const double StepsSeconds = 0.5;
 
@@ -63,18 +63,20 @@ namespace Diciela.EditorTools
             StructureDefinition cabin = EditorAssets.Load<Catalog>(ContentBuilder.CatalogPath).Families[0].Structures[0];
             rig.Zoom(ZoomNotches, OnScreen(camera, new Vector2(0.5f, 0.5f)));
 
-            After(ZoomSeconds, () =>
+            // Une pose par temps laissé au monde : l'outil n'envoie pas d'ordre tant que le précédent n'est pas joué.
+            After(ZoomSeconds, () => tool.Begin(cabin));
+            for (int i = 0; i < Places.Length; i++)
             {
-                tool.Begin(cabin);
-                foreach (Vector2 place in Places)
+                Vector2 place = Places[i];
+                After(ZoomSeconds + i * StepsSeconds, () =>
                 {
                     tool.AimAt(OnScreen(camera, place));
                     tool.Confirm();
                     tool.RotateStep();
                     tool.RotateStep();
-                }
-            });
-            After(ZoomSeconds + StepsSeconds, () =>
+                });
+            }
+            After(ZoomSeconds + Places.Length * StepsSeconds, () =>
             {
                 tool.AimAt(OnScreen(camera, aimFraction));
                 Debug.Log("DICIELA : mise en scène de l'album prête (" + tool.Result + ").");

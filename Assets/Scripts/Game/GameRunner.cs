@@ -127,6 +127,8 @@ namespace Diciela.Game
                 _cameraControls.Bind(null);
                 _buildBar.Hide();
                 _placementTool.Cancel();
+                _placementTool.Dispose();
+                _cameraRig.Hide();
                 _structureViews.Hide();
             }
             _placementTool = null;

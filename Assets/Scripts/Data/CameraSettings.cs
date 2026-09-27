@@ -19,17 +19,38 @@ namespace Diciela.Data
         [Tooltip("Distance au sol la plus lointaine, en mètres : la ville en maquette.")]
         [SerializeField, Min(1f)] private float _farDistance = 220f;
 
+        [Tooltip("Distance au sol au lancement, en mètres : 57, autant de crans de molette pour avancer que pour reculer.")]
+        [SerializeField, Min(1f)] private float _startDistance = 57f;
+
         [Tooltip("Inclinaison de la vue au plus près, en degrés sous l'horizon.")]
-        [SerializeField, Range(5f, 89f)] private float _nearPitch = 20f;
+        [SerializeField, Range(5f, 89f)] private float _nearPitch = 25f;
 
         [Tooltip("Inclinaison de la vue au plus loin, en degrés sous l'horizon.")]
         [SerializeField, Range(5f, 89f)] private float _farPitch = 60f;
+
+        [Tooltip("Inclinaison la plus forte, en degrés sous l'horizon, même en inclinant soi-même : la vue d'oiseau.")]
+        [SerializeField, Range(5f, 90f)] private float _maxPitch = 80f;
+
+        [Tooltip("Marge du haut de l'écran sous l'horizon, en degrés : on ne voit jamais le vide au-delà de la carte, et " +
+                 "le sol près du haut de l'écran reste proche.")]
+        [SerializeField, Range(0f, 30f)] private float _horizonMarginDegrees = 5f;
 
         [Tooltip("Hauteur minimale de la caméra au-dessus du sol, en mètres.")]
         [SerializeField, Min(0f)] private float _groundClearance = 2f;
 
         [Tooltip("Distance d'affichage la plus lointaine, en mètres.")]
         [SerializeField, Min(10f)] private float _farClipPlane = 1500f;
+
+        [Header("Ombres et brouillard, selon le zoom")]
+        [Tooltip("Distance des ombres la plus courte, en mètres (de près, des ombres fines).")]
+        [SerializeField, Min(1f)] private float _shadowMinMeters = 50f;
+
+        [Tooltip("Distance des ombres la plus longue, en mètres : elle couvre le sol visible, de loin (SAVOIR, 2.10).")]
+        [SerializeField, Min(1f)] private float _shadowMaxMeters = 300f;
+
+        [Tooltip("Le brouillard de la carte ne commence pas avant ce multiple de la distance au sol : la ville vue de loin " +
+                 "reste nette ; de près, le brouillard de la carte ne change pas.")]
+        [SerializeField, Min(0f)] private float _fogStartPerDistance = 1.3f;
 
         [Header("Gestes")]
         [Tooltip("Vitesse de déplacement, en fractions de la distance au sol par seconde.")]
@@ -41,6 +62,10 @@ namespace Diciela.Data
         [Tooltip("Rotation au bouton du milieu glissé, en degrés par pixel. Positive, la vue tourne du côté où va la " +
                  "souris, comme la touche E vers la droite ; négative, le sol suit la souris.")]
         [SerializeField, Range(-2f, 2f)] private float _orbitDegreesPerPixel = 0.25f;
+
+        [Tooltip("Inclinaison au bouton du milieu glissé de haut en bas, en degrés par pixel. Positive, la vue se relève " +
+                 "vers l'horizon quand la souris monte ; négative, l'inverse.")]
+        [SerializeField, Range(-2f, 2f)] private float _tiltDegreesPerPixel = 0.2f;
 
         [Tooltip("Rapprochement par cran de molette : 0,15 = 15 % plus près.")]
         [SerializeField, Range(0.01f, 0.9f)] private float _zoomStepPerNotch = 0.15f;
@@ -58,13 +83,20 @@ namespace Diciela.Data
         public float FieldOfView => _fieldOfView;
         public float NearDistance => _nearDistance;
         public float FarDistance => _farDistance;
+        public float StartDistance => _startDistance;
         public float NearPitch => _nearPitch;
         public float FarPitch => _farPitch;
+        public float MaxPitch => _maxPitch;
+        public float HorizonMarginDegrees => _horizonMarginDegrees;
         public float GroundClearance => _groundClearance;
         public float FarClipPlane => _farClipPlane;
+        public float ShadowMinMeters => _shadowMinMeters;
+        public float ShadowMaxMeters => _shadowMaxMeters;
+        public float FogStartPerDistance => _fogStartPerDistance;
         public float PanSpeedPerDistance => _panSpeedPerDistance;
         public float RotateDegreesPerSecond => _rotateDegreesPerSecond;
         public float OrbitDegreesPerPixel => _orbitDegreesPerPixel;
+        public float TiltDegreesPerPixel => _tiltDegreesPerPixel;
         public float ZoomStepPerNotch => _zoomStepPerNotch;
         public float ScrollPerNotch => _scrollPerNotch;
         public float ZoomSmoothing => _zoomSmoothing;

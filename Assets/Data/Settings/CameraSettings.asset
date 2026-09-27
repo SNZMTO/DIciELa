@@ -15,13 +15,20 @@ MonoBehaviour:
   _fieldOfView: 40
   _nearDistance: 15
   _farDistance: 220
-  _nearPitch: 20
+  _startDistance: 57
+  _nearPitch: 25
   _farPitch: 60
+  _maxPitch: 80
+  _horizonMarginDegrees: 5
   _groundClearance: 2
   _farClipPlane: 1500
+  _shadowMinMeters: 50
+  _shadowMaxMeters: 300
+  _fogStartPerDistance: 1.3
   _panSpeedPerDistance: 0.9
   _rotateDegreesPerSecond: 90
   _orbitDegreesPerPixel: 0.25
+  _tiltDegreesPerPixel: 0.2
   _zoomStepPerNotch: 0.15
   _scrollPerNotch: 1
   _zoomSmoothing: 0.12

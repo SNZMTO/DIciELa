@@ -47,20 +47,30 @@
                     "priority": 0
                 },
                 {
-                    "name": "Pointer",
-                    "type": "Value",
-                    "id": "3974a669-1486-4f87-a496-170b75ac1095",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true,
-                    "priority": 0
-                },
-                {
                     "name": "Orbit",
                     "type": "Button",
                     "id": "70dbb6db-363b-4177-9454-74e1a60efd8b",
                     "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "Pointer",
+                    "type": "PassThrough",
+                    "id": "f8a2abba-ce3a-416b-9cc3-906ab89f47d8",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "Look",
+                    "type": "PassThrough",
+                    "id": "d0347bbc-0cca-4e77-90a8-da77ef9a1996",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false,
@@ -235,7 +245,18 @@
                 },
                 {
                     "name": "",
-                    "id": "d317d4de-8ee0-4c52-a339-695339e0d3db",
+                    "id": "9c6d3464-9bbb-431a-ac5e-2ad5c0e4e0e4",
+                    "path": "<Mouse>/middleButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Orbit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "962595d0-9bf4-49b7-a6fd-55154acc90e1",
                     "path": "<Pointer>/position",
                     "interactions": "",
                     "processors": "",
@@ -246,12 +267,12 @@
                 },
                 {
                     "name": "",
-                    "id": "9c6d3464-9bbb-431a-ac5e-2ad5c0e4e0e4",
-                    "path": "<Mouse>/middleButton",
+                    "id": "e42a296a-29d2-4418-8841-b694d136ec30",
+                    "path": "<Pointer>/delta",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Orbit",
+                    "action": "Look",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -303,12 +324,22 @@
                 },
                 {
                     "name": "Pointer",
-                    "type": "Value",
-                    "id": "fc815285-9b03-478c-b359-a8ea11ba6d5a",
+                    "type": "PassThrough",
+                    "id": "761a4db1-eb6d-4c04-9b31-4fdbda5f7118",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": true,
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "Look",
+                    "type": "PassThrough",
+                    "id": "8b6ef4e9-23c6-4bc1-8254-31d89dd41a3e",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
                     "priority": 0
                 }
             ],
@@ -359,12 +390,23 @@
                 },
                 {
                     "name": "",
-                    "id": "28720b86-e3c7-4eff-b623-a811fcd1598b",
+                    "id": "d4105773-6969-4b9c-a0d6-f88cb77c018f",
                     "path": "<Pointer>/position",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Pointer",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8f6cba3c-8c9b-4b10-9b62-64a9b71d0609",
+                    "path": "<Pointer>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Look",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

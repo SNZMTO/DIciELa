@@ -41,7 +41,11 @@ namespace Diciela.Tests.EditMode.Architecture
                 Folder = "Assets/Scripts/Persistence", Diciela = Layers(5),
                 Precompiled = new[] { "Newtonsoft.Json.dll" }
             },
-            ["Diciela.View"] = new Rule { Folder = "Assets/Scripts/View", Diciela = Layers(5) },
+            ["Diciela.View"] = new Rule
+            {
+                Folder = "Assets/Scripts/View", Diciela = Layers(5),
+                External = new[] { "Unity.RenderPipelines.Core.Runtime", "Unity.RenderPipelines.Universal.Runtime" }
+            },
             ["Diciela.Controls"] = new Rule
             {
                 Folder = "Assets/Scripts/Controls", Diciela = With(Layers(5), "Diciela.View"),
@@ -80,7 +84,9 @@ namespace Diciela.Tests.EditMode.Architecture
                 Folder = "Assets/Tests/PlayMode",
                 Diciela = With(Layers(5), "Diciela.Persistence", "Diciela.View", "Diciela.Controls", "Diciela.UI",
                     "Diciela.Game"),
-                External = With(TestRunner, "Unity.InputSystem"), Precompiled = new[] { "nunit.framework.dll" }
+                External = With(TestRunner, "Unity.InputSystem", "Unity.InputSystem.TestFramework",
+                    "Unity.RenderPipelines.Core.Runtime", "Unity.RenderPipelines.Universal.Runtime"),
+                Precompiled = new[] { "nunit.framework.dll" }
             },
         };
 
