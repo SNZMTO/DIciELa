@@ -51,6 +51,8 @@
     background-color: rgb(122, 94, 64);
 }
 
-.button--selected {
+/* Le bouton choisi garde sa marque au survol : sans la seconde ligne, .button:hover, plus précis, l'emporterait. */
+.button--selected,
+.button--selected:hover {
     background-color: rgb(172, 128, 70);
 }

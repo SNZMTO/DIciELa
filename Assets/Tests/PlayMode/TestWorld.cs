@@ -24,7 +24,7 @@ namespace Diciela.Tests.PlayMode
         public TestWorld()
         {
             var simulation = Keep(ScriptableObject.CreateInstance<SimulationSettings>());
-            var placement = Keep(ScriptableObject.CreateInstance<PlacementSettings>());
+            Settings = Keep(ScriptableObject.CreateInstance<PlacementSettings>());
             var cameraSettings = Keep(ScriptableObject.CreateInstance<CameraSettings>());
             var translucent = Keep(new Material(Shader.Find("Universal Render Pipeline/Lit")));
             GameObject model = Keep(GameObject.CreatePrimitive(PrimitiveType.Cube));
@@ -36,21 +36,22 @@ namespace Diciela.Tests.PlayMode
             Preview = Keep(new GameObject("Aperçu de test")).AddComponent<PlacementPreview>();
             Views = Keep(new GameObject("Constructions de test")).AddComponent<StructureViews>();
 #if UNITY_EDITOR
-            Fill(placement, "_translucentMaterial", translucent);
+            Fill(Settings, "_translucentMaterial", translucent);
             Fill(Cabin, "_id", "cabane");
             Fill(Cabin, "_nameKey", "construction.cabane");
             Fill(Cabin, "_model", model);
             Fill(rig, "_settings", cameraSettings);
-            Fill(Preview, "_settings", placement);
-            Fill(Views, "_settings", placement);
+            Fill(Preview, "_settings", Settings);
+            Fill(Views, "_settings", Settings);
 #endif
             rig.Show(map.Relief);
             Camera = rig.Camera;
             Views.Show(World.Structures, map.Relief);
-            Tool = new PlacementTool(World, Camera, Preview, placement);
+            Tool = new PlacementTool(World, Camera, Preview, Settings);
         }
 
         public World World { get; }
+        public PlacementSettings Settings { get; }
         public Camera Camera { get; }
         public PlacementPreview Preview { get; }
         public StructureViews Views { get; }
