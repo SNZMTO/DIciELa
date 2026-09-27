@@ -208,6 +208,8 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 - **Le Input System lie par position physique, en disposition US** : un raccourci mnémonique (M, I, G…) se lie au
   caractère (`<Keyboard>/#(m)`), un raccourci de position (déplacement) à la position, pour que ZQSD tombe juste sur un
   clavier AZERTY.
+- **La molette de l'Input System vaut 1 par cran**, pas 120 : son réglage par défaut (« Scroll Delta Behavior :
+  Uniform Across All Platforms ») la ramène à la même échelle partout. Un zoom divisé par 120 ne bougerait presque pas.
 - **Ne jamais réécrire un fichier `.inputactions` à la main pendant qu'Unity tourne** : il en garde une copie vivante
   (erreurs d'index, actions muettes). Passer par un script d'éditeur, ou par la fenêtre du Input System.
 - **Recompiler pendant le Play** laisse un moniteur du Input System périmé (erreurs à chaque entrée en Play jusqu'à un

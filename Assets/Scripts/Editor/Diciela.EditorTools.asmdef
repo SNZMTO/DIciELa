@@ -3,7 +3,12 @@
     "rootNamespace": "Diciela.EditorTools",
     "references": [
         "Diciela.Data",
-        "Diciela.Game"
+        "Diciela.Game",
+        "Diciela.View",
+        "Diciela.Controls",
+        "Unity.InputSystem",
+        "Unity.RenderPipelines.Core.Runtime",
+        "Unity.RenderPipelines.Universal.Runtime"
     ],
     "includePlatforms": [
         "Editor"
