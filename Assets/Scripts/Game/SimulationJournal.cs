@@ -1,4 +1,5 @@
 using System;
+using Diciela.Data;
 using Diciela.Simulation;
 using Diciela.Simulation.Core;
 using Diciela.Simulation.Land;
@@ -24,6 +25,8 @@ namespace Diciela.Game
             _world = world;
             _world.Clock.DayStarted += OnDayStarted;
             _world.Clock.PhaseChanged += OnPhaseChanged;
+            _world.Structures.StructurePlaced += OnStructurePlaced;
+            _world.Structures.PlacementRefused += OnPlacementRefused;
             Relief relief = _world.Map.Relief;
             Debug.Log(Prefix + "monde créé, carte de " + relief.SizeX.ToString("0") + " × " + relief.SizeZ.ToString("0") +
                       " m (relief de " + relief.SamplesX + " × " + relief.SamplesZ + " points), " +
@@ -35,6 +38,8 @@ namespace Diciela.Game
         {
             _world.Clock.DayStarted -= OnDayStarted;
             _world.Clock.PhaseChanged -= OnPhaseChanged;
+            _world.Structures.StructurePlaced -= OnStructurePlaced;
+            _world.Structures.PlacementRefused -= OnPlacementRefused;
             Debug.Log(Prefix + "monde arrêté après " + _world.Clock.StepCount + " pas, " + Describe(_world.Clock) + ".");
         }
 
@@ -46,6 +51,19 @@ namespace Diciela.Game
         private static void OnPhaseChanged(DayPhase phase)
         {
             Debug.Log(Prefix + PhaseName(phase) + ".");
+        }
+
+        private static void OnStructurePlaced(Structure structure)
+        {
+            Debug.Log(Prefix + "construction n° " + structure.Id + " (" + structure.Definition.Id + ") posée en " +
+                      structure.Center + ", à " + structure.RotationDegrees + "°.");
+        }
+
+        private static void OnPlacementRefused(StructureDefinition definition, Vector2 center, float rotation,
+            PlacementResult reason)
+        {
+            Debug.Log(Prefix + "pose refusée (" + definition.Id + " en " + center + ", à " + rotation + "°) : " + reason +
+                      ".");
         }
 
         private static string Describe(Clock clock)
