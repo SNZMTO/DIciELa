@@ -19,7 +19,7 @@ namespace Diciela.EditorTools
         /// <summary>La caméra de gestion de la scène, installée si besoin ; null (avec une erreur) sans caméra.</summary>
         public static CameraRig EnsureIn(Scene scene)
         {
-            Camera camera = FindCamera(scene);
+            Camera camera = EditorAssets.FindInScene<Camera>(scene);
             if (camera == null)
             {
                 Debug.LogError("DICIELA : la scène « " + scene.name + " » n'a pas de caméra.");
@@ -44,17 +44,6 @@ namespace Diciela.EditorTools
                 EditorUtility.SetDirty(renderData);
             }
             return rig;
-        }
-
-        private static Camera FindCamera(Scene scene)
-        {
-            foreach (GameObject root in scene.GetRootGameObjects())
-            {
-                Camera camera = root.GetComponentInChildren<Camera>(true);
-                if (camera != null)
-                    return camera;
-            }
-            return null;
         }
 
         private static T GetOrAdd<T>(GameObject gameObject) where T : Component

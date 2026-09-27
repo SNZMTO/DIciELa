@@ -1,11 +1,11 @@
 using UnityEngine;
 
-namespace Diciela.Simulation.Land
+namespace Diciela.Simulation.Core
 {
     /// <summary>
-    /// Un rectangle posé au sol et tourné : une empreinte, ou la zone devant une porte. Dans son repère, x va vers sa
-    /// droite et y vers son avant ; à l'angle 0, l'avant est le nord (+z) ; un angle positif tourne vers l'est, comme la
-    /// caméra.
+    /// Un rectangle posé au sol et tourné (la géométrie du socle, ARCHITECTURE, section 3) : une empreinte, ou la zone
+    /// devant une porte. Dans son repère, x va vers sa droite et y vers son avant ; à l'angle 0, l'avant est le nord
+    /// (+z) ; un angle positif tourne vers l'est, comme la caméra.
     /// </summary>
     public readonly struct RotatedRect
     {

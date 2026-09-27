@@ -57,7 +57,7 @@ namespace Diciela.Tests.PlayMode
         [Test]
         public void ShowsTheMapFromItsCenter()
         {
-            Assert.AreEqual(40f, _cameraObject.GetComponent<Camera>().fieldOfView, 1e-4f);
+            Assert.AreEqual(_settings.FieldOfView, _cameraObject.GetComponent<Camera>().fieldOfView, 1e-4f);
             Assert.That(Vector3.Distance(MapCenter, LookedAtGround()), Is.LessThan(0.01f));
             Assert.That(_cameraObject.transform.position.y, Is.GreaterThan(10f));
         }

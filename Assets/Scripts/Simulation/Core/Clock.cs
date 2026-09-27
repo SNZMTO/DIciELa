@@ -60,8 +60,11 @@ namespace Diciela.Simulation.Core
             return realSeconds * _gameHoursPerRealSecond;
         }
 
-        /// <summary>Joue un pas. Les événements partent une fois l'état à jour, jamais au milieu.</summary>
-        public void Advance()
+        /// <summary>
+        /// Joue un pas. Les événements partent une fois l'état à jour, jamais au milieu. Seul le monde l'appelle, dans
+        /// son pas (<c>internal</c>, ouvert au seul monde) : rien au-dessus de la simulation ne fait avancer le temps.
+        /// </summary>
+        internal void Advance()
         {
             int dayBefore = Day;
             DayPhase phaseBefore = Phase;

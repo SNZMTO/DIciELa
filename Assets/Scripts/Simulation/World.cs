@@ -11,7 +11,7 @@ namespace Diciela.Simulation
     /// </summary>
     public sealed class World
     {
-        private readonly Queue<IOrder> _pendingOrders = new Queue<IOrder>();
+        private readonly Queue<Command> _pendingCommands = new Queue<Command>();
 
         public World(SimulationSettings settings, MapDescription map)
         {
@@ -36,12 +36,12 @@ namespace Diciela.Simulation
 
         public Structures Structures { get; }
 
-        /// <summary>Envoie un ordre ; il s'applique au début du pas suivant.</summary>
-        public void Submit(IOrder order)
+        /// <summary>Envoie un ordre ; il s'applique au début du pas suivant. La seule porte du joueur.</summary>
+        public void Submit(Command command)
         {
-            if (ReferenceEquals(order, null))
-                throw new ArgumentNullException(nameof(order));
-            _pendingOrders.Enqueue(order);
+            if (ReferenceEquals(command, null))
+                throw new ArgumentNullException(nameof(command));
+            _pendingCommands.Enqueue(command);
         }
 
         /// <summary>
@@ -50,16 +50,16 @@ namespace Diciela.Simulation
         /// </summary>
         public void Step()
         {
-            ApplyPendingOrders();
+            ApplyPendingCommands();
             Clock.Advance();
         }
 
         /// <summary>Les ordres envoyés pendant l'application attendent le pas suivant : la boucle est bornée.</summary>
-        private void ApplyPendingOrders()
+        private void ApplyPendingCommands()
         {
-            int count = _pendingOrders.Count;
+            int count = _pendingCommands.Count;
             for (int i = 0; i < count; i++)
-                _pendingOrders.Dequeue().Execute(this);
+                _pendingCommands.Dequeue().Execute(this);
         }
     }
 }

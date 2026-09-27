@@ -12,7 +12,8 @@
   jamais sauvegardé.
 - **Les dépendances ne vont que vers le bas**, et le compilateur l'impose : chaque couche est un assemblage (un fichier
   `.asmdef` : un paquet de scripts compilé à part, qui ne voit que les paquets qu'il déclare).
-- **Le joueur n'a qu'une porte** : les ordres. Les tests et la ville témoin passent par la même.
+- **Le joueur n'a qu'une porte** : les ordres. Les tests et la ville témoin passent par la même, et le compilateur la
+  garde (section 5).
 - **Le contenu est donnée** : des fiches (ScriptableObjects : des fichiers de données réglés dans l'Inspector), lues par
   la simulation, jamais écrites par elle.
 
@@ -142,6 +143,9 @@ sauvegardé.
   tracer, peindre, effacer, ranger, reposer, déplacer (angle compris), affecter, fermer un poste, régler. Chacun est
   vérifié en entier avant d'agir, par la même fonction que l'aperçu du fantôme, et lève son propre événement. Déplacer
   est une opération à part entière, jamais « retirer puis reposer ». Les ordres attendent le début du pas suivant.
+- **Seule la simulation change la simulation.** Ce qui modifie l'état d'un système (poser, faire avancer le temps,
+  tenir le maillage) est `internal`, ouvert par `InternalsVisibleTo` aux seules couches de la simulation au-dessus de
+  lui ; un ordre (`Command`) ne s'exécute que par le monde. Au-dessus, on lit, on écoute et on envoie des ordres.
 - **Les événements** : des `event Action<…>` nommés au passé (`BuildingPlaced`, `DayEnded`). Ceux levés pendant un pas
   sont mis en file et livrés à la fin de la couche, jamais au milieu d'une boucle. Dans la simulation, un système
   n'écoute que pour tenir à jour ce qu'il possède ou ce qu'il déduit.
@@ -286,8 +290,9 @@ code.
   seule, régénérés par un menu seulement.
 - **Les garde-fous** : un test lit le code de la simulation et refuse `MonoBehaviour`, `GameObject`, `Time`,
   `UnityEngine.Random`, `System.Random`, `Mathf.PerlinNoise`, `Debug`, `Resources`, `UnityEditor`, les statiques
-  modifiables et Newtonsoft ; un test compare les `.asmdef` au tableau de la section 2 ; un test vérifie que les
-  identifiants de fiches sont uniques et que les clés de textes existent.
+  modifiables et Newtonsoft ; un test compare les `.asmdef` au tableau de la section 2 ; un test refuse toute
+  ouverture des `internal` hors de la simulation (section 5) ; un test vérifie que les identifiants de fiches sont
+  uniques et que les clés de textes existent.
 - **Le journal** : `Game` écrit dans la console les événements clés (jour fini, arrivée, chantier fini), pour que le
   Play court de la procédure `verifier` prouve que la simulation travaille.
 

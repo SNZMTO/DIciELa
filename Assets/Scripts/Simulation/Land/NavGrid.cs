@@ -7,7 +7,8 @@ namespace Diciela.Simulation.Land
     /// <summary>
     /// Le maillage : un quadrillage invisible, plus fin que le mètre, qui dit ce qui occupe chaque maille (SAVOIR, 2.1).
     /// Il est déduit des constructions, jamais sauvegardé : chaque maille garde l'identifiant de ce qui la couvre (0 :
-    /// libre) et le nombre de portes qui en ont besoin pour rester dégagées.
+    /// libre) et le nombre de portes qui en ont besoin pour rester dégagées. Une maille se désigne par un Vector2Int :
+    /// en x sa colonne, en y sa rangée sur l'axe z du monde.
     /// </summary>
     public sealed class NavGrid
     {
@@ -30,66 +31,51 @@ namespace Diciela.Simulation.Land
         public int Width { get; }
         public int Depth { get; }
 
-        public int OccupantAt(int x, int z)
+        /// <summary>L'identifiant de ce qui occupe cette maille, ou 0 si elle est libre.</summary>
+        public int OccupantAt(Vector2Int cell)
         {
-            return _occupant[z * Width + x];
+            return _occupant[IndexOf(cell)];
         }
 
-        public bool IsDoorway(int x, int z)
+        /// <summary>Vrai si cette maille doit rester dégagée devant une porte.</summary>
+        public bool IsDoorway(Vector2Int cell)
         {
-            return _doorCount[z * Width + x] > 0;
+            return _doorCount[IndexOf(cell)] > 0;
         }
 
-        public Vector2 CellCenter(int x, int z)
+        /// <summary>Le milieu de cette maille, en mètres sur le plan XZ.</summary>
+        public Vector2 CellCenter(Vector2Int cell)
         {
-            return new Vector2(Metrics.CellCenter(x), Metrics.CellCenter(z));
+            return new Vector2(Metrics.CellCenter(cell.x), Metrics.CellCenter(cell.y));
         }
 
-        /// <summary>Les mailles (bornes comprises, ramenées sur le maillage) dont le milieu peut tomber dans ce rectangle.</summary>
-        public void CellRange(RotatedRect rect, out int minX, out int minZ, out int maxX, out int maxZ)
+        /// <summary>Les mailles que couvre ce rectangle (leur milieu tombe dedans), à parcourir avec foreach.</summary>
+        public CoveredCells CellsCoveredBy(RotatedRect rect)
         {
-            float lowX = float.MaxValue, lowZ = float.MaxValue, highX = float.MinValue, highZ = float.MinValue;
-            for (int corner = 0; corner < 4; corner++)
-            {
-                Vector2 point = rect.Corner(corner);
-                lowX = Mathf.Min(lowX, point.x);
-                lowZ = Mathf.Min(lowZ, point.y);
-                highX = Mathf.Max(highX, point.x);
-                highZ = Mathf.Max(highZ, point.y);
-            }
-            minX = Math.Max(0, Metrics.CellOf(lowX));
-            minZ = Math.Max(0, Metrics.CellOf(lowZ));
-            maxX = Math.Min(Width - 1, Metrics.CellOf(highX));
-            maxZ = Math.Min(Depth - 1, Metrics.CellOf(highZ));
+            return new CoveredCells(this, rect);
         }
 
         /// <summary>Donne à chaque maille du rectangle cet occupant (0 pour la libérer).</summary>
-        public void SetOccupant(RotatedRect rect, int occupant)
+        internal void SetOccupant(RotatedRect rect, int occupant)
         {
-            CellRange(rect, out int minX, out int minZ, out int maxX, out int maxZ);
-            for (int z = minZ; z <= maxZ; z++)
-            {
-                for (int x = minX; x <= maxX; x++)
-                {
-                    if (rect.Contains(CellCenter(x, z)))
-                        _occupant[z * Width + x] = occupant;
-                }
-            }
+            foreach (Vector2Int cell in CellsCoveredBy(rect))
+                _occupant[IndexOf(cell)] = occupant;
         }
 
         /// <summary>Compte une porte de plus devant chaque maille du rectangle.</summary>
-        public void AddDoorway(RotatedRect rect)
+        internal void AddDoorway(RotatedRect rect)
         {
-            CellRange(rect, out int minX, out int minZ, out int maxX, out int maxZ);
-            for (int z = minZ; z <= maxZ; z++)
+            foreach (Vector2Int cell in CellsCoveredBy(rect))
             {
-                for (int x = minX; x <= maxX; x++)
-                {
-                    int index = z * Width + x;
-                    if (rect.Contains(CellCenter(x, z)) && _doorCount[index] < byte.MaxValue)
-                        _doorCount[index]++;
-                }
+                int index = IndexOf(cell);
+                if (_doorCount[index] < byte.MaxValue)
+                    _doorCount[index]++;
             }
+        }
+
+        private int IndexOf(Vector2Int cell)
+        {
+            return cell.y * Width + cell.x;
         }
     }
 }

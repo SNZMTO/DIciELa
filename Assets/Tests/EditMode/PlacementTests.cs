@@ -52,7 +52,7 @@ namespace Diciela.Tests.EditMode
 
         private static void Place(World world, StructureDefinition definition, float x, float z, float rotation = 0f)
         {
-            world.Submit(new PlaceStructureOrder(definition, new Vector2(x, z), rotation));
+            world.Submit(new PlaceStructureCommand(definition, new Vector2(x, z), rotation));
             world.Step();
         }
 
@@ -61,7 +61,7 @@ namespace Diciela.Tests.EditMode
         {
             World world = NewWorld(TestData.SlopedMap(20, 0f));
 
-            world.Submit(new PlaceStructureOrder(_cabin, new Vector2(10f, 10f), 0f));
+            world.Submit(new PlaceStructureCommand(_cabin, new Vector2(10f, 10f), 0f));
             Assert.AreEqual(0, world.Structures.All.Count);
             world.Step();
 
