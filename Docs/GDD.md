@@ -41,7 +41,7 @@
   tant qu'on ne les a pas retirés.
 - **Défaut.** Pente maximale pour poser un bâtiment : 15°.
 - **Règle.** Les paysagistes retirent les arbres et les rochers de la carte : un arbre rend un peu de Bois, un rocher un
-  peu de Pierre. Au début, la Chimère s'en charge depuis la tente.
+  peu de Pierre. Au début, la Chimère s'en charge, à son poste « à tout faire ».
 - **Règle.** Les ressources de base (bois, pierre, terre à cultiver) ne dépendent d'aucun gisement : un bûcheron ou une
   carrière produit où qu'on le pose.
 - **Règle.** Chaque monde tire au hasard ce qui pousse sur ses champs sauvages. Il garantit les plantes dont les
@@ -175,10 +175,17 @@
 - **Règle.** Personne ne la connaît. Elle arrive dans un lieu vide, avec des trous de mémoire et quelques idées.
 - **À toi.** Son histoire, que tu écriras.
 - **Règle.** La tente vient en premier, la Place en deuxième.
-- **Règle.** La tente est son logis de départ. Elle garde le stock de départ et sert d'entrepôt ; elle a un poste « à
-  tout faire » (porter, bâtir, récolter, défricher), que tient la Chimère.
-- **Défaut.** La tente garde 50 marchandises. La Place, la cabane et les premiers bâtiments ne demandent que du Bois et
-  de la Pierre ; le stock de départ suffit à la Place et à deux cabanes.
+- **Règle.** La tente est son logis de départ, et seulement cela : elle n'a ni stock ni poste.
+- **Règle.** La Chimère dort quand le joueur le veut : il touche son logis (la tente, puis sa maison), et elle va s'y
+  coucher.
+- **À toi.** Ce que change son sommeil. Ma reco : elle quitte son poste jusqu'à ce que le joueur la réveille, sans
+  autre effet.
+- **Règle.** Le stock de départ est un tas posé au sol près de la tente ; il sert d'entrepôt jusqu'au premier
+  entrepôt. Au début, la Chimère tient un poste « à tout faire » (porter, bâtir, récolter, défricher).
+- **À toi.** À quel lieu ce poste appartient-il, puisque la Place n'existe pas encore ? Ma reco : au tas de départ ; il
+  disparaît avec lui, quand le tas est vide et que la loge et un entrepôt sont bâtis.
+- **Défaut.** Le tas de départ tient 50 marchandises. La Place, la cabane et les premiers bâtiments ne demandent que du
+  Bois et de la Pierre ; le stock de départ suffit à la Place et à deux cabanes.
 - **Règle.** Les premiers habitants arrivent vite, un par un, à mesure que les lits le permettent. Chacun est fort dans
   une discipline, apporte l'idée de son lieu de travail et le bâtit avec la Chimère, avant même la loge. Ils restent en
   ville comme habitants ordinaires ; ce ne sont pas des maîtres.
@@ -255,7 +262,7 @@
   attend ; quand sa production est pleine, il s'arrête.
 - **Règle.** Les charretiers vident ces stocks dans les entrepôts, où la ville conserve en gros, et y prennent ce dont
   les ateliers et les chantiers ont besoin. Tout passe par un entrepôt ; ils vont au plus près.
-- **Règle.** Le stock de la ville est ce que tiennent ses entrepôts (la tente au début) : un chiffre par marchandise.
+- **Règle.** Le stock de la ville est ce que tiennent ses entrepôts (le tas de départ au début) : un chiffre par marchandise.
 - **Règle.** Une liaison prioritaire, tirée par le joueur entre deux bâtiments, livre directement de l'un à l'autre sans
   passer par l'entrepôt : c'est l'outil pour optimiser.
 - **Défaut.** Chacun des deux petits stocks d'un bâtiment tient 10 marchandises ; un entrepôt en tient 200.
@@ -402,8 +409,8 @@
 - **Règle.** Les grands projets, rares, donnent un but lointain ; une idée les débloque.
 - **Règle.** Le premier est la maison de la Chimère, bâtie en secret. Le carnet dit que les habitants préparent quelque
   chose ; le joueur pose où il veut un chantier bâché ; le chantier dit ce qu'il consomme, pas ce qu'il bâtit ; à la
-  fin, la surprise. La maison remplace la tente : le poste « à tout faire » disparaît avec elle, et son stock part aux
-  entrepôts. Elle rend la Chimère aussi heureuse qu'une belle maison.
+  fin, la surprise. La maison remplace la tente comme logis de la Chimère. Elle la rend aussi heureuse qu'une belle
+  maison.
 - **Défaut.** Les idées du premier jouable, en plus de celles du départ (voir 6) :
 
 | Idée | Déclencheur |
