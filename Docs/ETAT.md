@@ -1,27 +1,32 @@
 # DICIELA — état actuel
 
-**Branche** : `etape-2-architecture`, fusionnée dans `main`. **Étape 2 finie** : `Docs/ARCHITECTURE.md` est écrit.
+**Branche** : `etape-3-menage` (pas encore commitée). **Étapes 3 et 4 écrites, en attente de vérification** : Unity
+est figé par une fenêtre du pack (« Synty requires the package com.unity.shadergraph… »).
 
-**Ce qui existe** : un projet Unity 6.6 neuf (modèle Universal 3D, contenu d'exemple encore là), sans code ni test ;
-`Docs/GDD.md`, `Docs/ARCHITECTURE.md` (couches, qui possède quoi, règles de passage), `Docs/DECISIONS.md` (1 à 46),
-`Docs/SAVOIR.md`, `Docs/ALBUM.md` (vide), `.claude/`. La tente n'est que le logis de la Chimère (décisions 45 et 46).
+**À faire par lui d'abord** : cliquer **Install** dans cette fenêtre (Shader Graph vient déjà avec URP ; l'outil de
+Synty ne lit que le texte du manifest). Unity importe alors le pack et applique les paquets.
 
-**À vérifier par lui** : rien à la souris. 31 « À toi » dans le GDD, chacun avec ma reco ; le plus pressé reste la
-taille de la carte (et la résolution du Terrain), à fixer avant de la peindre.
+**Étape 3, le ménage (écrit)** : Sampler Pack retiré (corbeille) ; Fantasy Village à jour, installé en copiant
+l'archive (`Assets/Synty/`) ; `TutorialInfo` et `Readme` retirés ; paquets du manifest (décision 47) ; produit
+`DIciELa`, société `SNZMTO` ; règle LFS de `Assets/Terrain/` essayée ; procédures `pack-synty` et `unity-cli`.
+Restent, par choix : `SampleScene` (retirée quand la scène `Jeu` la remplacera), l'asset d'actions du modèle (retiré à
+l'étape des gestes), le niveau de qualité Mobile (le CLI ne sait pas retirer un niveau).
 
-**À savoir**
-- Le `.gitattributes` abîmerait un TerrainData (règle `*.asset`) : ne rien committer du Terrain avant la règle de son
-  dossier (décision 41, SAVOIR 2.5).
-- LFS n'a pas agi au premier commit (`git lfs ls-files` vide, un PNG du modèle stocké en clair).
-- Le GDD dépasse 490 lignes : à resserrer à la session de ménage.
+**Étape 4, le socle du temps (écrit, compilé hors Unity)** : assemblages Data, Simulation.Core, Simulation,
+EditorTools, Tests.EditMode ; fiche `SimulationSettings` et menu `DICIELA/Données/Créer les fiches manquantes` ;
+`Clock` (le temps = un nombre entier de pas) et `World.Step` ; tests de l'horloge et deux garde-fous (références des
+assemblages, code de la simulation). La boucle de jeu et la scène `Jeu` viennent à l'étape 5.
 
-**Prochaines étapes, dans l'ordre**
-1. **Ménage du projet, avec lui** : retirer le contenu d'exemple et l'asset d'actions du modèle ; paquets (déclarer
-   Newtonsoft, retirer AI Navigation et Collab après avoir vérifié la démo du pack) ; essai de LFS et règle du Terrain ;
-   nom du produit et société (ils décident du dossier des sauvegardes). Puis il importe le pack.
-2. La première étape de code : les assemblages de `ARCHITECTURE.md` et leurs garde-fous (test des références, test du
-   code de la simulation), le temps et le pas fixe, la fiche de réglages.
+**Après le clic, dans l'ordre** : vérifier (compilation, console, tests EditMode), créer la fiche par le menu,
+committer l'étape 3 puis l'étape 4 (branche `etape-4-socle`), fusionner.
+
+**À savoir** : 31 « À toi » dans le GDD (le plus pressé : la taille de la carte et la résolution du Terrain) ; le GDD
+dépasse 490 lignes, à resserrer à la session de ménage.
+
+**Prochaine étape** : 5. La boucle de jeu (`Game`, pas fixe borné, journal console) et la scène `Jeu`, montée par un
+menu, qui remplace `SampleScene`.
 
 **Prompt de la session suivante**
 
-> Lis CLAUDE.md et Docs/ETAT.md. Étape 3 : le ménage du projet (liste d'ETAT). Montre-moi d'abord la liste de ce que tu retires, déclares ou règles, attends mon accord, puis fais-le.
+> Lis CLAUDE.md et Docs/ETAT.md. Si les étapes 3 et 4 ne sont pas commitées, finis-les (vérification, commits). Puis
+> étape 5 : montre-moi le plan court de la boucle de jeu et de la scène Jeu, attends mon accord, puis code-la.
