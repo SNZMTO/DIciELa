@@ -59,16 +59,16 @@ namespace Diciela.EditorTools
             controls.enabled = false;
             cameraControls.enabled = false;
             PlacementTool tool = controls.Tool;
-            var screen = new Vector2(rig.Camera.pixelWidth, rig.Camera.pixelHeight);
+            Camera camera = rig.Camera;
             StructureDefinition cabin = EditorAssets.Load<Catalog>(ContentBuilder.CatalogPath).Families[0].Structures[0];
-            rig.Zoom(ZoomNotches, screen * 0.5f);
+            rig.Zoom(ZoomNotches, OnScreen(camera, new Vector2(0.5f, 0.5f)));
 
             After(ZoomSeconds, () =>
             {
                 tool.Begin(cabin);
                 foreach (Vector2 place in Places)
                 {
-                    tool.AimAt(Vector2.Scale(place, screen));
+                    tool.AimAt(OnScreen(camera, place));
                     tool.Confirm();
                     tool.RotateStep();
                     tool.RotateStep();
@@ -76,9 +76,15 @@ namespace Diciela.EditorTools
             });
             After(ZoomSeconds + StepsSeconds, () =>
             {
-                tool.AimAt(Vector2.Scale(aimFraction, screen));
+                tool.AimAt(OnScreen(camera, aimFraction));
                 Debug.Log("DICIELA : mise en scène de l'album prête (" + tool.Result + ").");
             });
+        }
+
+        /// <summary>Le point de l'écran à cette fraction de la vue, calculé par la caméra, qui connaît sa part d'écran.</summary>
+        private static Vector2 OnScreen(Camera camera, Vector2 fraction)
+        {
+            return camera.ViewportToScreenPoint(fraction);
         }
 
         /// <summary>Joue ce geste dans ce nombre de secondes, si le Play dure encore.</summary>
