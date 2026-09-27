@@ -1,10 +1,14 @@
 using System;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Diciela.EditorTools
 {
-    /// <summary>Les petits gestes communs des monteurs : dossiers, existence d'un asset, champs remplis par nom.</summary>
+    /// <summary>
+    /// Les petits gestes communs des monteurs : dossiers, existence d'un asset, champs remplis par nom, composant
+    /// cherché dans une scène.
+    /// </summary>
     internal static class EditorAssets
     {
         /// <summary>Crée le dossier et ses parents s'ils manquent (chemin commençant par « Assets »).</summary>
@@ -54,6 +58,18 @@ namespace Diciela.EditorTools
             if (asset == null)
                 throw new InvalidOperationException("DICIELA : " + assetPath + " est introuvable.");
             return asset;
+        }
+
+        /// <summary>Le premier composant de ce type dans la scène (objets racines et leurs enfants), ou null.</summary>
+        public static T FindInScene<T>(Scene scene) where T : Component
+        {
+            foreach (GameObject root in scene.GetRootGameObjects())
+            {
+                T found = root.GetComponentInChildren<T>(true);
+                if (found != null)
+                    return found;
+            }
+            return null;
         }
     }
 }

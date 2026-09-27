@@ -24,6 +24,9 @@ paths:
   les services) ; un nombre de réglage écrit en dur (il va dans une donnée) ; une chaîne visible du joueur écrite en dur
   (elle passe par une clé de `strings.csv`) ; une allocation (liste, LINQ, lambda) dans une boucle par image ou par tick.
 - **Aucune méthode publique « pour les tests »** : un test passe par le même appel que le jeu.
+- **Seule la simulation change la simulation** : une méthode qui modifie l'état d'un système est `internal`, ouverte au
+  monde par `InternalsVisibleTo` (jamais aux tests) ; au-dessus, on lit, on écoute et on envoie des ordres
+  (ARCHITECTURE, section 5).
 - **Déplacer et tourner** sont des opérations à part entière, jamais « retirer puis reposer ».
 - **Chaque tâche d'un acteur a une issue d'échec** (destination perdue, chemin introuvable, délai dépassé).
 - **Toute boucle qui avance par pas a une borne.**
