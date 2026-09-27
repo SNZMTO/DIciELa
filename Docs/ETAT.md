@@ -1,29 +1,32 @@
 # DICIELA — état actuel
 
-**Branche** : `etape-4-socle`, fusionnée dans `main`. **Étapes 3 et 4 finies** : le projet est nettoyé, et le socle du
-temps existe, testé.
+**Branche** : `etape-5-boucle`, fusionnée dans `main`. **Étape 5 finie** : la boucle de jeu tourne dans la scène `Jeu`.
 
-**Ce qui marche** : EditMode 17/17 ; console vide. Le pack Fantasy Village à jour est dans `Assets/Synty/` (hors Git).
-Assemblages `Diciela.Data`, `Simulation.Core`, `Simulation`, `EditorTools`, `Tests.EditMode`. La fiche
-`Assets/Data/Settings/SimulationSettings.asset` (menu `DICIELA/Données/Créer les fiches manquantes`, réexécutable).
-`Clock` : le temps est un nombre entier de pas (décision 49) ; `World.Step`. Deux garde-fous : les références des
-assemblages suivent `ARCHITECTURE.md` ; le code de la simulation n'utilise rien d'interdit.
+**Ce qui marche** : EditMode 23/23, PlayMode 1/1, deux Play courts sans erreur (250 pas en 25 s, soit 50 minutes de
+jeu ; un second Play n'abonne rien en double). Assemblages `Data`, `Simulation.Core`, `Simulation`, `Game`,
+`EditorTools` et les deux de tests. `GameRunner` (scène `Jeu`, objet « Démarrage ») crée le monde à chaque Play, joue
+au plus 10 pas par image et abandonne le retard au-delà ; le journal écrit dans la console « monde créé », les jours,
+les phases et « monde arrêté après N pas ».
 
-**À vérifier par lui** : rien à la souris ; rien ne se voit encore. Produit `DIciELa`, société `SNZMTO` : le dossier
-des sauvegardes sera `%USERPROFILE%\AppData\LocalLow\SNZMTO\DIciELa`.
+**À vérifier par lui** : menu **DICIELA > Jouer** (depuis n'importe quelle scène) : le Play démarre dans `Jeu` ; la
+console dit « DICIELA : monde créé, jour 1… » ; en quittant le Play, « monde arrêté après N pas » (environ dix pas par
+seconde de jeu). L'écran reste gris : il n'y a encore ni carte ni rien à voir. **DICIELA > Scènes > Monter la scène
+Jeu** peut se relancer sans rien changer.
 
-**Restent du modèle, par choix** : `SampleScene` (retirée quand `Jeu` la remplace, étape 5), l'asset d'actions du modèle
-(retiré à l'étape des gestes), le niveau de qualité Mobile (le CLI ne sait pas retirer un niveau).
+**Restent du modèle, par choix** : l'asset d'actions (retiré à l'étape des gestes), le niveau de qualité Mobile (le CLI
+ne sait pas le retirer). `SampleSceneProfile` reste : c'est le profil de filtres des réglages de rendu URP.
 
 **À savoir**
 - Le pack ouvre une fenêtre modale (`SyntyPackageHelper`) qui fige le CLI jusqu'à un clic (procédure `pack-synty`).
 - 31 « À toi » dans le GDD ; le plus pressé : la taille de la carte et la résolution du Terrain, avant de la peindre.
-- Le GDD dépasse 490 lignes : à resserrer à la session de ménage (dans une étape environ).
+- **La prochaine étape est la session de ménage** (une toutes les cinq étapes) : relire un système en entier ; le GDD
+  (plus de 490 lignes) est le candidat désigné.
 
-**Prochaine étape** : 5. La boucle de jeu dans `Diciela.Game` (pas fixe borné par la fiche, journal des événements
-dans la console) et la scène `Jeu`, montée par un menu, qui remplace `SampleScene` ; un test PlayMode court.
+**Prochaines étapes, dans l'ordre**
+1. Session de ménage : resserrer le GDD sans rien changer à ses règles ; relire l'architecture contre le code.
+2. La carte : sa taille et sa résolution (ses « À toi »), la scène `Carte`, sa description pure lue par `Game`.
 
 **Prompt de la session suivante**
 
-> Lis CLAUDE.md et Docs/ETAT.md. Étape 5 : la boucle de jeu et la scène Jeu. Montre-moi d'abord le plan court, attends
-> mon accord, puis code-la et vérifie-la (procédure verifier).
+> Lis CLAUDE.md et Docs/ETAT.md. Session de ménage : propose-moi comment resserrer le GDD sans changer une règle
+> (plan court, attends mon accord), puis fais-le.
