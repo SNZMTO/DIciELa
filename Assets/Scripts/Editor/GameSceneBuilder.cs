@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Diciela.Data;
 using Diciela.Game;
+using Diciela.View;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -9,8 +10,8 @@ using UnityEngine.SceneManagement;
 namespace Diciela.EditorTools
 {
     /// <summary>
-    /// Monte les scènes du jeu : les fiches qui manquent, la carte de test, la carte (si elle n'existe pas), puis les
-    /// deux scènes racines, Jeu et JeuTest, chacune avec son démarrage relié à ses fiches. Réexécutable : ce qui existe
+    /// Monte les scènes du jeu : les fiches et les actions qui manquent, la carte de test, la carte (si elle n'existe
+    /// pas), puis les deux scènes racines, Jeu et JeuTest, chacune avec son démarrage et sa caméra reliés à leurs fiches. Réexécutable : ce qui existe
     /// n'est pas touché, un réglage fait à la main n'est pas écrasé. Finit sur la scène Jeu.
     /// </summary>
     public static class GameSceneBuilder
@@ -24,6 +25,7 @@ namespace Diciela.EditorTools
                 return;
 
             DataAssetBuilder.CreateMissingAssets();
+            InputActionsBuilder.CreateIfMissing();
             MapSceneBuilder.CreateTestMapIfMissing();
             MapSceneBuilder.CreateMapIfMissing();
             BuildRootScene(ScenePaths.GameTest, DataAssetBuilder.TestSessionPath);
@@ -66,6 +68,9 @@ namespace Diciela.EditorTools
             GameRunner runner = FindOrCreateRunner(scene);
             EditorAssets.AssignIfMissing(runner, "_settings", settings);
             EditorAssets.AssignIfMissing(runner, "_session", session);
+            CameraRig rig = CameraBuilder.EnsureIn(scene);
+            if (rig != null)
+                EditorAssets.AssignIfMissing(runner, "_cameraRig", rig);
             EditorSceneManager.SaveScene(scene, scenePath);
         }
 

@@ -18,6 +18,7 @@ namespace Diciela.EditorTools
         internal const string TestSessionPath = SettingsFolder + "/Session_Test.asset";
         internal const string MapCreationPath = SettingsFolder + "/CarteNeuve.asset";
         internal const string TestMapCreationPath = SettingsFolder + "/CarteNeuve_Test.asset";
+        internal const string CameraSettingsPath = SettingsFolder + "/CameraSettings.asset";
 
         [MenuItem("DICIELA/Données/Créer les fiches manquantes")]
         public static void CreateMissingAssets()
@@ -31,6 +32,7 @@ namespace Diciela.EditorTools
                 fiche => EditorAssets.Property(fiche, "_mapScenePath").stringValue = ScenePaths.MapTest);
             CreateIfMissing<MapCreationSettings>(MapCreationPath, null);
             CreateIfMissing<MapCreationSettings>(TestMapCreationPath, FillTestMapCreation);
+            CreateIfMissing<CameraSettings>(CameraSettingsPath, null);
 
             AssetDatabase.SaveAssets();
         }
