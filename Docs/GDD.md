@@ -178,12 +178,11 @@
 - **Règle.** La tente est son logis de départ, et seulement cela : elle n'a ni stock ni poste.
 - **Règle.** La Chimère dort quand le joueur le veut : il touche son logis (la tente, puis sa maison), et elle va s'y
   coucher.
-- **À toi.** Ce que change son sommeil. Ma reco : elle quitte son poste jusqu'à ce que le joueur la réveille, sans
-  autre effet.
+- **Règle.** Endormie, elle quitte son poste jusqu'à ce que le joueur la réveille ; son sommeil n'a pas d'autre effet.
 - **Règle.** Le stock de départ est un tas posé au sol près de la tente ; il sert d'entrepôt jusqu'au premier
   entrepôt. Au début, la Chimère tient un poste « à tout faire » (porter, bâtir, récolter, défricher).
-- **À toi.** À quel lieu ce poste appartient-il, puisque la Place n'existe pas encore ? Ma reco : au tas de départ ; il
-  disparaît avec lui, quand le tas est vide et que la loge et un entrepôt sont bâtis.
+- **Règle.** Ce poste appartient au tas de départ ; il disparaît avec lui, quand le tas est vide et que la loge et un
+  entrepôt sont bâtis.
 - **Défaut.** Le tas de départ tient 50 marchandises. La Place, la cabane et les premiers bâtiments ne demandent que du
   Bois et de la Pierre ; le stock de départ suffit à la Place et à deux cabanes.
 - **Règle.** Les premiers habitants arrivent vite, un par un, à mesure que les lits le permettent. Chacun est fort dans
