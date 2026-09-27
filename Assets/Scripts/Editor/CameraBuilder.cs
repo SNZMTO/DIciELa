@@ -27,15 +27,17 @@ namespace Diciela.EditorTools
             }
 
             var settings = EditorAssets.Load<CameraSettings>(DataAssetBuilder.CameraSettingsPath);
+            var gestures = EditorAssets.Load<GestureSettings>(DataAssetBuilder.GestureSettingsPath);
             var actions = EditorAssets.Load<InputActionAsset>(InputActionsBuilder.ActionsPath);
 
-            CameraRig rig = GetOrAdd<CameraRig>(camera.gameObject);
+            CameraRig rig = EditorAssets.GetOrAdd<CameraRig>(camera.gameObject);
             EditorAssets.AssignIfMissing(rig, "_settings", settings);
 
-            CameraControls controls = GetOrAdd<CameraControls>(camera.gameObject);
+            CameraControls controls = EditorAssets.GetOrAdd<CameraControls>(camera.gameObject);
             EditorAssets.AssignIfMissing(controls, "_actions", actions);
             EditorAssets.AssignIfMissing(controls, "_rig", rig);
             EditorAssets.AssignIfMissing(controls, "_settings", settings);
+            EditorAssets.AssignIfMissing(controls, "_gestures", gestures);
 
             UniversalAdditionalCameraData renderData = camera.GetUniversalAdditionalCameraData();
             if (!renderData.renderPostProcessing)
@@ -44,12 +46,6 @@ namespace Diciela.EditorTools
                 EditorUtility.SetDirty(renderData);
             }
             return rig;
-        }
-
-        private static T GetOrAdd<T>(GameObject gameObject) where T : Component
-        {
-            T component = gameObject.GetComponent<T>();
-            return component != null ? component : gameObject.AddComponent<T>();
         }
     }
 }

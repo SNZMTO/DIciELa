@@ -55,9 +55,6 @@ namespace Diciela.Data
         [Tooltip("Bande au bord de l'écran qui fait défiler la vue, en pixels (0 : jamais).")]
         [SerializeField, Min(0f)] private float _edgeScrollPixels = 12f;
 
-        [Tooltip("Distance en pixels au-delà de laquelle un clic devient un glisser.")]
-        [SerializeField, Min(0f)] private float _dragThresholdPixels = 6f;
-
         public float FieldOfView => _fieldOfView;
         public float NearDistance => _nearDistance;
         public float FarDistance => _farDistance;
@@ -72,6 +69,5 @@ namespace Diciela.Data
         public float ScrollPerNotch => _scrollPerNotch;
         public float ZoomSmoothing => _zoomSmoothing;
         public float EdgeScrollPixels => _edgeScrollPixels;
-        public float DragThresholdPixels => _dragThresholdPixels;
     }
 }

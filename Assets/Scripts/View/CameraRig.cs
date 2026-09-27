@@ -36,6 +36,9 @@ namespace Diciela.View
         /// <summary>Vrai quand la caméra montre une carte.</summary>
         public bool IsShowing => _relief != null;
 
+        /// <summary>La caméra elle-même, pour les rayons de la visée.</summary>
+        public Camera Camera => _camera;
+
         private void Awake()
         {
             _camera = GetComponent<Camera>();

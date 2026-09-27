@@ -40,6 +40,33 @@ namespace Diciela.Tests.PlayMode
         }
 
         [Test]
+        public void AReleaseWithoutDraggingIsAClickDecidedAtTheRelease()
+        {
+            var gesture = new DragGesture();
+
+            gesture.Update(true, new Vector2(100f, 100f), Threshold);
+            Assert.IsTrue(gesture.Began);
+            gesture.Update(true, new Vector2(102f, 101f), Threshold);
+            Assert.IsFalse(gesture.Clicked);
+            gesture.Update(false, new Vector2(102f, 101f), Threshold);
+            Assert.IsTrue(gesture.Clicked);
+            gesture.Update(false, new Vector2(102f, 101f), Threshold);
+            Assert.IsFalse(gesture.Clicked);
+        }
+
+        [Test]
+        public void ADragIsNeverAClick()
+        {
+            var gesture = new DragGesture();
+
+            gesture.Update(true, new Vector2(100f, 100f), Threshold);
+            gesture.Update(true, new Vector2(130f, 100f), Threshold);
+            gesture.Update(false, new Vector2(130f, 100f), Threshold);
+
+            Assert.IsFalse(gesture.Clicked);
+        }
+
+        [Test]
         public void APressFirstSeenLateStartsWhereItIsSeen()
         {
             var gesture = new DragGesture();

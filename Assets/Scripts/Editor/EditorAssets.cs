@@ -84,6 +84,25 @@ namespace Diciela.EditorTools
             return asset;
         }
 
+        /// <summary>Le composant de ce type sur cet objet, ajouté s'il manque.</summary>
+        public static T GetOrAdd<T>(GameObject gameObject) where T : Component
+        {
+            T component = gameObject.GetComponent<T>();
+            return component != null ? component : gameObject.AddComponent<T>();
+        }
+
+        /// <summary>Le composant de ce type dans la scène ; s'il manque, un objet racine de ce nom qui le porte.</summary>
+        public static T FindOrCreate<T>(Scene scene, string objectName) where T : Component
+        {
+            T existing = FindInScene<T>(scene);
+            if (existing != null)
+                return existing;
+
+            var created = new GameObject(objectName);
+            SceneManager.MoveGameObjectToScene(created, scene);
+            return created.AddComponent<T>();
+        }
+
         /// <summary>Le premier composant de ce type dans la scène (objets racines et leurs enfants), ou null.</summary>
         public static T FindInScene<T>(Scene scene) where T : Component
         {

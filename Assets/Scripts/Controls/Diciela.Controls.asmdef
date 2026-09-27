@@ -4,7 +4,9 @@
     "references": [
         "Diciela.Data",
         "Diciela.View",
-        "Unity.InputSystem"
+        "Unity.InputSystem",
+        "Diciela.Simulation.Land",
+        "Diciela.Simulation"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
