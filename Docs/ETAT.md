@@ -13,10 +13,9 @@ console dit « DICIELA : monde créé, jour 1… » ; en quittant le Play, « mo
 seconde de jeu). L'écran reste gris : il n'y a encore ni carte ni rien à voir. **DICIELA > Scènes > Monter la scène
 Jeu** peut se relancer sans rien changer.
 
-**Restent du modèle, par choix** : l'asset d'actions (retiré à l'étape des gestes), le niveau de qualité Mobile (le CLI
-ne sait pas le retirer). `SampleSceneProfile` reste : c'est le profil de filtres des réglages de rendu URP.
-
 **À savoir**
+- Restent du modèle, par choix : l'asset d'actions (retiré à l'étape des gestes), le niveau de qualité Mobile, et
+  `SampleSceneProfile` (le profil de filtres des réglages de rendu URP).
 - Le pack ouvre une fenêtre modale (`SyntyPackageHelper`) qui fige le CLI jusqu'à un clic (procédure `pack-synty`).
 - 31 « À toi » dans le GDD ; le plus pressé : la taille de la carte et la résolution du Terrain, avant de la peindre.
 - **La prochaine étape est la session de ménage** (une toutes les cinq étapes) : relire un système en entier ; le GDD
