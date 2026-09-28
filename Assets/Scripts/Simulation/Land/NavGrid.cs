@@ -49,6 +49,16 @@ namespace Diciela.Simulation.Land
             return _doorCount[IndexOf(cell)] > 0;
         }
 
+        /// <summary>
+        /// Vrai si un piéton peut entrer dans cette maille : elle est libre. Un fantôme la prend dès sa pose, comme un
+        /// bâtiment ; le devant d'une porte est toujours libre, les règles de pose y refusent tout. La seule réponse à
+        /// « se traverse-t-elle ? ».
+        /// </summary>
+        public bool IsWalkable(Vector2Int cell)
+        {
+            return _occupant[IndexOf(cell)] == 0;
+        }
+
         /// <summary>Le milieu de cette maille, en mètres sur le plan XZ.</summary>
         public Vector2 CellCenter(Vector2Int cell)
         {
@@ -79,12 +89,23 @@ namespace Diciela.Simulation.Land
             }
         }
 
-        /// <summary>La place de la maille dans les tableaux ; hors du maillage, une erreur, jamais la rangée voisine.</summary>
-        private int IndexOf(Vector2Int cell)
+        /// <summary>
+        /// La place de la maille dans les tableaux du maillage, et dans ceux qui le suivent (la recherche des trajets) ;
+        /// hors du maillage, une erreur, jamais la rangée voisine.
+        /// </summary>
+        internal int IndexOf(Vector2Int cell)
         {
             if (!Contains(cell))
                 throw new ArgumentOutOfRangeException(nameof(cell), "La maille " + cell + " est hors du maillage.");
             return cell.y * Width + cell.x;
+        }
+
+        /// <summary>La maille qui est à cette place dans les tableaux : l'inverse de <see cref="IndexOf"/>.</summary>
+        internal Vector2Int CellAt(int index)
+        {
+            if (index < 0 || index >= Width * Depth)
+                throw new ArgumentOutOfRangeException(nameof(index), "La place " + index + " est hors du maillage.");
+            return new Vector2Int(index % Width, index / Width);
         }
     }
 }

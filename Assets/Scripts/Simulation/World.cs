@@ -23,6 +23,7 @@ namespace Diciela.Simulation
             Clock = new Clock(settings);
             Map = map;
             Grid = new NavGrid(map.Relief, new GridMetrics(settings.CellsPerMeter));
+            PathFinder = new PathFinder(Grid);
             PlacementRules = new PlacementRules(Grid, map.Relief, settings);
             Structures = new Structures(Grid, PlacementRules);
         }
@@ -34,6 +35,9 @@ namespace Diciela.Simulation
 
         /// <summary>Le maillage : ce qui occupe le sol, déduit des constructions.</summary>
         public NavGrid Grid { get; }
+
+        /// <summary>La recherche des trajets sur le maillage : une seule, dont les tableaux servent à chaque recherche.</summary>
+        public PathFinder PathFinder { get; }
 
         /// <summary>Les règles de pose : la seule réponse à « peut-on poser ici ? », pour l'aperçu et l'ordre.</summary>
         public PlacementRules PlacementRules { get; }

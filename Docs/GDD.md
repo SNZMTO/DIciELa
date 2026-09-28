@@ -283,7 +283,8 @@
   et la raison s'écrit. **R** la tourne : une touche brève d'un cran, tenue en bougeant la souris au degré près. Le
   clic gauche pose ; l'outil reste en main pour la suivante ; un clic droit bref ou Échap le pose de côté.
 - **Défaut.** Le cran de rotation : 15°.
-- **Règle.** Une construction posée attend ses bâtisseurs en fantôme translucide.
+- **Règle.** Une construction posée attend ses bâtisseurs en fantôme translucide. Dès sa pose, elle prend sa place : on
+  ne traverse pas plus un fantôme qu'un bâtiment.
 - **À toi.** Retirer un arbre ou en planter un passe-t-il par la file des chantiers ? Ma reco : non, ce sont des tâches
   des paysagistes, dans l'ordre où le joueur les a désignées.
 - **Règle.** Ranger ou déplacer un bâtiment est un tout petit chantier : il se déconstruit en quelques secondes et se
@@ -302,8 +303,9 @@
   Pavés, faits par l'atelier de pierre. Un pont est un bout de route posé sur l'eau. Routes et ponts ne se rangent pas :
   ils s'effacent, par un petit chantier qui rend leurs matériaux.
 - **Défaut.** Un pont coûte du Bois.
-- **Règle.** Les piétons marchent partout ; les charrettes vont lentement dans l'herbe, plus vite sur la terre, encore
-  plus vite sur les pavés. Une route est un investissement, jamais une obligation.
+- **Règle.** Les piétons marchent partout où rien n'est posé, par le trajet le plus court ; les charrettes vont
+  lentement dans l'herbe, plus vite sur la terre, encore plus vite sur les pavés. Une route est un investissement,
+  jamais une obligation.
 - **Défaut.** Charrettes : moitié moins vite dans l'herbe, vitesse normale sur la terre, une fois et demie plus vite sur
   les pavés. Les piétons vont à la même vitesse partout.
 
