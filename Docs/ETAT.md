@@ -4,7 +4,7 @@
 `/code-review ultra` (décision 77). `main` est à l'étape 10.
 
 **Fait** : le ménage « ultracode » (8 agents, 1,10 M jetons sur 1,5 M). 8 trouvailles retenues, toutes confirmées par
-leur vérificateur, plus 3 vraies parmi les 40 écartées. Chaque correction a son test, vu rouge avant elle :
+leur vérificateur, plus 5 vraies parmi les 40 écartées. Chaque correction a son test, vu rouge avant elle :
 - la Chimère ne recule plus quand un fantôme coupe son trajet : elle rejoint sa nouvelle ligne sans quitter sa maille ;
 - posée sous un fantôme, elle sort par une maille libre qui le borde, du côté le plus vaste : jamais dans une poche
   qu'il ferme, jamais derrière une autre construction ; un second fantôme sur sa sortie lui en fait choisir une autre ;
