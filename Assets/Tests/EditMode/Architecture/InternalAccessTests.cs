@@ -53,7 +53,7 @@ namespace Diciela.Tests.EditMode.Architecture
         [Test]
         public void OnlyTheSimulationOpensItsInternalsAndOnlyToItself()
         {
-            string scriptsFolder = Normalized(Path.Combine(Application.dataPath, "Scripts"));
+            string scriptsFolder = Normalized(System.IO.Path.Combine(Application.dataPath, "Scripts"));
             string simulationFolder = scriptsFolder + "/Simulation/";
             var declarations = new List<string>();
             var faults = new List<string>();
@@ -77,7 +77,7 @@ namespace Diciela.Tests.EditMode.Architecture
 
         private static string Normalized(string path)
         {
-            return Path.GetFullPath(path).Replace('\\', '/');
+            return System.IO.Path.GetFullPath(path).Replace('\\', '/');
         }
     }
 }

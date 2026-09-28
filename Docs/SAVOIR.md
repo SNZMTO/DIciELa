@@ -64,13 +64,29 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 - **Un numéro de recherche** dit quelles cases des tableaux sont à jour : on ne vide jamais les 4 millions de mailles
   de la carte entre deux recherches (environ 40 Mo de tableaux, faits une fois par monde).
 - **Le vérifier** : un test lance le A* sur **400 maillages tirés au hasard** contre un Dijkstra sans heuristique ni
-  tas ; les coûts doivent être égaux, et chaque trajet est jugé pas à pas. Les cas écrits à la main se dessinent en
+  tas ; les coûts doivent être égaux, et chaque trajet est jugé pas à pas. Sur les mêmes terrains, les îlots se
+  comparent à un remplissage pas à pas en huit directions (la preuve que quatre suffisent), et la ligne tendue à un
+  juge qui essaie chaque maille autour de chaque segment, par des produits en croix en entiers (coordonnées doublées :
+  un milieu de maille tombe sur des nombres impairs, ses bords sur des pairs). Les cas écrits à la main se dessinent en
   texte, le nord en haut (`TestGround`), et chaque obstacle y est posé par l'ordre « poser ».
-- **Le lissage** : le A* rend un escalier de mailles ; on le tend comme une ficelle. Deux points se relient en ligne
-  droite si toutes les mailles que la ligne touche (coins compris) sont franchissables **au même coût** que le bout de
-  chemin remplacé : une charrette reste sur sa route.
-- **Savoir tout de suite qu'un chemin est introuvable** : une étiquette de composante connexe par façon de se déplacer,
-  recalculée à chaque changement de topologie. Sans elle, un A* vers une cible coupée parcourt toute la carte.
+- **Le lissage** : le A* rend un escalier de mailles ; on le tend comme une ficelle. Une ligne droite entre deux
+  milieux de mailles est libre si toutes les mailles qu'elle touche le sont, **coins compris** : passer par le coin de
+  quatre mailles les touche toutes, la règle même du pas en diagonale (une seule fonction du maillage pour les deux).
+  Le calcul est exact, en entiers : on compare où la ligne croise sa prochaine frontière de colonne et de rangée, sans
+  diviser. On part des bouts de l'escalier et de ses changements de direction (entre deux, l'escalier va droit : la
+  ligne est libre), et l'on tire de chaque bout : on file tant que la ligne depuis le dernier pli reste libre ; au
+  premier point caché, la ficelle plie sur le segment qui y mène, au plus loin qu'on le voit, là où il passe par un
+  milieu de maille. **Tirée d'un seul bout, la ficelle longe un mur au-delà de son coin** : on la tire depuis le
+  départ, puis depuis l'arrivée, qui ramène le pli contre le coin. Pour la charrette, « libre » deviendra « au même
+  coût que le bout d'escalier remplacé » : elle reste sur sa route.
+- **Savoir tout de suite qu'un trajet est introuvable** : les îlots, le sol libre découpé en morceaux d'un seul
+  tenant. Comme une diagonale ne coupe jamais un coin, se rejoindre en huit directions revient à se rejoindre en
+  quatre : on les relève rangée par rangée, chaque tronçon de mailles libres relié à ceux qu'il touche en dessous par
+  un union-find (chaque tronçon pointe vers un plus ancien de son îlot). Ils se refont quand on les lit et que la
+  version du maillage a changé : une fois pour tout ce qu'un pas a posé, une quinzaine de millisecondes sur la carte de
+  500 m, recherche comprise. La recherche ne garde que les départs et les arrivées d'un même îlot : un départ seul sur
+  le sien ferait fouiller tout l'îlot en vain. Sans les îlots, un A* vers une porte enfermée parcourt toute la carte.
+  La charrette aura les siens, si ses passages diffèrent de ceux du piéton.
 - **La marche** : un chemin est une polyligne ; l'avancement se compte en distance. L'allure se relit **à chaque mètre
   parcouru** et à chaque sommet, pas seulement aux sommets : une lanterne au milieu d'un long segment doit compter.
   Sans allocation par tick.
@@ -318,6 +334,8 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   en jeu). L'aperçu et le fantôme ne dessinent de toute façon que les maillages.
 - **Un rayon vers un sol plat au niveau le plus bas du relief peut le rater d'un arrondi** : la tranche de recherche
   déborde d'un millimètre au-dessus et au-dessous (`Relief.TryRaycast`).
+- **Le trajet s'appelle `Path`** (le lexique) : dans un fichier qui a `using System.IO;` et `using
+  Diciela.Simulation.Land;`, `Path` est ambigu ; y écrire `System.IO.Path`.
 - **Vérifier qu'un appel n'alloue rien** : `Assert.That(() => { … }, Is.Not.AllocatingGCMemory())`, du Test Framework.
   Il faut `using UnityEngine.TestTools.Constraints;` (l'extension) et l'alias
   `using Is = UnityEngine.TestTools.Constraints.Is;` (sinon `Is` est ambigu avec celui de NUnit), et un lambda à
