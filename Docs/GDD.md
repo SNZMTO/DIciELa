@@ -215,7 +215,7 @@
   qui lui va le mieux ; s'il n'y en a aucun, il flâne et ne travaille pas. Le joueur réaffecte qui il veut.
 - **Règle.** Flâner, c'est aller à un point libre tiré autour de l'endroit où l'on s'est mis à flâner, s'y arrêter un
   moment, puis recommencer, comme les colons de RimWorld. Un point devenu injoignable en chemin n'est qu'une pause de
-  plus.
+  plus. Si l'endroit même où l'on flânait est pris, ou coupé de soi, on se remet à flâner autour d'où l'on est.
 - **Défaut.** Un point à 6 m au plus de l'endroit où l'on s'est mis à flâner, à 2 m au moins de soi ; une pause de 0,1
   à 0,3 h de jeu (3 à 9 s).
 - **Règle.** Le joueur peut fermer un poste : personne ne le prend, et celui qui l'occupait redevient libre.
@@ -285,6 +285,8 @@
 - **Défaut.** Trois ouvriers au plus sur un chantier ; les chantiers se servent dans l'ordre de la file.
 - **Règle.** Pose libre : aucune case pour le joueur, on parle en mètres. La porte d'un bâtiment reste dégagée : rien ne
   se pose devant. Un bâtiment qu'on ne peut plus atteindre le montre.
+- **Règle.** Rien ne se chevauche, même de quelques centimètres, et on ne se glisse pas entre deux constructions plus
+  serrées que 25 cm (une maille du maillage) : deux constructions se collent à 25 cm près.
 - **Défaut.** Devant une porte, 1,5 m restent libres, sur la largeur de la porte.
 - **Règle.** Poser : la construction choisie suit le pointeur ; son aperçu est vert si elle se pose là, rouge sinon,
   et la raison s'écrit. **R** la tourne : une touche brève d'un cran, tenue en bougeant la souris au degré près. Le
@@ -292,7 +294,8 @@
 - **Défaut.** Le cran de rotation : 15°.
 - **Règle.** Une construction posée attend ses bâtisseurs en fantôme translucide. Dès sa pose, elle prend sa place : on
   ne traverse pas plus un fantôme qu'un bâtiment. Qui marche et voit son trajet coupé en cherche un autre ; qui se
-  trouve dessous en sort à pied, tout droit vers le sol libre le plus proche.
+  trouve dessous en sort à pied, tout droit, par le sol libre qui la borde : du côté où il est le plus vaste (jamais
+  une poche qu'elle vient de fermer), au plus près, et jamais à travers une autre construction.
 - **À toi.** Retirer un arbre ou en planter un passe-t-il par la file des chantiers ? Ma reco : non, ce sont des tâches
   des paysagistes, dans l'ordre où le joueur les a désignées.
 - **Règle.** Ranger ou déplacer un bâtiment est un tout petit chantier : il se déconstruit en quelques secondes et se

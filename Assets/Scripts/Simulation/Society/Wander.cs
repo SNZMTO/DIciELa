@@ -8,17 +8,16 @@ namespace Diciela.Simulation.Society
 {
     /// <summary>
     /// Flâner (GDD, section 7) : sans poste, un habitant va à un point libre tiré autour de l'endroit où il s'est mis à
-    /// flâner, au plus au rayon que dit sa sorte, s'y arrête un moment, puis recommence. Tiré autour de ce point et non
-    /// de lui-même, il ne dérive pas à travers la carte. Un point sans issue, ou devenu injoignable en chemin, n'est
-    /// qu'une pause de plus. Les tirages viennent du hasard de son pas (voir <see cref="Villager"/>).
+    /// flâner, au plus au rayon que dit sa sorte et pas tout près de lui, s'y arrête un moment, puis recommence. Tiré
+    /// autour de ce point et non de lui-même, il ne dérive pas à travers la carte. Un point sans issue, ou devenu
+    /// injoignable en chemin, n'est qu'une pause de plus ; si l'endroit même où il flânait est pris ou coupé de lui, il
+    /// se remet à flâner autour d'où il est (décision 89). Les tirages viennent du hasard de son pas (voir
+    /// <see cref="Villager"/>).
     /// </summary>
     internal sealed class Wander
     {
         // Les essais pour trouver un point à chaque départ ; tous ratés, c'est une pause de plus.
         private const int Draws = 8;
-
-        // Un point plus proche que cette part du rayon ne se verrait pas : un saut minuscule, comme un tremblement.
-        private const float MinHopShareOfRadius = 1f / 3f;
 
         private readonly NavGrid _grid;
         private readonly Islands _islands;
@@ -52,7 +51,7 @@ namespace Diciela.Simulation.Society
             _walk = walk;
             _metersPerStep = metersPerStep;
             _radiusCells = Math.Max(1, (int)(kind.WanderRadiusMeters * grid.Metrics.CellsPerMeter));
-            _minHopMeters = kind.WanderRadiusMeters * MinHopShareOfRadius;
+            _minHopMeters = kind.WanderMinHopMeters;
             _pauseMinHours = kind.WanderPauseMinHours;
             _pauseMaxHours = kind.WanderPauseMaxHours;
         }
@@ -79,6 +78,10 @@ namespace Diciela.Simulation.Society
                 _pauseLeft--;
                 return;
             }
+            // Une maille prise est sur l'îlot 0 : l'endroit où il flânait n'est plus sur son îlot s'il est pris, ou si une
+            // construction l'en a coupé.
+            if (_islands.IslandOf(_grid.CellOf(_anchor)) != _islands.IslandOf(_grid.CellOf(position)))
+                _anchor = position;
             if (!TryDraw(position, ref random, out Vector2Int target) || !_walk.TryStart(position, target))
                 Pause(ref random);
         }

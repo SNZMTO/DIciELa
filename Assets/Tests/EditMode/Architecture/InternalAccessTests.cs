@@ -31,8 +31,10 @@ namespace Diciela.Tests.EditMode.Architecture
             (typeof(NavGrid), "SetOccupant"),
             (typeof(NavGrid), "AddDoorway"),
             (typeof(Structures), "Place"),
+            (typeof(Structures), "DeliverEvents"),
             (typeof(Villagers), "CreateChimera"),
             (typeof(Villagers), "Step"),
+            (typeof(Villagers), "DeliverEvents"),
             (typeof(Villager), "Step"),
             (typeof(Command), "Execute"),
         };

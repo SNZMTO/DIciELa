@@ -81,8 +81,8 @@ la société, qui voit tout ce qui est en dessous.
   postes ; une tâche à prendre dit où, quoi et quelle sous-statistique elle lit.
 - **Le terrain.** La carte reçue au lancement (section 10) et son état : arbres et rochers retirés, champs sauvages
   (désigné, récolté, minuterie de repousse). Les emprises peintes (section 8). Les constructions : bâtiments, décos,
-  la Place, la réserve. Le maillage (SAVOIR 2.1), avec ses îlots, son A*, la ligne tendue qu'on tire d'un trajet et
-  ses distances par la route, écrits pour lui. L'eau :
+  la Place, la réserve. Le maillage (SAVOIR 2.1), avec ses îlots, son A*, la ligne tendue qu'on tire d'un trajet,
+  la sortie d'une construction posée sur un piéton et ses distances par la route, écrits pour lui. L'eau :
   canaux, relief creusé, zones irriguées. La force : réseaux et budget, un moulin bâti consommant qu'il travaille ou
   non.
 - **L'économie.** Les stocks : portes des bâtiments, entrepôts, étagères de l'étal, charge d'un porteur, panier d'un

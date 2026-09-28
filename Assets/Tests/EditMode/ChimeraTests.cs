@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Diciela.Data;
 using Diciela.Simulation;
 using Diciela.Simulation.Society;
 using NUnit.Framework;
@@ -68,6 +69,55 @@ namespace Diciela.Tests.EditMode
         }
 
         [Test]
+        public void ASecondOrderIsRefusedAndSaysSo()
+        {
+            var world = new World(_test.Settings, TestData.FlatMap(40f));
+            VillagerKindDefinition second = _test.Keep(TestData.VillagerKind("seconde"));
+            var refused = new List<VillagerKindDefinition>();
+            world.Villagers.ChimeraRefused += refused.Add;
+
+            world.Submit(new CreateChimeraCommand(_test.Kind));
+            world.Submit(new CreateChimeraCommand(second));
+            world.Step();
+
+            Assert.AreEqual(1, world.Villagers.All.Count);
+            Assert.AreSame(_test.Kind, world.Villagers.Chimera.Kind);
+            Assert.AreEqual(new[] { second }, refused);
+        }
+
+        [Test]
+        public void SheNeverHopsCloserThanHerKindSays()
+        {
+            // Sa sorte dit 4 m au moins par saut, et non les 2 m du banc : chaque arrêt est à 4 m au moins du précédent.
+            VillagerKindDefinition kind = _test.Keep(TestData.VillagerKind(minHop: 4f));
+            var world = new World(_test.Settings, TestData.FlatMap(40f));
+            world.Submit(new CreateChimeraCommand(kind));
+            world.Step();
+            Villager chimera = world.Villagers.Chimera;
+
+            Vector2 stop = chimera.Position;
+            bool moving = false;
+            int hops = 0;
+            // 6 000 pas : 20 heures de jeu, une soixantaine de sauts.
+            for (int step = 0; step < 6000; step++)
+            {
+                world.Step();
+                if (chimera.Position != chimera.PreviousPosition)
+                {
+                    moving = true;
+                    continue;
+                }
+                if (!moving)
+                    continue;
+                moving = false;
+                Assert.GreaterOrEqual(Vector2.Distance(stop, chimera.Position), 4f - 1e-3f, "Un saut trop court.");
+                stop = chimera.Position;
+                hops++;
+            }
+            Assert.Greater(hops, 20);
+        }
+
+        [Test]
         public void SheWandersWithinHerRadiusPausingBetweenHops()
         {
             World world = _test.World();
@@ -95,7 +145,7 @@ namespace Diciela.Tests.EditMode
                 }
                 if (idle == 0)
                 {
-                    // Un arrêt : au moins 2 m (un tiers du rayon) depuis l'arrêt d'avant.
+                    // Un arrêt : au moins 2 m (ce que dit la sorte du banc) depuis l'arrêt d'avant.
                     Assert.GreaterOrEqual(Vector2.Distance(stop, chimera.Position), 2f - 1e-3f, "Un saut minuscule.");
                     stop = chimera.Position;
                     hops++;

@@ -45,6 +45,22 @@ namespace Diciela.Tests.EditMode.Architecture
         }
 
         [Test]
+        public void ScannerFindsWhatASheetMustNotGive()
+        {
+            // ARCHITECTURE, section 9 : une fiche ne donne que des nombres, et son identifiant est Id, jamais .name.
+            const string source = "AnimationCurve courbe;\nGradient couleurs;\nstring n = fiche.name;\nstring m = fiche.Name;";
+
+            List<string> violations = SourceScanner.FindViolations(source);
+
+            Assert.AreEqual(new[]
+            {
+                "ligne 1 : AnimationCurve ou Gradient (une fiche ne donne que des nombres)",
+                "ligne 2 : AnimationCurve ou Gradient (une fiche ne donne que des nombres)",
+                "ligne 3 : .name (l'identifiant d'une fiche est Id)"
+            }, violations);
+        }
+
+        [Test]
         public void SimulationCodeUsesNothingForbidden()
         {
             string simulationFolder = Path.Combine(Application.dataPath, "Scripts", "Simulation");
