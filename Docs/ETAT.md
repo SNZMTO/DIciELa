@@ -8,14 +8,11 @@ sa raison ; R tourne (bref : un cran ; tenu : au degré) ; le clic gauche pose u
 range l'outil. La caméra part à 57 m, le bouton du milieu tourne et incline, les ombres et le brouillard suivent le zoom.
 
 **La cabane** (8c, décision 76) : `Bld_Preset_Shed_02`, préparé par **DICIELA > Contenu > Préparer les modèles** : ses
-62 pièces fusionnées en un maillage (15 matériaux, en LFS), porte au nord et au niveau du sol, fondations enfoncées ;
-empreinte 5,99 × 8,47 m, accessoires compris. **DICIELA > Album > Planche des modèles** (en Play) pose côte à côte le
-modèle du pack et le préparé, vus du côté des portes.
+62 pièces fusionnées (15 matériaux, en LFS), porte au nord et au sol (validé par le développeur), fondations enfoncées ;
+empreinte 5,99 × 8,47 m. **DICIELA > Album > Planche des modèles** montre le modèle du pack et le préparé.
 
 **Les trajets** (9, décisions 73 et 74) : un fantôme bloque le passage dès sa pose ; `World.PathFinder` cherche le
 trajet le moins cher d'un piéton (A* sur le maillage), sans allocation, vérifié contre un Dijkstra sur 400 terrains.
-
-**Réponse du développeur** : la porte au niveau du sol convient, sans décalage (ma reco suivie).
 
 **Question pour toi** : quand lancer les revues de bugs et d'incohérences à plusieurs agents ? (Ma reco : pas
 maintenant ; `/code-review ultra`, lancé par toi, sur la branche des étapes risquées avant leur fusion : 9b, les tâches,
