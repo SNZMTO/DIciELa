@@ -6,10 +6,11 @@ namespace Diciela.Simulation.Land
     /// <summary>
     /// La sortie d'une construction posée sur un piéton (GDD, section 9 ; décision 88) : la maille libre par où il en
     /// sort, tout droit, en la traversant. Elle borde cette construction (l'une de ses quatre voisines en fait partie) :
-    /// pour sortir, il n'en traverse pas une autre. Parmi ces mailles, celles du plus grand îlot, jamais une poche que la
-    /// construction vient de fermer ; sur cet îlot, la plus proche de lui. On cherche par anneaux autour de sa maille.
-    /// Une construction est d'un seul tenant : un anneau où il n'en reste aucune maille dit qu'elle est finie, et que
-    /// toutes les mailles qui la bordent ont été vues. Rien n'est alloué.
+    /// il ne vise jamais derrière une autre, mais sa ligne droite peut effleurer le coin d'une voisine collée à celle
+    /// qu'il quitte (SAVOIR, 2.1). Parmi ces mailles, celles du plus grand îlot, jamais une poche que la construction
+    /// vient de fermer ; sur cet îlot, la plus proche de lui. On cherche par anneaux autour de sa maille. Une
+    /// construction est d'un seul tenant : un anneau où il n'en reste aucune maille dit qu'elle est finie, et que toutes
+    /// les mailles qui la bordent ont été vues. Rien n'est alloué.
     /// </summary>
     public sealed class WayOutFinder
     {

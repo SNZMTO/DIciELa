@@ -100,12 +100,14 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   Quand une grandeur changera l'allure (une lanterne, une route pour la charrette), elle se relira **à chaque mètre
   parcouru** et à chaque coin, pas seulement aux coins : une lanterne au milieu d'un long segment doit compter.
 - **Sortir d'une construction posée sur soi** : tout droit, à travers elle, vers le milieu d'une maille libre qui la
-  **borde** (`WayOutFinder`), jamais à travers une autre ; puis reprendre ce qu'on faisait. Parmi ces mailles, celles
+  **borde** (`WayOutFinder`), jamais derrière une autre ; puis reprendre ce qu'on faisait. Parmi ces mailles, celles
   du plus grand îlot (les îlots comptent leurs mailles), puis la plus proche : la maille libre la plus proche peut être
   une poche que la construction vient de fermer, où l'on resterait pour toujours. La recherche va par anneaux autour
   de sa maille ; la construction est d'un seul tenant, donc un anneau qui n'en a plus aucune maille dit qu'elle est
   finie. Sans maille libre à son bord, on attend que le maillage change, sans chercher de nouveau à chaque pas ; si le
-  maillage change pendant qu'on sort, on revérifie sa maille de sortie.
+  maillage change pendant qu'on sort, on revérifie sa maille de sortie. Piège connu : la ligne droite vers une maille
+  du bord peut effleurer le coin d'une construction collée à celle qu'on quitte, le temps d'un pas ; seule une sortie
+  qui suivrait le maillage l'éviterait.
 - **Flâner sans dériver** : tirer le point suivant autour de l'endroit où l'on s'est mis à flâner, pas autour de soi ;
   de saut en saut, un tirage autour de soi traverse la carte. Le tirer sur son îlot : il est joignable par
   construction, et un point sans issue n'est qu'une pause de plus. Si l'endroit où l'on flânait est pris, ou coupé de
