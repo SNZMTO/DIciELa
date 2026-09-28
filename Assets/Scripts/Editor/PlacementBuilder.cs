@@ -9,8 +9,8 @@ namespace Diciela.EditorTools
 {
     /// <summary>
     /// Installe la pose dans une scène racine : les constructions vues (« Constructions »), l'aperçu et les gestes de
-    /// la pose (« Pose »), le geste « toucher » (« Choisir »), reliés à leurs fiches, à l'asset d'actions et au
-    /// démarrage. Réexécutable : ce qui est déjà réglé n'est pas touché.
+    /// la pose (« Pose »), le geste « toucher » (« Choisir »), reliés à leurs fiches, à l'asset d'actions, au
+    /// démarrage et à sa scène. Réexécutable : ce qui est déjà réglé n'est pas touché.
     /// </summary>
     internal static class PlacementBuilder
     {
@@ -18,7 +18,7 @@ namespace Diciela.EditorTools
         private const string PlacementObjectName = "Pose";
         private const string ChooseObjectName = "Choisir";
 
-        public static void EnsureIn(Scene scene, GameRunner runner)
+        public static void EnsureIn(Scene scene, GameRunner runner, GameStage stage)
         {
             var settings = EditorAssets.Load<PlacementSettings>(DataAssetBuilder.PlacementSettingsPath);
             var gestures = EditorAssets.Load<GestureSettings>(DataAssetBuilder.GestureSettingsPath);
@@ -41,10 +41,10 @@ namespace Diciela.EditorTools
             EditorAssets.AssignIfMissing(choose, "_gestures", gestures);
 
             EditorAssets.AssignIfMissing(runner, "_placementSettings", settings);
-            EditorAssets.AssignIfMissing(runner, "_structureViews", views);
-            EditorAssets.AssignIfMissing(runner, "_placementPreview", preview);
-            EditorAssets.AssignIfMissing(runner, "_placementControls", controls);
-            EditorAssets.AssignIfMissing(runner, "_chooseControls", choose);
+            EditorAssets.AssignIfMissing(stage, "_structureViews", views);
+            EditorAssets.AssignIfMissing(stage, "_placementPreview", preview);
+            EditorAssets.AssignIfMissing(stage, "_placementControls", controls);
+            EditorAssets.AssignIfMissing(stage, "_chooseControls", choose);
         }
     }
 }

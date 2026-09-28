@@ -1,21 +1,19 @@
 using System;
 using System.Collections;
-using Diciela.Controls;
 using Diciela.Data;
 using Diciela.Simulation;
 using Diciela.Simulation.Core;
-using Diciela.UI;
-using Diciela.View;
 using UnityEngine;
 
 namespace Diciela.Game
 {
     /// <summary>
     /// Le démarrage, racine de composition (ARCHITECTURE, sections 5, 10 et 11) : il charge la carte de sa session, crée
-    /// le monde, y fait créer la Chimère et lit la table des textes ; il montre le monde (caméra, constructions,
-    /// habitants, barre) et lui relie les gestes ; puis il le fait avancer par pas fixes, au plus un nombre borné de pas
-    /// par image, et donne aux habitants vus la fraction du pas en cours. Tout est recréé à chaque Play et libéré à la
-    /// sortie : ce projet ne recharge ni le code ni la scène.
+    /// le monde et lit la table des textes ; sa scène (GameStage) montre le monde et ouvre l'écran de création. Le temps
+    /// part quand l'ordre « créer la Chimère » est parti (GDD, section 6) : le premier pas se joue tout de suite, et la
+    /// Chimère prend la place de son aperçu dans la même image. Ensuite, il fait avancer le monde par pas fixes, au plus
+    /// un nombre borné de pas par image, et donne aux habitants vus la fraction du pas en cours. Tout est recréé à chaque
+    /// Play et libéré à la sortie : ce projet ne recharge ni le code ni la scène.
     /// </summary>
     public sealed class GameRunner : MonoBehaviour
     {
@@ -27,20 +25,12 @@ namespace Diciela.Game
         [SerializeField] private Catalog _catalog;
 
         [Header("Vues et gestes de la scène")]
-        [SerializeField] private CameraRig _cameraRig;
-        [SerializeField] private CameraControls _cameraControls;
-        [SerializeField] private StructureViews _structureViews;
-        [SerializeField] private VillagerViews _villagerViews;
-        [SerializeField] private PlacementPreview _placementPreview;
-        [SerializeField] private PlacementControls _placementControls;
-        [SerializeField] private ChooseControls _chooseControls;
-        [SerializeField] private BuildBar _buildBar;
+        [SerializeField] private GameStage _stage;
 
         private World _world;
         private TextTable _texts;
         private FixedStepAccumulator _accumulator;
         private SimulationJournal _journal;
-        private PlacementTool _placementTool;
         private MapScene _map;
         private double _lastRealtime;
         private bool _quitting;
@@ -54,9 +44,7 @@ namespace Diciela.Game
         private void OnEnable()
         {
             if (_settings == null || _session == null || _placementSettings == null || _interfaceSettings == null ||
-                _catalog == null || _catalog.ChimeraKind == null || _cameraRig == null || _cameraControls == null ||
-                _structureViews == null || _villagerViews == null || _placementPreview == null ||
-                _placementControls == null || _chooseControls == null || _buildBar == null)
+                _catalog == null || _catalog.ChimeraKind == null || _stage == null || !_stage.IsComplete)
             {
                 Debug.LogError("DICIELA : le démarrage n'a pas toutes ses fiches, ses vues et ses gestes (lancer " +
                                "« DICIELA/Scènes/Monter les scènes ») ; le monde ne tourne pas.", this);
@@ -73,7 +61,7 @@ namespace Diciela.Game
         private IEnumerator LoadMapThenCreateWorld()
         {
             yield return _map.Load(this);
-            if (_map.Description == null || !TryCreateWorld() || !TryCompose())
+            if (_map.Description == null || !TryCreateWorld() || !TryOpen())
                 enabled = false;
         }
 
@@ -83,10 +71,6 @@ namespace Diciela.Game
             try
             {
                 _world = new World(_settings, _map.Description);
-                // Un monde neuf commence par la Chimère ; l'écran de création enverra cet ordre à la place du démarrage.
-                _world.Submit(new CreateChimeraCommand(_catalog.ChimeraKind));
-                _accumulator = new FixedStepAccumulator(_settings);
-                _lastRealtime = Time.realtimeSinceStartupAsDouble;
                 _texts = TextTable.Parse(_interfaceSettings.Texts != null ? _interfaceSettings.Texts.text : null,
                     _interfaceSettings.Language);
                 return true;
@@ -100,23 +84,15 @@ namespace Diciela.Game
         }
 
         /// <summary>
-        /// Montre le monde et lui relie les gestes ; un échec (une interface qui ne trouve pas ses éléments) s'écrit dans
-        /// la console, et le monde ne tourne pas à moitié monté.
+        /// Montre le monde et ouvre l'écran de création ; un échec (une interface qui ne trouve pas ses éléments) s'écrit
+        /// dans la console, et le monde ne tourne pas à moitié monté.
         /// </summary>
-        private bool TryCompose()
+        private bool TryOpen()
         {
             try
             {
                 _journal = new SimulationJournal(_world);
-                _cameraRig.Show(_world.Map);
-                _structureViews.Show(_world.Structures, _world.Map.Relief);
-                _villagerViews.Show(_world.Villagers, _world.Map.Relief);
-                _placementTool = new PlacementTool(_world, _cameraRig.Camera, _placementPreview, _placementSettings);
-                _buildBar.Show(_catalog, _texts, _placementTool, _world);
-                _cameraControls.Bind(_buildBar);
-                _placementControls.Bind(_placementTool, _buildBar);
-                _chooseControls.Bind(new ChooseTool(_world, _cameraRig.Camera, _structureViews), _placementTool,
-                    _buildBar);
+                _stage.Open(_world, _catalog, _texts, _placementSettings, StartTime);
                 return true;
             }
             catch (Exception exception)
@@ -126,9 +102,17 @@ namespace Diciela.Game
             }
         }
 
+        /// <summary>L'ordre « créer la Chimère » est parti : le temps part, et son premier pas la fait naître.</summary>
+        private void StartTime()
+        {
+            _accumulator = new FixedStepAccumulator(_settings);
+            _lastRealtime = Time.realtimeSinceStartupAsDouble;
+            _world.Step();
+        }
+
         private void Update()
         {
-            if (_world == null)
+            if (_world == null || _accumulator == null)
                 return;
 
             // Le temps réel, pas Time.deltaTime, qu'Unity plafonne : seule la fiche borne les pas d'une image (décision 65).
@@ -137,7 +121,7 @@ namespace Diciela.Game
             _lastRealtime = now;
             for (int i = 0; i < steps; i++)
                 _world.Step();
-            _villagerViews.Follow(_accumulator.StepFraction, Time.deltaTime);
+            _stage.Follow(_accumulator.StepFraction, Time.deltaTime);
         }
 
         private void OnDisable()
@@ -145,24 +129,9 @@ namespace Diciela.Game
             StopAllCoroutines();
             Application.quitting -= OnQuitting;
 
-            // Tout ce qui a pu être montré, même par une composition interrompue : chaque Hide accepte de n'avoir
-            // rien à cacher.
+            // Tout ce qui a pu être montré, même par une ouverture interrompue.
             if (_world != null)
-            {
-                _placementControls.Bind(null, null);
-                _chooseControls.Bind(null, null, null);
-                _cameraControls.Bind(null);
-                _buildBar.Hide();
-                if (_placementTool != null)
-                {
-                    _placementTool.Cancel();
-                    _placementTool.Dispose();
-                }
-                _cameraRig.Hide();
-                _structureViews.Hide();
-                _villagerViews.Hide();
-            }
-            _placementTool = null;
+                _stage.Close();
             if (_journal != null)
                 _journal.Stop();
             _journal = null;

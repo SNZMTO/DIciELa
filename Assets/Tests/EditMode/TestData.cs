@@ -88,6 +88,60 @@ namespace Diciela.Tests.EditMode
             return kind;
         }
 
+        /// <summary>Une couleur de corps, sans matériau : la simulation ne le lit pas.</summary>
+        public static PaletteDefinition Palette(string id)
+        {
+            PaletteDefinition palette = ScriptableObject.CreateInstance<PaletteDefinition>();
+            var serialized = new SerializedObject(palette);
+            Property(serialized, "_id").stringValue = id;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            return palette;
+        }
+
+        /// <summary>Un corps sans personnage (la simulation ne le lit pas), dans cette couleur d'origine.</summary>
+        public static BodyDefinition Body(string id, PaletteDefinition palette)
+        {
+            BodyDefinition body = ScriptableObject.CreateInstance<BodyDefinition>();
+            var serialized = new SerializedObject(body);
+            Property(serialized, "_id").stringValue = id;
+            Property(serialized, "_palette").objectReferenceValue = palette;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            return body;
+        }
+
+        /// <summary>Un emplacement, et une pièce sans modèle à cet emplacement (sans emplacement si slot est null).</summary>
+        public static AttachmentDefinition Attachment(string id, AttachmentSlotDefinition slot)
+        {
+            AttachmentDefinition attachment = ScriptableObject.CreateInstance<AttachmentDefinition>();
+            var serialized = new SerializedObject(attachment);
+            Property(serialized, "_id").stringValue = id;
+            Property(serialized, "_slot").objectReferenceValue = slot;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            return attachment;
+        }
+
+        /// <summary>Un catalogue qui ne propose que ces corps, dans cet ordre.</summary>
+        public static Catalog Catalog(params BodyDefinition[] bodies)
+        {
+            Catalog catalog = ScriptableObject.CreateInstance<Catalog>();
+            var serialized = new SerializedObject(catalog);
+            SerializedProperty list = Property(serialized, "_bodies");
+            list.arraySize = bodies.Length;
+            for (int i = 0; i < bodies.Length; i++)
+                list.GetArrayElementAtIndex(i).objectReferenceValue = bodies[i];
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            return catalog;
+        }
+
+        public static AttachmentSlotDefinition Slot(string id)
+        {
+            AttachmentSlotDefinition slot = ScriptableObject.CreateInstance<AttachmentSlotDefinition>();
+            var serialized = new SerializedObject(slot);
+            Property(serialized, "_id").stringValue = id;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            return slot;
+        }
+
         /// <summary>Une carte carrée de size mètres, un point par mètre, dont la hauteur monte de riseX mètres par mètre.</summary>
         public static MapDescription SlopedMap(int size, float riseX)
         {

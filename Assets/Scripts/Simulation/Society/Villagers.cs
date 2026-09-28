@@ -64,10 +64,11 @@ namespace Diciela.Simulation.Society
         public Villager Chimera { get; private set; }
 
         /// <summary>
-        /// Crée la Chimère au point d'arrivée, sur le milieu de sa maille. Une seule par monde : si elle existe déjà,
-        /// faux, rien ne change, et <see cref="ChimeraRefused"/> le dira. Seul l'ordre « créer la Chimère » l'appelle.
+        /// Crée la Chimère au point d'arrivée, sur le milieu de sa maille, avec cette apparence. Une seule par monde : si
+        /// elle existe déjà, faux, rien ne change, et <see cref="ChimeraRefused"/> le dira. Seul l'ordre « créer la
+        /// Chimère » l'appelle.
         /// </summary>
-        internal bool CreateChimera(VillagerKindDefinition kind, Vector2 arrivalPoint)
+        internal bool CreateChimera(VillagerKindDefinition kind, Appearance appearance, Vector2 arrivalPoint)
         {
             if (ReferenceEquals(kind, null))
                 throw new ArgumentNullException(nameof(kind));
@@ -79,7 +80,8 @@ namespace Diciela.Simulation.Society
 
             Vector2Int cell = _grid.CellOf(arrivalPoint);
             cell = new Vector2Int(Math.Clamp(cell.x, 0, _grid.Width - 1), Math.Clamp(cell.y, 0, _grid.Depth - 1));
-            var chimera = new Villager(_nextId++, kind, _grid.CellCenter(cell), _grid, _islands, _finder, _clock);
+            var chimera = new Villager(_nextId++, kind, appearance, _grid.CellCenter(cell), _grid, _islands, _finder,
+                _clock);
             _all.Add(chimera);
             Chimera = chimera;
             _happened.Add(VillagerHappening.Of(VillagerHappening.Kinds.Arrived, chimera));

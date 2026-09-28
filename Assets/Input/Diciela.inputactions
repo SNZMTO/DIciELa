@@ -461,6 +461,46 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Confirm",
+            "id": "a4aafbf7-a7a4-4fd8-9c8b-e6e86d672a24",
+            "actions": [
+                {
+                    "name": "Confirm",
+                    "type": "Button",
+                    "id": "057c7f32-3fe7-42f5-bb7d-7b0fc643f849",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "04dae182-23c1-409d-aa46-1ec0815388df",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Confirm",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5cb3e2b6-74b9-4343-9c11-92e3d22b78e7",
+                    "path": "<Keyboard>/numpadEnter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Confirm",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []

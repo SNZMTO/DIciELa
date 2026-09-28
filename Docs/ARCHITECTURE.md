@@ -30,10 +30,10 @@ Du bas vers le haut. Le nom de l'assemblage est aussi son namespace.
 | la société | `Diciela.Simulation.Society` | `Assets/Scripts/Simulation/Society` | les habitants et leur journée ; les postes ; les arrivées et les logements ; la nourriture ; l'étal et les visiteurs ; le charme ; le savoir de la ville ; la raison d'arrêt d'un lieu |
 | le monde | `Diciela.Simulation` | `Assets/Scripts/Simulation` | le monde (il assemble les systèmes et les fait tourner) ; les ordres ; les déclencheurs ; le déroulé du départ ; la capture et la restauration |
 | la sauvegarde | `Diciela.Persistence` | `Assets/Scripts/Persistence` | instantanés ↔ JSON, versions, liste des mondes, fichiers mis de côté |
-| la vue | `Diciela.View` | `Assets/Scripts/View` | modèles, copie de travail du Terrain, sol, personnages, caméra, ambiance, calques, pastilles |
-| les gestes | `Diciela.Controls` | `Assets/Scripts/Controls` | Input System, visée, outils (poser, tracer, peindre, effacer, ranger, déplacer, choisir), pile d'Échap |
-| l'interface | `Diciela.UI` | `Assets/Scripts/UI` | UI Toolkit : panneaux, présentateurs, menus, bulles, carnet |
-| le démarrage | `Diciela.Game` | `Assets/Scripts/Game` | racine de composition, lecture de la carte, boucle à pas fixe, pause, enregistrement, journal |
+| la vue | `Diciela.View` | `Assets/Scripts/View` | modèles, copie de travail du Terrain, sol, personnages et leur habillage, caméra, ambiance, calques, pastilles |
+| les gestes | `Diciela.Controls` | `Assets/Scripts/Controls` | Input System, visée, outils (poser, tracer, peindre, effacer, ranger, déplacer, choisir), valider, pile d'Échap |
+| l'interface | `Diciela.UI` | `Assets/Scripts/UI` | UI Toolkit : panneaux, présentateurs, écran de création, menus, bulles, carnet |
+| le démarrage | `Diciela.Game` | `Assets/Scripts/Game` | racine de composition et sa scène (vues, gestes, ouverture de partie), lecture de la carte, boucle à pas fixe, pause, enregistrement, journal |
 
 Les annexes : `Diciela.EditorTools` (`Assets/Scripts/Editor`, éditeur seulement : menus `DICIELA/…`, monteurs,
 diagnostics, rapport d'équilibrage) ; `Diciela.Scenarios` (`Assets/Scripts/Scenarios`, éditeur seulement : la ville
@@ -144,7 +144,7 @@ sauvegardé.
 - **L'ordre du pas**, écrit dans `World` et nulle part ailleurs : les ordres en attente, puis le temps, le terrain,
   l'économie, la société, le monde.
 - **Les ordres** (le patron Commande) : chaque geste qui change la ville est un petit objet envoyé au monde : créer
-  la Chimère (au lancement d'un monde neuf), la coucher, la réveiller, poser, tracer, peindre, effacer, ranger,
+  la Chimère (à la validation de l'écran de création), la coucher, la réveiller, poser, tracer, peindre, effacer, ranger,
   reposer, déplacer (angle compris), affecter, fermer un poste, régler. Chacun est vérifié en entier avant d'agir, par
   la même fonction que l'aperçu, et lève son propre événement. Déplacer est une opération à part entière, jamais
   « retirer puis reposer ». Les ordres attendent le début du pas suivant.
@@ -212,8 +212,8 @@ sauvegardé.
 ## 9. Les fiches
 
 - Une fiche par chose : marchandise, recette, bâtiment, déco, plante, sorte d'emprise, sorte de tâche, poste,
-  statistique et sous-statistique, grandeur d'effet, sorte d'habitant, maître, idée et déclencheur, pièce de la Chimère,
-  réglages. Les listes ouvertes sont des fiches plutôt que des énumérations : ajouter une sous-statistique, c'est
+  statistique et sous-statistique, grandeur d'effet, sorte d'habitant, corps, couleur, emplacement et pièce, maître,
+  idée et déclencheur, réglages. Les listes ouvertes sont des fiches plutôt que des énumérations : ajouter une sous-statistique, c'est
   ajouter une fiche.
 - Chaque fiche a un identifiant texte stable, que la sauvegarde cite ; jamais le nom du fichier. Un catalogue racine les
   rassemble ; le jeu ne charge que lui.
@@ -223,8 +223,11 @@ sauvegardé.
   source ; sans source, le même menu fait une boîte à la taille de la fiche, sa porte marquée ; un test vérifie que
   le modèle suit sa fiche. La fiche dit aussi si le bâtiment est unique, s'il est le logis de la Chimère et s'il se
   dresse dès la pose (la tente) : la simulation lit ces propriétés, jamais un nom. La fiche d'une sorte d'habitant
-  garde le personnage du pack, tel quel ; la vue le montre, la simulation lit sa marche et sa flânerie. Le catalogue
-  mène à la sorte de la Chimère.
+  dit sa marche et sa flânerie ; son allure est l'apparence de chaque habitant : un corps (un personnage du pack, tel
+  quel, et sa couleur d'origine), une couleur (un matériau du pack), au plus une pièce par emplacement (une pièce du
+  pack et son point d'accroche ; l'emplacement dit l'os). La vue habille (SAVOIR 2.11) ; la simulation garde
+  l'apparence sans la lire. Le catalogue mène à la sorte de la Chimère et à ce que l'écran de création propose, dans son
+  ordre.
 - Une fiche de réglages de la simulation tient le pas, la borne de pas par image, la durée de la journée et de ses
   phases, les mailles par mètre et les bornes de boucle. Une fiche de session dit quelle carte charger et où ranger
   les sauvegardes.
@@ -255,6 +258,9 @@ code.
 | flâner | `Wander` | sorte d'habitant | `VillagerKindDefinition` | point d'arrivée | `ArrivalPoint` |
 | hasard par hachage | `HashRandom` | bâtie (une construction) | `Built` | unique | `IsUnique` |
 | logis de la Chimère | `ChimeraHome` | aller dormir ; se réveiller | `Bedtime` ; `Wake` | choisir ; toucher | `ChooseTool` ; `Touch` |
+| corps ; couleur (d'un corps) | `Body` ; `Palette` | emplacement ; pièce | `AttachmentSlot` ; `Attachment` | apparence ; habiller | `Appearance` ; `Dresser` |
+| écran de création | `CreationScreen` | aperçu de la Chimère | `AppearancePreview` | valider | `ConfirmControls` |
+| scène du démarrage | `GameStage` | point d'accroche | `Anchor` | | |
 
 ## 10. La carte, les scènes et la sauvegarde
 
@@ -302,6 +308,9 @@ code.
   le modèle est sous le pointeur : la vue dit laquelle (SAVOIR 2.7), l'outil « choisir » en fait un ordre. Un panneau
   ouvert rend la ville muette ; les conteneurs plein écran de l'interface ne captent pas le pointeur. Les gestes ne
   connaissent pas l'interface : elle leur dit seulement où elle est (`IInterfaceArea`), et `Game` les relie.
+- **L'ouverture d'une partie** : la scène du démarrage (`GameStage`) montre le monde et ouvre l'écran de création ; la
+  validation envoie l'ordre « créer la Chimère », ouvre la ville (barre, gestes de la pose et du toucher) et fait partir
+  le temps, dont le premier pas se joue aussitôt : la Chimère prend la place de son aperçu dans la même image.
 - **L'interface** suit le patron MVP : un présentateur écoute la simulation et remplit son panneau. Pour les écrans
   chargés (l'étal, la liste des habitants), la liaison de données de UI Toolkit reste possible.
 - **Aucun état statique modifiable** dans la simulation : le registre, le catalogue et les textes sont des objets

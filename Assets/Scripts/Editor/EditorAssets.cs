@@ -75,6 +75,15 @@ namespace Diciela.EditorTools
             EditorUtility.SetDirty(target);
         }
 
+        /// <summary>Remplit des champs d'une fiche qui existe, par SerializedObject, comme l'Inspector.</summary>
+        public static void Set(UnityEngine.Object target, Action<SerializedObject> fill)
+        {
+            var serialized = new SerializedObject(target);
+            fill(serialized);
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(target);
+        }
+
         /// <summary>Lit un asset qui doit exister ; sinon, une erreur claire.</summary>
         public static T Load<T>(string assetPath) where T : UnityEngine.Object
         {

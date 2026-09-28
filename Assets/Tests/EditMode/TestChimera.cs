@@ -11,8 +11,8 @@ namespace Diciela.Tests.EditMode
     /// <summary>
     /// Le banc des tests de la Chimère : les réglages du jeu (un pas de 0,1 s, une journée de 720 s, soit 300 pas par
     /// heure de jeu), mais deux mailles par mètre ; sa sorte : 1,5 m/s (15 cm par pas), flânerie à 6 m au plus, pauses
-    /// de 0,1 à 0,3 h (30 à 90 pas). Ses mondes sont plats, et elle y est créée par son ordre. Les fiches qu'il crée sont
-    /// détruites avec lui.
+    /// de 0,1 à 0,3 h (30 à 90 pas) ; son apparence : un corps et sa couleur, sans pièce. Ses mondes sont plats, et elle
+    /// y est créée par son ordre. Les fiches qu'il crée sont détruites avec lui.
     /// </summary>
     internal sealed class TestChimera : IDisposable
     {
@@ -25,10 +25,14 @@ namespace Diciela.Tests.EditMode
         {
             Settings = Keep(TestData.Settings(0.1f, 720f, 2f / 3f, 1f / 12f, cellsPerMeter: CellsPerMeter));
             Kind = Keep(TestData.VillagerKind());
+            PaletteDefinition palette = Keep(TestData.Palette("roux"));
+            Appearance = new Appearance(Keep(TestData.Body("chat", palette)), palette,
+                Array.Empty<AttachmentDefinition>());
         }
 
         public SimulationSettings Settings { get; }
         public VillagerKindDefinition Kind { get; }
+        public Appearance Appearance { get; }
 
         /// <summary>
         /// Un monde plat de size mètres, où l'ordre de la créer vient d'être joué : elle y commence sa première pause.
@@ -37,7 +41,7 @@ namespace Diciela.Tests.EditMode
         public World World(float size = 40f, Vector2? arrival = null)
         {
             var world = new World(Settings, TestData.FlatMap(size, arrival));
-            world.Submit(new CreateChimeraCommand(Kind));
+            world.Submit(new CreateChimeraCommand(Kind, Appearance));
             world.Step();
             return world;
         }

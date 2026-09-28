@@ -12,8 +12,9 @@ namespace Diciela.Tests.PlayMode
 {
     /// <summary>
     /// Deux parties de suite sur la scène de test, comme deux entrées en Play d'un projet qui ne recharge ni le code ni
-    /// la scène : chacune crée un seul monde, et une pose y donne un seul ordre, une seule ligne de journal et une seule
-    /// construction vue. Le Terrain de la carte de test (son asset) sort des deux parties inchangé.
+    /// la scène : chacune crée un seul monde, sa Chimère validée à l'écran de création, et une pose y donne un seul
+    /// ordre, une seule ligne de journal et une seule construction vue. Le Terrain de la carte de test (son asset) sort
+    /// des deux parties inchangé.
     /// </summary>
     public sealed class GameSessionsTests
     {
@@ -51,6 +52,7 @@ namespace Diciela.Tests.PlayMode
                     yield return UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode(
                         ScenePaths.GameTest, new LoadSceneParameters(LoadSceneMode.Additive));
 #endif
+                    yield return TestOpening.Confirm(MaxFrames);
                     var controls = FindIn<PlacementControls>(ScenePaths.GameTest);
                     for (int frame = 0; frame < MaxFrames && controls.Tool == null; frame++)
                         yield return null;
