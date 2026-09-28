@@ -209,7 +209,10 @@ sauvegardé.
   ajouter une fiche.
 - Chaque fiche a un identifiant texte stable, que la sauvegarde cite ; jamais le nom du fichier. Un catalogue racine les
   rassemble ; le jeu ne charge que lui.
-- La fiche d'un bâtiment porte son empreinte et sa porte, mesurées sur le modèle par un menu `DICIELA/…` (SAVOIR 2.9).
+- La fiche d'un bâtiment garde son modèle du pack (la source) et le modèle préparé depuis lui par le menu
+  `DICIELA/Contenu/Préparer les modèles` : fusionné, porte au nord, centré sur l'empreinte, son origine au sol. Le menu
+  y range aussi l'empreinte et la porte, mesurées sur le modèle (SAVOIR 2.9). Le modèle préparé se refait depuis la
+  source ; un test vérifie qu'il suit sa fiche.
 - Une fiche de réglages de la simulation tient le pas, la borne de pas par image, la durée de la journée et de ses
   phases, les mailles par mètre et les bornes de boucle. Une fiche de session dit quelle carte charger et où ranger
   les sauvegardes.
@@ -235,7 +238,7 @@ code.
 | place et angle | `Placement` | règles de pose | `PlacementRules` | aperçu ; fantôme (posé, pas bâti) | `Preview` ; `Planned` |
 | outil de pose | `PlacementTool` | barre de construction | `BuildBar` | famille ; catalogue | `StructureFamilyDefinition` ; `Catalog` |
 | table des textes | `TextTable` | zone de l'interface | `IInterfaceArea` | routine de pose | `ModelPose` |
-| trajet ; sa recherche | `Path` ; `PathFinder` | | | | |
+| trajet ; sa recherche | `Path` ; `PathFinder` | modèle du pack ; préparé | `SourceModel` ; `Model` | | |
 
 ## 10. La carte, les scènes et la sauvegarde
 

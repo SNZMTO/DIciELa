@@ -15,6 +15,19 @@
 
 ## Les captures
 
+### 28/09/2026 — étape 8c : la cabane a son modèle
+
+La cabane prend `Bld_Preset_Shed_02` du pack, préparé une fois par un menu : ses 62 pièces fusionnées en un seul
+maillage (15 matériaux), tourné porte au nord, centré, la porte au niveau du sol et les fondations enfoncées. Son
+empreinte passe de la boîte de 4 × 4 m à 5,99 × 8,47 m, accessoires compris. D'abord la même mise en scène que les deux
+entrées d'en dessous : trois cabanes posées en fantôme, tournées de 0°, 30° et 60°, et l'aperçu vert de la suivante ;
+un fantôme ne montre que la silhouette. Puis la planche des modèles, vue du côté des portes : à gauche le modèle
+préparé, à droite celui du pack, tel quel ; la préparation ne change pas l'art (on les voit sous deux angles).
+
+![Trois cabanes en fantôme et l'aperçu vert](Album/2026-09-28_etape-8c_pose-trois-cabanes.jpg)
+
+![La planche des modèles : le préparé, puis celui du pack](Album/2026-09-28_etape-8c_planche-des-modeles.jpg)
+
 ### 27/09/2026 — ménage 4 : la revue, un seul soleil et la nouvelle caméra
 
 La vue témoin, reprise : la caméra part plus près (57 m, à mi-chemin des crans de molette), un peu moins inclinée, et

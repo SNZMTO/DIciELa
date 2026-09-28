@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Diciela.Data::Diciela.Data.StructureDefinition
   _id: cabane
   _nameKey: construction.cabane
-  _widthMeters: 4
-  _depthMeters: 4
+  _widthMeters: 5.99
+  _depthMeters: 8.47
   _hasDoor: 1
-  _doorOffsetMeters: 0
-  _doorWidthMeters: 1.5
-  _model: {fileID: 7018343788108455565, guid: c5cd8aabb324bdb4eab9b848783adf7f, type: 3}
+  _doorOffsetMeters: 0.05
+  _doorWidthMeters: 2.69
+  _sourceModel: {fileID: 6781674940470143413, guid: f05490850754d3f41930c7ffe3c75610, type: 3}
+  _model: {fileID: 2823797968006156900, guid: 40ad75984bb23f84b91018b2874263c2, type: 3}

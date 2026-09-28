@@ -1,0 +1,122 @@
+using System.Collections.Generic;
+using Diciela.Data;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+namespace Diciela.EditorTools
+{
+    /// <summary>
+    /// Prépare les modèles des constructions (SAVOIR, 2.9) : le modèle du pack, tel quel, devient une copie qui se pose
+    /// sans calcul. Sa porte dit de combien le tourner pour qu'elle regarde le nord ; la boîte de ses maillages, une fois
+    /// tourné, donne l'empreinte et le centre ; l'origine du pack reste le sol (chez Synty, le niveau de la porte : les
+    /// fondations s'enfoncent). Les pièces, dans leur version la plus détaillée, sont fusionnées (ModelMerger). La fiche
+    /// reçoit le modèle préparé, son empreinte et sa porte. Tout se fait dans une scène d'aperçu, hors de la scène
+    /// ouverte.
+    /// </summary>
+    internal static class ModelPreparer
+    {
+        // Le bas de la porte tombe au niveau de l'origine du pack, à quelques centimètres près ; sinon on le signale.
+        private const float DoorGroundTolerance = 0.05f;
+
+        [MenuItem("DICIELA/Contenu/Préparer les modèles")]
+        public static void PrepareAll()
+        {
+            Catalog catalog = EditorAssets.Load<Catalog>(ContentBuilder.CatalogPath);
+            foreach (StructureFamilyDefinition family in catalog.Families)
+            {
+                foreach (StructureDefinition structure in family.Structures)
+                    Prepare(structure);
+            }
+            AssetDatabase.SaveAssets();
+        }
+
+        /// <summary>
+        /// Prépare le modèle de cette construction depuis sa source et remplit sa fiche ; faux s'il n'a pas pu (la raison
+        /// est dans la console), et la fiche reste telle quelle.
+        /// </summary>
+        public static bool Prepare(StructureDefinition structure)
+        {
+            if (structure.SourceModel == null)
+                return Refuse(structure, "sa fiche n'a pas de modèle du pack (Source Model).");
+
+            Scene scene = EditorSceneManager.NewPreviewScene();
+            try
+            {
+                // Le pivot porte la source à son origine : on le tourne, puis on le décale pour centrer la boîte.
+                var pivot = new GameObject("Pivot");
+                SceneManager.MoveGameObjectToScene(pivot, scene);
+                Object.Instantiate(structure.SourceModel, pivot.transform, false);
+
+                List<MeshFilter> pieces = SourceModelParts.NearPieces(pivot, out int distant);
+                List<MeshFilter> door = SourceModelParts.DoorPieces(pieces, pivot.transform);
+                if (pieces.Count == 0)
+                    return Refuse(structure, "son modèle n'a aucun maillage.");
+                if (structure.HasDoor && door.Count == 0)
+                    return Refuse(structure, "aucune pièce de son modèle ne porte « Door » dans son nom : pas de porte.");
+
+                float yaw = structure.HasDoor
+                    ? SourceModelParts.YawTowardsNorth(SourceModelParts.Box(pieces), SourceModelParts.Box(door))
+                    : 0f;
+                pivot.transform.rotation = Quaternion.Euler(0f, yaw, 0f);
+                Bounds turned = SourceModelParts.Box(pieces);
+                pivot.transform.position = new Vector3(-turned.center.x, 0f, -turned.center.z);
+                Bounds box = SourceModelParts.Box(pieces);
+                Bounds doorBox = structure.HasDoor ? SourceModelParts.Box(door) : default;
+
+                GameObject prepared = ModelMerger.Save(structure.name, pieces, out string merge);
+                if (prepared == null)
+                    return false;
+                Fill(structure, prepared, box, doorBox);
+                Debug.Log("DICIELA : " + structure.Id + " préparée depuis " + structure.SourceModel.name + " : " + merge +
+                          " (la version la plus détaillée de chaque pièce ; " + distant + " maillages de loin laissés) ; " +
+                          "tournée de " + yaw.ToString("0") + "°, empreinte " + Meters(box.size.x) + " × " +
+                          Meters(box.size.z) + " m" + (structure.HasDoor ? DoorReport(box, doorBox, door.Count) : "") +
+                          ".");
+                return true;
+            }
+            finally
+            {
+                EditorSceneManager.ClosePreviewScene(scene);
+            }
+        }
+
+        /// <summary>La fiche reçoit le modèle préparé, l'empreinte (au centimètre supérieur) et la porte.</summary>
+        private static void Fill(StructureDefinition structure, GameObject prepared, Bounds box, Bounds door)
+        {
+            var fiche = new SerializedObject(structure);
+            EditorAssets.Property(fiche, "_model").objectReferenceValue = prepared;
+            EditorAssets.Property(fiche, "_widthMeters").floatValue = Mathf.Ceil(box.size.x * 100f) / 100f;
+            EditorAssets.Property(fiche, "_depthMeters").floatValue = Mathf.Ceil(box.size.z * 100f) / 100f;
+            if (structure.HasDoor)
+            {
+                EditorAssets.Property(fiche, "_doorOffsetMeters").floatValue = Mathf.Round(door.center.x * 100f) / 100f;
+                EditorAssets.Property(fiche, "_doorWidthMeters").floatValue = Mathf.Round(door.size.x * 100f) / 100f;
+            }
+            fiche.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(structure);
+        }
+
+        private static string DoorReport(Bounds box, Bounds door, int pieces)
+        {
+            if (Mathf.Abs(door.min.y) > DoorGroundTolerance)
+                Debug.LogWarning("DICIELA : une pièce de la porte descend à " + Meters(door.min.y) + " m de l'origine " +
+                                 "du pack (un seuil de pierre, des fondations ?) : regarder la porte sur la planche des " +
+                                 "modèles (DICIELA/Album).");
+            return " ; porte (" + pieces + " pièces) décalée de " + Meters(door.center.x) + " m, large de " +
+                   Meters(door.size.x) + " m, en retrait de " + Meters(box.max.z - door.max.z) + " m de la façade";
+        }
+
+        private static string Meters(float value)
+        {
+            return value.ToString("0.00");
+        }
+
+        private static bool Refuse(StructureDefinition structure, string reason)
+        {
+            Debug.LogError("DICIELA : " + structure.Id + " n'est pas préparée : " + reason);
+            return false;
+        }
+    }
+}
