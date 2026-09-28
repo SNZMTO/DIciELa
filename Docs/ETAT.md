@@ -15,9 +15,12 @@ modèle du pack et le préparé, vus du côté des portes.
 **Les trajets** (9, décisions 73 et 74) : un fantôme bloque le passage dès sa pose ; `World.PathFinder` cherche le
 trajet le moins cher d'un piéton (A* sur le maillage), sans allocation, vérifié contre un Dijkstra sur 400 terrains.
 
-**Questions pour toi** (ma reco entre parenthèses) :
-1. Sur la planche (album du 28/09), ta « petite marque » est-elle au ras de l'herbe ? (Oui d'après la capture : la
-   porte est au sol ; sinon, dis de combien enfoncer, et la fiche recevra ce décalage.)
+**Réponse du développeur** : la porte au niveau du sol convient, sans décalage (ma reco suivie).
+
+**Question pour toi** : quand lancer les revues de bugs et d'incohérences à plusieurs agents ? (Ma reco : pas
+maintenant ; `/code-review ultra`, lancé par toi, sur la branche des étapes risquées avant leur fusion : 9b, les tâches,
+la sauvegarde ; une revue « ultracode » de tout le projet au prochain ménage, après 9b et la Chimère, plafond 1,5 M
+jetons.)
 
 **Prochaine étape : 9b** (son plan court est à valider) : savoir tout de suite qu'un trajet est introuvable
 (composantes connexes, recalculées à chaque pose), le lissage du trajet en ligne tendue, la marche le long du trajet ;
