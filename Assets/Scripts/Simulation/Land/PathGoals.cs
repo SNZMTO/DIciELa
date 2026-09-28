@@ -25,21 +25,18 @@ namespace Diciela.Simulation.Land
             _isGoal = new bool[grid.Width * grid.Depth];
         }
 
-        /// <summary>Marque les arrivées libres et prend leur boîte ; faux s'il n'y en a aucune.</summary>
-        public bool Mark(IReadOnlyList<Vector2Int> goals)
+        /// <summary>Marque les arrivées retenues (au moins une, toutes libres : voir PathEnds) et prend leur boîte.</summary>
+        public void Mark(IReadOnlyList<Vector2Int> goals)
         {
-            bool any = false;
+            _min = goals[0];
+            _max = goals[0];
             for (int i = 0; i < goals.Count; i++)
             {
                 Vector2Int goal = goals[i];
-                if (!_grid.IsWalkable(goal))
-                    continue;
                 _isGoal[_grid.IndexOf(goal)] = true;
-                _min = any ? Vector2Int.Min(_min, goal) : goal;
-                _max = any ? Vector2Int.Max(_max, goal) : goal;
-                any = true;
+                _min = Vector2Int.Min(_min, goal);
+                _max = Vector2Int.Max(_max, goal);
             }
-            return any;
         }
 
         public void Unmark(IReadOnlyList<Vector2Int> goals)

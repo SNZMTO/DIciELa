@@ -42,6 +42,12 @@ namespace Diciela.Game
         private double _lastRealtime;
         private bool _quitting;
 
+        /// <summary>
+        /// Le monde en cours, que lisent les outils de l'éditeur (la planche des trajets) ; null tant qu'il n'est pas né,
+        /// et après le Play.
+        /// </summary>
+        public World World => _world;
+
         private void OnEnable()
         {
             if (_settings == null || _session == null || _placementSettings == null || _interfaceSettings == null ||

@@ -31,6 +31,12 @@ namespace Diciela.Simulation.Land
         public int Width { get; }
         public int Depth { get; }
 
+        /// <summary>
+        /// Le numéro de version du maillage : il change chaque fois que des mailles sont prises ou libérées. Ce qui se
+        /// déduit du maillage (les îlots) se garde avec la version d'où il vient.
+        /// </summary>
+        public int Version { get; private set; }
+
         /// <summary>Vrai si cette maille est dans le maillage.</summary>
         public bool Contains(Vector2Int cell)
         {
@@ -56,7 +62,24 @@ namespace Diciela.Simulation.Land
         /// </summary>
         public bool IsWalkable(Vector2Int cell)
         {
-            return _occupant[IndexOf(cell)] == 0;
+            return IsWalkable(IndexOf(cell));
+        }
+
+        /// <summary>La même réponse, pour la maille à cette place dans les tableaux du maillage.</summary>
+        internal bool IsWalkable(int index)
+        {
+            return _occupant[index] == 0;
+        }
+
+        /// <summary>
+        /// Vrai si l'on passe en diagonale de cette maille à sa voisine dans la direction step (un pas en x et un en y) :
+        /// les deux mailles de côté, qui partagent le coin traversé, sont libres. Jamais de coin coupé : la même règle
+        /// pour un pas de la recherche et pour une ligne droite qui passe par un coin.
+        /// </summary>
+        internal bool IsCornerOpen(Vector2Int cell, Vector2Int step)
+        {
+            return IsWalkable(new Vector2Int(cell.x + step.x, cell.y)) &&
+                   IsWalkable(new Vector2Int(cell.x, cell.y + step.y));
         }
 
         /// <summary>Le milieu de cette maille, en mètres sur le plan XZ.</summary>
@@ -76,6 +99,7 @@ namespace Diciela.Simulation.Land
         {
             foreach (Vector2Int cell in CellsCoveredBy(rect))
                 _occupant[IndexOf(cell)] = occupant;
+            Version++;
         }
 
         /// <summary>Compte une porte de plus devant chaque maille du rectangle.</summary>
