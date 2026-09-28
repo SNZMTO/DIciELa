@@ -5,11 +5,10 @@ EditMode 53/53, PlayMode 56/56, Play court sans erreur. **DICIELA > Scènes > Mo
 
 **En jeu** : la barre en bas ; l'aperçu suit la souris, vert ou rouge avec sa raison ; R tourne (bref : un cran ;
 tenu : au degré) ; le clic gauche pose un fantôme ; clic droit bref ou Échap range l'outil. La caméra part à 57 m, le
-bouton du milieu tourne et incline, les ombres et le brouillard suivent le zoom ; un seul soleil, celui de la carte.
-Tous ses chiffres sont dans la fiche `CameraSettings`, réglable en jouant.
+bouton du milieu tourne et incline, les ombres et le brouillard suivent le zoom (fiche `CameraSettings`).
 
-**Réponses du développeur** : la carte garde 500 m tant que peu de bâtiments existent (on la tranchera en posant une
-ville sur un Terrain nu) ; la suite est l'étape 9, les chemins ; une planche des cabanes candidates lui a été envoyée.
+**Réponses du développeur** : la carte garde 500 m pour l'instant (tranchée plus tard, en posant une ville sur un
+Terrain nu) ; la suite est l'étape 9, les chemins.
 
 **Questions pour toi** (ma reco entre parenthèses) :
 1. Le modèle de la cabane : Shed_01, Shed_02, Shed_03, Shed_04 ou House_03 du pack (Shed_02 : la plus petite fermée,
