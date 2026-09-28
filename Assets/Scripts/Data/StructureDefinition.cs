@@ -3,8 +3,9 @@ using UnityEngine;
 namespace Diciela.Data
 {
     /// <summary>
-    /// La fiche d'une construction : bâtiment, déco, la Place. Son empreinte au sol et sa porte (mesurées sur le modèle
-    /// par un menu, SAVOIR 2.9) ; à l'angle 0, la construction regarde vers le nord (+z), où s'ouvre sa porte.
+    /// La fiche d'une construction : bâtiment, déco, la Place. Son modèle du pack (la source) et le modèle préparé
+    /// depuis lui ; son empreinte au sol et sa porte, mesurées sur le modèle par le menu DICIELA/Contenu/Préparer les
+    /// modèles (SAVOIR, 2.9). À l'angle 0, la construction regarde vers le nord (+z), où s'ouvre sa porte.
     /// </summary>
     [CreateAssetMenu(menuName = "DICIELA/Construction", fileName = "Construction")]
     public sealed class StructureDefinition : ScriptableObject
@@ -30,7 +31,11 @@ namespace Diciela.Data
         [Tooltip("Largeur de la porte, en mètres.")]
         [SerializeField, Min(0.25f)] private float _doorWidthMeters = 1.5f;
 
-        [Tooltip("Le modèle, pour la vue ; la simulation ne s'en sert pas.")]
+        [Tooltip("Le modèle du pack, tel quel : la source que le menu DICIELA/Contenu/Préparer les modèles mesure et fusionne.")]
+        [SerializeField] private GameObject _sourceModel;
+
+        [Tooltip("Le modèle préparé depuis la source par ce menu : fusionné, porte au nord, centré sur l'empreinte, son " +
+                 "origine au sol. La vue le montre ; la simulation ne s'en sert pas.")]
         [SerializeField] private GameObject _model;
 
         public string Id => _id;
@@ -40,6 +45,7 @@ namespace Diciela.Data
         public bool HasDoor => _hasDoor;
         public float DoorOffsetMeters => _doorOffsetMeters;
         public float DoorWidthMeters => _doorWidthMeters;
+        public GameObject SourceModel => _sourceModel;
         public GameObject Model => _model;
     }
 }

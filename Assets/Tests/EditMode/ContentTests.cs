@@ -4,13 +4,14 @@ using Diciela.Data;
 using Diciela.Simulation.Land;
 using NUnit.Framework;
 using UnityEditor;
+using UnityEngine;
 
 namespace Diciela.Tests.EditMode
 {
     /// <summary>
     /// Le contenu du jeu, lu dans le projet sans rien écrire (ARCHITECTURE, section 12) : un seul catalogue, qui mène à
     /// chaque fiche de construction une seule fois ; des identifiants uniques ; chaque texte cité a sa clé, non vide,
-    /// dans chaque langue de la table.
+    /// dans chaque langue de la table ; chaque modèle préparé suit sa fiche.
     /// </summary>
     public sealed class ContentTests
     {
@@ -83,6 +84,48 @@ namespace Diciela.Tests.EditMode
             }
 
             Assert.IsEmpty(faults, string.Join("\n", faults));
+        }
+
+        [Test]
+        public void EveryModelIsPreparedToItsFootprint()
+        {
+            // Le modèle préparé (SAVOIR, 2.9) : un seul maillage, un matériau par sous-maillage, centré sur l'empreinte
+            // de la fiche et à sa taille (arrondie au centimètre supérieur), la porte sur la façade.
+            const float Centimeter = 0.01f;
+            var faults = new List<string>();
+            foreach (StructureFamilyDefinition family in LoadSingle<Catalog>().Families)
+            {
+                foreach (StructureDefinition structure in family.Structures)
+                {
+                    if (structure.Model == null || structure.SourceModel == null)
+                    {
+                        faults.Add(structure.Id + " n'a pas son modèle du pack et son modèle préparé.");
+                        continue;
+                    }
+                    MeshFilter[] filters = structure.Model.GetComponentsInChildren<MeshFilter>(true);
+                    var renderer = structure.Model.GetComponent<MeshRenderer>();
+                    if (filters.Length != 1 || renderer == null || filters[0].gameObject != structure.Model ||
+                        renderer.sharedMaterials.Length != filters[0].sharedMesh.subMeshCount)
+                    {
+                        faults.Add(structure.Id + " n'a pas de modèle préparé d'un seul maillage, depuis sa source.");
+                        continue;
+                    }
+
+                    Bounds box = filters[0].sharedMesh.bounds;
+                    if (Mathf.Abs(box.center.x) > Centimeter || Mathf.Abs(box.center.z) > Centimeter)
+                        faults.Add(structure.Id + " : le modèle n'est pas centré sur son empreinte (" + box.center + ").");
+                    if (!Fits(box.size.x, structure.WidthMeters) || !Fits(box.size.z, structure.DepthMeters))
+                        faults.Add(structure.Id + " : le modèle mesure " + box.size.x + " × " + box.size.z +
+                                   " m, sa fiche " + structure.WidthMeters + " × " + structure.DepthMeters + " m.");
+                    if (structure.HasDoor && Mathf.Abs(structure.DoorOffsetMeters) + structure.DoorWidthMeters * 0.5f >
+                        structure.WidthMeters * 0.5f + Centimeter)
+                        faults.Add(structure.Id + " : sa porte déborde de sa façade.");
+                }
+            }
+
+            Assert.IsEmpty(faults, string.Join("\n", faults));
+
+            bool Fits(float model, float fiche) => model <= fiche + 0.001f && model >= fiche - Centimeter - 0.001f;
         }
 
         private static T LoadSingle<T>() where T : UnityEngine.Object

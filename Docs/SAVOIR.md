@@ -193,12 +193,29 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 
 ### 2.9 Poser un modèle du pack
 
-- **Une seule routine de pose** pour tout ce qui a un modèle (bâtiments, décos, personnages, charrettes).
-- Les prefabs du pack ont leur origine n'importe où (un coin, une porte, un socle enterré) : on **recentre à la pose**
-  d'après la boîte de leurs seuls maillages (jamais les particules : la fumée d'une cheminée fausse la boîte), puis on
-  applique un décalage fin tenu dans la donnée du modèle.
-- **La porte d'un bâtiment** se mesure une fois sur son modèle (par un menu d'éditeur) et se range dans sa donnée ;
-  l'entrée du bâtiment est devant elle et tourne avec lui.
+- **Préparer une fois, poser sans calcul.** Le menu `DICIELA/Contenu/Préparer les modèles` fait de chaque modèle du
+  pack une copie préparée : tournée porte au nord, centrée sur la boîte de ses seuls maillages (jamais les particules :
+  la fumée d'une cheminée fausse la boîte), **l'origine du pack gardée comme sol**. La routine de pose (`ModelPose`), la
+  seule pour tout ce qui a un modèle, ne fait plus que poser cette origine au centre de l'empreinte, sur le sol.
+- **Le sol d'un bâtiment Synty est son origine**, au niveau de la porte (Shed_02 a sa porte à l'origine même). Ses
+  fondations descendent en dessous et doivent s'enfoncer : poser le bas de sa boîte sur l'herbe soulève le bâtiment,
+  et la porte flotte.
+- **La boîte vraie se prend sur les sommets.** Les coins de la boîte d'une pièce tournée débordent : un accessoire posé
+  de biais gonflait l'empreinte de Shed_02 de 5,98 à 6,53 m, et la décentrait de 11 cm. Le test de contenu l'a vu.
+- **La porte** : les pièces dont le nom contient « Door » (le mur à porte, le seuil de pierre…). Le côté où elles
+  s'écartent le plus du centre donne le quart de tour ; leur boîte donne la place et la largeur de la porte sur la
+  façade. Le bas de cette boîte n'est pas le niveau de la porte : le seuil de Shed_02 descend à 28 cm sous l'origine.
+- **Fusionner.** Un preset du pack est fait de dizaines de pièces (Shed_02 : 62), chacune un objet à créer et au moins
+  un dessin par image, plus les ombres. Fusionné en un maillage, avec un sous-maillage par matériau (Shed_02 : 15), il
+  se crée d'un objet et se dessine en un appel par matériau. On ne prend que la version la plus détaillée de chaque
+  pièce : ses niveaux de loin (LOD) viennent des pièces elles-mêmes, pas du preset (deux maillages dans Shed_02).
+  Dans l'éditeur, `Mesh.CombineMeshes` et `GetVertices` lisent des maillages importés sans « Read/Write ».
+- **Le maillage préparé pèse des mégaoctets en texte** (Shed_02 : 5,7 Mo) et se refait à chaque préparation : il va
+  en LFS, comme le Terrain.
+- **Plus tard, si le Profiler le demande** : le GPU Resident Drawer d'Unity 6 (URP en Forward+, déjà le cas du projet,
+  plus deux réglages) dessine d'un coup les copies d'un même maillage ; fusionner aussi les niveaux de loin.
+- **Vérifier à l'œil** : la planche des modèles (`DICIELA/Album/…`) pose côte à côte le modèle du pack et le modèle
+  préparé, vus du côté de la porte. Un fantôme translucide ne montre ni la porte ni le sol.
 
 ### 2.10 L'ambiance
 
