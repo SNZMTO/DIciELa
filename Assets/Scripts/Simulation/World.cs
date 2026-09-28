@@ -26,8 +26,7 @@ namespace Diciela.Simulation
             Grid = new NavGrid(map.Relief, new GridMetrics(settings.CellsPerMeter));
             Islands = new Islands(Grid);
             PathFinder = new PathFinder(Grid, Islands);
-            PlacementRules = new PlacementRules(Grid, map.Relief, settings);
-            Structures = new Structures(Grid, PlacementRules);
+            Structures = new Structures(Grid, map.Relief, settings);
             Villagers = new Villagers(Grid, Islands, PathFinder, Clock);
         }
 
@@ -46,7 +45,7 @@ namespace Diciela.Simulation
         public PathFinder PathFinder { get; }
 
         /// <summary>Les règles de pose : la seule réponse à « peut-on poser ici ? », pour l'aperçu et l'ordre.</summary>
-        public PlacementRules PlacementRules { get; }
+        public PlacementRules PlacementRules => Structures.Rules;
 
         public Structures Structures { get; }
 
@@ -63,13 +62,15 @@ namespace Diciela.Simulation
 
         /// <summary>
         /// Joue un pas. L'ordre du pas, écrit ici et nulle part ailleurs : les ordres en attente, puis le temps,
-        /// le terrain, l'économie, la société, le monde. Pour l'instant, les ordres, le temps et les habitants.
+        /// le terrain, l'économie, la société, le monde. Pour l'instant, les ordres, le temps et les habitants, dont les
+        /// événements partent à la fin de leur couche.
         /// </summary>
         public void Step()
         {
             ApplyPendingCommands();
             Clock.Advance();
             Villagers.Step();
+            Villagers.DeliverEvents();
         }
 
         /// <summary>

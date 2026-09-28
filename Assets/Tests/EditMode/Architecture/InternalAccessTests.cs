@@ -33,9 +33,13 @@ namespace Diciela.Tests.EditMode.Architecture
             (typeof(Structures), "Place"),
             (typeof(Structures), "DeliverEvents"),
             (typeof(Villagers), "CreateChimera"),
+            (typeof(Villagers), "SendChimeraToBed"),
+            (typeof(Villagers), "WakeChimera"),
             (typeof(Villagers), "Step"),
             (typeof(Villagers), "DeliverEvents"),
             (typeof(Villager), "Step"),
+            (typeof(Villager), "TryGoToBed"),
+            (typeof(Villager), "WakeUp"),
             (typeof(Command), "Execute"),
         };
 

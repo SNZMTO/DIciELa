@@ -92,7 +92,8 @@ la société, qui voit tout ce qui est en dessous.
   La production comptée par marchandise. La valeur des marchandises. La publication des tâches à prendre.
 - **La société.** Les habitants (ordinaires, maîtres, la Chimère : trois sortes décrites par leurs fiches, jamais un
   cas particulier par nom) et leur journée (travail, soirée, nuit). Leur marche, le long de la ligne tendue d'un
-  trajet, et la sortie d'une construction posée sur eux ; la flânerie de qui n'a pas de poste. La table des postes.
+  trajet, et la sortie d'une construction posée sur eux ; la flânerie de qui n'a pas de poste ; le sommeil de la
+  Chimère, devant la porte de son logis, sur ordre. La table des postes.
   Les arrivées (une seule
   fonction ; les conditions sont dans la fiche de la sorte). Les logements et le déménagement de nuit. La nourriture.
   Le tirage des maîtres. L'étal (curseurs, souhaits, visiteurs, réputation). Le charme. Le savoir de la ville (ce qui
@@ -114,7 +115,7 @@ sauvegardé.
 | la carte peinte | reçue au lancement ; seule son empreinte est sauvegardée | le relief creusé, l'eau |
 | arbres et rochers retirés ; champ sauvage : désigné, récolté, minuterie | le terrain | — |
 | tracés et plantations : forme, sorte, état (en chantier, bâti) | le terrain | les coûts du maillage ; les champs, leur surface, leurs postes |
-| une construction : sorte, place, angle, niveau, état (fantôme, actif, en déplacement avec sa place visée, rangé) | le terrain | le maillage et ses îlots ; la réserve |
+| une construction : sorte, place, angle, niveau, état (fantôme, bâtie, en déplacement avec sa place visée, rangée) | le terrain | le maillage et ses îlots ; la réserve ; le logis de la Chimère (la construction bâtie que sa fiche dit être son logis) |
 | un chantier : rang dans la file, livraisons déposées, avancement | l'économie | — |
 | contenu et consigne de chaque stock | l'économie | le stock de la ville |
 | les réservations (quantité promise, place retenue) | l'économie, jamais sauvegardées | — |
@@ -122,7 +123,7 @@ sauvegardé.
 | la recette et l'avancement d'un atelier ; la production par marchandise | l'économie | la valeur des marchandises |
 | un habitant : sorte, statistiques, plafonds, apparence, tenue portée, position, effet d'étal en cours | la société | la statistique globale, la valeur pour une tâche, le bonheur |
 | qui tient quel poste ; les postes fermés | la société (une seule table) | qui est présent sur un lieu |
-| qui dort où ; la minuterie des arrivées | la société | les lits libres |
+| qui dort où (la Chimère : couchée ou non) ; la minuterie des arrivées | la société | les lits libres |
 | les curseurs, les souhaits, les visiteurs, la réputation | la société | les taux de l'étal ; le charme |
 | ce que la ville a débloqué | la société, écrit par les déclencheurs | le carnet |
 | l'avancement des déclencheurs, la part de chaque habitant | le monde | — |
@@ -143,10 +144,10 @@ sauvegardé.
 - **L'ordre du pas**, écrit dans `World` et nulle part ailleurs : les ordres en attente, puis le temps, le terrain,
   l'économie, la société, le monde.
 - **Les ordres** (le patron Commande) : chaque geste qui change la ville est un petit objet envoyé au monde : créer
-  la Chimère (au lancement d'un monde neuf), poser, tracer, peindre, effacer, ranger, reposer, déplacer (angle compris),
-  affecter, fermer un poste, régler. Chacun est vérifié en entier avant d'agir, par la même fonction que l'aperçu, et
-  lève son propre événement. Déplacer est une opération à part entière, jamais « retirer puis reposer ». Les ordres
-  attendent le début du pas suivant.
+  la Chimère (au lancement d'un monde neuf), la coucher, la réveiller, poser, tracer, peindre, effacer, ranger,
+  reposer, déplacer (angle compris), affecter, fermer un poste, régler. Chacun est vérifié en entier avant d'agir, par
+  la même fonction que l'aperçu, et lève son propre événement. Déplacer est une opération à part entière, jamais
+  « retirer puis reposer ». Les ordres attendent le début du pas suivant.
 - **Seule la simulation change la simulation.** Ce qui modifie l'état d'un système (poser, faire avancer le temps,
   tenir le maillage) est `internal`, ouvert par `InternalsVisibleTo` aux seules couches de la simulation au-dessus de
   lui ; un ordre (`Command`) ne s'exécute que par le monde. Au-dessus, on lit, on écoute et on envoie des ordres.
@@ -219,8 +220,11 @@ sauvegardé.
 - La fiche d'un bâtiment garde son modèle du pack (la source) et le modèle préparé depuis lui par le menu
   `DICIELA/Contenu/Préparer les modèles` : fusionné, porte au nord, centré sur l'empreinte, son origine au sol. Le menu
   y range aussi l'empreinte et la porte, mesurées sur le modèle (SAVOIR 2.9). Le modèle préparé se refait depuis la
-  source ; un test vérifie qu'il suit sa fiche. La fiche d'une sorte d'habitant garde le personnage du pack, tel quel ;
-  la vue le montre, la simulation lit sa marche et sa flânerie. Le catalogue mène à la sorte de la Chimère.
+  source ; sans source, le même menu fait une boîte à la taille de la fiche, sa porte marquée ; un test vérifie que
+  le modèle suit sa fiche. La fiche dit aussi si le bâtiment est unique, s'il est le logis de la Chimère et s'il se
+  dresse dès la pose (la tente) : la simulation lit ces propriétés, jamais un nom. La fiche d'une sorte d'habitant
+  garde le personnage du pack, tel quel ; la vue le montre, la simulation lit sa marche et sa flânerie. Le catalogue
+  mène à la sorte de la Chimère.
 - Une fiche de réglages de la simulation tient le pas, la borne de pas par image, la durée de la journée et de ses
   phases, les mailles par mètre et les bornes de boucle. Une fiche de session dit quelle carte charger et où ranger
   les sauvegardes.
@@ -249,7 +253,8 @@ code.
 | trajet ; sa recherche | `Path` ; `PathFinder` | modèle du pack ; préparé | `SourceModel` ; `Model` | îlot ; les îlots | `Island` ; `Islands` |
 | ligne tendue ; la tendre | `Path.Corners` ; `PathTightener` | ligne droite (libre ou non) | `StraightLine` | marche | `Walk` |
 | flâner | `Wander` | sorte d'habitant | `VillagerKindDefinition` | point d'arrivée | `ArrivalPoint` |
-| hasard par hachage | `HashRandom` | | | | |
+| hasard par hachage | `HashRandom` | bâtie (une construction) | `Built` | unique | `IsUnique` |
+| logis de la Chimère | `ChimeraHome` | aller dormir ; se réveiller | `Bedtime` ; `Wake` | choisir ; toucher | `ChooseTool` ; `Touch` |
 
 ## 10. La carte, les scènes et la sauvegarde
 
@@ -293,9 +298,10 @@ code.
   (`CameraControls`) ; ses chiffres sont dans une fiche. La visée de la pose passe après elle (SAVOIR 2.8).
 - **Les gestes** : un seul asset d'actions, monté par un script d'éditeur. Les raccourcis se lient au caractère, le
   déplacement à la position (SAVOIR 3). Un geste appartient à la ville ou à l'interface dès l'enfoncement ; clic ou
-  glisser se décide au relâchement (SAVOIR 2.8). Un panneau ouvert rend la ville muette ; les conteneurs plein écran
-  de l'interface ne captent pas le pointeur. Les gestes ne connaissent pas l'interface : elle leur dit seulement où
-  elle est (`IInterfaceArea`), et `Game` les relie.
+  glisser se décide au relâchement (SAVOIR 2.8). Sans outil de pose en main, un clic gauche touche la construction dont
+  le modèle est sous le pointeur : la vue dit laquelle (SAVOIR 2.7), l'outil « choisir » en fait un ordre. Un panneau
+  ouvert rend la ville muette ; les conteneurs plein écran de l'interface ne captent pas le pointeur. Les gestes ne
+  connaissent pas l'interface : elle leur dit seulement où elle est (`IInterfaceArea`), et `Game` les relie.
 - **L'interface** suit le patron MVP : un présentateur écoute la simulation et remplit son panneau. Pour les écrans
   chargés (l'étal, la liste des habitants), la liaison de données de UI Toolkit reste possible.
 - **Aucun état statique modifiable** dans la simulation : le registre, le catalogue et les textes sont des objets

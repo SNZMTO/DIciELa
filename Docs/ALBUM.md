@@ -15,6 +15,23 @@
 
 ## Les captures
 
+### 28/09/2026 — étape 11 : la tente
+
+La vue de départ ne propose plus qu'une chose : la barre n'offre que la tente, tant que la Chimère n'a pas de logis.
+Plantée (menu `DICIELA/Album/Planter la tente près de la Chimère`), la tente se dresse d'un coup, sans fantôme : une
+boîte à sa taille, 3 × 3 m, sa porte marquée, en attendant son modèle (le pack n'en a pas). Elle quitte la barre, qui
+propose maintenant la cabane. Toucher la tente (un clic, ou le menu `DICIELA/Album/Toucher la tente`) envoie la
+Chimère s'y coucher : elle marche jusqu'à sa porte, entre, et on ne la voit plus. Touchée de nouveau, la tente la
+réveille : elle ressort et flâne devant sa porte.
+
+![La vue de départ : la barre ne propose que la tente](Album/2026-09-28_etape-11_vue-de-depart.jpg)
+
+![La tente plantée devant la Chimère ; la barre propose la cabane](Album/2026-09-28_etape-11_la-tente-plantee.jpg)
+
+![Touchée, la tente l'appelle : elle va dormir](Album/2026-09-28_etape-11_elle-va-dormir.jpg)
+
+![Endormie, elle est dans sa tente](Album/2026-09-28_etape-11_endormie.jpg)
+
 ### 28/09/2026 — étape 10 : la Chimère marche
 
 La Chimère entre en jeu. Pas encore d'écran de création : son personnage est `SM_Chr_Cat_Female_01` du pack, en

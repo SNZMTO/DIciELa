@@ -107,6 +107,32 @@ namespace Diciela.Tests.PlayMode
             AssertNear(new Vector3(heading.x, 0f, heading.y), Shown.forward);
         }
 
+        [Test]
+        public void AsleepSheIsHiddenAndWokenSheIsSeenAgain()
+        {
+            // Sa tente de 3 × 3 m, plantée en (50 ; 45), porte au nord : elle y va, s'y couche, et on ne la voit plus.
+            var tent = Keep(ScriptableObject.CreateInstance<StructureDefinition>());
+#if UNITY_EDITOR
+            TestWorld.Fill(tent, "_widthMeters", 3f);
+            TestWorld.Fill(tent, "_depthMeters", 3f);
+            TestWorld.Fill(tent, "_unique", true);
+            TestWorld.Fill(tent, "_chimeraHome", true);
+            TestWorld.Fill(tent, "_builtWhenPlaced", true);
+#endif
+            Villager chimera = _world.Villagers.Chimera;
+            _world.Submit(new PlaceStructureCommand(tent, new Placement(new Vector2(50f, 45f), 0f)));
+            _world.Submit(new SendChimeraToBedCommand());
+            for (int step = 0; step < 2000 && !chimera.IsAsleep; step++)
+                _world.Step();
+
+            Assert.IsTrue(chimera.IsAsleep, "Elle a rejoint sa tente.");
+            Assert.IsFalse(Shown.gameObject.activeSelf, "Endormie, elle est dans sa tente.");
+
+            _world.Submit(new WakeChimeraCommand());
+            _world.Step();
+            Assert.IsTrue(Shown.gameObject.activeSelf, "Réveillée, elle sort.");
+        }
+
         [UnityTest]
         public IEnumerator HidingRemovesTheCharacters()
         {

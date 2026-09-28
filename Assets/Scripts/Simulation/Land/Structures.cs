@@ -6,8 +6,9 @@ namespace Diciela.Simulation.Land
 {
     /// <summary>
     /// Les constructions posées sur la carte (ARCHITECTURE, section 4) : la vérité, dont le maillage est déduit et tenu
-    /// à jour ici. Une pose passe par les règles de pose ; refusée, elle ne change rien et dit pourquoi. Les événements
-    /// d'un pas attendent la fin de leur couche, dans une seule file, dans l'ordre des poses (ARCHITECTURE, section 5).
+    /// à jour ici. Une pose passe par les règles de pose, qu'elles créent et qui les lisent ; refusée, elle ne change
+    /// rien et dit pourquoi. Les événements d'un pas attendent la fin de leur couche, dans une seule file, dans l'ordre
+    /// des poses (ARCHITECTURE, section 5).
     /// </summary>
     public sealed class Structures
     {
@@ -17,15 +18,13 @@ namespace Diciela.Simulation.Land
         private readonly PlacementRules _rules;
         private int _nextId = 1;
 
-        public Structures(NavGrid grid, PlacementRules rules)
+        public Structures(NavGrid grid, Relief relief, SimulationSettings settings)
         {
             if (ReferenceEquals(grid, null))
                 throw new ArgumentNullException(nameof(grid));
-            if (ReferenceEquals(rules, null))
-                throw new ArgumentNullException(nameof(rules));
 
             _grid = grid;
-            _rules = rules;
+            _rules = new PlacementRules(grid, relief, settings, this);
         }
 
         /// <summary>Levé quand une construction est posée.</summary>
@@ -35,6 +34,37 @@ namespace Diciela.Simulation.Land
         public event Action<StructureDefinition, Placement, PlacementResult> PlacementRefused;
 
         public IReadOnlyList<Structure> All => _all;
+
+        /// <summary>Les règles de pose, que le monde montre au-dessus de lui (World.PlacementRules).</summary>
+        internal PlacementRules Rules => _rules;
+
+        /// <summary>
+        /// Le logis de la Chimère : la construction bâtie que sa fiche dit être son logis (la tente, puis sa maison) ;
+        /// null tant qu'elle n'en a pas (GDD, section 6).
+        /// </summary>
+        public Structure ChimeraHome
+        {
+            get
+            {
+                foreach (Structure structure in _all)
+                {
+                    if (structure.Definition.IsChimeraHome && structure.State == StructureState.Built)
+                        return structure;
+                }
+                return null;
+            }
+        }
+
+        /// <summary>Vrai si une construction de cette fiche est posée.</summary>
+        public bool IsPlaced(StructureDefinition definition)
+        {
+            foreach (Structure structure in _all)
+            {
+                if (ReferenceEquals(structure.Definition, definition))
+                    return true;
+            }
+            return false;
+        }
 
         /// <summary>
         /// Pose la construction si les règles le permettent ; sinon, la refuse, et <see cref="PlacementRefused"/> le dira
