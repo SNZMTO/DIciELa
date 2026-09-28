@@ -199,6 +199,10 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   sur la boîte.
 - **Un menu de diagnostic** vise le centre de triangles tirés sur chaque modèle et compte les fautes : c'est la preuve
   que la visée tient.
+- **Toucher une construction vise son modèle, jamais le sol** : vu de biais, le haut d'une tente cache le sol derrière
+  elle, et le rayon qui touche son toit retombe hors de son empreinte. Aujourd'hui, la vue (`StructureViews.TryPick`)
+  vise la boîte des maillages dans le repère du modèle, qui tourne avec lui (jamais `Renderer.bounds`, droite et plus
+  large) ; les triangles viendront avec le premier modèle creux.
 - **Viser le sol suit le relief** (`Relief.TryRaycast`) : on ne marche que dans la tranche du rayon entre le plus haut
   et le plus bas de la carte, par demi-mailles, puis on affine par dichotomie ; la boucle est bornée. **Tirer le sol
   avec la caméra** prend un plan à la hauteur du point visé : sur une colline, le relief ferait sauter la prise
@@ -259,6 +263,10 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   Dans l'éditeur, `Mesh.CombineMeshes` et `GetVertices` lisent des maillages importés sans « Read/Write ».
 - **Le maillage préparé pèse des mégaoctets en texte** (Shed_02 : 5,7 Mo) et se refait à chaque préparation : il va
   en LFS, comme le Terrain.
+- **Sans modèle du pack, une boîte fusionnée de même** (`PlaceholderBuilder`) : le corps laisse devant lui l'épaisseur
+  de la porte, qui affleure la façade, pour que la boîte remplisse l'empreinte sans la dépasser (le test de contenu
+  la mesure comme un modèle préparé). Une porte posée devant une boîte pleine dépasserait de son épaisseur ; une porte
+  à fleur d'une face de même plan clignoterait.
 - **Plus tard, si le Profiler le demande** : le GPU Resident Drawer d'Unity 6 (URP en Forward+, déjà le cas du projet,
   plus deux réglages) dessine d'un coup les copies d'un même maillage ; fusionner aussi les niveaux de loin.
 - **Vérifier à l'œil** : la planche des modèles (`DICIELA/Album/…`) pose côte à côte le modèle du pack et le modèle

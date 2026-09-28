@@ -12,6 +12,18 @@ namespace Diciela.EditorTools
     {
         private const string LitShader = "Universal Render Pipeline/Lit";
 
+        /// <summary>Un matériau opaque de cette couleur.</summary>
+        public static Material OpaqueIfMissing(string path, Color color)
+        {
+            Material existing = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (existing != null)
+                return existing;
+
+            var material = new Material(Shader.Find(LitShader));
+            material.SetColor("_BaseColor", color);
+            return Save(material, path);
+        }
+
         /// <summary>
         /// Un matériau translucide, blanc, sans ombre : la vue lui donne sa couleur et sa transparence. Les réglages
         /// sont ceux que l'Inspector d'URP pose pour « Transparent, Alpha » (BaseShaderGUI).

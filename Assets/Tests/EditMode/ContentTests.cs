@@ -89,17 +89,18 @@ namespace Diciela.Tests.EditMode
         [Test]
         public void EveryModelIsPreparedToItsFootprint()
         {
-            // Le modèle préparé (SAVOIR, 2.9) : un seul maillage, un matériau par sous-maillage, centré sur l'empreinte
-            // de la fiche et à sa taille (arrondie au centimètre supérieur), la porte sur la façade.
+            // Le modèle préparé (SAVOIR, 2.9), depuis le pack ou en boîte faute de modèle choisi : un seul maillage, un
+            // matériau par sous-maillage, centré sur l'empreinte de la fiche et à sa taille (arrondie au centimètre
+            // supérieur), la porte sur la façade.
             const float Centimeter = 0.01f;
             var faults = new List<string>();
             foreach (StructureFamilyDefinition family in LoadSingle<Catalog>().Families)
             {
                 foreach (StructureDefinition structure in family.Structures)
                 {
-                    if (structure.Model == null || structure.SourceModel == null)
+                    if (structure.Model == null)
                     {
-                        faults.Add(structure.Id + " n'a pas son modèle du pack et son modèle préparé.");
+                        faults.Add(structure.Id + " n'a pas de modèle préparé.");
                         continue;
                     }
                     MeshFilter[] filters = structure.Model.GetComponentsInChildren<MeshFilter>(true);
@@ -126,6 +127,28 @@ namespace Diciela.Tests.EditMode
             Assert.IsEmpty(faults, string.Join("\n", faults));
 
             bool Fits(float model, float fiche) => model <= fiche + 0.001f && model >= fiche - Centimeter - 0.001f;
+        }
+
+        [Test]
+        public void TheCatalogHasOneChimeraHomeFirstUniqueWithADoor()
+        {
+            // La tente vient en premier (GDD, section 6) : le catalogue a un logis de la Chimère, en tête de sa famille ;
+            // il est unique, et il a une porte, devant laquelle elle se couche.
+            var homes = new List<StructureDefinition>();
+            foreach (StructureFamilyDefinition family in LoadSingle<Catalog>().Families)
+            {
+                for (int i = 0; i < family.Structures.Count; i++)
+                {
+                    StructureDefinition structure = family.Structures[i];
+                    if (!structure.IsChimeraHome)
+                        continue;
+                    homes.Add(structure);
+                    Assert.AreEqual(0, i, structure.Id + " n'est pas en tête de sa famille.");
+                    Assert.IsTrue(structure.IsUnique, structure.Id + " n'est pas unique.");
+                    Assert.IsTrue(structure.HasDoor, structure.Id + " n'a pas de porte.");
+                }
+            }
+            Assert.AreEqual(1, homes.Count, "Le catalogue doit avoir un seul logis de la Chimère : la tente.");
         }
 
         /// <summary>La seule fiche de ce type dans le projet ; il y en a une, et une seule.</summary>

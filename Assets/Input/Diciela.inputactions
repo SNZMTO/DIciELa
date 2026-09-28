@@ -411,6 +411,56 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Choose",
+            "id": "ff0e1235-3736-4add-bda3-9fe15f202f95",
+            "actions": [
+                {
+                    "name": "Touch",
+                    "type": "Button",
+                    "id": "59fdbf8b-038a-4b2d-a97b-f77fdfe3d0e4",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "Pointer",
+                    "type": "PassThrough",
+                    "id": "1ee10c83-0c69-4992-9660-6676a07b6244",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "56fb1cea-62c5-4cc4-94b5-fb42a1b08ce5",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Touch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b71dcdd5-f5ea-430a-8f91-d9cb73f5f0e3",
+                    "path": "<Pointer>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pointer",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []

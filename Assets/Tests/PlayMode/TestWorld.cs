@@ -12,8 +12,10 @@ namespace Diciela.Tests.PlayMode
 {
     /// <summary>
     /// Un petit monde monté en mémoire pour les tests de la pose : plat, 100 × 100 m à 10 m de haut ; la caméra de
-    /// gestion qui le montre ; l'aperçu, les constructions vues, une cabane de 4 × 4 m (une boîte) et l'outil de pose.
-    /// Les fiches ont leurs valeurs par défaut, remplies par SerializedObject, le chemin de l'Inspector.
+    /// gestion qui le montre ; l'aperçu, les constructions vues, une cabane de 4 × 4 m (un cube d'un mètre pour modèle),
+    /// une tente de 3 × 3 m (unique, logis de la Chimère, dressée dès la pose ; une boîte de 3 × 2,5 × 3 m pour modèle)
+    /// et l'outil de pose. Les fiches ont leurs valeurs par défaut, remplies par SerializedObject, le chemin de
+    /// l'Inspector.
     /// </summary>
     internal sealed class TestWorld : IDisposable
     {
@@ -28,7 +30,13 @@ namespace Diciela.Tests.PlayMode
             var cameraSettings = Keep(ScriptableObject.CreateInstance<CameraSettings>());
             var translucent = Keep(new Material(Shader.Find("Universal Render Pipeline/Lit")));
             GameObject model = Keep(GameObject.CreatePrimitive(PrimitiveType.Cube));
+            GameObject tentModel = Keep(new GameObject("Tente de test"));
+            GameObject tentBox = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            tentBox.transform.SetParent(tentModel.transform, false);
+            tentBox.transform.localPosition = new Vector3(0f, 1.25f, 0f);
+            tentBox.transform.localScale = new Vector3(3f, 2.5f, 3f);
             Cabin = Keep(ScriptableObject.CreateInstance<StructureDefinition>());
+            Tent = Keep(ScriptableObject.CreateInstance<StructureDefinition>());
             var map = new MapDescription(new Relief(100f, 100f, 2, 2, new[] { 10f, 10f, 10f, 10f }));
             World = new World(simulation, map);
 
@@ -40,6 +48,15 @@ namespace Diciela.Tests.PlayMode
             Fill(Cabin, "_id", "cabane");
             Fill(Cabin, "_nameKey", "construction.cabane");
             Fill(Cabin, "_model", model);
+            Fill(Tent, "_id", "tente");
+            Fill(Tent, "_nameKey", "construction.tente");
+            Fill(Tent, "_widthMeters", 3f);
+            Fill(Tent, "_depthMeters", 3f);
+            Fill(Tent, "_doorWidthMeters", 1.2f);
+            Fill(Tent, "_unique", true);
+            Fill(Tent, "_chimeraHome", true);
+            Fill(Tent, "_builtWhenPlaced", true);
+            Fill(Tent, "_model", tentModel);
             Fill(rig, "_settings", cameraSettings);
             Fill(Preview, "_settings", Settings);
             Fill(Views, "_settings", Settings);
@@ -56,6 +73,7 @@ namespace Diciela.Tests.PlayMode
         public PlacementPreview Preview { get; }
         public StructureViews Views { get; }
         public StructureDefinition Cabin { get; }
+        public StructureDefinition Tent { get; }
         public PlacementTool Tool { get; }
 
         /// <summary>Le point de l'écran où l'on voit ce point du sol.</summary>
@@ -90,8 +108,21 @@ namespace Diciela.Tests.PlayMode
                 property.stringValue = text;
             else if (value is float number)
                 property.floatValue = number;
+            else if (value is bool flag)
+                property.boolValue = flag;
             else
                 property.objectReferenceValue = (Object)value;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        /// <summary>Remplit une liste d'une fiche par SerializedObject, comme l'Inspector.</summary>
+        public static void FillList(Object target, string field, params Object[] items)
+        {
+            var serialized = new UnityEditor.SerializedObject(target);
+            UnityEditor.SerializedProperty list = serialized.FindProperty(field);
+            list.arraySize = items.Length;
+            for (int i = 0; i < items.Length; i++)
+                list.GetArrayElementAtIndex(i).objectReferenceValue = items[i];
             serialized.ApplyModifiedPropertiesWithoutUndo();
         }
 #endif

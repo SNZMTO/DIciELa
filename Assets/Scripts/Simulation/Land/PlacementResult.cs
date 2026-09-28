@@ -21,6 +21,9 @@ namespace Diciela.Simulation.Land
         BlocksADoor = 4,
 
         /// <summary>Une autre construction occupe déjà le devant de sa porte.</summary>
-        DoorBlocked = 5
+        DoorBlocked = 5,
+
+        /// <summary>Elle est unique, et déjà posée : une seule dans la ville (GDD, section 9).</summary>
+        AlreadyPlaced = 6
     }
 }

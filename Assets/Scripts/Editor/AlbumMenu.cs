@@ -95,7 +95,7 @@ namespace Diciela.EditorTools
             cameraControls.enabled = false;
             PlacementTool tool = controls.Tool;
             Camera camera = rig.Camera;
-            StructureDefinition cabin = EditorAssets.Load<Catalog>(ContentBuilder.CatalogPath).Families[0].Structures[0];
+            var cabin = EditorAssets.Load<StructureDefinition>(ContentBuilder.CabinPath);
             rig.Zoom(ZoomNotches, OnScreen(camera, new Vector2(0.5f, 0.5f)));
 
             // Une pose par temps laissé au monde : l'outil n'envoie pas d'ordre tant que le précédent n'est pas joué.
@@ -125,7 +125,7 @@ namespace Diciela.EditorTools
         }
 
         /// <summary>Joue ce geste dans ce nombre de secondes, si le Play dure encore.</summary>
-        private static void After(double seconds, Action gesture)
+        internal static void After(double seconds, Action gesture)
         {
             double at = EditorApplication.timeSinceStartup + seconds;
             void WhenDue()

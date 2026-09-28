@@ -4,7 +4,8 @@
     "references": [
         "Diciela.Data",
         "Diciela.Simulation.Land",
-        "Diciela.Controls"
+        "Diciela.Controls",
+        "Diciela.Simulation"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
