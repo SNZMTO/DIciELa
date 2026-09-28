@@ -57,9 +57,15 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   plusieurs arrivées. **Le test d'arrivée se fait à la sortie de la file, jamais à la découverte** : à coûts pondérés,
   la première arrivée vue n'est pas la moins chère. Heuristique : la distance octile à la boîte des arrivées (jamais
   surestimée, cohérente). Une instance par maillage, tampons gardés d'un appel à l'autre, un tas binaire pour la file
-  ouverte.
+  ouverte ; une entrée périmée (sa maille rejointe moins cher depuis) se saute à la sortie.
+- **À total égal, le plus avancé d'abord** (le coût payé le plus grand) : sans ce départage, sur l'herbe libre, tous
+  les trajets de même coût forment une large bande (des centaines de milliers de mailles sur la carte) que la
+  recherche fouille au lieu de filer droit. Il rend aussi le même trajet à chaque fois.
+- **Un numéro de recherche** dit quelles cases des tableaux sont à jour : on ne vide jamais les 4 millions de mailles
+  de la carte entre deux recherches (environ 40 Mo de tableaux, faits une fois par monde).
 - **Le vérifier** : un test lance le A* sur **400 maillages tirés au hasard** contre un Dijkstra sans heuristique ni
-  tas ; les coûts doivent être égaux.
+  tas ; les coûts doivent être égaux, et chaque trajet est jugé pas à pas. Les cas écrits à la main se dessinent en
+  texte, le nord en haut (`TestGround`), et chaque obstacle y est posé par l'ordre « poser ».
 - **Le lissage** : le A* rend un escalier de mailles ; on le tend comme une ficelle. Deux points se relient en ligne
   droite si toutes les mailles que la ligne touche (coins compris) sont franchissables **au même coût** que le bout de
   chemin remplacé : une charrette reste sur sa route.
@@ -295,6 +301,11 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   en jeu). L'aperçu et le fantôme ne dessinent de toute façon que les maillages.
 - **Un rayon vers un sol plat au niveau le plus bas du relief peut le rater d'un arrondi** : la tranche de recherche
   déborde d'un millimètre au-dessus et au-dessous (`Relief.TryRaycast`).
+- **Vérifier qu'un appel n'alloue rien** : `Assert.That(() => { … }, Is.Not.AllocatingGCMemory())`, du Test Framework.
+  Il faut `using UnityEngine.TestTools.Constraints;` (l'extension) et l'alias
+  `using Is = UnityEngine.TestTools.Constraints.Is;` (sinon `Is` est ambigu avec celui de NUnit), et un lambda à
+  accolades (sans elles, NUnit le prend pour une valeur à lire). Montrer d'abord que le compteur voit une allocation :
+  sinon l'assertion ne prouve rien.
 
 ## 4. Les tests qui rapportent le plus
 

@@ -45,10 +45,10 @@ namespace Diciela.Tests.EditMode
             return definition;
         }
 
-        /// <summary>Une petite carte plate de 10 m de côté, à 0 m de hauteur.</summary>
-        public static MapDescription FlatMap()
+        /// <summary>Une carte plate de size mètres de côté (10 par défaut), à 0 m de hauteur.</summary>
+        public static MapDescription FlatMap(float size = 10f)
         {
-            return new MapDescription(new Relief(10f, 10f, 2, 2, new float[4]));
+            return new MapDescription(new Relief(size, size, 2, 2, new float[4]));
         }
 
         /// <summary>Une carte carrée de size mètres, un point par mètre, dont la hauteur monte de riseX mètres par mètre.</summary>
