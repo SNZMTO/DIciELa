@@ -490,7 +490,8 @@
   constructions.
 - **Règle.** Tant que le modèle d'une construction n'est pas choisi, elle se voit en boîte à sa taille, sa porte
   marquée.
-- **À toi.** Le modèle de la cabane, et celui de la tente, que le pack n'a pas.
+- **Règle.** La cabane a le modèle `Bld_Preset_Shed_02` du pack ; `House_03` est pressentie pour la maison.
+- **À toi.** Le modèle de la tente, que le pack n'a pas.
 - **À toi.** Le reste du plan de l'interface ; le son et la musique. Ma reco : chaque panneau naît avec son système
   (la liste des habitants avec eux, l'étal avec le troc), sur le côté, la ville visible derrière, comme dans
   Timberborn ; le son et la musique après le premier jouable, avec un pack acheté, comme l'art.
