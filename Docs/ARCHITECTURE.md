@@ -81,7 +81,8 @@ la société, qui voit tout ce qui est en dessous.
   postes ; une tâche à prendre dit où, quoi et quelle sous-statistique elle lit.
 - **Le terrain.** La carte reçue au lancement (section 10) et son état : arbres et rochers retirés, champs sauvages
   (désigné, récolté, minuterie de repousse). Les emprises peintes (section 8). Les constructions : bâtiments, décos,
-  la Place, la réserve. Le maillage (SAVOIR 2.1), avec son A* et ses distances par la route, écrits pour lui. L'eau :
+  la Place, la réserve. Le maillage (SAVOIR 2.1), avec ses îlots, son A*, la ligne tendue qu'on tire d'un trajet et
+  ses distances par la route, écrits pour lui. L'eau :
   canaux, relief creusé, zones irriguées. La force : réseaux et budget, un moulin bâti consommant qu'il travaille ou
   non.
 - **L'économie.** Les stocks : portes des bâtiments, entrepôts, étagères de l'étal, charge d'un porteur, panier d'un
@@ -111,7 +112,7 @@ sauvegardé.
 | la carte peinte | reçue au lancement ; seule son empreinte est sauvegardée | le relief creusé, l'eau |
 | arbres et rochers retirés ; champ sauvage : désigné, récolté, minuterie | le terrain | — |
 | tracés et plantations : forme, sorte, état (en chantier, bâti) | le terrain | les coûts du maillage ; les champs, leur surface, leurs postes |
-| une construction : sorte, place, angle, niveau, état (fantôme, actif, en déplacement avec sa place visée, rangé) | le terrain | le maillage ; la réserve |
+| une construction : sorte, place, angle, niveau, état (fantôme, actif, en déplacement avec sa place visée, rangé) | le terrain | le maillage et ses îlots ; la réserve |
 | un chantier : rang dans la file, livraisons déposées, avancement | l'économie | — |
 | contenu et consigne de chaque stock | l'économie | le stock de la ville |
 | les réservations (quantité promise, place retenue) | l'économie, jamais sauvegardées | — |
@@ -149,9 +150,11 @@ sauvegardé.
 - **Les événements** : des `event Action<…>` nommés au passé (`StructurePlaced`, `DayEnded`). Ceux levés pendant un pas
   sont mis en file et livrés à la fin de la couche, jamais au milieu d'une boucle. Dans la simulation, un système
   n'écoute que pour tenir à jour ce qu'il possède ou ce qu'il déduit.
-- **La topologie** : le maillage lève « topologie modifiée » avec un numéro de version à chaque pose, retrait ou tracé.
-  L'écoutent : la logistique, les logements, la pastille « injoignable », les distances gardées, les composantes
-  connexes. Toute affectation gardée l'est avec cette version.
+- **La topologie** : le maillage porte un numéro de version, changé à chaque pose, retrait ou tracé. Ce qui s'en
+  déduit se garde avec la version d'où il vient et se refait quand on le lit et qu'elle a changé : les îlots, les
+  distances gardées. Ce qui doit agir quand elle change écoute « topologie modifiée », levé avec ce numéro : la
+  logistique, les logements, la pastille « injoignable », les marcheurs. Toute affectation gardée l'est avec cette
+  version.
 - **Le déterminisme** : les mêmes ordres, aux mêmes pas, donnent la même partie, quelle que soit la cadence d'images.
   Le hasard vient du hachage ; aucun ordre de traitement ne dépend de l'ordre d'un dictionnaire.
 
@@ -238,7 +241,8 @@ code.
 | place et angle | `Placement` | règles de pose | `PlacementRules` | aperçu ; fantôme (posé, pas bâti) | `Preview` ; `Planned` |
 | outil de pose | `PlacementTool` | barre de construction | `BuildBar` | famille ; catalogue | `StructureFamilyDefinition` ; `Catalog` |
 | table des textes | `TextTable` | zone de l'interface | `IInterfaceArea` | routine de pose | `ModelPose` |
-| trajet ; sa recherche | `Path` ; `PathFinder` | modèle du pack ; préparé | `SourceModel` ; `Model` | | |
+| trajet ; sa recherche | `Path` ; `PathFinder` | modèle du pack ; préparé | `SourceModel` ; `Model` | îlot ; les îlots | `Island` ; `Islands` |
+| ligne tendue ; la tendre | `Path.Corners` ; `PathTightener` | ligne droite (libre ou non) | `StraightLine` | | |
 
 ## 10. La carte, les scènes et la sauvegarde
 
@@ -286,7 +290,8 @@ code.
   chargés (l'étal, la liste des habitants), la liaison de données de UI Toolkit reste possible.
 - **Aucun état statique modifiable** dans la simulation : le registre, le catalogue et les textes sont des objets
   créés par `Game`. Le Play de ce projet ne recharge ni le code ni la scène : `Game` crée le monde, la table des textes
-  et l'outil de pose, et les libère à la sortie ; chaque composant de gestes active sa carte de l'asset d'actions dans
+  et l'outil de pose, et les libère à la sortie (les outils de l'éditeur lisent le monde en cours par
+  `GameRunner.World`) ; chaque composant de gestes active sa carte de l'asset d'actions dans
   `OnEnable` et la désactive dans `OnDisable`.
 
 ## 12. Les tests et les garde-fous
@@ -297,8 +302,9 @@ code.
   avancer (lu dans le journal) ; deux parties de suite y posent chacune une seule fois, et l'asset du Terrain en sort
   inchangé ; poser, tourner, déplacer, ranger par les mêmes appels que les gestes ; les gestes eux-mêmes, joués par une
   souris et un clavier simulés (le banc d'essai de l'Input System).
-- **Les tests qui rapportent le plus** sont dans SAVOIR 4. L'oracle du A* est un Dijkstra naïf écrit dans les tests,
-  pas celui du jeu. Les fichiers témoins (or, vieilles sauvegardes) sont dans `Assets/Tests/Fixtures`, en lecture
+- **Les tests qui rapportent le plus** sont dans SAVOIR 4. Les oracles des trajets sont écrits dans les tests, pas
+  dans le jeu : un Dijkstra naïf pour le A*, un remplissage pas à pas pour les îlots, un juge qui essaie chaque maille
+  pour la ligne tendue. Les fichiers témoins (or, vieilles sauvegardes) sont dans `Assets/Tests/Fixtures`, en lecture
   seule, régénérés par un menu seulement.
 - **Les garde-fous** : un test lit le code de la simulation et refuse `MonoBehaviour`, `GameObject`, `Time`,
   `UnityEngine.Random`, `System.Random`, `Mathf.PerlinNoise`, `Debug`, `Resources`, `UnityEditor`, les statiques

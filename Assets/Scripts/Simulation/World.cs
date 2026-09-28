@@ -23,7 +23,8 @@ namespace Diciela.Simulation
             Clock = new Clock(settings);
             Map = map;
             Grid = new NavGrid(map.Relief, new GridMetrics(settings.CellsPerMeter));
-            PathFinder = new PathFinder(Grid);
+            Islands = new Islands(Grid);
+            PathFinder = new PathFinder(Grid, Islands);
             PlacementRules = new PlacementRules(Grid, map.Relief, settings);
             Structures = new Structures(Grid, PlacementRules);
         }
@@ -35,6 +36,9 @@ namespace Diciela.Simulation
 
         /// <summary>Le maillage : ce qui occupe le sol, déduit des constructions.</summary>
         public NavGrid Grid { get; }
+
+        /// <summary>Les îlots du maillage : qui peut rejoindre qui à pied, su sans rien fouiller.</summary>
+        public Islands Islands { get; }
 
         /// <summary>La recherche des trajets sur le maillage : une seule, dont les tableaux servent à chaque recherche.</summary>
         public PathFinder PathFinder { get; }

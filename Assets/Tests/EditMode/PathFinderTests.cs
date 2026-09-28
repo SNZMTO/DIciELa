@@ -14,7 +14,7 @@ namespace Diciela.Tests.EditMode
     /// </summary>
     public sealed class PathFinderTests
     {
-        private readonly List<Vector2Int> _path = new List<Vector2Int>();
+        private readonly Path _path = new Path();
         private SimulationSettings _settings;
         private StructureDefinition _block;
 
@@ -45,8 +45,8 @@ namespace Diciela.Tests.EditMode
         /// <summary>Le coût du trajet trouvé, après avoir vérifié chacun de ses pas.</summary>
         private int CostOf(TestGround ground)
         {
-            string fault = SlowPaths.Judge(ground.Blocked, ground.Starts, ground.Goals, _path, out int cost);
-            Assert.IsNull(fault, fault + "\n" + ground.Describe(_path));
+            string fault = SlowPaths.Judge(ground.Blocked, ground.Starts, ground.Goals, _path.Cells, out int cost);
+            Assert.IsNull(fault, fault + "\n" + ground.Describe(_path.Cells));
             return cost;
         }
 
@@ -62,7 +62,7 @@ namespace Diciela.Tests.EditMode
                 ".....");
 
             Assert.IsTrue(Find(ground));
-            Assert.AreEqual(40, CostOf(ground), ground.Describe(_path));
+            Assert.AreEqual(40, CostOf(ground), ground.Describe(_path.Cells));
         }
 
         [Test]
@@ -77,8 +77,8 @@ namespace Diciela.Tests.EditMode
                 ".....#.",
                 "S.....#");
 
-            Assert.IsFalse(Find(ground), ground.Describe(_path));
-            Assert.IsEmpty(_path);
+            Assert.IsFalse(Find(ground), ground.Describe(_path.Cells));
+            Assert.IsEmpty(_path.Cells);
         }
 
         [Test]
@@ -93,8 +93,8 @@ namespace Diciela.Tests.EditMode
                 ".#####.",
                 "S......");
 
-            Assert.IsFalse(Find(ground), ground.Describe(_path));
-            Assert.IsEmpty(_path);
+            Assert.IsFalse(Find(ground), ground.Describe(_path.Cells));
+            Assert.IsEmpty(_path.Cells);
         }
 
         [Test]
@@ -107,7 +107,7 @@ namespace Diciela.Tests.EditMode
             ground.Goals.Add(ground.Starts[0]);
 
             Assert.IsTrue(Find(ground));
-            Assert.AreEqual(new[] { new Vector2Int(1, 1) }, _path);
+            Assert.AreEqual(new[] { new Vector2Int(1, 1) }, _path.Cells);
         }
 
         [Test]
@@ -125,7 +125,7 @@ namespace Diciela.Tests.EditMode
                 "..###..");
 
             Assert.IsTrue(Find(ground));
-            Assert.AreEqual(new Vector2Int(0, 6), _path[_path.Count - 1], ground.Describe(_path));
+            Assert.AreEqual(new Vector2Int(0, 6), _path.Cells[_path.Cells.Count - 1], ground.Describe(_path.Cells));
             Assert.AreEqual(40, CostOf(ground));
         }
 
@@ -144,13 +144,13 @@ namespace Diciela.Tests.EditMode
             ground.Goals.Insert(0, takenGoal);
 
             Assert.IsTrue(Find(ground));
-            Assert.AreEqual(new Vector2Int(1, 1), _path[0]);
-            Assert.AreEqual(28, CostOf(ground), ground.Describe(_path));
+            Assert.AreEqual(new Vector2Int(1, 1), _path.Cells[0]);
+            Assert.AreEqual(28, CostOf(ground), ground.Describe(_path.Cells));
 
             PathFinder finder = ground.World.PathFinder;
             Assert.IsFalse(finder.TryFindPath(new[] { takenStart }, ground.Goals, _path));
             Assert.IsFalse(finder.TryFindPath(ground.Starts, new[] { takenGoal }, _path));
-            Assert.IsEmpty(_path);
+            Assert.IsEmpty(_path.Cells);
         }
 
         [Test]

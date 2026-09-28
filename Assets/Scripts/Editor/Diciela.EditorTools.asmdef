@@ -10,7 +10,9 @@
         "Unity.RenderPipelines.Core.Runtime",
         "Unity.RenderPipelines.Universal.Runtime",
         "Diciela.UI",
-        "Diciela.Simulation.Land"
+        "Diciela.Simulation.Core",
+        "Diciela.Simulation.Land",
+        "Diciela.Simulation"
     ],
     "includePlatforms": [
         "Editor"

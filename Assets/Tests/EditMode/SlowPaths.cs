@@ -6,9 +6,10 @@ namespace Diciela.Tests.EditMode
 {
     /// <summary>
     /// L'oracle des trajets (SAVOIR, 4) : un Dijkstra lent et sûr, sans estimation ni tas (à chaque tour, la maille
-    /// ouverte la moins chère, cherchée dans tout le terrain), et un juge qui vérifie un trajet pas à pas. Les règles
-    /// de la marche y sont écrites une seconde fois, à part du code testé : huit voisines, un pas droit coûte 10, un pas
-    /// en diagonale 14, une diagonale ne coupe jamais un coin ; un départ ou une arrivée bloqué ne compte pas.
+    /// ouverte la moins chère, cherchée dans tout le terrain), un juge qui vérifie un escalier pas à pas, et les îlots
+    /// remplis pas à pas. Les règles de la marche y sont écrites une seconde fois, à part du code testé : huit voisines,
+    /// un pas droit coûte 10, un pas en diagonale 14, une diagonale ne coupe jamais un coin ; un départ ou une arrivée
+    /// bloqué ne compte pas.
     /// </summary>
     internal static class SlowPaths
     {
@@ -67,6 +68,47 @@ namespace Diciela.Tests.EditMode
                 }
             }
             return NoPath;
+        }
+
+        /// <summary>
+        /// Les îlots selon l'oracle : chaque maille libre reçoit le numéro de l'îlot qu'on remplit pas à pas depuis la
+        /// première maille libre pas encore atteinte (huit voisines, sans couper de coin) ; 0 pour une maille bloquée.
+        /// </summary>
+        public static int[,] Islands(bool[,] blocked)
+        {
+            int width = blocked.GetLength(0);
+            int depth = blocked.GetLength(1);
+            var island = new int[width, depth];
+            var reached = new Stack<Vector2Int>();
+            int count = 0;
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < depth; y++)
+                {
+                    if (blocked[x, y] || island[x, y] != 0)
+                        continue;
+                    count++;
+                    island[x, y] = count;
+                    reached.Push(new Vector2Int(x, y));
+                    // Chaque maille entre au plus une fois dans la pile.
+                    while (reached.Count > 0)
+                    {
+                        Vector2Int cell = reached.Pop();
+                        for (int dx = -1; dx <= 1; dx++)
+                        {
+                            for (int dy = -1; dy <= 1; dy++)
+                            {
+                                var next = new Vector2Int(cell.x + dx, cell.y + dy);
+                                if (StepCost(blocked, cell, next) == NoPath || island[next.x, next.y] != 0)
+                                    continue;
+                                island[next.x, next.y] = count;
+                                reached.Push(next);
+                            }
+                        }
+                    }
+                }
+            }
+            return island;
         }
 
         /// <summary>Le coût d'un pas de from à to s'il est permis, sinon <see cref="NoPath"/>.</summary>

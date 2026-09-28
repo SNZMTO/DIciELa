@@ -7,10 +7,11 @@ namespace Diciela.Simulation.Land
     /// <summary>
     /// La recherche des trajets d'un piéton sur le maillage (SAVOIR, 2.1) : un A*, qui explore d'abord les mailles dont
     /// le coût payé plus le coût restant estimé est le plus petit. Huit voisines : un pas droit coûte 10, un pas en
-    /// diagonale 14, et une diagonale ne coupe jamais un coin. Plusieurs départs, plusieurs arrivées ; on n'est arrivé
-    /// qu'en sortant une arrivée de la file, jamais en la découvrant. Une instance par maillage : ses tableaux, faits
-    /// une fois, servent à chaque recherche sans être vidés (un numéro de recherche dit ce qui est à jour), si bien
-    /// qu'une recherche n'alloue rien. Les mêmes entrées rendent toujours le même trajet.
+    /// diagonale 14, et une diagonale ne coupe jamais un coin. Plusieurs départs, plusieurs arrivées, dont on ne garde
+    /// que ceux d'un même îlot ; on n'est arrivé qu'en sortant une arrivée de la file, jamais en la découvrant.
+    /// L'escalier trouvé est ensuite tendu en ligne droite. Une instance par maillage : ses tableaux, faits une fois,
+    /// servent à chaque recherche sans être vidés (un numéro de recherche dit ce qui est à jour), si bien qu'une
+    /// recherche n'alloue rien. Les mêmes entrées rendent toujours le même trajet.
     /// </summary>
     public sealed class PathFinder
     {
@@ -26,20 +27,26 @@ namespace Diciela.Simulation.Land
         };
 
         private readonly NavGrid _grid;
+        private readonly PathEnds _ends;
         private readonly PathGoals _goals;
+        private readonly PathTightener _tightener;
         private readonly PathQueue _open = new PathQueue();
         private readonly int[] _cost;
         private readonly int[] _searchOf;
         private readonly byte[] _from;
         private int _search;
 
-        public PathFinder(NavGrid grid)
+        public PathFinder(NavGrid grid, Islands islands)
         {
             if (ReferenceEquals(grid, null))
                 throw new ArgumentNullException(nameof(grid));
+            if (ReferenceEquals(islands, null))
+                throw new ArgumentNullException(nameof(islands));
 
             _grid = grid;
+            _ends = new PathEnds(grid, islands);
             _goals = new PathGoals(grid);
+            _tightener = new PathTightener(grid);
             int cells = grid.Width * grid.Depth;
             _cost = new int[cells];
             _searchOf = new int[cells];
@@ -47,12 +54,12 @@ namespace Diciela.Simulation.Land
         }
 
         /// <summary>
-        /// Cherche le trajet le moins cher d'un des départs à une des arrivées et le range dans path, maille par maille,
-        /// du départ à l'arrivée comprises ; faux s'il n'y en a pas, et path reste vide. Un départ ou une arrivée sur une
-        /// maille prise est ignoré ; une maille hors du maillage est une erreur.
+        /// Cherche le trajet le moins cher d'un des départs à une des arrivées et le range dans path : l'escalier de
+        /// mailles, du départ à l'arrivée comprises, et la ligne tendue qu'on en tire ; faux s'il n'y en a pas, et path
+        /// reste vide. Un départ ou une arrivée sur une maille prise est ignoré ; une maille hors du maillage est une
+        /// erreur. Quand aucun départ ne partage son îlot avec une arrivée, la réponse vient sans rien fouiller.
         /// </summary>
-        public bool TryFindPath(IReadOnlyList<Vector2Int> starts, IReadOnlyList<Vector2Int> goals,
-            List<Vector2Int> path)
+        public bool TryFindPath(IReadOnlyList<Vector2Int> starts, IReadOnlyList<Vector2Int> goals, Path path)
         {
             if (ReferenceEquals(starts, null))
                 throw new ArgumentNullException(nameof(starts));
@@ -60,28 +67,23 @@ namespace Diciela.Simulation.Land
                 throw new ArgumentNullException(nameof(goals));
             if (ReferenceEquals(path, null))
                 throw new ArgumentNullException(nameof(path));
-            CheckInsideGrid(starts, nameof(starts));
-            CheckInsideGrid(goals, nameof(goals));
 
             path.Clear();
-            BeginSearch();
-            if (!_goals.Mark(goals))
+            if (!_ends.Keep(starts, goals))
                 return false;
-            PushStarts(starts);
-            bool found = Search(out int arrival);
-            _goals.Unmark(goals);
-            if (found)
-                BuildPath(arrival, path);
-            return found;
-        }
 
-        private void CheckInsideGrid(IReadOnlyList<Vector2Int> cells, string name)
-        {
-            for (int i = 0; i < cells.Count; i++)
-            {
-                if (!_grid.Contains(cells[i]))
-                    throw new ArgumentOutOfRangeException(name, "La maille " + cells[i] + " est hors du maillage.");
-            }
+            BeginSearch();
+            _goals.Mark(_ends.Goals);
+            PushStarts(_ends.Starts);
+            bool found = Search(out int arrival);
+            _goals.Unmark(_ends.Goals);
+            // Un départ et une arrivée partagent un îlot : un trajet les relie forcément.
+            if (!found)
+                throw new InvalidOperationException("Les îlots disent joignable une arrivée que la recherche n'atteint pas.");
+
+            BuildPath(arrival, path);
+            _tightener.Tighten(path);
+            return true;
         }
 
         /// <summary>Un nouveau numéro de recherche : ce qu'ont écrit les recherches d'avant n'est plus à jour.</summary>
@@ -101,8 +103,6 @@ namespace Diciela.Simulation.Land
             for (int i = 0; i < starts.Count; i++)
             {
                 Vector2Int start = starts[i];
-                if (!_grid.IsWalkable(start))
-                    continue;
                 int index = _grid.IndexOf(start);
                 if (_searchOf[index] == _search)
                     continue;
@@ -146,8 +146,7 @@ namespace Diciela.Simulation.Land
 
             bool diagonal = step.x != 0 && step.y != 0;
             // Une diagonale ne coupe jamais un coin : les deux mailles droites qu'elle longe se traversent.
-            if (diagonal && (!_grid.IsWalkable(new Vector2Int(next.x, cell.y)) ||
-                             !_grid.IsWalkable(new Vector2Int(cell.x, next.y))))
+            if (diagonal && !_grid.IsCornerOpen(cell, step))
                 return;
 
             int nextCost = cost + (diagonal ? DiagonalCost : StraightCost);
@@ -160,19 +159,19 @@ namespace Diciela.Simulation.Land
             _open.Push(index, nextCost, nextCost + _goals.Estimate(next));
         }
 
-        /// <summary>Remonte les pas depuis l'arrivée jusqu'à un départ, puis remet le trajet dans le sens de la marche.</summary>
-        private void BuildPath(int arrival, List<Vector2Int> path)
+        /// <summary>Remonte les pas depuis l'arrivée jusqu'à un départ, puis remet l'escalier dans le sens de la marche.</summary>
+        private void BuildPath(int arrival, Path path)
         {
             // Un trajet passe au plus une fois par chaque maille : c'est la borne de la remontée.
             int index = arrival;
             for (int i = 0; i < _from.Length; i++)
             {
                 Vector2Int cell = _grid.CellAt(index);
-                path.Add(cell);
+                path.AddCell(cell);
                 byte from = _from[index];
                 if (from == FromStart)
                 {
-                    path.Reverse();
+                    path.ReverseCells();
                     return;
                 }
                 index = _grid.IndexOf(cell - Steps[from]);

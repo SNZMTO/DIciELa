@@ -1,22 +1,23 @@
-using System.Collections.Generic;
 using Diciela.Data;
+using Diciela.Simulation.Land;
 using NUnit.Framework;
 using UnityEngine;
 
 namespace Diciela.Tests.EditMode
 {
     /// <summary>
-    /// Le A* contre l'oracle (SAVOIR, 4) : 400 terrains tirés au hasard, de 4 à 24 mailles de côté, bloqués de 0 à 45 %,
-    /// avec un à trois départs et une à trois arrivées, pris ou non. La graine est fixe : le même tirage à chaque
-    /// campagne. Sur chaque terrain, le trajet trouvé est juste pas à pas et coûte ce que coûte le moins cher selon le
-    /// Dijkstra ; s'il n'y en a pas, la recherche le dit.
+    /// Les trajets contre les oracles (SAVOIR, 4) : 400 terrains tirés au hasard, de 4 à 24 mailles de côté, bloqués de 0
+    /// à 45 %, avec un à trois départs et une à trois arrivées, pris ou non. La graine est fixe : le même tirage à chaque
+    /// campagne. Sur chaque terrain, l'escalier trouvé est juste pas à pas et coûte ce que coûte le moins cher selon le
+    /// Dijkstra ; s'il n'y en a pas, la recherche le dit. La ligne tendue qu'on en tire ne touche que des mailles libres,
+    /// selon un juge lent qui essaie chaque maille autour de chaque segment.
     /// </summary>
     public sealed class PathFinderOracleTests
     {
         private const int Grounds = 400;
         private const int Seed = 20260928;
 
-        private readonly List<Vector2Int> _path = new List<Vector2Int>();
+        private readonly Path _path = new Path();
         private SimulationSettings _settings;
         private StructureDefinition _block;
 
@@ -41,19 +42,20 @@ namespace Diciela.Tests.EditMode
             int reachable = 0;
             for (int n = 0; n < Grounds; n++)
             {
-                TestGround ground = RandomGround(random);
+                TestGround ground = TestGround.Random(_settings, _block, random);
                 int expected = SlowPaths.CheapestCost(ground.Blocked, ground.Starts, ground.Goals);
                 bool found = ground.World.PathFinder.TryFindPath(ground.Starts, ground.Goals, _path);
-                string where = "Terrain " + n + " :\n" + ground.Describe(_path);
+                string where = "Terrain " + n + " :\n" + ground.Describe(_path.Cells);
 
                 if (expected == SlowPaths.NoPath)
                 {
                     Assert.IsFalse(found, where);
-                    Assert.IsEmpty(_path, where);
+                    Assert.IsEmpty(_path.Cells, where);
+                    Assert.IsEmpty(_path.Corners, where);
                     continue;
                 }
                 Assert.IsTrue(found, where);
-                string fault = SlowPaths.Judge(ground.Blocked, ground.Starts, ground.Goals, _path, out int cost);
+                string fault = SlowPaths.Judge(ground.Blocked, ground.Starts, ground.Goals, _path.Cells, out int cost);
                 Assert.IsNull(fault, fault + "\n" + where);
                 Assert.AreEqual(expected, cost, where);
                 reachable++;
@@ -64,26 +66,25 @@ namespace Diciela.Tests.EditMode
             Assert.GreaterOrEqual(Grounds - reachable, 20, "Trop peu de terrains sans trajet.");
         }
 
-        private TestGround RandomGround(System.Random random)
+        [Test]
+        public void TheTautLineOnlyTouchesFreeCellsOnRandomGrounds()
         {
-            int size = random.Next(4, 25);
-            double density = random.NextDouble() * 0.45;
-            var blocked = new bool[size, size];
-            for (int x = 0; x < size; x++)
+            var random = new System.Random(Seed);
+            int tightened = 0;
+            for (int n = 0; n < Grounds; n++)
             {
-                for (int y = 0; y < size; y++)
-                    blocked[x, y] = random.NextDouble() < density;
-            }
-            return TestGround.Build(_settings, _block, blocked, RandomCells(random, size), RandomCells(random, size));
-        }
+                TestGround ground = TestGround.Random(_settings, _block, random);
+                if (!ground.World.PathFinder.TryFindPath(ground.Starts, ground.Goals, _path))
+                    continue;
 
-        private static List<Vector2Int> RandomCells(System.Random random, int size)
-        {
-            int count = random.Next(1, 4);
-            var cells = new List<Vector2Int>(count);
-            for (int i = 0; i < count; i++)
-                cells.Add(new Vector2Int(random.Next(size), random.Next(size)));
-            return cells;
+                string fault = SlowLines.Judge(ground.Blocked, _settings.CellsPerMeter, _path);
+                Assert.IsNull(fault, "Terrain " + n + " : " + fault + "\n" + ground.Describe(_path.Cells));
+                if (_path.Corners.Count < _path.Cells.Count)
+                    tightened++;
+            }
+
+            // Le tirage donne largement des escaliers à tendre.
+            Assert.GreaterOrEqual(tightened, 20, "Trop peu de trajets tendus.");
         }
     }
 }

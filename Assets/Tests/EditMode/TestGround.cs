@@ -58,6 +58,32 @@ namespace Diciela.Tests.EditMode
             return Build(settings, block, blocked, starts, goals);
         }
 
+        /// <summary>
+        /// Un terrain tiré au hasard : de 4 à 24 mailles de côté, bloqué de 0 à 45 %, avec un à trois départs et une à
+        /// trois arrivées, pris ou non. La même graine donne les mêmes terrains, dans le même ordre.
+        /// </summary>
+        public static TestGround Random(SimulationSettings settings, StructureDefinition block, System.Random random)
+        {
+            int size = random.Next(4, 25);
+            double density = random.NextDouble() * 0.45;
+            var blocked = new bool[size, size];
+            for (int x = 0; x < size; x++)
+            {
+                for (int y = 0; y < size; y++)
+                    blocked[x, y] = random.NextDouble() < density;
+            }
+            return Build(settings, block, blocked, RandomCells(random, size), RandomCells(random, size));
+        }
+
+        private static List<Vector2Int> RandomCells(System.Random random, int size)
+        {
+            int count = random.Next(1, 4);
+            var cells = new List<Vector2Int>(count);
+            for (int i = 0; i < count; i++)
+                cells.Add(new Vector2Int(random.Next(size), random.Next(size)));
+            return cells;
+        }
+
         /// <summary>Un terrain carré de ces blocs, départs et arrivées ; chaque bloc est posé par un ordre.</summary>
         public static TestGround Build(SimulationSettings settings, StructureDefinition block, bool[,] blocked,
             List<Vector2Int> starts, List<Vector2Int> goals)
@@ -83,9 +109,10 @@ namespace Diciela.Tests.EditMode
             return new TestGround(world, blocked, starts, goals);
         }
 
-        /// <summary>Le terrain redessiné en texte, avec un trajet en « o », pour lire un échec.</summary>
-        public string Describe(List<Vector2Int> path)
+        /// <summary>Le terrain redessiné en texte, avec un escalier de mailles en « o », pour lire un échec.</summary>
+        public string Describe(IReadOnlyList<Vector2Int> path)
         {
+            var onPath = new HashSet<Vector2Int>(path);
             int size = Blocked.GetLength(0);
             var text = new StringBuilder();
             for (int y = size - 1; y >= 0; y--)
@@ -94,7 +121,7 @@ namespace Diciela.Tests.EditMode
                 {
                     var cell = new Vector2Int(x, y);
                     char sign = Blocked[x, y] ? '#' : '.';
-                    if (path.Contains(cell))
+                    if (onPath.Contains(cell))
                         sign = 'o';
                     if (Starts.Contains(cell))
                         sign = 'S';

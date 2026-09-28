@@ -1,25 +1,28 @@
 # DICIELA — état actuel
 
-**Branche** : `main`, à jour. **Étapes 6 à 9 et 8c finies.** EditMode 66/66, PlayMode 56/56, Play court sans erreur.
-**DICIELA > Scènes > Monter les scènes** monte tout.
+**Branche** : `main`, à jour. **Étapes 6 à 9, 8c et 9b finies.** EditMode 77/77, PlayMode 56/56, Play court sans
+erreur. **DICIELA > Scènes > Monter les scènes** monte tout.
 
-**En jeu** : la barre en bas ; l'aperçu de la cabane (la silhouette de son modèle) suit la souris, vert ou rouge avec
-sa raison ; R tourne (bref : un cran ; tenu : au degré) ; le clic gauche pose un fantôme ; clic droit bref ou Échap
-range l'outil. La caméra part à 57 m, le bouton du milieu tourne et incline, les ombres et le brouillard suivent le zoom.
+**En jeu** : l'aperçu de la cabane (décision 76) suit la souris, vert ou rouge avec sa raison ; R tourne ; clic gauche :
+un fantôme ; clic droit bref ou Échap : l'outil rangé. La caméra part à 57 m ; le bouton du milieu tourne et incline.
 
-**La cabane** (8c, décision 76) : `Bld_Preset_Shed_02`, préparé par **DICIELA > Contenu > Préparer les modèles** : ses
-62 pièces fusionnées (15 matériaux, en LFS), porte au nord et au sol (validé par le développeur), fondations enfoncées ;
-empreinte 5,99 × 8,47 m. **DICIELA > Album > Planche des modèles** montre le modèle du pack et le préparé.
+**Les trajets** (9 et 9b, décisions 73, 74, 79, 80) : un fantôme bloque le passage dès sa pose. `World.PathFinder`
+rend le trajet le moins cher d'un piéton en escalier de mailles et en ligne tendue, tirée des deux bouts ;
+`World.Islands` dit sans rien fouiller qui rejoint qui (une quinzaine de ms sur la carte de 500 m après une pose).
 
-**Les trajets** (9, décisions 73 et 74) : un fantôme bloque le passage dès sa pose ; `World.PathFinder` cherche le
-trajet le moins cher d'un piéton (A* sur le maillage), sans allocation, vérifié contre un Dijkstra sur 400 terrains.
+**À vérifier par toi** : en Play, pose deux cabanes ou plus, puis **DICIELA > Album > Planche des trajets, de la
+première porte à la dernière** : la vue se penche ; un trait blanc en escalier et un orange tendu vont d'une porte à
+l'autre en contournant les cabanes. Enferme la dernière porte entre des cabanes, relance : « injoignable ».
 
-**Les revues** (décision 77) : 9b s'arrêtera avant sa fusion pour ton `/code-review ultra` ; le ménage qui suit 9b et
-la Chimère sera une revue « ultracode » de tout le projet (plafond 1,5 M jetons), si tu l'écris dans ton message.
+**Questions pour toi**, pour la Chimère : 1. Où apparaît-elle au lancement ? Ma reco : au point d'arrivée de la
+carte, que tu poseras dans `Carte` ; en attendant, au centre. 2. Que fait-elle sans poste (GDD 7 : « il flâne ») ? Ma
+reco : elle va à un point libre tiré à quelques mètres, s'y arrête un moment, recommence (les colons de RimWorld).
 
-**Prochaine étape : 9b** (son plan court est à valider) : savoir tout de suite qu'un trajet est introuvable
-(composantes connexes, recalculées à chaque pose), le lissage du trajet en ligne tendue, la marche le long du trajet ;
-puis la Chimère, qui marchera la première. Plus tard, si le Profiler le demande : le GPU Resident Drawer, les LOD.
+**Prochaine étape : la Chimère marche** (plan court à valider) : la société naît avec elle (une habitante, sa
+position, sa sorte et sa vitesse dans une fiche) ; la marche le long d'un trajet tendu (refait quand un fantôme le
+coupe, sortie d'un fantôme posé sur elle) ; la vue la montre (un personnage du pack, lissé entre deux pas). Elle
+s'arrêtera avant sa fusion pour ton `/code-review ultra` ; le ménage qui suit sera la revue « ultracode », si tu
+l'écris (décisions 77 et 78). Ensuite sa création, la tente ; le GPU Resident Drawer et les LOD si le Profiler le dit.
 
 **Prompt de la session suivante**
 

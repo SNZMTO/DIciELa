@@ -15,6 +15,18 @@
 
 ## Les captures
 
+### 28/09/2026 — étape 9b : l'injoignable su tout de suite, le trajet tendu
+
+Rien ne change pour le joueur : 9b travaille dans la simulation, et la vue témoin reste celle de l'entrée d'en
+dessous. La planche des trajets le montre, vue de dessus : les trois cabanes de la mise en scène de l'album, en
+fantôme, et le trajet d'un piéton de la porte de la première (à gauche, porte au nord) à celle de la dernière (à
+droite, tournée de 60°, porte vers l'est). En blanc, l'escalier de mailles que trouve la recherche ; en orange, la
+ligne tendue qu'on en tire : elle passe au nord de la cabane du milieu en pliant contre son coin, plie une dernière
+fois pour contourner la cabane de droite et finit devant sa porte. Escalier de 28,2 m, ligne tendue de 26,2 m,
+cherchés et tendus en 9 ms sur la carte de 500 m.
+
+![La planche des trajets : l'escalier en blanc, la ligne tendue en orange](Album/2026-09-28_etape-9b_planche-des-trajets.jpg)
+
 ### 28/09/2026 — étape 8c : la cabane a son modèle
 
 La cabane prend `Bld_Preset_Shed_02` du pack, préparé une fois par un menu : ses 62 pièces fusionnées en un seul
