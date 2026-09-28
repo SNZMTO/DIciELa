@@ -14,10 +14,8 @@ empreinte 5,99 × 8,47 m. **DICIELA > Album > Planche des modèles** montre le m
 **Les trajets** (9, décisions 73 et 74) : un fantôme bloque le passage dès sa pose ; `World.PathFinder` cherche le
 trajet le moins cher d'un piéton (A* sur le maillage), sans allocation, vérifié contre un Dijkstra sur 400 terrains.
 
-**Question pour toi** : quand lancer les revues de bugs et d'incohérences à plusieurs agents ? (Ma reco : pas
-maintenant ; `/code-review ultra`, lancé par toi, sur la branche des étapes risquées avant leur fusion : 9b, les tâches,
-la sauvegarde ; une revue « ultracode » de tout le projet au prochain ménage, après 9b et la Chimère, plafond 1,5 M
-jetons.)
+**Les revues** (décision 77) : 9b s'arrêtera avant sa fusion pour ton `/code-review ultra` ; le ménage qui suit 9b et
+la Chimère sera une revue « ultracode » de tout le projet (plafond 1,5 M jetons), si tu l'écris dans ton message.
 
 **Prochaine étape : 9b** (son plan court est à valider) : savoir tout de suite qu'un trajet est introuvable
 (composantes connexes, recalculées à chaque pose), le lissage du trajet en ligne tendue, la marche le long du trajet ;
