@@ -45,10 +45,31 @@ namespace Diciela.Tests.EditMode
             return definition;
         }
 
-        /// <summary>Une carte plate de size mètres de côté (10 par défaut), à 0 m de hauteur.</summary>
-        public static MapDescription FlatMap(float size = 10f)
+        /// <summary>
+        /// Une carte plate de size mètres de côté (10 par défaut), à 0 m de hauteur ; son point d'arrivée, s'il est
+        /// donné, sinon le centre.
+        /// </summary>
+        public static MapDescription FlatMap(float size = 10f, Vector2? arrival = null)
         {
-            return new MapDescription(new Relief(size, size, 2, 2, new float[4]));
+            return new MapDescription(new Relief(size, size, 2, 2, new float[4]), arrival);
+        }
+
+        /// <summary>
+        /// Une sorte d'habitant qui marche à walk mètres par seconde et flâne dans ce rayon, avec des pauses de pauseMin
+        /// à pauseMax heures de jeu ; sans personnage, que la simulation ne lit pas.
+        /// </summary>
+        public static VillagerKindDefinition VillagerKind(string id = "chimere", float walk = 1.5f, float radius = 6f,
+            float pauseMin = 0.1f, float pauseMax = 0.3f)
+        {
+            VillagerKindDefinition kind = ScriptableObject.CreateInstance<VillagerKindDefinition>();
+            var serialized = new SerializedObject(kind);
+            Property(serialized, "_id").stringValue = id;
+            Property(serialized, "_walkMetersPerSecond").floatValue = walk;
+            Property(serialized, "_wanderRadiusMeters").floatValue = radius;
+            Property(serialized, "_wanderPauseMinHours").floatValue = pauseMin;
+            Property(serialized, "_wanderPauseMaxHours").floatValue = pauseMax;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            return kind;
         }
 
         /// <summary>Une carte carrée de size mètres, un point par mètre, dont la hauteur monte de riseX mètres par mètre.</summary>

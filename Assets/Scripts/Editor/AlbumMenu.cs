@@ -1,6 +1,9 @@
 using System;
 using Diciela.Controls;
 using Diciela.Data;
+using Diciela.Game;
+using Diciela.Simulation;
+using Diciela.Simulation.Society;
 using Diciela.View;
 using UnityEditor;
 using UnityEngine;
@@ -9,9 +12,10 @@ using Object = UnityEngine.Object;
 namespace Diciela.EditorTools
 {
     /// <summary>
-    /// Les mises en scène de l'album (Docs/ALBUM.md), en Play : on se rapproche du centre de la vue, puis on tient
-    /// l'outil de pose à la place de la souris, par les mêmes appels que les gestes, le temps d'une capture. Les gestes
-    /// de la caméra et de la pose restent coupés jusqu'à la fin du Play.
+    /// Les mises en scène de l'album (Docs/ALBUM.md), en Play. Poser trois cabanes : on se rapproche du centre de la vue,
+    /// puis on tient l'outil de pose à la place de la souris, par les mêmes appels que les gestes, le temps d'une
+    /// capture ; les gestes de la caméra et de la pose restent coupés jusqu'à la fin du Play. Se rapprocher de la
+    /// Chimère : des crans de molette vers là où on la voit, comme le ferait la souris posée sur elle.
     /// </summary>
     public static class AlbumMenu
     {
@@ -19,6 +23,9 @@ namespace Diciela.EditorTools
         private const float ZoomNotches = 2f;
         private const double ZoomSeconds = 0.8;
         private const double StepsSeconds = 0.5;
+
+        // Les crans de molette vers la Chimère : assez pour la voir presque de face.
+        private const float ChimeraZoomNotches = 7f;
 
         // Trois places, en fractions de l'écran, pour trois cabanes ; une place libre devant elles.
         private static readonly Vector2[] Places =
@@ -37,6 +44,34 @@ namespace Diciela.EditorTools
         public static void StageTakenPlace()
         {
             Stage(Places[1]);
+        }
+
+        [MenuItem("DICIELA/Album/Se rapprocher de la Chimère")]
+        public static void ZoomOnChimera()
+        {
+            var runner = Object.FindAnyObjectByType<GameRunner>();
+            World world = runner != null ? runner.World : null;
+            Villager chimera = world != null ? world.Villagers.Chimera : null;
+            var rig = Object.FindAnyObjectByType<CameraRig>();
+            if (!EditorApplication.isPlaying || chimera == null || rig == null)
+            {
+                Debug.LogError("DICIELA : on se rapproche de la Chimère en Play, une fois qu'elle est née.");
+                return;
+            }
+
+            PutPlacementToolAside();
+            Vector2 at = chimera.Position;
+            var ground = new Vector3(at.x, world.Map.Relief.HeightAt(at.x, at.y), at.y);
+            rig.Zoom(ChimeraZoomNotches, rig.Camera.WorldToScreenPoint(ground));
+            Debug.Log("DICIELA : la vue se rapproche de la Chimère, en " + at + ".");
+        }
+
+        /// <summary>Pose de côté l'outil de pose, comme par Échap : son aperçu ne cache plus ce qu'on veut montrer.</summary>
+        internal static void PutPlacementToolAside()
+        {
+            var controls = Object.FindAnyObjectByType<PlacementControls>();
+            if (controls != null && controls.Tool != null)
+                controls.Tool.Cancel();
         }
 
         private static void Stage(Vector2 aimFraction)

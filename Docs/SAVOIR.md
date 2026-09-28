@@ -87,9 +87,20 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   500 m, recherche comprise. La recherche ne garde que les départs et les arrivées d'un même îlot : un départ seul sur
   le sien ferait fouiller tout l'îlot en vain. Sans les îlots, un A* vers une porte enfermée parcourt toute la carte.
   La charrette aura les siens, si ses passages diffèrent de ceux du piéton.
-- **La marche** : un chemin est une polyligne ; l'avancement se compte en distance. L'allure se relit **à chaque mètre
-  parcouru** et à chaque sommet, pas seulement aux sommets : une lanterne au milieu d'un long segment doit compter.
-  Sans allocation par tick.
+- **La marche** (`Walk`) : le marcheur suit la ligne tendue, et l'avancement se compte en distance, d'un coin à
+  l'autre, sans allocation par pas. Il garde son trajet avec la version du maillage où il l'a vérifié ; quand elle
+  change, il revérifie le reste de sa ligne (le segment en cours en entier, puis les suivants et la maille du but) et
+  ne cherche un autre trajet, depuis sa maille, que si une construction la coupe : une pose loin de lui ne coûte rien.
+  Quand une grandeur changera l'allure (une lanterne, une route pour la charrette), elle se relira **à chaque mètre
+  parcouru** et à chaque coin, pas seulement aux coins : une lanterne au milieu d'un long segment doit compter.
+- **Sortir d'une construction posée sur soi** : tout droit vers le milieu de la maille libre la plus proche
+  (`NavGrid.TryFindNearestWalkable`), à travers la construction, puis reprendre ce qu'on faisait. La recherche va par
+  anneaux autour de sa maille et s'arrête dès qu'un anneau ne peut plus faire mieux : un milieu de maille de l'anneau r
+  est à au moins r - ½ mailles du point. Sans maille libre à sa portée, on attend que le maillage change, sans
+  chercher de nouveau à chaque pas.
+- **Flâner sans dériver** : tirer le point suivant autour de l'endroit où l'on s'est mis à flâner, pas autour de soi ;
+  de saut en saut, un tirage autour de soi traverse la carte. Le tirer sur son îlot : il est joignable par
+  construction, et un point sans issue n'est qu'une pause de plus.
 - **Les distances par la route** (qui est le plus proche d'un dépôt) : un Dijkstra gardé tant que le maillage ne change
   pas (un numéro de version du maillage, incrémenté à chaque pose ou retrait), quelques jeux de départs gardés à la
   fois ; sinon chaque charrette relance le calcul à chaque tick.
@@ -99,7 +110,10 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 - **La simulation avance par pas fixes** (un dixième de seconde), en C# pur, et ne sait pas qu'elle est dessinée.
 - **La vue interpole** entre les deux derniers états de la simulation (la fraction du pas en cours) : sans ça, tout ce
   qui bouge saute dix fois par seconde et tourne par à-coups. L'image a un pas de retard, invisible. C'est la même idée
-  que l'interpolation d'un jeu en ligne entre deux messages du serveur.
+  que l'interpolation d'un jeu en ligne entre deux messages du serveur. Ici, un habitant garde sa position du pas
+  d'avant ; l'accumulateur donne la fraction (le temps en attente divisé par la durée d'un pas), et le démarrage la
+  passe à la vue des habitants après avoir joué les pas de l'image. Le personnage se tourne vers son déplacement du
+  dernier pas, à une vitesse bornée : il ne pivote pas d'un coup à chaque coin.
 - **Les virages** d'un véhicule : arrondir la polyligne en arcs à la vue seulement ; la simulation garde le chemin exact.
 
 ### 2.3 La sauvegarde
@@ -124,6 +138,12 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 - **Le hasard en entiers** : un hachage (graine, position ou numéro) → un nombre qui a l'air tiré au hasard mais qui est
   toujours le même. Jamais `UnityEngine.Random`, `System.Random` ni `Mathf.PerlinNoise` : une mise à jour ou une autre
   machine pourrait les faire bouger d'un bit.
+- **SplitMix64** (Sebastiano Vigna) : un compteur qui avance d'un grand nombre impair, brassé à chaque tirage
+  (`HashRandom`). Deux entiers donnent son départ (un habitant tire sur son numéro et celui du pas, qui se sauvegarde :
+  la même partie après un chargement) ; c'est une valeur, créée là où l'on tire, qui n'alloue rien. Mis à l'échelle
+  d'un intervalle par une multiplication, pas par un modulo, qui favoriserait les petites valeurs. Vérifié contre ses
+  premières valeurs publiées, recalculées à part (en JavaScript, sur des entiers de 64 bits), jamais sorties de
+  mémoire.
 - **Ce qu'on tire pour un monde** (les plantes de ses champs sauvages, la pose de chaque élément semé : style,
   rotation, taille, décalage) se tire du hachage, puis **se sauvegarde** : une retouche du tirage ne change pas une
   partie en cours.
@@ -336,6 +356,9 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   déborde d'un millimètre au-dessus et au-dessous (`Relief.TryRaycast`).
 - **Le trajet s'appelle `Path`** (le lexique) : dans un fichier qui a `using System.IO;` et `using
   Diciela.Simulation.Land;`, `Path` est ambigu ; y écrire `System.IO.Path`.
+- **Une capture ne dit pas dans quel sens marche un personnage** : entre deux images, il a pu faire plusieurs sauts et
+  tourner. Pour savoir où regarde un modèle, mesurer ses os dans leur pose d'origine : `PrefabUtility.LoadPrefabContents`
+  charge un prefab à part, sans toucher la scène ouverte (puis `UnloadPrefabContents`).
 - **Vérifier qu'un appel n'alloue rien** : `Assert.That(() => { … }, Is.Not.AllocatingGCMemory())`, du Test Framework.
   Il faut `using UnityEngine.TestTools.Constraints;` (l'extension) et l'alias
   `using Is = UnityEngine.TestTools.Constraints.Is;` (sinon `Is` est ambigu avec celui de NUnit), et un lambda à
@@ -346,6 +369,9 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 
 - **Contre un oracle** : un algorithme rapide (le A*) comparé à un algorithme lent et sûr (un Dijkstra, un parcours en
   largeur) sur des centaines d'entrées tirées au hasard.
+- **Des invariants sur des parties tirées au hasard** : la marche jouée sur 200 terrains où l'on pose des fantômes
+  pendant qu'elle marche (jamais dans une maille prise, jamais figée). Le test compte ce qu'il a exercé (des sorties de
+  fantôme, des pas de marche) et exige un minimum : vert sans les cas visés ne prouverait rien.
 - **Un fichier d'or** pour tout générateur déterministe.
 - **Un aller-retour de sauvegarde** comparé champ à champ, et un fichier hostile (identifiants inconnus, positions hors du
   monde, chevauchements, quantités énormes) qui ne doit lever aucune exception.

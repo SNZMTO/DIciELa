@@ -5,12 +5,13 @@ using UnityEngine;
 namespace Diciela.Game
 {
     /// <summary>
-    /// Convertit le Terrain de la carte en description pure pour la simulation (ARCHITECTURE, section 10). Le Terrain
-    /// est posé à l'origine : ses mètres sont ceux du monde, un seul repère.
+    /// Convertit la carte en description pure pour la simulation (ARCHITECTURE, section 10) : son Terrain, et son point
+    /// d'arrivée s'il y en a un. Le Terrain est posé à l'origine : ses mètres sont ceux du monde, un seul repère.
     /// </summary>
     public static class MapReader
     {
-        public static MapDescription Read(TerrainData data, Vector3 terrainPosition)
+        /// <param name="arrivalPosition">La place du point d'arrivée posé dans la carte ; null, le centre.</param>
+        public static MapDescription Read(TerrainData data, Vector3 terrainPosition, Vector3? arrivalPosition = null)
         {
             if (data == null)
                 throw new ArgumentNullException(nameof(data));
@@ -29,7 +30,10 @@ namespace Diciela.Game
                     heights[z * resolution + x] = terrainPosition.y + normalized[z, x] * size.y;
             }
 
-            return new MapDescription(new Relief(size.x, size.z, resolution, resolution, heights));
+            Vector2? arrival = null;
+            if (arrivalPosition.HasValue)
+                arrival = new Vector2(arrivalPosition.Value.x, arrivalPosition.Value.z);
+            return new MapDescription(new Relief(size.x, size.z, resolution, resolution, heights), arrival);
         }
     }
 }

@@ -91,7 +91,9 @@ la société, qui voit tout ce qui est en dessous.
   des plantations (semis, pousse, graines gardées, récolte). Les chantiers (rang dans la file, livraisons, avancement).
   La production comptée par marchandise. La valeur des marchandises. La publication des tâches à prendre.
 - **La société.** Les habitants (ordinaires, maîtres, la Chimère : trois sortes décrites par leurs fiches, jamais un
-  cas particulier par nom) et leur journée (travail, soirée, nuit). La table des postes. Les arrivées (une seule
+  cas particulier par nom) et leur journée (travail, soirée, nuit). Leur marche, le long de la ligne tendue d'un
+  trajet, et la sortie d'une construction posée sur eux ; la flânerie de qui n'a pas de poste. La table des postes.
+  Les arrivées (une seule
   fonction ; les conditions sont dans la fiche de la sorte). Les logements et le déménagement de nuit. La nourriture.
   Le tirage des maîtres. L'étal (curseurs, souhaits, visiteurs, réputation). Le charme. Le savoir de la ville (ce qui
   est débloqué). La raison d'arrêt d'un lieu, une seule fonction lue par la vue et l'interface.
@@ -126,7 +128,7 @@ sauvegardé.
 | l'avancement des déclencheurs, la part de chaque habitant | le monde | — |
 | l'étape du départ | le monde | — |
 | les effets actifs | ce qui les porte (une lanterne, un maître, une plantation irriguée…) | le registre des effets |
-| une tâche en cours | personne : elle n'est pas sauvegardée | — |
+| une tâche en cours, une marche, une flânerie | personne : elles ne sont pas sauvegardées | — |
 | le dossier des sauvegardes | la fiche de session | — |
 
 ## 5. Le pas, les ordres et les événements
@@ -140,10 +142,11 @@ sauvegardé.
   qui bouge garde sa position du pas précédent.
 - **L'ordre du pas**, écrit dans `World` et nulle part ailleurs : les ordres en attente, puis le temps, le terrain,
   l'économie, la société, le monde.
-- **Les ordres** (le patron Commande) : chaque geste qui change la ville est un petit objet envoyé au monde : poser,
-  tracer, peindre, effacer, ranger, reposer, déplacer (angle compris), affecter, fermer un poste, régler. Chacun est
-  vérifié en entier avant d'agir, par la même fonction que l'aperçu, et lève son propre événement. Déplacer
-  est une opération à part entière, jamais « retirer puis reposer ». Les ordres attendent le début du pas suivant.
+- **Les ordres** (le patron Commande) : chaque geste qui change la ville est un petit objet envoyé au monde : créer
+  la Chimère (au lancement d'un monde neuf), poser, tracer, peindre, effacer, ranger, reposer, déplacer (angle compris),
+  affecter, fermer un poste, régler. Chacun est vérifié en entier avant d'agir, par la même fonction que l'aperçu, et
+  lève son propre événement. Déplacer est une opération à part entière, jamais « retirer puis reposer ». Les ordres
+  attendent le début du pas suivant.
 - **Seule la simulation change la simulation.** Ce qui modifie l'état d'un système (poser, faire avancer le temps,
   tenir le maillage) est `internal`, ouvert par `InternalsVisibleTo` aux seules couches de la simulation au-dessus de
   lui ; un ordre (`Command`) ne s'exécute que par le monde. Au-dessus, on lit, on écoute et on envoie des ordres.
@@ -152,9 +155,10 @@ sauvegardé.
   n'écoute que pour tenir à jour ce qu'il possède ou ce qu'il déduit.
 - **La topologie** : le maillage porte un numéro de version, changé à chaque pose, retrait ou tracé. Ce qui s'en
   déduit se garde avec la version d'où il vient et se refait quand on le lit et qu'elle a changé : les îlots, les
-  distances gardées. Ce qui doit agir quand elle change écoute « topologie modifiée », levé avec ce numéro : la
-  logistique, les logements, la pastille « injoignable », les marcheurs. Toute affectation gardée l'est avec cette
-  version.
+  distances gardées, le trajet d'un marcheur (qui le lit à chaque pas : il revérifie le reste de sa ligne, et n'en
+  cherche un autre que si elle est coupée). Ce qui doit agir quand elle change sans la lire à chaque pas écoute
+  « topologie modifiée », levé avec ce numéro : la logistique, les logements, la pastille « injoignable ». Toute
+  affectation gardée l'est avec cette version.
 - **Le déterminisme** : les mêmes ordres, aux mêmes pas, donnent la même partie, quelle que soit la cadence d'images.
   Le hasard vient du hachage ; aucun ordre de traitement ne dépend de l'ordre d'un dictionnaire.
 
@@ -215,7 +219,8 @@ sauvegardé.
 - La fiche d'un bâtiment garde son modèle du pack (la source) et le modèle préparé depuis lui par le menu
   `DICIELA/Contenu/Préparer les modèles` : fusionné, porte au nord, centré sur l'empreinte, son origine au sol. Le menu
   y range aussi l'empreinte et la porte, mesurées sur le modèle (SAVOIR 2.9). Le modèle préparé se refait depuis la
-  source ; un test vérifie qu'il suit sa fiche.
+  source ; un test vérifie qu'il suit sa fiche. La fiche d'une sorte d'habitant garde le personnage du pack, tel quel ;
+  la vue le montre, la simulation lit sa marche et sa flânerie. Le catalogue mène à la sorte de la Chimère.
 - Une fiche de réglages de la simulation tient le pas, la borne de pas par image, la durée de la journée et de ses
   phases, les mailles par mètre et les bornes de boucle. Une fiche de session dit quelle carte charger et où ranger
   les sauvegardes.
@@ -242,7 +247,9 @@ code.
 | outil de pose | `PlacementTool` | barre de construction | `BuildBar` | famille ; catalogue | `StructureFamilyDefinition` ; `Catalog` |
 | table des textes | `TextTable` | zone de l'interface | `IInterfaceArea` | routine de pose | `ModelPose` |
 | trajet ; sa recherche | `Path` ; `PathFinder` | modèle du pack ; préparé | `SourceModel` ; `Model` | îlot ; les îlots | `Island` ; `Islands` |
-| ligne tendue ; la tendre | `Path.Corners` ; `PathTightener` | ligne droite (libre ou non) | `StraightLine` | | |
+| ligne tendue ; la tendre | `Path.Corners` ; `PathTightener` | ligne droite (libre ou non) | `StraightLine` | marche | `Walk` |
+| flâner | `Wander` | sorte d'habitant | `VillagerKindDefinition` | point d'arrivée | `ArrivalPoint` |
+| hasard par hachage | `HashRandom` | | | | |
 
 ## 10. La carte, les scènes et la sauvegarde
 
@@ -258,7 +265,8 @@ code.
   une description : hauteurs en mètres, eaux et leur sorte, arbres, rochers, champs sauvages, point d'arrivée, avec des
   identifiants tirés de la position arrondie. Le relief entre le premier, lu sur le Terrain désigné par la racine de la
   carte (`MapRoot`), posé à l'origine ; hauteur et pente se lisent sur une même surface, par interpolation bilinéaire.
-  Le reste entre avec les systèmes qui s'en servent. `World` reçoit la description ; la ville témoin en fabrique une.
+  Le point d'arrivée est l'objet de la carte qui porte `ArrivalPoint` ; sans lui, le centre. Le reste entre avec les
+  systèmes qui s'en servent. `World` reçoit la description ; la ville témoin en fabrique une.
   L'empreinte de la description est sauvegardée : si la carte a été repeinte, les poses sont revérifiées par la fonction
   des ordres.
 - **La copie de travail du Terrain.** Ce qui modifie le sol en jeu travaille sur une copie en mémoire (`Instantiate`
@@ -277,6 +285,8 @@ code.
 
 - **La vue** écoute les événements et ne photographie jamais : elle se construit à partir de l'état au chargement,
   puis suit les événements, par la même routine de pose (SAVOIR 2.9). Chaque abonnement est défait dans `OnDestroy`.
+  Ce qui bouge se lit à chaque image : le démarrage donne aux habitants vus la fraction du pas en cours, et chacun se
+  montre entre sa position du pas d'avant et celle du dernier (SAVOIR 2.2).
 - **La caméra de gestion** : la vue la tient (`CameraRig` : un point visé sur la carte, qui suit le relief de la
   simulation, et une distance qui règle l'inclinaison ; `CameraAtmosphere` : les ombres et le brouillard qui suivent
   le zoom, sur une copie en mémoire des réglages du rendu, rendue à la sortie) ; les gestes la commandent

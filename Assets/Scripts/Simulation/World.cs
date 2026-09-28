@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Diciela.Data;
 using Diciela.Simulation.Core;
 using Diciela.Simulation.Land;
+using Diciela.Simulation.Society;
 
 namespace Diciela.Simulation
 {
@@ -27,6 +28,7 @@ namespace Diciela.Simulation
             PathFinder = new PathFinder(Grid, Islands);
             PlacementRules = new PlacementRules(Grid, map.Relief, settings);
             Structures = new Structures(Grid, PlacementRules);
+            Villagers = new Villagers(Grid, Islands, PathFinder, Clock);
         }
 
         public Clock Clock { get; }
@@ -48,6 +50,9 @@ namespace Diciela.Simulation
 
         public Structures Structures { get; }
 
+        /// <summary>Les habitants : la Chimère, une fois créée par son ordre.</summary>
+        public Villagers Villagers { get; }
+
         /// <summary>Envoie un ordre ; il s'applique au début du pas suivant. La seule porte du joueur.</summary>
         public void Submit(Command command)
         {
@@ -58,12 +63,13 @@ namespace Diciela.Simulation
 
         /// <summary>
         /// Joue un pas. L'ordre du pas, écrit ici et nulle part ailleurs : les ordres en attente, puis le temps,
-        /// le terrain, l'économie, la société, le monde. Seuls les ordres et le temps existent pour l'instant.
+        /// le terrain, l'économie, la société, le monde. Pour l'instant, les ordres, le temps et les habitants.
         /// </summary>
         public void Step()
         {
             ApplyPendingCommands();
             Clock.Advance();
+            Villagers.Step();
         }
 
         /// <summary>Les ordres envoyés pendant l'application attendent le pas suivant : la boucle est bornée.</summary>

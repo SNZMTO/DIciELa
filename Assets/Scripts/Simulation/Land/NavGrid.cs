@@ -88,6 +88,51 @@ namespace Diciela.Simulation.Land
             return new Vector2(Metrics.CellCenter(cell.x), Metrics.CellCenter(cell.y));
         }
 
+        /// <summary>La maille qui contient ce point, en mètres sur le plan XZ ; elle peut être hors du maillage.</summary>
+        public Vector2Int CellOf(Vector2 point)
+        {
+            return new Vector2Int(Metrics.CellOf(point.x), Metrics.CellOf(point.y));
+        }
+
+        /// <summary>
+        /// La maille libre dont le milieu est le plus proche de ce point, à au plus maxRings mailles de la sienne ; faux
+        /// s'il n'y en a pas. On cherche par anneaux autour de la maille du point, jusqu'à ce qu'aucun anneau plus loin
+        /// ne puisse faire mieux. À distance égale, la première trouvée : la même à chaque fois.
+        /// </summary>
+        public bool TryFindNearestWalkable(Vector2 point, int maxRings, out Vector2Int nearest)
+        {
+            Vector2Int center = CellOf(point);
+            nearest = default;
+            float best = float.MaxValue;
+            bool found = false;
+            for (int ring = 0; ring <= maxRings; ring++)
+            {
+                // Le milieu d'une maille de cet anneau est à au moins (ring - ½) mailles du point, où qu'il soit dans la
+                // sienne : passé la meilleure distance, plus rien ne peut faire mieux.
+                if (found && (ring - 0.5f) * Metrics.CellSize > best)
+                    break;
+                for (int dy = -ring; dy <= ring; dy++)
+                {
+                    // Sur les rangées du bas et du haut de l'anneau, toutes les mailles ; entre elles, les deux des bords.
+                    int stride = dy == -ring || dy == ring ? 1 : 2 * ring;
+                    for (int dx = -ring; dx <= ring; dx += stride)
+                    {
+                        var cell = new Vector2Int(center.x + dx, center.y + dy);
+                        if (!Contains(cell) || !IsWalkable(cell))
+                            continue;
+                        float distance = Vector2.Distance(CellCenter(cell), point);
+                        if (distance < best)
+                        {
+                            best = distance;
+                            nearest = cell;
+                            found = true;
+                        }
+                    }
+                }
+            }
+            return found;
+        }
+
         /// <summary>Les mailles que couvre ce rectangle (leur milieu tombe dedans), à parcourir avec foreach.</summary>
         public CoveredCells CellsCoveredBy(RotatedRect rect)
         {

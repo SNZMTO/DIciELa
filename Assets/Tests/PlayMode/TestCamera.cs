@@ -30,7 +30,7 @@ namespace Diciela.Tests.PlayMode
             if (atmosphere)
                 TestWorld.Fill(Atmosphere, "_settings", Settings);
 #endif
-            Rig.Show(new Relief(100f, 100f, 2, 2, new[] { 10f, 10f, 10f, 10f }));
+            Rig.Show(new MapDescription(new Relief(100f, 100f, 2, 2, new[] { 10f, 10f, 10f, 10f })));
         }
 
         public CameraSettings Settings { get; }

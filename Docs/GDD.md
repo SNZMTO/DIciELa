@@ -31,6 +31,8 @@
   force) ; un bord où arrive l'esquisse d'une route, par où viennent les visiteurs et les nouveaux habitants ; des
   arbres, des rochers, et des champs sauvages près des replats où l'on bâtit ; assez de place pour une grande ville et
   ses canaux.
+- **Règle.** Le développeur pose dans la carte son point d'arrivée : la Chimère y apparaît au lancement d'une partie,
+  et la vue part de là. Sans lui, c'est le centre de la carte.
 - **Défaut.** Environ 500 m de côté.
 - **À toi.** La taille exacte, avant de peindre. Ma reco : la trouver en posant sur un Terrain nu les bâtiments d'une
   ville de fin de partie.
@@ -161,9 +163,9 @@
 ## 6. La Chimère
 
 - **Règle.** On la crée au lancement d'une partie : un corps d'animal et sa couleur, puis des morceaux d'autres animaux
-  (queue, oreilles, museau) et des accessoires (chapeau, cape…).
+  (queue, oreilles, museau) et des accessoires (chapeau, cape…). Elle apparaît au point d'arrivée de la carte (voir 2).
 - **Règle.** Le joueur la place à un poste, comme un habitant, et elle y va ; on ne la dirige jamais directement, et
-  elle ne prend jamais de poste d'elle-même.
+  elle ne prend jamais de poste d'elle-même. Sans poste, elle flâne (voir 7).
 - **Règle.** Elle travaille dans tous les domaines. Elle progresse lentement, mais plus haut que les habitants
   ordinaires : sa vitesse est faible, ses plafonds hauts.
 - **Défaut.** Elle commence à 10 partout ; tous ses plafonds sont à 100.
@@ -211,6 +213,11 @@
 - **Défaut.** Un expert apporte environ trois fois ce qu'apporte un débutant.
 - **Règle.** Un habitant sans poste (un arrivant, ou celui dont le bâtiment est rangé) prend tout seul le poste libre
   qui lui va le mieux ; s'il n'y en a aucun, il flâne et ne travaille pas. Le joueur réaffecte qui il veut.
+- **Règle.** Flâner, c'est aller à un point libre tiré autour de l'endroit où l'on s'est mis à flâner, s'y arrêter un
+  moment, puis recommencer, comme les colons de RimWorld. Un point devenu injoignable en chemin n'est qu'une pause de
+  plus.
+- **Défaut.** Un point à 6 m au plus de l'endroit où l'on s'est mis à flâner, à 2 m au moins de soi ; une pause de 0,1
+  à 0,3 h de jeu (3 à 9 s).
 - **Règle.** Le joueur peut fermer un poste : personne ne le prend, et celui qui l'occupait redevient libre.
 - **Règle.** Des bâtiments de service ouvrent les postes des métiers qui ne produisent rien : la loge des bâtisseurs
   (les ouvriers : chantiers, canaux, décos), l'entrepôt (les charretiers), la cabane du paysagiste (les paysagistes).
@@ -284,7 +291,8 @@
   clic gauche pose ; l'outil reste en main pour la suivante ; un clic droit bref ou Échap le pose de côté.
 - **Défaut.** Le cran de rotation : 15°.
 - **Règle.** Une construction posée attend ses bâtisseurs en fantôme translucide. Dès sa pose, elle prend sa place : on
-  ne traverse pas plus un fantôme qu'un bâtiment.
+  ne traverse pas plus un fantôme qu'un bâtiment. Qui marche et voit son trajet coupé en cherche un autre ; qui se
+  trouve dessous en sort à pied, tout droit vers le sol libre le plus proche.
 - **À toi.** Retirer un arbre ou en planter un passe-t-il par la file des chantiers ? Ma reco : non, ce sont des tâches
   des paysagistes, dans l'ordre où le joueur les a désignées.
 - **Règle.** Ranger ou déplacer un bâtiment est un tout petit chantier : il se déconstruit en quelques secondes et se
@@ -481,7 +489,11 @@
   leurs accessoires, leurs couleurs et leurs noms. À terme, un artiste payé fera de plus jolis personnages.
 - **Règle.** Les corps du pack sont d'un seul tenant : pas de tête d'une bête sur le corps d'une autre avant l'artiste.
   Les queues, oreilles et museaux de la Chimère sont des accessoires du pack.
-- **Règle.** Le pack n'a pas d'animations : un pack d'animations est à acheter, par le développeur.
+- **Règle.** Le pack n'a pas d'animations : un pack d'animations est à acheter, par le développeur. En attendant, les
+  personnages glissent, bras écartés, et se tournent vers où ils vont.
+- **Défaut.** Un personnage se tourne à 540° par seconde.
+- **À toi.** Le personnage de la Chimère en attendant l'écran de création. Ma reco, appliquée : `SM_Chr_Cat_Female_01`,
+  un corps d'animal (voir 6) ; tu le changes dans sa fiche (`Assets/Data/Habitants/Chimere.asset`).
 - **Règle.** Le jeu n'a pas de saisons.
 - **À toi.** Des saisons, plus tard ? Le pack n'en a que des bouts, et aucun bâtiment ni arbre d'hiver (détail dans la
   procédure `pack-synty`). Ma reco : non ; si le rythme en demande un jour, un événement du temps plutôt que quatre

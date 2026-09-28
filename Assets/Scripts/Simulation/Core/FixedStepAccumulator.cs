@@ -28,6 +28,12 @@ namespace Diciela.Simulation.Core
         }
 
         /// <summary>
+        /// La part du pas suivant déjà écoulée, de 0 à 1 : la vue montre ce qui bouge à cette fraction du chemin entre sa
+        /// place au pas d'avant et celle du dernier pas joué (ARCHITECTURE, section 5).
+        /// </summary>
+        public float StepFraction => (float)Math.Min(1.0, _pendingSeconds / _stepSeconds);
+
+        /// <summary>
         /// Ajoute le temps réel écoulé depuis l'image précédente et rend le nombre de pas à jouer maintenant. Un temps
         /// négatif ou indéfini ne compte pas.
         /// </summary>

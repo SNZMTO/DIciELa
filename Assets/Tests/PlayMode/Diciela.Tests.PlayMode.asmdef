@@ -4,6 +4,7 @@
     "references": [
         "Diciela.Data",
         "Diciela.Simulation.Land",
+        "Diciela.Simulation.Society",
         "Diciela.View",
         "Diciela.Controls",
         "Diciela.Game",

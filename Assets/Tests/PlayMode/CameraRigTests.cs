@@ -1,4 +1,5 @@
 using System.Collections;
+using Diciela.Simulation.Land;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -29,10 +30,21 @@ namespace Diciela.Tests.PlayMode
         [Test]
         public void ShowsTheMapFromItsCenterAtTheStartDistance()
         {
+            // La carte de test n'a pas de point d'arrivée : il est au centre.
             Assert.AreEqual(_test.Settings.FieldOfView, _test.Camera.fieldOfView, 1e-4f);
             Assert.That(Vector3.Distance(TestCamera.MapCenter, _test.LookedAtGround()), Is.LessThan(0.01f));
             Assert.AreEqual(_test.Settings.StartDistance,
                 Vector3.Distance(_test.Holder.transform.position, TestCamera.MapCenter), 0.01f);
+        }
+
+        [Test]
+        public void ShowsTheMapFromItsArrivalPoint()
+        {
+            var relief = new Relief(100f, 100f, 2, 2, new[] { 10f, 10f, 10f, 10f });
+
+            _test.Rig.Show(new MapDescription(relief, new Vector2(20f, 70f)));
+
+            Assert.That(Vector3.Distance(new Vector3(20f, 10f, 70f), _test.LookedAtGround()), Is.LessThan(0.01f));
         }
 
         [UnityTest]

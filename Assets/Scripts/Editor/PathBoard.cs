@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Diciela.Controls;
 using Diciela.Game;
 using Diciela.Simulation;
 using Diciela.Simulation.Land;
@@ -58,9 +57,7 @@ namespace Diciela.EditorTools
 
             // L'outil de pose est posé de côté, comme par Échap : son aperçu ne cache pas les traits. La vue se penche
             // jusqu'à sa borne, au plus près de la verticale : les toits des fantômes ne les cachent pas non plus.
-            var controls = Object.FindAnyObjectByType<PlacementControls>();
-            if (controls != null && controls.Tool != null)
-                controls.Tool.Cancel();
+            AlbumMenu.PutPlacementToolAside();
             var rig = Object.FindAnyObjectByType<CameraRig>();
             if (rig != null)
                 rig.Tilt(-TiltBeyondTheBoundDegrees);

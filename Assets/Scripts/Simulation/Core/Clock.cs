@@ -15,6 +15,7 @@ namespace Diciela.Simulation.Core
         private readonly long _workEndStep;
         private readonly long _eveningEndStep;
         private readonly double _gameHoursPerRealSecond;
+        private readonly double _realSecondsPerStep;
 
         /// <summary>Levé quand une nouvelle journée commence, avec son numéro (la première est la 1).</summary>
         public event Action<int> DayStarted;
@@ -38,6 +39,7 @@ namespace Diciela.Simulation.Core
             _workEndStep = (long)Math.Round(_stepsPerDay * (double)settings.WorkFraction, MidpointRounding.AwayFromZero);
             _eveningEndStep = (long)Math.Round(_stepsPerDay * workAndEvening, MidpointRounding.AwayFromZero);
             _gameHoursPerRealSecond = HoursPerDay / (_stepsPerDay * (double)settings.StepSeconds);
+            _realSecondsPerStep = settings.StepSeconds;
             Phase = PhaseAt(0);
         }
 
@@ -58,6 +60,24 @@ namespace Diciela.Simulation.Core
         public double RealSecondsToGameHours(double realSeconds)
         {
             return realSeconds * _gameHoursPerRealSecond;
+        }
+
+        /// <summary>
+        /// Le nombre de pas que durent ces heures de jeu, arrondi au plus proche : la seule conversion des heures de jeu
+        /// en pas. Ce qui dure se compte en pas, un entier, et ne dérive pas.
+        /// </summary>
+        public long StepsIn(double gameHours)
+        {
+            return (long)Math.Round(gameHours * _stepsPerDay / HoursPerDay, MidpointRounding.AwayFromZero);
+        }
+
+        /// <summary>
+        /// Ce qu'une vitesse « à l'écran », en mètres par seconde de temps réel, parcourt en un pas : la seule conversion
+        /// d'une vitesse. Une partie accélérée jouera plus de pas, jamais un pas plus long (ARCHITECTURE, section 5).
+        /// </summary>
+        public float MetersPerStep(float metersPerSecond)
+        {
+            return (float)(metersPerSecond * _realSecondsPerStep);
         }
 
         /// <summary>

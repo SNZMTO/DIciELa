@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using Diciela.Simulation;
 using Diciela.Simulation.Core;
 using Diciela.Simulation.Land;
+using Diciela.Simulation.Society;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -30,6 +31,9 @@ namespace Diciela.Tests.EditMode.Architecture
             (typeof(NavGrid), "SetOccupant"),
             (typeof(NavGrid), "AddDoorway"),
             (typeof(Structures), "Place"),
+            (typeof(Villagers), "CreateChimera"),
+            (typeof(Villagers), "Step"),
+            (typeof(Villager), "Step"),
             (typeof(Command), "Execute"),
         };
 

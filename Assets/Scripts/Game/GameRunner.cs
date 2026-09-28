@@ -12,9 +12,10 @@ namespace Diciela.Game
 {
     /// <summary>
     /// Le démarrage, racine de composition (ARCHITECTURE, sections 5, 10 et 11) : il charge la carte de sa session, crée
-    /// le monde et la table des textes, montre le monde (caméra, constructions, barre) et lui relie les gestes ; puis il
-    /// le fait avancer par pas fixes, au plus un nombre borné de pas par image. Tout est recréé à chaque Play et libéré
-    /// à la sortie : ce projet ne recharge ni le code ni la scène.
+    /// le monde, y fait créer la Chimère et lit la table des textes ; il montre le monde (caméra, constructions,
+    /// habitants, barre) et lui relie les gestes ; puis il le fait avancer par pas fixes, au plus un nombre borné de pas
+    /// par image, et donne aux habitants vus la fraction du pas en cours. Tout est recréé à chaque Play et libéré à la
+    /// sortie : ce projet ne recharge ni le code ni la scène.
     /// </summary>
     public sealed class GameRunner : MonoBehaviour
     {
@@ -29,6 +30,7 @@ namespace Diciela.Game
         [SerializeField] private CameraRig _cameraRig;
         [SerializeField] private CameraControls _cameraControls;
         [SerializeField] private StructureViews _structureViews;
+        [SerializeField] private VillagerViews _villagerViews;
         [SerializeField] private PlacementPreview _placementPreview;
         [SerializeField] private PlacementControls _placementControls;
         [SerializeField] private BuildBar _buildBar;
@@ -51,8 +53,9 @@ namespace Diciela.Game
         private void OnEnable()
         {
             if (_settings == null || _session == null || _placementSettings == null || _interfaceSettings == null ||
-                _catalog == null || _cameraRig == null || _cameraControls == null || _structureViews == null ||
-                _placementPreview == null || _placementControls == null || _buildBar == null)
+                _catalog == null || _catalog.ChimeraKind == null || _cameraRig == null || _cameraControls == null ||
+                _structureViews == null || _villagerViews == null || _placementPreview == null ||
+                _placementControls == null || _buildBar == null)
             {
                 Debug.LogError("DICIELA : le démarrage n'a pas toutes ses fiches, ses vues et ses gestes (lancer " +
                                "« DICIELA/Scènes/Monter les scènes ») ; le monde ne tourne pas.", this);
@@ -79,6 +82,8 @@ namespace Diciela.Game
             try
             {
                 _world = new World(_settings, _map.Description);
+                // Un monde neuf commence par la Chimère ; l'écran de création enverra cet ordre à la place du démarrage.
+                _world.Submit(new CreateChimeraCommand(_catalog.ChimeraKind));
                 _accumulator = new FixedStepAccumulator(_settings);
                 _lastRealtime = Time.realtimeSinceStartupAsDouble;
                 _texts = TextTable.Parse(_interfaceSettings.Texts != null ? _interfaceSettings.Texts.text : null,
@@ -102,8 +107,9 @@ namespace Diciela.Game
             try
             {
                 _journal = new SimulationJournal(_world);
-                _cameraRig.Show(_world.Map.Relief);
+                _cameraRig.Show(_world.Map);
                 _structureViews.Show(_world.Structures, _world.Map.Relief);
+                _villagerViews.Show(_world.Villagers, _world.Map.Relief);
                 _placementTool = new PlacementTool(_world, _cameraRig.Camera, _placementPreview, _placementSettings);
                 _buildBar.Show(_catalog, _texts, _placementTool);
                 _cameraControls.Bind(_buildBar);
@@ -128,6 +134,7 @@ namespace Diciela.Game
             _lastRealtime = now;
             for (int i = 0; i < steps; i++)
                 _world.Step();
+            _villagerViews.Follow(_accumulator.StepFraction, Time.deltaTime);
         }
 
         private void OnDisable()
@@ -149,6 +156,7 @@ namespace Diciela.Game
                 }
                 _cameraRig.Hide();
                 _structureViews.Hide();
+                _villagerViews.Hide();
             }
             _placementTool = null;
             if (_journal != null)

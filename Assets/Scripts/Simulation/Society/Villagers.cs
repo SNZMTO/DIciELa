@@ -1,0 +1,76 @@
+using System;
+using System.Collections.Generic;
+using Diciela.Data;
+using Diciela.Simulation.Core;
+using Diciela.Simulation.Land;
+using UnityEngine;
+
+namespace Diciela.Simulation.Society
+{
+    /// <summary>
+    /// Les habitants de la ville (ARCHITECTURE, section 4) : la vérité de qui vit ici et où. Pour l'instant, la Chimère,
+    /// que le joueur crée au lancement d'une partie ; les arrivées viendront avec les logements. Chacun joue son pas
+    /// dans l'ordre de son arrivée.
+    /// </summary>
+    public sealed class Villagers
+    {
+        private readonly List<Villager> _all = new List<Villager>();
+        private readonly NavGrid _grid;
+        private readonly Islands _islands;
+        private readonly PathFinder _finder;
+        private readonly Clock _clock;
+        private int _nextId = 1;
+
+        public Villagers(NavGrid grid, Islands islands, PathFinder finder, Clock clock)
+        {
+            if (ReferenceEquals(grid, null))
+                throw new ArgumentNullException(nameof(grid));
+            if (ReferenceEquals(islands, null))
+                throw new ArgumentNullException(nameof(islands));
+            if (ReferenceEquals(finder, null))
+                throw new ArgumentNullException(nameof(finder));
+            if (ReferenceEquals(clock, null))
+                throw new ArgumentNullException(nameof(clock));
+
+            _grid = grid;
+            _islands = islands;
+            _finder = finder;
+            _clock = clock;
+        }
+
+        /// <summary>Levé quand un habitant arrive en ville : pour l'instant, la Chimère, à sa création.</summary>
+        public event Action<Villager> VillagerArrived;
+
+        public IReadOnlyList<Villager> All => _all;
+
+        /// <summary>La Chimère, une fois créée ; null avant.</summary>
+        public Villager Chimera { get; private set; }
+
+        /// <summary>
+        /// Crée la Chimère au point d'arrivée, sur le milieu de sa maille. Une seule par monde : faux, et rien ne change,
+        /// si elle existe déjà. Seul l'ordre « créer la Chimère » l'appelle.
+        /// </summary>
+        internal bool CreateChimera(VillagerKindDefinition kind, Vector2 arrivalPoint)
+        {
+            if (ReferenceEquals(kind, null))
+                throw new ArgumentNullException(nameof(kind));
+            if (Chimera != null)
+                return false;
+
+            Vector2Int cell = _grid.CellOf(arrivalPoint);
+            cell = new Vector2Int(Math.Clamp(cell.x, 0, _grid.Width - 1), Math.Clamp(cell.y, 0, _grid.Depth - 1));
+            var chimera = new Villager(_nextId++, kind, _grid.CellCenter(cell), _grid, _islands, _finder, _clock);
+            _all.Add(chimera);
+            Chimera = chimera;
+            VillagerArrived?.Invoke(chimera);
+            return true;
+        }
+
+        /// <summary>Joue un pas pour chaque habitant, dans l'ordre de leur arrivée. Seul le monde l'appelle.</summary>
+        internal void Step()
+        {
+            for (int i = 0; i < _all.Count; i++)
+                _all[i].Step();
+        }
+    }
+}
