@@ -26,13 +26,22 @@ namespace Diciela.Simulation.Society
         private readonly int _wayOutRings;
         private bool _leaving;
         private Vector2 _wayOut;
-        private int _enclosedVersion = -1;
+        private bool _enclosed;
+        private int _enclosedVersion;
 
         internal Villager(int id, VillagerKindDefinition kind, Vector2 position, NavGrid grid, Islands islands,
             PathFinder finder, Clock clock)
         {
             if (ReferenceEquals(kind, null))
                 throw new ArgumentNullException(nameof(kind));
+            if (ReferenceEquals(grid, null))
+                throw new ArgumentNullException(nameof(grid));
+            if (ReferenceEquals(islands, null))
+                throw new ArgumentNullException(nameof(islands));
+            if (ReferenceEquals(finder, null))
+                throw new ArgumentNullException(nameof(finder));
+            if (ReferenceEquals(clock, null))
+                throw new ArgumentNullException(nameof(clock));
 
             Id = id;
             Kind = kind;
@@ -59,8 +68,11 @@ namespace Diciela.Simulation.Society
         /// <summary>Sa position au pas d'avant : la vue le montre entre les deux.</summary>
         public Vector2 PreviousPosition { get; private set; }
 
-        /// <summary>Vrai quand il marche le long d'un trajet ; pas quand il sort d'une construction.</summary>
-        public bool IsWalking => _walk.IsWalking && !_leaving;
+        /// <summary>
+        /// Vrai quand il marche le long d'un trajet ; pas quand il sort d'une construction posée sur lui, ni quand il y
+        /// est enfermé, immobile.
+        /// </summary>
+        public bool IsWalking => _walk.IsWalking && !_leaving && !_enclosed;
 
         /// <summary>Le trajet qu'il suit, dont la ligne tendue ; il ne vaut que pendant qu'il marche.</summary>
         public Path Path => _walk.Path;
@@ -91,15 +103,17 @@ namespace Diciela.Simulation.Society
             if (!_leaving)
             {
                 if (_grid.IsWalkable(_grid.CellOf(position)))
-                    return false;
-                // Enfermé : il attend que le maillage change pour chercher de nouveau.
-                if (_enclosedVersion == _grid.Version)
-                    return true;
-                if (!_grid.TryFindNearestWalkable(position, _wayOutRings, out Vector2Int free))
                 {
-                    _enclosedVersion = _grid.Version;
-                    return true;
+                    _enclosed = false;
+                    return false;
                 }
+                // Enfermé : il attend que le maillage change pour chercher de nouveau.
+                if (_enclosed && _enclosedVersion == _grid.Version)
+                    return true;
+                _enclosed = !_grid.TryFindNearestWalkable(position, _wayOutRings, out Vector2Int free);
+                _enclosedVersion = _grid.Version;
+                if (_enclosed)
+                    return true;
                 _wayOut = _grid.CellCenter(free);
                 _leaving = true;
             }

@@ -69,5 +69,25 @@ namespace Diciela.Tests.EditMode
             Assert.AreEqual(where, chimera.Position);
             Assert.IsFalse(chimera.IsWalking);
         }
+
+        [Test]
+        public void EnclosedInTheMiddleOfAWalkSheIsNoLongerWalking()
+        {
+            // En pleine marche, tout est couvert : elle s'arrête là où elle est, et ne se dit plus en marche.
+            World world = _test.World();
+            Villager chimera = TestChimera.StartALongWalk(world);
+            world.Step();
+            Assert.IsTrue(chimera.IsWalking);
+            world.Submit(new PlaceStructureCommand(_test.Block(40f, 40f), new Placement(new Vector2(20f, 20f), 0f)));
+            world.Step();
+            Vector2 where = chimera.Position;
+
+            for (int step = 0; step < 50; step++)
+            {
+                world.Step();
+                Assert.IsFalse(chimera.IsWalking, "Enfermée, elle se dit en marche au pas " + step + ".");
+            }
+            Assert.AreEqual(where, chimera.Position);
+        }
     }
 }
