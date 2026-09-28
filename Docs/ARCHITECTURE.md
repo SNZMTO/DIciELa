@@ -235,6 +235,7 @@ code.
 | place et angle | `Placement` | règles de pose | `PlacementRules` | aperçu ; fantôme (posé, pas bâti) | `Preview` ; `Planned` |
 | outil de pose | `PlacementTool` | barre de construction | `BuildBar` | famille ; catalogue | `StructureFamilyDefinition` ; `Catalog` |
 | table des textes | `TextTable` | zone de l'interface | `IInterfaceArea` | routine de pose | `ModelPose` |
+| trajet ; sa recherche | `Path` ; `PathFinder` | | | | |
 
 ## 10. La carte, les scènes et la sauvegarde
 
