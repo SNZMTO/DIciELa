@@ -9,25 +9,23 @@ namespace Diciela.Simulation.Society
     /// <summary>
     /// Un habitant (ARCHITECTURE, section 4) : sa sorte, sa place et ce qu'il fait. Sa place est sa position, en mètres
     /// sur le plan XZ ; il garde aussi celle du pas d'avant, pour que la vue le montre entre les deux. Sans poste, il
-    /// flâne. Une construction posée sur lui ne l'arrête pas : il en sort à pied, tout droit vers la maille libre la
-    /// plus proche (décisions 73 et 74), puis reprend ce qu'il faisait. Chaque pas tire son hasard de son numéro et du
-    /// numéro du pas : les mêmes ordres rejouent la même partie.
+    /// flâne. Une construction posée sur lui ne l'arrête pas : il en sort à pied, tout droit, par la maille libre qui
+    /// la borde du côté du plus grand îlot (décisions 73 et 88), puis reprend ce qu'il faisait. Chaque pas tire son
+    /// hasard de son numéro et du numéro du pas : les mêmes ordres rejouent la même partie.
     /// </summary>
     public sealed class Villager
     {
-        // Jusqu'où chercher une maille libre pour sortir d'une construction, en mètres : plus que la plus grande.
-        private const float WayOutSearchMeters = 20f;
-
         private readonly NavGrid _grid;
         private readonly Clock _clock;
         private readonly Walk _walk;
         private readonly Wander _wander;
+        private readonly WayOutFinder _wayOuts;
         private readonly float _metersPerStep;
-        private readonly int _wayOutRings;
         private bool _leaving;
         private Vector2 _wayOut;
         private bool _enclosed;
-        private int _enclosedVersion;
+        // La version du maillage où il a cherché sa sortie : enfermé, il attend qu'elle change ; en sortant, il revérifie.
+        private int _wayOutVersion;
 
         internal Villager(int id, VillagerKindDefinition kind, Vector2 position, NavGrid grid, Islands islands,
             PathFinder finder, Clock clock)
@@ -50,7 +48,7 @@ namespace Diciela.Simulation.Society
             _grid = grid;
             _clock = clock;
             _metersPerStep = clock.MetersPerStep(kind.WalkMetersPerSecond);
-            _wayOutRings = grid.Metrics.CellCount(WayOutSearchMeters);
+            _wayOuts = new WayOutFinder(grid, islands);
             _walk = new Walk(grid, finder);
             _wander = new Wander(kind, grid, islands, clock, _walk, _metersPerStep);
             HashRandom random = RandomOfTheStep();
@@ -100,6 +98,12 @@ namespace Diciela.Simulation.Society
         /// </summary>
         private bool LeaveCoveredGround(ref Vector2 position, ref HashRandom random)
         {
+            // Le maillage a changé pendant qu'il sort : si sa maille de sortie a été prise, il en cherche une autre.
+            if (_leaving && _wayOutVersion != _grid.Version)
+            {
+                _wayOutVersion = _grid.Version;
+                _leaving = _grid.IsWalkable(_grid.CellOf(_wayOut));
+            }
             if (!_leaving)
             {
                 if (_grid.IsWalkable(_grid.CellOf(position)))
@@ -108,10 +112,10 @@ namespace Diciela.Simulation.Society
                     return false;
                 }
                 // Enfermé : il attend que le maillage change pour chercher de nouveau.
-                if (_enclosed && _enclosedVersion == _grid.Version)
+                if (_enclosed && _wayOutVersion == _grid.Version)
                     return true;
-                _enclosed = !_grid.TryFindNearestWalkable(position, _wayOutRings, out Vector2Int free);
-                _enclosedVersion = _grid.Version;
+                _wayOutVersion = _grid.Version;
+                _enclosed = !_wayOuts.TryFind(position, out Vector2Int free);
                 if (_enclosed)
                     return true;
                 _wayOut = _grid.CellCenter(free);

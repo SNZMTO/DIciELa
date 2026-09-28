@@ -11,8 +11,8 @@ namespace Diciela.Simulation.Land
     /// relie aux tronçons qu'il touche dans la rangée d'en dessous, par un union-find : chaque tronçon pointe vers un
     /// tronçon plus ancien de son îlot, et ainsi de suite jusqu'au plus ancien, qui représente l'îlot. Les îlots se
     /// déduisent du maillage, ne sont jamais sauvegardés, et se refont quand on les lit et que la version du maillage a
-    /// changé : une seule fois pour tout ce qu'un pas a posé. Les tableaux se gardent d'une fois à l'autre et ne
-    /// grandissent qu'au besoin.
+    /// changé : une seule fois pour tout ce qu'un pas a posé. Chacun sait combien il a de mailles. Les tableaux se
+    /// gardent d'une fois à l'autre et ne grandissent qu'au besoin.
     /// </summary>
     public sealed class Islands
     {
@@ -25,7 +25,10 @@ namespace Diciela.Simulation.Land
         private int[] _end;
         private int[] _parent;
         private int[] _island;
+        // Le nombre de mailles de chaque îlot, par son numéro (à partir de 1) : il y a au plus un îlot par tronçon.
+        private int[] _size;
         private int _runs;
+        private int _islandCount;
         private bool _labeled;
         private int _labeledVersion;
 
@@ -42,6 +45,7 @@ namespace Diciela.Simulation.Land
             _end = new int[capacity];
             _parent = new int[capacity];
             _island = new int[capacity];
+            _size = new int[capacity + 1];
         }
 
         /// <summary>
@@ -68,6 +72,17 @@ namespace Diciela.Simulation.Land
                     last = middle - 1;
             }
             return _island[first];
+        }
+
+        /// <summary>
+        /// Le nombre de mailles de cet îlot ; 0 pour l'îlot 0, celui des mailles prises. Un numéro sans îlot : une erreur.
+        /// </summary>
+        public int SizeOf(int island)
+        {
+            Refresh();
+            if (island < 0 || island > _islandCount)
+                throw new ArgumentOutOfRangeException(nameof(island), "L'îlot " + island + " n'existe pas.");
+            return island == 0 ? 0 : _size[island];
         }
 
         private void Refresh()
@@ -131,6 +146,7 @@ namespace Diciela.Simulation.Land
             Array.Resize(ref _end, capacity);
             Array.Resize(ref _parent, capacity);
             Array.Resize(ref _island, capacity);
+            Array.Resize(ref _size, capacity + 1);
         }
 
         /// <summary>Met deux tronçons dans le même îlot : le représentant le plus récent pointe vers le plus ancien.</summary>
@@ -160,8 +176,8 @@ namespace Diciela.Simulation.Land
         }
 
         /// <summary>
-        /// Numérote les îlots à partir de 1, dans l'ordre de leur plus ancien tronçon. Un tronçon pointe vers un plus
-        /// ancien du même îlot, déjà numéroté : il prend son numéro.
+        /// Numérote les îlots à partir de 1, dans l'ordre de leur plus ancien tronçon, et compte leurs mailles. Un
+        /// tronçon pointe vers un plus ancien du même îlot, déjà numéroté : il prend son numéro.
         /// </summary>
         private void Number()
         {
@@ -169,8 +185,12 @@ namespace Diciela.Simulation.Land
             for (int run = 0; run < _runs; run++)
             {
                 int parent = _parent[run];
-                _island[run] = parent == run ? ++islands : _island[parent];
+                if (parent == run)
+                    _size[++islands] = 0;
+                _island[run] = parent == run ? islands : _island[parent];
+                _size[_island[run]] += _end[run] - _start[run];
             }
+            _islandCount = islands;
         }
     }
 }

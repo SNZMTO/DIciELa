@@ -15,6 +15,7 @@ MonoBehaviour:
   _id: chimere
   _walkMetersPerSecond: 1.5
   _wanderRadiusMeters: 6
+  _wanderMinHopMeters: 2
   _wanderPauseMinHours: 0.1
   _wanderPauseMaxHours: 0.3
   _model: {fileID: 2141610353401006500, guid: 4f99572d119932b499bccc5cdac84383, type: 3}
