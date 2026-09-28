@@ -37,6 +37,14 @@ namespace Diciela.Simulation.Society
         {
             if (ReferenceEquals(kind, null))
                 throw new ArgumentNullException(nameof(kind));
+            if (ReferenceEquals(grid, null))
+                throw new ArgumentNullException(nameof(grid));
+            if (ReferenceEquals(islands, null))
+                throw new ArgumentNullException(nameof(islands));
+            if (ReferenceEquals(clock, null))
+                throw new ArgumentNullException(nameof(clock));
+            if (ReferenceEquals(walk, null))
+                throw new ArgumentNullException(nameof(walk));
 
             _grid = grid;
             _islands = islands;

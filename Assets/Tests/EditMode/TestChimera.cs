@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Diciela.Data;
 using Diciela.Simulation;
+using Diciela.Simulation.Society;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -39,6 +40,15 @@ namespace Diciela.Tests.EditMode
             world.Submit(new CreateChimeraCommand(Kind));
             world.Step();
             return world;
+        }
+
+        /// <summary>Joue jusqu'à ce qu'elle parte vers un point à 4 m au moins : le pas où elle vient de le tirer.</summary>
+        public static Villager StartALongWalk(World world)
+        {
+            Villager chimera = world.Villagers.Chimera;
+            TestGrids.StepUntil(world, () => chimera.IsWalking && chimera.Path.Length >= 4f &&
+                                             chimera.Position == chimera.PreviousPosition, 20000, "un départ de 4 m");
+            return chimera;
         }
 
         /// <summary>Une construction sans porte de width × depth mètres, détruite avec le banc.</summary>

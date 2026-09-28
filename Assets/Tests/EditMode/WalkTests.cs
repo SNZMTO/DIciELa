@@ -28,15 +28,6 @@ namespace Diciela.Tests.EditMode
             _test.Dispose();
         }
 
-        /// <summary>Joue jusqu'à ce qu'elle parte vers un point à 4 m au moins : le pas où elle vient de le tirer.</summary>
-        private static Villager StartALongWalk(World world)
-        {
-            Villager chimera = world.Villagers.Chimera;
-            TestGrids.StepUntil(world, () => chimera.IsWalking && chimera.Path.Length >= 4f &&
-                                             chimera.Position == chimera.PreviousPosition, 20000, "un départ de 4 m");
-            return chimera;
-        }
-
         private static Vector2 Last(IReadOnlyList<Vector2> corners)
         {
             return corners[corners.Count - 1];
@@ -46,7 +37,7 @@ namespace Diciela.Tests.EditMode
         public void AGhostAcrossHerLineMakesHerGoAround()
         {
             World world = _test.World();
-            Villager chimera = StartALongWalk(world);
+            Villager chimera = TestChimera.StartALongWalk(world);
             Vector2 from = chimera.Position;
             Vector2 to = Last(chimera.Path.Corners);
 
@@ -80,7 +71,7 @@ namespace Diciela.Tests.EditMode
         {
             // Cinq pas après son départ, elle a quitté sa première maille : un nouveau trajet partirait d'ailleurs.
             World world = _test.World();
-            Villager chimera = StartALongWalk(world);
+            Villager chimera = TestChimera.StartALongWalk(world);
             for (int i = 0; i < 5; i++)
                 world.Step();
             var before = new List<Vector2>(chimera.Path.Corners);
@@ -96,7 +87,7 @@ namespace Diciela.Tests.EditMode
         public void AGhostOnHerGoalMakesHerPauseThenGoElsewhere()
         {
             World world = _test.World();
-            Villager chimera = StartALongWalk(world);
+            Villager chimera = TestChimera.StartALongWalk(world);
             Vector2 goal = Last(chimera.Path.Corners);
 
             world.Submit(new PlaceStructureCommand(_test.Block(1f, 1f), new Placement(goal, 0f)));
