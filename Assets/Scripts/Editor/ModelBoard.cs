@@ -10,8 +10,8 @@ namespace Diciela.EditorTools
 {
     /// <summary>
     /// La planche des modèles (Docs/ALBUM.md), en Play : chaque construction du catalogue deux fois, son modèle du pack
-    /// puis son modèle préparé, posés par la routine de pose au centre de la carte, porte au nord, et vus du côté de
-    /// leur porte. On compare l'un à l'autre (la préparation ne change pas l'art) et l'on voit la porte au niveau du
+    /// puis son modèle préparé (sans modèle du pack, sa boîte seule), posés par la routine de pose au centre de la
+    /// carte, porte au nord, et vus du côté de leur porte. On compare l'un à l'autre (la préparation ne change pas l'art) et l'on voit la porte au niveau du
     /// sol. Ce ne sont que des vues : la simulation n'en sait rien. Les gestes restent coupés jusqu'à la fin du Play.
     /// </summary>
     public static class ModelBoard
@@ -47,7 +47,7 @@ namespace Diciela.EditorTools
             foreach (StructureFamilyDefinition family in catalog.Families)
             {
                 foreach (StructureDefinition structure in family.Structures)
-                    total += 2f * (structure.WidthMeters + GapMeters);
+                    total += ModelsOf(structure).Length * (structure.WidthMeters + GapMeters);
             }
 
             float x = (relief.SizeX - total) * 0.5f;
@@ -56,7 +56,7 @@ namespace Diciela.EditorTools
             {
                 foreach (StructureDefinition structure in family.Structures)
                 {
-                    foreach (GameObject model in new[] { structure.SourceModel, structure.Model })
+                    foreach (GameObject model in ModelsOf(structure))
                     {
                         GameObject view = ModelPose.Instantiate(model, null, "Planche : " + model.name);
                         ModelPose.Place(view.transform, new Placement(new Vector2(x + structure.WidthMeters * 0.5f, z), 0f),
@@ -74,6 +74,14 @@ namespace Diciela.EditorTools
             rig.Rotate(Mathf.DeltaAngle(rig.Camera.transform.eulerAngles.y, 180f));
             rig.Zoom(notches, center);
             Debug.Log("DICIELA : planche des modèles prête, " + total.ToString("0") + " m de large.");
+        }
+
+        /// <summary>Le modèle du pack puis le modèle préparé ; sans modèle du pack, la boîte seule.</summary>
+        private static GameObject[] ModelsOf(StructureDefinition structure)
+        {
+            return structure.SourceModel != null
+                ? new[] { structure.SourceModel, structure.Model }
+                : new[] { structure.Model };
         }
     }
 }
