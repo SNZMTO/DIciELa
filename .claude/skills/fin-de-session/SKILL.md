@@ -13,9 +13,10 @@ disable-model-invocation: true
    - Quelle **flèche de dépendance** entre assemblages l'étape a-t-elle ajoutée (aucune, idéalement) ?
    Et : un fichier a-t-il dépassé 200 lignes ? Si oui, il est découpé avant le commit.
    **Toutes les cinq étapes environ**, la prochaine étape est une **session de ménage** sur un seul système : le relire
-   en entier, corriger ce qui a dérivé, sans agent. `ETAT.md` le rappelle. Exception (décision 77) : le ménage qui suit
-   9b et la Chimère est une revue « ultracode » de tout le projet, lancée seulement si le développeur écrit « ultracode »
-   et accepte le plan (les angles, le nombre d'agents, le plafond de 1,5 M jetons).
+   en entier, corriger ce qui a dérivé, sans agent. `ETAT.md` le rappelle. Exception (décisions 77 et 90) : avant le
+   premier jouable, une revue « ultracode » des seuls bugs de la simulation (deux chercheurs Opus, chaque trouvaille
+   revérifiée par un vérificateur Sonnet, plafond 1 M jetons), lancée seulement si le développeur écrit « ultracode » et
+   accepte le plan. Ses chercheurs rangent parfois une vraie trouvaille parmi leurs « écartées » : les relire toutes.
 1. **Les décisions** prises pendant la session ont leur numéro dans `Docs/DECISIONS.md` (datées, avec leur raison), et
    le GDD ou l'architecture sont **réécrits** là où elles changent la vérité (pas de rature, pas de note datée).
 2. **Ce qui a été remplacé est supprimé** : code, données, tests, lignes de documents.

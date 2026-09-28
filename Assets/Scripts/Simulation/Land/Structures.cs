@@ -6,11 +6,13 @@ namespace Diciela.Simulation.Land
 {
     /// <summary>
     /// Les constructions posées sur la carte (ARCHITECTURE, section 4) : la vérité, dont le maillage est déduit et tenu
-    /// à jour ici. Une pose passe par les règles de pose ; refusée, elle ne change rien et dit pourquoi.
+    /// à jour ici. Une pose passe par les règles de pose ; refusée, elle ne change rien et dit pourquoi. Les événements
+    /// d'un pas attendent la fin de leur couche, dans une seule file, dans l'ordre des poses (ARCHITECTURE, section 5).
     /// </summary>
     public sealed class Structures
     {
         private readonly List<Structure> _all = new List<Structure>();
+        private readonly List<Happening> _happened = new List<Happening>();
         private readonly NavGrid _grid;
         private readonly PlacementRules _rules;
         private int _nextId = 1;
@@ -35,15 +37,16 @@ namespace Diciela.Simulation.Land
         public IReadOnlyList<Structure> All => _all;
 
         /// <summary>
-        /// Pose la construction si les règles le permettent ; sinon, lève <see cref="PlacementRefused"/>. Seul l'ordre
-        /// « poser » l'appelle, au début d'un pas ; au-dessus de la simulation, on vérifie avec les règles de pose.
+        /// Pose la construction si les règles le permettent ; sinon, la refuse, et <see cref="PlacementRefused"/> le dira
+        /// avec les événements du pas. Seul l'ordre « poser » l'appelle, au début d'un pas ; au-dessus de la simulation,
+        /// on vérifie avec les règles de pose.
         /// </summary>
         internal PlacementResult Place(StructureDefinition definition, Placement placement)
         {
             PlacementResult result = _rules.Check(definition, placement);
             if (result != PlacementResult.Ok)
             {
-                PlacementRefused?.Invoke(definition, placement, result);
+                _happened.Add(new Happening(null, definition, placement, result));
                 return result;
             }
 
@@ -52,8 +55,46 @@ namespace Diciela.Simulation.Land
             _grid.SetOccupant(PlacementRules.Footprint(definition, placement), structure.Id);
             if (definition.HasDoor)
                 _grid.AddDoorway(_rules.Doorway(definition, placement));
-            StructurePlaced?.Invoke(structure);
+            _happened.Add(new Happening(structure, definition, placement, result));
             return result;
+        }
+
+        /// <summary>Livre les événements du pas, dans leur ordre, puis vide la file. Seul le monde l'appelle.</summary>
+        internal void DeliverEvents()
+        {
+            try
+            {
+                for (int i = 0; i < _happened.Count; i++)
+                {
+                    Happening happening = _happened[i];
+                    if (happening.Result == PlacementResult.Ok)
+                        StructurePlaced?.Invoke(happening.Placed);
+                    else
+                        PlacementRefused?.Invoke(happening.Definition, happening.Placement, happening.Result);
+                }
+            }
+            finally
+            {
+                _happened.Clear();
+            }
+        }
+
+        /// <summary>Une pose jouée, en attendant d'être annoncée : la construction posée, ou la raison du refus.</summary>
+        private readonly struct Happening
+        {
+            public Happening(Structure placed, StructureDefinition definition, Placement placement,
+                PlacementResult result)
+            {
+                Placed = placed;
+                Definition = definition;
+                Placement = placement;
+                Result = result;
+            }
+
+            public Structure Placed { get; }
+            public StructureDefinition Definition { get; }
+            public Placement Placement { get; }
+            public PlacementResult Result { get; }
         }
     }
 }

@@ -72,12 +72,17 @@ namespace Diciela.Simulation
             Villagers.Step();
         }
 
-        /// <summary>Les ordres envoyés pendant l'application attendent le pas suivant : la boucle est bornée.</summary>
+        /// <summary>
+        /// Les ordres envoyés pendant l'application attendent le pas suivant : la boucle est bornée. Leurs événements
+        /// partent ensuite, tous les ordres joués (ARCHITECTURE, section 5).
+        /// </summary>
         private void ApplyPendingCommands()
         {
             int count = _pendingCommands.Count;
             for (int i = 0; i < count; i++)
                 _pendingCommands.Dequeue().Execute(this);
+            Structures.DeliverEvents();
+            Villagers.DeliverEvents();
         }
     }
 }

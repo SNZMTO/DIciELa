@@ -14,7 +14,6 @@ namespace Diciela.Tests.PlayMode
     /// </summary>
     public sealed class GameRunnerTests
     {
-        private const float WaitSeconds = 2f;
         private const int MaxFrames = 2400;
 
         [UnityTest]
@@ -43,9 +42,15 @@ namespace Diciela.Tests.PlayMode
                 yield return UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode(ScenePaths.GameTest,
                     new LoadSceneParameters(LoadSceneMode.Additive));
 #endif
-                float start = Time.realtimeSinceStartup;
-                for (int frame = 0; frame < MaxFrames && Time.realtimeSinceStartup - start < WaitSeconds; frame++)
+                // La carte se charge, puis part avec son démarrage. La borne compte les images, jamais les secondes : une
+                // machine lente attend plus longtemps.
+                for (int frame = 0; frame < MaxFrames; frame++)
+                {
+                    if (mapWasLoaded && !SceneManager.GetSceneByPath(ScenePaths.GameTest).isLoaded &&
+                        !SceneManager.GetSceneByPath(ScenePaths.MapTest).isLoaded)
+                        break;
                     yield return null;
+                }
 
                 Assert.IsTrue(mapWasLoaded, "La carte de test a fini de se charger avant de partir.");
                 Assert.IsFalse(SceneManager.GetSceneByPath(ScenePaths.GameTest).isLoaded, "La scène de test est quittée.");

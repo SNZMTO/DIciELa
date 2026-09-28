@@ -49,8 +49,12 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   s'inscrit. Une maille porte au plus un objet : c'est la vérité pour « rien ne se chevauche » et pour le passage.
   C# pur. Une maille a un coût d'entrée par façon de se déplacer, en entiers, lu dans les fiches : un piéton paie le
   même prix partout où l'on passe ; une charrette paie plus cher l'herbe que la terre, et la terre que les pavés
-  (GDD, section 9). Une maille peut être bloquée. Un objet posé s'y **trame** : son empreinte (un rectangle tourné) marque les mailles qu'elle couvre,
-  avec un écart minimal entre deux objets.
+  (GDD, section 9). Une maille peut être bloquée. Un objet posé s'y **trame** : son empreinte (un rectangle tourné)
+  prend toute maille qu'elle touche, même en partie (les axes séparateurs : ceux du monde et ceux du rectangle ; une
+  marge d'un dixième de millimètre laisse permis deux bords communs). Une maille libre ne touche donc aucun objet : rien
+  ne se chevauche, aucune fente plus étroite qu'une maille ne se traverse, et deux objets se collent à une maille près.
+  Ne prendre que les mailles dont le milieu tombe dedans laisse deux objets se recouvrir d'une demi-maille, et un
+  piéton passer dans une fente.
 - **Le A\*** : huit voisines ; un pas droit coûte 10, un pas en diagonale 14, multipliés par le coût de la maille où
   l'on entre. **Une diagonale ne coupe jamais un coin** : elle n'est permise que si les deux mailles droites qu'elle
   longe sont franchissables (on ne passe pas entre deux bancs qui se touchent par l'angle). Plusieurs départs,
@@ -91,16 +95,21 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   l'autre, sans allocation par pas. Il garde son trajet avec la version du maillage où il l'a vérifié ; quand elle
   change, il revérifie le reste de sa ligne (le segment en cours en entier, puis les suivants et la maille du but) et
   ne cherche un autre trajet, depuis sa maille, que si une construction la coupe : une pose loin de lui ne coûte rien.
+  Ce trajet part du milieu de sa maille, qu'il a pu dépasser : il rejoint la ligne au point de son premier segment le
+  plus proche de lui, sans sortir de sa maille ; sinon il recule de quelques centimètres avant de repartir.
   Quand une grandeur changera l'allure (une lanterne, une route pour la charrette), elle se relira **à chaque mètre
   parcouru** et à chaque coin, pas seulement aux coins : une lanterne au milieu d'un long segment doit compter.
-- **Sortir d'une construction posée sur soi** : tout droit vers le milieu de la maille libre la plus proche
-  (`NavGrid.TryFindNearestWalkable`), à travers la construction, puis reprendre ce qu'on faisait. La recherche va par
-  anneaux autour de sa maille et s'arrête dès qu'un anneau ne peut plus faire mieux : un milieu de maille de l'anneau r
-  est à au moins r - ½ mailles du point. Sans maille libre à sa portée, on attend que le maillage change, sans
-  chercher de nouveau à chaque pas.
+- **Sortir d'une construction posée sur soi** : tout droit, à travers elle, vers le milieu d'une maille libre qui la
+  **borde** (`WayOutFinder`), jamais à travers une autre ; puis reprendre ce qu'on faisait. Parmi ces mailles, celles
+  du plus grand îlot (les îlots comptent leurs mailles), puis la plus proche : la maille libre la plus proche peut être
+  une poche que la construction vient de fermer, où l'on resterait pour toujours. La recherche va par anneaux autour
+  de sa maille ; la construction est d'un seul tenant, donc un anneau qui n'en a plus aucune maille dit qu'elle est
+  finie. Sans maille libre à son bord, on attend que le maillage change, sans chercher de nouveau à chaque pas ; si le
+  maillage change pendant qu'on sort, on revérifie sa maille de sortie.
 - **Flâner sans dériver** : tirer le point suivant autour de l'endroit où l'on s'est mis à flâner, pas autour de soi ;
   de saut en saut, un tirage autour de soi traverse la carte. Le tirer sur son îlot : il est joignable par
-  construction, et un point sans issue n'est qu'une pause de plus.
+  construction, et un point sans issue n'est qu'une pause de plus. Si l'endroit où l'on flânait est pris, ou coupé de
+  soi, se remettre à flâner autour d'où l'on est : sinon chaque tirage rate, pour toujours.
 - **Les distances par la route** (qui est le plus proche d'un dépôt) : un Dijkstra gardé tant que le maillage ne change
   pas (un numéro de version du maillage, incrémenté à chaque pose ou retrait), quelques jeux de départs gardés à la
   fois ; sinon chaque charrette relance le calcul à chaque tick.

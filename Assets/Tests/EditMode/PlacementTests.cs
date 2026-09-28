@@ -104,10 +104,10 @@ namespace Diciela.Tests.EditMode
         }
 
         [Test]
-        public void ATinyTurnedStructureStillTakesItsCell()
+        public void ATinyTurnedStructureTakesTheCellsItTouches()
         {
-            // Une déco de 0,25 × 0,25 m tournée de 45° et centrée sur un coin de maille n'atteint que 0,18 m de son
-            // centre, et le milieu de maille le plus proche est à 0,35 m : elle prend la maille de son centre.
+            // Une déco de 0,25 × 0,25 m tournée de 45° et centrée sur le coin de quatre mailles n'atteint aucun de leurs
+            // milieux, mais entre un peu dans chacune : elle les prend toutes les quatre.
             StructureDefinition lantern = Keep(TestData.Structure("lanterne", 0.25f, 0.25f, hasDoor: false));
             World world = NewWorld(TestData.SlopedMap(20, 0f));
             Place(world, _cabin, 10f, 10f);
@@ -116,7 +116,10 @@ namespace Diciela.Tests.EditMode
 
             Place(world, lantern, 15f, 5f, 45f);
             Assert.AreEqual(2, world.Structures.All.Count);
-            Assert.AreEqual(2, world.Grid.OccupantAt(new Vector2Int(30, 10)));
+            foreach (Vector2Int cell in new[] { new Vector2Int(29, 9), new Vector2Int(30, 9), new Vector2Int(29, 10),
+                         new Vector2Int(30, 10) })
+                Assert.AreEqual(2, world.Grid.OccupantAt(cell), "La maille " + cell + " est libre.");
+            Assert.AreEqual(0, world.Grid.OccupantAt(new Vector2Int(31, 10)));
         }
 
         [Test]

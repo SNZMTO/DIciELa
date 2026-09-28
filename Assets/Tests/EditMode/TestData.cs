@@ -59,13 +59,14 @@ namespace Diciela.Tests.EditMode
         /// à pauseMax heures de jeu ; sans personnage, que la simulation ne lit pas.
         /// </summary>
         public static VillagerKindDefinition VillagerKind(string id = "chimere", float walk = 1.5f, float radius = 6f,
-            float pauseMin = 0.1f, float pauseMax = 0.3f)
+            float pauseMin = 0.1f, float pauseMax = 0.3f, float minHop = 2f)
         {
             VillagerKindDefinition kind = ScriptableObject.CreateInstance<VillagerKindDefinition>();
             var serialized = new SerializedObject(kind);
             Property(serialized, "_id").stringValue = id;
             Property(serialized, "_walkMetersPerSecond").floatValue = walk;
             Property(serialized, "_wanderRadiusMeters").floatValue = radius;
+            Property(serialized, "_wanderMinHopMeters").floatValue = minHop;
             Property(serialized, "_wanderPauseMinHours").floatValue = pauseMin;
             Property(serialized, "_wanderPauseMaxHours").floatValue = pauseMax;
             serialized.ApplyModifiedPropertiesWithoutUndo();

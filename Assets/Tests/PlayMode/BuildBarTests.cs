@@ -18,7 +18,6 @@ namespace Diciela.Tests.PlayMode
     /// </summary>
     public sealed class BuildBarTests
     {
-        private const float WaitSeconds = 3f;
         private const int MaxFrames = 3600;
 
         [UnityTest]
@@ -31,8 +30,8 @@ namespace Diciela.Tests.PlayMode
 #endif
             BuildBar bar = null;
             VisualElement structures = null;
-            float start = Time.realtimeSinceStartup;
-            for (int frame = 0; frame < MaxFrames && Time.realtimeSinceStartup - start < WaitSeconds; frame++)
+            // La borne compte les images, jamais les secondes : une machine lente attend plus longtemps.
+            for (int frame = 0; frame < MaxFrames; frame++)
             {
                 yield return null;
                 bar = Object.FindAnyObjectByType<BuildBar>();

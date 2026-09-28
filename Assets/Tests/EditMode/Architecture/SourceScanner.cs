@@ -5,8 +5,9 @@ using System.Text.RegularExpressions;
 namespace Diciela.Tests.EditMode.Architecture
 {
     /// <summary>
-    /// Cherche dans le code de la simulation ce qu'elle n'a pas le droit d'utiliser (ARCHITECTURE, section 12).
-    /// Les commentaires et les chaînes sont retirés avant la recherche.
+    /// Cherche dans le code de la simulation ce qu'elle n'a pas le droit d'utiliser (ARCHITECTURE, sections 9 et 12).
+    /// Les commentaires et les chaînes sont retirés avant la recherche. « == null » sur une fiche échappe à la
+    /// recherche : le texte ne dit pas le type de ce qu'on compare.
     /// </summary>
     internal static class SourceScanner
     {
@@ -21,6 +22,9 @@ namespace Diciela.Tests.EditMode.Architecture
             ("Resources", new Regex(@"\bResources\s*\.")),
             ("UnityEditor", new Regex(@"\bUnityEditor\b")),
             ("Newtonsoft (réservé à la sauvegarde)", new Regex(@"\bNewtonsoft\b")),
+            ("AnimationCurve ou Gradient (une fiche ne donne que des nombres)",
+                new Regex(@"\b(AnimationCurve|Gradient)\b")),
+            (".name (l'identifiant d'une fiche est Id)", new Regex(@"\.name\b")),
             ("champ statique modifiable", new Regex(
                 @"\bstatic\s+(?!readonly\b|class\b|void\b|extern\b|partial\b)(?:[\w<>\[\],.?]+\s+)+\w+\s*(=(?!>)|;)")),
         };

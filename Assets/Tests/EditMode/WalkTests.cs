@@ -67,6 +67,32 @@ namespace Diciela.Tests.EditMode
         }
 
         [Test]
+        public void WhenHerTrajetIsRedoneSheGoesOnWithoutSteppingBack()
+        {
+            // Un pas après son départ, elle est à 15 cm du milieu de sa première maille, encore dedans (elle fait 50 cm).
+            // Le mur du test d'avant coupe sa ligne : le nouveau trajet part du milieu de cette maille. Elle doit repartir
+            // vers l'avant de sa nouvelle ligne, jamais revenir d'abord à son départ.
+            World world = _test.World();
+            Villager chimera = TestChimera.StartALongWalk(world);
+            Vector2 from = chimera.Position;
+            Vector2 to = Last(chimera.Path.Corners);
+            world.Step();
+            Assert.AreEqual(world.Grid.CellOf(from), world.Grid.CellOf(chimera.Position));
+
+            Vector2 along = (to - from).normalized;
+            float angle = Mathf.Atan2(along.x, along.y) * Mathf.Rad2Deg;
+            world.Submit(new PlaceStructureCommand(_test.Block(2.5f, 1f), new Placement((from + to) * 0.5f, angle)));
+            world.Step();
+
+            Assert.AreEqual(1, world.Structures.All.Count, "Le mur doit se poser.");
+            Assert.IsTrue(chimera.IsWalking);
+            IReadOnlyList<Vector2> corners = chimera.Path.Corners;
+            Assert.AreEqual(from, corners[0], "Le nouveau trajet part du milieu de sa maille.");
+            float ahead = Vector2.Dot(chimera.Position - corners[0], corners[1] - corners[0]);
+            Assert.Greater(ahead, 0.001f, "Elle revient au départ de sa nouvelle ligne.");
+        }
+
+        [Test]
         public void AGhostAwayFromHerLineChangesNothing()
         {
             // Cinq pas après son départ, elle a quitté sa première maille : un nouveau trajet partirait d'ailleurs.

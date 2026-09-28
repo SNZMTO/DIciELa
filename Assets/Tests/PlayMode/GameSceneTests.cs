@@ -15,7 +15,6 @@ namespace Diciela.Tests.PlayMode
     /// </summary>
     public sealed class GameSceneTests
     {
-        private const float RunSeconds = 1f;
         private const int MaxFrames = 1200;
 
         [UnityTest]
@@ -27,9 +26,18 @@ namespace Diciela.Tests.PlayMode
             yield return UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode(ScenePaths.GameTest,
                 new LoadSceneParameters(LoadSceneMode.Additive));
 #endif
-            float start = Time.realtimeSinceStartup;
-            for (int frame = 0; frame < MaxFrames && Time.realtimeSinceStartup - start < RunSeconds; frame++)
+            // Elle tourne jusqu'à ce que sa carte soit chargée et que le monde ait joué un pas : celui où la Chimère naît.
+            // La borne compte les images, jamais les secondes : une machine lente attend plus longtemps.
+            GameRunner runner = null;
+            for (int frame = 0; frame < MaxFrames; frame++)
+            {
+                if (runner == null)
+                    runner = Object.FindAnyObjectByType<GameRunner>();
+                if (SceneManager.GetSceneByPath(ScenePaths.MapTest).isLoaded && runner != null && runner.World != null &&
+                    runner.World.Villagers.Chimera != null)
+                    break;
                 yield return null;
+            }
 
             Assert.IsTrue(SceneManager.GetSceneByPath(ScenePaths.MapTest).isLoaded, "La carte de test doit être chargée.");
             Assert.IsFalse(SceneManager.GetSceneByPath(ScenePaths.Map).isLoaded, "La vraie carte ne doit jamais l'être.");

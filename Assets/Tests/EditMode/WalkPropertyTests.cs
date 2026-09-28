@@ -20,7 +20,7 @@ namespace Diciela.Tests.EditMode
     {
         private const int StepsPerGround = 1500;
 
-        // Sortir d'un fantôme : 20 m au plus à 15 cm par pas, avec de la marge.
+        // Sortir d'un fantôme : sa diagonale au plus (moins de 5 m ici), à 15 cm par pas, avec de la marge.
         private const int MaxStepsCovered = 200;
 
         private TestChimera _test;
@@ -112,7 +112,6 @@ namespace Diciela.Tests.EditMode
             World world = _test.World(size);
             Villager chimera = world.Villagers.Chimera;
             NavGrid grid = world.Grid;
-            int wayOutRings = grid.Metrics.CellCount(20f);
             int covered = 0;
             int stillWalking = 0;
 
@@ -130,13 +129,13 @@ namespace Diciela.Tests.EditMode
                 if (chimera.IsWalking && startFree && !endFree)
                     Assert.Fail("Elle entre dans un fantôme, " + Where(seed, step, chimera));
 
-                // Posée sous un fantôme, elle en sort, sauf si aucune maille libre n'est à sa portée.
+                // Posée sous un fantôme, elle en sort, sauf si aucune maille libre ne le borde.
                 if (covered > 0 && endFree)
                     _walkOuts++;
                 if (chimera.Position != chimera.PreviousPosition)
                     _moves++;
                 covered = endFree ? 0 : covered + 1;
-                if (covered > MaxStepsCovered && grid.TryFindNearestWalkable(chimera.Position, wayOutRings, out _))
+                if (covered > MaxStepsCovered && AFreeCellBorders(grid, grid.OccupantAt(grid.CellOf(chimera.Position))))
                     Assert.Fail("Elle ne sort pas du fantôme, " + Where(seed, step, chimera));
 
                 // En marche, elle avance à chaque pas ; seul le pas du départ la laisse sur place.
@@ -144,6 +143,27 @@ namespace Diciela.Tests.EditMode
                 if (stillWalking > 1)
                     Assert.Fail("Elle marche sans avancer, " + Where(seed, step, chimera));
             }
+        }
+
+        /// <summary>L'oracle lent : vrai si une maille libre touche par un côté une maille de cet occupant.</summary>
+        private static bool AFreeCellBorders(NavGrid grid, int occupant)
+        {
+            var sides = new[] { Vector2Int.left, Vector2Int.right, Vector2Int.down, Vector2Int.up };
+            for (int x = 0; x < grid.Width; x++)
+            {
+                for (int y = 0; y < grid.Depth; y++)
+                {
+                    var cell = new Vector2Int(x, y);
+                    if (!grid.IsWalkable(cell))
+                        continue;
+                    foreach (Vector2Int side in sides)
+                    {
+                        if (grid.Contains(cell + side) && grid.OccupantAt(cell + side) == occupant)
+                            return true;
+                    }
+                }
+            }
+            return false;
         }
 
         private static string Where(int seed, int step, Villager chimera)

@@ -19,6 +19,10 @@ namespace Diciela.Data
                  "s'est mis à flâner (GDD, section 7).")]
         [SerializeField, Min(1f)] private float _wanderRadiusMeters = 6f;
 
+        [Tooltip("Un point de flânerie est à au moins cette distance de soi, en mètres : plus près, le saut ne se verrait " +
+                 "pas, comme un tremblement (GDD, section 7).")]
+        [SerializeField, Min(0f)] private float _wanderMinHopMeters = 2f;
+
         [Tooltip("La pause la plus courte entre deux points de flânerie, en heures de jeu.")]
         [SerializeField, Min(0f)] private float _wanderPauseMinHours = 0.1f;
 
@@ -34,6 +38,7 @@ namespace Diciela.Data
         public string Id => _id;
         public float WalkMetersPerSecond => _walkMetersPerSecond;
         public float WanderRadiusMeters => _wanderRadiusMeters;
+        public float WanderMinHopMeters => _wanderMinHopMeters;
         public float WanderPauseMinHours => _wanderPauseMinHours;
         public float WanderPauseMaxHours => _wanderPauseMaxHours;
         public GameObject Model => _model;

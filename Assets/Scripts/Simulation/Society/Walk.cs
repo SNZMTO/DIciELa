@@ -9,8 +9,9 @@ namespace Diciela.Simulation.Society
     /// La marche d'un habitant vers une maille (SAVOIR, 2.1) : il suit la ligne tendue de son trajet, et l'avancement se
     /// compte en distance. Le trajet se garde avec la version du maillage où il a été vérifié : quand elle change, on
     /// revérifie le reste de la ligne, et l'on ne cherche un autre trajet que si une construction la coupe, but compris.
-    /// Issue d'échec : le but n'est plus joignable, et la marche est perdue. Le trajet et ses listes se gardent d'une
-    /// marche à l'autre : marcher n'alloue rien.
+    /// La ligne part du milieu de la maille où il se trouve, qu'il a pu dépasser : il la rejoint sans reculer. Issue
+    /// d'échec : le but n'est plus joignable, et la marche est perdue. Le trajet et ses listes se gardent d'une marche à
+    /// l'autre : marcher n'alloue rien.
     /// </summary>
     internal sealed class Walk
     {
@@ -20,6 +21,7 @@ namespace Diciela.Simulation.Society
         private readonly Vector2Int[] _start = new Vector2Int[1];
         private readonly Vector2Int[] _goal = new Vector2Int[1];
         private int _next;
+        private Vector2 _join;
         private int _checkedVersion;
 
         public Walk(NavGrid grid, PathFinder finder)
@@ -54,10 +56,31 @@ namespace Diciela.Simulation.Society
         {
             _start[0] = _grid.CellOf(from);
             _checkedVersion = _grid.Version;
-            // La ligne part du milieu de la maille où il se trouve, à quelques centimètres de lui.
             _next = 0;
             IsWalking = _finder.TryFindPath(_start, _goal, _path);
+            if (IsWalking)
+                _join = JoinPoint(from);
             return IsWalking;
+        }
+
+        /// <summary>
+        /// Où il rejoint sa ligne, qui part du milieu de sa maille : au point de son premier segment le plus proche de
+        /// lui, sans sortir de sa maille. Il ne recule donc pas vers ce milieu s'il l'a dépassé, et ne quitte jamais le
+        /// sol libre : sa maille, puis la ligne vérifiée.
+        /// </summary>
+        private Vector2 JoinPoint(Vector2 from)
+        {
+            IReadOnlyList<Vector2> corners = _path.Corners;
+            Vector2 start = corners[0];
+            if (corners.Count < 2)
+                return start;
+            Vector2 segment = corners[1] - start;
+            float length = segment.magnitude;
+            Vector2 along = segment / length;
+            // Le segment quitte la maille à une demi-maille de son milieu, sur l'axe où il avance le plus.
+            float inCell = 0.5f * _grid.Metrics.CellSize / Mathf.Max(Mathf.Abs(along.x), Mathf.Abs(along.y));
+            float reach = Mathf.Clamp(Vector2.Dot(from - start, along), 0f, Mathf.Min(inCell, length));
+            return start + along * reach;
         }
 
         /// <summary>Cesse de marcher, là où il est.</summary>
@@ -83,10 +106,11 @@ namespace Diciela.Simulation.Society
 
             IReadOnlyList<Vector2> corners = _path.Corners;
             float left = meters;
-            // Chaque tour atteint un coin, ou finit le pas au milieu d'un segment : au plus un tour par coin.
+            // Chaque tour atteint un coin, ou finit le pas au milieu d'un segment : au plus un tour par coin. Le premier
+            // coin visé est le point où il rejoint sa ligne.
             while (_next < corners.Count)
             {
-                Vector2 corner = corners[_next];
+                Vector2 corner = _next == 0 ? _join : corners[_next];
                 float distance = Vector2.Distance(position, corner);
                 if (distance > left)
                 {

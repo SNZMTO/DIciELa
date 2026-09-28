@@ -29,6 +29,7 @@ namespace Diciela.Game
             _world.Structures.StructurePlaced += OnStructurePlaced;
             _world.Structures.PlacementRefused += OnPlacementRefused;
             _world.Villagers.VillagerArrived += OnVillagerArrived;
+            _world.Villagers.ChimeraRefused += OnChimeraRefused;
             Relief relief = _world.Map.Relief;
             Debug.Log(Prefix + "monde créé, carte de " + relief.SizeX.ToString("0") + " × " + relief.SizeZ.ToString("0") +
                       " m (relief de " + relief.SamplesX + " × " + relief.SamplesZ + " points), " +
@@ -43,6 +44,7 @@ namespace Diciela.Game
             _world.Structures.StructurePlaced -= OnStructurePlaced;
             _world.Structures.PlacementRefused -= OnPlacementRefused;
             _world.Villagers.VillagerArrived -= OnVillagerArrived;
+            _world.Villagers.ChimeraRefused -= OnChimeraRefused;
             foreach (Villager villager in _world.Villagers.All)
                 Debug.Log(Prefix + Describe(villager) + " est en " + villager.Position + ".");
             Debug.Log(Prefix + "monde arrêté après " + _world.Clock.StepCount + " pas, " + Describe(_world.Clock) + ".");
@@ -51,6 +53,11 @@ namespace Diciela.Game
         private static void OnVillagerArrived(Villager villager)
         {
             Debug.Log(Prefix + Describe(villager) + " arrive en " + villager.Position + ".");
+        }
+
+        private static void OnChimeraRefused(VillagerKindDefinition kind)
+        {
+            Debug.Log(Prefix + "création de la Chimère refusée (" + kind.Id + ") : elle existe déjà.");
         }
 
         private static string Describe(Villager villager)
