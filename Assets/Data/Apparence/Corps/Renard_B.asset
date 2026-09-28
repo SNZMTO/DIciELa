@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 151263f3fcf6e1e40ab8cc1a8f2f5605, type: 3}
+  m_Name: Renard_B
+  m_EditorClassIdentifier: Diciela.Data::Diciela.Data.BodyDefinition
+  _id: renard_b
+  _nameKey: corps.renard_b
+  _model: {fileID: 3783256465832989184, guid: 1617174c7ca255244963f78b7069a5f9, type: 3}
+  _palette: {fileID: 11400000, guid: 8651efd2a2b9aed40be9bef93b6a65bf, type: 2}

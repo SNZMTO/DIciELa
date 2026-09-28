@@ -15,6 +15,21 @@
 
 ## Les captures
 
+### 28/09/2026 — étape 12 : l'écran de création
+
+Une partie s'ouvre maintenant sur l'écran de création : un panneau à droite, la ville derrière, la Chimère à venir
+debout au point d'arrivée, tournée vers la caméra. Une ligne par choix, et des flèches pour en faire le tour : le corps
+(seize), la couleur (douze), puis la queue, les oreilles, le museau, la tête, le visage, le cou, le dos et la ceinture,
+« aucun » en tête. Le temps attend : « C'est parti » (ou Entrée) la fait naître, la barre paraît et la vue recule. La
+planche de la Chimère (`DICIELA/Album/Planche de la Chimère, chaque pièce sur un corps`) montre les 39 pièces, chacune
+sur un corps ; les chapeaux y sont redescendus sur les têtes, après une première place bien trop haute.
+
+![L'écran de création, au lancement d'une partie](Album/2026-09-28_etape-12_ecran-de-creation.jpg)
+
+![« C'est parti » : la Chimère arrive, la barre paraît, la vue recule](Album/2026-09-28_etape-12_vue-de-depart.jpg)
+
+![La planche de la Chimère : chaque pièce sur un corps](Album/2026-09-28_etape-12_planche-de-la-chimere.jpg)
+
 ### 28/09/2026 — étape 11 : la tente
 
 La vue de départ ne propose plus qu'une chose : la barre n'offre que la tente, tant que la Chimère n'a pas de logis.

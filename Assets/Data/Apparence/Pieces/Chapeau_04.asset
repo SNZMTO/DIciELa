@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c23e5ab7bd599064c84c8d05d1e712db, type: 3}
+  m_Name: Chapeau_04
+  m_EditorClassIdentifier: Diciela.Data::Diciela.Data.AttachmentDefinition
+  _id: chapeau_04
+  _nameKey: piece.chapeau_04
+  _slot: {fileID: 11400000, guid: 0a99e833d6253834caa80327a81c03cd, type: 2}
+  _model: {fileID: 6392995574433485122, guid: 893e97f4ac184f94aa8818d0892467cc, type: 3}
+  _anchor: {x: 0, y: 1.7264524, z: -0.012833104}

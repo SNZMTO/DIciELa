@@ -4,7 +4,8 @@ namespace Diciela.Data
 {
     /// <summary>
     /// La fiche d'une sorte d'habitant : ordinaire, maître ou la Chimère (ARCHITECTURE, section 9). Ce qui distingue
-    /// une sorte d'une autre est ici, jamais dans le code par son nom : sa marche, sa flânerie, son personnage.
+    /// une sorte d'une autre est ici, jamais dans le code par son nom : sa marche, sa flânerie, la vitesse à laquelle il
+    /// se tourne à l'écran. Son allure est à chaque habitant : son apparence (corps, couleur, pièces).
     /// </summary>
     [CreateAssetMenu(menuName = "DICIELA/Sorte d'habitant", fileName = "SorteHabitant")]
     public sealed class VillagerKindDefinition : ScriptableObject
@@ -29,9 +30,6 @@ namespace Diciela.Data
         [Tooltip("La pause la plus longue entre deux points de flânerie, en heures de jeu.")]
         [SerializeField, Min(0f)] private float _wanderPauseMaxHours = 0.3f;
 
-        [Tooltip("Le personnage du pack qui la montre, tel quel. La vue s'en sert ; la simulation, jamais.")]
-        [SerializeField] private GameObject _model;
-
         [Tooltip("La vitesse à laquelle le personnage se tourne vers où il va, à l'écran, en degrés par seconde.")]
         [SerializeField, Min(1f)] private float _turnDegreesPerSecond = 540f;
 
@@ -41,7 +39,6 @@ namespace Diciela.Data
         public float WanderMinHopMeters => _wanderMinHopMeters;
         public float WanderPauseMinHours => _wanderPauseMinHours;
         public float WanderPauseMaxHours => _wanderPauseMaxHours;
-        public GameObject Model => _model;
         public float TurnDegreesPerSecond => _turnDegreesPerSecond;
     }
 }

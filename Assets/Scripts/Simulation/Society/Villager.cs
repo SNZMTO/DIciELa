@@ -7,12 +7,12 @@ using UnityEngine;
 namespace Diciela.Simulation.Society
 {
     /// <summary>
-    /// Un habitant (ARCHITECTURE, section 4) : sa sorte, sa place et ce qu'il fait. Sa place est sa position, en mètres
-    /// sur le plan XZ ; il garde aussi celle du pas d'avant, pour que la vue le montre entre les deux. Sans poste, il
-    /// flâne ; envoyé dormir, il va à son lit, s'y couche et n'en bouge plus jusqu'à ce qu'on le réveille. Une
-    /// construction posée sur lui ne l'arrête pas : il en sort à pied, tout droit, par la maille libre qui la borde du
-    /// côté du plus grand îlot (décisions 73 et 88), puis reprend ce qu'il faisait. Chaque pas tire son hasard de son
-    /// numéro et du numéro du pas : les mêmes ordres rejouent la même partie.
+    /// Un habitant (ARCHITECTURE, section 4) : sa sorte, son apparence, sa place et ce qu'il fait. Sa place est sa
+    /// position, en mètres sur le plan XZ ; il garde aussi celle du pas d'avant, pour que la vue le montre entre les
+    /// deux. Sans poste, il flâne ; envoyé dormir, il va à son lit, s'y couche et n'en bouge plus jusqu'à ce qu'on le
+    /// réveille. Une construction posée sur lui ne l'arrête pas : il en sort à pied, tout droit, par la maille libre qui
+    /// la borde du côté du plus grand îlot (décisions 73 et 88), puis reprend ce qu'il faisait. Chaque pas tire son
+    /// hasard de son numéro et du numéro du pas : les mêmes ordres rejouent la même partie.
     /// </summary>
     public sealed class Villager
     {
@@ -30,11 +30,13 @@ namespace Diciela.Simulation.Society
         // La version du maillage où il a cherché sa sortie : enfermé, il attend qu'elle change ; en sortant, il revérifie.
         private int _wayOutVersion;
 
-        internal Villager(int id, VillagerKindDefinition kind, Vector2 position, NavGrid grid, Islands islands,
-            PathFinder finder, Clock clock)
+        internal Villager(int id, VillagerKindDefinition kind, Appearance appearance, Vector2 position, NavGrid grid,
+            Islands islands, PathFinder finder, Clock clock)
         {
             if (ReferenceEquals(kind, null))
                 throw new ArgumentNullException(nameof(kind));
+            if (ReferenceEquals(appearance, null))
+                throw new ArgumentNullException(nameof(appearance));
             if (ReferenceEquals(grid, null))
                 throw new ArgumentNullException(nameof(grid));
             if (ReferenceEquals(islands, null))
@@ -46,6 +48,7 @@ namespace Diciela.Simulation.Society
 
             Id = id;
             Kind = kind;
+            Appearance = appearance;
             Position = position;
             PreviousPosition = position;
             _grid = grid;
@@ -64,6 +67,9 @@ namespace Diciela.Simulation.Society
         public int Id { get; }
 
         public VillagerKindDefinition Kind { get; }
+
+        /// <summary>Son corps, sa couleur et ses pièces : la vue l'habille ainsi.</summary>
+        public Appearance Appearance { get; }
 
         /// <summary>Sa position au dernier pas, en mètres sur le plan XZ.</summary>
         public Vector2 Position { get; private set; }

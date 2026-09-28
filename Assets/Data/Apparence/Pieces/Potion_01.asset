@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c23e5ab7bd599064c84c8d05d1e712db, type: 3}
+  m_Name: Potion_01
+  m_EditorClassIdentifier: Diciela.Data::Diciela.Data.AttachmentDefinition
+  _id: potion_01
+  _nameKey: piece.potion_01
+  _slot: {fileID: 11400000, guid: ceded7acf4710b24aa2c9bbebe8850d5, type: 2}
+  _model: {fileID: 3529348415535276901, guid: 1c2c8046132bf864a9e2e2a29d727235, type: 3}
+  _anchor: {x: 8.881784e-18, y: 0.5528884, z: 0}
