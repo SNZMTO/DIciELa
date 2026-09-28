@@ -1,7 +1,7 @@
 # DICIELA — état actuel
 
-**Branche** : `etape-10-chimere-marche`, poussée, **pas fusionnée** : elle attend ton `/code-review ultra` (décision 77).
-Étapes 6 à 10 finies. EditMode 105/105, PlayMode 65/65, Play court sans erreur. `main` est à la fin de 9b.
+**Branche** : `main`, à jour. **Étapes 6 à 10 finies**, l'étape 10 relue par `/code-review ultra` (deux remarques
+mineures, corrigées). EditMode 106/106, PlayMode 65/65, Play court sans erreur.
 
 **En jeu** : la Chimère naît au point d'arrivée de la carte (au centre tant que tu n'en poses pas), et la vue part sur
 elle (décisions 82 à 86). Sans poste, elle flâne : un point libre à 6 m au plus, une pause de 3 à 9 s. Un fantôme qui
@@ -17,12 +17,14 @@ montrent), Ctrl+S, ferme `Carte`, **DICIELA > Jouer** : elle et la vue partent d
 **À toi** (ma reco est appliquée) : son personnage en attendant sa création ; tu le changes dans
 `Assets/Data/Habitants/Chimere.asset` (tout animal du pack convient : ils regardent tous vers +z).
 
-**Prochaine étape** : ta revue `/code-review ultra` sur `etape-10-chimere-marche` (facturée à part, lancée par toi).
-Je trie ses trouvailles avec toi, je corrige (chaque correction avec son test), je vérifie, puis je fusionne dans
-`main`. Ensuite, le ménage « ultracode » (décision 77) : un agent par angle, chaque trouvaille revérifiée, plafond de
-1,5 M jetons ; rien ne part sans que tu écrives « ultracode » et acceptes son plan. Puis sa création et la tente.
+**Prochaine étape : le ménage « ultracode »** (décision 77) : une revue de tout le projet, un agent par angle (bugs de
+la simulation, écarts entre documents et code, règles d'architecture, tests faibles), chaque trouvaille revérifiée par
+un autre, plafond de 1,5 M jetons ; les corrections codées ensuite ici, chacune avec son test. Rien ne part sans que tu
+écrives « ultracode » et acceptes son plan. Trois points connus de la marche l'attendent : le petit recul après un
+trajet refait ; la sortie d'un fantôme qui peut viser une poche fermée ; un second ordre « créer la Chimère » muet.
+Ensuite : sa création et la tente.
 
 **Prompt de la session suivante**
 
-> Lis CLAUDE.md et Docs/ETAT.md. Voici les trouvailles de `/code-review ultra` sur `etape-10-chimere-marche` :
-> [colle-les]. Trie-les avec moi, corrige, vérifie, fusionne ; puis montre-moi le plan du ménage « ultracode ».
+> Lis CLAUDE.md et Docs/ETAT.md. ultracode : montre-moi le plan du ménage (angles, agents, plafond), attends mon
+> accord, lance-le, puis corrige ses trouvailles avec moi.
