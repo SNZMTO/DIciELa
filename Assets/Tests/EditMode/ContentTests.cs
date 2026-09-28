@@ -11,7 +11,7 @@ namespace Diciela.Tests.EditMode
     /// <summary>
     /// Le contenu du jeu, lu dans le projet sans rien écrire (ARCHITECTURE, section 12) : un seul catalogue, qui mène à
     /// chaque fiche de construction une seule fois ; des identifiants uniques ; chaque texte cité a sa clé, non vide,
-    /// dans chaque langue de la table ; chaque modèle préparé suit sa fiche.
+    /// dans chaque langue de la table ; chaque modèle préparé suit sa fiche. La Chimère a ses tests à part.
     /// </summary>
     public sealed class ContentTests
     {
@@ -128,7 +128,8 @@ namespace Diciela.Tests.EditMode
             bool Fits(float model, float fiche) => model <= fiche + 0.001f && model >= fiche - Centimeter - 0.001f;
         }
 
-        private static T LoadSingle<T>() where T : UnityEngine.Object
+        /// <summary>La seule fiche de ce type dans le projet ; il y en a une, et une seule.</summary>
+        internal static T LoadSingle<T>() where T : UnityEngine.Object
         {
             string[] guids = AssetDatabase.FindAssets("t:" + typeof(T).Name);
             Assert.AreEqual(1, guids.Length, "Il faut une seule fiche " + typeof(T).Name + " dans le projet.");

@@ -51,7 +51,12 @@ jamais un bâtiment ni un décor de sa propre initiative ; les choix d'art sont 
   laveur, gobelin), museau (`Snout_01`), cheveux, barbes, chapeaux (`Hat_01` à `08`), capes, sacs, lunettes, monocle,
   couronne, boucles d'oreilles, fleur, écharpe…
 - Tous les personnages sont **riggés** (SkinnedMeshRenderer) mais **le pack n'a aucune animation** : un pack
-  d'animations compatible est à acheter par le développeur.
+  d'animations compatible est à acheter par le développeur. Posés tels quels, ils restent bras écartés (leur Animator
+  n'a pas de contrôleur).
+- **Un personnage a son origine aux pieds et regarde vers +z** : dans la pose d'origine, les yeux sont 31 cm devant la
+  tête, les orteils devant les talons (mesuré sur les os, test `ChimeraContentTests`). On les pose donc sans correction.
+- **Chaque prefab d'animal porte les seize corps d'animaux**, un seul actif (celui de son nom), sur le même squelette :
+  changer d'animal, c'est activer un autre enfant.
 - **Les corps sont d'un seul tenant** : pas de tête d'une bête sur le corps d'une autre sans retoucher les modèles.
 
 ## Ce que le pack a, et ce qui lui manque

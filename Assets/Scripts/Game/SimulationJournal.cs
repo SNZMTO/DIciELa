@@ -3,6 +3,7 @@ using Diciela.Data;
 using Diciela.Simulation;
 using Diciela.Simulation.Core;
 using Diciela.Simulation.Land;
+using Diciela.Simulation.Society;
 using UnityEngine;
 
 namespace Diciela.Game
@@ -27,20 +28,34 @@ namespace Diciela.Game
             _world.Clock.PhaseChanged += OnPhaseChanged;
             _world.Structures.StructurePlaced += OnStructurePlaced;
             _world.Structures.PlacementRefused += OnPlacementRefused;
+            _world.Villagers.VillagerArrived += OnVillagerArrived;
             Relief relief = _world.Map.Relief;
             Debug.Log(Prefix + "monde créé, carte de " + relief.SizeX.ToString("0") + " × " + relief.SizeZ.ToString("0") +
                       " m (relief de " + relief.SamplesX + " × " + relief.SamplesZ + " points), " +
                       Describe(_world.Clock) + ".");
         }
 
-        /// <summary>Se désabonne du monde et écrit où il en était.</summary>
+        /// <summary>Se désabonne du monde et écrit où il en était, et où sont ses habitants.</summary>
         public void Stop()
         {
             _world.Clock.DayStarted -= OnDayStarted;
             _world.Clock.PhaseChanged -= OnPhaseChanged;
             _world.Structures.StructurePlaced -= OnStructurePlaced;
             _world.Structures.PlacementRefused -= OnPlacementRefused;
+            _world.Villagers.VillagerArrived -= OnVillagerArrived;
+            foreach (Villager villager in _world.Villagers.All)
+                Debug.Log(Prefix + Describe(villager) + " est en " + villager.Position + ".");
             Debug.Log(Prefix + "monde arrêté après " + _world.Clock.StepCount + " pas, " + Describe(_world.Clock) + ".");
+        }
+
+        private static void OnVillagerArrived(Villager villager)
+        {
+            Debug.Log(Prefix + Describe(villager) + " arrive en " + villager.Position + ".");
+        }
+
+        private static string Describe(Villager villager)
+        {
+            return "l'habitant n° " + villager.Id + " (" + villager.Kind.Id + ")";
         }
 
         private static void OnDayStarted(int day)

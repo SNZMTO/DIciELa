@@ -19,6 +19,7 @@ namespace Diciela.EditorTools
     public static class GameSceneBuilder
     {
         private const string StartupObjectName = "Démarrage";
+        private const string VillagersObjectName = "Habitants";
 
         [MenuItem("DICIELA/Scènes/Monter les scènes")]
         public static void BuildScenes()
@@ -81,6 +82,8 @@ namespace Diciela.EditorTools
                 EditorAssets.AssignIfMissing(runner, "_cameraControls", rig.GetComponent<CameraControls>());
             }
             PlacementBuilder.EnsureIn(scene, runner);
+            EditorAssets.AssignIfMissing(runner, "_villagerViews",
+                EditorAssets.FindOrCreate<VillagerViews>(scene, VillagersObjectName));
             InterfaceBuilder.EnsureIn(scene, runner);
             EditorSceneManager.SaveScene(scene, scenePath);
         }

@@ -47,16 +47,19 @@ namespace Diciela.View
             _camera = GetComponent<Camera>();
         }
 
-        /// <summary>Montre la carte depuis son centre, à la distance de départ. Appelé par le démarrage.</summary>
-        public void Show(Relief relief)
+        /// <summary>
+        /// Montre la carte depuis son point d'arrivée, où apparaît la Chimère, à la distance de départ. Appelé par le
+        /// démarrage.
+        /// </summary>
+        public void Show(MapDescription map)
         {
-            if (ReferenceEquals(relief, null))
-                throw new ArgumentNullException(nameof(relief));
+            if (ReferenceEquals(map, null))
+                throw new ArgumentNullException(nameof(map));
             if (_settings == null)
                 throw new InvalidOperationException("La caméra n'a pas sa fiche de réglages.");
 
-            _relief = relief;
-            _pivot = new Vector2(relief.SizeX / 2f, relief.SizeZ / 2f);
+            _relief = map.Relief;
+            _pivot = map.ArrivalPoint;
             _yawDegrees = 0f;
             _tiltDegrees = 0f;
             _targetDistance = Mathf.Clamp(_settings.StartDistance, _settings.NearDistance, _settings.FarDistance);

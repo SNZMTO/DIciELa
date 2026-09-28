@@ -58,7 +58,7 @@ namespace Diciela.Tests.EditMode
             World world = CabinWorld();
 
             Assert.IsTrue(world.PathFinder.TryFindPath(South, North, _path));
-            string fault = SlowPaths.Judge(Occupied(world.Grid), South, North, _path.Cells, out int cost);
+            string fault = SlowPaths.Judge(TestGrids.Occupied(world.Grid), South, North, _path.Cells, out int cost);
             Assert.IsNull(fault, fault);
             Assert.AreEqual(272, cost);
         }
@@ -164,18 +164,6 @@ namespace Diciela.Tests.EditMode
             foreach (Vector2 corner in _path.Corners)
                 text.Append(' ').Append(corner.ToString("F3"));
             return text.ToString();
-        }
-
-        /// <summary>Les mailles prises du maillage, pour juger un trajet autour d'autre chose que des blocs dessinés.</summary>
-        private static bool[,] Occupied(NavGrid grid)
-        {
-            var occupied = new bool[grid.Width, grid.Depth];
-            for (int x = 0; x < grid.Width; x++)
-            {
-                for (int y = 0; y < grid.Depth; y++)
-                    occupied[x, y] = grid.OccupantAt(new Vector2Int(x, y)) != 0;
-            }
-            return occupied;
         }
     }
 }

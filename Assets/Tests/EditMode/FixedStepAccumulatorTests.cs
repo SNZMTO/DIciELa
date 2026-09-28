@@ -44,6 +44,20 @@ namespace Diciela.Tests.EditMode
         }
 
         [Test]
+        public void TheFractionOfTheNextStepIsWhatRemains()
+        {
+            // 0,25 s : deux pas joués, 0,05 s en attente, la moitié du pas suivant. Le retard abandonné ne laisse rien.
+            var accumulator = new FixedStepAccumulator(_settings);
+            Assert.AreEqual(0f, accumulator.StepFraction);
+
+            Assert.AreEqual(2, accumulator.Accumulate(0.25));
+            Assert.AreEqual(0.5f, accumulator.StepFraction, 1e-4f);
+
+            Assert.AreEqual(10, accumulator.Accumulate(5.0));
+            Assert.AreEqual(0f, accumulator.StepFraction);
+        }
+
+        [Test]
         public void NeverPlaysMoreThanTheBoundAndDropsTheBacklog()
         {
             var accumulator = new FixedStepAccumulator(_settings);

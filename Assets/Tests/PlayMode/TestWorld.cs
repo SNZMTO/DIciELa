@@ -44,7 +44,7 @@ namespace Diciela.Tests.PlayMode
             Fill(Preview, "_settings", Settings);
             Fill(Views, "_settings", Settings);
 #endif
-            rig.Show(map.Relief);
+            rig.Show(map);
             Camera = rig.Camera;
             Views.Show(World.Structures, map.Relief);
             Tool = new PlacementTool(World, Camera, Preview, Settings);
