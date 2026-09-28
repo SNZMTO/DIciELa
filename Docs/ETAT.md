@@ -1,28 +1,30 @@
 # DICIELA — état actuel
 
-**Branche** : `menage-4-revue`, fusionnée dans `main`. **Étapes 6 à 8b finies**, puis une revue complète du code et de
-la caméra (décisions 65 à 72) : les bugs de la pose corrigés, la caméra retouchée, les gestes testés.
+**Branche** : `main`, à jour. **Étapes 6 à 8b finies**, puis la revue du code et de la caméra (décisions 65 à 72).
+EditMode 53/53, PlayMode 56/56, Play court sans erreur. **DICIELA > Scènes > Monter les scènes** monte tout.
 
-**Ce qui marche** : EditMode 53/53, PlayMode 56/56, Play court sans erreur. **DICIELA > Scènes > Monter les scènes**
-monte tout et réenregistre les fiches, sans toucher une carte existante. En jeu : la barre en bas ; l'aperçu suit la
-souris, vert ou rouge avec sa raison ; R tourne (bref : un cran ; tenu : au degré) ; le clic gauche pose un fantôme ;
-clic droit bref ou Échap range l'outil. La caméra part à 57 m, le bouton du milieu tourne et incline, les ombres et
-le brouillard suivent le zoom ; un seul soleil, celui de la carte.
+**En jeu** : la barre en bas ; l'aperçu suit la souris, vert ou rouge avec sa raison ; R tourne (bref : un cran ;
+tenu : au degré) ; le clic gauche pose un fantôme ; clic droit bref ou Échap range l'outil. La caméra part à 57 m, le
+bouton du milieu tourne et incline, les ombres et le brouillard suivent le zoom ; un seul soleil, celui de la carte.
+Tous ses chiffres sont dans la fiche `CameraSettings`, réglable en jouant.
 
-**À vérifier par lui** (**DICIELA > Jouer**) : la lumière, plus sombre (celle du pack) ; incliner au bouton du milieu ;
-le brouillard qui recule en dézoomant ; la vue de départ. Tout se règle en jouant, dans la fiche `CameraSettings`.
+**Réponses du développeur** : la carte garde 500 m tant que peu de bâtiments existent (on la tranchera en posant une
+ville sur un Terrain nu) ; la suite est l'étape 9, les chemins ; une planche des cabanes candidates lui a été envoyée.
 
-**Questions pour toi** :
-1. Le modèle de la cabane (et de la tente, que le pack n'a pas) : ton choix d'art. En attendant, une boîte. Une maison
-   du pack avec cheminée demandera le module des particules pour sa fumée : je l'ajoute sur ton accord.
-2. La taille de la carte, avant de la peindre (« À toi », GDD 2).
-3. La suite. Ma reco : étape 9, les chemins : l'A* sur le maillage (SAVOIR 2.1), vérifié contre un Dijkstra, sans
-   rien de visible encore ; puis la Chimère qui marche jusqu'à son poste.
+**Questions pour toi** (ma reco entre parenthèses) :
+1. Le modèle de la cabane : Shed_01, Shed_02, Shed_03, Shed_04 ou House_03 du pack (Shed_02 : la plus petite fermée,
+   6,5 × 8,5 m). La fiche prendra sa taille et sa porte. La planche se remet en scène en Play par **DICIELA > Album >
+   Planche des cabanes candidates** : ce menu est temporaire (`ModelBoardMenu.cs`, non suivi par Git), à supprimer
+   une fois le choix fait.
+2. Un fantôme (posé, pas bâti) bloque-t-il le passage ? (Oui, dès qu'il est posé : une maille, un objet, une seule
+   vérité pour la pose et le passage.)
+3. Le plan de l'étape 9 ci-dessous.
 
-**À savoir** : 35 « À toi » au GDD, avec ma reco sauf ce qui est à toi seul (histoire, Chimère, modèles, quartiers).
-À surveiller : la file « en fin de couche » (33) ; la caméra quand une colline cache le point visé ; suivre un habitant.
-
-**Prochaine étape** : 9, les chemins sur le maillage, si tu valides la question 3.
+**Étape 9, les chemins** (rien de visible, SAVOIR 2.1) : une maille se traverse si elle est libre ou devant une porte,
+au même prix partout pour un piéton ; un A* dans `Simulation.Land` (huit voisines, jamais de coin coupé, plusieurs
+départs et arrivées, test d'arrivée à la sortie de la file, heuristique octile, tas binaire, tampons gardés, sans
+allocation par appel) ; des tests EditMode contre un Dijkstra sur 400 maillages tirés au hasard, et des cas écrits à
+la main. Ensuite, en 9b : l'injoignable su tout de suite (composantes), le lissage, la marche, puis la Chimère.
 
 **Prompt de la session suivante**
 
