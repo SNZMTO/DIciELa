@@ -6,19 +6,21 @@ using UnityEngine;
 namespace Diciela.Simulation.Land
 {
     /// <summary>
-    /// Les règles de pose (GDD, sections 2 et 9) : dans la carte, sur un sol assez plat, sans rien recouvrir, sans se
-    /// poser devant une porte, et la sienne dégagée. Une seule fonction répond, pour l'aperçu comme pour l'ordre. Les
-    /// règles disent aussi quel sol une construction occupe (son empreinte) et lequel elle garde libre (le devant de sa
-    /// porte). Elles lisent le maillage et le relief, sans rien changer.
+    /// Les règles de pose (GDD, sections 2 et 9) : une construction unique pas encore posée ; dans la carte, sur un sol
+    /// assez plat, sans rien recouvrir, sans se poser devant une porte, et la sienne dégagée. Une seule fonction répond,
+    /// pour l'aperçu comme pour l'ordre. Les règles disent aussi quel sol une construction occupe (son empreinte) et
+    /// lequel elle garde libre (le devant de sa porte). Elles lisent le maillage, le relief et les constructions posées,
+    /// sans rien changer ; les constructions les créent.
     /// </summary>
     public sealed class PlacementRules
     {
         private readonly NavGrid _grid;
         private readonly Relief _relief;
+        private readonly Structures _structures;
         private readonly float _maxSlopeDegrees;
         private readonly float _doorClearanceMeters;
 
-        public PlacementRules(NavGrid grid, Relief relief, SimulationSettings settings)
+        internal PlacementRules(NavGrid grid, Relief relief, SimulationSettings settings, Structures structures)
         {
             if (ReferenceEquals(grid, null))
                 throw new ArgumentNullException(nameof(grid));
@@ -26,18 +28,32 @@ namespace Diciela.Simulation.Land
                 throw new ArgumentNullException(nameof(relief));
             if (ReferenceEquals(settings, null))
                 throw new ArgumentNullException(nameof(settings));
+            if (ReferenceEquals(structures, null))
+                throw new ArgumentNullException(nameof(structures));
 
             _grid = grid;
             _relief = relief;
+            _structures = structures;
             _maxSlopeDegrees = settings.MaxBuildSlopeDegrees;
             _doorClearanceMeters = settings.DoorClearanceMeters;
+        }
+
+        /// <summary>
+        /// Vrai si cette construction peut encore se poser quelque part : une construction unique déjà posée, non (GDD,
+        /// section 9). La barre ne propose pas ce qui ne se pose plus.
+        /// </summary>
+        public bool IsAvailable(StructureDefinition definition)
+        {
+            if (ReferenceEquals(definition, null))
+                throw new ArgumentNullException(nameof(definition));
+            return !definition.IsUnique || !_structures.IsPlaced(definition);
         }
 
         /// <summary>Peut-on poser cette construction à cette place ? La même réponse pour l'aperçu et pour l'ordre.</summary>
         public PlacementResult Check(StructureDefinition definition, Placement placement)
         {
-            if (ReferenceEquals(definition, null))
-                throw new ArgumentNullException(nameof(definition));
+            if (!IsAvailable(definition))
+                return PlacementResult.AlreadyPlaced;
 
             RotatedRect footprint = Footprint(definition, placement);
             if (!IsInsideMap(footprint))

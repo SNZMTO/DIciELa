@@ -9,13 +9,14 @@ namespace Diciela.EditorTools
 {
     /// <summary>
     /// Installe la pose dans une scène racine : les constructions vues (« Constructions »), l'aperçu et les gestes de
-    /// la pose (« Pose »), reliés à leurs fiches, à l'asset d'actions et au démarrage. Réexécutable : ce qui est déjà
-    /// réglé n'est pas touché.
+    /// la pose (« Pose »), le geste « toucher » (« Choisir »), reliés à leurs fiches, à l'asset d'actions et au
+    /// démarrage. Réexécutable : ce qui est déjà réglé n'est pas touché.
     /// </summary>
     internal static class PlacementBuilder
     {
         private const string StructuresObjectName = "Constructions";
         private const string PlacementObjectName = "Pose";
+        private const string ChooseObjectName = "Choisir";
 
         public static void EnsureIn(Scene scene, GameRunner runner)
         {
@@ -35,10 +36,15 @@ namespace Diciela.EditorTools
             EditorAssets.AssignIfMissing(controls, "_settings", settings);
             EditorAssets.AssignIfMissing(controls, "_gestures", gestures);
 
+            ChooseControls choose = EditorAssets.FindOrCreate<ChooseControls>(scene, ChooseObjectName);
+            EditorAssets.AssignIfMissing(choose, "_actions", actions);
+            EditorAssets.AssignIfMissing(choose, "_gestures", gestures);
+
             EditorAssets.AssignIfMissing(runner, "_placementSettings", settings);
             EditorAssets.AssignIfMissing(runner, "_structureViews", views);
             EditorAssets.AssignIfMissing(runner, "_placementPreview", preview);
             EditorAssets.AssignIfMissing(runner, "_placementControls", controls);
+            EditorAssets.AssignIfMissing(runner, "_chooseControls", choose);
         }
     }
 }

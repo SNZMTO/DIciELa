@@ -5,7 +5,8 @@ namespace Diciela.Data
     /// <summary>
     /// La fiche d'une construction : bâtiment, déco, la Place. Son modèle du pack (la source) et le modèle préparé
     /// depuis lui ; son empreinte au sol et sa porte, mesurées sur le modèle par le menu DICIELA/Contenu/Préparer les
-    /// modèles (SAVOIR, 2.9). À l'angle 0, la construction regarde vers le nord (+z), où s'ouvre sa porte.
+    /// modèles (SAVOIR, 2.9). Sans modèle du pack, le même menu lui fait une boîte à la taille de sa fiche, sa porte
+    /// marquée (GDD, section 16). À l'angle 0, la construction regarde vers le nord (+z), où s'ouvre sa porte.
     /// </summary>
     [CreateAssetMenu(menuName = "DICIELA/Construction", fileName = "Construction")]
     public sealed class StructureDefinition : ScriptableObject
@@ -31,11 +32,23 @@ namespace Diciela.Data
         [Tooltip("Largeur de la porte, en mètres.")]
         [SerializeField, Min(0.25f)] private float _doorWidthMeters = 1.5f;
 
-        [Tooltip("Le modèle du pack, tel quel : la source que le menu DICIELA/Contenu/Préparer les modèles mesure et fusionne.")]
+        [Tooltip("Une seule dans la ville : la tente puis la maison de la Chimère, la Place, les grands projets (GDD, " +
+                 "section 9).")]
+        [SerializeField] private bool _unique;
+
+        [Tooltip("Le logis de la Chimère : elle y dort quand le joueur le touche (GDD, section 6). La tente, puis sa " +
+                 "maison ; il lui faut une porte.")]
+        [SerializeField] private bool _chimeraHome;
+
+        [Tooltip("Dressée dès qu'on la pose, sans chantier : la tente, que la Chimère plante d'un coup (GDD, section 9).")]
+        [SerializeField] private bool _builtWhenPlaced;
+
+        [Tooltip("Le modèle du pack, tel quel : la source que le menu DICIELA/Contenu/Préparer les modèles mesure et " +
+                 "fusionne. Vide tant que le modèle n'est pas choisi : le menu fait alors une boîte à la taille de la fiche.")]
         [SerializeField] private GameObject _sourceModel;
 
-        [Tooltip("Le modèle préparé depuis la source par ce menu : fusionné, porte au nord, centré sur l'empreinte, son " +
-                 "origine au sol. La vue le montre ; la simulation ne s'en sert pas.")]
+        [Tooltip("Le modèle préparé par ce menu, depuis la source ou en boîte : fusionné, porte au nord, centré sur " +
+                 "l'empreinte, son origine au sol. La vue le montre ; la simulation ne s'en sert pas.")]
         [SerializeField] private GameObject _model;
 
         public string Id => _id;
@@ -45,6 +58,9 @@ namespace Diciela.Data
         public bool HasDoor => _hasDoor;
         public float DoorOffsetMeters => _doorOffsetMeters;
         public float DoorWidthMeters => _doorWidthMeters;
+        public bool IsUnique => _unique;
+        public bool IsChimeraHome => _chimeraHome;
+        public bool BuiltWhenPlaced => _builtWhenPlaced;
         public GameObject SourceModel => _sourceModel;
         public GameObject Model => _model;
     }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Diciela.Controls;
 using Diciela.Data;
+using Diciela.Simulation;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -40,7 +41,7 @@ namespace Diciela.UI
         }
 
         /// <summary>Montre la barre, remplie par son présentateur ; appelé par le démarrage quand le monde naît.</summary>
-        public void Show(Catalog catalog, TextTable texts, PlacementTool tool)
+        public void Show(Catalog catalog, TextTable texts, PlacementTool tool, World world)
         {
             Hide();
             VisualElement root = _document.rootVisualElement;
@@ -57,7 +58,7 @@ namespace Diciela.UI
             _families = families;
             _structures = structures;
             _reason = reason;
-            _presenter = new BuildBarPresenter(this, catalog, texts, tool);
+            _presenter = new BuildBarPresenter(this, catalog, texts, tool, world);
             _bar.RemoveFromClassList(HiddenBarClass);
         }
 

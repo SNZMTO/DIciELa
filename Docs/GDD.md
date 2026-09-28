@@ -173,9 +173,16 @@
 - **Règle.** Personne ne la connaît. Elle arrive dans un lieu vide, avec des trous de mémoire et quelques idées.
 - **À toi.** Son histoire, que tu écriras.
 - **Règle.** La tente vient en premier, la Place en deuxième. La tente est son logis de départ, et seulement cela :
-  elle n'a ni stock ni poste.
+  elle n'a ni stock ni poste. Elle se plante d'un coup, sans chantier.
+- **Règle.** Tant que la Chimère n'a pas de logis, la barre de construction ne propose que la tente ; plantée, la tente
+  quitte la barre (elle est unique) et le reste s'ouvre. C'est une consigne de la barre : un ordre qui poserait autre
+  chose d'abord n'est pas refusé.
 - **Règle.** La Chimère dort quand le joueur le veut : il touche son logis (la tente, puis sa maison), et elle va s'y
-  coucher. Endormie, elle quitte son poste jusqu'à ce que le joueur la réveille ; son sommeil n'a pas d'autre effet.
+  coucher : elle marche jusqu'à sa porte, entre, et on ne la voit plus. Le joueur la réveille en touchant de nouveau
+  son logis, même quand elle y va encore : elle flâne alors devant sa porte. Endormie, elle quitte son poste jusqu'à ce
+  que le joueur la réveille ; son sommeil n'a pas d'autre effet.
+- **Règle.** Si elle ne peut pas rejoindre sa porte, elle ne part pas se coucher ; si sa porte est coupée d'elle en
+  chemin, elle y renonce et flâne.
 - **Règle.** Le stock de départ est un tas posé au sol près de la tente, qui sert d'entrepôt jusqu'au premier
   entrepôt. Il porte un poste « à tout faire » (porter, bâtir, récolter, défricher), que tient la Chimère ; le poste
   disparaît avec le tas, quand le tas est vide et que la loge et un entrepôt sont bâtis.
@@ -189,8 +196,8 @@
 - **Règle.** Ils n'attendent ni poste libre (ils apportent l'idée de ce qui l'ouvrira) ni de quoi manger (au début,
   aucun champ ne tourne) : il leur faut seulement un lit. La règle de la nourriture vaut pour les arrivées suivantes.
 - **Défaut.** Ils commencent à 40 dans la sous-statistique de leur métier. Le déroulé :
-  1. La Chimère plante sa tente ; le joueur choisit l'endroit. Elle connaît déjà la tente, la Place, la cabane, le
-     chemin de terre, le pont, le bûcheron et la carrière.
+  1. La Chimère plante sa tente, d'un coup ; le joueur choisit l'endroit. Elle connaît déjà la tente, la Place, la
+     cabane, le chemin de terre, le pont, le bûcheron et la carrière.
   2. Elle bâtit la Place et deux cabanes, et récolte un champ sauvage de lin.
   3. Un premier habitant par statistique arrive, chacun avec son idée : le bâtisseur (la loge des bâtisseurs), la
      fermière (les champs : elle sème le premier, en lin), la charretière (l'entrepôt), le menuisier (la scierie).
@@ -277,9 +284,9 @@
 
 ## 9. Les chantiers et les routes
 
-- **Règle.** Tout se construit par des ouvriers ; au tout début, avant la loge, la Chimère et les premiers habitants
-  bâtissent eux-mêmes (voir 6). Le joueur pose un fantôme ; les charretiers apportent les matériaux ; les ouvriers
-  bâtissent ; un ouvrier qualifié bâtit plus vite.
+- **Règle.** Tout se construit par des ouvriers, sauf la tente, que la Chimère plante d'un coup ; au tout début, avant
+  la loge, la Chimère et les premiers habitants bâtissent eux-mêmes (voir 6). Le joueur pose un fantôme ; les
+  charretiers apportent les matériaux ; les ouvriers bâtissent ; un ouvrier qualifié bâtit plus vite.
 - **Règle.** La file des chantiers est visible et le joueur en change l'ordre. Un chantier qui attend ses matériaux
   laisse passer les suivants. Annuler rend au stock les matériaux déjà livrés.
 - **Défaut.** Trois ouvriers au plus sur un chantier ; les chantiers se servent dans l'ordre de la file.
@@ -290,12 +297,14 @@
 - **Défaut.** Devant une porte, 1,5 m restent libres, sur la largeur de la porte.
 - **Règle.** Poser : la construction choisie suit le pointeur ; son aperçu est vert si elle se pose là, rouge sinon,
   et la raison s'écrit. **R** la tourne : une touche brève d'un cran, tenue en bougeant la souris au degré près. Le
-  clic gauche pose ; l'outil reste en main pour la suivante ; un clic droit bref ou Échap le pose de côté.
+  clic gauche pose ; l'outil reste en main pour la suivante, sauf après une construction unique ; un clic droit bref ou
+  Échap le pose de côté.
 - **Défaut.** Le cran de rotation : 15°.
-- **Règle.** Une construction posée attend ses bâtisseurs en fantôme translucide. Dès sa pose, elle prend sa place : on
-  ne traverse pas plus un fantôme qu'un bâtiment. Qui marche et voit son trajet coupé en cherche un autre ; qui se
-  trouve dessous en sort à pied, tout droit, par le sol libre qui la borde, jamais celui qu'une autre construction
-  cache : du côté où il est le plus vaste (jamais une poche qu'elle vient de fermer), au plus près.
+- **Règle.** Une construction posée attend ses bâtisseurs en fantôme translucide ; bâtie, elle se voit avec ses
+  matériaux. Dès sa pose, elle prend sa place : on ne traverse pas plus un fantôme qu'un bâtiment. Qui marche et voit
+  son trajet coupé en cherche un autre ; qui se trouve dessous en sort à pied, tout droit, par le sol libre qui la
+  borde, jamais celui qu'une autre construction cache : du côté où il est le plus vaste (jamais une poche qu'elle vient
+  de fermer), au plus près.
 - **À toi.** Retirer un arbre ou en planter un passe-t-il par la file des chantiers ? Ma reco : non, ce sont des tâches
   des paysagistes, dans l'ordre où le joueur les a désignées.
 - **Règle.** Ranger ou déplacer un bâtiment est un tout petit chantier : il se déconstruit en quelques secondes et se
@@ -306,8 +315,9 @@
   sinon plus personne ne pourrait le reposer.
 - **Règle.** On ne démolit pas, on range. La réserve n'a pas de limite. Ranger un bâtiment rend au stock ce que
   gardaient ses petits stocks ; un entrepôt rangé garde ses marchandises jusqu'à ce qu'on le repose.
-- **Règle.** Les bâtiments uniques sont la tente puis la maison de la Chimère, la Place et les grands projets. Ils se
-  rangent aussi, et le jeu dit ce qui s'arrête tant qu'ils ne sont pas reposés : une pastille sur le bouton de la
+- **Règle.** Les bâtiments uniques sont la tente puis la maison de la Chimère, la Place et les grands projets : un seul
+  de chacun dans la ville. Posé, un bâtiment unique quitte la barre, et une seconde pose est refusée (« Déjà posée »).
+  Ils se rangent aussi, et le jeu dit ce qui s'arrête tant qu'ils ne sont pas reposés : une pastille sur le bouton de la
   réserve et une ligne dans la réserve (la Place : plus de visiteurs). Pour la maison de la Chimère, une bulle avec son
   portrait : « Je vais quand même pas dormir dehors… ».
 - **Règle.** Un chemin de terre ne coûte aucun matériau (c'est un chantier quand même) ; une route pavée demande des
@@ -503,12 +513,15 @@
   décors, comme les sécheresses de Timberborn.
 - **Règle.** On choisit quoi construire dans une barre en bas de l'écran : les familles en onglets, puis leurs
   constructions.
+- **Règle.** Sans rien en main, un clic gauche touche la construction qu'on voit sous le pointeur : on vise son modèle,
+  pas le sol derrière lui. Pour l'instant, toucher le logis de la Chimère la couche ou la réveille (voir 6).
 - **Règle.** Tant que le modèle d'une construction n'est pas choisi, elle se voit en boîte à sa taille, sa porte
   marquée.
 - **Règle.** La cabane a le modèle `Bld_Preset_Shed_02` du pack ; `House_03` est pressentie pour la maison.
 - **Règle.** Une construction se pose la porte au niveau du sol : ses fondations s'enfoncent, et cachent le vide sous
   elle sur une pente. Son empreinte est la boîte de son modèle, accessoires compris : rien ne se chevauche à l'écran.
-- **À toi.** Le modèle de la tente, que le pack n'a pas.
+- **À toi.** Le modèle de la tente, que le pack n'a pas. En attendant, une boîte.
+- **Défaut.** La tente mesure 3 × 3 m, sa porte 1,2 m de large ; sa boîte fait 2,5 m de haut.
 - **À toi.** Le reste du plan de l'interface ; le son et la musique. Ma reco : chaque panneau naît avec son système
   (la liste des habitants avec eux, l'étal avec le troc), sur le côté, la ville visible derrière, comme dans
   Timberborn ; le son et la musique après le premier jouable, avec un pack acheté, comme l'art.

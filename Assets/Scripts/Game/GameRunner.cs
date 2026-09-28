@@ -33,6 +33,7 @@ namespace Diciela.Game
         [SerializeField] private VillagerViews _villagerViews;
         [SerializeField] private PlacementPreview _placementPreview;
         [SerializeField] private PlacementControls _placementControls;
+        [SerializeField] private ChooseControls _chooseControls;
         [SerializeField] private BuildBar _buildBar;
 
         private World _world;
@@ -55,7 +56,7 @@ namespace Diciela.Game
             if (_settings == null || _session == null || _placementSettings == null || _interfaceSettings == null ||
                 _catalog == null || _catalog.ChimeraKind == null || _cameraRig == null || _cameraControls == null ||
                 _structureViews == null || _villagerViews == null || _placementPreview == null ||
-                _placementControls == null || _buildBar == null)
+                _placementControls == null || _chooseControls == null || _buildBar == null)
             {
                 Debug.LogError("DICIELA : le démarrage n'a pas toutes ses fiches, ses vues et ses gestes (lancer " +
                                "« DICIELA/Scènes/Monter les scènes ») ; le monde ne tourne pas.", this);
@@ -111,9 +112,11 @@ namespace Diciela.Game
                 _structureViews.Show(_world.Structures, _world.Map.Relief);
                 _villagerViews.Show(_world.Villagers, _world.Map.Relief);
                 _placementTool = new PlacementTool(_world, _cameraRig.Camera, _placementPreview, _placementSettings);
-                _buildBar.Show(_catalog, _texts, _placementTool);
+                _buildBar.Show(_catalog, _texts, _placementTool, _world);
                 _cameraControls.Bind(_buildBar);
                 _placementControls.Bind(_placementTool, _buildBar);
+                _chooseControls.Bind(new ChooseTool(_world, _cameraRig.Camera, _structureViews), _placementTool,
+                    _buildBar);
                 return true;
             }
             catch (Exception exception)
@@ -147,6 +150,7 @@ namespace Diciela.Game
             if (_world != null)
             {
                 _placementControls.Bind(null, null);
+                _chooseControls.Bind(null, null, null);
                 _cameraControls.Bind(null);
                 _buildBar.Hide();
                 if (_placementTool != null)

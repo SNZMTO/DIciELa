@@ -30,6 +30,10 @@ namespace Diciela.Game
             _world.Structures.PlacementRefused += OnPlacementRefused;
             _world.Villagers.VillagerArrived += OnVillagerArrived;
             _world.Villagers.ChimeraRefused += OnChimeraRefused;
+            _world.Villagers.VillagerWentToBed += OnVillagerWentToBed;
+            _world.Villagers.VillagerFellAsleep += OnVillagerFellAsleep;
+            _world.Villagers.VillagerWokeUp += OnVillagerWokeUp;
+            _world.Villagers.SleepRefused += OnSleepRefused;
             Relief relief = _world.Map.Relief;
             Debug.Log(Prefix + "monde créé, carte de " + relief.SizeX.ToString("0") + " × " + relief.SizeZ.ToString("0") +
                       " m (relief de " + relief.SamplesX + " × " + relief.SamplesZ + " points), " +
@@ -45,6 +49,10 @@ namespace Diciela.Game
             _world.Structures.PlacementRefused -= OnPlacementRefused;
             _world.Villagers.VillagerArrived -= OnVillagerArrived;
             _world.Villagers.ChimeraRefused -= OnChimeraRefused;
+            _world.Villagers.VillagerWentToBed -= OnVillagerWentToBed;
+            _world.Villagers.VillagerFellAsleep -= OnVillagerFellAsleep;
+            _world.Villagers.VillagerWokeUp -= OnVillagerWokeUp;
+            _world.Villagers.SleepRefused -= OnSleepRefused;
             foreach (Villager villager in _world.Villagers.All)
                 Debug.Log(Prefix + Describe(villager) + " est en " + villager.Position + ".");
             Debug.Log(Prefix + "monde arrêté après " + _world.Clock.StepCount + " pas, " + Describe(_world.Clock) + ".");
@@ -58,6 +66,26 @@ namespace Diciela.Game
         private static void OnChimeraRefused(VillagerKindDefinition kind)
         {
             Debug.Log(Prefix + "création de la Chimère refusée (" + kind.Id + ") : elle existe déjà.");
+        }
+
+        private static void OnVillagerWentToBed(Villager villager)
+        {
+            Debug.Log(Prefix + Describe(villager) + " va dormir, depuis " + villager.Position + ".");
+        }
+
+        private static void OnVillagerFellAsleep(Villager villager)
+        {
+            Debug.Log(Prefix + Describe(villager) + " s'endort en " + villager.Position + ".");
+        }
+
+        private static void OnVillagerWokeUp(Villager villager)
+        {
+            Debug.Log(Prefix + Describe(villager) + " est debout, en " + villager.Position + ".");
+        }
+
+        private static void OnSleepRefused(SleepRefusal reason)
+        {
+            Debug.Log(Prefix + "ordre « dormir » ou « réveiller » refusé : " + reason + ".");
         }
 
         private static string Describe(Villager villager)

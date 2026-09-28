@@ -9,16 +9,19 @@ namespace Diciela.Simulation.Society
     /// <summary>
     /// Un habitant (ARCHITECTURE, section 4) : sa sorte, sa place et ce qu'il fait. Sa place est sa position, en mètres
     /// sur le plan XZ ; il garde aussi celle du pas d'avant, pour que la vue le montre entre les deux. Sans poste, il
-    /// flâne. Une construction posée sur lui ne l'arrête pas : il en sort à pied, tout droit, par la maille libre qui
-    /// la borde du côté du plus grand îlot (décisions 73 et 88), puis reprend ce qu'il faisait. Chaque pas tire son
-    /// hasard de son numéro et du numéro du pas : les mêmes ordres rejouent la même partie.
+    /// flâne ; envoyé dormir, il va à son lit, s'y couche et n'en bouge plus jusqu'à ce qu'on le réveille. Une
+    /// construction posée sur lui ne l'arrête pas : il en sort à pied, tout droit, par la maille libre qui la borde du
+    /// côté du plus grand îlot (décisions 73 et 88), puis reprend ce qu'il faisait. Chaque pas tire son hasard de son
+    /// numéro et du numéro du pas : les mêmes ordres rejouent la même partie.
     /// </summary>
     public sealed class Villager
     {
         private readonly NavGrid _grid;
+        private readonly Islands _islands;
         private readonly Clock _clock;
         private readonly Walk _walk;
         private readonly Wander _wander;
+        private readonly Bedtime _bedtime;
         private readonly WayOutFinder _wayOuts;
         private readonly float _metersPerStep;
         private bool _leaving;
@@ -46,11 +49,13 @@ namespace Diciela.Simulation.Society
             Position = position;
             PreviousPosition = position;
             _grid = grid;
+            _islands = islands;
             _clock = clock;
             _metersPerStep = clock.MetersPerStep(kind.WalkMetersPerSecond);
             _wayOuts = new WayOutFinder(grid, islands);
             _walk = new Walk(grid, finder);
             _wander = new Wander(kind, grid, islands, clock, _walk, _metersPerStep);
+            _bedtime = new Bedtime(_walk, _metersPerStep);
             HashRandom random = RandomOfTheStep();
             _wander.Begin(position, ref random);
         }
@@ -75,15 +80,58 @@ namespace Diciela.Simulation.Society
         /// <summary>Le trajet qu'il suit, dont la ligne tendue ; il ne vaut que pendant qu'il marche.</summary>
         public Path Path => _walk.Path;
 
-        /// <summary>Joue un pas : sortir d'une construction posée sur lui d'abord, sinon flâner.</summary>
+        /// <summary>Vrai pendant qu'il marche vers son lit.</summary>
+        public bool IsGoingToBed => _bedtime.IsGoing;
+
+        /// <summary>Vrai quand il dort, couché dans son logis : on ne le voit plus.</summary>
+        public bool IsAsleep => _bedtime.IsAsleep;
+
+        /// <summary>
+        /// Joue un pas : endormi, rien ; sinon, sortir d'une construction posée sur lui d'abord, puis aller dormir ou
+        /// flâner.
+        /// </summary>
         internal void Step()
         {
             PreviousPosition = Position;
+            if (_bedtime.IsAsleep)
+                return;
+
             Vector2 position = Position;
             HashRandom random = RandomOfTheStep();
             if (!LeaveCoveredGround(ref position, ref random))
-                _wander.Step(ref position, ref random);
+            {
+                if (!_bedtime.IsGoing)
+                    _wander.Step(ref position, ref random);
+                else if (!_bedtime.Step(ref position))
+                    _wander.Begin(position, ref random);
+            }
             Position = position;
+        }
+
+        /// <summary>
+        /// L'envoie dormir dans ce lit, le milieu de cette maille. Faux s'il ne peut pas l'atteindre d'où il est (il est
+        /// encore sur une construction posée sur lui, ou son lit est sur un autre îlot) : rien ne change alors. S'il
+        /// finit de sortir d'une construction, il en sort d'abord, puis va dormir. Seuls les habitants l'appellent, qui
+        /// ont vérifié qu'il est debout.
+        /// </summary>
+        internal bool TryGoToBed(Vector2Int bed)
+        {
+            // Une maille prise est sur l'îlot 0 : sur un sol couvert, rien ne se rejoint.
+            int island = _islands.IslandOf(_grid.CellOf(Position));
+            if (island == 0 || _islands.IslandOf(bed) != island)
+                return false;
+            return _bedtime.TryStart(Position, bed);
+        }
+
+        /// <summary>
+        /// Le réveille, ou l'arrête s'il allait dormir : il se remet à flâner autour d'où il est. Seuls les habitants
+        /// l'appellent.
+        /// </summary>
+        internal void WakeUp()
+        {
+            _bedtime.Stop();
+            HashRandom random = RandomOfTheStep();
+            _wander.Begin(Position, ref random);
         }
 
         private HashRandom RandomOfTheStep()
@@ -129,7 +177,10 @@ namespace Diciela.Simulation.Society
             }
             position = _wayOut;
             _leaving = false;
-            _wander.Resume(position, ref random);
+            if (!_bedtime.IsGoing)
+                _wander.Resume(position, ref random);
+            else if (!_bedtime.Resume(position))
+                _wander.Begin(position, ref random);
             return true;
         }
     }

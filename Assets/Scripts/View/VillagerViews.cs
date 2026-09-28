@@ -11,7 +11,8 @@ namespace Diciela.View
     /// l'ouverture, ceux qui sont déjà là ; ensuite, chaque arrivée, par l'événement de la simulation. À chaque image, le
     /// démarrage donne la fraction du pas en cours : chaque personnage se montre à cette fraction du chemin entre sa
     /// place au pas d'avant et celle du dernier pas (SAVOIR, 2.2), posé sur le sol, et se tourne vers où il va, sans
-    /// à-coup. Le pack n'a pas d'animations : il glisse.
+    /// à-coup. Le pack n'a pas d'animations : il glisse. Endormi, il est entré dans son logis : on ne le voit plus
+    /// jusqu'à ce qu'il se réveille.
     /// </summary>
     public sealed class VillagerViews : MonoBehaviour
     {
@@ -43,13 +44,19 @@ namespace Diciela.View
             foreach (Villager villager in villagers.All)
                 OnVillagerArrived(villager);
             villagers.VillagerArrived += OnVillagerArrived;
+            villagers.VillagerFellAsleep += OnVillagerSleepChanged;
+            villagers.VillagerWokeUp += OnVillagerSleepChanged;
         }
 
         /// <summary>Cesse de suivre le monde et retire ce qu'on montrait.</summary>
         public void Hide()
         {
             if (_villagers != null)
+            {
                 _villagers.VillagerArrived -= OnVillagerArrived;
+                _villagers.VillagerFellAsleep -= OnVillagerSleepChanged;
+                _villagers.VillagerWokeUp -= OnVillagerSleepChanged;
+            }
             _villagers = null;
             _relief = null;
             foreach (Shown shown in _shown)
@@ -88,6 +95,17 @@ namespace Diciela.View
             var shown = new Shown { Villager = villager, Transform = view.transform };
             _shown.Add(shown);
             Place(shown, 1f, 0f);
+            view.SetActive(!villager.IsAsleep);
+        }
+
+        /// <summary>Il s'est endormi dans son logis, ou s'est réveillé : on le cache, ou on le montre de nouveau.</summary>
+        private void OnVillagerSleepChanged(Villager villager)
+        {
+            foreach (Shown shown in _shown)
+            {
+                if (ReferenceEquals(shown.Villager, villager))
+                    shown.Transform.gameObject.SetActive(!villager.IsAsleep);
+            }
         }
 
         private void Place(Shown shown, float stepFraction, float deltaSeconds)

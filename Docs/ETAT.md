@@ -1,30 +1,29 @@
 # DICIELA — état actuel
 
-**Branche** : `main`, à jour : le ménage 5 y est fusionné, sans nouvelle `/code-review ultra` (décision 91).
+**Branche** : `etape-11-tente`, poussée, pas fusionnée : elle touche la journée de la Chimère (sa marche vers son lit),
+et la décision 77 fait attendre une étape qui touche la marche. La fusion est ton choix (plus bas).
 
+**Fait** : l'étape 11, la tente (décisions 92 à 97).
+- La barre ne propose que la tente tant que la Chimère n'a pas de logis. Plantée d'un coup, sans fantôme, la tente
+  quitte la barre, qui propose alors la cabane ; une seconde tente est refusée (« Déjà posée »).
+- La tente se voit en boîte de 3 × 3 m, porte marquée (Défauts). `Préparer les modèles` fait cette boîte pour toute
+  fiche sans modèle du pack.
+- Toucher la tente (clic gauche, rien en main) envoie la Chimère s'y coucher : elle marche jusqu'à sa porte et
+  disparaît. La toucher encore la réveille, même en chemin. Porte hors d'atteinte : elle ne part pas, ou renonce.
+- L'outil « choisir » vise le modèle, pas le sol. L'écran de création devient l'étape 12.
+**EditMode 132/132, PlayMode 75/75**, Play court sans erreur (833 pas, le cycle complet dans le journal). Album : 4 captures.
 
-**Fait** : le ménage « ultracode » (8 agents, 1,10 M jetons sur 1,5 M). 8 trouvailles retenues, toutes confirmées par
-leur vérificateur, plus 5 vraies parmi les 40 écartées. Chaque correction a son test, vu rouge avant elle :
-- la Chimère ne recule plus quand un fantôme coupe son trajet : elle rejoint sa nouvelle ligne sans quitter sa maille ;
-- posée sous un fantôme, elle sort par une maille libre qui le borde, du côté le plus vaste : jamais dans une poche
-  qu'il ferme, jamais derrière une autre construction ; un second fantôme sur sa sortie lui en fait choisir une autre ;
-- si l'endroit où elle flânait est couvert, ou coupé d'elle, elle flâne autour d'où elle est ;
-- une construction prend toute maille qu'elle touche : rien ne se chevauche, plus de fente de 13 cm à traverser ;
-- un second ordre « créer la Chimère » est refusé et le dit ; les événements partent à la fin de leur couche ;
-- le recul minimal de la flânerie (2 m) est dans la fiche de sa sorte ; la garde d'architecture refuse `AnimationCurve`,
-  `Gradient` et `.name` dans la simulation ; les tests PlayMode attendent une condition, jamais des secondes.
-**EditMode 117/117, PlayMode 65/65**, Play court sans erreur (296 pas).
+**À vérifier par toi** (Play) : la barre ne montre que « Tente ». Pose-la : elle se dresse d'un coup, opaque, et la
+barre montre « Cabane ». Clique sur la tente : la Chimère y va et disparaît devant la porte ; reclique : elle ressort.
+Reclique pendant qu'elle y va : elle s'arrête et flâne. Un clic sur le sol ou sur une cabane ne fait rien.
 
-**À vérifier par toi** (Play) : pose une cabane en travers de sa marche : elle la contourne, sans hoquet en arrière.
-Pose-en une sur elle : elle en sort à pied, tout droit, par le bord qui donne sur le grand espace libre. Approche une
-cabane d'une autre : à moins de 25 cm, l'aperçu peut rougir (« La place est prise ») selon où tombent leurs bords.
+**À toi** :
+1. Fusionner sans `/code-review ultra`, ou lancer la revue sur la branche. Ma reco : fusionner. `Walk` n'a pas changé,
+   seule la journée de l'habitant gagne une branche, gardée par neuf tests. Garde les deux revues gratuites pour les
+   tâches et la sauvegarde. Sur ton mot : `git fetch . etape-11-tente:main`, puis `git push origin main`.
+2. Le modèle de la tente (GDD 16) : une composition du pack, à toi ; la boîte en attendant.
 
-**À toi** (mes recos appliquées, l'accord du développeur) : décisions 87 (deux constructions se collent à 25 cm près), 88 (la
-sortie d'un fantôme), 89 (flâner ailleurs quand son coin est perdu), 90 (la prochaine revue ultracode : avant le premier
-jouable, les seuls bugs, plafond 1 M). Son personnage reste le chat du pack, dans `Assets/Data/Habitants/Chimere.asset`.
-
-**Prochaine étape** : la création de la Chimère et la tente.
+**Prochaine étape** : l'étape 12, l'écran de création de la Chimère (corps, couleur, morceaux, accessoires du pack).
 **Prompt de la session suivante**
 
-> Lis CLAUDE.md et Docs/ETAT.md. Montre-moi le plan court de l'étape suivante : la création de la Chimère et la
-> tente.
+> Lis CLAUDE.md et Docs/ETAT.md. Montre-moi le plan court de l'étape suivante : l'écran de création de la Chimère.

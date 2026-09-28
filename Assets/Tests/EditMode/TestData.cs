@@ -46,6 +46,21 @@ namespace Diciela.Tests.EditMode
         }
 
         /// <summary>
+        /// Un logis de la Chimère, unique, de size mètres de côté, porte de 1 m au milieu de sa façade nord (GDD, section
+        /// 6). Par défaut, la tente : dressée dès la pose ; sinon, une maison qui attend ses bâtisseurs.
+        /// </summary>
+        public static StructureDefinition Home(string id = "tente", float size = 3f, bool builtWhenPlaced = true)
+        {
+            StructureDefinition home = Structure(id, size, size);
+            var serialized = new SerializedObject(home);
+            Property(serialized, "_unique").boolValue = true;
+            Property(serialized, "_chimeraHome").boolValue = true;
+            Property(serialized, "_builtWhenPlaced").boolValue = builtWhenPlaced;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            return home;
+        }
+
+        /// <summary>
         /// Une carte plate de size mètres de côté (10 par défaut), à 0 m de hauteur ; son point d'arrivée, s'il est
         /// donné, sinon le centre.
         /// </summary>

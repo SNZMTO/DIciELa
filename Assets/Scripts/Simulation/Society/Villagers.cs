@@ -9,14 +9,14 @@ namespace Diciela.Simulation.Society
 {
     /// <summary>
     /// Les habitants de la ville (ARCHITECTURE, section 4) : la vérité de qui vit ici et où. Pour l'instant, la Chimère,
-    /// que le joueur crée au lancement d'une partie ; les arrivées viendront avec les logements. Chacun joue son pas
-    /// dans l'ordre de son arrivée. Les événements d'un pas attendent la fin de leur couche, dans une seule file
-    /// (ARCHITECTURE, section 5).
+    /// que le joueur crée au lancement d'une partie, et qu'il envoie dormir dans son logis ou réveille ; les arrivées
+    /// viendront avec les logements. Chacun joue son pas dans l'ordre de son arrivée. Les événements d'un pas attendent
+    /// la fin de leur couche, dans une seule file (ARCHITECTURE, section 5).
     /// </summary>
     public sealed class Villagers
     {
         private readonly List<Villager> _all = new List<Villager>();
-        private readonly List<Happening> _happened = new List<Happening>();
+        private readonly List<VillagerHappening> _happened = new List<VillagerHappening>();
         private readonly NavGrid _grid;
         private readonly Islands _islands;
         private readonly PathFinder _finder;
@@ -46,6 +46,18 @@ namespace Diciela.Simulation.Society
         /// <summary>Levé quand un ordre « créer la Chimère » est refusé, avec la sorte refusée : elle existe déjà.</summary>
         public event Action<VillagerKindDefinition> ChimeraRefused;
 
+        /// <summary>Levé quand un habitant part dormir : il marche vers son lit.</summary>
+        public event Action<Villager> VillagerWentToBed;
+
+        /// <summary>Levé quand un habitant arrive à son lit et s'endort : on ne le voit plus.</summary>
+        public event Action<Villager> VillagerFellAsleep;
+
+        /// <summary>Levé quand un habitant se réveille, ou cesse d'aller dormir : il se remet à flâner.</summary>
+        public event Action<Villager> VillagerWokeUp;
+
+        /// <summary>Levé quand un ordre « dormir » ou « réveiller » est refusé, avec la raison.</summary>
+        public event Action<SleepRefusal> SleepRefused;
+
         public IReadOnlyList<Villager> All => _all;
 
         /// <summary>La Chimère, une fois créée ; null avant.</summary>
@@ -61,7 +73,7 @@ namespace Diciela.Simulation.Society
                 throw new ArgumentNullException(nameof(kind));
             if (Chimera != null)
             {
-                _happened.Add(new Happening(null, kind));
+                _happened.Add(VillagerHappening.ChimeraRefusedWith(kind));
                 return false;
             }
 
@@ -70,8 +82,57 @@ namespace Diciela.Simulation.Society
             var chimera = new Villager(_nextId++, kind, _grid.CellCenter(cell), _grid, _islands, _finder, _clock);
             _all.Add(chimera);
             Chimera = chimera;
-            _happened.Add(new Happening(chimera, null));
+            _happened.Add(VillagerHappening.Of(VillagerHappening.Kinds.Arrived, chimera));
             return true;
+        }
+
+        /// <summary>
+        /// Envoie la Chimère dormir : elle marche jusqu'à ce point, devant la porte de son logis (null : elle n'a pas de
+        /// logis). Refusé si elle n'existe pas, dort déjà ou y va, ou ne peut pas rejoindre ce point ; rien ne change
+        /// alors, et <see cref="SleepRefused"/> le dira. Seul l'ordre « dormir » l'appelle.
+        /// </summary>
+        internal void SendChimeraToBed(Vector2? bed)
+        {
+            if (Chimera == null)
+                Refuse(SleepRefusal.NoChimera);
+            else if (!bed.HasValue)
+                Refuse(SleepRefusal.NoHome);
+            else if (Chimera.IsAsleep || Chimera.IsGoingToBed)
+                Refuse(SleepRefusal.AlreadyInBed);
+            else if (!Chimera.TryGoToBed(_grid.CellOf(bed.Value)))
+                Refuse(SleepRefusal.Unreachable);
+            else
+                _happened.Add(VillagerHappening.Of(VillagerHappening.Kinds.WentToBed, Chimera));
+        }
+
+        /// <summary>
+        /// Réveille la Chimère, ou l'arrête si elle allait dormir. Refusé si elle n'existe pas ou qu'elle est debout ; rien
+        /// ne change alors, et <see cref="SleepRefused"/> le dira. Seul l'ordre « réveiller » l'appelle.
+        /// </summary>
+        internal void WakeChimera()
+        {
+            if (Chimera == null)
+                Refuse(SleepRefusal.NoChimera);
+            else if (!Chimera.IsAsleep && !Chimera.IsGoingToBed)
+                Refuse(SleepRefusal.NotAsleep);
+            else
+            {
+                Chimera.WakeUp();
+                _happened.Add(VillagerHappening.Of(VillagerHappening.Kinds.WokeUp, Chimera));
+            }
+        }
+
+        /// <summary>Joue un pas pour chaque habitant, dans l'ordre de leur arrivée. Seul le monde l'appelle.</summary>
+        internal void Step()
+        {
+            for (int i = 0; i < _all.Count; i++)
+            {
+                Villager villager = _all[i];
+                bool wasAsleep = villager.IsAsleep;
+                villager.Step();
+                if (!wasAsleep && villager.IsAsleep)
+                    _happened.Add(VillagerHappening.Of(VillagerHappening.Kinds.FellAsleep, villager));
+            }
         }
 
         /// <summary>Livre les événements du pas, dans leur ordre, puis vide la file. Seul le monde l'appelle.</summary>
@@ -80,13 +141,7 @@ namespace Diciela.Simulation.Society
             try
             {
                 for (int i = 0; i < _happened.Count; i++)
-                {
-                    Happening happening = _happened[i];
-                    if (happening.Arrived != null)
-                        VillagerArrived?.Invoke(happening.Arrived);
-                    else
-                        ChimeraRefused?.Invoke(happening.Refused);
-                }
+                    Deliver(_happened[i]);
             }
             finally
             {
@@ -94,24 +149,34 @@ namespace Diciela.Simulation.Society
             }
         }
 
-        /// <summary>Joue un pas pour chaque habitant, dans l'ordre de leur arrivée. Seul le monde l'appelle.</summary>
-        internal void Step()
+        private void Deliver(VillagerHappening happening)
         {
-            for (int i = 0; i < _all.Count; i++)
-                _all[i].Step();
+            switch (happening.Kind)
+            {
+                case VillagerHappening.Kinds.Arrived:
+                    VillagerArrived?.Invoke(happening.Villager);
+                    break;
+                case VillagerHappening.Kinds.ChimeraRefused:
+                    ChimeraRefused?.Invoke(happening.RefusedKind);
+                    break;
+                case VillagerHappening.Kinds.WentToBed:
+                    VillagerWentToBed?.Invoke(happening.Villager);
+                    break;
+                case VillagerHappening.Kinds.FellAsleep:
+                    VillagerFellAsleep?.Invoke(happening.Villager);
+                    break;
+                case VillagerHappening.Kinds.WokeUp:
+                    VillagerWokeUp?.Invoke(happening.Villager);
+                    break;
+                default:
+                    SleepRefused?.Invoke(happening.SleepRefusal);
+                    break;
+            }
         }
 
-        /// <summary>Un ordre joué, en attendant d'être annoncé : l'habitant arrivé, ou la sorte refusée.</summary>
-        private readonly struct Happening
+        private void Refuse(SleepRefusal reason)
         {
-            public Happening(Villager arrived, VillagerKindDefinition refused)
-            {
-                Arrived = arrived;
-                Refused = refused;
-            }
-
-            public Villager Arrived { get; }
-            public VillagerKindDefinition Refused { get; }
+            _happened.Add(VillagerHappening.SleepRefusedFor(reason));
         }
     }
 }

@@ -1,8 +1,10 @@
 clé,fr,en
 famille.logement,Logement,Housing
+construction.tente,Tente,Tent
 construction.cabane,Cabane,Cabin
 pose.refus.OutsideMap,Hors de la carte,Outside the map
 pose.refus.TooSteep,Trop pentu,Too steep
 pose.refus.Overlaps,La place est prise,Something is in the way
 pose.refus.BlocksADoor,"Devant une porte, rien ne se pose",Nothing goes in front of a door
 pose.refus.DoorBlocked,Sa porte serait bouchée,Its door would be blocked
+pose.refus.AlreadyPlaced,Déjà posée : une seule par ville,Already placed: one per town

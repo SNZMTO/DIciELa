@@ -6,7 +6,8 @@
         "Diciela.View",
         "Unity.InputSystem",
         "Diciela.Simulation.Land",
-        "Diciela.Simulation"
+        "Diciela.Simulation",
+        "Diciela.Simulation.Society"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

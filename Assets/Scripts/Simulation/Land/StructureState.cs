@@ -1,11 +1,16 @@
 namespace Diciela.Simulation.Land
 {
     /// <summary>
-    /// Où en est une construction. Une construction posée attend d'être bâtie (GDD, section 9) ; les états suivants
-    /// viennent avec les chantiers. Les valeurs ne changent jamais de numéro.
+    /// Où en est une construction. Une construction posée attend d'être bâtie (GDD, section 9), sauf celle que sa fiche
+    /// dit dressée dès la pose (la tente) ; les états suivants viennent avec les chantiers. Les valeurs ne changent
+    /// jamais de numéro.
     /// </summary>
     public enum StructureState
     {
-        Planned = 0
+        /// <summary>Un fantôme : posée, elle attend ses bâtisseurs.</summary>
+        Planned = 0,
+
+        /// <summary>Bâtie : elle sert.</summary>
+        Built = 1
     }
 }

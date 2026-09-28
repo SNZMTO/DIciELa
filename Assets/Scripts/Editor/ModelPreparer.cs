@@ -12,8 +12,8 @@ namespace Diciela.EditorTools
     /// sans calcul. Sa porte dit de combien le tourner pour qu'elle regarde le nord ; la boîte de ses maillages, une fois
     /// tourné, donne l'empreinte et le centre ; l'origine du pack reste le sol (chez Synty, le niveau de la porte : les
     /// fondations s'enfoncent). Les pièces, dans leur version la plus détaillée, sont fusionnées (ModelMerger). La fiche
-    /// reçoit le modèle préparé, son empreinte et sa porte. Tout se fait dans une scène d'aperçu, hors de la scène
-    /// ouverte.
+    /// reçoit le modèle préparé, son empreinte et sa porte. Une fiche sans modèle du pack reçoit sa boîte, à sa taille
+    /// (PlaceholderBuilder). Tout se fait dans une scène d'aperçu, hors de la scène ouverte.
     /// </summary>
     internal static class ModelPreparer
     {
@@ -33,13 +33,13 @@ namespace Diciela.EditorTools
         }
 
         /// <summary>
-        /// Prépare le modèle de cette construction depuis sa source et remplit sa fiche ; faux s'il n'a pas pu (la raison
-        /// est dans la console), et la fiche reste telle quelle.
+        /// Prépare le modèle de cette construction depuis sa source et remplit sa fiche ; sans source, lui fait sa boîte.
+        /// Faux s'il n'a pas pu (la raison est dans la console), et la fiche reste telle quelle.
         /// </summary>
         public static bool Prepare(StructureDefinition structure)
         {
             if (structure.SourceModel == null)
-                return Refuse(structure, "sa fiche n'a pas de modèle du pack (Source Model).");
+                return PrepareBox(structure);
 
             Scene scene = EditorSceneManager.NewPreviewScene();
             try
@@ -80,6 +80,25 @@ namespace Diciela.EditorTools
             {
                 EditorSceneManager.ClosePreviewScene(scene);
             }
+        }
+
+        /// <summary>
+        /// Sans modèle du pack, la construction se voit en boîte à la taille de sa fiche (GDD, section 16) : la fiche fait
+        /// foi, et la boîte la suit.
+        /// </summary>
+        private static bool PrepareBox(StructureDefinition structure)
+        {
+            GameObject box = PlaceholderBuilder.Build(structure, out string merge);
+            if (box == null)
+                return false;
+            var fiche = new SerializedObject(structure);
+            EditorAssets.Property(fiche, "_model").objectReferenceValue = box;
+            fiche.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(structure);
+            Debug.Log("DICIELA : " + structure.Id + " se voit en boîte de " + Meters(structure.WidthMeters) + " × " +
+                      Meters(structure.DepthMeters) + " m, à la taille de sa fiche, en attendant son modèle : " + merge +
+                      ".");
+            return true;
         }
 
         /// <summary>La fiche reçoit le modèle préparé, l'empreinte (au centimètre supérieur) et la porte.</summary>

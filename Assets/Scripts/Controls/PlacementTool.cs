@@ -10,9 +10,9 @@ namespace Diciela.Controls
     /// <summary>
     /// L'outil de pose (GDD, section 9) : la construction choisie suit le pointeur sur le sol ; l'aperçu dit, par les
     /// règles de pose, la même fonction que l'ordre, si elle se pose là ; on tourne d'un cran ou au degré ; on pose par
-    /// l'ordre « poser », et l'outil reste prêt pour la suivante jusqu'à ce qu'on l'annule. Un ordre envoyé attend d'être
-    /// joué avant le suivant ; posé ou refusé, l'aperçu se refait. Les gestes et les tests l'appellent par les mêmes
-    /// méthodes. Celui qui le crée le libère (Dispose).
+    /// l'ordre « poser », et l'outil reste prêt pour la suivante jusqu'à ce qu'on l'annule, ou qu'elle soit unique. Un
+    /// ordre envoyé attend d'être joué avant le suivant ; posé ou refusé, l'aperçu se refait. Les gestes et les tests
+    /// l'appellent par les mêmes méthodes. Celui qui le crée le libère (Dispose).
     /// </summary>
     public sealed class PlacementTool : IDisposable
     {
@@ -150,11 +150,16 @@ namespace Diciela.Controls
             OnOrderPlayed();
         }
 
-        /// <summary>Un ordre a été joué : on peut en envoyer un autre, et la place visée n'est peut-être plus libre.</summary>
+        /// <summary>
+        /// Un ordre a été joué : on peut en envoyer un autre, et la place visée n'est peut-être plus libre. Une
+        /// construction unique qu'on vient de poser ne se pose plus nulle part : l'outil la pose de côté.
+        /// </summary>
         private void OnOrderPlayed()
         {
             _sent = false;
-            if (IsActive && _aimed)
+            if (IsActive && !_world.PlacementRules.IsAvailable(Current))
+                Cancel();
+            else if (IsActive && _aimed)
                 Refresh();
         }
 

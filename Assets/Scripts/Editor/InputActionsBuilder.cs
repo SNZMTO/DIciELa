@@ -51,6 +51,12 @@ namespace Diciela.EditorTools
                      AddPointerIfMissing(placement, PlacementControls.PointerAction) +
                      AddLookIfMissing(placement, PlacementControls.LookAction);
 
+            // Toucher ce qu'on voit : le clic gauche, quand l'outil de pose est au repos.
+            InputActionMap choose = asset.FindActionMap(ChooseControls.MapName) ??
+                                    asset.AddActionMap(ChooseControls.MapName);
+            added += AddButtonIfMissing(choose, ChooseControls.TouchAction, "<Mouse>/leftButton") +
+                     AddPointerIfMissing(choose, ChooseControls.PointerAction);
+
             if (added > 0)
             {
                 EditorAssets.EnsureFolder("Assets/Input");
