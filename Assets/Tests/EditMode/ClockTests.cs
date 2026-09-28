@@ -39,6 +39,27 @@ namespace Diciela.Tests.EditMode
         }
 
         [Test]
+        public void GameHoursBecomeStepsRoundedToTheNearest()
+        {
+            // 100 pas pour 24 h : 2,4 h font 10 pas ; 0,12 h, un demi-pas, s'arrondit à 1 ; 0,1 h (0,417 pas), à 0.
+            Clock clock = NewWorld().Clock;
+
+            Assert.AreEqual(10, clock.StepsIn(2.4));
+            Assert.AreEqual(100, clock.StepsIn(24.0));
+            Assert.AreEqual(1, clock.StepsIn(0.12));
+            Assert.AreEqual(0, clock.StepsIn(0.1));
+        }
+
+        [Test]
+        public void AScreenSpeedBecomesMetersPerStep()
+        {
+            // 1,5 m par seconde réelle, un pas de 0,1 s : 15 cm par pas, quelle que soit la durée de la journée.
+            Assert.AreEqual(0.15f, NewWorld().Clock.MetersPerStep(1.5f), 1e-6f);
+            Assert.AreEqual(0.15f, NewWorld(day: 720f).Clock.MetersPerStep(1.5f), 1e-6f);
+            Assert.AreEqual(0.3f, NewWorld(step: 0.2f).Clock.MetersPerStep(1.5f), 1e-6f);
+        }
+
+        [Test]
         public void StartsOnDayOneAtWork()
         {
             Clock clock = NewWorld().Clock;

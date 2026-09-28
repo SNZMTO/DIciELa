@@ -54,9 +54,11 @@ namespace Diciela.Game
                 yield break;
             }
 
+            ArrivalPoint arrival = ArrivalPoint.FindIn(_scene);
             try
             {
-                Description = MapReader.Read(root.Terrain.terrainData, root.transform.position);
+                Description = MapReader.Read(root.Terrain.terrainData, root.transform.position,
+                    arrival != null ? arrival.transform.position : (Vector3?)null);
             }
             catch (ArgumentException exception)
             {

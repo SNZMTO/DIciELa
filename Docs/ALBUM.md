@@ -15,6 +15,22 @@
 
 ## Les captures
 
+### 28/09/2026 — étape 10 : la Chimère marche
+
+La Chimère entre en jeu. Pas encore d'écran de création : son personnage est `SM_Chr_Cat_Female_01` du pack, en
+attendant. Elle apparaît au point d'arrivée de la carte (ici le centre, la carte n'en a pas encore), là où part la vue.
+Sans poste, elle flâne : un point libre à quelques mètres, une pause, et ainsi de suite. D'abord la vue de départ :
+la voici, toute petite, au milieu de la carte vierge. Puis la mise en scène habituelle des trois cabanes, posées
+autour d'elle : elle flâne entre les fantômes, qu'elle contourne (une cabane posée sur elle la ferait sortir à pied,
+vers le sol libre le plus proche). Enfin, de près (menu `DICIELA/Album/Se rapprocher de la Chimère`) : le pack n'a
+pas d'animations, elle glisse bras écartés, tournée vers où elle va.
+
+![La vue de départ, la Chimère au centre](Album/2026-09-28_etape-10_vue-de-depart.jpg)
+
+![Trois cabanes posées autour d'elle, elle flâne entre les fantômes](Album/2026-09-28_etape-10_trois-cabanes.jpg)
+
+![La Chimère de près, entre les fantômes](Album/2026-09-28_etape-10_la-chimere-de-pres.jpg)
+
 ### 28/09/2026 — étape 9b : l'injoignable su tout de suite, le trajet tendu
 
 Rien ne change pour le joueur : 9b travaille dans la simulation, et la vue témoin reste celle de l'entrée d'en

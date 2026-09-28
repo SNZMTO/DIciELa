@@ -10,8 +10,8 @@ namespace Diciela.Tests.PlayMode
 {
     /// <summary>
     /// La scène de test, jouée comme par le joueur : on la charge, elle charge sa carte de test, on la laisse tourner,
-    /// on la quitte. Le journal du jeu dit si le monde a reçu sa carte et s'il a avancé ; toute erreur dans la console
-    /// fait échouer le test. La vraie carte n'est jamais chargée.
+    /// on la quitte. Le journal du jeu dit si le monde a reçu sa carte, si la Chimère y est née et s'il a avancé ; toute
+    /// erreur dans la console fait échouer le test. La vraie carte n'est jamais chargée.
     /// </summary>
     public sealed class GameSceneTests
     {
@@ -22,6 +22,7 @@ namespace Diciela.Tests.PlayMode
         public IEnumerator TheWorldReceivesTheTestMapAndSteps()
         {
             LogAssert.Expect(LogType.Log, new Regex(@"^DICIELA : monde créé, carte de \d+ × \d+ m \(relief de \d+ × \d+ points\)"));
+            LogAssert.Expect(LogType.Log, new Regex(@"^DICIELA : l'habitant n° 1 \(chimere\) arrive en "));
 #if UNITY_EDITOR
             yield return UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode(ScenePaths.GameTest,
                 new LoadSceneParameters(LoadSceneMode.Additive));

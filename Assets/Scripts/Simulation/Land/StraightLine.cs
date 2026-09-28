@@ -8,9 +8,10 @@ namespace Diciela.Simulation.Land
     /// touche le sont, coins compris : passer par le coin commun de quatre mailles les touche toutes les quatre, la
     /// règle même qui interdit à un pas en diagonale de couper un coin. Le calcul est exact, en entiers : on avance de
     /// maille en maille, en comparant où la ligne croise la prochaine frontière entre deux colonnes et la prochaine
-    /// entre deux rangées.
+    /// entre deux rangées. Une lecture du maillage : la ligne tendue d'un trajet en est faite, et un marcheur s'en sert
+    /// pour savoir si le reste de sa ligne est encore libre.
     /// </summary>
-    internal static class StraightLine
+    public static class StraightLine
     {
         /// <summary>Vrai si la ligne droite du milieu de from à celui de to ne touche que des mailles libres.</summary>
         public static bool IsClear(NavGrid grid, Vector2Int from, Vector2Int to)
