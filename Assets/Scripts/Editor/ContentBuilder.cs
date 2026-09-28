@@ -5,8 +5,8 @@ using UnityEngine;
 namespace Diciela.EditorTools
 {
     /// <summary>
-    /// Crée le contenu qui manque : la fiche de la cabane et son remplaçant, sa famille, le catalogue (GDD, sections 9
-    /// et 16). Réexécutable : une fiche qui existe n'est jamais touchée.
+    /// Crée le contenu qui manque : la fiche de la cabane et son modèle préparé, sa famille, le catalogue (GDD, sections
+    /// 9 et 16). Réexécutable : une fiche qui existe n'est jamais touchée, sauf pour ce qui lui manque.
     /// </summary>
     internal static class ContentBuilder
     {
@@ -15,6 +15,10 @@ namespace Diciela.EditorTools
         private const string CabinPath = StructuresFolder + "/Cabane.asset";
         private const string HousingPath = StructuresFolder + "/Famille_Logement.asset";
 
+        // Le modèle du pack de la cabane (décision 75).
+        private const string CabinSourcePath =
+            "Assets/Synty/PolygonFantasyVillage/Prefabs/Buildings/Preset/Bld_Preset_Shed_02.prefab";
+
         public static void CreateMissing()
         {
             StructureDefinition cabin = EditorAssets.CreateIfMissing<StructureDefinition>(CabinPath, fiche =>
@@ -22,9 +26,10 @@ namespace Diciela.EditorTools
                 EditorAssets.Property(fiche, "_id").stringValue = "cabane";
                 EditorAssets.Property(fiche, "_nameKey").stringValue = "construction.cabane";
             });
-            // Tant que la cabane n'a pas son modèle, sa boîte suit sa fiche ; un vrai modèle n'est jamais touché.
-            if (cabin.Model == null || PlaceholderBuilder.IsPlaceholder(cabin.Model))
-                EditorAssets.AssignIfMissing(cabin, "_model", PlaceholderBuilder.EnsureBox(cabin));
+            // Le modèle préparé se fait ici une fois ; ensuite, par le menu DICIELA/Contenu/Préparer les modèles.
+            EditorAssets.AssignIfMissing(cabin, "_sourceModel", EditorAssets.Load<GameObject>(CabinSourcePath));
+            if (cabin.Model == null)
+                ModelPreparer.Prepare(cabin);
 
             StructureFamilyDefinition housing = EditorAssets.CreateIfMissing<StructureFamilyDefinition>(HousingPath,
                 fiche =>

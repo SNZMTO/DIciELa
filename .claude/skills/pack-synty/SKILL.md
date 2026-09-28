@@ -80,8 +80,12 @@ jamais un bâtiment ni un décor de sa propre initiative ; les choix d'art sont 
 
 ## Pièges
 
-- **Les prefabs ont leur origine n'importe où** (un coin, une porte, un socle enterré) : les recentrer à la pose d'après
-  la boîte de leurs seuls maillages (jamais les particules), plus un décalage fin tenu dans la donnée du modèle.
+- **Un preset de bâtiment a son origine au niveau de sa porte** (Shed_02 : à la porte même), ses fondations en
+  dessous, et des dizaines de pièces (Shed_02 : 62, dont le mur à porte `SM_Bld_Wall_Door_02`, et des accessoires
+  autour : tonneaux, caisses, vignes). On ne le pose jamais tel quel : le menu `DICIELA/Contenu/Préparer les modèles` le
+  fusionne, le tourne porte au nord, le centre et garde son origine comme sol (SAVOIR 2.9).
+- **Les niveaux de détail (LOD) sont dans les pièces**, pas dans le preset : une recherche dans le texte du preset ne les
+  voit pas.
 - **Viser un modèle par ses triangles demande « Read/Write »** coché à l'import de ses maillages ; sans lui, dans un jeu
   compilé, les triangles ne se lisent pas.
 - **L'échelle** : les packs Synty sont faits pour un mètre par unité (un humain mesure environ 1,8 unité), à vérifier
