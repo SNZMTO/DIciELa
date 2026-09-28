@@ -57,8 +57,8 @@ namespace Diciela.Simulation.Land
 
         /// <summary>
         /// Vrai si un piéton peut entrer dans cette maille : elle est libre. Un fantôme la prend dès sa pose, comme un
-        /// bâtiment ; le devant d'une porte est toujours libre, les règles de pose y refusent tout. La seule réponse à
-        /// « se traverse-t-elle ? ».
+        /// bâtiment ; le devant d'une porte reste libre (sauf la rangée que touche son propre mur), les règles de pose y
+        /// refusent tout. La seule réponse à « se traverse-t-elle ? ».
         /// </summary>
         public bool IsWalkable(Vector2Int cell)
         {

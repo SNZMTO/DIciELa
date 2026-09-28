@@ -56,7 +56,7 @@ namespace Diciela.Tests.EditMode
         }
 
         [Test]
-        public void SheNeverLeavesThroughAnotherConstruction()
+        public void TheWayOutIsNeverBehindAnotherConstruction()
         {
             // Un poteau de 0,5 × 2 m, collé au bloc à l'est, prend les mailles (14 ; 8 à 11). Du point (6,9 ; 5,25), dans
             // la maille (13 ; 10), la maille libre la plus proche serait (15 ; 10), à 0,85 m, mais derrière le poteau.
