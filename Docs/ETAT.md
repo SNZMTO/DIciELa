@@ -1,7 +1,7 @@
 # DICIELA — état actuel
 
-**Branche** : `menage-5-ultracode`, poussée, **pas encore fusionnée** : elle touche la marche, elle attend ton
-`/code-review ultra` (décision 77). `main` est à l'étape 10.
+**Branche** : `main`, à jour : le ménage 5 y est fusionné, sans nouvelle `/code-review ultra` (décision 91).
+
 
 **Fait** : le ménage « ultracode » (8 agents, 1,10 M jetons sur 1,5 M). 8 trouvailles retenues, toutes confirmées par
 leur vérificateur, plus 5 vraies parmi les 40 écartées. Chaque correction a son test, vu rouge avant elle :
@@ -23,8 +23,8 @@ cabane d'une autre : à moins de 25 cm, l'aperçu peut rougir (« La place est p
 sortie d'un fantôme), 89 (flâner ailleurs quand son coin est perdu), 90 (la prochaine revue ultracode : avant le premier
 jouable, les seuls bugs, plafond 1 M). Son personnage reste le chat du pack, dans `Assets/Data/Habitants/Chimere.asset`.
 
-**Prochaine étape** : ton `/code-review ultra`, ses remarques, la fusion ; puis la création de la Chimère et la tente.
+**Prochaine étape** : la création de la Chimère et la tente.
 **Prompt de la session suivante**
 
-> Lis CLAUDE.md et Docs/ETAT.md. Corrige avec moi les remarques du `/code-review ultra` de `menage-5-ultracode`,
-> fusionne, puis montre-moi le plan court de l'étape suivante : la création de la Chimère et la tente.
+> Lis CLAUDE.md et Docs/ETAT.md. Montre-moi le plan court de l'étape suivante : la création de la Chimère et la
+> tente.
