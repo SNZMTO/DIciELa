@@ -7,8 +7,8 @@ using UnityEngine;
 namespace Diciela.View
 {
     /// <summary>
-    /// Les habitants, vus (ARCHITECTURE, section 11) : chacun par le personnage du pack que dit sa sorte, tel quel. À
-    /// l'ouverture, ceux qui sont déjà là ; ensuite, chaque arrivée, par l'événement de la simulation. À chaque image, le
+    /// Les habitants, vus (ARCHITECTURE, section 11) : chacun habillé de son apparence (Dresser). À l'ouverture, ceux
+    /// qui sont déjà là ; ensuite, chaque arrivée, par l'événement de la simulation. À chaque image, le
     /// démarrage donne la fraction du pas en cours : chaque personnage se montre à cette fraction du chemin entre sa
     /// place au pas d'avant et celle du dernier pas (SAVOIR, 2.2), posé sur le sol, et se tourne vers où il va, sans
     /// à-coup. Le pack n'a pas d'animations : il glisse. Endormi, il est entré dans son logis : on ne le voit plus
@@ -82,15 +82,13 @@ namespace Diciela.View
         private void OnVillagerArrived(Villager villager)
         {
             // Appelé pendant un pas de la simulation : une fiche mal réglée se dit, sans arrêter le monde.
-            GameObject model = villager.Kind.Model;
-            if (model == null)
+            GameObject view = Dresser.Dress(villager.Appearance, transform);
+            if (view == null)
             {
-                Debug.LogError("DICIELA : la sorte d'habitant « " + villager.Kind.Id + " » n'a pas de personnage ; " +
-                               "l'habitant n° " + villager.Id + " ne se voit pas.", this);
+                Debug.LogError("DICIELA : l'habitant n° " + villager.Id + " ne se voit pas.", this);
                 return;
             }
 
-            GameObject view = Instantiate(model, transform, false);
             view.name = villager.Kind.Id + " n° " + villager.Id;
             var shown = new Shown { Villager = villager, Transform = view.transform };
             _shown.Add(shown);

@@ -57,10 +57,10 @@ namespace Diciela.Tests.EditMode
             var arrivals = new List<Villager>();
             world.Villagers.VillagerArrived += arrivals.Add;
 
-            world.Submit(new CreateChimeraCommand(_test.Kind));
-            world.Submit(new CreateChimeraCommand(_test.Kind));
+            world.Submit(new CreateChimeraCommand(_test.Kind, _test.Appearance));
+            world.Submit(new CreateChimeraCommand(_test.Kind, _test.Appearance));
             world.Step();
-            world.Submit(new CreateChimeraCommand(_test.Kind));
+            world.Submit(new CreateChimeraCommand(_test.Kind, _test.Appearance));
             world.Step();
 
             Assert.AreEqual(1, world.Villagers.All.Count);
@@ -76,8 +76,8 @@ namespace Diciela.Tests.EditMode
             var refused = new List<VillagerKindDefinition>();
             world.Villagers.ChimeraRefused += refused.Add;
 
-            world.Submit(new CreateChimeraCommand(_test.Kind));
-            world.Submit(new CreateChimeraCommand(second));
+            world.Submit(new CreateChimeraCommand(_test.Kind, _test.Appearance));
+            world.Submit(new CreateChimeraCommand(second, _test.Appearance));
             world.Step();
 
             Assert.AreEqual(1, world.Villagers.All.Count);
@@ -91,7 +91,7 @@ namespace Diciela.Tests.EditMode
             // Sa sorte dit 4 m au moins par saut, et non les 2 m du banc : chaque arrêt est à 4 m au moins du précédent.
             VillagerKindDefinition kind = _test.Keep(TestData.VillagerKind(minHop: 4f));
             var world = new World(_test.Settings, TestData.FlatMap(40f));
-            world.Submit(new CreateChimeraCommand(kind));
+            world.Submit(new CreateChimeraCommand(kind, _test.Appearance));
             world.Step();
             Villager chimera = world.Villagers.Chimera;
 

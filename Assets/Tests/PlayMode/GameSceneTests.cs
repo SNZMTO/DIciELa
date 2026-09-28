@@ -9,9 +9,10 @@ using UnityEngine.TestTools;
 namespace Diciela.Tests.PlayMode
 {
     /// <summary>
-    /// La scène de test, jouée comme par le joueur : on la charge, elle charge sa carte de test, on la laisse tourner,
-    /// on la quitte. Le journal du jeu dit si le monde a reçu sa carte, si la Chimère y est née et s'il a avancé ; toute
-    /// erreur dans la console fait échouer le test. La vraie carte n'est jamais chargée.
+    /// La scène de test, jouée comme par le joueur : on la charge, elle charge sa carte de test et ouvre l'écran de
+    /// création, on valide, on la laisse tourner, on la quitte. Le journal du jeu dit si le monde a reçu sa carte, si la
+    /// Chimère y est née et s'il a avancé ; toute erreur dans la console fait échouer le test. La vraie carte n'est
+    /// jamais chargée.
     /// </summary>
     public sealed class GameSceneTests
     {
@@ -26,6 +27,7 @@ namespace Diciela.Tests.PlayMode
             yield return UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode(ScenePaths.GameTest,
                 new LoadSceneParameters(LoadSceneMode.Additive));
 #endif
+            yield return TestOpening.Confirm(MaxFrames);
             // Elle tourne jusqu'à ce que sa carte soit chargée et que le monde ait joué un pas : celui où la Chimère naît.
             // La borne compte les images, jamais les secondes : une machine lente attend plus longtemps.
             GameRunner runner = null;

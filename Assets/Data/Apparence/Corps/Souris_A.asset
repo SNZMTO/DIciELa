@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 151263f3fcf6e1e40ab8cc1a8f2f5605, type: 3}
+  m_Name: Souris_A
+  m_EditorClassIdentifier: Diciela.Data::Diciela.Data.BodyDefinition
+  _id: souris_a
+  _nameKey: corps.souris_a
+  _model: {fileID: 3329244074904586184, guid: e5d67a04157b84542befec53c243f6ee, type: 3}
+  _palette: {fileID: 11400000, guid: 00c6d426d35349d479b91b6a4abcd027, type: 2}

@@ -40,6 +40,10 @@ En cas de doute, `unity list` (les outils du paquet `com.unity.pipeline`) ou la 
   `editor_status` jusqu'à prêt : la commande qui suit une recompilation échoue sinon (`Network error`).
 - **Jamais pendant le Play** (le garde-fou le bloque) : un moniteur du Input System resterait périmé.
 - Un `up_to_date` immédiat veut souvent dire que l'éditeur n'a pas vu les fichiers : `menu --path "Assets/Refresh"`.
+- **Un fichier écrit pendant une compilation peut être importé sans être compilé** : `recompile` répond `up_to_date`,
+  et ni `Assets/Refresh` ni une retouche du fichier n'y changent rien. Le sortir du dossier, `Refresh`, le remettre,
+  `Refresh`. Vérifier qu'un type neuf est compilé : `grep -c <Type> Library/ScriptAssemblies/<Assemblage>.dll`.
+- Un fichier de données retouché hors de l'éditeur (la table des textes) n'est relu qu'après `Assets/Refresh`.
 - `get_console_logs` ne remonte pas les erreurs de compilation : `grep "error CS" Logs/Editor.log` en ne lisant que les
   lignes ajoutées depuis la dernière compilation. `editor_play` refuse d'entrer s'il y a une erreur de compilation.
 

@@ -162,8 +162,20 @@
 
 ## 6. La Chimère
 
-- **Règle.** On la crée au lancement d'une partie : un corps d'animal et sa couleur, puis des morceaux d'autres animaux
-  (queue, oreilles, museau) et des accessoires (chapeau, cape…). Elle apparaît au point d'arrivée de la carte (voir 2).
+- **Règle.** On la crée au lancement d'une partie, sur l'écran de création : un corps d'animal et sa couleur, puis des
+  morceaux d'autres animaux (queue, oreilles, museau) et des accessoires (tête, visage, cou, dos, ceinture), au plus un
+  par emplacement. Elle apparaît au point d'arrivée de la carte (voir 2).
+- **Règle.** L'écran de création est un panneau sur le côté, la ville visible derrière ; la Chimère à venir se tient au
+  point d'arrivée, la caméra au plus près et tournée vers elle. Une ligne par choix, et des flèches qui en font le tour :
+  le corps (huit animaux, deux silhouettes chacun), la couleur (douze), puis une ligne par emplacement, « aucun » en
+  tête. Changer de corps lui rend sa couleur d'origine. On part du premier corps, dans sa couleur, sans pièce.
+  « C'est parti » (ou Entrée) la crée.
+- **Règle.** Le temps attend « C'est parti » : la journée commence quand elle arrive.
+- **Règle.** Elle n'a pas de nom : c'est la Chimère.
+- **À toi.** Les noms des corps, des couleurs et des pièces : un premier jet neutre (« Chat A », « Couleur 4 »,
+  « Chapeau 6 »), à réécrire dans la table des textes. Et ce que l'écran propose. Ma reco, appliquée : ni cheveux, ni
+  barbe, ni boucles d'oreilles, faits pour les humains ; les chapeaux 1 à 5, eux aussi à la taille des humains, font de
+  petits bonnets sur les grosses têtes des animaux.
 - **Règle.** Le joueur la place à un poste, comme un habitant, et elle y va ; on ne la dirige jamais directement, et
   elle ne prend jamais de poste d'elle-même. Sans poste, elle flâne (voir 7).
 - **Règle.** Elle travaille dans tous les domaines. Elle progresse lentement, mais plus haut que les habitants
@@ -501,12 +513,16 @@
 - **Règle.** Les habitants ordinaires sont les humains du pack ; les maîtres, ses animaux humanoïdes, distingués par
   leurs accessoires, leurs couleurs et leurs noms. À terme, un artiste payé fera de plus jolis personnages.
 - **Règle.** Les corps du pack sont d'un seul tenant : pas de tête d'une bête sur le corps d'une autre avant l'artiste.
-  Les queues, oreilles et museaux de la Chimère sont des accessoires du pack.
+  Les queues, oreilles et museaux de la Chimère sont des accessoires du pack. Ils s'ajoutent au corps, qui garde les
+  siens (des oreilles de cochon sur un chat lui en font quatre), et gardent leurs couleurs du pack.
+- **Règle.** Chaque pièce a sa place sur le personnage, la même pour tous les animaux, qui ont un seul squelette.
+- **À toi.** La place de chaque pièce, mesurée au départ (la base d'un chapeau un peu sous le haut du crâne, les
+  lunettes contre la face), à affiner dans sa fiche en regardant l'écran de création ou la planche de la Chimère.
+- **À toi.** La caméra de l'écran de création ne s'approche pas plus que celle de la ville (15 m, Défaut de la caméra) :
+  la Chimère y est petite. Ma reco : un cran plus près pour cet écran seul.
 - **Règle.** Le pack n'a pas d'animations : un pack d'animations est à acheter, par le développeur. En attendant, les
   personnages glissent, bras écartés, et se tournent vers où ils vont.
 - **Défaut.** Un personnage se tourne à 540° par seconde.
-- **À toi.** Le personnage de la Chimère en attendant l'écran de création. Ma reco, appliquée : `SM_Chr_Cat_Female_01`,
-  un corps d'animal (voir 6) ; tu le changes dans sa fiche (`Assets/Data/Habitants/Chimere.asset`).
 - **Règle.** Le jeu n'a pas de saisons.
 - **À toi.** Des saisons, plus tard ? Le pack n'en a que des bouts, et aucun bâtiment ni arbre d'hiver (détail dans la
   procédure `pack-synty`). Ma reco : non ; si le rythme en demande un jour, un événement du temps plutôt que quatre

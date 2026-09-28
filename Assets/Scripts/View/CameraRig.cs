@@ -42,6 +42,10 @@ namespace Diciela.View
         /// <summary>L'inclinaison de la vue, en degrés sous l'horizon.</summary>
         public float PitchDegrees => CameraPose.Pitch(_settings, _distance, _tiltDegrees);
 
+        /// <summary>La distance la plus proche (les habitants presque de face), et celle d'où part une partie.</summary>
+        public float NearestDistance => _settings.NearDistance;
+        public float StartDistance => _settings.StartDistance;
+
         private void Awake()
         {
             _camera = GetComponent<Camera>();
@@ -142,6 +146,15 @@ namespace Diciela.View
             float factor = Mathf.Pow(1f - _settings.ZoomStepPerNotch, notches);
             _targetDistance = Mathf.Clamp(_targetDistance * factor, _settings.NearDistance, _settings.FarDistance);
             _grip.BeginZoom(_camera, _relief, screenPoint, PivotHeight());
+        }
+
+        /// <summary>Rapproche ou éloigne la caméra à cette distance du point visé, entre ses bornes, sans à-coup.</summary>
+        public void ZoomTo(float meters)
+        {
+            if (!IsShowing)
+                return;
+            _grip.ReleaseZoom();
+            _targetDistance = Mathf.Clamp(meters, _settings.NearDistance, _settings.FarDistance);
         }
 
         private void LateUpdate()

@@ -57,6 +57,13 @@ namespace Diciela.EditorTools
             added += AddButtonIfMissing(choose, ChooseControls.TouchAction, "<Mouse>/leftButton") +
                      AddPointerIfMissing(choose, ChooseControls.PointerAction);
 
+            // Valider ce que l'interface propose : Entrée, celle du pavé numérique comprise.
+            InputActionMap confirm = asset.FindActionMap(ConfirmControls.MapName) ??
+                                     asset.AddActionMap(ConfirmControls.MapName);
+            added += AddIfMissing(confirm, ConfirmControls.ConfirmAction, m =>
+                m.AddAction(ConfirmControls.ConfirmAction, InputActionType.Button, "<Keyboard>/enter")
+                    .AddBinding("<Keyboard>/numpadEnter"));
+
             if (added > 0)
             {
                 EditorAssets.EnsureFolder("Assets/Input");

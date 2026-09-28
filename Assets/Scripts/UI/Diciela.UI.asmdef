@@ -5,7 +5,9 @@
         "Diciela.Data",
         "Diciela.Simulation.Land",
         "Diciela.Controls",
-        "Diciela.Simulation"
+        "Diciela.Simulation",
+        "Diciela.Simulation.Society",
+        "Diciela.View"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

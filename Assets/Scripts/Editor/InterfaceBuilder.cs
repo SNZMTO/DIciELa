@@ -8,8 +8,9 @@ using UnityEngine.UIElements;
 namespace Diciela.EditorTools
 {
     /// <summary>
-    /// Installe l'interface dans une scène racine : le panneau UI Toolkit (ses réglages et son thème) et la barre de
-    /// construction (« Interface »), reliée au démarrage. Réexécutable : ce qui est déjà réglé n'est pas touché.
+    /// Installe l'interface dans une scène racine : le panneau UI Toolkit (ses réglages et son thème), la barre de
+    /// construction (« Interface ») et l'écran de création (« Création »), chacun avec son document, reliés à la scène du
+    /// démarrage. Réexécutable : ce qui est déjà réglé n'est pas touché.
     /// </summary>
     internal static class InterfaceBuilder
     {
@@ -17,28 +18,37 @@ namespace Diciela.EditorTools
         private const string PanelPath = Folder + "/Panneau.asset";
         private const string ThemePath = Folder + "/Theme.tss";
         private const string BarLayoutPath = Folder + "/BarreConstruction.uxml";
+        private const string CreationLayoutPath = Folder + "/Creation.uxml";
         private const string InterfaceObjectName = "Interface";
+        private const string CreationObjectName = "Création";
 
         // L'écran de référence : l'interface garde sa taille relative, à mi-chemin entre la largeur et la hauteur.
         private static readonly Vector2Int ReferenceResolution = new Vector2Int(1920, 1080);
         private const float WidthOrHeight = 0.5f;
 
-        public static void EnsureIn(Scene scene, GameRunner runner)
+        public static void EnsureIn(Scene scene, GameStage stage)
         {
             PanelSettings panel = PanelIfMissing();
-            var layout = EditorAssets.Load<VisualTreeAsset>(BarLayoutPath);
-
             BuildBar bar = EditorAssets.FindOrCreate<BuildBar>(scene, InterfaceObjectName);
-            UIDocument document = bar.GetComponent<UIDocument>();
-            if (document.panelSettings == null || document.visualTreeAsset == null)
-            {
-                if (document.panelSettings == null)
-                    document.panelSettings = panel;
-                if (document.visualTreeAsset == null)
-                    document.visualTreeAsset = layout;
-                EditorUtility.SetDirty(document);
-            }
-            EditorAssets.AssignIfMissing(runner, "_buildBar", bar);
+            Document(bar, panel, BarLayoutPath);
+            EditorAssets.AssignIfMissing(stage, "_buildBar", bar);
+
+            CreationScreen creation = EditorAssets.FindOrCreate<CreationScreen>(scene, CreationObjectName);
+            Document(creation, panel, CreationLayoutPath);
+            EditorAssets.AssignIfMissing(stage, "_creationScreen", creation);
+        }
+
+        /// <summary>Le document UI Toolkit de cet écran : le panneau et sa mise en page, s'ils lui manquent.</summary>
+        private static void Document(Component screen, PanelSettings panel, string layoutPath)
+        {
+            UIDocument document = screen.GetComponent<UIDocument>();
+            if (document.panelSettings != null && document.visualTreeAsset != null)
+                return;
+            if (document.panelSettings == null)
+                document.panelSettings = panel;
+            if (document.visualTreeAsset == null)
+                document.visualTreeAsset = EditorAssets.Load<VisualTreeAsset>(layoutPath);
+            EditorUtility.SetDirty(document);
         }
 
         private static PanelSettings PanelIfMissing()

@@ -12,14 +12,16 @@ namespace Diciela.EditorTools
 {
     /// <summary>
     /// Monte les scènes du jeu : les fiches et les actions qui manquent, la carte de test, la carte (si elle n'existe
-    /// pas), puis les deux scènes racines, Jeu et JeuTest, chacune avec son démarrage et sa caméra reliés à leurs
-    /// fiches, et sans soleil. Réexécutable : ce qui existe n'est pas touché, un réglage fait à la main n'est pas écrasé. Finit sur la
-    /// scène Jeu.
+    /// pas), puis les deux scènes racines, Jeu et JeuTest, chacune avec son démarrage, sa scène (vues, gestes, écran de
+    /// création) et sa caméra reliés à leurs fiches, et sans soleil. Réexécutable : ce qui existe n'est pas touché, un
+    /// réglage fait à la main n'est pas écrasé. Finit sur la scène Jeu.
     /// </summary>
     public static class GameSceneBuilder
     {
         private const string StartupObjectName = "Démarrage";
         private const string VillagersObjectName = "Habitants";
+        private const string PreviewObjectName = "Aperçu de la Chimère";
+        private const string ConfirmObjectName = "Valider";
 
         [MenuItem("DICIELA/Scènes/Monter les scènes")]
         public static void BuildScenes()
@@ -70,6 +72,8 @@ namespace Diciela.EditorTools
             var session = EditorAssets.Load<SessionSettings>(sessionPath);
 
             GameRunner runner = EditorAssets.FindOrCreate<GameRunner>(scene, StartupObjectName);
+            GameStage stage = EditorAssets.GetOrAdd<GameStage>(runner.gameObject);
+            EditorAssets.AssignIfMissing(runner, "_stage", stage);
             EditorAssets.AssignIfMissing(runner, "_settings", settings);
             EditorAssets.AssignIfMissing(runner, "_session", session);
             EditorAssets.AssignIfMissing(runner, "_interfaceSettings",
@@ -78,13 +82,19 @@ namespace Diciela.EditorTools
             CameraRig rig = CameraBuilder.EnsureIn(scene);
             if (rig != null)
             {
-                EditorAssets.AssignIfMissing(runner, "_cameraRig", rig);
-                EditorAssets.AssignIfMissing(runner, "_cameraControls", rig.GetComponent<CameraControls>());
+                EditorAssets.AssignIfMissing(stage, "_cameraRig", rig);
+                EditorAssets.AssignIfMissing(stage, "_cameraControls", rig.GetComponent<CameraControls>());
             }
-            PlacementBuilder.EnsureIn(scene, runner);
-            EditorAssets.AssignIfMissing(runner, "_villagerViews",
+            PlacementBuilder.EnsureIn(scene, runner, stage);
+            EditorAssets.AssignIfMissing(stage, "_villagerViews",
                 EditorAssets.FindOrCreate<VillagerViews>(scene, VillagersObjectName));
-            InterfaceBuilder.EnsureIn(scene, runner);
+            EditorAssets.AssignIfMissing(stage, "_appearancePreview",
+                EditorAssets.FindOrCreate<AppearancePreview>(scene, PreviewObjectName));
+            ConfirmControls confirm = EditorAssets.FindOrCreate<ConfirmControls>(scene, ConfirmObjectName);
+            EditorAssets.AssignIfMissing(confirm, "_actions",
+                EditorAssets.Load<UnityEngine.InputSystem.InputActionAsset>(InputActionsBuilder.ActionsPath));
+            EditorAssets.AssignIfMissing(stage, "_confirmControls", confirm);
+            InterfaceBuilder.EnsureIn(scene, stage);
             EditorSceneManager.SaveScene(scene, scenePath);
         }
 

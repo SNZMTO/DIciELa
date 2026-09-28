@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 151263f3fcf6e1e40ab8cc1a8f2f5605, type: 3}
+  m_Name: Lapin_A
+  m_EditorClassIdentifier: Diciela.Data::Diciela.Data.BodyDefinition
+  _id: lapin_a
+  _nameKey: corps.lapin_a
+  _model: {fileID: 2684404703277580328, guid: fdd8d84cec5087a479e3a3b0c031b403, type: 3}
+  _palette: {fileID: 11400000, guid: 00ce1454294615c4ea69527a7fc60753, type: 2}

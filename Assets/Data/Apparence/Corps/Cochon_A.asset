@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 151263f3fcf6e1e40ab8cc1a8f2f5605, type: 3}
+  m_Name: Cochon_A
+  m_EditorClassIdentifier: Diciela.Data::Diciela.Data.BodyDefinition
+  _id: cochon_a
+  _nameKey: corps.cochon_a
+  _model: {fileID: 4414966460589624572, guid: ec7dedaf71b85da47a1d8594816e49a5, type: 3}
+  _palette: {fileID: 11400000, guid: 82d3eb0161a8fcd49a80a3086ee0a5aa, type: 2}

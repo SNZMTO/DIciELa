@@ -30,7 +30,7 @@ namespace Diciela.Tests.PlayMode
 #if UNITY_EDITOR
             TestWorld.Fill(kind, "_id", "chimere");
 #endif
-            _test.World.Submit(new CreateChimeraCommand(kind));
+            _test.World.Submit(new CreateChimeraCommand(kind, TestWorld.PlainAppearance(o => _test.Keep(o))));
             _test.World.Submit(new PlaceStructureCommand(_test.Tent, new Placement(new Vector2(50f, 45f), 0f)));
             _test.World.Step();
             _tool = new ChooseTool(_test.World, _test.Camera, _test.Views);

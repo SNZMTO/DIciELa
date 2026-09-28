@@ -4,6 +4,7 @@ using Diciela.Controls;
 using Diciela.Data;
 using Diciela.Simulation;
 using Diciela.Simulation.Land;
+using Diciela.Simulation.Society;
 using Diciela.View;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -98,6 +99,26 @@ namespace Diciela.Tests.PlayMode
             _created.Clear();
         }
 
+        /// <summary>
+        /// Une apparence sans pièce : un corps de ce modèle (aucun si null), dans une couleur sans matériau ; ses fiches
+        /// sont confiées à keep, pour être détruites avec le test.
+        /// </summary>
+        public static Appearance PlainAppearance(Action<Object> keep, GameObject model = null)
+        {
+            var palette = ScriptableObject.CreateInstance<PaletteDefinition>();
+            var body = ScriptableObject.CreateInstance<BodyDefinition>();
+            keep(palette);
+            keep(body);
+#if UNITY_EDITOR
+            Fill(palette, "_id", "roux");
+            Fill(body, "_id", "chat");
+            Fill(body, "_palette", palette);
+            if (model != null)
+                Fill(body, "_model", model);
+#endif
+            return new Appearance(body, palette, Array.Empty<AttachmentDefinition>());
+        }
+
 #if UNITY_EDITOR
         /// <summary>Remplit un champ par SerializedObject, comme l'Inspector.</summary>
         public static void Fill(Object target, string field, object value)
@@ -110,6 +131,8 @@ namespace Diciela.Tests.PlayMode
                 property.floatValue = number;
             else if (value is bool flag)
                 property.boolValue = flag;
+            else if (value is Vector3 vector)
+                property.vector3Value = vector;
             else
                 property.objectReferenceValue = (Object)value;
             serialized.ApplyModifiedPropertiesWithoutUndo();

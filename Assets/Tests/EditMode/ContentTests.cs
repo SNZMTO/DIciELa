@@ -11,7 +11,8 @@ namespace Diciela.Tests.EditMode
     /// <summary>
     /// Le contenu du jeu, lu dans le projet sans rien écrire (ARCHITECTURE, section 12) : un seul catalogue, qui mène à
     /// chaque fiche de construction une seule fois ; des identifiants uniques ; chaque texte cité a sa clé, non vide,
-    /// dans chaque langue de la table ; chaque modèle préparé suit sa fiche. La Chimère a ses tests à part.
+    /// dans chaque langue de la table (constructions, corps, couleurs, emplacements, pièces) ; chaque modèle préparé suit
+    /// sa fiche. La Chimère a ses tests à part.
     /// </summary>
     public sealed class ContentTests
     {
@@ -60,12 +61,26 @@ namespace Diciela.Tests.EditMode
             string csv = settings.Texts.text;
 
             var keys = new List<string>();
-            foreach (StructureFamilyDefinition family in LoadSingle<Catalog>().Families)
+            Catalog catalog = LoadSingle<Catalog>();
+            foreach (StructureFamilyDefinition family in catalog.Families)
             {
                 keys.Add(family.NameKey);
                 foreach (StructureDefinition structure in family.Structures)
                     keys.Add(structure.NameKey);
             }
+            foreach (BodyDefinition body in catalog.Bodies)
+                keys.Add(body.NameKey);
+            foreach (PaletteDefinition palette in catalog.Palettes)
+                keys.Add(palette.NameKey);
+            foreach (AttachmentSlotDefinition slot in catalog.AttachmentSlots)
+                keys.Add(slot.NameKey);
+            foreach (AttachmentDefinition attachment in catalog.Attachments)
+                keys.Add(attachment.NameKey);
+            keys.AddRange(new[]
+            {
+                TextKeys.CreationTitle, TextKeys.CreationBody, TextKeys.CreationPalette, TextKeys.CreationNone,
+                TextKeys.CreationPrevious, TextKeys.CreationNext, TextKeys.CreationConfirm
+            });
             foreach (PlacementResult result in Enum.GetValues(typeof(PlacementResult)))
             {
                 if (result != PlacementResult.Ok)

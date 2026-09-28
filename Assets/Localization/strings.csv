@@ -8,3 +8,85 @@ pose.refus.Overlaps,La place est prise,Something is in the way
 pose.refus.BlocksADoor,"Devant une porte, rien ne se pose",Nothing goes in front of a door
 pose.refus.DoorBlocked,Sa porte serait bouchée,Its door would be blocked
 pose.refus.AlreadyPlaced,Déjà posée : une seule par ville,Already placed: one per town
+corps.chat_a,Chat A,Cat A
+corps.chat_b,Chat B,Cat B
+corps.cochon_a,Cochon A,Pig A
+corps.cochon_b,Cochon B,Pig B
+corps.grenouille_a,Grenouille A,Frog A
+corps.grenouille_b,Grenouille B,Frog B
+corps.lapin_a,Lapin A,Rabbit A
+corps.lapin_b,Lapin B,Rabbit B
+corps.oiseau_a,Oiseau A,Bird A
+corps.oiseau_b,Oiseau B,Bird B
+corps.ratonlaveur_a,Raton laveur A,Raccoon A
+corps.ratonlaveur_b,Raton laveur B,Raccoon B
+corps.renard_a,Renard A,Fox A
+corps.renard_b,Renard B,Fox B
+corps.souris_a,Souris A,Mouse A
+corps.souris_b,Souris B,Mouse B
+couleur.01,Couleur 1,Colour 1
+couleur.02,Couleur 2,Colour 2
+couleur.03,Couleur 3,Colour 3
+couleur.04,Couleur 4,Colour 4
+couleur.05,Couleur 5,Colour 5
+couleur.06,Couleur 6,Colour 6
+couleur.07,Couleur 7,Colour 7
+couleur.08,Couleur 8,Colour 8
+couleur.09,Couleur 9,Colour 9
+couleur.10,Couleur 10,Colour 10
+couleur.11,Couleur 11,Colour 11
+couleur.12,Couleur 12,Colour 12
+emplacement.queue,Queue,Tail
+emplacement.oreilles,Oreilles,Ears
+emplacement.museau,Museau,Snout
+emplacement.tete,Tête,Head
+emplacement.visage,Visage,Face
+emplacement.cou,Cou,Neck
+emplacement.dos,Dos,Back
+emplacement.ceinture,Ceinture,Belt
+piece.queue_01,Queue 1,Tail 1
+piece.queue_02,Queue 2,Tail 2
+piece.queue_03,Queue 3,Tail 3
+piece.queue_04,Queue 4,Tail 4
+piece.queue_05,Queue 5,Tail 5
+piece.oreillescochon_01,Oreilles de cochon 1,Pig ears 1
+piece.oreillescochon_02,Oreilles de cochon 2,Pig ears 2
+piece.oreillesraton_01,Oreilles de raton laveur 1,Raccoon ears 1
+piece.oreillesraton_02,Oreilles de raton laveur 2,Raccoon ears 2
+piece.oreillesgobelin_01,Oreilles de gobelin 1,Goblin ears 1
+piece.oreillesgobelin_02,Oreilles de gobelin 2,Goblin ears 2
+piece.museau_01,Museau,Snout
+piece.chapeau_01,Chapeau 1,Hat 1
+piece.chapeau_02,Chapeau 2,Hat 2
+piece.chapeau_03,Chapeau 3,Hat 3
+piece.chapeau_04,Chapeau 4,Hat 4
+piece.chapeau_05,Chapeau 5,Hat 5
+piece.chapeau_06,Chapeau 6,Hat 6
+piece.chapeau_07,Chapeau 7,Hat 7
+piece.chapeau_08,Chapeau 8,Hat 8
+piece.casque_01,Casque,Helmet
+piece.couronne_01,Couronne,Crown
+piece.fleur_01,Fleur,Flower
+piece.noeud_01,Nœud 1,Bow 1
+piece.noeud_02,Nœud 2,Bow 2
+piece.noeud_03,Nœud 3,Bow 3
+piece.lunettes_01,Lunettes,Glasses
+piece.monocle_01,Monocle,Monocle
+piece.echarpe_01,Écharpe,Scarf
+piece.bandana_01,Bandana,Bandana
+piece.cape_01,Cape 1,Cape 1
+piece.cape_02,Cape 2,Cape 2
+piece.cape_03,Cape 3,Cape 3
+piece.cape_04,Cape 4,Cape 4
+piece.sacados_01,Sac à dos 1,Backpack 1
+piece.sacados_02,Sac à dos 2,Backpack 2
+piece.bourse_01,Bourse,Pouch
+piece.gourde_01,Gourde,Canteen
+piece.potion_01,Potion,Potion
+creation.titre,La Chimère,The Chimera
+creation.corps,Corps,Body
+creation.couleur,Couleur,Colour
+creation.aucun,Aucun,None
+creation.valider,C'est parti,Let's go
+creation.precedent,<,<
+creation.suivant,>,>

@@ -46,17 +46,23 @@ jamais un bâtiment ni un décor de sa propre initiative ; les choix d'art sont 
   `SM_Chr_Butcher_01`.
 - **Animaux humanoïdes** (les maîtres, et le corps de la Chimère), en mâle et femelle : Oiseau (`Bird`), Lapin
   (`Bunny`), Chat (`Cat`), Renard (`Fox`), Grenouille (`Frog`), Souris (`Mouse`), Cochon (`Pig`), Raton laveur
-  (`Racoon`). Variantes de couleur : `Materials/Alts/Animal_Alts/` (A, B, C par animal).
+  (`Racoon`). Couleurs : les douze matériaux `Materials/Alts/Animal_Alts/` (`Animal_01` à `04`, A à C), qui vont sur
+  n'importe quel corps.
 - **Accessoires à attacher** (`Prefabs/Characters/Chr_Attach/`) : queues (`Tail_01` à `05`), oreilles (cochon, raton
   laveur, gobelin), museau (`Snout_01`), cheveux, barbes, chapeaux (`Hat_01` à `08`), capes, sacs, lunettes, monocle,
-  couronne, boucles d'oreilles, fleur, écharpe…
+  couronne, boucles d'oreilles, fleur, écharpe… **Elles ne sont pas modelées à leur place sur le personnage** : debout,
+  dans ses axes, leur pivot à leur point d'accroche ; on les pose sur ce point, puis on les confie à un os (SAVOIR 2.11).
+  Les chapeaux 1 à 5, les cheveux et la barbe sont à la taille des humains ; le reste, à celle des animaux.
 - Tous les personnages sont **riggés** (SkinnedMeshRenderer) mais **le pack n'a aucune animation** : un pack
   d'animations compatible est à acheter par le développeur. Posés tels quels, ils restent bras écartés (leur Animator
   n'a pas de contrôleur).
 - **Un personnage a son origine aux pieds et regarde vers +z** : dans la pose d'origine, les yeux sont 31 cm devant la
   tête, les orteils devant les talons (mesuré sur les os, test `ChimeraContentTests`). On les pose donc sans correction.
-- **Chaque prefab d'animal porte les seize corps d'animaux**, un seul actif (celui de son nom), sur le même squelette :
-  changer d'animal, c'est activer un autre enfant.
+- **Chaque prefab d'animal porte les seize corps d'animaux**, un seul actif (celui de son nom), sur le même squelette,
+  mais les quinze cachés pointent vers un matériau absent du projet : changer d'animal, c'est prendre son prefab.
+- **Deux squelettes** : les animaux ont `head` à 1,21 m et mesurent 2,1 à 2,5 m, oreilles comprises (des têtes
+  énormes) ; les humains ont `Head` à 1,57 m. L'oiseau, le lapin, la souris et le cochon portent d'office une petite
+  cape, sous `CapesMini_01`.
 - **Les corps sont d'un seul tenant** : pas de tête d'une bête sur le corps d'une autre sans retoucher les modèles.
 
 ## Ce que le pack a, et ce qui lui manque

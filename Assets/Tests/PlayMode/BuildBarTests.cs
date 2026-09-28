@@ -12,8 +12,8 @@ using UnityEngine.UIElements;
 namespace Diciela.Tests.PlayMode
 {
     /// <summary>
-    /// La barre de construction dans la scène de test : elle montre le catalogue du jeu, dans la langue de ses réglages
-    /// (lus dans le projet), et dit aux gestes quand le pointeur est sur elle. Le pointeur compte depuis le bas de
+    /// La barre de construction dans la scène de test, une fois la Chimère créée : elle montre le catalogue du jeu, dans
+    /// la langue de ses réglages (lus dans le projet), et dit aux gestes quand le pointeur est sur elle. Le pointeur compte depuis le bas de
     /// l'écran, UI Toolkit depuis le haut : l'attendu se calcule par la conversion d'UI Toolkit, inversée.
     /// </summary>
     public sealed class BuildBarTests
@@ -28,6 +28,7 @@ namespace Diciela.Tests.PlayMode
             yield return UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode(ScenePaths.GameTest,
                 new LoadSceneParameters(LoadSceneMode.Additive));
 #endif
+            yield return TestOpening.Confirm(MaxFrames);
             BuildBar bar = null;
             VisualElement structures = null;
             // La borne compte les images, jamais les secondes : une machine lente attend plus longtemps.

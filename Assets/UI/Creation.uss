@@ -1,0 +1,77 @@
+/* L'écran de création de la Chimère (GDD, section 6) : un panneau à droite, la ville visible derrière ; une ligne par
+   choix, ses flèches de part et d'autre du choix ; le bouton qui valide en bas. Les couleurs sont celles de la barre. */
+
+.screen {
+    flex-grow: 1;
+    justify-content: center;
+    align-items: flex-end;
+    padding-right: 32px;
+}
+
+.panel {
+    width: 520px;
+    padding: 18px 20px;
+    background-color: rgba(34, 27, 20, 0.85);
+    border-radius: 10px;
+}
+
+.panel--hidden {
+    display: none;
+}
+
+.title {
+    margin-bottom: 12px;
+    font-size: 30px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    color: rgb(250, 240, 224);
+}
+
+.row {
+    flex-direction: row;
+    align-items: center;
+    height: 46px;
+}
+
+.row-label {
+    width: 130px;
+    font-size: 20px;
+    color: rgb(222, 206, 184);
+}
+
+.arrow {
+    width: 44px;
+    height: 40px;
+    margin: 0;
+    font-size: 26px;
+    color: rgb(250, 240, 224);
+    background-color: rgb(92, 70, 48);
+    border-width: 0;
+    border-radius: 6px;
+}
+
+.arrow:hover {
+    background-color: rgb(122, 94, 64);
+}
+
+.choice {
+    flex-grow: 1;
+    font-size: 20px;
+    -unity-text-align: middle-center;
+    color: rgb(250, 240, 224);
+}
+
+.confirm {
+    height: 52px;
+    margin: 16px 0 0 0;
+    font-size: 22px;
+    -unity-font-style: bold;
+    color: rgb(34, 27, 20);
+    background-color: rgb(172, 128, 70);
+    border-width: 0;
+    border-radius: 8px;
+}
+
+.confirm:hover {
+    background-color: rgb(196, 150, 86);
+}
