@@ -15,8 +15,7 @@ Terrain nu) ; la suite est l'étape 9, les chemins.
    6,5 × 8,5 m). La fiche prendra sa taille et sa porte. La planche se remet en scène en Play par **DICIELA > Album >
    Planche des cabanes candidates** : ce menu est temporaire (`ModelBoardMenu.cs`, non suivi par Git), à supprimer
    une fois le choix fait.
-2. Un fantôme (posé, pas bâti) bloque-t-il le passage ? (Oui, dès qu'il est posé : une maille, un objet, une seule
-   vérité pour la pose et le passage.)
+2. Un fantôme (posé, pas bâti) bloque-t-il le passage ? (Oui, dès sa pose : une maille, un objet, une vérité.)
 3. Le plan de l'étape 9 ci-dessous.
 
 **Étape 9, les chemins** (rien de visible, SAVOIR 2.1) : une maille se traverse si elle est libre ou devant une porte,
