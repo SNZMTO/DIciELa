@@ -46,8 +46,9 @@ jamais un bâtiment ni un décor de sa propre initiative ; les choix d'art sont 
   `SM_Chr_Butcher_01`.
 - **Animaux humanoïdes** (les maîtres, et le corps de la Chimère), en mâle et femelle : Oiseau (`Bird`), Lapin
   (`Bunny`), Chat (`Cat`), Renard (`Fox`), Grenouille (`Frog`), Souris (`Mouse`), Cochon (`Pig`), Raton laveur
-  (`Racoon`). Couleurs : les douze matériaux `Materials/Alts/Animal_Alts/` (`Animal_01` à `04`, A à C), qui vont sur
-  n'importe quel corps.
+  (`Racoon`). Couleurs : douze textures (`01` à `04`, A à C), lues par deux familles de matériaux, celle des
+  personnages (`Materials/Alts/Animal_Alts/`, corps, têtes, queues) et celle des objets (`Materials/Alts/`, les autres
+  pièces), qui ne diffèrent que par leur shader ; toute partie prend n'importe laquelle des douze.
 - **Accessoires à attacher** (`Prefabs/Characters/Chr_Attach/`) : queues (`Tail_01` à `05`), oreilles (cochon, raton
   laveur, gobelin), museau (`Snout_01`), cheveux, barbes, chapeaux (`Hat_01` à `08`), capes, sacs, lunettes, monocle,
   couronne, boucles d'oreilles, fleur, écharpe… **Elles ne sont pas modelées à leur place sur le personnage** : debout,
@@ -62,8 +63,11 @@ jamais un bâtiment ni un décor de sa propre initiative ; les choix d'art sont 
   mais les quinze cachés pointent vers un matériau absent du projet : changer d'animal, c'est prendre son prefab.
 - **Deux squelettes** : les animaux ont `head` à 1,21 m et mesurent 2,1 à 2,5 m, oreilles comprises (des têtes
   énormes) ; les humains ont `Head` à 1,57 m. L'oiseau, le lapin, la souris et le cochon portent d'office une petite
-  cape, sous `CapesMini_01`.
-- **Les corps sont d'un seul tenant** : pas de tête d'une bête sur le corps d'une autre sans retoucher les modèles.
+  cape, sous `CapesMini_01`, sur son propre squelette (`CapeRigMini_*`).
+- **La tête de chaque animal est un îlot** de son modèle : aucun triangle ne la relie au corps, qui est d'un seul tenant
+  (bras, jambes, habits). Elle se sépare selon ses os (`head`, `eyes`, `eyebrows`) et va sur le corps de n'importe quel
+  autre animal (SAVOIR 2.11). Le chat, le renard et l'oiseau portent d'office une pièce (deux queues, une huppe), copies
+  des modèles de `Chr_Attach`.
 
 ## Ce que le pack a, et ce qui lui manque
 

@@ -11,7 +11,7 @@ namespace Diciela.Tests.EditMode
     /// <summary>
     /// Le contenu du jeu, lu dans le projet sans rien écrire (ARCHITECTURE, section 12) : un seul catalogue, qui mène à
     /// chaque fiche de construction une seule fois ; des identifiants uniques ; chaque texte cité a sa clé, non vide,
-    /// dans chaque langue de la table (constructions, corps, couleurs, emplacements, pièces) ; chaque modèle préparé suit
+    /// dans chaque langue de la table (constructions, têtes, corps, couleurs, emplacements, pièces) ; chaque modèle préparé suit
     /// sa fiche. La Chimère a ses tests à part.
     /// </summary>
     public sealed class ContentTests
@@ -68,6 +68,8 @@ namespace Diciela.Tests.EditMode
                 foreach (StructureDefinition structure in family.Structures)
                     keys.Add(structure.NameKey);
             }
+            foreach (HeadDefinition head in catalog.Heads)
+                keys.Add(head.NameKey);
             foreach (BodyDefinition body in catalog.Bodies)
                 keys.Add(body.NameKey);
             foreach (PaletteDefinition palette in catalog.Palettes)
@@ -78,7 +80,7 @@ namespace Diciela.Tests.EditMode
                 keys.Add(attachment.NameKey);
             keys.AddRange(new[]
             {
-                TextKeys.CreationTitle, TextKeys.CreationBody, TextKeys.CreationPalette, TextKeys.CreationNone,
+                TextKeys.CreationTitle, TextKeys.CreationHead, TextKeys.CreationBody, TextKeys.CreationNone,
                 TextKeys.CreationPrevious, TextKeys.CreationNext, TextKeys.CreationConfirm
             });
             foreach (PlacementResult result in Enum.GetValues(typeof(PlacementResult)))

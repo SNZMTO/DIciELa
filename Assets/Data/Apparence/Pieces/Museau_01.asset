@@ -16,4 +16,5 @@ MonoBehaviour:
   _nameKey: piece.museau_01
   _slot: {fileID: 11400000, guid: e1f9983da2f97c44da9fa6c8e4036a39, type: 2}
   _model: {fileID: 5482801249323866497, guid: eecaa6290aa0cb744a1b76fff83139c7, type: 3}
+  _palette: {fileID: 11400000, guid: 82d3eb0161a8fcd49a80a3086ee0a5aa, type: 2}
   _anchor: {x: 0, y: 1.4002995, z: 0.40033966}

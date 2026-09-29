@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5d0ab0493495fc142aa30b1d1cb778b9, type: 3}
-  m_Name: Tete
+  m_Name: Barbe
   m_EditorClassIdentifier: Diciela.Data::Diciela.Data.AttachmentSlotDefinition
-  _id: tete
-  _nameKey: emplacement.tete
+  _id: barbe
+  _nameKey: emplacement.barbe
   _bone: head

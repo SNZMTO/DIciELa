@@ -7,65 +7,107 @@ namespace Diciela.View
 {
     /// <summary>
     /// Habille un personnage d'une apparence (GDD, section 6 ; SAVOIR, 2.11), la seule façon de le faire, pour les
-    /// habitants vus comme pour l'aperçu de l'écran de création. Le corps du pack, tel quel, sans ses corps cachés (ils
-    /// n'ont pas de matériau dans le projet, et pèsent pour rien). Sa couleur à la place de celle d'origine, sur le
-    /// matériau partagé : une copie par personnage empêcherait le rendu de les regrouper. Chaque pièce posée droite, son
-    /// pivot sur son point d'accroche, puis accrochée à l'os de son emplacement sans bouger : elle le suivra quand le
-    /// personnage sera animé.
+    /// habitants vus comme pour l'aperçu de l'écran de création. Le personnage du pack d'où vient le corps sert de
+    /// squelette : tous les animaux ont le même. On lui retire ce qu'il porte (ses seize corps, ses pièces d'office, ses
+    /// capes cachées), puis il reçoit le corps et la tête choisis, chacun de sa couleur, sur ses os. Une petite cape qu'il
+    /// porte dans le pack reste, comme un habit, de la couleur du corps. Chaque pièce se pose droite, son pivot sur son
+    /// point d'accroche, puis s'accroche à l'os de son emplacement sans bouger ; sa couleur remplace la sienne. Les
+    /// couleurs se posent sur les matériaux partagés : une copie par personnage empêcherait le rendu de les regrouper.
     /// </summary>
     public static class Dresser
     {
         /// <summary>
-        /// Le personnage habillé, enfant de ce parent, à son origine ; null si son corps n'a pas de personnage (dit dans
-        /// la console).
+        /// Le personnage habillé, enfant de ce parent, à son origine ; null si une fiche n'a pas son modèle (dit dans la
+        /// console).
         /// </summary>
         public static GameObject Dress(Appearance appearance, Transform parent)
         {
-            GameObject model = appearance.Body.Model;
-            if (model == null)
+            BodyDefinition body = appearance.Body;
+            if (body.Model == null || body.Mesh == null || appearance.Head.Mesh == null)
             {
-                Debug.LogError("DICIELA : le corps « " + appearance.Body.Id + " » n'a pas de personnage.");
+                Debug.LogError("DICIELA : le corps « " + body.Id + " » ou la tête « " + appearance.Head.Id +
+                               " » n'a pas son modèle.");
                 return null;
             }
 
-            GameObject character = Object.Instantiate(model, parent, false);
+            GameObject character = Object.Instantiate(body.Model, parent, false);
             character.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
-            Paint(character, appearance);
-            foreach (AttachmentDefinition attachment in appearance.Attachments)
-                Attach(character.transform, attachment);
+            if (!TryStrip(character.transform, out Skeleton skeleton))
+            {
+                Debug.LogError("DICIELA : le personnage de « " + body.Id + " » n'a pas de corps allumé.");
+                return character;
+            }
+
+            Recolor(character.GetComponentsInChildren<Renderer>(), body.Palette, appearance.BodyPalette);
+            Part(character.transform, "Corps", body.Mesh, appearance.BodyPalette, skeleton);
+            Part(character.transform, "Tête", appearance.Head.Mesh, appearance.HeadPalette, skeleton);
+            foreach (WornAttachment worn in appearance.Attachments)
+                Attach(character.transform, worn);
             return character;
         }
 
-        /// <summary>Retire les corps cachés, et pose la couleur choisie à la place de celle d'origine.</summary>
-        private static void Paint(GameObject character, Appearance appearance)
+        /// <summary>Les os du corps allumé, relevés avant qu'on le retire : la tête et le corps choisis s'y posent.</summary>
+        private readonly struct Skeleton
         {
-            Material from = appearance.Body.Palette != null ? appearance.Body.Palette.Material : null;
-            Material to = appearance.Palette.Material;
-            foreach (SkinnedMeshRenderer skin in character.GetComponentsInChildren<SkinnedMeshRenderer>(true))
+            public Skeleton(SkinnedMeshRenderer shown)
             {
-                if (!skin.gameObject.activeSelf)
-                {
-                    Remove(skin.gameObject);
-                    continue;
-                }
-                if (from == null || to == null || from == to)
-                    continue;
-                Material[] materials = skin.sharedMaterials;
-                bool changed = false;
-                for (int i = 0; i < materials.Length; i++)
-                {
-                    if (materials[i] != from)
-                        continue;
-                    materials[i] = to;
-                    changed = true;
-                }
-                if (changed)
-                    skin.sharedMaterials = materials;
+                Bones = shown.bones;
+                Root = shown.rootBone;
+                Bounds = shown.localBounds;
             }
+
+            public Transform[] Bones { get; }
+            public Transform Root { get; }
+            public Bounds Bounds { get; }
         }
 
-        private static void Attach(Transform character, AttachmentDefinition attachment)
+        /// <summary>
+        /// Retire ce que porte le personnage du pack : ses corps (les maillages à peau enfants directs), ses pièces
+        /// d'office (ses maillages sans peau), ses capes cachées. Faux s'il n'a pas de corps allumé, dont on garde les os.
+        /// </summary>
+        private static bool TryStrip(Transform character, out Skeleton skeleton)
         {
+            skeleton = default;
+            bool found = false;
+            foreach (SkinnedMeshRenderer skin in character.GetComponentsInChildren<SkinnedMeshRenderer>(true))
+            {
+                bool body = skin.transform.parent == character;
+                if (body && skin.gameObject.activeSelf && !found)
+                {
+                    skeleton = new Skeleton(skin);
+                    found = true;
+                }
+                if (body || !skin.gameObject.activeSelf)
+                    Remove(skin.gameObject);
+            }
+            foreach (MeshRenderer piece in character.GetComponentsInChildren<MeshRenderer>(true))
+            {
+                MeshFilter filter = piece.GetComponent<MeshFilter>();
+                Remove(piece);
+                if (filter != null)
+                    Remove(filter);
+            }
+            return found;
+        }
+
+        /// <summary>Un maillage à peau sur les os du personnage, de cette couleur.</summary>
+        private static void Part(Transform character, string name, Mesh mesh, PaletteDefinition palette,
+            Skeleton skeleton)
+        {
+            var part = new GameObject(name);
+            part.transform.SetParent(character, false);
+            var skin = part.AddComponent<SkinnedMeshRenderer>();
+            skin.sharedMesh = mesh;
+            skin.bones = skeleton.Bones;
+            skin.rootBone = skeleton.Root;
+            // Sans la boîte du corps d'origine, autour de son os racine, le rendu la croirait hors de vue.
+            skin.localBounds = skeleton.Bounds;
+            skin.sharedMaterial = palette.CharacterMaterial;
+        }
+
+        private static void Attach(Transform character, WornAttachment worn)
+        {
+            AttachmentDefinition attachment = worn.Attachment;
             if (attachment.Model == null)
             {
                 Debug.LogError("DICIELA : la pièce « " + attachment.Id + " » n'a pas de modèle.");
@@ -75,12 +117,41 @@ namespace Diciela.View
             // Posée dans les axes du personnage, telle que le pack la modèle, puis confiée à son os sans bouger.
             GameObject piece = Object.Instantiate(attachment.Model, character, false);
             piece.transform.localPosition = attachment.Anchor;
+            Recolor(piece.GetComponentsInChildren<Renderer>(), attachment.Palette, worn.Palette);
             Transform bone = Find(character, attachment.Slot.Bone);
             if (bone != null)
                 piece.transform.SetParent(bone, true);
             else
                 Debug.LogError("DICIELA : le personnage n'a pas d'os « " + attachment.Slot.Bone + " » pour la pièce « " +
                                attachment.Id + " ».");
+        }
+
+        /// <summary>
+        /// Remplace une couleur par une autre sur ces rendus, chaque matériau par celui de même sorte (personnage, objet),
+        /// là seulement où il est : une lentille de verre reste en verre.
+        /// </summary>
+        private static void Recolor(Renderer[] renderers, PaletteDefinition own, PaletteDefinition chosen)
+        {
+            if (own == null || own == chosen)
+                return;
+            foreach (Renderer renderer in renderers)
+            {
+                Material[] materials = renderer.sharedMaterials;
+                bool changed = false;
+                for (int i = 0; i < materials.Length; i++)
+                {
+                    Material to = materials[i] == null ? null
+                        : materials[i] == own.CharacterMaterial ? chosen.CharacterMaterial
+                        : materials[i] == own.ObjectMaterial ? chosen.ObjectMaterial
+                        : null;
+                    if (to == null)
+                        continue;
+                    materials[i] = to;
+                    changed = true;
+                }
+                if (changed)
+                    renderer.sharedMaterials = materials;
+            }
         }
 
         private static Transform Find(Transform root, string name)
@@ -98,12 +169,12 @@ namespace Diciela.View
             return null;
         }
 
-        private static void Remove(GameObject hidden)
+        private static void Remove(Object thing)
         {
             if (Application.isPlaying)
-                Object.Destroy(hidden);
+                Object.Destroy(thing);
             else
-                Object.DestroyImmediate(hidden);
+                Object.DestroyImmediate(thing);
         }
     }
 }

@@ -16,4 +16,5 @@ MonoBehaviour:
   _nameKey: piece.bourse_01
   _slot: {fileID: 11400000, guid: ceded7acf4710b24aa2c9bbebe8850d5, type: 2}
   _model: {fileID: 3376513382122392894, guid: 0b305d24c67ebe9439bfcf9edc68c057, type: 3}
+  _palette: {fileID: 11400000, guid: 82d3eb0161a8fcd49a80a3086ee0a5aa, type: 2}
   _anchor: {x: 8.881784e-18, y: 0.5528884, z: 0}

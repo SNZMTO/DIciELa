@@ -16,4 +16,5 @@ MonoBehaviour:
   _nameKey: piece.oreillescochon_02
   _slot: {fileID: 11400000, guid: 237ba4d2efff1aa4c91544ec94af0605, type: 2}
   _model: {fileID: 8518552691439549650, guid: 456fd078701d1d14081b5bc349f88f8e, type: 3}
+  _palette: {fileID: 11400000, guid: 82d3eb0161a8fcd49a80a3086ee0a5aa, type: 2}
   _anchor: {x: 0, y: 1.8850781, z: 0.04960112}

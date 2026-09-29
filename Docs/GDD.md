@@ -162,20 +162,20 @@
 
 ## 6. La Chimère
 
-- **Règle.** On la crée au lancement d'une partie, sur l'écran de création : un corps d'animal et sa couleur, puis des
-  morceaux d'autres animaux (queue, oreilles, museau) et des accessoires (tête, visage, cou, dos, ceinture), au plus un
-  par emplacement. Elle apparaît au point d'arrivée de la carte (voir 2).
+- **Règle.** On la crée au lancement d'une partie, sur l'écran de création : une tête d'animal et un corps d'animal,
+  pas forcément le même, puis des morceaux d'autres animaux (queue, oreilles, museau) et des accessoires, au plus un par
+  emplacement ; chaque partie a sa couleur. Elle apparaît au point d'arrivée de la carte (voir 2).
 - **Règle.** L'écran de création est un panneau sur le côté, la ville visible derrière ; la Chimère à venir se tient au
-  point d'arrivée, la caméra au plus près et tournée vers elle. Une ligne par choix, et des flèches qui en font le tour :
-  le corps (huit animaux, deux silhouettes chacun), la couleur (douze), puis une ligne par emplacement, « aucun » en
-  tête. Changer de corps lui rend sa couleur d'origine. On part du premier corps, dans sa couleur, sans pièce.
-  « C'est parti » (ou Entrée) la crée.
+  point d'arrivée, la caméra au plus près et tournée vers elle. Une ligne par partie, sa pièce et sa couleur, chacune
+  entre ses flèches : la tête (seize), le corps et ses habits (seize), puis la queue, les oreilles, le museau, les
+  cheveux, le chapeau, le visage, la barbe, les boucles d'oreilles, le cou, le dos et la ceinture, « aucun » en tête.
+  Les douze couleurs du pack vont sur n'importe quelle partie ; changer de partie lui rend sa couleur d'origine. On part
+  du chat, dans ses couleurs, avec sa queue. « C'est parti » (ou Entrée) la crée.
 - **Règle.** Le temps attend « C'est parti » : la journée commence quand elle arrive.
 - **Règle.** Elle n'a pas de nom : c'est la Chimère.
-- **À toi.** Les noms des corps, des couleurs et des pièces : un premier jet neutre (« Chat A », « Couleur 4 »,
-  « Chapeau 6 »), à réécrire dans la table des textes. Et ce que l'écran propose. Ma reco, appliquée : ni cheveux, ni
-  barbe, ni boucles d'oreilles, faits pour les humains ; les chapeaux 1 à 5, eux aussi à la taille des humains, font de
-  petits bonnets sur les grosses têtes des animaux.
+- **À toi.** Les noms des têtes, des corps, des couleurs et des pièces : un premier jet neutre (« Chat A »,
+  « Couleur 4 », « Chapeau 6 »), à réécrire dans la table des textes. Toutes les pièces du pack sont proposées ; celles
+  faites pour les humains (cheveux, barbe, boucles d'oreilles, chapeaux 1 à 5) sont petites sur les animaux.
 - **Règle.** Le joueur la place à un poste, comme un habitant, et elle y va ; on ne la dirige jamais directement, et
   elle ne prend jamais de poste d'elle-même. Sans poste, elle flâne (voir 7).
 - **Règle.** Elle travaille dans tous les domaines. Elle progresse lentement, mais plus haut que les habitants
@@ -512,14 +512,18 @@
   lanternes, le réseau de force.
 - **Règle.** Les habitants ordinaires sont les humains du pack ; les maîtres, ses animaux humanoïdes, distingués par
   leurs accessoires, leurs couleurs et leurs noms. À terme, un artiste payé fera de plus jolis personnages.
-- **Règle.** Les corps du pack sont d'un seul tenant : pas de tête d'une bête sur le corps d'une autre avant l'artiste.
-  Les queues, oreilles et museaux de la Chimère sont des accessoires du pack. Ils s'ajoutent au corps, qui garde les
-  siens (des oreilles de cochon sur un chat lui en font quatre), et gardent leurs couleurs du pack.
+- **Règle.** La tête de chaque animal du pack est une pièce à part de son modèle : elle se pose sur le corps de
+  n'importe quel autre, tous les animaux ayant le même squelette. Le corps reste d'un seul tenant, bras, jambes et
+  habits ensemble. Les queues, oreilles et museaux de la Chimère sont des accessoires du pack ; ils s'ajoutent à la
+  tête, qui garde les siens (des oreilles de cochon sur une tête de chat lui en font quatre).
+- **Règle.** Ce qu'un animal porte dans le pack (la queue du chat et du renard, la huppe de l'oiseau) est un choix de
+  l'écran comme un autre ; la petite cape de l'oiseau, du lapin, de la souris et du cochon reste avec son corps, comme
+  un habit.
 - **Règle.** Chaque pièce a sa place sur le personnage, la même pour tous les animaux, qui ont un seul squelette.
 - **À toi.** La place de chaque pièce, mesurée au départ (la base d'un chapeau un peu sous le haut du crâne, les
-  lunettes contre la face), à affiner dans sa fiche en regardant l'écran de création ou la planche de la Chimère.
-- **À toi.** La caméra de l'écran de création ne s'approche pas plus que celle de la ville (15 m, Défaut de la caméra) :
-  la Chimère y est petite. Ma reco : un cran plus près pour cet écran seul.
+  lunettes contre la face, les pièces faites pour les humains là où le pack pose les cheveux de l'oiseau), à affiner
+  dans sa fiche en regardant l'écran de création ou les planches de la Chimère.
+- **Défaut.** Au plus près, la caméra est à 8 m : l'écran de création y montre la Chimère entière.
 - **Règle.** Le pack n'a pas d'animations : un pack d'animations est à acheter, par le développeur. En attendant, les
   personnages glissent, bras écartés, et se tournent vers où ils vont.
 - **Défaut.** Un personnage se tourne à 540° par seconde.

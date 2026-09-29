@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9ef14ded5bd0eb49a8824adb059e4d5, type: 3}
+  m_Name: Chat_A
+  m_EditorClassIdentifier: Diciela.Data::Diciela.Data.HeadDefinition
+  _id: chat_a
+  _nameKey: tete.chat_a
+  _mesh: {fileID: 4300000, guid: 8829fe8faa5ea0044896cfdac81ba337, type: 2}
+  _palette: {fileID: 11400000, guid: a044d4e6df3513d45968a9f4df51a8da, type: 2}

@@ -13,7 +13,7 @@ namespace Diciela.Tests.PlayMode
 {
     /// <summary>
     /// Les habitants vus : un monde plat de 100 × 100 m à 10 m de haut, aux réglages par défaut (quatre mailles par
-    /// mètre, 15 cm par pas), la Chimère créée par son ordre, son corps une capsule à la place du personnage du pack.
+    /// mètre, 15 cm par pas), la Chimère créée par son ordre, habillée du personnage de TestRig.
     /// Elle naît au centre, dans la maille (200 ; 200), dont le milieu est (50,125 ; 50,125).
     /// </summary>
     public sealed class VillagerViewsTests
@@ -22,13 +22,14 @@ namespace Diciela.Tests.PlayMode
         private World _world;
         private VillagerKindDefinition _kind;
         private VillagerViews _views;
+        private TestRig _rig;
 
         [SetUp]
         public void CreateWorld()
         {
             var settings = Keep(ScriptableObject.CreateInstance<SimulationSettings>());
             _kind = Keep(ScriptableObject.CreateInstance<VillagerKindDefinition>());
-            GameObject model = Keep(GameObject.CreatePrimitive(PrimitiveType.Capsule));
+            _rig = new TestRig();
 #if UNITY_EDITOR
             TestWorld.Fill(_kind, "_id", "chimere");
 #endif
@@ -36,7 +37,7 @@ namespace Diciela.Tests.PlayMode
             _world = new World(settings, map);
             _views = Keep(new GameObject("Habitants de test")).AddComponent<VillagerViews>();
             _views.Show(_world.Villagers, map.Relief);
-            _world.Submit(new CreateChimeraCommand(_kind, TestWorld.PlainAppearance(o => Keep(o), model)));
+            _world.Submit(new CreateChimeraCommand(_kind, _rig.Plain));
             _world.Step();
         }
 
@@ -47,6 +48,7 @@ namespace Diciela.Tests.PlayMode
             foreach (Object created in _created)
                 Object.Destroy(created);
             _created.Clear();
+            _rig.Dispose();
         }
 
         private T Keep<T>(T created) where T : Object

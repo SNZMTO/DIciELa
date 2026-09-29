@@ -16,4 +16,5 @@ MonoBehaviour:
   _nameKey: piece.lunettes_01
   _slot: {fileID: 11400000, guid: ac2c537759d04294596fca80c4fab8a7, type: 2}
   _model: {fileID: 7108484762047629956, guid: 8ea5fd61e4b3e6b44810ae5d11c2be6b, type: 3}
+  _palette: {fileID: 11400000, guid: 82d3eb0161a8fcd49a80a3086ee0a5aa, type: 2}
   _anchor: {x: 0, y: 1.5202997, z: 0.443786}

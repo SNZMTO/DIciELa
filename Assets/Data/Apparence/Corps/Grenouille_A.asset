@@ -15,4 +15,6 @@ MonoBehaviour:
   _id: grenouille_a
   _nameKey: corps.grenouille_a
   _model: {fileID: 6445089357956671520, guid: 3360aad1a73813e439ab00afc3dd9611, type: 3}
+  _mesh: {fileID: 4300000, guid: b136c91f4966aa94a9718131ca3d6182, type: 2}
   _palette: {fileID: 11400000, guid: fe95b120b09dd9344b524b1441cef2db, type: 2}
+  _worn: []

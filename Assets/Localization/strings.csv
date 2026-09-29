@@ -39,7 +39,6 @@ couleur.12,Couleur 12,Colour 12
 emplacement.queue,Queue,Tail
 emplacement.oreilles,Oreilles,Ears
 emplacement.museau,Museau,Snout
-emplacement.tete,Tête,Head
 emplacement.visage,Visage,Face
 emplacement.cou,Cou,Neck
 emplacement.dos,Dos,Back
@@ -85,8 +84,45 @@ piece.gourde_01,Gourde,Canteen
 piece.potion_01,Potion,Potion
 creation.titre,La Chimère,The Chimera
 creation.corps,Corps,Body
-creation.couleur,Couleur,Colour
 creation.aucun,Aucun,None
 creation.valider,C'est parti,Let's go
 creation.precedent,<,<
 creation.suivant,>,>
+tete.chat_a,Chat A,Cat A
+tete.chat_b,Chat B,Cat B
+tete.cochon_a,Cochon A,Pig A
+tete.cochon_b,Cochon B,Pig B
+tete.grenouille_a,Grenouille A,Frog A
+tete.grenouille_b,Grenouille B,Frog B
+tete.lapin_a,Lapin A,Rabbit A
+tete.lapin_b,Lapin B,Rabbit B
+tete.oiseau_a,Oiseau A,Bird A
+tete.oiseau_b,Oiseau B,Bird B
+tete.ratonlaveur_a,Raton laveur A,Raccoon A
+tete.ratonlaveur_b,Raton laveur B,Raccoon B
+tete.renard_a,Renard A,Fox A
+tete.renard_b,Renard B,Fox B
+tete.souris_a,Souris A,Mouse A
+tete.souris_b,Souris B,Mouse B
+creation.tete,Tête,Head
+emplacement.cheveux,Cheveux,Hair
+emplacement.chapeau,Chapeau,Hat
+emplacement.barbe,Barbe,Beard
+emplacement.bouclesoreilles,Boucles d'oreilles,Earrings
+piece.cheveux_01,Cheveux 1,Hair 1
+piece.cheveux_02,Cheveux 2,Hair 2
+piece.cheveux_03,Cheveux 3,Hair 3
+piece.cheveux_04,Cheveux 4,Hair 4
+piece.cheveux_05,Cheveux 5,Hair 5
+piece.cheveux_06,Cheveux 6,Hair 6
+piece.cheveux_09,Cheveux 9,Hair 9
+piece.cheveux_10,Cheveux 10,Hair 10
+piece.cheveux_11,Cheveux 11,Hair 11
+piece.cheveux_12,Cheveux 12,Hair 12
+piece.cheveux_13,Cheveux 13,Hair 13
+piece.cheveux_14,Cheveux 14,Hair 14
+piece.barbe_01,Barbe,Beard
+piece.bouclesoreilles_01,Boucles d'oreilles 1,Earrings 1
+piece.bouclesoreilles_02,Boucles d'oreilles 2,Earrings 2
+piece.bouclesoreilles_03,Boucles d'oreilles 3,Earrings 3
+piece.bouclesoreilles_04,Boucles d'oreilles 4,Earrings 4
