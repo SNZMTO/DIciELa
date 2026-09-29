@@ -20,7 +20,9 @@ namespace Diciela.EditorTools
         /// <summary>La caméra de gestion de la scène, installée si besoin ; null (avec une erreur) sans caméra.</summary>
         public static CameraRig EnsureIn(Scene scene)
         {
-            Camera camera = EditorAssets.FindInScene<Camera>(scene);
+            // La caméra qui porte déjà la caméra de gestion ; sinon, la caméra de la scène (l'atelier a la sienne, posée après).
+            CameraRig installed = EditorAssets.FindInScene<CameraRig>(scene);
+            Camera camera = installed != null ? installed.GetComponent<Camera>() : EditorAssets.FindInScene<Camera>(scene);
             if (camera == null)
             {
                 Debug.LogError("DICIELA : la scène « " + scene.name + " » n'a pas de caméra.");
