@@ -8,7 +8,7 @@ namespace Diciela.Data
     /// Le réglage d'une pièce sur des porteurs qui ne ressemblent pas aux autres : des têtes pour une pièce de la tête (les
     /// dômes des yeux de la grenouille, le bec de l'oiseau), des corps pour une pièce du corps (la tunique évasée du raton
     /// sous une cape). Un décalage de plus, sur eux seulement, et au besoin un autre modèle (la barbe réduite au menton)
-    /// ou une autre taille. Les deux variantes d'un animal ont la même forme : un
+    /// ou une autre taille, ou une rotation de plus. Les deux variantes d'un animal ont la même forme : un
     /// réglage les nomme toutes les deux. Réglé à la main, dans la fiche de la pièce.
     /// </summary>
     [Serializable]
@@ -32,9 +32,14 @@ namespace Diciela.Data
                  "sienne.")]
         [SerializeField] private Vector3 _scale;
 
+        [Tooltip("Une rotation de plus sur ces porteurs, en degrés, ajoutée à la sienne (la barbe de la grenouille, haut " +
+                 "vers l'avant).")]
+        [SerializeField] private Vector3 _rotation;
+
         public Vector3 Offset => _offset;
         public GameObject Model => _model;
         public Vector3 Scale => _scale;
+        public Vector3 Rotation => _rotation;
 
         /// <summary>Vrai si ce réglage vaut sur ce corps (onBody : une pièce du corps) ou sur cette tête.</summary>
         public bool AppliesTo(HeadDefinition head, BodyDefinition body, bool onBody)
