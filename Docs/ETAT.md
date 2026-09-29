@@ -23,7 +23,7 @@ la bourse à la hanche ; « Crête stylée » dans les cheveux.
 3. Les réglages fins restent dans les fiches (`Assets/Data/Apparence/Pieces`, champ « Adjustments »).
 
 **Prochaine étape** : l'étape 14, le tas de départ et son poste « à tout faire » (GDD 6), premier travail de la
-Chimère ; elle touche aux tâches : arrêt pour `/code-review ultra` avant sa fusion (décision 77). Ménage vers la 15.
+Chimère. Ménage vers la 15.
 
 **Prompt de la session suivante**
 
