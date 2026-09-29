@@ -20,7 +20,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2d34c253ad668d549b93a4ff7e56318f, type: 2}
   - {fileID: 11400000, guid: 97c714f6ad5e560429c406900fc7fd2b, type: 2}
   - {fileID: 11400000, guid: 9e70911bcc001bf42b8698a4608f7f21, type: 2}
-  _fused: []
   _crown: {x: 0, y: 1.8775733, z: 0.01119394}
   _face: {x: 0, y: 1.5761726, z: 0.3529058}
   _ears: {x: 0, y: 1.7587726, z: 0.01119394}

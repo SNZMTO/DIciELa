@@ -49,12 +49,14 @@ namespace Diciela.EditorTools
                     if (HeadPartCutter.TryCut(skin, shells, kind, out HeadPartCutter.Part part))
                         cut.Parts[kind] = part;
                 }
-                cut.Positions = shells.Positions;
-                cut.SkullTriangles = shells.AllTrianglesOf(HeadShells.Kind.Skull);
-                cut.Measures = HeadMeasures.Of(shells.Positions, cut.SkullTriangles, shells.Eyes, shells.BrowHeight);
+                // Le crâne se mesure refermé, comme il est enregistré : des oreilles cousues détachées y laissent un trou.
+                var positions = new List<Vector3>(shells.Positions);
+                cut.SkullTriangles = SkullCap.Closed(positions, shells.AllTrianglesOf(HeadShells.Kind.Skull));
+                cut.Positions = positions.ToArray();
+                cut.Measures = HeadMeasures.Of(cut.Positions, cut.SkullTriangles, shells.Eyes, shells.BrowHeight);
                 List<int> body = shells.AllTrianglesOf(HeadShells.Kind.Body);
-                cut.Back = SurfaceBaker.Surface(shells.Positions, body, ContactAxis.Forward, backArea, cell);
-                cut.Front = SurfaceBaker.Surface(shells.Positions, body, ContactAxis.Back, backArea, cell);
+                cut.Back = SurfaceBaker.Surface(cut.Positions, body, ContactAxis.Forward, backArea, cell);
+                cut.Front = SurfaceBaker.Surface(cut.Positions, body, ContactAxis.Back, backArea, cell);
             }
             finally
             {

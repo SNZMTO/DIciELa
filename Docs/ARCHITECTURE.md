@@ -227,7 +227,7 @@ sauvegardé.
   d'un personnage du pack par le menu des fiches, sur le squelette commun), chacun de sa couleur (une couleur : les
   deux matériaux du pack de même teinte, pour les personnages et pour les objets), au plus une pièce par emplacement, de
   sa couleur. La tête porte ses points et ses surfaces mesurés, les pièces qui se sont détachées d'elle (et ce que le
-  pack pose sur elle), et les emplacements qu'elle tient soudés ; le corps garde son personnage, son dos et son ventre
+  pack pose sur elle) ; le corps garde son personnage, son dos et son ventre
   mesurés, et ce que ce personnage porte ailleurs que sur la tête. L'emplacement dit l'os, le repère (les pieds ou un
   point de la tête) et le contact ; la pièce, son modèle (du pack ou détaché d'une tête), son décalage, sa taille par
   axe, la face qui touche et ce qu'elle cache. Ce qui se déduit du pack (maillages, points, surfaces, pièces d'office,
@@ -269,7 +269,7 @@ code.
 | écran de création | `CreationScreen` | aperçu de la Chimère | `AppearancePreview` | valider | `ConfirmControls` |
 | scène du démarrage | `GameStage` | décalage ; taille (d'une pièce) | `Offset` ; `Scale` | tête ; pièce portée | `Head` ; `WornAttachment` |
 | choix de l'écran de création | `CreationChoices` | découpe (crâne, corps) | `BodyCutter` | morceau soudé (d'un maillage) | `Shell` |
-| repère (d'un emplacement) | `AttachmentFrame` | contact ; carte de surface | `ContactAxis` ; `SurfaceMap` | soudée (au crâne) | `Fused` |
+| repère (d'un emplacement) | `AttachmentFrame` | contact ; carte de surface | `ContactAxis` ; `SurfaceMap` | oreilles cousues ; couvercle | `FusedEars` ; `SkullCap` |
 
 ## 10. La carte, les scènes et la sauvegarde
 
