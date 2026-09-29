@@ -277,9 +277,10 @@ code.
 - **Les scènes.** `Carte` est au développeur : le Terrain, l'eau, la lumière, les filtres, et ce qu'il y pose (arbres,
   rochers, champs sauvages, sortes d'eau, point d'arrivée). Elle naît d'une copie de la démo du pack dont le menu de
   montage ne garde que le soleil, les filtres et le Terrain (relief vierge) ; il ne la touche plus ensuite. `Jeu` est
-  montée par le même menu : démarrage, caméra, interface, sans soleil à elle ; elle charge `Carte` (refusée si elle est
-  déjà ouverte dans l'éditeur) et en fait la scène active, sinon la lumière du pack est perdue. `JeuTest`, montée par
-  le même menu, charge `CarteTest` (plate, éditeur seulement). Chaque scène racine a sa fiche de session, lue avant
+  montée par le même menu : démarrage, caméra, interface, l'atelier de la création (un prefab généré, posé loin de la
+  carte, avec sa caméra), sans soleil à elle ; elle charge `Carte` (refusée si elle est déjà ouverte dans l'éditeur) et
+  en fait la scène active, sinon la lumière du pack est perdue. `JeuTest`, montée par le même menu, a les mêmes objets
+  et charge `CarteTest` (plate, éditeur seulement). Chaque scène racine a sa fiche de session, lue avant
   tout chargement : les tests ne peuvent pas atteindre la vraie partie. On ne fixe jamais la scène de départ du Play ;
   un menu `DICIELA/Jouer` ouvre `Jeu`, seule, et lance le Play.
 - **La carte entre dans la simulation en données pures.** Au lancement d'un monde, `Game` convertit la scène `Carte` en
