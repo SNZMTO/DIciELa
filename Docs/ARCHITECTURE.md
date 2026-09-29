@@ -224,11 +224,17 @@ sauvegardé.
   le modèle suit sa fiche. La fiche dit aussi si le bâtiment est unique, s'il est le logis de la Chimère et s'il se
   dresse dès la pose (la tente) : la simulation lit ces propriétés, jamais un nom. La fiche d'une sorte d'habitant
   dit sa marche et sa flânerie ; son allure est l'apparence de chaque habitant : une tête et un corps (chacun séparé
-  d'un personnage du pack par le menu des fiches, sur le squelette commun ; le corps garde son personnage et ce que
-  celui-ci porte dans le pack), chacun de sa couleur (une couleur : les deux matériaux du pack de même teinte, pour les
-  personnages et pour les objets), au plus une pièce par emplacement, de sa couleur (une pièce du pack et son point
-  d'accroche ; l'emplacement dit l'os). La vue habille (SAVOIR 2.11) ; la simulation garde l'apparence sans la lire. Le catalogue mène à la sorte de la Chimère et à ce que l'écran de création propose, dans son
-  ordre.
+  d'un personnage du pack par le menu des fiches, sur le squelette commun), chacun de sa couleur (une couleur : les
+  deux matériaux du pack de même teinte, pour les personnages et pour les objets), au plus une pièce par emplacement, de
+  sa couleur. La tête porte ses points et ses surfaces mesurés, les pièces qui se sont détachées d'elle (et ce que le
+  pack pose sur elle), et les emplacements qu'elle tient soudés ; le corps garde son personnage, son dos et son ventre
+  mesurés, et ce que ce personnage porte ailleurs que sur la tête. L'emplacement dit l'os, le repère (les pieds ou un
+  point de la tête) et le contact ; la pièce, son modèle (du pack ou détaché d'une tête), son décalage, sa taille par
+  axe, la face qui touche et ce qu'elle cache. Ce qui se déduit du pack (maillages, points, surfaces, pièces d'office,
+  os, repère, contact) est réécrit à chaque passage du menu ; le décalage et la taille d'une pièce ne sont écrits qu'une
+  fois (taille nulle : pas encore réglée), puis ils sont au développeur. La vue habille (SAVOIR 2.11) ; la simulation
+  garde l'apparence sans la lire. Le catalogue mène à la sorte de la Chimère et à ce que l'écran de création propose,
+  dans son ordre (les pièces détachées des têtes en tête de liste).
 - Une fiche de réglages de la simulation tient le pas, la borne de pas par image, la durée de la journée et de ses
   phases, les mailles par mètre et les bornes de boucle. Une fiche de session dit quelle carte charger et où ranger
   les sauvegardes.
@@ -261,8 +267,9 @@ code.
 | logis de la Chimère | `ChimeraHome` | aller dormir ; se réveiller | `Bedtime` ; `Wake` | choisir ; toucher | `ChooseTool` ; `Touch` |
 | corps ; couleur (d'un corps) | `Body` ; `Palette` | emplacement ; pièce | `AttachmentSlot` ; `Attachment` | apparence ; habiller | `Appearance` ; `Dresser` |
 | écran de création | `CreationScreen` | aperçu de la Chimère | `AppearancePreview` | valider | `ConfirmControls` |
-| scène du démarrage | `GameStage` | point d'accroche | `Anchor` | tête ; pièce portée | `Head` ; `WornAttachment` |
-| choix de l'écran de création | `CreationChoices` | découpe (tête, corps) | `BodyCutter` | | |
+| scène du démarrage | `GameStage` | décalage ; taille (d'une pièce) | `Offset` ; `Scale` | tête ; pièce portée | `Head` ; `WornAttachment` |
+| choix de l'écran de création | `CreationChoices` | découpe (crâne, corps) | `BodyCutter` | morceau soudé (d'un maillage) | `Shell` |
+| repère (d'un emplacement) | `AttachmentFrame` | contact ; carte de surface | `ContactAxis` ; `SurfaceMap` | soudée (au crâne) | `Fused` |
 
 ## 10. La carte, les scènes et la sauvegarde
 

@@ -98,13 +98,16 @@ namespace Diciela.Tests.EditMode
             return palette;
         }
 
-        /// <summary>Une tête sans maillage (la simulation ne le lit pas), dans cette couleur d'origine.</summary>
-        public static HeadDefinition Head(string id, PaletteDefinition palette)
+        /// <summary>
+        /// Une tête sans maillage (la simulation ne le lit pas), dans cette couleur d'origine, qui porte ces pièces d'office.
+        /// </summary>
+        public static HeadDefinition Head(string id, PaletteDefinition palette, params AttachmentDefinition[] worn)
         {
             HeadDefinition head = ScriptableObject.CreateInstance<HeadDefinition>();
             var serialized = new SerializedObject(head);
             Property(serialized, "_id").stringValue = id;
             Property(serialized, "_palette").objectReferenceValue = palette;
+            Fill(Property(serialized, "_worn"), worn);
             serialized.ApplyModifiedPropertiesWithoutUndo();
             return head;
         }

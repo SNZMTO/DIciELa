@@ -15,3 +15,5 @@ MonoBehaviour:
   _id: visage
   _nameKey: emplacement.visage
   _bone: head
+  _frame: 2
+  _contact: 2

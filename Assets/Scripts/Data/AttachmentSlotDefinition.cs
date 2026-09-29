@@ -3,9 +3,10 @@ using UnityEngine;
 namespace Diciela.Data
 {
     /// <summary>
-    /// La fiche d'un emplacement (GDD, section 6) : la queue, les oreilles, la tête… Un personnage porte au plus une
-    /// pièce par emplacement ; l'écran de création en fait une ligne, dans l'ordre du catalogue. Ses pièces s'accrochent
-    /// à un même os du squelette des personnages, qu'elles suivront quand ils seront animés.
+    /// La fiche d'un emplacement (GDD, section 6) : la queue, les oreilles, le chapeau… Un personnage porte au plus une
+    /// pièce par emplacement ; l'écran de création en fait une ligne, dans l'ordre du catalogue. Ses pièces se posent
+    /// depuis un même repère (les pieds, ou un point mesuré sur la tête choisie) et s'accrochent à un même os du
+    /// squelette des personnages, qu'elles suivront quand ils seront animés.
     /// </summary>
     [CreateAssetMenu(menuName = "DICIELA/Emplacement", fileName = "Emplacement")]
     public sealed class AttachmentSlotDefinition : ScriptableObject
@@ -19,8 +20,23 @@ namespace Diciela.Data
         [Tooltip("Le nom de l'os du squelette des personnages auquel s'accrochent ses pièces (pelvis, head…).")]
         [SerializeField] private string _bone = "";
 
+        [Tooltip("D'où se mesure la place de ses pièces : les pieds, ou un point de la tête choisie. Rempli par le menu.")]
+        [SerializeField] private AttachmentFrame _frame;
+
+        [Tooltip("Comment ses pièces viennent au contact du personnage : descendre sur le crâne, reculer contre la face, " +
+                 "avancer contre le dos, ou rien. Rempli par le menu.")]
+        [SerializeField] private ContactAxis _contact;
+
         public string Id => _id;
         public string NameKey => _nameKey;
         public string Bone => _bone;
+        public AttachmentFrame Frame => _frame;
+        public ContactAxis Contact => _contact;
+
+        /// <summary>
+        /// Vrai si ses pièces touchent le corps (celles des pieds et du cou : ce qui les porte), faux si elles touchent la
+        /// tête.
+        /// </summary>
+        public bool TouchesBody => _frame == AttachmentFrame.Body || _frame == AttachmentFrame.Neck;
     }
 }

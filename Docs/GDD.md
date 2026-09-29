@@ -163,19 +163,31 @@
 ## 6. La Chimère
 
 - **Règle.** On la crée au lancement d'une partie, sur l'écran de création : une tête d'animal et un corps d'animal,
-  pas forcément le même, puis des morceaux d'autres animaux (queue, oreilles, museau) et des accessoires, au plus un par
-  emplacement ; chaque partie a sa couleur. Elle apparaît au point d'arrivée de la carte (voir 2).
-- **Règle.** L'écran de création est un panneau sur le côté, la ville visible derrière ; la Chimère à venir se tient au
-  point d'arrivée, la caméra au plus près et tournée vers elle. Une ligne par partie, sa pièce et sa couleur, chacune
-  entre ses flèches : la tête (seize), le corps et ses habits (seize), puis la queue, les oreilles, le museau, les
-  cheveux, le chapeau, le visage, la barbe, les boucles d'oreilles, le cou, le dos et la ceinture, « aucun » en tête.
-  Les douze couleurs du pack vont sur n'importe quelle partie ; changer de partie lui rend sa couleur d'origine. On part
-  du chat, dans ses couleurs, avec sa queue. « C'est parti » (ou Entrée) la crée.
+  pas forcément le même, puis des morceaux d'autres animaux (oreilles, touffe, museau, queue) et des accessoires, au
+  plus un par emplacement ; chaque partie a sa couleur. Elle apparaît au point d'arrivée de la carte (voir 2).
+- **Règle.** L'écran de création est un panneau de bois sur le côté, la ville visible derrière ; la Chimère à venir se
+  tient au point d'arrivée, la caméra au plus près et tournée vers elle. Une ligne par partie, sa pièce et sa couleur,
+  chacune entre ses flèches : la tête (seize), le corps et ses habits (seize), puis la queue, les oreilles, le museau,
+  les cheveux, le chapeau, le visage, la barbe, les boucles d'oreilles, le cou, le dos et la ceinture, « aucun » en
+  tête. Les douze couleurs du pack vont sur n'importe quelle partie ; changer de partie lui rend sa couleur d'origine.
+  On part du chat, dans ses couleurs, avec ses oreilles et sa queue. « C'est parti » (ou Entrée) la crée.
+- **Règle.** Une tête est un crâne, ses yeux et ses sourcils ; ce qui s'en détache (les oreilles du chat, du cochon, du
+  lapin, du renard et de la souris ; les touffes du cochon, du raton laveur, du renard et de la souris ; le museau du
+  renard) sont des pièces qu'elle porte d'office, qu'on peut changer. Changer de tête change ses pièces : chaque ligne
+  qui montrait une pièce de l'ancienne tête (ou rien, faute d'en avoir) prend celle de la nouvelle ; une pièce choisie
+  par le joueur reste. Le raton laveur a les oreilles soudées au crâne : sa ligne Oreilles ne propose rien (« Celles de
+  la tête »). Les autres museaux font la forme du visage : la ligne Museau y ajoute un nez.
+- **Règle.** Chaque pièce se pose sur la tête choisie, à son relief : un chapeau descend jusqu'à toucher le crâne, des
+  lunettes reculent contre la face, un sac avance contre le dos, une bourse recule contre le ventre. Un chapeau cache
+  les oreilles choisies (elles restent choisies) ; la couronne, la fleur et les nœuds non. Les pièces faites pour les
+  humains (cheveux, chapeaux 1 à 5, barbe, boucles d'oreilles, oreilles du pack, groin) sont agrandies pour une tête
+  d'animal, les cheveux et la barbe axe par axe pour épouser un crâne large et plat.
 - **Règle.** Le temps attend « C'est parti » : la journée commence quand elle arrive.
 - **Règle.** Elle n'a pas de nom : c'est la Chimère.
 - **À toi.** Les noms des têtes, des corps, des couleurs et des pièces : un premier jet neutre (« Chat A »,
-  « Couleur 4 », « Chapeau 6 »), à réécrire dans la table des textes. Toutes les pièces du pack sont proposées ; celles
-  faites pour les humains (cheveux, barbe, boucles d'oreilles, chapeaux 1 à 5) sont petites sur les animaux.
+  « Couleur 4 », « Chapeau 6 », « Oreilles de chat »), à réécrire dans la table des textes. Toutes les pièces du pack
+  sont proposées ; certaines vont mal sur une tête d'animal (les cheveux humains, la boucle d'oreille 1, le bandana,
+  sans doute fait pour la tête) : à garder, à régler ou à retirer (décisions 110 et 111).
 - **Règle.** Le joueur la place à un poste, comme un habitant, et elle y va ; on ne la dirige jamais directement, et
   elle ne prend jamais de poste d'elle-même. Sans poste, elle flâne (voir 7).
 - **Règle.** Elle travaille dans tous les domaines. Elle progresse lentement, mais plus haut que les habitants

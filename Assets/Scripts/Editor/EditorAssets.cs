@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -72,7 +73,7 @@ namespace Diciela.EditorTools
 
             property.objectReferenceValue = value;
             serialized.ApplyModifiedPropertiesWithoutUndo();
-            EditorUtility.SetDirty(target);
+            Persist(target);
         }
 
         /// <summary>Remplit des champs d'une fiche qui existe, par SerializedObject, comme l'Inspector.</summary>
@@ -81,7 +82,26 @@ namespace Diciela.EditorTools
             var serialized = new SerializedObject(target);
             fill(serialized);
             serialized.ApplyModifiedPropertiesWithoutUndo();
+            Persist(target);
+        }
+
+        /// <summary>
+        /// Écrit tout de suite sur le disque une fiche retouchée : un monteur qui enregistre ensuite un prefab peut faire
+        /// relire à Unity les fiches du disque, et une retouche restée en mémoire serait perdue.
+        /// </summary>
+        private static void Persist(UnityEngine.Object target)
+        {
             EditorUtility.SetDirty(target);
+            if (AssetDatabase.Contains(target))
+                AssetDatabase.SaveAssetIfDirty(target);
+        }
+
+        /// <summary>Remplit une liste sérialisée de ces références, dans cet ordre, à la place de ce qu'elle tenait.</summary>
+        public static void SetList<T>(SerializedProperty list, IReadOnlyList<T> items) where T : UnityEngine.Object
+        {
+            list.arraySize = items.Count;
+            for (int i = 0; i < items.Count; i++)
+                list.GetArrayElementAtIndex(i).objectReferenceValue = items[i];
         }
 
         /// <summary>Lit un asset qui doit exister ; sinon, une erreur claire.</summary>

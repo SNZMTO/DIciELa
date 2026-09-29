@@ -15,3 +15,5 @@ MonoBehaviour:
   _id: museau
   _nameKey: emplacement.museau
   _bone: head
+  _frame: 2
+  _contact: 2

@@ -11,17 +11,16 @@ namespace Diciela.Tests.EditMode
 {
     /// <summary>
     /// Le contenu de la Chimère, lu dans le projet sans rien écrire : le catalogue mène à sa sorte et à tout ce que
-    /// l'écran de création propose, une seule fois ; les modèles et les couleurs viennent du pack, les têtes et les corps
-    /// de leur découpe (Assets/Art/Personnages). Chaque personnage d'un corps montre un seul corps, dans sa couleur
-    /// d'origine, a l'os de chaque emplacement et regarde vers +z depuis ses pieds ; tous ont le même squelette. Chaque
-    /// tête et chaque corps sont son modèle coupé au cou : la tête ne garde que des sommets menés par les os de la tête,
-    /// le corps aucun, et les deux ensemble ont tous les triangles du modèle. Chargés à part, sans toucher la scène.
+    /// l'écran de création propose, une seule fois ; les couleurs viennent du pack, les têtes et les corps de leur découpe
+    /// (Assets/Art/Personnages), les pièces du pack ou de la découpe des têtes ; chaque pièce a sa taille, et celle d'un
+    /// emplacement à contact, sa face qui touche ; chaque tête a ses points et ses surfaces mesurés. Chaque personnage d'un
+    /// corps montre un seul corps, dans sa couleur d'origine, a l'os de chaque emplacement et regarde vers +z depuis ses
+    /// pieds ; tous ont le même squelette. La découpe elle-même : HeadCutTests. Chargés à part, sans toucher la scène.
     /// </summary>
     public sealed class ChimeraContentTests
     {
         private const string Pack = "Assets/Synty/";
         private const string Cuts = "Assets/Art/Personnages/";
-        private static readonly string[] HeadBones = { "head", "eyes", "eyebrows" };
 
         [Test]
         public void TheCatalogLeadsToTheChimeraAndToEverythingHerScreenOffersOnce()
@@ -36,14 +35,19 @@ namespace Diciela.Tests.EditMode
 
             var faults = new List<string>();
             Check(catalog.Palettes, p => p.Id, p => From(p.CharacterMaterial, Pack) + From(p.ObjectMaterial, Pack), faults);
-            Check(catalog.Heads, h => h.Id, h => From(h.Mesh, Cuts) + In(catalog.Palettes, h.Palette), faults);
+            Check(catalog.Heads, h => h.Id, h => From(h.Mesh, Cuts) + In(catalog.Palettes, h.Palette) +
+                                                 string.Concat(h.Worn.Select(w => In(catalog.Attachments, w))) +
+                                                 Measured(h), faults);
             Check(catalog.Bodies, b => b.Id, b => From(b.Model, Pack) + From(b.Mesh, Cuts) +
                                                   In(catalog.Palettes, b.Palette) +
                                                   string.Concat(b.Worn.Select(w => In(catalog.Attachments, w))), faults);
             Check(catalog.AttachmentSlots, s => s.Id, s => string.IsNullOrEmpty(s.Bone) ? " sans os ;" : "", faults);
-            Check(catalog.Attachments, a => a.Id, a => From(a.Model, Pack) + In(catalog.AttachmentSlots, a.Slot) +
+            Check(catalog.Attachments, a => a.Id, a => (From(a.Model, Pack) == "" ? "" : From(a.Model, Cuts)) +
+                                                       In(catalog.AttachmentSlots, a.Slot) +
                                                        In(catalog.Palettes, a.Palette) +
-                                                       (a.Anchor == Vector3.zero ? " sans point d'accroche ;" : ""),
+                                                       (a.HasScale ? "" : " sans taille ;") +
+                                                       (a.Slot == null || a.Slot.Contact == ContactAxis.None ||
+                                                        !a.Shape.IsEmpty ? "" : " sans sa face qui touche ;"),
                 faults);
 
             Assert.IsEmpty(faults, string.Join("\n", faults));
@@ -91,42 +95,6 @@ namespace Diciela.Tests.EditMode
             Assert.IsEmpty(faults, string.Join("\n", faults));
         }
 
-        [Test]
-        public void EveryHeadAndBodyIsTheirPackModelCutAtTheNeck()
-        {
-            Catalog catalog = ContentTests.LoadSingle<Catalog>();
-            var faults = new List<string>();
-            foreach (BodyDefinition body in catalog.Bodies)
-            {
-                HeadDefinition head = catalog.Heads.FirstOrDefault(h => h != null && body != null && h.Id == body.Id);
-                if (head == null || head.Mesh == null || body.Mesh == null || body.Model == null)
-                {
-                    faults.Add((body != null ? body.Id : "?") + " : pas de tête du même animal, ou pas de découpe.");
-                    continue;
-                }
-                GameObject root = PrefabUtility.LoadPrefabContents(AssetDatabase.GetAssetPath(body.Model));
-                try
-                {
-                    SkinnedMeshRenderer source = Shown(root)[0];
-                    string[] bones = source.bones.Select(b => b.name).ToArray();
-                    if (head.Mesh.triangles.Length + body.Mesh.triangles.Length != source.sharedMesh.triangles.Length)
-                        faults.Add(body.Id + " : la tête et le corps n'ont pas ensemble les triangles du modèle.");
-                    if (head.Mesh.boneWeights.Any(w => HeadShare(w, bones) < 0.5f))
-                        faults.Add(body.Id + " : la tête garde des sommets menés par d'autres os que ceux de la tête.");
-                    if (body.Mesh.boneWeights.Any(w => HeadShare(w, bones) >= 0.5f))
-                        faults.Add(body.Id + " : le corps garde des sommets de la tête.");
-                    if (head.Mesh.bindposes.Length != bones.Length || body.Mesh.bindposes.Length != bones.Length)
-                        faults.Add(body.Id + " : la découpe n'a pas les poses d'origine des os.");
-                }
-                finally
-                {
-                    PrefabUtility.UnloadPrefabContents(root);
-                }
-            }
-
-            Assert.IsEmpty(faults, string.Join("\n", faults));
-        }
-
         /// <summary>
         /// Une liste du catalogue : aucune fiche vide, des identifiants non vides et uniques, rien à redire à chacune ; et
         /// chaque fiche de cette sorte dans le projet y est.
@@ -158,6 +126,15 @@ namespace Diciela.Tests.EditMode
             }
         }
 
+        /// <summary>Ses points et ses surfaces : mesurés au-dessus des pieds, pas vides.</summary>
+        private static string Measured(HeadDefinition head)
+        {
+            bool points = new[] { AttachmentFrame.Crown, AttachmentFrame.Face, AttachmentFrame.Ears, AttachmentFrame.Neck }
+                .All(frame => head.PointOf(frame).y > 0.5f);
+            bool surfaces = !head.SurfaceOf(ContactAxis.Down).IsEmpty && !head.SurfaceOf(ContactAxis.Back).IsEmpty;
+            return points && surfaces ? "" : " sans ses points ou ses surfaces ;";
+        }
+
         private static string From(Object asset, string folder)
         {
             return asset != null && AssetDatabase.GetAssetPath(asset).StartsWith(folder) ? "" : " pas de " + folder + " ;";
@@ -172,14 +149,6 @@ namespace Diciela.Tests.EditMode
         {
             return root.transform.Cast<Transform>().Select(child => child.GetComponent<SkinnedMeshRenderer>())
                 .Where(skin => skin != null && skin.gameObject.activeSelf).ToArray();
-        }
-
-        private static float HeadShare(BoneWeight w, string[] bones)
-        {
-            return (HeadBones.Contains(bones[w.boneIndex0]) ? w.weight0 : 0f) +
-                   (HeadBones.Contains(bones[w.boneIndex1]) ? w.weight1 : 0f) +
-                   (HeadBones.Contains(bones[w.boneIndex2]) ? w.weight2 : 0f) +
-                   (HeadBones.Contains(bones[w.boneIndex3]) ? w.weight3 : 0f);
         }
 
         private static Transform Bone(GameObject root, string name)

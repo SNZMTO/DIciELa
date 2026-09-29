@@ -80,7 +80,7 @@ namespace Diciela.Tests.EditMode
                 keys.Add(attachment.NameKey);
             keys.AddRange(new[]
             {
-                TextKeys.CreationTitle, TextKeys.CreationHead, TextKeys.CreationBody, TextKeys.CreationNone,
+                TextKeys.CreationTitle, TextKeys.CreationHead, TextKeys.CreationBody, TextKeys.CreationNone, TextKeys.CreationFused,
                 TextKeys.CreationPrevious, TextKeys.CreationNext, TextKeys.CreationConfirm
             });
             foreach (PlacementResult result in Enum.GetValues(typeof(PlacementResult)))
