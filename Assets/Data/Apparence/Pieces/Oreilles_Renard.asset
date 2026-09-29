@@ -38,6 +38,7 @@ MonoBehaviour:
     _bodies: []
     _offset: {x: -0.08, y: -0.06, z: 0}
     _model: {fileID: 0}
+    _scale: {x: 0, y: 0, z: 0}
   _reference: {fileID: 11400000, guid: de1f45910ee8c84418e18fba2da13a15, type: 2}
   _shape:
     _origin: {x: -0.67228055, y: -0.099695}

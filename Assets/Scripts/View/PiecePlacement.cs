@@ -26,6 +26,7 @@ namespace Diciela.View
         public static void Place(Transform piece, Appearance appearance, AttachmentDefinition attachment)
         {
             bool pair = IsPair(piece);
+            Vector3 scale = attachment.ScaleOn(appearance.Head, appearance.Body);
             Vector3 offset = attachment.Offset + attachment.AdjustmentOn(appearance.Head, appearance.Body);
             float spread = 0f;
             // Le x d'une paire l'écarte, chaque moitié de son côté.
@@ -36,9 +37,9 @@ namespace Diciela.View
             }
             piece.localPosition = pair && TryRest(appearance.Head, attachment, offset, ref spread, out Vector3 rest)
                 ? rest
-                : PlaceOf(appearance, attachment, offset, spread);
+                : PlaceOf(appearance, attachment, offset, scale, spread);
             piece.localRotation = Quaternion.Euler(attachment.Rotation) * piece.localRotation;
-            piece.localScale = attachment.Scale;
+            piece.localScale = scale;
             if (pair)
                 SpreadHalves(piece, spread);
         }
@@ -120,7 +121,7 @@ namespace Diciela.View
 
         // Le point du repère plus le décalage ; sur l'axe de contact, la place où la pièce touche, plus le décalage sur
         // cet axe.
-        private static Vector3 PlaceOf(Appearance appearance, AttachmentDefinition attachment, Vector3 offset,
+        private static Vector3 PlaceOf(Appearance appearance, AttachmentDefinition attachment, Vector3 offset, Vector3 scale,
             float spread)
         {
             AttachmentSlotDefinition slot = attachment.Slot;
@@ -130,7 +131,7 @@ namespace Diciela.View
                 return place;
             bool onBody = slot.TouchesBody;
             SurfaceMap surface = onBody ? appearance.Body.SurfaceOf(axis) : appearance.Head.SurfaceOf(axis);
-            if (!Contact.TryTouch(axis, surface, attachment.Shape, place, attachment.Scale, out float along, spread))
+            if (!Contact.TryTouch(axis, surface, attachment.Shape, place, scale, out float along, spread))
             {
                 Debug.LogWarning("DICIELA : la pièce « " + attachment.Id + " » ne touche pas « " +
                                  (onBody ? appearance.Body.Id : appearance.Head.Id) + " ».");

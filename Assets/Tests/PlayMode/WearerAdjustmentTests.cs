@@ -9,7 +9,7 @@ namespace Diciela.Tests.PlayMode
     /// <summary>
     /// Les réglages d'une pièce par porteur (SAVOIR, 2.11), sur le personnage de TestRig habillé comme en jeu : un
     /// décalage ne vaut que sur ses têtes, ou ses corps pour une pièce du corps ; il peut donner à la pièce un autre modèle
-    /// sur ses têtes (la barbe réduite au menton).
+    /// sur ses têtes (la barbe réduite au menton), ou une autre taille (la barbe agrandie sur la grenouille).
     /// </summary>
     public sealed class WearerAdjustmentTests
     {
@@ -74,6 +74,24 @@ namespace Diciela.Tests.PlayMode
             GameObject dressed = _rig.Keep(Dresser.Dress(new Appearance(bird, _rig.Origin, _rig.Body, _rig.Origin,
                 new[] { new WornAttachment(beard, _rig.Origin) }), null));
             Assert.IsNotNull(dressed.transform.Find("root/pelvis/head/Menton de test(Clone)"), "Sur l'oiseau, le menton.");
+        }
+
+        [Test]
+        public void AnAdjustmentCanGiveThePieceAnotherSizeOnItsHeads()
+        {
+            HeadDefinition cat = _rig.HeadWithEars(new Vector3(0.4f, 1.8f, 0f));
+            HeadDefinition frog = _rig.HeadWithEars(new Vector3(0.4f, 1.8f, 0f));
+            AttachmentDefinition beard = _rig.Piece("Barbe agrandie", AttachmentFrame.Face, ContactAxis.None, Vector3.zero,
+                1f, null);
+            Adjust(beard, new Object[] { frog }, Vector3.zero);
+#if UNITY_EDITOR
+            var serialized = new UnityEditor.SerializedObject(beard);
+            serialized.FindProperty("_adjustments").GetArrayElementAtIndex(0).FindPropertyRelative("_scale").vector3Value =
+                Vector3.one * 1.25f;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+#endif
+            Assert.AreEqual(1f, _rig.Worn(cat, beard).lossyScale.x, 1e-4f, "Sur le chat, sa taille.");
+            Assert.AreEqual(1.25f, _rig.Worn(frog, beard).lossyScale.x, 1e-4f, "Sur la grenouille, agrandie.");
         }
 
         // Un seul réglage sur cette pièce : ce décalage, sur ces têtes ou ces corps.

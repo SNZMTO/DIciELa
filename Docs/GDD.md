@@ -184,10 +184,11 @@
   lunettes reculent contre la face, une bourse pend à la hanche, accrochée à la ceinture. Des oreilles se posent aux
   oreilles de la tête choisie, chacune de son côté, par leur base : aucune ne flotte, et sur une tête plus ronde elles
   se rapprochent du milieu, sans déborder du crâne. Les nœuds se tiennent debout (le grand à l'arrière de la tête, ses
-  rubans dans le dos). La barbe encadre la bouche de chaque tête, et prend la couleur du poil de sa couleur ; sous un
-  bec ou un gros museau (le cochon, l'oiseau, le raton, le renard, la souris), et sur la grenouille, elle se réduit
-  au menton (un bouc), sous la bouche, contre la mâchoire. Une tête qui ne ressemble pas aux autres a ses réglages, pièce par pièce : sur la grenouille, la couronne se
-  pose entre les dômes des yeux ; les oreilles du raton et du renard se rapprochent et s'enfoncent sur les autres
+  rubans dans le dos). La barbe ne va qu'au chat, à la souris et à la grenouille (les autres têtes ne la portent pas,
+  leur ligne reste vide) ; elle prend la couleur du poil de sa couleur. Sur le chat, elle encadre la bouche ; sur la
+  grenouille, agrandie, son sourire au milieu ; sur la souris, réduite au menton, sous la bouche, contre la mâchoire.
+  Une tête qui ne ressemble pas aux autres a ses réglages, pièce par pièce : sur la grenouille, la couronne se pose
+  entre les dômes des yeux ; les oreilles du raton et du renard se rapprochent et s'enfoncent sur les autres
   têtes, celles du raton aussi bas que sur le chat. Un chapeau cache les oreilles et les cheveux choisis, touffes et
   huppe comprises (ils restent choisis) ; la couronne, la fleur et les nœuds non. Les cheveux sont ceux des animaux
   (les touffes, la crête de l'oiseau) : les coiffures humaines du pack ne sont pas proposées. Les pièces faites pour
