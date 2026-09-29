@@ -227,7 +227,7 @@ sauvegardé.
   d'un personnage du pack par le menu des fiches, sur le squelette commun), chacun de sa couleur (une couleur : les
   deux matériaux du pack de même teinte, pour les personnages et pour les objets), au plus une pièce par emplacement, de
   sa couleur. La tête porte ses points et ses surfaces mesurés, les pièces qui se sont détachées d'elle (et ce que le
-  pack pose sur elle) ; le corps garde son personnage, son dos et son ventre mesurés, et ce que ce personnage porte
+  pack pose sur elle) et les emplacements qu'elle ne porte pas ; le corps garde son personnage, son dos et son ventre mesurés, et ce que ce personnage porte
   ailleurs que sur la tête. L'emplacement dit l'os, le repère (les pieds ou un point de la tête), le contact, si ses
   pièces vont par paires (qui se posent par leur base) et si l'on ne peut pas s'en passer ; la pièce, son modèle (du
   pack, détaché d'une tête, ou une copie du pack : une paire en deux moitiés, une barbe teinte comme le poil), sa tête

@@ -30,6 +30,10 @@ namespace Diciela.Data
                  "pack pose sur sa tête (la huppe de l'oiseau). Rempli par le menu.")]
         [SerializeField] private List<AttachmentDefinition> _worn = new List<AttachmentDefinition>();
 
+        [Tooltip("Les emplacements qu'elle ne porte pas (la grenouille : les oreilles) : l'écran de création ne les propose " +
+                 "pas avec elle, et rien ne s'y pose. Rempli par le menu.")]
+        [SerializeField] private List<AttachmentSlotDefinition> _refuses = new List<AttachmentSlotDefinition>();
+
         [Tooltip("Le haut de son crâne, en mètres depuis les pieds du personnage debout (x à sa droite, y en haut, z " +
                  "devant). Mesuré par le menu, jamais réglé à la main : une pièce se règle dans sa fiche.")]
         [SerializeField] private Vector3 _crown;
@@ -57,6 +61,17 @@ namespace Diciela.Data
         public Mesh Mesh => _mesh;
         public PaletteDefinition Palette => _palette;
         public IReadOnlyList<AttachmentDefinition> Worn => _worn;
+
+        /// <summary>Vrai si elle ne porte pas ce qui va à cet emplacement.</summary>
+        public bool Refuses(AttachmentSlotDefinition slot)
+        {
+            foreach (AttachmentSlotDefinition refused in _refuses)
+            {
+                if (ReferenceEquals(refused, slot))
+                    return true;
+            }
+            return false;
+        }
 
         /// <summary>La place de son oreille droite sur le crâne ; la gauche en est le miroir.</summary>
         public Vector3 EarRight => _earRight;
