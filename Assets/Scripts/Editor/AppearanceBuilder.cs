@@ -19,13 +19,13 @@ namespace Diciela.EditorTools
 
         // Les animaux du pack, dans l'ordre de l'écran : le chat d'abord, la Chimère de départ, et la tête de référence des
         // réglages ; et les emplacements que leur tête ne porte pas (la grenouille, sans oreilles ; la barbe ne va qu'au
-        // chat, à la souris et à la grenouille).
+        // chat, à la grenouille, au lapin et à la souris).
         private static readonly string[] NoSlot = new string[0];
         private static readonly string[] NoBeard = { "Barbe" };
         private static readonly (string Pack, string Name, string[] Refuses)[] Animals =
         {
             ("Cat", "Chat", NoSlot), ("Pig", "Cochon", NoBeard), ("Frog", "Grenouille", new[] { "Oreilles" }),
-            ("Bunny", "Lapin", NoBeard), ("Bird", "Oiseau", NoBeard), ("Racoon", "RatonLaveur", NoBeard),
+            ("Bunny", "Lapin", NoSlot), ("Bird", "Oiseau", NoBeard), ("Racoon", "RatonLaveur", NoBeard),
             ("Fox", "Renard", NoBeard), ("Mouse", "Souris", NoSlot)
         };
 
