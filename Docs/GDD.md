@@ -185,8 +185,8 @@
   oreilles de la tête choisie, chacune de son côté, par leur base : aucune ne flotte, et sur une tête plus ronde elles
   se rapprochent du milieu, sans déborder du crâne. Les nœuds se tiennent debout (le grand à l'arrière de la tête, ses
   rubans dans le dos). La barbe encadre la bouche de chaque tête, et prend la couleur du poil de sa couleur ; sous un
-  bec ou un gros museau (le cochon, l'oiseau, le raton, le renard, la souris), elle se réduit au menton, sous la
-  bouche. Une tête qui ne ressemble pas aux autres a ses réglages, pièce par pièce : sur la grenouille, la couronne se
+  bec ou un gros museau (le cochon, l'oiseau, le raton, le renard, la souris), et sur la grenouille, elle se réduit
+  au menton (un bouc), sous la bouche, contre la mâchoire. Une tête qui ne ressemble pas aux autres a ses réglages, pièce par pièce : sur la grenouille, la couronne se
   pose entre les dômes des yeux ; les oreilles du raton et du renard se rapprochent et s'enfoncent sur les autres
   têtes, celles du raton aussi bas que sur le chat. Un chapeau cache les oreilles et les cheveux choisis, touffes et
   huppe comprises (ils restent choisis) ; la couronne, la fleur et les nœuds non. Les cheveux sont ceux des animaux
