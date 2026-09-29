@@ -41,6 +41,7 @@ namespace Diciela.Tests.PlayMode
         private TestRig _rig;
         private NotedCreationView _view;
         private CreationPresenter _presenter;
+        private AttachmentSlotDefinition _catalogEars;
 
         [SetUp]
         public void CreateScreen()
@@ -50,7 +51,7 @@ namespace Diciela.Tests.PlayMode
             var kind = _rig.Keep(ScriptableObject.CreateInstance<VillagerKindDefinition>());
             var red = Fiche<PaletteDefinition>("roux", "couleur.roux");
             var grey = Fiche<PaletteDefinition>("gris", "couleur.gris");
-            var ears = Fiche<AttachmentSlotDefinition>("oreilles", "emplacement.oreilles");
+            var ears = _catalogEars = Fiche<AttachmentSlotDefinition>("oreilles", "emplacement.oreilles");
             var catEars = Fiche<AttachmentDefinition>("chat", "piece.chat");
             var foxEars = Fiche<AttachmentDefinition>("renard", "piece.renard");
             var goblinEars = Fiche<AttachmentDefinition>("gobelin", "piece.gobelin");
@@ -113,6 +114,22 @@ namespace Diciela.Tests.PlayMode
             Assert.AreEqual("Oreilles de gobelin", _view.Choices[Ears]);
             _view.Step(Head, -1);
             Assert.AreEqual("Oreilles de gobelin", _view.Choices[Ears], "Des oreilles choisies restent.");
+        }
+
+        [Test]
+        public void ARowThatCannotBeEmptyNeverOffersNone()
+        {
+#if UNITY_EDITOR
+            TestWorld.Fill(_catalogEars, "_required", true);
+#endif
+            for (int step = 0; step < 4; step++)
+            {
+                _view.Step(Ears, 1);
+                Assert.AreNotEqual("Aucun", _view.Choices[Ears], "Le museau, par exemple : jamais « aucun ».");
+            }
+            _view.Step(Head, 1);
+            _view.Step(Head, 1);
+            Assert.AreNotEqual("Aucun", _view.Choices[Ears], "Une tête qui n'en porte pas laisse la pièce montrée.");
         }
 
         [Test]

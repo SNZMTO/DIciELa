@@ -19,3 +19,4 @@ MonoBehaviour:
   _contact: 0
   _pairs: 0
   _seated: 0
+  _required: 0

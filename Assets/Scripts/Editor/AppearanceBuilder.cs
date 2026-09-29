@@ -19,12 +19,12 @@ namespace Diciela.EditorTools
 
         // Les animaux du pack, dans l'ordre de l'écran : le chat d'abord, la Chimère de départ, et la tête de référence des
         // réglages. Savoir du pack : la profondeur (face vers l'avant) au-delà de laquelle un museau est cousu à la face,
-        // mesurée tête par tête (le groin, les museaux du raton et de la souris, le bec) ; les faces rondes du chat, du
-        // lapin et de la grenouille n'en ont pas, le museau du renard est à part.
+        // mesurée tête par tête (le groin, les museaux du raton et de la souris, le bec, le nez et la bouche du chat et du
+        // lapin, la pastille peinte de la grenouille : ses narines et son sourire) ; celui du renard est à part.
         private const float NoSnout = float.PositiveInfinity;
         private static readonly (string Pack, string Name, float SnoutFront)[] Animals =
         {
-            ("Cat", "Chat", NoSnout), ("Pig", "Cochon", 0.37f), ("Frog", "Grenouille", NoSnout), ("Bunny", "Lapin", NoSnout),
+            ("Cat", "Chat", 0.40f), ("Pig", "Cochon", 0.37f), ("Frog", "Grenouille", 0.32f), ("Bunny", "Lapin", 0.39f),
             ("Bird", "Oiseau", 0.37f), ("Racoon", "RatonLaveur", 0.37f), ("Fox", "Renard", NoSnout),
             ("Mouse", "Souris", 0.38f)
         };

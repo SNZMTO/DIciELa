@@ -35,6 +35,10 @@ namespace Diciela.Data
                  "museaux) : ce qui touchait leur tête touche la tête choisie, le reste s'enfonce. Rempli par le menu.")]
         [SerializeField] private bool _seated;
 
+        [Tooltip("Vrai si un personnage ne peut pas s'en passer (le museau) : chaque tête en porte un d'office et l'écran " +
+                 "de création ne propose pas « aucun ». Rempli par le menu.")]
+        [SerializeField] private bool _required;
+
         public string Id => _id;
         public string NameKey => _nameKey;
         public string Bone => _bone;
@@ -42,6 +46,7 @@ namespace Diciela.Data
         public ContactAxis Contact => _contact;
         public bool Pairs => _pairs;
         public bool Seated => _seated;
+        public bool Required => _required;
 
         /// <summary>
         /// Vrai si ses pièces touchent le corps (celles des pieds et du cou : ce qui les porte), faux si elles touchent la
