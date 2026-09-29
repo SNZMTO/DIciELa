@@ -21,12 +21,7 @@ MonoBehaviour:
   _rotation: {x: 0, y: 0, z: 0}
   _scale: {x: 2.826, y: 2.826, z: 2.826}
   _hides: []
-  _adjustments:
-  - _heads:
-    - {fileID: 11400000, guid: f4e4b2750101ffd4ea491e90f7817f26, type: 2}
-    - {fileID: 11400000, guid: 5dca2e59fc77bad499cce384bb1c0b44, type: 2}
-    _bodies: []
-    _offset: {x: -0.07, y: 0.05, z: -0.04}
+  _adjustments: []
   _reference: {fileID: 11400000, guid: b101e7e10079f0b4db61f9549b700b64, type: 2}
   _coversBack: 0
   _shape:

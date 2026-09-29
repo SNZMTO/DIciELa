@@ -53,7 +53,7 @@ namespace Diciela.View
             }
             foreach (WornAttachment worn in appearance.Attachments)
             {
-                if (!hidden.Contains(worn.Attachment.Slot))
+                if (!hidden.Contains(worn.Attachment.Slot) && !head.Refuses(worn.Attachment.Slot))
                     Attach(character.transform, appearance, worn);
             }
             return character;
