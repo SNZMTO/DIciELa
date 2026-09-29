@@ -15,6 +15,16 @@
 
 ## Les captures
 
+### 29/09/2026 — étape 13d : proportions et places des pièces
+
+Chaque pièce revue sur les huit animaux, de trois quarts et de profil, par deux jurys : les repères du haut du crâne
+et des oreilles pris à mi-profondeur de la tête (les oreilles de raton ne flottent plus sur les yeux de la
+grenouille), les chapeaux, les cheveux et les oreilles du pack ramenés à la mesure du crâne, les objets de ceinture,
+de cou et de dos plaqués au corps, une cape à la largeur des épaules. Avant, puis après : les oreilles de raton sur la
+grenouille, la cape 1, la bourse de profil, les oreilles de cochon, le chapeau 1, les cheveux 1.
+
+![Six pièces, avant puis après](Album/2026-09-29_etape-13d_pieces-avant-apres.jpg)
+
 ### 29/09/2026 — étape 13c : l'atelier de la Chimère
 
 La Chimère ne se crée plus sur la carte : l'écran de création s'ouvre dans un atelier low poly généré, loin de la

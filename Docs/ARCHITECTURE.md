@@ -230,7 +230,8 @@ sauvegardé.
   pack pose sur elle) ; le corps garde son personnage, son dos et son ventre
   mesurés, et ce que ce personnage porte ailleurs que sur la tête. L'emplacement dit l'os, le repère (les pieds ou un
   point de la tête) et le contact ; la pièce, son modèle (du pack ou détaché d'une tête), son décalage, sa taille par
-  axe, la face qui touche et ce qu'elle cache. Ce qui se déduit du pack (maillages, points, surfaces, pièces d'office,
+  axe, la face qui touche, ce qu'elle cache et si elle couvre le dos (une cape cache la petite cape d'un corps). Ce qui
+  se déduit du pack (maillages, points, surfaces, pièces d'office,
   os, repère, contact) est réécrit à chaque passage du menu ; le décalage et la taille d'une pièce ne sont écrits qu'une
   fois (taille nulle : pas encore réglée), puis ils sont au développeur. La vue habille (SAVOIR 2.11) ; la simulation
   garde l'apparence sans la lire. Le catalogue mène à la sorte de la Chimère et à ce que l'écran de création propose,

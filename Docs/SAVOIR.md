@@ -327,12 +327,23 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   touche. Une pièce se pose au point du repère de son emplacement plus son décalage, et, sur l'axe de contact, là où sa
   face touche la surface (`Contact`, au jeu, en quelques centaines d'opérations : les modèles du pack ne sont pas
   lisibles en jeu). Ce qui se mesure depuis les pieds ou au cou touche le corps ; le reste, la tête. Un chapeau cache
-  les oreilles choisies.
+  les oreilles et les cheveux choisis (touffes, huppe).
+- **Des repères stables d'une tête à l'autre** : le haut du crâne et les oreilles se tiennent à mi-profondeur de la tête,
+  à hauteur des yeux (le milieu entre l'avant et l'arrière du crâne, sur la ligne du milieu). La place du point le plus
+  haut d'un crâne plat varie de 17,5 cm d'une tête à l'autre (raton −9 cm, oiseau +9 cm) : une pièce réglée sur une tête
+  glissait d'autant sur une autre. Les oreilles se prennent depuis le haut de la ligne du milieu : les dômes des yeux de
+  la grenouille les relevaient de 7 cm. Changer un repère déplace toutes les pièces réglées dessus : on convertit leurs
+  décalages pour qu'elles restent à leur place sur leur tête de référence (le chat A pour les pièces du pack ; la leur
+  pour une pièce découpée ; l'oiseau pour la huppe).
+- **Une pièce tenue par un lien touche par ce lien** (les cordons d'une cape, l'anse d'une bourse, le nœud d'un
+  bandana) : le contact l'arrête là, et le reste flotte à 10 ou 20 cm du corps. Son décalage sur l'axe de contact la
+  plaque, le lien entrant dans le corps, où il ne se voit pas.
 - **Les chapeaux low poly ont un fond fermé** que la tête traverse : le contact seul les poserait comme un couvercle.
   Une pièce humaine reprend l'enfoncement de son dessin sur son porteur ; un chapeau animal au fond fermé descend de
   35 % de sa hauteur sous le contact (les chapeaux humains : de 20 à 80 %) ; un anneau ouvert (la couronne) reste posé.
 - **Le pack pose lui-même ses pièces** : les humains, cheveux, chapeaux et barbe à l'origine de leur os Head, droits ;
-  l'oiseau, sa huppe sous head ; le chat et le renard, leur queue sous pelvis. Ce sont des copies, reconnues à leur
+  l'oiseau, sa huppe sous head ; le chat et le renard, leur queue sous pelvis ; tous sans rotation (0°). Les chapeaux
+  du pack sont dessinés un peu penchés en arrière : ce n'est pas une pose ratée. Ce sont des copies, reconnues à leur
   maillage (`PackPoses`). Le réglage de départ d'une pièce (`AttachmentFitter`, écrit une fois, quand sa taille est
   nulle) reprend cette pose ; une pièce humaine se ramène de la tête de son porteur à celle du chat, agrandie du rapport
   des crânes à hauteur des sourcils (≈ 3 ; l'os eyebrows des animaux est au niveau des yeux : on mesure les sommets des
@@ -343,8 +354,9 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   raton. **Les petites capes** de l'oiseau, du lapin, de la souris et du cochon ont leur propre squelette : elles ne
   suivront pas l'animation du dos.
 - **Vérifier de près** : `DICIELA/Album/Planches des pièces, sur chaque tête (fichiers)` photographie hors scène
-  (`Studio`, `PreviewRenderUtility`, qui rend avec l'URP) chaque pièce sur les seize têtes, en planches de 4 × 4 dans
-  `Temp/Planches` ; une structure en C# se lit par copie : une boîte se construit dans une variable, pas dans une
+  (`Studio`, `PreviewRenderUtility`, qui rend avec l'URP) chaque pièce sur les huit animaux (têtes A), de trois quarts et
+  de profil, en planches de 4 × 4 dans `Temp/Planches`, avec `Mesures.csv` (la boîte de chaque pièce rapportée au crâne
+  ou au corps : `PieceMeasures`) ; le profil montre ce qui flotte ou s'enfonce, que le trois quarts cache ; une structure en C# se lit par copie : une boîte se construit dans une variable, pas dans une
   propriété (`Bounds` restait réduit à un point). La planche en Play des têtes et des corps reste pour le cou.
 
 ## 3. Pièges de Unity et de C#

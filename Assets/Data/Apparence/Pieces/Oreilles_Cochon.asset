@@ -17,7 +17,7 @@ MonoBehaviour:
   _slot: {fileID: 11400000, guid: 237ba4d2efff1aa4c91544ec94af0605, type: 2}
   _model: {fileID: 6411209620701540705, guid: e9a5a92bb7baf3c49ad43bee26dd460f, type: 3}
   _palette: {fileID: 11400000, guid: 82d3eb0161a8fcd49a80a3086ee0a5aa, type: 2}
-  _offset: {x: 0, y: -0.15010571, z: -0.073287494}
+  _offset: {x: 0, y: -0.144685, z: -0.027957}
   _scale: {x: 1, y: 1, z: 1}
   _hides: []
   _shape:
