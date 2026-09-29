@@ -26,25 +26,19 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 4b53f20ee8a69dd41aadab0d862d81de, type: 2}
     _bodies: []
     _offset: {x: 0, y: 0.015, z: 0}
-    _model: {fileID: 0}
     _scale: {x: 0, y: 0, z: 0}
-    _rotation: {x: 0, y: 0, z: 0}
   - _heads:
     - {fileID: 11400000, guid: 4485f1ba8bde87343ba9f0c6be84668b, type: 2}
     - {fileID: 11400000, guid: 76033ea3cdc9588418cf7c2ec47b8b37, type: 2}
     _bodies: []
-    _offset: {x: 0, y: 0.21, z: -0.13}
-    _model: {fileID: 637463393314409295, guid: 5e35954aaa9be91478dd26ac1b429e31, type: 3}
-    _scale: {x: 0, y: 0, z: 0}
-    _rotation: {x: 0, y: 0, z: 0}
+    _offset: {x: 0, y: 0.12, z: -0.055}
+    _scale: {x: 1.3462, y: 1.2332, z: 1.1248}
   - _heads:
     - {fileID: 11400000, guid: f4e4b2750101ffd4ea491e90f7817f26, type: 2}
     - {fileID: 11400000, guid: 5dca2e59fc77bad499cce384bb1c0b44, type: 2}
     _bodies: []
-    _offset: {x: 0, y: -0.03, z: -0.03}
-    _model: {fileID: 0}
-    _scale: {x: 3.0031, y: 2.751, z: 2.5091}
-    _rotation: {x: 12, y: 0, z: 0}
+    _offset: {x: 0, y: -0.032, z: -0.02}
+    _scale: {x: 3.2102, y: 2.3715, z: 2.163}
   _reference: {fileID: 11400000, guid: b101e7e10079f0b4db61f9549b700b64, type: 2}
   _shape:
     _origin: {x: -0.15981483, y: -0.32212263}

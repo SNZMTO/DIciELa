@@ -6,10 +6,9 @@ namespace Diciela.Data
 {
     /// <summary>
     /// Le réglage d'une pièce sur des porteurs qui ne ressemblent pas aux autres : des têtes pour une pièce de la tête (les
-    /// dômes des yeux de la grenouille, le bec de l'oiseau), des corps pour une pièce du corps (la tunique évasée du raton
-    /// sous une cape). Un décalage de plus, sur eux seulement, et au besoin un autre modèle (la barbe réduite au menton)
-    /// ou une autre taille, ou une rotation de plus. Les deux variantes d'un animal ont la même forme : un
-    /// réglage les nomme toutes les deux. Réglé à la main, dans la fiche de la pièce.
+    /// dômes des yeux de la grenouille), des corps pour une pièce du corps (une ceinture sur un ventre rond). Un décalage de
+    /// plus, sur eux seulement, et au besoin une autre taille (la barbe élargie sur la grenouille). Les deux variantes d'un
+    /// animal ont la même forme : un réglage les nomme toutes les deux. Réglé à la main, dans la fiche de la pièce.
     /// </summary>
     [Serializable]
     public struct WearerAdjustment
@@ -17,29 +16,19 @@ namespace Diciela.Data
         [Tooltip("Les têtes sur lesquelles ce réglage vaut, pour une pièce de la tête.")]
         [SerializeField] private List<HeadDefinition> _heads;
 
-        [Tooltip("Les corps sur lesquels ce réglage vaut, pour une pièce du corps (cou, dos, ceinture, queue).")]
+        [Tooltip("Les corps sur lesquels ce réglage vaut, pour une pièce du corps (ceinture, queue).")]
         [SerializeField] private List<BodyDefinition> _bodies;
 
         [Tooltip("Le décalage ajouté sur ces porteurs, en mètres (x à droite, y en haut, z devant). Pour une paire " +
                  "(des oreilles), x écarte ses moitiés, chacune de son côté : négatif, elles se rapprochent.")]
         [SerializeField] private Vector3 _offset;
 
-        [Tooltip("Le modèle qu'elle prend sur ces porteurs, s'il n'est pas le sien (la barbe réduite au menton sous un bec " +
-                 "ou un gros museau) : une copie posée de la même façon. Vide : le sien.")]
-        [SerializeField] private GameObject _model;
-
-        [Tooltip("Sa taille sur ces porteurs, à la place de la sienne (la barbe agrandie sur la grenouille) ; zéro : la " +
+        [Tooltip("Sa taille sur ces porteurs, à la place de la sienne (la barbe élargie sur la grenouille) ; zéro : la " +
                  "sienne.")]
         [SerializeField] private Vector3 _scale;
 
-        [Tooltip("Une rotation de plus sur ces porteurs, en degrés, ajoutée à la sienne (la barbe de la grenouille, haut " +
-                 "vers l'avant).")]
-        [SerializeField] private Vector3 _rotation;
-
         public Vector3 Offset => _offset;
-        public GameObject Model => _model;
         public Vector3 Scale => _scale;
-        public Vector3 Rotation => _rotation;
 
         /// <summary>Vrai si ce réglage vaut sur ce corps (onBody : une pièce du corps) ou sur cette tête.</summary>
         public bool AppliesTo(HeadDefinition head, BodyDefinition body, bool onBody)

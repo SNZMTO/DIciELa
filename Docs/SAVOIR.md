@@ -352,9 +352,9 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   dos, où la base extérieure dépasse de la silhouette du crâne.
 - **Une barbe se pose sur la bouche**, pas sur les yeux : les bouches sont peintes d'un trait noir (la case noire de la
   texture, sous les yeux, au milieu), toutes vers 1,37 m, quand les yeux vont de 1,47 à 1,64 m ; son réglage par tête la
-  ramène à la bouche, mesurée ainsi. Sous un bec ou un gros museau, elle prend un autre modèle par son réglage (le
-  `_model` d'un `WearerAdjustment`) : sa copie réduite au menton (`FurCopy`, la moitié basse de sa hauteur), posée de
-  la même façon.
+  ramène à la bouche, et au besoin lui donne une autre taille, selon l'axe (la grenouille, à la bouche large : plus
+  large que haute, ses côtés couvrent les coins). Un bec ou un gros museau n'ont pas trouvé de barbe qui leur aille : ces
+  têtes la refusent. Régler une barbe se juge de face et de profil, deux réglages côte à côte (une variante A, une B).
 - **Une barbe se teint comme le poil** (`FurCopy`) : le pack la peint dans le masque des cheveux d'une texture d'objet,
   que ses douze couleurs teintent de deux bruns presque pareils (les teintes `_Hair_Color` et `_Skin_Color` des
   matériaux) : sa couleur ne changeait pas. Sa copie prend le matériau de personnage de sa couleur et tous ses sommets

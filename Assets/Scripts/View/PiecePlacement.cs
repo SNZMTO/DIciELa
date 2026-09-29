@@ -38,8 +38,7 @@ namespace Diciela.View
             piece.localPosition = pair && TryRest(appearance.Head, attachment, offset, ref spread, out Vector3 rest)
                 ? rest
                 : PlaceOf(appearance, attachment, offset, scale, spread);
-            piece.localRotation = Quaternion.Euler(attachment.RotationOn(appearance.Head, appearance.Body)) *
-                                  piece.localRotation;
+            piece.localRotation = Quaternion.Euler(attachment.Rotation) * piece.localRotation;
             piece.localScale = scale;
             if (pair)
                 SpreadHalves(piece, spread);

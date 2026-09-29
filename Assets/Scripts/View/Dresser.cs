@@ -118,15 +118,14 @@ namespace Diciela.View
         private static void Attach(Transform character, Appearance appearance, WornAttachment worn)
         {
             AttachmentDefinition attachment = worn.Attachment;
-            GameObject model = attachment.ModelOn(appearance.Head, appearance.Body);
-            if (model == null || !attachment.HasScale)
+            if (attachment.Model == null || !attachment.HasScale)
             {
                 Debug.LogError("DICIELA : la pièce « " + attachment.Id + " » n'a pas de modèle, ou pas de taille.");
                 return;
             }
 
             // Posée dans les axes du personnage, telle que le modèle est fait, puis confiée à son os sans bouger.
-            GameObject piece = Object.Instantiate(model, character, false);
+            GameObject piece = Object.Instantiate(attachment.Model, character, false);
             PiecePlacement.Place(piece.transform, appearance, attachment);
             PaletteSwap.Apply(piece.GetComponentsInChildren<Renderer>(), attachment.Palette, worn.Palette);
             Transform bone = Find(character, attachment.Slot.Bone);
