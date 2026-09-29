@@ -350,6 +350,11 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   glisse vers le milieu, par pas de 1 cm, jusqu'à porter à plat (3 cm d'écart au plus). Cela ne suffit pas aux oreilles
   larges du raton et du renard : leurs réglages les rapprochent encore et les enfoncent sur les autres têtes ; juger de
   dos, où la base extérieure dépasse de la silhouette du crâne.
+- **Une barbe se pose sur la bouche**, pas sur les yeux : les bouches sont peintes d'un trait noir (la case noire de la
+  texture, sous les yeux, au milieu), toutes vers 1,37 m, quand les yeux vont de 1,47 à 1,64 m ; son réglage par tête la
+  ramène à la bouche, mesurée ainsi. Sous un bec ou un gros museau, elle prend un autre modèle par son réglage (le
+  `_model` d'un `WearerAdjustment`) : sa copie réduite au menton (`FurCopy`, la moitié basse de sa hauteur), posée de
+  la même façon.
 - **Une barbe se teint comme le poil** (`FurCopy`) : le pack la peint dans le masque des cheveux d'une texture d'objet,
   que ses douze couleurs teintent de deux bruns presque pareils (les teintes `_Hair_Color` et `_Skin_Color` des
   matériaux) : sa couleur ne changeait pas. Sa copie prend le matériau de personnage de sa couleur et tous ses sommets

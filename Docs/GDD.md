@@ -169,7 +169,7 @@
   fond en alcôve, un sol, un socle) ; la Chimère à venir s'y tient de face sur le socle. On la fait tourner, avec A et
   E ou en la glissant au clic gauche ; elle garde son angle quand on change une pièce. Une ligne par partie, sa pièce
   et sa couleur, chacune entre ses flèches : la tête (seize), le corps et ses habits (seize), puis la queue, les
-  oreilles, les cheveux, le chapeau, le visage, la barbe, le cou, le dos et la ceinture. La tête, le corps, la queue et
+  oreilles, les cheveux, le chapeau, le visage, la barbe et la ceinture (pas encore d'accessoires de cou ni de dos). La tête, le corps, la queue et
   les oreilles ont toujours une pièce ; les autres lignes ont « aucun » en tête. Les douze couleurs du pack vont sur
   n'importe quelle partie ; changer de partie lui rend sa couleur d'origine. On part du chat, dans ses couleurs, avec
   ses oreilles et sa queue. « C'est parti » (ou Entrée) la crée, et la ville s'ouvre sur elle, au point d'arrivée.
@@ -181,19 +181,18 @@
   vide garde sa pièce si la nouvelle tête n'en porte pas. Toutes les têtes sont ainsi sans oreilles, et chaque paire
   d'oreilles va sur chacune, sauf la grenouille : elle ne porte pas d'oreilles, sa ligne reste vide avec elle.
 - **Règle.** Chaque pièce se pose sur la tête choisie, à son relief : un chapeau descend jusqu'à toucher le crâne, des
-  lunettes reculent contre la face, un sac avance contre le dos, une bourse recule contre le ventre. Des oreilles se
-  posent aux oreilles de la tête choisie, chacune de son côté, par leur base : aucune ne flotte, et sur une tête plus
-  ronde elles se rapprochent du milieu, sans déborder du crâne. Les nœuds se tiennent debout (le grand à l'arrière de
-  la tête, ses rubans dans le dos), le bandana tombe sur la poitrine ; le bandana et l'écharpe passent devant le col
-  des habits, les capes tombent des épaules. La barbe prend la couleur du poil de sa couleur. Une tête ou un corps qui
-  ne ressemble pas aux autres a ses réglages, pièce par pièce : sur la grenouille, la couronne
-  se pose entre les dômes des yeux ; les oreilles du raton et du renard se rapprochent et s'enfoncent sur les autres
-  têtes, celles du raton aussi bas que sur le chat ; une cape recule sur la tunique évasée du raton, du renard et de la grenouille. Un
-  chapeau cache les oreilles et les cheveux choisis, touffes et huppe comprises (ils restent choisis) ; la couronne, la
-  fleur et les nœuds non. Une cape remplace la petite cape que portent l'oiseau, le lapin, la souris et le cochon. Les
-  cheveux sont ceux des animaux (touffes, huppe) : les coiffures humaines du pack ne sont pas proposées. Les pièces
-  faites pour les humains (chapeaux 1 à 5, barbe, oreilles du pack) sont agrandies pour une tête d'animal, la barbe axe
-  par axe pour épouser un crâne large et plat.
+  lunettes reculent contre la face, une bourse pend à la hanche, accrochée à la ceinture. Des oreilles se posent aux
+  oreilles de la tête choisie, chacune de son côté, par leur base : aucune ne flotte, et sur une tête plus ronde elles
+  se rapprochent du milieu, sans déborder du crâne. Les nœuds se tiennent debout (le grand à l'arrière de la tête, ses
+  rubans dans le dos). La barbe encadre la bouche de chaque tête, et prend la couleur du poil de sa couleur ; sous un
+  bec ou un gros museau (le cochon, l'oiseau, le raton, le renard, la souris), elle se réduit au menton, sous la
+  bouche. Une tête qui ne ressemble pas aux autres a ses réglages, pièce par pièce : sur la grenouille, la couronne se
+  pose entre les dômes des yeux ; les oreilles du raton et du renard se rapprochent et s'enfoncent sur les autres
+  têtes, celles du raton aussi bas que sur le chat. Un chapeau cache les oreilles et les cheveux choisis, touffes et
+  huppe comprises (ils restent choisis) ; la couronne, la fleur et les nœuds non. Les cheveux sont ceux des animaux
+  (les touffes, la crête de l'oiseau) : les coiffures humaines du pack ne sont pas proposées. Les pièces faites pour
+  les humains (chapeaux 1 à 5, barbe, oreilles du pack) sont agrandies pour une tête d'animal, la barbe axe par axe
+  pour épouser un crâne large et plat.
 - **Règle.** Le temps attend « C'est parti » : la journée commence quand elle arrive.
 - **Règle.** Elle n'a pas de nom : c'est la Chimère.
 - **À toi.** Les noms des têtes, des corps, des couleurs et des pièces : un premier jet neutre (« Chat A »,

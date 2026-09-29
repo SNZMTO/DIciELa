@@ -23,7 +23,6 @@ MonoBehaviour:
   _hides: []
   _adjustments: []
   _reference: {fileID: 11400000, guid: b101e7e10079f0b4db61f9549b700b64, type: 2}
-  _coversBack: 0
   _shape:
     _origin: {x: -0.2333156, y: -0.055259816}
     _cell: 0.019529412

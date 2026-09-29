@@ -15,8 +15,6 @@ namespace Diciela.EditorTools
     /// </summary>
     internal static class AttachmentFitter
     {
-        // Le haut de ce qui se porte au cou passe sous la tête de ce nombre de mètres, pour que la tête le couvre.
-        private const float NeckTuck = 0.06f;
         // Un chapeau low poly a un fond fermé que la tête traverse : il descend sous le contact de cette part de sa hauteur
         // (sur les chapeaux humains du pack, de 0,2 à 0,8, 0,4 au milieu).
         private const float ClosedHatSinkPerHeight = 0.35f;
@@ -96,9 +94,6 @@ namespace Diciela.EditorTools
                 case SlotRule.Place.TailRoot:
                     offset = tailRoot;
                     break;
-                case SlotRule.Place.Back:
-                    offset = new Vector3(0f, bones[slot.Bone].y - center.y, 0f);
-                    break;
                 case SlotRule.Place.Crown:
                     offset = new Vector3(-center.x, 0f, -center.z);
                     break;
@@ -110,9 +105,6 @@ namespace Diciela.EditorTools
                     break;
                 case SlotRule.Place.Ears:
                     offset = Vector3.zero;
-                    break;
-                case SlotRule.Place.UnderHead:
-                    offset = new Vector3(-center.x, -box.max.y + NeckTuck, -center.z);
                     break;
                 default:
                     offset = bones[slot.Bone];

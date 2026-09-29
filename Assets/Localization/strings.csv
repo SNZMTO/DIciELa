@@ -39,8 +39,6 @@ couleur.12,Couleur 12,Colour 12
 emplacement.queue,Queue,Tail
 emplacement.oreilles,Oreilles,Ears
 emplacement.visage,Visage,Face
-emplacement.cou,Cou,Neck
-emplacement.dos,Dos,Back
 emplacement.ceinture,Ceinture,Belt
 piece.queue_01,Queue 1,Tail 1
 piece.queue_02,Queue 2,Tail 2
@@ -80,14 +78,6 @@ piece.noeud_02,Nœud 2,Bow 2
 piece.noeud_03,Nœud 3,Bow 3
 piece.lunettes_01,Lunettes,Glasses
 piece.monocle_01,Monocle,Monocle
-piece.echarpe_01,Écharpe,Scarf
-piece.bandana_01,Bandana,Bandana
-piece.cape_01,Cape 1,Cape 1
-piece.cape_02,Cape 2,Cape 2
-piece.cape_03,Cape 3,Cape 3
-piece.cape_04,Cape 4,Cape 4
-piece.sacados_01,Sac à dos 1,Backpack 1
-piece.sacados_02,Sac à dos 2,Backpack 2
 piece.bourse_01,Bourse,Pouch
 piece.gourde_01,Gourde,Canteen
 piece.potion_01,Potion,Potion
@@ -117,5 +107,5 @@ creation.tete,Tête,Head
 emplacement.cheveux,Cheveux,Hair
 emplacement.chapeau,Chapeau,Hat
 emplacement.barbe,Barbe,Beard
-piece.cheveux_14,Cheveux 14,Hair 14
+piece.cheveux_14,Crête stylée,Stylish crest
 piece.barbe_01,Barbe,Beard

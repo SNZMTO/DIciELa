@@ -137,21 +137,5 @@ namespace Diciela.Tests.PlayMode
             Assert.IsNull(dressed.transform.Find("root/pelvis/head/Oreilles de test(Clone)"), "Le chapeau les cache.");
             Assert.IsNotNull(dressed.transform.Find("root/pelvis/head/Chapeau qui cache(Clone)"));
         }
-
-        [UnityTest]
-        public IEnumerator ACapeReplacesTheLittleCapeTheBodyWears()
-        {
-            AttachmentDefinition cape = _rig.Piece("Cape de test", AttachmentFrame.Body, ContactAxis.None, Vector3.zero, 1f,
-                null);
-#if UNITY_EDITOR
-            TestWorld.Fill(cape, "_coversBack", true);
-#endif
-            GameObject dressed = _rig.Keep(Dresser.Dress(new Appearance(_rig.Head, _rig.Origin, _rig.Body, _rig.Origin,
-                new[] { new WornAttachment(cape, _rig.Origin) }), null));
-            yield return null;
-
-            Assert.IsNull(dressed.transform.Find("Capes/Petite cape"), "La cape choisie remplace sa petite cape.");
-            Assert.IsNotNull(dressed.transform.Find("root/pelvis/head/Cape de test(Clone)"));
-        }
     }
 }
