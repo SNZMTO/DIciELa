@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Diciela.Data;
 using UnityEngine;
 
@@ -6,8 +5,7 @@ namespace Diciela.EditorTools
 {
     /// <summary>
     /// Ce qu'on lit de la forme d'une pièce du pack pour son réglage de départ (AttachmentFitter) : sa frange (une
-    /// coiffure), si son fond est fermé (un chapeau low poly que la tête traverse), si c'est un anneau seul ou une paire
-    /// (une boucle d'oreille).
+    /// coiffure) et si son fond est fermé (un chapeau low poly que la tête traverse).
     /// </summary>
     internal static class PieceShape
     {
@@ -33,18 +31,5 @@ namespace Diciela.EditorTools
             return bottom > SurfaceMap.Empty && bottom < box.min.y + ClosedBottomShare * box.size.y;
         }
 
-        /// <summary>Vrai pour un anneau seul, qui a des triangles à cheval sur la ligne du milieu ; faux pour une paire.</summary>
-        public static bool IsSingle(PackMeasures.Geometry geometry)
-        {
-            List<int> triangles = geometry.Triangles;
-            for (int t = 0; t < triangles.Count; t += 3)
-            {
-                float a = geometry.Positions[triangles[t]].x, b = geometry.Positions[triangles[t + 1]].x;
-                float c = geometry.Positions[triangles[t + 2]].x;
-                if (Mathf.Min(a, Mathf.Min(b, c)) < 0f && Mathf.Max(a, Mathf.Max(b, c)) > 0f)
-                    return true;
-            }
-            return false;
-        }
     }
 }

@@ -18,15 +18,11 @@ namespace Diciela.EditorTools
         private const string HumanReference = Characters + "/SM_Chr_Male_01.prefab";
 
         // Les animaux du pack, dans l'ordre de l'écran : le chat d'abord, la Chimère de départ, et la tête de référence des
-        // réglages. Savoir du pack : la profondeur (face vers l'avant) au-delà de laquelle un museau est cousu à la face,
-        // mesurée tête par tête (le groin, les museaux du raton et de la souris, le bec, le nez et la bouche du chat et du
-        // lapin, la pastille peinte de la grenouille : ses narines et son sourire) ; celui du renard est à part.
-        private const float NoSnout = float.PositiveInfinity;
-        private static readonly (string Pack, string Name, float SnoutFront)[] Animals =
+        // réglages.
+        private static readonly (string Pack, string Name)[] Animals =
         {
-            ("Cat", "Chat", 0.40f), ("Pig", "Cochon", 0.37f), ("Frog", "Grenouille", 0.32f), ("Bunny", "Lapin", 0.39f),
-            ("Bird", "Oiseau", 0.37f), ("Racoon", "RatonLaveur", 0.37f), ("Fox", "Renard", NoSnout),
-            ("Mouse", "Souris", 0.38f)
+            ("Cat", "Chat"), ("Pig", "Cochon"), ("Frog", "Grenouille"), ("Bunny", "Lapin"), ("Bird", "Oiseau"),
+            ("Racoon", "RatonLaveur"), ("Fox", "Renard"), ("Mouse", "Souris")
         };
 
         public static void CreateMissing(Catalog catalog)
@@ -52,8 +48,8 @@ namespace Diciela.EditorTools
             var context = new AnimalContext(palettes, slotsByName, PackPoses.Read(), byMesh);
             var animals = new List<AnimalBuilder.Animal>();
             var ownPieces = new List<AttachmentDefinition>();
-            foreach ((string pack, string name, float snoutFront) in Animals)
-                animals.AddRange(AnimalBuilder.Build(pack, name, snoutFront, context, ownPieces));
+            foreach ((string pack, string name) in Animals)
+                animals.AddRange(AnimalBuilder.Build(pack, name, context, ownPieces));
 
             Fit(packPieces, geometries, rules, animals, context, new[] { slotsByName["Oreilles"], slotsByName["Cheveux"] });
             var heads = new List<HeadDefinition>();
@@ -117,23 +113,29 @@ namespace Diciela.EditorTools
                 }
                 else
                 {
-                    AttachmentFitter.FitByRule(piece, rule, packPiece.Designed == AttachmentBuilder.Design.HumanPoint,
-                        geometries[piece], reference.Measures, reference.Head, human.Measures, bones, tailRoot, hides);
+                    AttachmentFitter.FitByRule(piece, rule, geometries[piece], reference.Measures, reference.Head, bones,
+                        tailRoot, hides);
                 }
             }
         }
 
         /// <summary>
         /// Ajoute à une liste du catalogue ce qui lui manque, à la suite (ou en tête, dans l'ordre donné) ; ce qui y est
-        /// reste où on l'a mis.
+        /// reste où on l'a mis, et ce qui a été supprimé du projet en sort.
         /// </summary>
         private static void AddMissing<T>(Catalog catalog, string listName, List<T> items, bool atFront) where T : Object
         {
             var serialized = new SerializedObject(catalog);
             SerializedProperty list = EditorAssets.Property(serialized, listName);
             var present = new HashSet<Object>();
-            for (int i = 0; i < list.arraySize; i++)
-                present.Add(list.GetArrayElementAtIndex(i).objectReferenceValue);
+            for (int i = list.arraySize - 1; i >= 0; i--)
+            {
+                Object item = list.GetArrayElementAtIndex(i).objectReferenceValue;
+                if (item == null)
+                    list.DeleteArrayElementAtIndex(i);
+                else
+                    present.Add(item);
+            }
             int at = 0;
             foreach (T item in items)
             {

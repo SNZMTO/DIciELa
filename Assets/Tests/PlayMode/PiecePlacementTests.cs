@@ -7,8 +7,8 @@ using UnityEngine;
 namespace Diciela.Tests.PlayMode
 {
     /// <summary>
-    /// La pose d'une pièce (SAVOIR, 2.11), sur le personnage de TestRig habillé comme en jeu : une boucle d'oreille suit
-    /// l'oreille de son côté, chaque moitié d'une paire la sienne, d'après l'écart entre les oreilles de la tête choisie
+    /// La pose d'une pièce (SAVOIR, 2.11), sur le personnage de TestRig habillé comme en jeu : chaque moitié d'une paire
+    /// d'oreilles suit l'oreille de son côté, d'après l'écart entre les oreilles de la tête choisie
     /// et celles de sa tête de référence ; ailleurs que sur celle-ci, une paire se pose par sa base ; une pièce tourne sur
     /// son pivot de sa rotation ; un réglage ne vaut que sur ses têtes, ou ses corps pour une pièce du corps.
     /// </summary>
@@ -26,23 +26,6 @@ namespace Diciela.Tests.PlayMode
         public void DestroyRig()
         {
             _rig.Dispose();
-        }
-
-        [Test]
-        public void AnEarringFollowsTheEarOfItsSide()
-        {
-            HeadDefinition wide = Head(new Vector3(0.4f, 1.8f, 0f)), narrow = Head(new Vector3(0.3f, 1.7f, 0.1f));
-            AttachmentDefinition earring = _rig.Piece("Boucle de test", AttachmentFrame.Ears, ContactAxis.None,
-                new Vector3(0.4f, 0.1f, 0f), 1f, null);
-#if UNITY_EDITOR
-            TestWorld.Fill(earring, "_reference", wide);
-#endif
-            Assert.That(Vector3.Distance(new Vector3(0.4f, 1.9f, 0f), Worn(wide, earring).position), Is.LessThan(1e-4f),
-                "Sur sa tête de référence, à sa place.");
-            Transform onNarrow = Worn(narrow, earring);
-            Assert.That(Vector3.Distance(new Vector3(0.3f, 1.8f, 0.1f), onNarrow.position), Is.LessThan(1e-4f),
-                "Des oreilles 10 cm plus serrées : elle se rapproche d'autant du milieu, à la hauteur de ses oreilles.");
-            Assert.AreEqual(1f, onNarrow.lossyScale.x, 1e-4f, "Elle garde sa taille.");
         }
 
         [Test]
@@ -158,7 +141,6 @@ namespace Diciela.Tests.PlayMode
             AttachmentDefinition pair = _rig.Piece(name, AttachmentFrame.Ears, contact, offset, 1f, null);
 #if UNITY_EDITOR
             TestWorld.Fill(pair.Slot, "_pairs", true);
-            TestWorld.Fill(pair.Slot, "_seated", true);
 #endif
             foreach ((string half, float side) in new[] { ("Droite", 1f), ("Gauche", -1f) })
             {

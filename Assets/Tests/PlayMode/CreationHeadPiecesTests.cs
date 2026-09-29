@@ -125,7 +125,7 @@ namespace Diciela.Tests.PlayMode
             for (int step = 0; step < 4; step++)
             {
                 _view.Step(Ears, 1);
-                Assert.AreNotEqual("Aucun", _view.Choices[Ears], "Le museau, par exemple : jamais « aucun ».");
+                Assert.AreNotEqual("Aucun", _view.Choices[Ears], "Les oreilles, par exemple : jamais « aucun ».");
             }
             _view.Step(Head, 1);
             _view.Step(Head, 1);
