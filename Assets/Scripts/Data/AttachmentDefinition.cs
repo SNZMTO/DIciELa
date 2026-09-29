@@ -94,20 +94,6 @@ namespace Diciela.Data
                 : _scale;
         }
 
-        /// <summary>Sa rotation sur ce porteur : la sienne, plus celle de son réglage.</summary>
-        public Vector3 RotationOn(HeadDefinition head, BodyDefinition body)
-        {
-            return TryAdjustment(head, body, out WearerAdjustment adjustment) ? _rotation + adjustment.Rotation : _rotation;
-        }
-
-        /// <summary>Le modèle qu'elle prend sur ce porteur : celui de son réglage, s'il en donne un ; sinon le sien.</summary>
-        public GameObject ModelOn(HeadDefinition head, BodyDefinition body)
-        {
-            return TryAdjustment(head, body, out WearerAdjustment adjustment) && adjustment.Model != null
-                ? adjustment.Model
-                : _model;
-        }
-
         // Son réglage sur ce porteur : selon le corps pour une pièce du corps, selon la tête sinon.
         private bool TryAdjustment(HeadDefinition head, BodyDefinition body, out WearerAdjustment found)
         {

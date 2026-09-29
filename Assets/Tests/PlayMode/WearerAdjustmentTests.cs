@@ -9,7 +9,7 @@ namespace Diciela.Tests.PlayMode
     /// <summary>
     /// Les réglages d'une pièce par porteur (SAVOIR, 2.11), sur le personnage de TestRig habillé comme en jeu : un
     /// décalage ne vaut que sur ses têtes, ou ses corps pour une pièce du corps ; il peut donner à la pièce un autre modèle
-    /// sur ses têtes (la barbe réduite au menton), ou une autre taille (la barbe agrandie sur la grenouille).
+    /// une autre taille sur ses têtes (la barbe élargie sur la grenouille).
     /// </summary>
     public sealed class WearerAdjustmentTests
     {
@@ -52,28 +52,6 @@ namespace Diciela.Tests.PlayMode
 
             Adjust(cape, new Object[] { _rig.Body }, new Vector3(0f, 0f, -0.1f));
             Assert.AreEqual(-0.3f, _rig.Worn(head, cape).position.z, 1e-4f, "Elle se règle par corps.");
-        }
-
-        [Test]
-        public void AnAdjustmentCanGiveThePieceAnotherModelOnItsHeads()
-        {
-            HeadDefinition cat = _rig.HeadWithEars(new Vector3(0.4f, 1.8f, 0f));
-            HeadDefinition bird = _rig.HeadWithEars(new Vector3(0.4f, 1.8f, 0f));
-            AttachmentDefinition beard = _rig.Piece("Barbe de test", AttachmentFrame.Face, ContactAxis.None, Vector3.zero,
-                1f, null);
-            GameObject chin = _rig.Keep(GameObject.CreatePrimitive(PrimitiveType.Cube));
-            chin.name = "Menton de test";
-            Adjust(beard, new Object[] { bird }, Vector3.zero);
-#if UNITY_EDITOR
-            var serialized = new UnityEditor.SerializedObject(beard);
-            serialized.FindProperty("_adjustments").GetArrayElementAtIndex(0).FindPropertyRelative("_model")
-                .objectReferenceValue = chin;
-            serialized.ApplyModifiedPropertiesWithoutUndo();
-#endif
-            Assert.IsNotNull(_rig.Worn(cat, beard), "Sur le chat, la barbe entière.");
-            GameObject dressed = _rig.Keep(Dresser.Dress(new Appearance(bird, _rig.Origin, _rig.Body, _rig.Origin,
-                new[] { new WornAttachment(beard, _rig.Origin) }), null));
-            Assert.IsNotNull(dressed.transform.Find("root/pelvis/head/Menton de test(Clone)"), "Sur l'oiseau, le menton.");
         }
 
         [Test]
