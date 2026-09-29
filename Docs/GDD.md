@@ -181,7 +181,8 @@
   d'oreilles va sur chacune. Les autres museaux font la forme du visage : la ligne Museau y ajoute un nez.
 - **Règle.** Chaque pièce se pose sur la tête choisie, à son relief : un chapeau descend jusqu'à toucher le crâne, des
   lunettes reculent contre la face, un sac avance contre le dos, une bourse recule contre le ventre. Un chapeau cache
-  les oreilles choisies (elles restent choisies) ; la couronne, la fleur et les nœuds non. Les pièces faites pour les
+  les oreilles et les cheveux choisis, touffes et huppe comprises (ils restent choisis) ; la couronne, la fleur et les
+  nœuds non. Une cape remplace la petite cape que portent l'oiseau, le lapin, la souris et le cochon. Les pièces faites pour les
   humains (cheveux, chapeaux 1 à 5, barbe, boucles d'oreilles, oreilles du pack, groin) sont agrandies pour une tête
   d'animal, les cheveux et la barbe axe par axe pour épouser un crâne large et plat.
 - **Règle.** Le temps attend « C'est parti » : la journée commence quand elle arrive.

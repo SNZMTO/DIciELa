@@ -20,6 +20,7 @@ MonoBehaviour:
   _offset: {x: 0.000068597496, y: 0.61788833, z: -0.139}
   _scale: {x: 1, y: 1, z: 1}
   _hides: []
+  _coversBack: 0
   _shape:
     _origin: {x: 0, y: 0}
     _cell: 0

@@ -51,7 +51,7 @@ namespace Diciela.EditorTools
             foreach ((string pack, string name) in Animals)
                 animals.AddRange(AnimalBuilder.Build(pack, name, context, ownPieces));
 
-            Fit(packPieces, geometries, rules, animals, context, slotsByName["Oreilles"]);
+            Fit(packPieces, geometries, rules, animals, context, new[] { slotsByName["Oreilles"], slotsByName["Cheveux"] });
             var heads = new List<HeadDefinition>();
             var bodies = new List<BodyDefinition>();
             foreach (AnimalBuilder.Animal animal in animals)
@@ -75,7 +75,7 @@ namespace Diciela.EditorTools
         private static void Fit(List<AttachmentBuilder.PackPiece> packPieces,
             Dictionary<AttachmentDefinition, PackMeasures.Geometry> geometries,
             Dictionary<AttachmentSlotDefinition, SlotRule> rules, List<AnimalBuilder.Animal> animals,
-            AnimalContext context, AttachmentSlotDefinition ears)
+            AnimalContext context, AttachmentSlotDefinition[] underHats)
         {
             AnimalBuilder.Animal reference = animals[0];
             var humanModel = EditorAssets.Load<GameObject>(HumanReference);
@@ -92,7 +92,7 @@ namespace Diciela.EditorTools
             {
                 AttachmentDefinition piece = packPiece.Fiche;
                 SlotRule rule = rules[piece.Slot];
-                AttachmentSlotDefinition hides = packPiece.HidesEars ? ears : null;
+                AttachmentSlotDefinition[] hides = packPiece.CoversHead ? underHats : null;
                 if (context.Poses.TryFind(piece.Model, false, out PackPoses.Pose onAnimal))
                 {
                     AnimalBuilder.Animal wearer = animals.Find(animal => animal.Model == onAnimal.Character);
