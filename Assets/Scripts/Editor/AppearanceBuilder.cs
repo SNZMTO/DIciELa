@@ -18,11 +18,13 @@ namespace Diciela.EditorTools
         private const string HumanReference = Characters + "/SM_Chr_Male_01.prefab";
 
         // Les animaux du pack, dans l'ordre de l'écran : le chat d'abord, la Chimère de départ, et la tête de référence des
-        // réglages.
-        private static readonly (string Pack, string Name)[] Animals =
+        // réglages ; et les emplacements que leur tête ne porte pas (la grenouille, sans oreilles, n'en prend aucune).
+        private static readonly string[] NoSlot = new string[0];
+        private static readonly (string Pack, string Name, string[] Refuses)[] Animals =
         {
-            ("Cat", "Chat"), ("Pig", "Cochon"), ("Frog", "Grenouille"), ("Bunny", "Lapin"), ("Bird", "Oiseau"),
-            ("Racoon", "RatonLaveur"), ("Fox", "Renard"), ("Mouse", "Souris")
+            ("Cat", "Chat", NoSlot), ("Pig", "Cochon", NoSlot), ("Frog", "Grenouille", new[] { "Oreilles" }),
+            ("Bunny", "Lapin", NoSlot), ("Bird", "Oiseau", NoSlot), ("Racoon", "RatonLaveur", NoSlot),
+            ("Fox", "Renard", NoSlot), ("Mouse", "Souris", NoSlot)
         };
 
         public static void CreateMissing(Catalog catalog)
@@ -48,8 +50,8 @@ namespace Diciela.EditorTools
             var context = new AnimalContext(palettes, slotsByName, PackPoses.Read(), byMesh);
             var animals = new List<AnimalBuilder.Animal>();
             var ownPieces = new List<AttachmentDefinition>();
-            foreach ((string pack, string name) in Animals)
-                animals.AddRange(AnimalBuilder.Build(pack, name, context, ownPieces));
+            foreach ((string pack, string name, string[] refuses) in Animals)
+                animals.AddRange(AnimalBuilder.Build(pack, name, refuses, context, ownPieces));
 
             Fit(packPieces, geometries, rules, animals, context, new[] { slotsByName["Oreilles"], slotsByName["Cheveux"] });
             var heads = new List<HeadDefinition>();

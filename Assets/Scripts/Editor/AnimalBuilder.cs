@@ -46,10 +46,10 @@ namespace Diciela.EditorTools
         }
 
         /// <summary>
-        /// Les deux silhouettes de cet animal (pack : Cat ; name : Chat) ; ownPieces reçoit les pièces détachées de ses
-        /// têtes.
+        /// Les deux silhouettes de cet animal (pack : Cat ; name : Chat ; refuses : les emplacements que sa tête ne porte
+        /// pas) ; ownPieces reçoit les pièces détachées de ses têtes.
         /// </summary>
-        public static List<Animal> Build(string pack, string name, AnimalContext context,
+        public static List<Animal> Build(string pack, string name, string[] refuses, AnimalContext context,
             List<AttachmentDefinition> ownPieces)
         {
             var cuts = new List<AnimalCut>();
@@ -92,6 +92,10 @@ namespace Diciela.EditorTools
                 }
                 SplitPackWorn(cut.Model, context, worn, out List<AttachmentDefinition> bodyWorn);
                 EditorAssets.Set(head, fiche => EditorAssets.SetList(EditorAssets.Property(fiche, "_worn"), worn));
+                var refused = new List<AttachmentSlotDefinition>();
+                foreach (string slot in refuses)
+                    refused.Add(context.Slots[slot]);
+                EditorAssets.Set(head, fiche => EditorAssets.SetList(EditorAssets.Property(fiche, "_refuses"), refused));
                 EditorAssets.Set(body, fiche => EditorAssets.SetList(EditorAssets.Property(fiche, "_worn"), bodyWorn));
                 animals.Add(new Animal(head, body, cut.Measures, cut.Model));
             }

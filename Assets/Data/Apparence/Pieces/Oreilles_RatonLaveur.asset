@@ -25,10 +25,11 @@ MonoBehaviour:
   - _heads:
     - {fileID: 11400000, guid: b101e7e10079f0b4db61f9549b700b64, type: 2}
     - {fileID: 11400000, guid: 4b53f20ee8a69dd41aadab0d862d81de, type: 2}
+    _bodies: []
+    _offset: {x: -0.07, y: -0.11, z: 0}
+  - _heads:
     - {fileID: 11400000, guid: 6f46a54e351c25344b024f6fab849356, type: 2}
     - {fileID: 11400000, guid: 0494ee1a8a5299b4b96346ae24d1d3d5, type: 2}
-    - {fileID: 11400000, guid: f4e4b2750101ffd4ea491e90f7817f26, type: 2}
-    - {fileID: 11400000, guid: 5dca2e59fc77bad499cce384bb1c0b44, type: 2}
     - {fileID: 11400000, guid: 4b9fde1e972dfca4e83ad90e191f0813, type: 2}
     - {fileID: 11400000, guid: 80928d14497dae44bbe0a33a935009e9, type: 2}
     - {fileID: 11400000, guid: 572ebf464be754c4481744decd1ef3f6, type: 2}
@@ -38,7 +39,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 4485f1ba8bde87343ba9f0c6be84668b, type: 2}
     - {fileID: 11400000, guid: 76033ea3cdc9588418cf7c2ec47b8b37, type: 2}
     _bodies: []
-    _offset: {x: -0.07, y: -0.11, z: 0}
+    _offset: {x: -0.07, y: -0.16, z: 0}
   _reference: {fileID: 11400000, guid: f116abfa388267c45b7eeaf7b356af52, type: 2}
   _coversBack: 0
   _shape:

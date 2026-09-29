@@ -42,6 +42,7 @@ namespace Diciela.Tests.PlayMode
         private NotedCreationView _view;
         private CreationPresenter _presenter;
         private AttachmentSlotDefinition _catalogEars;
+        private HeadDefinition _frog;
 
         [SetUp]
         public void CreateScreen()
@@ -57,7 +58,7 @@ namespace Diciela.Tests.PlayMode
             var goblinEars = Fiche<AttachmentDefinition>("gobelin", "piece.gobelin");
             var cat = Fiche<HeadDefinition>("chat", "tete.chat");
             var fox = Fiche<HeadDefinition>("renard", "tete.renard");
-            var frog = Fiche<HeadDefinition>("grenouille", "tete.grenouille");
+            var frog = _frog = Fiche<HeadDefinition>("grenouille", "tete.grenouille");
             var body = Fiche<BodyDefinition>("chat", "corps.chat");
             var catalog = _rig.Keep(ScriptableObject.CreateInstance<Catalog>());
 #if UNITY_EDITOR
@@ -130,6 +131,21 @@ namespace Diciela.Tests.PlayMode
             _view.Step(Head, 1);
             _view.Step(Head, 1);
             Assert.AreNotEqual("Aucun", _view.Choices[Ears], "Une tête qui n'en porte pas laisse la pièce montrée.");
+        }
+
+        [Test]
+        public void AHeadThatRefusesARowKeepsItEmptyEvenWhenItCannotBe()
+        {
+#if UNITY_EDITOR
+            TestWorld.Fill(_catalogEars, "_required", true);
+            TestWorld.FillList(_frog, "_refuses", _catalogEars);
+#endif
+            _view.Step(Head, -1);
+            Assert.AreEqual("Aucun", _view.Choices[Ears], "La grenouille ne porte pas d'oreilles.");
+            _view.Step(Ears, 1);
+            Assert.AreEqual("Aucun", _view.Choices[Ears], "Et on ne peut pas lui en mettre.");
+            _view.Step(Head, 1);
+            Assert.AreEqual("Oreilles de chat", _view.Choices[Ears], "Le chat revient avec les siennes.");
         }
 
         [Test]

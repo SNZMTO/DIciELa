@@ -179,16 +179,16 @@
   changer. Changer de tête change ses pièces : chaque ligne qui montrait une pièce de l'ancienne tête (ou rien, faute
   d'en avoir) prend celle de la nouvelle ; une pièce choisie par le joueur reste, et une ligne qui ne peut pas être
   vide garde sa pièce si la nouvelle tête n'en porte pas. Toutes les têtes sont ainsi sans oreilles, et chaque paire
-  d'oreilles va sur chacune.
+  d'oreilles va sur chacune, sauf la grenouille : elle ne porte pas d'oreilles, sa ligne reste vide avec elle.
 - **Règle.** Chaque pièce se pose sur la tête choisie, à son relief : un chapeau descend jusqu'à toucher le crâne, des
   lunettes reculent contre la face, un sac avance contre le dos, une bourse recule contre le ventre. Des oreilles se
   posent aux oreilles de la tête choisie, chacune de son côté, par leur base : aucune ne flotte, et sur une tête plus
   ronde elles se rapprochent du milieu, sans déborder du crâne. Les nœuds se tiennent debout (le grand à l'arrière de
   la tête, ses rubans dans le dos), le bandana tombe sur la poitrine ; le bandana et l'écharpe passent devant le col
   des habits, les capes tombent des épaules. La barbe prend la couleur du poil de sa couleur. Une tête ou un corps qui
-  ne ressemble pas aux autres a ses réglages, pièce par pièce : sur la grenouille, les oreilles du pack et la couronne
-  se posent derrière les dômes des yeux, la couronne entre eux ; les oreilles du raton et du renard se rapprochent et
-  s'enfoncent sur les autres têtes ; une cape recule sur la tunique évasée du raton, du renard et de la grenouille. Un
+  ne ressemble pas aux autres a ses réglages, pièce par pièce : sur la grenouille, la couronne
+  se pose entre les dômes des yeux ; les oreilles du raton et du renard se rapprochent et s'enfoncent sur les autres
+  têtes, celles du raton aussi bas que sur le chat ; une cape recule sur la tunique évasée du raton, du renard et de la grenouille. Un
   chapeau cache les oreilles et les cheveux choisis, touffes et huppe comprises (ils restent choisis) ; la couronne, la
   fleur et les nœuds non. Une cape remplace la petite cape que portent l'oiseau, le lapin, la souris et le cochon. Les
   cheveux sont ceux des animaux (touffes, huppe) : les coiffures humaines du pack ne sont pas proposées. Les pièces

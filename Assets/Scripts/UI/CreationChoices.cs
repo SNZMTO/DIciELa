@@ -7,11 +7,11 @@ namespace Diciela.UI
     /// <summary>
     /// Les choix de l'écran de création (GDD, section 6), sans l'écran : une ligne pour la tête, une pour le corps, puis
     /// une par emplacement, chacune avec sa pièce et sa couleur. Les flèches font le tour des pièces d'une ligne (« aucune »
-    /// en tête pour un emplacement dont on peut se passer ; la tête, le corps et le museau en ont toujours une) et des couleurs du catalogue ; changer de
-    /// pièce lui rend sa couleur d'origine. On part de l'apparence de départ du catalogue. Les pièces qu'une tête porte
-    /// d'office (ses oreilles, ses touffes, son museau) suivent la tête : en changer remplace, sur chaque ligne qui montrait
-    /// une pièce de l'ancienne tête (ou rien, faute d'en avoir), par celle de la nouvelle ; une pièce choisie par le joueur
-    /// reste.
+    /// en tête si l'on peut se passer de l'emplacement) et des couleurs du catalogue ; changer de pièce lui rend sa couleur
+    /// d'origine. On part de l'apparence de départ du catalogue. Les pièces qu'une tête porte d'office (ses oreilles, ses
+    /// touffes) la suivent : sur chaque ligne qui montrait une pièce de l'ancienne tête (ou rien, faute d'en avoir), celle
+    /// de la nouvelle ; une pièce choisie par le joueur reste. Une ligne que la tête ne porte pas (les oreilles de la
+    /// grenouille) reste vide avec elle.
     /// </summary>
     public sealed class CreationChoices
     {
@@ -70,9 +70,11 @@ namespace Diciela.UI
             return row == BodyRow ? TextKeys.CreationBody : _catalog.AttachmentSlots[row - FirstSlotRow].NameKey;
         }
 
-        /// <summary>La clé du nom de la pièce choisie sur cette ligne ; vide pour « aucune ».</summary>
+        /// <summary>La clé du nom de la pièce choisie sur cette ligne ; vide pour « aucune », ou que la tête ne porte pas.</summary>
         public string PieceKey(int row)
         {
+            if (Refused(row))
+                return "";
             if (row == HeadRow)
                 return _catalog.Heads[_pieces[row]].NameKey;
             if (row == BodyRow)
@@ -83,6 +85,8 @@ namespace Diciela.UI
         /// <summary>La clé du nom de la couleur de cette ligne ; vide sans pièce.</summary>
         public string PaletteKey(int row)
         {
+            if (Refused(row))
+                return "";
             return _palettes[row] == None ? "" : _catalog.Palettes[_palettes[row]].NameKey;
         }
 
@@ -101,7 +105,7 @@ namespace Diciela.UI
                 _pieces[row] = Wrap(_pieces[row] + direction, _catalog.Bodies.Count);
                 _palettes[row] = PaletteIndex(_catalog.Bodies[_pieces[row]].Palette);
             }
-            else if (row > BodyRow && row < _pieces.Length)
+            else if (row > BodyRow && row < _pieces.Length && !Refused(row))
             {
                 List<AttachmentDefinition> offered = _offered[row - FirstSlotRow];
                 // « Aucune » est un choix de la ligne, avant ses pièces, si l'on peut se passer de son emplacement.
@@ -116,7 +120,7 @@ namespace Diciela.UI
         /// <summary>Passe à la couleur d'à côté sur cette ligne, si elle porte une pièce.</summary>
         public void Recolor(int row, int direction)
         {
-            if (row >= 0 && row < _pieces.Length && _palettes[row] != None)
+            if (row >= 0 && row < _pieces.Length && _palettes[row] != None && !Refused(row))
                 _palettes[row] = Wrap(_palettes[row] + direction, _catalog.Palettes.Count);
         }
 
@@ -126,7 +130,7 @@ namespace Diciela.UI
             _worn.Clear();
             for (int row = FirstSlotRow; row < _pieces.Length; row++)
             {
-                if (_pieces[row] != None)
+                if (_pieces[row] != None && !Refused(row))
                     _worn.Add(new WornAttachment(_offered[row - FirstSlotRow][_pieces[row]], Palette(row)));
             }
             return new Appearance(_catalog.Heads[_pieces[HeadRow]], Palette(HeadRow), _catalog.Bodies[_pieces[BodyRow]],
@@ -147,12 +151,24 @@ namespace Diciela.UI
                 if (!ReferenceEquals(shown, WornIn(before, slot)))
                     continue;
                 AttachmentDefinition own = WornIn(after, slot);
-                // Une ligne dont on ne peut pas se passer garde sa pièce si la nouvelle tête n'en porte pas.
+                // Une ligne dont on ne peut pas se passer garde sa pièce si la nouvelle tête n'en porte pas, ou prend la
+                // première qu'elle propose si elle n'en avait pas (en revenant d'une tête qui ne la porte pas).
                 if (own == null && slot.Required)
+                {
+                    if (shown == null && offered.Count > 0)
+                        (_pieces[row], _palettes[row]) = (0, PaletteIndex(offered[0].Palette));
                     continue;
+                }
                 _pieces[row] = own == null ? None : offered.IndexOf(own);
                 _palettes[row] = _pieces[row] == None ? None : PaletteIndex(own.Palette);
             }
+        }
+
+        // Vrai si la tête choisie ne porte pas ce qui va à l'emplacement de cette ligne : sa pièce ne se montre ni ne change.
+        private bool Refused(int row)
+        {
+            return row >= FirstSlotRow && row < _pieces.Length &&
+                   _catalog.Heads[_pieces[HeadRow]].Refuses(_catalog.AttachmentSlots[row - FirstSlotRow]);
         }
 
         private static AttachmentDefinition WornIn(HeadDefinition head, AttachmentSlotDefinition slot)
@@ -165,10 +181,7 @@ namespace Diciela.UI
             return null;
         }
 
-        private PaletteDefinition Palette(int row)
-        {
-            return _catalog.Palettes[_palettes[row]];
-        }
+        private PaletteDefinition Palette(int row) => _catalog.Palettes[_palettes[row]];
 
         /// <summary>Le rang d'une couleur dans le catalogue ; la première, si le catalogue ne l'a pas.</summary>
         private int PaletteIndex(PaletteDefinition palette)
@@ -181,9 +194,6 @@ namespace Diciela.UI
             return 0;
         }
 
-        private static int Wrap(int index, int count)
-        {
-            return (index % count + count) % count;
-        }
+        private static int Wrap(int index, int count) => (index % count + count) % count;
     }
 }
