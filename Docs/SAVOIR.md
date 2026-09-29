@@ -365,16 +365,14 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   bas, et sur une tête plus étroite on voyait leur intérieur, en croissant clair. `SkullCap` le referme en éventail,
   dans un sous-maillage à part, que le test de la découpe ne compte pas.
 - **Une pièce se tourne sur son pivot** (sa rotation, puis sa taille) ; sa face qui touche se remesure tournée : relancer
-  le menu des fiches. Le pack dessine couchés les nœuds et le bandana : aucun de ses personnages ne les
-  porte, sa scène de démonstration les aligne à 0°. Le casque est un morion : de profil, bord relevé devant et derrière,
+  le menu des fiches. Le pack dessine couchés les nœuds : aucun de ses personnages ne les porte, sa scène de démonstration les aligne à 0°. Le casque est un morion : de profil, bord relevé devant et derrière,
   la rosace sur le côté ; tourné d'un quart, il montrait son profil de face.
 - **Des réglages par porteur** (`WearerAdjustment`) : un décalage de plus sur des têtes (une pièce de la tête) ou des
-  corps (du cou à la queue). Les variantes A et B d'un animal ont les mêmes repères et les mêmes cartes : un réglage les
-  nomme toutes les deux. Un seul enfoncement ne va pas à tous les corps : celui qui plaque une cape contre le col évasé
-  du chat la fait entrer de 7 cm dans la tunique évasée du raton. L'enfoncement de la face d'une pièce dans un corps,
-  sous la taille, se calcule depuis les cartes, comme `Contact`, sans rien photographier.
-- **Une pièce tenue par un lien touche par ce lien** (les cordons d'une cape, l'anse d'une bourse, le nœud d'un
-  bandana) : le contact l'arrête là, et le reste flotte à 10 ou 20 cm du corps. Son décalage sur l'axe de contact la
+  corps (la ceinture, la queue), et au besoin une autre taille, axe par axe. Les variantes A et B d'un animal ont les
+  mêmes repères et les mêmes cartes : un réglage les nomme toutes les deux. Un seul enfoncement ne va pas à tous les
+  corps : une cape plaquée contre le col évasé du chat entrait de 7 cm dans la tunique évasée du raton. L'enfoncement
+  de la face d'une pièce dans un corps se calcule depuis les cartes, comme `Contact`, sans rien photographier.
+- **Une pièce tenue par un lien touche par ce lien** (l'anse d'une bourse, les cordons d'une cape) : le contact l'arrête là, et le reste flotte à 10 ou 20 cm du corps. Son décalage sur l'axe de contact la
   plaque, le lien entrant dans le corps, où il ne se voit pas.
 - **Les chapeaux low poly ont un fond fermé** que la tête traverse : le contact seul les poserait comme un couvercle.
   Une pièce humaine reprend l'enfoncement de son dessin sur son porteur ; un chapeau animal au fond fermé descend de

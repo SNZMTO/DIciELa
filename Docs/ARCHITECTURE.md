@@ -227,17 +227,16 @@ sauvegardé.
   d'un personnage du pack par le menu des fiches, sur le squelette commun), chacun de sa couleur (une couleur : les
   deux matériaux du pack de même teinte, pour les personnages et pour les objets), au plus une pièce par emplacement, de
   sa couleur. La tête porte ses points et ses surfaces mesurés, les pièces qui se sont détachées d'elle (et ce que le
-  pack pose sur elle) et les emplacements qu'elle ne porte pas ; le corps garde son personnage, son dos et son ventre mesurés, et ce que ce personnage porte
-  ailleurs que sur la tête. L'emplacement dit l'os, le repère (les pieds ou un point de la tête), le contact, si ses
-  pièces vont par paires (qui se posent par leur base) et si l'on ne peut pas s'en passer ; la pièce, son modèle (du
-  pack, détaché d'une tête, ou une copie du pack : une paire en deux moitiés, une barbe teinte comme le poil), sa tête
-  de référence, son décalage, sa rotation, sa taille par axe, ses réglages sur les têtes ou les corps qui ne
-  ressemblent pas aux autres, la face qui touche, ce qu'elle cache et si elle couvre le dos (une cape cache la petite
-  cape d'un corps). Ce qui se déduit du pack (maillages, points, surfaces, pièces d'office, os, repère, contact, paires
-  et emplacements obligatoires, copies, tête de référence, si une pièce couvre le dos) est réécrit à chaque passage du
-  menu ; le décalage et la taille d'une pièce ne sont écrits
-  qu'une fois (taille nulle : pas encore réglée), puis ils sont au développeur, comme sa rotation et ses réglages. La
-  vue habille (SAVOIR 2.11) ; la simulation garde l'apparence sans la lire. Le catalogue mène à la sorte de la Chimère
+  pack pose sur elle) et les emplacements qu'elle ne porte pas ; le corps garde son personnage, son dos et son ventre
+  mesurés, et ce que ce personnage porte ailleurs que sur la tête. L'emplacement dit l'os, le repère (les pieds ou un
+  point de la tête), le contact, si ses pièces vont par paires (qui se posent par leur base) et si l'on ne peut pas s'en
+  passer ; la pièce, son modèle (du pack, détaché d'une tête, ou une copie du pack : une paire en deux moitiés, une barbe
+  teinte comme le poil), sa tête de référence, son décalage, sa rotation, sa taille par axe, ses réglages sur les têtes
+  ou les corps qui ne ressemblent pas aux autres, la face qui touche et ce qu'elle cache. Ce qui se déduit du pack
+  (maillages, points, surfaces, pièces d'office, os, repère, contact, paires et emplacements obligatoires, copies, tête
+  de référence) est réécrit à chaque passage du menu ; le décalage et la taille d'une pièce ne sont écrits qu'une fois
+  (taille nulle : pas encore réglée), puis ils sont au développeur, comme sa rotation et ses réglages. La vue habille
+  (SAVOIR 2.11) ; la simulation garde l'apparence sans la lire. Le catalogue mène à la sorte de la Chimère
   et à ce que l'écran de création propose, dans son ordre (les pièces détachées des têtes en tête de liste).
 - Une fiche de réglages de la simulation tient le pas, la borne de pas par image, la durée de la journée et de ses
   phases, les mailles par mètre et les bornes de boucle. Une fiche de session dit quelle carte charger et où ranger
