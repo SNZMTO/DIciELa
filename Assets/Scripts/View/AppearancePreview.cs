@@ -1,32 +1,43 @@
-using Diciela.Simulation.Land;
 using Diciela.Simulation.Society;
 using UnityEngine;
 
 namespace Diciela.View
 {
     /// <summary>
-    /// L'aperçu de l'écran de création (GDD, section 6) : la Chimère à venir, habillée de l'apparence choisie, debout
-    /// au point d'arrivée, tournée comme elle y naîtra. Ce n'est qu'une vue : la simulation la crée à la validation, et
-    /// sa vue prend alors la place de l'aperçu.
+    /// L'aperçu de l'écran de création (GDD, section 6) : la Chimère à venir, habillée de l'apparence choisie, debout sur
+    /// le socle de l'atelier (Atelier), de face ; le joueur la fait tourner, et elle garde son angle quand il l'habille
+    /// autrement. Ce n'est qu'une vue : la simulation la crée à la validation, au point d'arrivée de la carte.
     /// </summary>
     public sealed class AppearancePreview : MonoBehaviour
     {
         private GameObject _shown;
         private Vector3 _place;
+        private float _yawDegrees;
 
-        /// <summary>Se tient prêt à montrer une apparence à ce point de la carte, posé sur son relief.</summary>
-        public void Stand(Vector2 point, Relief relief)
+        /// <summary>Se tient prêt à montrer une apparence à cette place, de face.</summary>
+        public void Stand(Vector3 place)
         {
-            _place = new Vector3(point.x, relief.HeightAt(point.x, point.y), point.y);
+            _place = place;
+            _yawDegrees = 0f;
+            Place();
         }
 
-        /// <summary>Montre cette apparence à la place de la précédente.</summary>
+        /// <summary>
+        /// La fait tourner sur elle-même de cet angle, en degrés : positif, dans le sens des aiguilles d'une montre, vue
+        /// d'en haut.
+        /// </summary>
+        public void Turn(float degrees)
+        {
+            _yawDegrees = Mathf.Repeat(_yawDegrees + degrees, 360f);
+            Place();
+        }
+
+        /// <summary>Montre cette apparence à la place de la précédente, tournée comme elle.</summary>
         public void Show(Appearance appearance)
         {
             Hide();
             _shown = Dresser.Dress(appearance, transform);
-            if (_shown != null)
-                _shown.transform.SetPositionAndRotation(_place, Quaternion.identity);
+            Place();
         }
 
         /// <summary>Retire ce qu'on montrait.</summary>
@@ -35,6 +46,12 @@ namespace Diciela.View
             if (_shown != null)
                 Destroy(_shown);
             _shown = null;
+        }
+
+        private void Place()
+        {
+            if (_shown != null)
+                _shown.transform.SetPositionAndRotation(_place, Quaternion.Euler(0f, _yawDegrees, 0f));
         }
 
         private void OnDestroy()

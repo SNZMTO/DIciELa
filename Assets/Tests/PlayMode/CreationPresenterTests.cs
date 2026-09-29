@@ -132,6 +132,15 @@ namespace Diciela.Tests.PlayMode
         }
 
         [Test]
+        public void TurnedSheStaysTurnedWhenTheChoiceChanges()
+        {
+            _preview.Turn(90f);
+            _view.Step(2, 1);
+            Transform shown = _preview.transform.GetChild(_preview.transform.childCount - 1);
+            Assert.AreEqual(90f, shown.eulerAngles.y, 0.01f, "Coiffée d'un chapeau, elle garde son angle.");
+        }
+
+        [Test]
         public void TheHeadAndTheBodyTakeTheirColorsApartAndAnotherHeadComesInItsOwn()
         {
             _view.Recolor(0, -1);

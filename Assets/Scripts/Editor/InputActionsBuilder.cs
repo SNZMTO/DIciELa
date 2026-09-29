@@ -34,7 +34,7 @@ namespace Diciela.EditorTools
             InputActionMap camera = asset.FindActionMap(CameraControls.MapName) ??
                                     asset.AddActionMap(CameraControls.MapName);
             int added = AddIfMissing(camera, CameraControls.MoveAction, AddMove) +
-                        AddIfMissing(camera, CameraControls.RotateAction, AddRotate) +
+                        AddIfMissing(camera, CameraControls.RotateAction, m => AddTurn(m, CameraControls.RotateAction)) +
                         AddIfMissing(camera, CameraControls.ZoomAction, AddZoom) +
                         AddButtonIfMissing(camera, CameraControls.DragAction, "<Mouse>/rightButton") +
                         AddButtonIfMissing(camera, CameraControls.OrbitAction, "<Mouse>/middleButton") +
@@ -63,6 +63,13 @@ namespace Diciela.EditorTools
             added += AddIfMissing(confirm, ConfirmControls.ConfirmAction, m =>
                 m.AddAction(ConfirmControls.ConfirmAction, InputActionType.Button, "<Keyboard>/enter")
                     .AddBinding("<Keyboard>/numpadEnter"));
+
+            // Faire tourner la Chimère à l'atelier : les touches qui tournent la caméra en ville, le clic gauche glissé.
+            InputActionMap preview = asset.FindActionMap(PreviewControls.MapName) ??
+                                     asset.AddActionMap(PreviewControls.MapName);
+            added += AddIfMissing(preview, PreviewControls.TurnAction, m => AddTurn(m, PreviewControls.TurnAction)) +
+                     AddButtonIfMissing(preview, PreviewControls.GrabAction, "<Mouse>/leftButton") +
+                     AddPointerIfMissing(preview, PreviewControls.PointerAction);
 
             if (added > 0)
             {
@@ -94,9 +101,10 @@ namespace Diciela.EditorTools
                 .With("Left", "<Keyboard>/leftArrow").With("Right", "<Keyboard>/rightArrow");
         }
 
-        private static void AddRotate(InputActionMap map)
+        // Un axe sur les touches Q et E, liées à leur position : A et E en AZERTY (SAVOIR, section 3).
+        private static void AddTurn(InputActionMap map, string actionName)
         {
-            InputAction rotate = map.AddAction(CameraControls.RotateAction, InputActionType.Value);
+            InputAction rotate = map.AddAction(actionName, InputActionType.Value);
             rotate.expectedControlType = "Axis";
             rotate.AddCompositeBinding("1DAxis").With("Negative", "<Keyboard>/q").With("Positive", "<Keyboard>/e");
         }
