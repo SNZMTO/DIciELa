@@ -15,7 +15,8 @@ namespace Diciela.EditorTools
     /// Les mises en scène de l'album (Docs/ALBUM.md), en Play. Poser trois cabanes : on se rapproche du centre de la vue,
     /// puis on tient l'outil de pose à la place de la souris, par les mêmes appels que les gestes, le temps d'une
     /// capture ; les gestes de la caméra et de la pose restent coupés jusqu'à la fin du Play. Se rapprocher de la
-    /// Chimère : des crans de molette vers là où on la voit, comme le ferait la souris posée sur elle.
+    /// Chimère : des crans de molette vers là où on la voit, comme le ferait la souris posée sur elle. Tourner la Chimère
+    /// de l'atelier : de trois quarts, par le même appel que le glisser.
     /// </summary>
     public static class AlbumMenu
     {
@@ -26,6 +27,9 @@ namespace Diciela.EditorTools
 
         // Les crans de molette vers la Chimère : assez pour la voir presque de face.
         private const float ChimeraZoomNotches = 7f;
+
+        // De trois quarts, sa face vers la droite de l'écran (comme un glisser vers la droite).
+        private const float ThreeQuarterDegrees = -35f;
 
         // Trois places, en fractions de l'écran, pour trois cabanes ; une place libre devant elles.
         private static readonly Vector2[] Places =
@@ -64,6 +68,18 @@ namespace Diciela.EditorTools
             var ground = new Vector3(at.x, world.Map.Relief.HeightAt(at.x, at.y), at.y);
             rig.Zoom(ChimeraZoomNotches, rig.Camera.WorldToScreenPoint(ground));
             Debug.Log("DICIELA : la vue se rapproche de la Chimère, en " + at + ".");
+        }
+
+        [MenuItem("DICIELA/Album/Tourner la Chimère de l'atelier")]
+        public static void TurnChimeraInAtelier()
+        {
+            var preview = Object.FindAnyObjectByType<AppearancePreview>();
+            if (!EditorApplication.isPlaying || preview == null || preview.transform.childCount == 0)
+            {
+                Debug.LogError("DICIELA : on tourne la Chimère en Play, à l'écran de création.");
+                return;
+            }
+            preview.Turn(ThreeQuarterDegrees);
         }
 
         /// <summary>Pose de côté l'outil de pose, comme par Échap : son aperçu ne cache plus ce qu'on veut montrer.</summary>

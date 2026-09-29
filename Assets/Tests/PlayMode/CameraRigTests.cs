@@ -7,9 +7,9 @@ using UnityEngine.TestTools;
 namespace Diciela.Tests.PlayMode
 {
     /// <summary>
-    /// La caméra de gestion (la caméra de test, sans lissage du zoom) : se montrer, zoomer, tourner, tirer le sol, se
-    /// déplacer. Les gestes l'appellent comme le joueur. Les attendus du pointeur viennent de la projection inverse
-    /// (WorldToScreenPoint), pas du rayon qui sert à la caméra.
+    /// La caméra de gestion (la caméra de test, sans lissage du zoom) : se montrer, reculer depuis la Chimère, zoomer,
+    /// tourner, tirer le sol, se déplacer. Les gestes l'appellent comme le joueur. Les attendus du pointeur viennent de
+    /// la projection inverse (WorldToScreenPoint), pas du rayon qui sert à la caméra.
     /// </summary>
     public sealed class CameraRigTests
     {
@@ -45,6 +45,19 @@ namespace Diciela.Tests.PlayMode
             _test.Rig.Show(new MapDescription(relief, new Vector2(20f, 70f)));
 
             Assert.That(Vector3.Distance(new Vector3(20f, 10f, 70f), _test.LookedAtGround()), Is.LessThan(0.01f));
+        }
+
+        [UnityTest]
+        public IEnumerator PullingBackStartsAtTheNearestDistanceThenReturnsToTheStart()
+        {
+            _test.Rig.PullBack();
+            Assert.AreEqual(_test.Settings.NearDistance,
+                Vector3.Distance(_test.Holder.transform.position, TestCamera.MapCenter), 0.01f, "Tout près du point visé.");
+            yield return null;
+            yield return null;
+            Assert.AreEqual(_test.Settings.StartDistance,
+                Vector3.Distance(_test.Holder.transform.position, TestCamera.MapCenter), 0.01f,
+                "Puis à la distance de départ (sans lissage, d'un coup).");
         }
 
         [UnityTest]

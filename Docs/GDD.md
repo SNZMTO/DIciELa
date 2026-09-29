@@ -165,12 +165,14 @@
 - **Règle.** On la crée au lancement d'une partie, sur l'écran de création : une tête d'animal et un corps d'animal,
   pas forcément le même, puis des morceaux d'autres animaux (oreilles, touffe, museau, queue) et des accessoires, au
   plus un par emplacement ; chaque partie a sa couleur. Elle apparaît au point d'arrivée de la carte (voir 2).
-- **Règle.** L'écran de création est un panneau de bois sur le côté, la ville visible derrière ; la Chimère à venir se
-  tient au point d'arrivée, la caméra au plus près et tournée vers elle. Une ligne par partie, sa pièce et sa couleur,
-  chacune entre ses flèches : la tête (seize), le corps et ses habits (seize), puis la queue, les oreilles, le museau,
-  les cheveux, le chapeau, le visage, la barbe, les boucles d'oreilles, le cou, le dos et la ceinture, « aucun » en
-  tête. Les douze couleurs du pack vont sur n'importe quelle partie ; changer de partie lui rend sa couleur d'origine.
-  On part du chat, dans ses couleurs, avec ses oreilles et sa queue. « C'est parti » (ou Entrée) la crée.
+- **Règle.** L'écran de création est un panneau de bois sur le côté, dans un atelier hors de la carte, en low poly (un
+  fond en alcôve, un sol, un socle) ; la Chimère à venir s'y tient de face sur le socle. On la fait tourner, avec A et
+  E ou en la glissant au clic gauche ; elle garde son angle quand on change une pièce. Une ligne par partie, sa pièce
+  et sa couleur, chacune entre ses flèches : la tête (seize), le corps et ses habits (seize), puis la queue, les
+  oreilles, le museau, les cheveux, le chapeau, le visage, la barbe, les boucles d'oreilles, le cou, le dos et la
+  ceinture, « aucun » en tête. Les douze couleurs du pack vont sur n'importe quelle partie ; changer de partie lui
+  rend sa couleur d'origine. On part du chat, dans ses couleurs, avec ses oreilles et sa queue. « C'est parti » (ou
+  Entrée) la crée, et la ville s'ouvre sur elle, au point d'arrivée.
 - **Règle.** Une tête est un crâne, ses yeux et ses sourcils ; ce qui s'en détache (les oreilles du chat, du cochon, du
   lapin, du raton laveur, du renard et de la souris ; les touffes du cochon, du raton laveur, du renard et de la
   souris ; le museau du renard) sont des pièces qu'elle porte d'office, qu'on peut changer. Changer de tête change ses
@@ -535,7 +537,8 @@
 - **À toi.** La place de chaque pièce, mesurée au départ (la base d'un chapeau un peu sous le haut du crâne, les
   lunettes contre la face, les pièces faites pour les humains là où le pack pose les cheveux de l'oiseau), à affiner
   dans sa fiche en regardant l'écran de création ou les planches de la Chimère.
-- **Défaut.** Au plus près, la caméra est à 8 m : l'écran de création y montre la Chimère entière.
+- **Défaut.** Au plus près, la caméra est à 8 m : la ville s'ouvre de là sur la Chimère qui naît, puis la caméra recule
+  à sa distance de départ.
 - **Règle.** Le pack n'a pas d'animations : un pack d'animations est à acheter, par le développeur. En attendant, les
   personnages glissent, bras écartés, et se tournent vers où ils vont.
 - **Défaut.** Un personnage se tourne à 540° par seconde.

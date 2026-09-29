@@ -10,9 +10,10 @@ namespace Diciela.Game
 {
     /// <summary>
     /// Ce que le démarrage montre d'un monde et relie aux gestes (ARCHITECTURE, section 11), dans l'ordre d'une partie
-    /// neuve (GDD, section 6) : la ville vue (caméra, constructions, habitants) et l'écran de création, la caméra tout
-    /// près du point d'arrivée, tournée vers la Chimère à venir ; puis, l'ordre de la créer parti, la barre et les gestes
-    /// de la ville, la caméra reculée à sa distance de départ. Il délie et cache tout à la sortie.
+    /// neuve (GDD, section 6) : l'écran de création dans l'atelier, la Chimère à venir sur son socle, qu'on fait
+    /// tourner ; puis, l'ordre de la créer parti, la ville (caméra, barre, gestes), la caméra tout près de la Chimère
+    /// qui naît au point d'arrivée, puis reculée à sa distance de départ. Les constructions et les habitants sont vus dès l'ouverture. Il délie et cache tout à
+    /// la sortie.
     /// </summary>
     public sealed class GameStage : MonoBehaviour
     {
@@ -27,6 +28,8 @@ namespace Diciela.Game
         [SerializeField] private CreationScreen _creationScreen;
         [SerializeField] private AppearancePreview _appearancePreview;
         [SerializeField] private ConfirmControls _confirmControls;
+        [SerializeField] private Atelier _atelier;
+        [SerializeField] private PreviewControls _previewControls;
 
         private PlacementTool _placementTool;
 
@@ -34,27 +37,23 @@ namespace Diciela.Game
         public bool IsComplete => _cameraRig != null && _cameraControls != null && _structureViews != null &&
                                   _villagerViews != null && _placementPreview != null && _placementControls != null &&
                                   _chooseControls != null && _buildBar != null && _creationScreen != null &&
-                                  _appearancePreview != null && _confirmControls != null;
+                                  _appearancePreview != null && _confirmControls != null && _atelier != null &&
+                                  _previewControls != null;
 
-        /// <summary>
-        /// Montre ce monde et ouvre l'écran de création ; à la validation, ouvre la ville, puis appelle started. La
-        /// Chimère regarde vers le nord : la caméra se tourne pour la voir de face.
-        /// </summary>
+        /// <summary>Montre ce monde et ouvre l'écran de création ; à la validation, ouvre la ville, puis appelle started.</summary>
         public void Open(World world, Catalog catalog, TextTable texts, PlacementSettings placement, Action started)
         {
-            _cameraRig.Show(world.Map);
             _structureViews.Show(world.Structures, world.Map.Relief);
             _villagerViews.Show(world.Villagers, world.Map.Relief);
-            _appearancePreview.Stand(world.Map.ArrivalPoint, world.Map.Relief);
+            _atelier.Show();
+            _appearancePreview.Stand(_atelier.Spot);
             _creationScreen.Show(catalog, texts, _appearancePreview, world, () =>
             {
                 OpenTown(world, catalog, texts, placement);
                 started();
             });
-            _cameraControls.Bind(_creationScreen);
+            _previewControls.Bind(_appearancePreview, _creationScreen);
             _confirmControls.Bind(_creationScreen.Confirm);
-            _cameraRig.Rotate(180f);
-            _cameraRig.ZoomTo(_cameraRig.NearestDistance);
         }
 
         /// <summary>Donne aux habitants vus la fraction du pas en cours.</summary>
@@ -67,11 +66,13 @@ namespace Diciela.Game
         public void Close()
         {
             _confirmControls.Bind(null);
+            _previewControls.Bind(null, null);
             _placementControls.Bind(null, null);
             _chooseControls.Bind(null, null, null);
             _cameraControls.Bind(null);
             _creationScreen.Hide();
             _appearancePreview.Hide();
+            _atelier.Hide();
             _buildBar.Hide();
             if (_placementTool != null)
             {
@@ -84,17 +85,23 @@ namespace Diciela.Game
             _villagerViews.Hide();
         }
 
+        // La Chimère naît au point d'arrivée, tournée vers le nord : la caméra se tourne pour la voir de face, part tout
+        // près d'elle et recule jusqu'à la distance de départ.
         private void OpenTown(World world, Catalog catalog, TextTable texts, PlacementSettings placement)
         {
             _confirmControls.Bind(null);
+            _previewControls.Bind(null, null);
             _creationScreen.Hide();
             _appearancePreview.Hide();
+            _atelier.Hide();
+            _cameraRig.Show(world.Map);
+            _cameraRig.Rotate(180f);
+            _cameraRig.PullBack();
             _placementTool = new PlacementTool(world, _cameraRig.Camera, _placementPreview, placement);
             _buildBar.Show(catalog, texts, _placementTool, world);
             _cameraControls.Bind(_buildBar);
             _placementControls.Bind(_placementTool, _buildBar);
             _chooseControls.Bind(new ChooseTool(world, _cameraRig.Camera, _structureViews), _placementTool, _buildBar);
-            _cameraRig.ZoomTo(_cameraRig.StartDistance);
         }
     }
 }

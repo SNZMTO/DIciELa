@@ -77,7 +77,8 @@ En cas de doute, `unity list` (les outils du paquet `com.unity.pipeline`) ou la 
   et une capture montre une image figée. `editor_focus` avant `editor_play`, et lire le nombre de pas dans la ligne
   « monde arrêté après N pas » à l'`editor_stop` : un seul pas veut dire que rien n'a tourné.
 - **Captures** : `capture_game_view --source screen --width 1600 --height 900 --save_path Assets/Temp/x.png` (en Play ;
-  2400 × 1350 marche encore, 3840 × 2160 rend une image noire ou périmée ;
+  2400 × 1350 marche encore, 3840 × 2160 rend une image noire ou périmée ; l'image est la vue Game rééchantillonnée à
+  la taille demandée : si la vue n'a pas ce rapport, l'image est étirée (juger les proportions avec prudence) ;
   la source `camera` manque l'UI Toolkit), puis supprimer `Assets/Temp` et son `.meta`. Pour vérifier, une capture seulement si
   c'est le seul moyen ; pour l'album, voir `Docs/ALBUM.md`. Le JPG de l'album se fait par PowerShell (`System.Drawing`,
   encodeur JPEG, qualité 88 : environ 100 Ko) ; Python n'est pas installé.

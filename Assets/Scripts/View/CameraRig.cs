@@ -9,7 +9,8 @@ namespace Diciela.View
     /// La caméra de gestion (GDD, section 16) : elle regarde un point du sol, qui reste sur la carte et suit son relief,
     /// d'une distance qui règle aussi l'inclinaison : de loin, la ville en maquette ; de près, les habitants presque de
     /// face. On peut l'incliner soi-même, dans des bornes. Tirer le sol et zoomer gardent sous le pointeur le point du
-    /// sol qu'il vise (GroundGrip). Elle ne lit pas les touches : les gestes l'appellent.
+    /// sol qu'il vise (GroundGrip). Elle ne lit pas les touches : les gestes l'appellent. Éteinte tant qu'elle ne
+    /// montre pas la carte (l'atelier de la création a sa propre caméra) : une seule caméra rend à la fois.
     /// </summary>
     [RequireComponent(typeof(Camera))]
     public sealed class CameraRig : MonoBehaviour
@@ -42,19 +43,13 @@ namespace Diciela.View
         /// <summary>L'inclinaison de la vue, en degrés sous l'horizon.</summary>
         public float PitchDegrees => CameraPose.Pitch(_settings, _distance, _tiltDegrees);
 
-        /// <summary>La distance la plus proche (les habitants presque de face), et celle d'où part une partie.</summary>
-        public float NearestDistance => _settings.NearDistance;
-        public float StartDistance => _settings.StartDistance;
-
         private void Awake()
         {
             _camera = GetComponent<Camera>();
+            _camera.enabled = false;
         }
 
-        /// <summary>
-        /// Montre la carte depuis son point d'arrivée, où apparaît la Chimère, à la distance de départ. Appelé par le
-        /// démarrage.
-        /// </summary>
+        /// <summary>Montre la carte depuis son point d'arrivée, où apparaît la Chimère, à la distance de départ.</summary>
         public void Show(MapDescription map)
         {
             if (ReferenceEquals(map, null))
@@ -72,6 +67,7 @@ namespace Diciela.View
             _grip.Clear();
             _camera.fieldOfView = _settings.FieldOfView;
             _camera.farClipPlane = _settings.FarClipPlane;
+            _camera.enabled = true;
             Apply();
         }
 
@@ -81,6 +77,8 @@ namespace Diciela.View
             _relief = null;
             _grip.Clear();
             _distanceVelocity = 0f;
+            if (_camera != null)
+                _camera.enabled = false;
         }
 
         /// <summary>Déplace le point visé : x vers la droite de l'écran, y vers le haut, plus vite quand on est loin.</summary>
@@ -102,10 +100,7 @@ namespace Diciela.View
             return IsShowing && _grip.BeginDrag(_camera, _relief, screenPoint, PivotHeight());
         }
 
-        /// <summary>
-        /// Tire le sol saisi jusqu'à ce point de l'écran : il revient sous le pointeur, quelle que soit l'inclinaison de
-        /// la vue (SAVOIR, 2.8).
-        /// </summary>
+        /// <summary>Tire le sol saisi jusqu'à ce point de l'écran : il revient sous le pointeur (SAVOIR, 2.8).</summary>
         public void DragTo(Vector2 screenPoint)
         {
             if (IsShowing && _grip.TryDrag(_camera, screenPoint, out Vector2 shift))
@@ -121,10 +116,7 @@ namespace Diciela.View
             _yawDegrees = Mathf.Repeat(_yawDegrees + degrees, 360f);
         }
 
-        /// <summary>
-        /// Incline la vue autour du point visé : un angle positif la relève vers l'horizon. L'inclinaison choisie tient,
-        /// zoom compris, entre ses bornes (CameraPose).
-        /// </summary>
+        /// <summary>Incline la vue autour du point visé (positif : vers l'horizon), dans ses bornes (CameraPose).</summary>
         public void Tilt(float degrees)
         {
             if (!IsShowing)
@@ -155,6 +147,16 @@ namespace Diciela.View
                 return;
             _grip.ReleaseZoom();
             _targetDistance = Mathf.Clamp(meters, _settings.NearDistance, _settings.FarDistance);
+        }
+
+        /// <summary>Repart au plus près du point visé, puis recule sans à-coup jusqu'à la distance qu'elle visait.</summary>
+        public void PullBack()
+        {
+            if (!IsShowing)
+                return;
+            _distance = _settings.NearDistance;
+            _distanceVelocity = 0f;
+            Apply();
         }
 
         private void LateUpdate()

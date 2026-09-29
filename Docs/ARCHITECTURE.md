@@ -270,6 +270,7 @@ code.
 | scène du démarrage | `GameStage` | décalage ; taille (d'une pièce) | `Offset` ; `Scale` | tête ; pièce portée | `Head` ; `WornAttachment` |
 | choix de l'écran de création | `CreationChoices` | découpe (crâne, corps) | `BodyCutter` | morceau soudé (d'un maillage) | `Shell` |
 | repère (d'un emplacement) | `AttachmentFrame` | contact ; carte de surface | `ContactAxis` ; `SurfaceMap` | oreilles cousues ; couvercle | `FusedEars` ; `SkullCap` |
+| atelier ; ses gestes | `Atelier` ; `PreviewControls` | tourner (la Chimère) | `Turn` | reculer (la caméra) | `PullBack` |
 
 ## 10. La carte, les scènes et la sauvegarde
 
@@ -317,9 +318,13 @@ code.
   le modèle est sous le pointeur : la vue dit laquelle (SAVOIR 2.7), l'outil « choisir » en fait un ordre. Un panneau
   ouvert rend la ville muette ; les conteneurs plein écran de l'interface ne captent pas le pointeur. Les gestes ne
   connaissent pas l'interface : elle leur dit seulement où elle est (`IInterfaceArea`), et `Game` les relie.
-- **L'ouverture d'une partie** : la scène du démarrage (`GameStage`) montre le monde et ouvre l'écran de création ; la
-  validation envoie l'ordre « créer la Chimère », ouvre la ville (barre, gestes de la pose et du toucher) et fait partir
-  le temps, dont le premier pas se joue aussitôt : la Chimère prend la place de son aperçu dans la même image.
+- **L'ouverture d'une partie** : la scène du démarrage (`GameStage`) montre le monde (constructions, habitants) et ouvre
+  l'écran de création dans l'atelier (`Atelier` : un décor généré loin de la carte, sa lumière, sa caméra) ; l'aperçu
+  (`AppearancePreview`) s'y tient sur le socle, et les gestes de l'atelier (`PreviewControls`, leur propre carte
+  d'actions) le font tourner. Une seule caméra rend à la fois : celle de la ville reste éteinte tant qu'elle ne montre
+  pas la carte. La validation envoie l'ordre « créer la Chimère », cache l'atelier, ouvre la ville (caméra, barre, gestes
+  de la pose et du toucher ; la caméra part au plus près de la Chimère et recule) et fait partir le temps, dont le
+  premier pas se joue aussitôt : la Chimère naît au point d'arrivée dans la même image.
 - **L'interface** suit le patron MVP : un présentateur écoute la simulation et remplit son panneau. Pour les écrans
   chargés (l'étal, la liste des habitants), la liaison de données de UI Toolkit reste possible.
 - **Aucun état statique modifiable** dans la simulation : le registre, le catalogue et les textes sont des objets

@@ -11,9 +11,9 @@ using UnityEngine.SceneManagement;
 namespace Diciela.EditorTools
 {
     /// <summary>
-    /// Monte les scènes du jeu : les fiches et les actions qui manquent, la carte de test, la carte (si elle n'existe
-    /// pas), puis les deux scènes racines, Jeu et JeuTest, chacune avec son démarrage, sa scène (vues, gestes, écran de
-    /// création) et sa caméra reliés à leurs fiches, et sans soleil. Réexécutable : ce qui existe n'est pas touché, un
+    /// Monte les scènes du jeu : les fiches, les actions et l'atelier qui manquent, la carte de test, la carte (si elle
+    /// n'existe pas), puis les deux scènes racines, Jeu et JeuTest, chacune avec son démarrage, sa scène (vues, gestes,
+    /// écran de création, atelier) et sa caméra reliés à leurs fiches, et sans soleil. Réexécutable : ce qui existe n'est pas touché, un
     /// réglage fait à la main n'est pas écrasé. Finit sur la scène Jeu.
     /// </summary>
     public static class GameSceneBuilder
@@ -22,6 +22,7 @@ namespace Diciela.EditorTools
         private const string VillagersObjectName = "Habitants";
         private const string PreviewObjectName = "Aperçu de la Chimère";
         private const string ConfirmObjectName = "Valider";
+        private const string TurnObjectName = "Tourner la Chimère";
 
         [MenuItem("DICIELA/Scènes/Monter les scènes")]
         public static void BuildScenes()
@@ -31,6 +32,7 @@ namespace Diciela.EditorTools
 
             DataAssetBuilder.CreateMissingAssets();
             InputActionsBuilder.EnsureActions();
+            AtelierBuilder.EnsureAssets();
             MapSceneBuilder.CreateTestMapIfMissing();
             MapSceneBuilder.CreateMapIfMissing();
             BuildRootScene(ScenePaths.GameTest, DataAssetBuilder.TestSessionPath);
@@ -94,6 +96,15 @@ namespace Diciela.EditorTools
             EditorAssets.AssignIfMissing(confirm, "_actions",
                 EditorAssets.Load<UnityEngine.InputSystem.InputActionAsset>(InputActionsBuilder.ActionsPath));
             EditorAssets.AssignIfMissing(stage, "_confirmControls", confirm);
+            EditorAssets.AssignIfMissing(stage, "_atelier", AtelierBuilder.EnsureIn(scene));
+            PreviewControls turn = EditorAssets.FindOrCreate<PreviewControls>(scene, TurnObjectName);
+            EditorAssets.AssignIfMissing(turn, "_actions",
+                EditorAssets.Load<UnityEngine.InputSystem.InputActionAsset>(InputActionsBuilder.ActionsPath));
+            EditorAssets.AssignIfMissing(turn, "_settings",
+                EditorAssets.Load<CameraSettings>(DataAssetBuilder.CameraSettingsPath));
+            EditorAssets.AssignIfMissing(turn, "_gestures",
+                EditorAssets.Load<GestureSettings>(DataAssetBuilder.GestureSettingsPath));
+            EditorAssets.AssignIfMissing(stage, "_previewControls", turn);
             InterfaceBuilder.EnsureIn(scene, stage);
             EditorSceneManager.SaveScene(scene, scenePath);
         }

@@ -284,6 +284,11 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   carte recule de même quand la caméra s'éloigne. Les deux se règlent sur une copie en mémoire de l'asset URP
   (`Instantiate`, puis `QualitySettings.renderPipeline`) et dans `RenderSettings`, rendus à la sortie : le Play ne
   recharge pas le domaine, et une copie oubliée survivrait d'un Play à l'autre (`CameraAtmosphere`).
+- **Deux caméras, une seule allumée** : l'atelier de la création a sa caméra, loin de la carte ; celle de la ville
+  reste éteinte tant qu'elle ne montre pas la carte, sinon la scène entière se rend deux fois par image. La seconde
+  caméra n'a pas d'écouteur de son (deux écouteurs : un avertissement à chaque image), et le menu qui installe la
+  caméra de la ville la cherche par son `CameraRig`, jamais « la première caméra de la scène ». Le soleil, l'ambiance
+  et les filtres de la carte éclairent aussi l'atelier : son sol et son fond ne portent pas d'ombre.
 
 ### 2.11 Habiller un personnage du pack
 

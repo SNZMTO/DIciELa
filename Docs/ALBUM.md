@@ -15,6 +15,17 @@
 
 ## Les captures
 
+### 29/09/2026 — étape 13c : l'atelier de la Chimère
+
+La Chimère ne se crée plus sur la carte : l'écran de création s'ouvre dans un atelier low poly généré, loin de la
+carte (un fond en alcôve, un sol en damier, un socle, une lumière chaude, sa caméra). Elle s'y tient de face sur le
+socle, à gauche du panneau ; A et E, ou un glisser au clic gauche, la font tourner (ici de trois quarts : sa queue
+paraît). « C'est parti » ouvre la ville sur elle, au point d'arrivée, et la caméra recule.
+
+![L'atelier de la Chimère](Album/2026-09-29_etape-13c_atelier-de-la-chimere.jpg)
+
+![La Chimère tournée de trois quarts](Album/2026-09-29_etape-13c_chimere-tournee.jpg)
+
 ### 29/09/2026 — étape 13b (suite) : les oreilles du raton laveur se détachent
 
 Les oreilles du raton laveur, cousues à son crâne dans le pack, en sont découpées : toutes les têtes sont maintenant
