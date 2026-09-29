@@ -19,7 +19,8 @@ MonoBehaviour:
   _worn:
   - {fileID: 11400000, guid: fc31ff0ed42af3f40b292367a6b1fe78, type: 2}
   - {fileID: 11400000, guid: 276883155e9980c459a617cb6b423eab, type: 2}
-  _refuses: []
+  _refuses:
+  - {fileID: 11400000, guid: 63501f8cc8b9b32409144d672bb5ca5a, type: 2}
   _crown: {x: 0, y: 1.9236966, z: -0.053909063}
   _face: {x: 0, y: 1.6132432, z: 0.32006478}
   _earRight: {x: 0.3091423, y: 1.7758766, z: -0.053909063}

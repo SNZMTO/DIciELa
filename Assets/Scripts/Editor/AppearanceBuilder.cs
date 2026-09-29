@@ -18,13 +18,15 @@ namespace Diciela.EditorTools
         private const string HumanReference = Characters + "/SM_Chr_Male_01.prefab";
 
         // Les animaux du pack, dans l'ordre de l'écran : le chat d'abord, la Chimère de départ, et la tête de référence des
-        // réglages ; et les emplacements que leur tête ne porte pas (la grenouille, sans oreilles, n'en prend aucune).
+        // réglages ; et les emplacements que leur tête ne porte pas (la grenouille, sans oreilles ; la barbe ne va qu'au
+        // chat, à la souris et à la grenouille).
         private static readonly string[] NoSlot = new string[0];
+        private static readonly string[] NoBeard = { "Barbe" };
         private static readonly (string Pack, string Name, string[] Refuses)[] Animals =
         {
-            ("Cat", "Chat", NoSlot), ("Pig", "Cochon", NoSlot), ("Frog", "Grenouille", new[] { "Oreilles" }),
-            ("Bunny", "Lapin", NoSlot), ("Bird", "Oiseau", NoSlot), ("Racoon", "RatonLaveur", NoSlot),
-            ("Fox", "Renard", NoSlot), ("Mouse", "Souris", NoSlot)
+            ("Cat", "Chat", NoSlot), ("Pig", "Cochon", NoBeard), ("Frog", "Grenouille", new[] { "Oreilles" }),
+            ("Bunny", "Lapin", NoBeard), ("Bird", "Oiseau", NoBeard), ("Racoon", "RatonLaveur", NoBeard),
+            ("Fox", "Renard", NoBeard), ("Mouse", "Souris", NoSlot)
         };
 
         public static void CreateMissing(Catalog catalog)
