@@ -33,15 +33,18 @@ namespace Diciela.EditorTools
         public SurfaceMap Back { get; private set; }
         public SurfaceMap Front { get; private set; }
 
-        /// <summary>Découpe ce personnage du pack ; file nomme ses maillages (Chat_A).</summary>
-        public static AnimalCut Of(GameObject model, string file, Rect backArea, float cell)
+        /// <summary>
+        /// Découpe ce personnage du pack ; file nomme ses maillages (Chat_A) ; snoutFront : la profondeur de son museau
+        /// cousu (HeadShells), l'infini s'il n'en a pas.
+        /// </summary>
+        public static AnimalCut Of(GameObject model, string file, float snoutFront, Rect backArea, float cell)
         {
             var cut = new AnimalCut(model);
             GameObject root = PrefabUtility.LoadPrefabContents(AssetDatabase.GetAssetPath(model));
             try
             {
                 SkinnedMeshRenderer skin = PackSkin.VisibleBody(root);
-                HeadShells shells = HeadShells.Of(skin);
+                HeadShells shells = HeadShells.Of(skin, snoutFront);
                 (cut.Skull, cut.Body) = BodyCutter.Cut(skin, shells, file);
                 cut.Material = skin.sharedMaterial;
                 foreach (HeadShells.Kind kind in new[] { HeadShells.Kind.Ears, HeadShells.Kind.Tufts, HeadShells.Kind.Snout })

@@ -227,17 +227,17 @@ sauvegardé.
   d'un personnage du pack par le menu des fiches, sur le squelette commun), chacun de sa couleur (une couleur : les
   deux matériaux du pack de même teinte, pour les personnages et pour les objets), au plus une pièce par emplacement, de
   sa couleur. La tête porte ses points et ses surfaces mesurés, les pièces qui se sont détachées d'elle (et ce que le
-  pack pose sur elle) ; le corps garde son personnage, son dos et son ventre
-  mesurés, et ce que ce personnage porte ailleurs que sur la tête. L'emplacement dit l'os, le repère (les pieds ou un
-  point de la tête), le contact et si ses pièces peuvent aller par paires ; la pièce, son modèle (du pack, détaché d'une
+  pack pose sur elle) ; le corps garde son personnage, son dos et son ventre mesurés, et ce que ce personnage porte
+  ailleurs que sur la tête. L'emplacement dit l'os, le repère (les pieds ou un point de la tête), le contact, si ses
+  pièces peuvent aller par paires et si elles se posent par leur base ; la pièce, son modèle (du pack, détaché d'une
   tête, ou une paire du pack copiée en deux moitiés), sa tête de référence, son décalage, sa rotation, sa taille par
   axe, ses réglages sur les têtes ou les corps qui ne ressemblent pas aux autres, la face qui touche, ce qu'elle cache
   et si elle couvre le dos (une cape cache la petite cape d'un corps). Ce qui se déduit du pack (maillages, points,
-  surfaces, pièces d'office, os, repère, contact, paires et leurs moitiés, tête de référence, si une pièce couvre le
-  dos) est réécrit à chaque passage du menu ; le décalage et la taille d'une pièce ne sont écrits qu'une fois (taille
-  nulle : pas encore réglée), puis ils sont au développeur, comme sa rotation et ses réglages. La vue habille
-  (SAVOIR 2.11) ; la simulation garde l'apparence sans la lire. Le catalogue mène à la sorte de la Chimère et à ce que
-  l'écran de création propose, dans son ordre (les pièces détachées des têtes en tête de liste).
+  surfaces, pièces d'office, os, repère, contact, paires et leurs moitiés, pose par la base, tête de référence, si une
+  pièce couvre le dos) est réécrit à chaque passage du menu ; le décalage et la taille d'une pièce ne sont écrits
+  qu'une fois (taille nulle : pas encore réglée), puis ils sont au développeur, comme sa rotation et ses réglages. La
+  vue habille (SAVOIR 2.11) ; la simulation garde l'apparence sans la lire. Le catalogue mène à la sorte de la Chimère
+  et à ce que l'écran de création propose, dans son ordre (les pièces détachées des têtes en tête de liste).
 - Une fiche de réglages de la simulation tient le pas, la borne de pas par image, la durée de la journée et de ses
   phases, les mailles par mètre et les bornes de boucle. Une fiche de session dit quelle carte charger et où ranger
   les sauvegardes.
@@ -272,7 +272,7 @@ code.
 | écran de création | `CreationScreen` | aperçu de la Chimère | `AppearancePreview` | valider | `ConfirmControls` |
 | scène du démarrage | `GameStage` | décalage ; taille (d'une pièce) | `Offset` ; `Scale` | tête ; pièce portée | `Head` ; `WornAttachment` |
 | choix de l'écran de création | `CreationChoices` | découpe (crâne, corps) | `BodyCutter` | morceau soudé (d'un maillage) | `Shell` |
-| repère (d'un emplacement) | `AttachmentFrame` | contact ; carte de surface | `ContactAxis` ; `SurfaceMap` | oreilles cousues ; couvercle | `FusedEars` ; `SkullCap` |
+| repère (d'un emplacement) | `AttachmentFrame` | contact ; carte de surface | `ContactAxis` ; `SurfaceMap` | oreilles cousues ; museau cousu ; couvercle | `FusedEars` ; `FusedSnout` ; `SkullCap` |
 | atelier ; ses gestes | `Atelier` ; `PreviewControls` | tourner (la Chimère) | `Turn` | reculer (la caméra) | `PullBack` |
 | pose (d'une pièce) ; paire, moitié | `PiecePlacement` ; `Pairs`, `EarHalves` | rotation ; réglage (par tête, par corps) | `Rotation` ; `WearerAdjustment` | tête de référence ; se poser par sa base | `Reference` ; `Contact.TryRest` |
 

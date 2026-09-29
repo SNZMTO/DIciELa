@@ -67,6 +67,10 @@ piece.touffes_ratonlaveur,Touffe du raton laveur,Raccoon's tuft
 piece.touffes_renard,Touffe du renard,Fox's tuft
 piece.touffes_souris,Touffe de la souris,Mouse's tuft
 piece.museau_renard,Museau de renard,Fox snout
+piece.museau_cochon,Groin du cochon,Pig's snout
+piece.museau_ratonlaveur,Museau du raton laveur,Raccoon's muzzle
+piece.museau_souris,Museau de la souris,Mouse's muzzle
+piece.museau_oiseau,Bec de l'oiseau,Bird's beak
 piece.chapeau_01,Chapeau 1,Hat 1
 piece.chapeau_02,Chapeau 2,Hat 2
 piece.chapeau_03,Chapeau 3,Hat 3

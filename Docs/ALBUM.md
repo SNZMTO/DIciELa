@@ -15,6 +15,18 @@
 
 ## Les captures
 
+### 29/09/2026 — étape 13e (suite) : les museaux se détachent, les oreilles du raton se rapprochent
+
+Le groin du cochon, les museaux du raton laveur et de la souris, le bec de l'oiseau se détachent de leur tête, comme
+le museau du renard : un museau choisi remplace celui de la tête, plaqué contre la face. Chaque ligne, un museau sur
+les huit têtes : le groin, le museau du raton, celui de la souris, le bec, puis le groin du pack. Ensuite les
+oreilles du raton sur les huit têtes, de face, de dos, de trois quarts et de profil : sur une tête plus ronde que la
+sienne, elles se rapprochent du milieu au lieu de déborder du crâne.
+
+![Quatre museaux détachés et le groin du pack, sur les huit têtes](Album/2026-09-29_etape-13e_museaux-echanges.jpg)
+
+![Les oreilles du raton sur les huit têtes](Album/2026-09-29_etape-13e_oreilles-du-raton.jpg)
+
 ### 29/09/2026 — étape 13e : les oreilles et les pièces réglées tête par tête
 
 Chaque paire d'oreilles se pose aux oreilles de la tête choisie, par sa base, sans flotter ; certaines pièces sont

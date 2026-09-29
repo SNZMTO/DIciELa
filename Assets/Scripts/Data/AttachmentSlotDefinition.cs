@@ -31,12 +31,17 @@ namespace Diciela.Data
                  "suit l'oreille de son côté sur la tête choisie. Rempli par le menu.")]
         [SerializeField] private bool _pairs;
 
+        [Tooltip("Vrai si ses pièces se posent par leur base sur une autre tête que la leur (les oreilles, les boucles, les " +
+                 "museaux) : ce qui touchait leur tête touche la tête choisie, le reste s'enfonce. Rempli par le menu.")]
+        [SerializeField] private bool _seated;
+
         public string Id => _id;
         public string NameKey => _nameKey;
         public string Bone => _bone;
         public AttachmentFrame Frame => _frame;
         public ContactAxis Contact => _contact;
         public bool Pairs => _pairs;
+        public bool Seated => _seated;
 
         /// <summary>
         /// Vrai si ses pièces touchent le corps (celles des pieds et du cou : ce qui les porte), faux si elles touchent la

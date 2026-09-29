@@ -63,23 +63,28 @@ namespace Diciela.Tests.PlayMode
         [Test]
         public void APairRestsByItsBaseOnAnotherHead()
         {
-            // Une rangée de cases de 10 cm, de x = -0,5 à 0,5. La tête de référence est plate, à 1,8 m ; l'autre penche : à
-            // 1,6 m sous le dedans des oreilles, à 1,5 m sous le dehors. Le dessous de la paire : 10 cm sous son pivot, sous
-            // ses moitiés seulement (de 20 à 40 cm du milieu), enfoncé de 2 cm dans sa tête de référence.
-            var flat = Row(x => 1.8f);
-            var slope = Row(x => Mathf.Abs(x) < 0.3f ? 1.6f : 1.5f);
+            // Une rangée de cases de 10 cm, de x = -0,5 à 0,5. La tête de référence est plate, à 1,8 m ; les autres ont un
+            // plateau sous le dedans des oreilles (à moins de 30 cm du milieu), à 1,6 m, et plus bas au-dehors. Le dessous
+            // de la paire : 10 cm sous son pivot, sous ses moitiés seulement (de 20 à 40 cm du milieu), enfoncé de 2 cm dans
+            // sa tête de référence.
             var under = Row(x => Mathf.Abs(x) > 0.2f && Mathf.Abs(x) < 0.4f ? -0.1f : SurfaceMap.Empty);
-            HeadDefinition reference = Head(new Vector3(0.4f, 1.8f, 0f)), other = Head(new Vector3(0.4f, 1.7f, 0f));
+            HeadDefinition reference = Head(new Vector3(0.4f, 1.8f, 0f)), gentle = Head(new Vector3(0.4f, 1.7f, 0f)),
+                steep = Head(new Vector3(0.4f, 1.7f, 0f));
             AttachmentDefinition ears = Pair("Oreilles posées", ContactAxis.Down, new Vector3(0f, -0.02f, 0f));
 #if UNITY_EDITOR
-            TestWorld.Fill(reference, "_top", flat);
-            TestWorld.Fill(other, "_top", slope);
+            TestWorld.Fill(reference, "_top", Row(x => 1.8f));
+            TestWorld.Fill(gentle, "_top", Row(x => Mathf.Abs(x) < 0.3f ? 1.6f : 1.58f));
+            TestWorld.Fill(steep, "_top", Row(x => Mathf.Abs(x) < 0.3f ? 1.6f : 1.5f));
             TestWorld.Fill(ears, "_shape", under);
             TestWorld.Fill(ears, "_reference", reference);
 #endif
             Assert.AreEqual(1.8f + 0.1f - 0.02f, Worn(reference, ears).position.y, 1e-3f, "Sur sa tête, posée.");
-            Assert.AreEqual(1.5f + 0.1f - 0.02f, Worn(other, ears).position.y, 1e-3f,
+            Assert.AreEqual(1.58f + 0.1f - 0.02f, Worn(gentle, ears).position.y, 1e-3f,
                 "Ailleurs, par sa base : le dehors touche (enfoncé de même), le dedans s'enfonce ; rien ne flotte.");
+            Transform onSteep = Worn(steep, ears);
+            Assert.AreEqual(1.6f + 0.1f - 0.02f, onSteep.position.y, 1e-3f,
+                "Sur un bord trop penché, elle glisse vers le milieu et porte à plat sur le plateau.");
+            Assert.That(onSteep.Find("Droite").position.x, Is.InRange(0.035f, 0.065f), "De 5 cm environ, de chaque côté.");
         }
 
         [Test]
@@ -151,6 +156,10 @@ namespace Diciela.Tests.PlayMode
         private AttachmentDefinition Pair(string name, ContactAxis contact, Vector3 offset)
         {
             AttachmentDefinition pair = _rig.Piece(name, AttachmentFrame.Ears, contact, offset, 1f, null);
+#if UNITY_EDITOR
+            TestWorld.Fill(pair.Slot, "_pairs", true);
+            TestWorld.Fill(pair.Slot, "_seated", true);
+#endif
             foreach ((string half, float side) in new[] { ("Droite", 1f), ("Gauche", -1f) })
             {
                 GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
