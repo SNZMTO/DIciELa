@@ -10,7 +10,7 @@ namespace Diciela.EditorTools
 {
     /// <summary>
     /// La planche d'essais (SAVOIR, 2.11) : des Chimères composées à la main, photographiées de face (comme dans
-    /// l'atelier), de trois quarts d'en haut (comme en ville) et de dos, une par ligne. La liste est un fichier texte,
+    /// l'atelier), de trois quarts d'en haut (comme en ville), de profil et de dos, une par ligne. La liste est un fichier texte,
     /// Temp/Planches/Essais.txt, une Chimère par ligne : l'identifiant de la tête, celui du corps, puis les noms des
     /// fiches de ses pièces, séparés par des points-virgules (« grenouille_a;grenouille_a;Oreilles_Cochon »). Pour juger
     /// une combinaison sans passer par l'écran de création.
@@ -59,10 +59,11 @@ namespace Diciela.EditorTools
                     var target = new Vector3(0f, 1.55f, 0.05f);
                     photos.Add(studio.Shoot(target, new Vector3(0f, 0.12f, 1f), 0.95f));
                     photos.Add(studio.Shoot(target, new Vector3(0.8f, 1.1f, 1.2f), 0.95f));
+                    photos.Add(studio.Shoot(target, new Vector3(1f, 0.05f, 0f), 0.95f));
                     photos.Add(studio.Shoot(target, new Vector3(0.3f, 0.2f, -1f), 0.95f));
                     Object.DestroyImmediate(holder);
                 }
-                studio.Save(photos, 3, Sheet);
+                studio.Save(photos, 4, Sheet);
             }
             Debug.Log("DICIELA : planche d'essais écrite dans " + Path.GetFullPath(Sheet) + ".");
         }

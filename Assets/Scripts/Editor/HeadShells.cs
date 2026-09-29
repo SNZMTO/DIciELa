@@ -4,14 +4,12 @@ using UnityEngine;
 namespace Diciela.EditorTools
 {
     /// <summary>
-    /// Les morceaux de la tête d'un animal du pack (SAVOIR, 2.11). Ses triangles sont ceux dont les sommets suivent en
-    /// moyenne pour moitié au moins les os de la tête (head, eyes, eyebrows) ; ils forment des morceaux d'un seul tenant
-    /// (sommets soudés par leur position, car le pack double un sommet à chaque couture de texture), chacun fermé, qu'on
-    /// détache sans laisser de trou. Chaque morceau est classé par sa place : le plus grand est le crâne ; une paire de grands
-    /// morceaux hors de la ligne du milieu, au-dessus des yeux, les oreilles ; de petits morceaux sur le haut, au milieu, les
-    /// touffes ; un morceau au milieu, devant, sous les yeux, le museau (le renard seul) ; des oreilles cousues au crâne
-    /// (le raton laveur) s'en détachent aussi (FusedEars) ; le reste (yeux, sourcils,
-    /// moustaches) va avec le crâne. Les positions sont celles du personnage debout : pieds à l'origine, face vers +z.
+    /// Les morceaux de la tête d'un animal du pack (SAVOIR, 2.11) : les triangles dont les sommets suivent pour moitié au
+    /// moins les os de la tête, en morceaux d'un seul tenant (sommets soudés par leur position), chacun fermé. Le plus
+    /// grand est le crâne ; une paire de grands morceaux hors du milieu, au-dessus des yeux, les oreilles ; de petits
+    /// morceaux en haut, au milieu, les touffes ; un morceau au milieu, devant, sous les yeux, le museau (le renard). Des
+    /// oreilles cousues au crâne (FusedEars) et un museau cousu à la face (FusedSnout) s'en détachent aussi ; le reste
+    /// (yeux, sourcils, moustaches) va avec le crâne. Positions du personnage debout : pieds à l'origine, face vers +z.
     /// </summary>
     internal sealed class HeadShells
     {
@@ -60,8 +58,11 @@ namespace Diciela.EditorTools
         /// <summary>La hauteur moyenne des sommets de ses sourcils (l'os eyebrows des animaux est plus bas, aux yeux).</summary>
         public float BrowHeight { get; }
 
-        /// <summary>Les morceaux de ce corps allumé d'un personnage du pack.</summary>
-        public static HeadShells Of(SkinnedMeshRenderer skin)
+        /// <summary>
+        /// Les morceaux de ce corps allumé d'un personnage du pack ; snoutFront : la profondeur au-delà de laquelle sa face
+        /// porte un museau cousu (FusedSnout), ou l'infini s'il n'en a pas.
+        /// </summary>
+        public static HeadShells Of(SkinnedMeshRenderer skin, float snoutFront)
         {
             Mesh source = skin.sharedMesh;
             (Vector3[] positions, Vector3[] normals) = PackSkin.Standing(skin);
@@ -110,6 +111,12 @@ namespace Diciela.EditorTools
                     kinds[firstOfSub[sub] + first / 3] = Kind.Ears;
             }
             (List<Vector3> eyeVertices, float browHeight) = PackSkin.Features(positions, eyes, brows);
+            // Un museau cousu à la face aussi, s'il n'y en a pas un à part (le renard) ; il est sous les oreilles cousues.
+            if (!counts.ContainsKey(Kind.Snout) && !float.IsInfinity(snoutFront))
+            {
+                foreach ((int sub, int first) in FusedSnout.Find(positions, triangles, skull, eyeVertices, snoutFront))
+                    kinds[firstOfSub[sub] + first / 3] = Kind.Snout;
+            }
             return new HeadShells(positions, normals, eyeVertices, browHeight, triangles, kinds);
         }
 

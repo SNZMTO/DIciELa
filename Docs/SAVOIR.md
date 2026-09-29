@@ -310,6 +310,13 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   la tête se prennent sur le crâne refermé, sans quoi un rayon file par le trou. Dans la copie découpée, jamais dans le
   pack, une teinte peut être repeinte (`PartRepaint`) : l'intérieur de l'oreille gauche du raton est peint du blanc de
   sa face ; sur une autre tête, cette lèvre faisait un bandeau clair.
+- **Un museau cousu à la face** (`FusedSnout`) : le groin du cochon, les museaux du raton et de la souris, le bec de
+  l'oiseau font partie du crâne. Leur noyau est ce qui est tout entier plus en avant qu'une profondeur mesurée tête par
+  tête (savoir du pack, dans la table des animaux) : un seuil commun couperait la face ronde du chat, du lapin et de
+  la grenouille, qui avance de 6 cm au milieu. Tous les morceaux du noyau comptent (le bec a deux mâchoires). On y
+  ajoute de proche en proche ses flancs : les triangles voisins qui ne regardent pas vers l'avant (la face, si). Avec
+  le centre des triangles au lieu de leurs trois coins, la mâchoire du cochon partait avec le groin et pendait en
+  plaque rose sur les autres têtes.
 - **Le crâne et le corps** restent des maillages à peau sur le squelette commun (`BodyCutter`), réécrits en place à
   chaque passage (même fichier, mêmes références) : copier champ par champ, jamais par copie sérialisée, qui garde
   l'ancien découpage des sommets (crânes en miettes). **Oreilles, touffes, museau** suivent à 100 % les os de la tête :
@@ -347,7 +354,11 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   l'oreille de son côté. Sur une autre tête que sa référence, une paire se pose par sa base (`Contact.TryRest`) : les
   points de sa face à moins de 3 cm du dessus de sa tête de référence, là où elle y est posée, restent au contact ; le
   plus bas touche, les autres s'enfoncent. Posée par son premier point de contact, une paire large flottait sur une
-  tête ronde (les oreilles du raton sur la souris).
+  tête ronde (les oreilles du raton sur la souris). Au bord d'un dôme, sa base déborde du crâne (des oreilles
+  décollées) : elle glisse vers le milieu, par pas de 1 cm, jusqu'à porter à plat (3 cm d'écart au plus). Un museau se
+  pose par sa base aussi, contre la face, mais par le point du milieu : sur une face bombée, « le plus bas touche »
+  enfouissait un museau à dos plat. Seule une paire se pose ainsi dans un emplacement à paires : une boucle seule,
+  sans appui sous elle, flottait.
 - **Le dessous d'une pièce découpée se referme** : des oreilles cousues au crâne (le raton) en sortent ouvertes par le
   bas, et sur une tête plus étroite on voyait leur intérieur, en croissant clair. `SkullCap` le referme en éventail,
   dans un sous-maillage à part, que le test de la découpe ne compte pas.
