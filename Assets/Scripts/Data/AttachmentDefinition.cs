@@ -59,10 +59,6 @@ namespace Diciela.Data
                  "oreilles de la tête choisie, comparé à celui de celle-ci. Déduit du pack par le menu.")]
         [SerializeField] private HeadDefinition _reference;
 
-        [Tooltip("Vrai si elle couvre le dos (une cape) : elle cache la petite cape que certains corps portent d'office. " +
-                 "Déduit du pack par le menu.")]
-        [SerializeField] private bool _coversBack;
-
         [Tooltip("Sa face qui touche le personnage (le dessous d'un chapeau, le dos de lunettes, le devant d'un sac), " +
                  "dans ses axes, à sa taille d'origine. Mesurée par le menu.")]
         [SerializeField] private SurfaceMap _shape = new SurfaceMap();
@@ -81,22 +77,36 @@ namespace Diciela.Data
         public bool HasScale => _scale.x > 0f && _scale.y > 0f && _scale.z > 0f;
         public IReadOnlyList<AttachmentSlotDefinition> Hides => _hides;
 
-        /// <summary>Vrai si elle cache la petite cape que certains corps portent d'office.</summary>
-        public bool CoversBack => _coversBack;
-
         /// <summary>
         /// Son décalage de plus sur ce porteur (zéro s'il n'y en a pas) : selon le corps pour une pièce du corps, selon
         /// la tête sinon.
         /// </summary>
         public Vector3 AdjustmentOn(HeadDefinition head, BodyDefinition body)
         {
+            return TryAdjustment(head, body, out WearerAdjustment adjustment) ? adjustment.Offset : Vector3.zero;
+        }
+
+        /// <summary>Le modèle qu'elle prend sur ce porteur : celui de son réglage, s'il en donne un ; sinon le sien.</summary>
+        public GameObject ModelOn(HeadDefinition head, BodyDefinition body)
+        {
+            return TryAdjustment(head, body, out WearerAdjustment adjustment) && adjustment.Model != null
+                ? adjustment.Model
+                : _model;
+        }
+
+        // Son réglage sur ce porteur : selon le corps pour une pièce du corps, selon la tête sinon.
+        private bool TryAdjustment(HeadDefinition head, BodyDefinition body, out WearerAdjustment found)
+        {
             bool onBody = _slot != null && _slot.TouchesBody;
             foreach (WearerAdjustment adjustment in _adjustments)
             {
-                if (adjustment.AppliesTo(head, body, onBody))
-                    return adjustment.Offset;
+                if (!adjustment.AppliesTo(head, body, onBody))
+                    continue;
+                found = adjustment;
+                return true;
             }
-            return Vector3.zero;
+            found = default;
+            return false;
         }
         public SurfaceMap Shape => _shape;
     }

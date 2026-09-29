@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Diciela.Data;
+using Diciela.View;
 using Diciela.Simulation.Society;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -100,6 +101,26 @@ namespace Diciela.Tests.PlayMode
             TestWorld.Fill(piece, "_scale", Vector3.one * scale);
 #endif
             return piece;
+        }
+
+        /// <summary>Une tête du banc, sur le crâne du banc, dont l'oreille droite est à cette place.</summary>
+        public HeadDefinition HeadWithEars(Vector3 earRight)
+        {
+            var head = Keep(ScriptableObject.CreateInstance<HeadDefinition>());
+#if UNITY_EDITOR
+            TestWorld.Fill(head, "_id", "tete");
+            TestWorld.Fill(head, "_mesh", Head.Mesh);
+            TestWorld.Fill(head, "_earRight", earRight);
+#endif
+            return head;
+        }
+
+        /// <summary>Le modèle de cette pièce, porté par le personnage du banc habillé de cette tête ; null s'il n'y est pas.</summary>
+        public Transform Worn(HeadDefinition head, AttachmentDefinition piece)
+        {
+            GameObject dressed = Keep(Dresser.Dress(new Appearance(head, Origin, Body, Origin,
+                new[] { new WornAttachment(piece, Origin) }), null));
+            return dressed.transform.Find("root/pelvis/head/" + piece.Model.name + "(Clone)");
         }
 
         public T Keep<T>(T created) where T : Object

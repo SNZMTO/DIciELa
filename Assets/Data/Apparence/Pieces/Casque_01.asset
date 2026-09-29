@@ -25,7 +25,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ef3fd64fc655c1d4d9e9d8f926a3b8e7, type: 2}
   _adjustments: []
   _reference: {fileID: 11400000, guid: b101e7e10079f0b4db61f9549b700b64, type: 2}
-  _coversBack: 0
   _shape:
     _origin: {x: -0.68727416, y: -0.7815391}
     _cell: 0.065200195

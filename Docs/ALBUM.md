@@ -15,6 +15,13 @@
 
 ## Les captures
 
+### 29/09/2026 — étape 13e : la barbe sur la bouche de chaque tête
+
+La barbe encadre la bouche de chaque tête ; sous un bec ou un gros museau, elle se réduit au menton. De gauche à
+droite : chat, cochon, grenouille, lapin, oiseau, raton, renard, souris ; de face, de trois quarts, de profil.
+
+![La barbe sur les huit têtes](Album/2026-09-29_etape-13e_barbes.jpg)
+
 ### 29/09/2026 — étape 13e (fin) : chaque tête garde son museau, la barbe prend la couleur du poil
 
 Le museau ne se change plus, la queue et les oreilles ne sont jamais vides ; plus de coiffures humaines ni de boucles

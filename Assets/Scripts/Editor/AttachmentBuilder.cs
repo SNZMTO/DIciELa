@@ -68,44 +68,35 @@ namespace Diciela.EditorTools
                     false, false),
                 ("Barbe", "head", AttachmentFrame.Face, ContactAxis.Back, new SlotRule(SlotRule.Place.Nose, 0f),
                     false, false),
-                ("Cou", "neck_01", AttachmentFrame.Neck, ContactAxis.Back, new SlotRule(SlotRule.Place.UnderHead, 0f),
-                    false, false),
-                ("Dos", "spine_03", AttachmentFrame.Body, ContactAxis.Forward, new SlotRule(SlotRule.Place.Back, 0f),
-                    false, false),
                 ("Ceinture", "pelvis", AttachmentFrame.Body, ContactAxis.Back, new SlotRule(SlotRule.Place.Bone, 0f),
                     false, false)
             };
 
         // Les pièces : leur nom dans le pack, leur emplacement, leur nom de fichier, jusqu'à quel numéro elles sont
         // dessinées pour une tête humaine et autour de quoi (savoir du pack : les chapeaux 1 à 5, la barbe et les oreilles,
-        // autour de l'os Head ; les chapeaux 6 à 8, la huppe 14 et le reste, à la taille des animaux), et si elles couvrent le haut du crâne (les chapeaux et le casque),
-        // qui cachent alors d'office les oreilles et les cheveux (les touffes, la huppe), et si elles couvrent le dos (les
-        // capes), qui cachent alors la petite cape que certains corps portent d'office, et si elles se teignent comme le poil
-        // (la barbe : FurCopy).
+        // autour de l'os Head ; les chapeaux 6 à 8, la huppe 14 et le reste, à la taille des animaux), si elles couvrent le
+        // haut du crâne (les chapeaux et le casque), qui cachent alors d'office les oreilles et les cheveux (les touffes, la
+        // huppe), et si elles se teignent comme le poil (la barbe : FurCopy).
         private static readonly (string Pack, string Slot, string Name, int HumanUpTo, Design Human, bool CoversHead,
-            bool CoversBack, bool Fur)[]
+            bool Fur)[]
             Kinds =
             {
-                ("Tail", "Queue", "Queue", 0, Design.Animal, false, false, false),
-                ("Pig_Ear", "Oreilles", "OreillesCochon", AllHuman, Design.HumanHead, false, false, false),
-                ("Raccon_Ear", "Oreilles", "OreillesRaton", AllHuman, Design.HumanHead, false, false, false),
-                ("Goblin_Ear", "Oreilles", "OreillesGobelin", AllHuman, Design.HumanHead, false, false, false),
-                ("Hair", "Cheveux", "Cheveux", 0, Design.Animal, false, false, false),
-                ("Hat", "Chapeau", "Chapeau", 5, Design.HumanHead, true, false, false),
-                ("Helmet", "Chapeau", "Casque", 0, Design.Animal, true, false, false),
-                ("Crown", "Chapeau", "Couronne", 0, Design.Animal, false, false, false),
-                ("Flower", "Chapeau", "Fleur", 0, Design.Animal, false, false, false),
-                ("Bow", "Chapeau", "Noeud", 0, Design.Animal, false, false, false),
-                ("Glasses", "Visage", "Lunettes", 0, Design.Animal, false, false, false),
-                ("Monocle", "Visage", "Monocle", 0, Design.Animal, false, false, false),
-                ("Beard", "Barbe", "Barbe", AllHuman, Design.HumanWrap, false, false, true),
-                ("Scarf", "Cou", "Echarpe", 0, Design.Animal, false, false, false),
-                ("Bandana", "Cou", "Bandana", 0, Design.Animal, false, false, false),
-                ("Cape", "Dos", "Cape", 0, Design.Animal, false, true, false),
-                ("Backpack", "Dos", "SacADos", 0, Design.Animal, false, false, false),
-                ("Pouch", "Ceinture", "Bourse", 0, Design.Animal, false, false, false),
-                ("Canteen", "Ceinture", "Gourde", 0, Design.Animal, false, false, false),
-                ("Potion", "Ceinture", "Potion", 0, Design.Animal, false, false, false)
+                ("Tail", "Queue", "Queue", 0, Design.Animal, false, false),
+                ("Pig_Ear", "Oreilles", "OreillesCochon", AllHuman, Design.HumanHead, false, false),
+                ("Raccon_Ear", "Oreilles", "OreillesRaton", AllHuman, Design.HumanHead, false, false),
+                ("Goblin_Ear", "Oreilles", "OreillesGobelin", AllHuman, Design.HumanHead, false, false),
+                ("Hair", "Cheveux", "Cheveux", 0, Design.Animal, false, false),
+                ("Hat", "Chapeau", "Chapeau", 5, Design.HumanHead, true, false),
+                ("Helmet", "Chapeau", "Casque", 0, Design.Animal, true, false),
+                ("Crown", "Chapeau", "Couronne", 0, Design.Animal, false, false),
+                ("Flower", "Chapeau", "Fleur", 0, Design.Animal, false, false),
+                ("Bow", "Chapeau", "Noeud", 0, Design.Animal, false, false),
+                ("Glasses", "Visage", "Lunettes", 0, Design.Animal, false, false),
+                ("Monocle", "Visage", "Monocle", 0, Design.Animal, false, false),
+                ("Beard", "Barbe", "Barbe", AllHuman, Design.HumanWrap, false, true),
+                ("Pouch", "Ceinture", "Bourse", 0, Design.Animal, false, false),
+                ("Canteen", "Ceinture", "Gourde", 0, Design.Animal, false, false),
+                ("Potion", "Ceinture", "Potion", 0, Design.Animal, false, false)
             };
 
         /// <summary>
@@ -146,8 +137,7 @@ namespace Diciela.EditorTools
             List<PaletteDefinition> palettes)
         {
             var pieces = new List<PackPiece>();
-            foreach ((string pack, string slot, string name, int humanUpTo, Design human, bool coversHead, bool coversBack,
-                         bool fur) in Kinds)
+            foreach ((string pack, string slot, string name, int humanUpTo, Design human, bool coversHead, bool fur) in Kinds)
             {
                 for (int n = 1; n <= MaxPieceNumber; n++)
                 {
@@ -176,7 +166,6 @@ namespace Diciela.EditorTools
                             FurCopy.Copy(model, name + "_" + number, palettes));
                     else
                         EditorAssets.AssignIfMissing(piece, "_model", model);
-                    EditorAssets.Set(piece, fiche => EditorAssets.Property(fiche, "_coversBack").boolValue = coversBack);
                     EditorAssets.AssignIfMissing(piece, "_palette",
                         PaletteBuilder.PaletteOf(model.GetComponentInChildren<Renderer>(true), palettes));
                     pieces.Add(new PackPiece(piece, n <= humanUpTo ? human : Design.Animal, coversHead));
