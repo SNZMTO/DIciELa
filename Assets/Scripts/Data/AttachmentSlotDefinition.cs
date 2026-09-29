@@ -27,11 +27,16 @@ namespace Diciela.Data
                  "avancer contre le dos, ou rien. Rempli par le menu.")]
         [SerializeField] private ContactAxis _contact;
 
+        [Tooltip("Vrai si ses pièces peuvent aller par paires (les oreilles, deux boucles d'oreilles) : chaque moitié " +
+                 "suit l'oreille de son côté sur la tête choisie. Rempli par le menu.")]
+        [SerializeField] private bool _pairs;
+
         public string Id => _id;
         public string NameKey => _nameKey;
         public string Bone => _bone;
         public AttachmentFrame Frame => _frame;
         public ContactAxis Contact => _contact;
+        public bool Pairs => _pairs;
 
         /// <summary>
         /// Vrai si ses pièces touchent le corps (celles des pieds et du cou : ce qui les porte), faux si elles touchent la

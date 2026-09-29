@@ -11,9 +11,8 @@ namespace Diciela.View
     /// squelette : tous les animaux ont le même. On lui retire ce qu'il porte (ses seize corps, ses pièces d'office, ses
     /// capes cachées), puis il reçoit le corps et le crâne choisis, chacun de sa couleur, sur ses os. Une petite cape
     /// qu'il porte dans le pack reste, comme un habit, de la couleur du corps, sauf sous une pièce qui couvre le dos (une
-    /// cape). Chaque pièce se pose droite, son pivot au point de son repère sur la tête choisie plus son décalage, à sa
-    /// taille, puis s'accroche à l'os de son emplacement sans bouger ; une pièce qu'une autre cache (des oreilles sous un
-    /// chapeau) ne se pose pas.
+    /// cape). Chaque pièce se pose (PiecePlacement), puis s'accroche à l'os de son emplacement sans bouger ; une pièce
+    /// qu'une autre cache (des oreilles sous un chapeau) ne se pose pas.
     /// </summary>
     public static class Dresser
     {
@@ -131,8 +130,7 @@ namespace Diciela.View
 
             // Posée dans les axes du personnage, telle que le modèle est fait, puis confiée à son os sans bouger.
             GameObject piece = Object.Instantiate(attachment.Model, character, false);
-            piece.transform.localPosition = PlaceOf(appearance, attachment);
-            piece.transform.localScale = attachment.Scale;
+            PiecePlacement.Place(piece.transform, appearance, attachment);
             PaletteSwap.Apply(piece.GetComponentsInChildren<Renderer>(), attachment.Palette, worn.Palette);
             Transform bone = Find(character, attachment.Slot.Bone);
             if (bone != null)
@@ -140,30 +138,6 @@ namespace Diciela.View
             else
                 Debug.LogError("DICIELA : le personnage n'a pas d'os « " + attachment.Slot.Bone + " » pour la pièce « " +
                                attachment.Id + " ».");
-        }
-
-        /// <summary>
-        /// La place du pivot : le point du repère sur la tête choisie plus le décalage ; sur l'axe de contact de
-        /// l'emplacement, la place où la pièce touche la tête ou le corps, plus le décalage sur cet axe.
-        /// </summary>
-        private static Vector3 PlaceOf(Appearance appearance, AttachmentDefinition attachment)
-        {
-            AttachmentSlotDefinition slot = attachment.Slot;
-            Vector3 place = appearance.Head.PointOf(slot.Frame) + attachment.Offset;
-            ContactAxis axis = slot.Contact;
-            if (axis == ContactAxis.None)
-                return place;
-            bool onBody = slot.TouchesBody;
-            SurfaceMap surface = onBody ? appearance.Body.SurfaceOf(axis) : appearance.Head.SurfaceOf(axis);
-            if (!Contact.TryTouch(axis, surface, attachment.Shape, place, attachment.Scale, out float along))
-            {
-                Debug.LogWarning("DICIELA : la pièce « " + attachment.Id + " » ne touche pas « " +
-                                 (onBody ? appearance.Body.Id : appearance.Head.Id) + " ».");
-                return place;
-            }
-            return axis == ContactAxis.Down
-                ? new Vector3(place.x, along + attachment.Offset.y, place.z)
-                : new Vector3(place.x, place.y, along + attachment.Offset.z);
         }
 
         private static Transform Find(Transform root, string name)

@@ -49,22 +49,35 @@ namespace Diciela.EditorTools
             public bool CoversHead { get; }
         }
 
-        // Les emplacements, dans l'ordre des lignes de l'écran : leur os, leur repère, leur contact, et la règle de départ
-        // de leurs pièces que le pack ne pose nulle part (un chapeau entre de 2 cm dans le crâne, des cheveux de 1 cm).
-        private static readonly (string Name, string Bone, AttachmentFrame Frame, ContactAxis Contact, SlotRule Rule)[]
+        // Les emplacements, dans l'ordre des lignes de l'écran : leur os, leur repère, leur contact, la règle de départ de
+        // leurs pièces que le pack ne pose nulle part (un chapeau entre de 2 cm dans le crâne, des cheveux de 1 cm), et si
+        // leurs pièces vont par paires (les oreilles, en deux moitiés).
+        private static readonly
+            (string Name, string Bone, AttachmentFrame Frame, ContactAxis Contact, SlotRule Rule, bool Pairs)[]
             Slots =
             {
-                ("Queue", "pelvis", AttachmentFrame.Body, ContactAxis.None, new SlotRule(SlotRule.Place.TailRoot, 0f)),
-                ("Oreilles", "head", AttachmentFrame.Ears, ContactAxis.None, new SlotRule(SlotRule.Place.Ears, 0f)),
-                ("Museau", "head", AttachmentFrame.Face, ContactAxis.Back, new SlotRule(SlotRule.Place.Nose, 0f)),
-                ("Cheveux", "head", AttachmentFrame.Crown, ContactAxis.Down, new SlotRule(SlotRule.Place.Crown, 0.01f)),
-                ("Chapeau", "head", AttachmentFrame.Crown, ContactAxis.Down, new SlotRule(SlotRule.Place.Crown, 0.02f)),
-                ("Visage", "head", AttachmentFrame.Face, ContactAxis.Back, new SlotRule(SlotRule.Place.Eyes, 0f)),
-                ("Barbe", "head", AttachmentFrame.Face, ContactAxis.Back, new SlotRule(SlotRule.Place.Nose, 0f)),
-                ("BouclesOreilles", "head", AttachmentFrame.Ears, ContactAxis.None, new SlotRule(SlotRule.Place.Ears, 0f)),
-                ("Cou", "neck_01", AttachmentFrame.Neck, ContactAxis.Back, new SlotRule(SlotRule.Place.UnderHead, 0f)),
-                ("Dos", "spine_03", AttachmentFrame.Body, ContactAxis.Forward, new SlotRule(SlotRule.Place.Back, 0f)),
-                ("Ceinture", "pelvis", AttachmentFrame.Body, ContactAxis.Back, new SlotRule(SlotRule.Place.Bone, 0f))
+                ("Queue", "pelvis", AttachmentFrame.Body, ContactAxis.None, new SlotRule(SlotRule.Place.TailRoot, 0f),
+                    false),
+                ("Oreilles", "head", AttachmentFrame.Ears, ContactAxis.Down, new SlotRule(SlotRule.Place.Ears, 0f),
+                    true),
+                ("Museau", "head", AttachmentFrame.Face, ContactAxis.Back, new SlotRule(SlotRule.Place.Nose, 0f),
+                    false),
+                ("Cheveux", "head", AttachmentFrame.Crown, ContactAxis.Down, new SlotRule(SlotRule.Place.Crown, 0.01f),
+                    false),
+                ("Chapeau", "head", AttachmentFrame.Crown, ContactAxis.Down, new SlotRule(SlotRule.Place.Crown, 0.02f),
+                    false),
+                ("Visage", "head", AttachmentFrame.Face, ContactAxis.Back, new SlotRule(SlotRule.Place.Eyes, 0f),
+                    false),
+                ("Barbe", "head", AttachmentFrame.Face, ContactAxis.Back, new SlotRule(SlotRule.Place.Nose, 0f),
+                    false),
+                ("BouclesOreilles", "head", AttachmentFrame.Ears, ContactAxis.Down, new SlotRule(SlotRule.Place.Ears, 0f),
+                    true),
+                ("Cou", "neck_01", AttachmentFrame.Neck, ContactAxis.Back, new SlotRule(SlotRule.Place.UnderHead, 0f),
+                    false),
+                ("Dos", "spine_03", AttachmentFrame.Body, ContactAxis.Forward, new SlotRule(SlotRule.Place.Back, 0f),
+                    false),
+                ("Ceinture", "pelvis", AttachmentFrame.Body, ContactAxis.Back, new SlotRule(SlotRule.Place.Bone, 0f),
+                    false)
             };
 
         // Les pièces : leur nom dans le pack, leur emplacement, leur nom de fichier, jusqu'à quel numéro elles sont
@@ -108,7 +121,7 @@ namespace Diciela.EditorTools
             Dictionary<AttachmentSlotDefinition, SlotRule> rules)
         {
             var byName = new Dictionary<string, AttachmentSlotDefinition>();
-            foreach ((string name, string bone, AttachmentFrame frame, ContactAxis contact, SlotRule rule) in Slots)
+            foreach ((string name, string bone, AttachmentFrame frame, ContactAxis contact, SlotRule rule, bool pairs) in Slots)
             {
                 string id = name.ToLowerInvariant();
                 AttachmentSlotDefinition slot = EditorAssets.CreateIfMissing<AttachmentSlotDefinition>(
@@ -122,6 +135,7 @@ namespace Diciela.EditorTools
                     EditorAssets.Property(fiche, "_bone").stringValue = bone;
                     EditorAssets.Property(fiche, "_frame").enumValueIndex = (int)frame;
                     EditorAssets.Property(fiche, "_contact").enumValueIndex = (int)contact;
+                    EditorAssets.Property(fiche, "_pairs").boolValue = pairs;
                 });
                 byName[name] = slot;
                 rules[slot] = rule;
@@ -152,7 +166,16 @@ namespace Diciela.EditorTools
                             EditorAssets.Property(fiche, "_nameKey").stringValue = "piece." + id;
                         });
                     EditorAssets.AssignIfMissing(piece, "_slot", slots[slot]);
-                    EditorAssets.AssignIfMissing(piece, "_model", model);
+                    // Une paire du pack (des oreilles, deux boucles) se copie en deux moitiés : la fiche porte la copie ; une
+                    // pièce d'un seul côté garde son modèle.
+                    if (slots[slot].Pairs)
+                    {
+                        GameObject halves = EarHalves.Copy(model, name + "_" + number);
+                        EditorAssets.Set(piece, fiche => EditorAssets.Property(fiche, "_model").objectReferenceValue =
+                            halves != null ? halves : model);
+                    }
+                    else
+                        EditorAssets.AssignIfMissing(piece, "_model", model);
                     EditorAssets.Set(piece, fiche => EditorAssets.Property(fiche, "_coversBack").boolValue = coversBack);
                     EditorAssets.AssignIfMissing(piece, "_palette",
                         PaletteBuilder.PaletteOf(model.GetComponentInChildren<Renderer>(true), palettes));

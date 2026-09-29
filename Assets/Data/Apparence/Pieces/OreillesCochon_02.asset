@@ -15,15 +15,23 @@ MonoBehaviour:
   _id: oreillescochon_02
   _nameKey: piece.oreillescochon_02
   _slot: {fileID: 11400000, guid: 237ba4d2efff1aa4c91544ec94af0605, type: 2}
-  _model: {fileID: 8518552691439549650, guid: 456fd078701d1d14081b5bc349f88f8e, type: 3}
+  _model: {fileID: 2406903658338183243, guid: fe22af4a2f79dcf4583a4914e7efb4e0, type: 3}
   _palette: {fileID: 11400000, guid: 82d3eb0161a8fcd49a80a3086ee0a5aa, type: 2}
-  _offset: {x: 0, y: -0.120926, z: 0.093363}
+  _offset: {x: 0, y: -0.31025743, z: 0.093363}
+  _rotation: {x: 0, y: 0, z: 0}
   _scale: {x: 2.512, y: 2.512, z: 2.512}
   _hides: []
+  _adjustments:
+  - _heads:
+    - {fileID: 11400000, guid: f4e4b2750101ffd4ea491e90f7817f26, type: 2}
+    - {fileID: 11400000, guid: 5dca2e59fc77bad499cce384bb1c0b44, type: 2}
+    _bodies: []
+    _offset: {x: -0.08, y: 0, z: -0.05}
+  _reference: {fileID: 11400000, guid: b101e7e10079f0b4db61f9549b700b64, type: 2}
   _coversBack: 0
   _shape:
-    _origin: {x: 0, y: 0}
-    _cell: 0
-    _columns: 0
-    _rows: 0
-    _values: 
+    _origin: {x: -0.2457148, y: -0.08963772}
+    _cell: 0.020565277
+    _columns: 24
+    _rows: 5
+    _values: 00800080008000800500e9fff3ff0080008000800080008000800080008000800080f2ffecff07000080008000800080008045000300ebffd9ffc8ffcbff0080008000800080008000800080008000800080cbffcaffdcffecff08005b00008047000300edffddffceffc6ffc8ff0080008000800080008000800080008000800080c7ffc7ffd1ffe0ffefff2100570000806c00eaffd6ffc9ffc3ffc7ff0080008000800080008000800080008000800080c6ffc5ffccffdaffecff6e0000800080008000800080d2ffc5ffc8ff0080008000800080008000800080008000800080c7ffc7ffd6ff0080008000800080y

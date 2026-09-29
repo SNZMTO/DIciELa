@@ -18,8 +18,26 @@ MonoBehaviour:
   _model: {fileID: 2452865851890699625, guid: 8fee7bb22ba1b004484fd5fec2427d04, type: 3}
   _palette: {fileID: 11400000, guid: 82d3eb0161a8fcd49a80a3086ee0a5aa, type: 2}
   _offset: {x: 0, y: 1.163, z: 0.09}
+  _rotation: {x: 0, y: 0, z: 0}
   _scale: {x: 1.6, y: 0.85, z: 1}
   _hides: []
+  _adjustments:
+  - _heads: []
+    _bodies:
+    - {fileID: 11400000, guid: e5f633bc53d1f954da2634976d771f8a, type: 2}
+    - {fileID: 11400000, guid: 9a0c05b36c11eaf489004d3a4e7e2288, type: 2}
+    _offset: {x: 0, y: 0, z: -0.08}
+  - _heads: []
+    _bodies:
+    - {fileID: 11400000, guid: 9f8e9eb17b84f7d449ef945c19c2020b, type: 2}
+    - {fileID: 11400000, guid: a3dd0f924e2fb6242a007df6c19ed554, type: 2}
+    _offset: {x: 0, y: 0, z: -0.07}
+  - _heads: []
+    _bodies:
+    - {fileID: 11400000, guid: 3d59819437ab40242b7cdfaa77095557, type: 2}
+    - {fileID: 11400000, guid: 995c757fd681acf4895ba4fa6937ad1a, type: 2}
+    _offset: {x: 0, y: 0, z: -0.07}
+  _reference: {fileID: 11400000, guid: b101e7e10079f0b4db61f9549b700b64, type: 2}
   _coversBack: 1
   _shape:
     _origin: {x: -0.29366383, y: -1.0868013}

@@ -116,7 +116,7 @@ namespace Diciela.EditorTools
             {
                 EditorAssets.Property(fiche, "_crown").vector3Value = cut.Measures.Crown;
                 EditorAssets.Property(fiche, "_face").vector3Value = cut.Measures.Face;
-                EditorAssets.Property(fiche, "_ears").vector3Value = cut.Measures.Ears;
+                EditorAssets.Property(fiche, "_earRight").vector3Value = cut.Measures.EarRight;
                 EditorAssets.Property(fiche, "_neck").vector3Value = cut.Measures.Neck;
                 EditorAssets.Property(fiche, "_top").boxedValue = top;
                 EditorAssets.Property(fiche, "_front").boxedValue = front;
@@ -149,8 +149,9 @@ namespace Diciela.EditorTools
             AttachmentSlotDefinition slot, PaletteDefinition palette)
         {
             // Enregistrée, la pièce peut avoir remplacé en place un maillage déjà là : on relit celui du modèle.
-            GameObject model = HeadPartCutter.Save(part, file, material);
-            Mesh mesh = model.GetComponent<MeshFilter>().sharedMesh;
+            PartRepaint.Apply(file, part.Mesh);
+            GameObject model = HeadPartCutter.Save(part, file, material, slot.Pairs);
+            PackMeasures.Geometry geometry = PackMeasures.GeometryOf(model);
             string id = file.ToLowerInvariant();
             AttachmentDefinition piece = EditorAssets.CreateIfMissing<AttachmentDefinition>(
                 Folder + "/Pieces/" + file + ".asset", fiche =>
@@ -161,7 +162,7 @@ namespace Diciela.EditorTools
             EditorAssets.AssignIfMissing(piece, "_slot", slot);
             EditorAssets.AssignIfMissing(piece, "_model", model);
             EditorAssets.AssignIfMissing(piece, "_palette", palette);
-            SurfaceBaker.ShapeOf(piece, mesh.vertices, new List<int>(mesh.triangles), slot.Contact);
+            SurfaceBaker.ShapeOf(piece, geometry.Positions, geometry.Triangles, slot.Contact);
             return piece;
         }
 
