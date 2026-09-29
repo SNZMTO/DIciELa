@@ -15,6 +15,14 @@
 
 ## Les captures
 
+### 29/09/2026 — étape 13e (fin) : chaque tête porte son museau
+
+Le museau de chaque animal se détache (le nez et la bouche du chat et du lapin, la bouche de la grenouille compris) et
+le museau est obligatoire. Chaque ligne, un museau sur les huit têtes : chat, cochon, grenouille, lapin, oiseau, raton
+laveur, renard, souris.
+
+![Les huit museaux sur les huit têtes](Album/2026-09-29_etape-13e_huit-museaux.jpg)
+
 ### 29/09/2026 — étape 13e (suite) : les museaux se détachent, les oreilles du raton se rapprochent
 
 Le groin du cochon, les museaux du raton laveur et de la souris, le bec de l'oiseau se détachent de leur tête, comme

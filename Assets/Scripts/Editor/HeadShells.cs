@@ -114,7 +114,7 @@ namespace Diciela.EditorTools
             // Un museau cousu à la face aussi, s'il n'y en a pas un à part (le renard) ; il est sous les oreilles cousues.
             if (!counts.ContainsKey(Kind.Snout) && !float.IsInfinity(snoutFront))
             {
-                foreach ((int sub, int first) in FusedSnout.Find(positions, triangles, skull, eyeVertices, snoutFront))
+                foreach ((int sub, int first) in FusedSnout.Find(positions, triangles, shells, skull, eyeVertices, snoutFront))
                     kinds[firstOfSub[sub] + first / 3] = Kind.Snout;
             }
             return new HeadShells(positions, normals, eyeVertices, browHeight, triangles, kinds);

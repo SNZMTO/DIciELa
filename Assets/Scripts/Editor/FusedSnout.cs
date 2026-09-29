@@ -4,7 +4,8 @@ using UnityEngine;
 namespace Diciela.EditorTools
 {
     /// <summary>
-    /// Le museau cousu à la face (le groin du cochon, le museau du raton laveur et de la souris, le bec de l'oiseau) : dans
+    /// Le museau cousu à la face (le groin du cochon, les museaux du raton laveur, de la souris, du chat et du lapin, le bec
+    /// de l'oiseau, la bouche peinte de la grenouille) : dans
     /// le crâne, ce qui dépasse devant la face, sous le haut des yeux, près du milieu. Le noyau est ce qui est tout entier
     /// plus en avant que la profondeur donnée par le pack (savoir du pack, mesuré tête par tête : AppearanceBuilder) ; on y
     /// ajoute, de proche en proche, ses flancs (les triangles voisins tournés sur le côté, en haut ou en bas, pas vers
@@ -20,13 +21,17 @@ namespace Diciela.EditorTools
         private const float FlankDepth = 0.08f;
         private const float FlankFacing = 0.6f;
         private const int MinTriangles = 12;
+        // Un îlot laissé par la découpe est à moins de cette demi-largeur du milieu (les défenses du cochon en sont plus
+        // loin).
+        private const float IslandHalfWidth = 0.12f;
 
         /// <summary>
         /// Les triangles du museau cousu à ce crâne (premiers indices), sous le haut de ces yeux, plus en avant que front (en
-        /// mètres, face vers +z) ; vide s'il n'y en a pas.
+        /// mètres, face vers +z), avec les petits morceaux de la tête posés au milieu de la face (shells : tous ses morceaux ;
+        /// les narines et le sourire de la grenouille) ; vide s'il n'y en a pas.
         /// </summary>
         public static HashSet<(int Sub, int First)> Find(Vector3[] positions, int[][] triangles,
-            List<(int Sub, int First)> skull, List<Vector3> eyes, float front)
+            List<List<(int Sub, int First)>> shells, List<(int Sub, int First)> skull, List<Vector3> eyes, float front)
         {
             float eyesTop = float.MinValue;
             foreach (Vector3 eye in eyes)
@@ -47,11 +52,54 @@ namespace Diciela.EditorTools
             }
             // Tout le noyau, en un ou plusieurs morceaux (le bec de l'oiseau a deux mâchoires).
             var snout = new HashSet<(int Sub, int First)>();
-            if (core.Count < MinTriangles)
-                return snout;
-            snout.UnionWith(core);
-            Grow(snout, flanks, positions, triangles);
+            if (core.Count >= MinTriangles)
+            {
+                snout.UnionWith(core);
+                Grow(snout, flanks, positions, triangles);
+            }
+            Islands(snout, shells, skull, positions, triangles, eyesTop, front);
             return snout;
+        }
+
+        // Ajoute au museau les îlots du milieu de la face, sous le haut des yeux et devant la face : ce que sa découpe
+        // laisse flotter (le fond des narines du cochon), les morceaux du crâne restants hors du plus grand, et les petits
+        // morceaux de la tête posés sur la face (les narines et le sourire de la grenouille, la bouche du chat). Les yeux,
+        // les sourcils et les défenses, plus loin du milieu, restent.
+        private static void Islands(HashSet<(int Sub, int First)> snout, List<List<(int Sub, int First)>> pieces,
+            List<(int Sub, int First)> skull, Vector3[] positions, int[][] triangles, float eyesTop, float front)
+        {
+            var rest = new List<(int Sub, int First)>();
+            foreach ((int Sub, int First) triangle in skull)
+            {
+                if (!snout.Contains(triangle))
+                    rest.Add(triangle);
+            }
+            List<List<(int Sub, int First)>> shells = MeshShells.Group(positions, triangles, rest);
+            List<(int Sub, int First)> largest = shells[0];
+            foreach (List<(int Sub, int First)> piece in pieces)
+            {
+                if (piece != skull)
+                    shells.Add(piece);
+            }
+            foreach (List<(int Sub, int First)> shell in shells)
+            {
+                if (shell.Count > largest.Count)
+                    largest = shell;
+            }
+            foreach (List<(int Sub, int First)> shell in shells)
+            {
+                if (shell == largest)
+                    continue;
+                Vector3 center = Vector3.zero;
+                foreach ((int sub, int first) in shell)
+                {
+                    for (int k = 0; k < 3; k++)
+                        center += positions[triangles[sub][first + k]];
+                }
+                center /= shell.Count * 3;
+                if (center.y < eyesTop && Mathf.Abs(center.x) < IslandHalfWidth && center.z > front - FlankDepth)
+                    snout.UnionWith(shell);
+            }
         }
 
         // Ajoute au museau, de proche en proche, les flancs qui le touchent par un sommet. Borné : chaque tour en ajoute au

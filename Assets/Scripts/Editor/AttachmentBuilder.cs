@@ -51,34 +51,34 @@ namespace Diciela.EditorTools
 
         // Les emplacements, dans l'ordre des lignes de l'écran : leur os, leur repère, leur contact, la règle de départ de
         // leurs pièces que le pack ne pose nulle part (un chapeau entre de 2 cm dans le crâne, des cheveux de 1 cm), si
-        // leurs pièces vont par paires (les oreilles, en deux moitiés) et si elles se posent par leur base (oreilles, boucles,
-        // museaux : ce qui touchait leur tête touche la tête choisie).
-        private static readonly
-            (string Name, string Bone, AttachmentFrame Frame, ContactAxis Contact, SlotRule Rule, bool Pairs, bool Seated)[]
+        // leurs pièces vont par paires (les oreilles, en deux moitiés), si elles se posent par leur base (oreilles, boucles,
+        // museaux : ce qui touchait leur tête touche la tête choisie) et si l'on ne peut pas s'en passer (le museau).
+        private static readonly (string Name, string Bone, AttachmentFrame Frame, ContactAxis Contact, SlotRule Rule,
+            bool Pairs, bool Seated, bool Required)[]
             Slots =
             {
                 ("Queue", "pelvis", AttachmentFrame.Body, ContactAxis.None, new SlotRule(SlotRule.Place.TailRoot, 0f),
-                    false, false),
+                    false, false, false),
                 ("Oreilles", "head", AttachmentFrame.Ears, ContactAxis.Down, new SlotRule(SlotRule.Place.Ears, 0f),
-                    true, true),
+                    true, true, false),
                 ("Museau", "head", AttachmentFrame.Face, ContactAxis.Back, new SlotRule(SlotRule.Place.Nose, 0f),
-                    false, true),
+                    false, true, true),
                 ("Cheveux", "head", AttachmentFrame.Crown, ContactAxis.Down, new SlotRule(SlotRule.Place.Crown, 0.01f),
-                    false, false),
+                    false, false, false),
                 ("Chapeau", "head", AttachmentFrame.Crown, ContactAxis.Down, new SlotRule(SlotRule.Place.Crown, 0.02f),
-                    false, false),
+                    false, false, false),
                 ("Visage", "head", AttachmentFrame.Face, ContactAxis.Back, new SlotRule(SlotRule.Place.Eyes, 0f),
-                    false, false),
+                    false, false, false),
                 ("Barbe", "head", AttachmentFrame.Face, ContactAxis.Back, new SlotRule(SlotRule.Place.Nose, 0f),
-                    false, false),
+                    false, false, false),
                 ("BouclesOreilles", "head", AttachmentFrame.Ears, ContactAxis.Down, new SlotRule(SlotRule.Place.Ears, 0f),
-                    true, true),
+                    true, true, false),
                 ("Cou", "neck_01", AttachmentFrame.Neck, ContactAxis.Back, new SlotRule(SlotRule.Place.UnderHead, 0f),
-                    false, false),
+                    false, false, false),
                 ("Dos", "spine_03", AttachmentFrame.Body, ContactAxis.Forward, new SlotRule(SlotRule.Place.Back, 0f),
-                    false, false),
+                    false, false, false),
                 ("Ceinture", "pelvis", AttachmentFrame.Body, ContactAxis.Back, new SlotRule(SlotRule.Place.Bone, 0f),
-                    false, false)
+                    false, false, false)
             };
 
         // Les pièces : leur nom dans le pack, leur emplacement, leur nom de fichier, jusqu'à quel numéro elles sont
@@ -122,8 +122,8 @@ namespace Diciela.EditorTools
             Dictionary<AttachmentSlotDefinition, SlotRule> rules)
         {
             var byName = new Dictionary<string, AttachmentSlotDefinition>();
-            foreach ((string name, string bone, AttachmentFrame frame, ContactAxis contact, SlotRule rule, bool pairs, bool seated)
-                     in Slots)
+            foreach ((string name, string bone, AttachmentFrame frame, ContactAxis contact, SlotRule rule, bool pairs, bool seated,
+                         bool required) in Slots)
             {
                 string id = name.ToLowerInvariant();
                 AttachmentSlotDefinition slot = EditorAssets.CreateIfMissing<AttachmentSlotDefinition>(
@@ -139,6 +139,7 @@ namespace Diciela.EditorTools
                     EditorAssets.Property(fiche, "_contact").enumValueIndex = (int)contact;
                     EditorAssets.Property(fiche, "_pairs").boolValue = pairs;
                     EditorAssets.Property(fiche, "_seated").boolValue = seated;
+                    EditorAssets.Property(fiche, "_required").boolValue = required;
                 });
                 byName[name] = slot;
                 rules[slot] = rule;

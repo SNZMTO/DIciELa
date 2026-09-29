@@ -310,8 +310,10 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   la tête se prennent sur le crâne refermé, sans quoi un rayon file par le trou. Dans la copie découpée, jamais dans le
   pack, une teinte peut être repeinte (`PartRepaint`) : l'intérieur de l'oreille gauche du raton est peint du blanc de
   sa face ; sur une autre tête, cette lèvre faisait un bandeau clair.
-- **Un museau cousu à la face** (`FusedSnout`) : le groin du cochon, les museaux du raton et de la souris, le bec de
-  l'oiseau font partie du crâne. Leur noyau est ce qui est tout entier plus en avant qu'une profondeur mesurée tête par
+- **Un museau cousu à la face** (`FusedSnout`) : le groin du cochon, les museaux du raton, de la souris, du chat et du
+  lapin, le bec de l'oiseau font partie du crâne ; la bouche de la grenouille est une pastille à part (ses narines et
+  son sourire), prise avec les petits morceaux posés au milieu de la face. Ce que la découpe laisse flotter au milieu
+  de la face (le fond des narines du cochon) part avec le museau. Leur noyau est ce qui est tout entier plus en avant qu'une profondeur mesurée tête par
   tête (savoir du pack, dans la table des animaux) : un seuil commun couperait la face ronde du chat, du lapin et de
   la grenouille, qui avance de 6 cm au milieu. Tous les morceaux du noyau comptent (le bec a deux mâchoires). On y
   ajoute de proche en proche ses flancs : les triangles voisins qui ne regardent pas vers l'avant (la face, si). Avec

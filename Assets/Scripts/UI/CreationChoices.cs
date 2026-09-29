@@ -7,10 +7,11 @@ namespace Diciela.UI
     /// <summary>
     /// Les choix de l'écran de création (GDD, section 6), sans l'écran : une ligne pour la tête, une pour le corps, puis
     /// une par emplacement, chacune avec sa pièce et sa couleur. Les flèches font le tour des pièces d'une ligne (« aucune »
-    /// en tête pour un emplacement ; la tête et le corps en ont toujours une) et des couleurs du catalogue ; changer de
+    /// en tête pour un emplacement dont on peut se passer ; la tête, le corps et le museau en ont toujours une) et des couleurs du catalogue ; changer de
     /// pièce lui rend sa couleur d'origine. On part de l'apparence de départ du catalogue. Les pièces qu'une tête porte
-    /// d'office (ses oreilles, ses touffes) suivent la tête : en changer remplace, sur chaque ligne qui montrait une pièce
-    /// de l'ancienne tête (ou rien, faute d'en avoir), par celle de la nouvelle ; une pièce choisie par le joueur reste.
+    /// d'office (ses oreilles, ses touffes, son museau) suivent la tête : en changer remplace, sur chaque ligne qui montrait
+    /// une pièce de l'ancienne tête (ou rien, faute d'en avoir), par celle de la nouvelle ; une pièce choisie par le joueur
+    /// reste.
     /// </summary>
     public sealed class CreationChoices
     {
@@ -103,8 +104,11 @@ namespace Diciela.UI
             else if (row > BodyRow && row < _pieces.Length)
             {
                 List<AttachmentDefinition> offered = _offered[row - FirstSlotRow];
-                // « Aucune » est un choix de la ligne, avant ses pièces.
-                _pieces[row] = Wrap(_pieces[row] + 1 + direction, offered.Count + 1) - 1;
+                // « Aucune » est un choix de la ligne, avant ses pièces, si l'on peut se passer de son emplacement.
+                if (_catalog.AttachmentSlots[row - FirstSlotRow].Required && offered.Count > 0)
+                    _pieces[row] = Wrap(_pieces[row] + direction, offered.Count);
+                else
+                    _pieces[row] = Wrap(_pieces[row] + 1 + direction, offered.Count + 1) - 1;
                 _palettes[row] = _pieces[row] == None ? None : PaletteIndex(offered[_pieces[row]].Palette);
             }
         }
@@ -143,6 +147,9 @@ namespace Diciela.UI
                 if (!ReferenceEquals(shown, WornIn(before, slot)))
                     continue;
                 AttachmentDefinition own = WornIn(after, slot);
+                // Une ligne dont on ne peut pas se passer garde sa pièce si la nouvelle tête n'en porte pas.
+                if (own == null && slot.Required)
+                    continue;
                 _pieces[row] = own == null ? None : offered.IndexOf(own);
                 _palettes[row] = _pieces[row] == None ? None : PaletteIndex(own.Palette);
             }
