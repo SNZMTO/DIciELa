@@ -368,6 +368,10 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   `completed` (appelé tout de suite si le chargement est déjà fini).
 - **Un composant détruit, tenu par une interface, n'est pas `null`** : le `== null` d'Unity ne joue que sur le type
   `Object`. Tester `(cible as Object) == null`.
+- **Un `Hide()` appelé pendant qu'une scène se décharge** (le démarrage ferme tout dans son `OnDestroy`) trouve des
+  objets Unity déjà détruits, dans un ordre qu'on ne choisit pas : il ne touche que ses champs C#, ou vérifie que
+  l'objet vit encore (`if (_camera != null)`, `if (this != null)`). Sinon, une `MissingReferenceException` fait tomber
+  le test en cours et laisse la carte de test ouverte pour les suivants.
 - **Un `ScriptableObject` modifié dans l'Inspector n'est pas écrit par Ctrl+S** (qui sauve la scène) : `File/Save
   Project`.
 - **Changer une valeur par défaut dans le C# ne change pas un asset déjà écrit** : l'asset garde l'ancienne valeur.
