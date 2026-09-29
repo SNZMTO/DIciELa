@@ -39,9 +39,13 @@ namespace Diciela.Data
                  "qui enveloppent le crâne (cheveux, barbe). Zéro : pas encore réglée, le menu la remplit.")]
         [SerializeField] private Vector3 _scale;
 
-        [Tooltip("Les emplacements qu'elle cache quand on la porte (un chapeau cache les oreilles) : leurs pièces restent " +
-                 "choisies, mais ne se montrent pas.")]
+        [Tooltip("Les emplacements qu'elle cache quand on la porte (un chapeau cache les oreilles et les cheveux) : leurs " +
+                 "pièces restent choisies, mais ne se montrent pas.")]
         [SerializeField] private List<AttachmentSlotDefinition> _hides = new List<AttachmentSlotDefinition>();
+
+        [Tooltip("Vrai si elle couvre le dos (une cape) : elle cache la petite cape que certains corps portent d'office. " +
+                 "Déduit du pack par le menu.")]
+        [SerializeField] private bool _coversBack;
 
         [Tooltip("Sa face qui touche le personnage (le dessous d'un chapeau, le dos de lunettes, le devant d'un sac), " +
                  "dans ses axes, à sa taille d'origine. Mesurée par le menu.")]
@@ -58,6 +62,9 @@ namespace Diciela.Data
         /// <summary>Vrai si sa taille est réglée : positive selon ses trois axes.</summary>
         public bool HasScale => _scale.x > 0f && _scale.y > 0f && _scale.z > 0f;
         public IReadOnlyList<AttachmentSlotDefinition> Hides => _hides;
+
+        /// <summary>Vrai si elle cache la petite cape que certains corps portent d'office.</summary>
+        public bool CoversBack => _coversBack;
         public SurfaceMap Shape => _shape;
     }
 }

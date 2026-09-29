@@ -17,7 +17,7 @@ namespace Diciela.Tests.PlayMode
     /// de sa couleur ; la petite cape prend celle du corps. Une pièce pend à l'os de son emplacement, droite, à sa taille,
     /// son pivot au point de son repère sur la tête choisie plus son décalage, où que soit posé le personnage ; sa couleur
     /// remplace la sienne, et son verre reste du verre. Une pièce à contact descend jusqu'à toucher le dessus de la tête ;
-    /// une pièce qu'une autre cache ne se pose pas.
+    /// une pièce qu'une autre cache ne se pose pas ; une cape remplace la petite cape du corps.
     /// </summary>
     public sealed class DresserTests
     {
@@ -136,6 +136,22 @@ namespace Diciela.Tests.PlayMode
 
             Assert.IsNull(dressed.transform.Find("root/pelvis/head/Oreilles de test(Clone)"), "Le chapeau les cache.");
             Assert.IsNotNull(dressed.transform.Find("root/pelvis/head/Chapeau qui cache(Clone)"));
+        }
+
+        [UnityTest]
+        public IEnumerator ACapeReplacesTheLittleCapeTheBodyWears()
+        {
+            AttachmentDefinition cape = Piece("Cape de test", AttachmentFrame.Body, ContactAxis.None, Vector3.zero, 1f,
+                null);
+#if UNITY_EDITOR
+            TestWorld.Fill(cape, "_coversBack", true);
+#endif
+            GameObject dressed = _rig.Keep(Dresser.Dress(new Appearance(_rig.Head, _rig.Origin, _rig.Body, _rig.Origin,
+                new[] { new WornAttachment(cape, _rig.Origin) }), null));
+            yield return null;
+
+            Assert.IsNull(dressed.transform.Find("Capes/Petite cape"), "La cape choisie remplace sa petite cape.");
+            Assert.IsNotNull(dressed.transform.Find("root/pelvis/head/Cape de test(Clone)"));
         }
 
         /// <summary>Une pièce de ce nom sur son propre emplacement de l'os head, dans la couleur d'origine du banc.</summary>

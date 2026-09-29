@@ -17,9 +17,9 @@ MonoBehaviour:
   _mesh: {fileID: 4300000, guid: b6358c27338daad4e872cd35d226fa0f, type: 2}
   _palette: {fileID: 11400000, guid: fe95b120b09dd9344b524b1441cef2db, type: 2}
   _worn: []
-  _crown: {x: 0, y: 1.8930048, z: 0.041349538}
+  _crown: {x: 0, y: 1.8930048, z: -0.056313038}
   _face: {x: 0, y: 1.6364161, z: 0.25747868}
-  _ears: {x: 0, y: 1.8329084, z: 0.041349538}
+  _ears: {x: 0, y: 1.787679, z: -0.056313038}
   _neck: {x: 0, y: 1.1125112, z: 0.0013495386}
   _top:
     _origin: {x: -0.7, y: -0.6}

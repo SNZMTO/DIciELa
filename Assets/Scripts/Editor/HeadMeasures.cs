@@ -6,9 +6,11 @@ namespace Diciela.EditorTools
     /// <summary>
     /// Les points d'une tête du pack, pris sur la surface de son crâne par des rayons (MeshRay), sur le personnage debout
     /// (SAVOIR, 2.11) : le haut du crâne, le milieu des yeux à leur avant, la place des oreilles sur le crâne, le bas de
-    /// la tête sur la ligne du milieu, et la
-    /// largeur du crâne à hauteur des sourcils, qui donne le rapport de taille entre deux têtes. La même mesure sert aux
-    /// têtes des animaux et à la tête humaine d'où viennent les pièces faites pour les humains.
+    /// la tête sur la ligne du milieu, et la largeur du crâne à hauteur des sourcils, qui donne le rapport de taille entre
+    /// deux têtes. Le haut du crâne et les oreilles se tiennent à mi-profondeur de la tête, à hauteur des yeux : la place
+    /// du point le plus haut d'un crâne plat varie de plusieurs dizaines de centimètres d'une tête à l'autre. Les oreilles
+    /// se prennent depuis le haut de la ligne du milieu, pas depuis les dômes des yeux de la grenouille. La même mesure
+    /// sert aux têtes des animaux et à la tête humaine d'où viennent les pièces faites pour les humains.
     /// </summary>
     internal readonly struct HeadMeasures
     {
@@ -68,8 +70,10 @@ namespace Diciela.EditorTools
             foreach (int index in skull)
                 box.Encapsulate(positions[index]);
 
-            Vector3 crown = CrownOf(ray, box);
-            Vector3 center = new Vector3(0f, (crown.y + box.min.y) * 0.5f, crown.z);
+            Vector3 face = FaceOf(eyes);
+            float middle = MiddleOf(ray, box, face.y);
+            var crown = new Vector3(0f, CrownOf(ray, box), middle);
+            var center = new Vector3(0f, (MidlineTopOf(ray, box) + box.min.y) * 0.5f, middle);
             float angle = EarDegrees * Mathf.Deg2Rad;
             Vector3 right = Hit(ray, center, new Vector3(Mathf.Sin(angle), Mathf.Cos(angle), 0f));
             Vector3 left = Hit(ray, center, new Vector3(-Mathf.Sin(angle), Mathf.Cos(angle), 0f));
@@ -78,7 +82,6 @@ namespace Diciela.EditorTools
             var brow = new Vector3(0f, browHeight, crown.z);
             float width = Hit(ray, brow + Vector3.right * Far, Vector3.left).x -
                           Hit(ray, brow + Vector3.left * Far, Vector3.right).x;
-            Vector3 face = FaceOf(eyes);
             Vector3 beside = brow + Vector3.right * Midline;
             float depth = Hit(ray, beside + Vector3.forward * Far, Vector3.back).z -
                           Hit(ray, beside + Vector3.back * Far, Vector3.forward).z;
@@ -86,20 +89,40 @@ namespace Diciela.EditorTools
                 width, depth);
         }
 
-        // Le plus haut point du crâne sous une bande autour du milieu, ramené sur le milieu.
-        private static Vector3 CrownOf(MeshRay ray, Bounds box)
+        // La hauteur du plus haut point du crâne sous une bande autour du milieu.
+        private static float CrownOf(MeshRay ray, Bounds box)
         {
-            var crown = new Vector3(0f, float.MinValue, 0f);
+            float crown = float.MinValue;
             for (float x = -CrownHalfBand; x <= CrownHalfBand; x += Step * 2f)
-            {
-                for (float z = box.min.z; z <= box.max.z; z += Step)
-                {
-                    var from = new Vector3(x, box.max.y + 1f, z);
-                    if (ray.TryHit(from, Vector3.down, out float distance) && from.y - distance > crown.y)
-                        crown = new Vector3(0f, from.y - distance, z);
-                }
-            }
+                crown = Mathf.Max(crown, TopAt(ray, box, x));
             return crown;
+        }
+
+        // La hauteur du plus haut point du crâne sur la ligne du milieu.
+        private static float MidlineTopOf(MeshRay ray, Bounds box)
+        {
+            return TopAt(ray, box, Midline);
+        }
+
+        private static float TopAt(MeshRay ray, Bounds box, float x)
+        {
+            float top = float.MinValue;
+            for (float z = box.min.z; z <= box.max.z; z += Step)
+            {
+                var from = new Vector3(x, box.max.y + 1f, z);
+                if (ray.TryHit(from, Vector3.down, out float distance))
+                    top = Mathf.Max(top, from.y - distance);
+            }
+            return top;
+        }
+
+        // Le milieu de la tête d'avant en arrière, sur la ligne du milieu, à cette hauteur (celle des yeux).
+        private static float MiddleOf(MeshRay ray, Bounds box, float height)
+        {
+            var from = new Vector3(Midline, height, 0f);
+            float front = Hit(ray, from + Vector3.forward * (box.max.z + Far), Vector3.back).z;
+            float back = Hit(ray, from + Vector3.back * (Far - box.min.z), Vector3.forward).z;
+            return (front + back) * 0.5f;
         }
 
         // Le plus avancé des points du crâne sur la ligne du milieu, entre son bas et ses yeux.

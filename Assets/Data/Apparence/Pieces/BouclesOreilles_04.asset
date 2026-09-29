@@ -17,9 +17,10 @@ MonoBehaviour:
   _slot: {fileID: 11400000, guid: e6913190d2d351244ba8f122c69210b7, type: 2}
   _model: {fileID: 4758090854547419810, guid: f0f37032d729a704fb9491b92267cc09, type: 3}
   _palette: {fileID: 11400000, guid: 82d3eb0161a8fcd49a80a3086ee0a5aa, type: 2}
-  _offset: {x: 0.3052, y: 0.0000, z: 0.0000}
-  _scale: {x: 1.8840, y: 1.8840, z: 1.8840}
+  _offset: {x: 0.3052, y: 0.005874, z: 0.042763}
+  _scale: {x: 1.884, y: 1.884, z: 1.884}
   _hides: []
+  _coversBack: 0
   _shape:
     _origin: {x: 0, y: 0}
     _cell: 0

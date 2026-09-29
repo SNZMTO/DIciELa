@@ -48,7 +48,7 @@ namespace Diciela.EditorTools
         /// </summary>
         public static void FitHuman(AttachmentDefinition piece, SlotRule rule, bool wraps, HumanHead wearer,
             HeadMeasures reference, HeadDefinition referenceHead, PackMeasures.Geometry geometry,
-            AttachmentSlotDefinition hides)
+            AttachmentSlotDefinition[] hides)
         {
             if (piece.HasScale)
                 return;
@@ -81,7 +81,7 @@ namespace Diciela.EditorTools
         /// </summary>
         public static void FitByRule(AttachmentDefinition piece, SlotRule rule, bool human, PackMeasures.Geometry geometry,
             HeadMeasures reference, HeadMeasures humanReference, Dictionary<string, Vector3> bones, Vector3 tailRoot,
-            AttachmentSlotDefinition hides)
+            AttachmentSlotDefinition[] hides)
         {
             if (piece.HasScale)
                 return;
@@ -154,14 +154,14 @@ namespace Diciela.EditorTools
                 : new Vector3(offset.x, offset.y, along);
         }
 
-        private static void Write(AttachmentDefinition piece, Vector3 offset, Vector3 scale, AttachmentSlotDefinition hides)
+        private static void Write(AttachmentDefinition piece, Vector3 offset, Vector3 scale, AttachmentSlotDefinition[] hides)
         {
             EditorAssets.Set(piece, fiche =>
             {
                 EditorAssets.Property(fiche, "_offset").vector3Value = offset;
                 EditorAssets.Property(fiche, "_scale").vector3Value = scale;
                 if (hides != null)
-                    EditorAssets.SetList(EditorAssets.Property(fiche, "_hides"), new[] { hides });
+                    EditorAssets.SetList(EditorAssets.Property(fiche, "_hides"), hides);
             });
         }
     }
