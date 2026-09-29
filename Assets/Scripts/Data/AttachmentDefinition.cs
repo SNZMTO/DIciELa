@@ -86,6 +86,14 @@ namespace Diciela.Data
             return TryAdjustment(head, body, out WearerAdjustment adjustment) ? adjustment.Offset : Vector3.zero;
         }
 
+        /// <summary>Sa taille sur ce porteur : celle de son réglage, s'il en donne une ; sinon la sienne.</summary>
+        public Vector3 ScaleOn(HeadDefinition head, BodyDefinition body)
+        {
+            return TryAdjustment(head, body, out WearerAdjustment adjustment) && adjustment.Scale != Vector3.zero
+                ? adjustment.Scale
+                : _scale;
+        }
+
         /// <summary>Le modèle qu'elle prend sur ce porteur : celui de son réglage, s'il en donne un ; sinon le sien.</summary>
         public GameObject ModelOn(HeadDefinition head, BodyDefinition body)
         {
