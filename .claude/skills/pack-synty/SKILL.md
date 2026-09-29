@@ -68,9 +68,9 @@ jamais un bâtiment ni un décor de sa propre initiative ; les choix d'art sont 
   énormes) ; les humains ont `Head` à 1,57 m. L'oiseau, le lapin, la souris et le cochon portent d'office une petite
   cape, sous `CapesMini_01`, sur son propre squelette (`CapeRigMini_*`).
 - **La tête de chaque animal se sépare de son corps**, sans triangle commun ; elle-même est faite de morceaux fermés :
-  crâne, yeux, sourcils, et, selon l'animal, des oreilles (chat, cochon, lapin, renard, souris ; soudées au crâne chez le
-  raton laveur), des touffes (cochon, raton laveur, renard, souris), le museau (renard seul) : ceux-là se détachent sans
-  trou (SAVOIR 2.11). Le corps est d'un seul tenant
+  crâne, yeux, sourcils, et, selon l'animal, des oreilles (chat, cochon, lapin, renard, souris ; cousues au crâne chez le
+  raton laveur, qu'on en découpe et dont on referme les trous), des touffes (cochon, raton laveur, renard, souris), le
+  museau (renard seul) : ceux-là se détachent sans trou (SAVOIR 2.11). Le corps est d'un seul tenant
   (bras, jambes, habits). La tête se sépare selon ses os (`head`, `eyes`, `eyebrows`) et va sur le corps de n'importe quel
   autre animal (SAVOIR 2.11). Le chat, le renard et l'oiseau portent d'office une pièce (deux queues, une huppe), copies
   des modèles de `Chr_Attach`.

@@ -9,7 +9,8 @@ namespace Diciela.EditorTools
     /// (sommets soudés par leur position, car le pack double un sommet à chaque couture de texture), chacun fermé, qu'on
     /// détache sans laisser de trou. Chaque morceau est classé par sa place : le plus grand est le crâne ; une paire de grands
     /// morceaux hors de la ligne du milieu, au-dessus des yeux, les oreilles ; de petits morceaux sur le haut, au milieu, les
-    /// touffes ; un morceau au milieu, devant, sous les yeux, le museau (le renard seul) ; le reste (yeux, sourcils,
+    /// touffes ; un morceau au milieu, devant, sous les yeux, le museau (le renard seul) ; des oreilles cousues au crâne
+    /// (le raton laveur) s'en détachent aussi (FusedEars) ; le reste (yeux, sourcils,
     /// moustaches) va avec le crâne. Les positions sont celles du personnage debout : pieds à l'origine, face vers +z.
     /// </summary>
     internal sealed class HeadShells
@@ -102,20 +103,14 @@ namespace Diciela.EditorTools
                     kinds[firstOfSub[sub] + first / 3] = kind;
             }
             Check(skin, counts);
-            var eyeVertices = new List<Vector3>();
-            float browSum = 0f;
-            int browCount = 0;
-            for (int v = 0; v < eyes.Length; v++)
+            // Une tête sans oreilles à part peut les avoir cousues au crâne (le raton laveur) : on les détache aussi.
+            if (!counts.ContainsKey(Kind.Ears))
             {
-                if (eyes[v] >= HeadShare)
-                    eyeVertices.Add(positions[v]);
-                if (brows[v] >= HeadShare)
-                {
-                    browSum += positions[v].y;
-                    browCount++;
-                }
+                foreach ((int sub, int first) in FusedEars.Find(positions, source.uv, triangles, skull, eyesHeight))
+                    kinds[firstOfSub[sub] + first / 3] = Kind.Ears;
             }
-            return new HeadShells(positions, normals, eyeVertices, browSum / Mathf.Max(1, browCount), triangles, kinds);
+            (List<Vector3> eyeVertices, float browHeight) = PackSkin.Features(positions, eyes, brows);
+            return new HeadShells(positions, normals, eyeVertices, browHeight, triangles, kinds);
         }
 
         /// <summary>Les triangles de cette sorte, tous sous-maillages confondus.</summary>

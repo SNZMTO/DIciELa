@@ -11,7 +11,6 @@ namespace Diciela.UI
     /// pièce lui rend sa couleur d'origine. On part de l'apparence de départ du catalogue. Les pièces qu'une tête porte
     /// d'office (ses oreilles, ses touffes) suivent la tête : en changer remplace, sur chaque ligne qui montrait une pièce
     /// de l'ancienne tête (ou rien, faute d'en avoir), par celle de la nouvelle ; une pièce choisie par le joueur reste.
-    /// Une ligne que la tête tient soudée à son crâne ne propose rien : « celles de la tête ».
     /// </summary>
     public sealed class CreationChoices
     {
@@ -73,8 +72,6 @@ namespace Diciela.UI
         /// <summary>La clé du nom de la pièce choisie sur cette ligne ; vide pour « aucune ».</summary>
         public string PieceKey(int row)
         {
-            if (Fused(row))
-                return TextKeys.CreationFused;
             if (row == HeadRow)
                 return _catalog.Heads[_pieces[row]].NameKey;
             if (row == BodyRow)
@@ -85,7 +82,7 @@ namespace Diciela.UI
         /// <summary>La clé du nom de la couleur de cette ligne ; vide sans pièce.</summary>
         public string PaletteKey(int row)
         {
-            return _palettes[row] == None || Fused(row) ? "" : _catalog.Palettes[_palettes[row]].NameKey;
+            return _palettes[row] == None ? "" : _catalog.Palettes[_palettes[row]].NameKey;
         }
 
         /// <summary>Passe à la pièce d'à côté sur cette ligne (-1 à gauche, +1 à droite), dans sa couleur d'origine.</summary>
@@ -103,7 +100,7 @@ namespace Diciela.UI
                 _pieces[row] = Wrap(_pieces[row] + direction, _catalog.Bodies.Count);
                 _palettes[row] = PaletteIndex(_catalog.Bodies[_pieces[row]].Palette);
             }
-            else if (row > BodyRow && row < _pieces.Length && !Fused(row))
+            else if (row > BodyRow && row < _pieces.Length)
             {
                 List<AttachmentDefinition> offered = _offered[row - FirstSlotRow];
                 // « Aucune » est un choix de la ligne, avant ses pièces.
@@ -115,7 +112,7 @@ namespace Diciela.UI
         /// <summary>Passe à la couleur d'à côté sur cette ligne, si elle porte une pièce.</summary>
         public void Recolor(int row, int direction)
         {
-            if (row >= 0 && row < _pieces.Length && _palettes[row] != None && !Fused(row))
+            if (row >= 0 && row < _pieces.Length && _palettes[row] != None)
                 _palettes[row] = Wrap(_palettes[row] + direction, _catalog.Palettes.Count);
         }
 
@@ -125,7 +122,7 @@ namespace Diciela.UI
             _worn.Clear();
             for (int row = FirstSlotRow; row < _pieces.Length; row++)
             {
-                if (_pieces[row] != None && !Fused(row))
+                if (_pieces[row] != None)
                     _worn.Add(new WornAttachment(_offered[row - FirstSlotRow][_pieces[row]], Palette(row)));
             }
             return new Appearance(_catalog.Heads[_pieces[HeadRow]], Palette(HeadRow), _catalog.Bodies[_pieces[BodyRow]],
@@ -159,20 +156,6 @@ namespace Diciela.UI
                     return piece;
             }
             return null;
-        }
-
-        /// <summary>Vrai si la tête choisie tient soudé à son crâne l'emplacement de cette ligne.</summary>
-        private bool Fused(int row)
-        {
-            if (row < FirstSlotRow || row >= _pieces.Length)
-                return false;
-            AttachmentSlotDefinition slot = _catalog.AttachmentSlots[row - FirstSlotRow];
-            foreach (AttachmentSlotDefinition fused in _catalog.Heads[_pieces[HeadRow]].Fused)
-            {
-                if (ReferenceEquals(fused, slot))
-                    return true;
-            }
-            return false;
         }
 
         private PaletteDefinition Palette(int row)

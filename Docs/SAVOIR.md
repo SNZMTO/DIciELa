@@ -294,7 +294,15 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   une paire de grands morceaux hors du milieu, dont le centre est au-dessus des yeux (leur bas descend plus bas qu'eux),
   les oreilles ; de petits morceaux sur le haut, au milieu, les touffes ; un morceau au milieu, devant, sous les yeux,
   le museau (le renard seul). Yeux, sourcils et moustaches restent au crâne. Une tête qui sort de ces nombres (0 ou 2
-  oreilles, 3 touffes au plus, 1 museau) arrête le menu. Les oreilles du raton laveur sont cousues à son crâne.
+  oreilles, 3 touffes au plus, 1 museau) arrête le menu.
+- **Les oreilles du raton laveur sont cousues à son crâne** (`FusedEars`) : dans une tête sans oreilles à part, le
+  noyau d'une oreille est ce qui est mince au-dessus des yeux, sur les côtés (un rayon lancé vers l'intérieur ressort à
+  moins de 30 cm, le dôme en fait plus de 60 ; un bord qui ne voit rien derrière lui compte aussi), un grand morceau
+  de chaque côté. Son dos, épais à la base, échappe aux rayons : il se reconnaît à sa peinture (on ajoute de proche en
+  proche les triangles voisins qui ne sont pas de la teinte du crâne, la plus répandue). Un plan de coupe à la base
+  mange le front : écarté. Les trous laissés se referment en éventail (`SkullCap`), chaque bord suivi arête par arête
+  (un trou peut se toucher lui-même en un sommet), le centre à la hauteur de la moitié basse du bord ; les mesures de
+  la tête se prennent sur le crâne refermé, sans quoi un rayon file par le trou.
 - **Le crâne et le corps** restent des maillages à peau sur le squelette commun (`BodyCutter`), réécrits en place à
   chaque passage (même fichier, mêmes références) : copier champ par champ, jamais par copie sérialisée, qui garde
   l'ancien découpage des sommets (crânes en miettes). **Oreilles, touffes, museau** suivent à 100 % les os de la tête :
@@ -314,8 +322,7 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   touche. Une pièce se pose au point du repère de son emplacement plus son décalage, et, sur l'axe de contact, là où sa
   face touche la surface (`Contact`, au jeu, en quelques centaines d'opérations : les modèles du pack ne sont pas
   lisibles en jeu). Ce qui se mesure depuis les pieds ou au cou touche le corps ; le reste, la tête. Un chapeau cache
-  les oreilles choisies. Sur le raton laveur, le contact ne se prend que sur la bande du milieu du crâne : sinon ses
-  oreilles soudées portent le chapeau.
+  les oreilles choisies.
 - **Les chapeaux low poly ont un fond fermé** que la tête traverse : le contact seul les poserait comme un couvercle.
   Une pièce humaine reprend l'enfoncement de son dessin sur son porteur ; un chapeau animal au fond fermé descend de
   35 % de sa hauteur sous le contact (les chapeaux humains : de 20 à 80 %) ; un anneau ouvert (la couronne) reste posé.

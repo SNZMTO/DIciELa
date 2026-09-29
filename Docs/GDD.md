@@ -172,11 +172,11 @@
   tête. Les douze couleurs du pack vont sur n'importe quelle partie ; changer de partie lui rend sa couleur d'origine.
   On part du chat, dans ses couleurs, avec ses oreilles et sa queue. « C'est parti » (ou Entrée) la crée.
 - **Règle.** Une tête est un crâne, ses yeux et ses sourcils ; ce qui s'en détache (les oreilles du chat, du cochon, du
-  lapin, du renard et de la souris ; les touffes du cochon, du raton laveur, du renard et de la souris ; le museau du
-  renard) sont des pièces qu'elle porte d'office, qu'on peut changer. Changer de tête change ses pièces : chaque ligne
-  qui montrait une pièce de l'ancienne tête (ou rien, faute d'en avoir) prend celle de la nouvelle ; une pièce choisie
-  par le joueur reste. Le raton laveur a les oreilles soudées au crâne : sa ligne Oreilles ne propose rien (« Celles de
-  la tête »). Les autres museaux font la forme du visage : la ligne Museau y ajoute un nez.
+  lapin, du raton laveur, du renard et de la souris ; les touffes du cochon, du raton laveur, du renard et de la
+  souris ; le museau du renard) sont des pièces qu'elle porte d'office, qu'on peut changer. Changer de tête change ses
+  pièces : chaque ligne qui montrait une pièce de l'ancienne tête (ou rien, faute d'en avoir) prend celle de la
+  nouvelle ; une pièce choisie par le joueur reste. Toutes les têtes sont ainsi sans oreilles, et chaque paire
+  d'oreilles va sur chacune. Les autres museaux font la forme du visage : la ligne Museau y ajoute un nez.
 - **Règle.** Chaque pièce se pose sur la tête choisie, à son relief : un chapeau descend jusqu'à toucher le crâne, des
   lunettes reculent contre la face, un sac avance contre le dos, une bourse recule contre le ventre. Un chapeau cache
   les oreilles choisies (elles restent choisies) ; la couronne, la fleur et les nœuds non. Les pièces faites pour les
