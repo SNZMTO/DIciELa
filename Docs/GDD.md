@@ -186,8 +186,8 @@
   se rapprochent du milieu, sans déborder du crâne. Les nœuds se tiennent debout (le grand à l'arrière de la tête, ses
   rubans dans le dos). La barbe ne va qu'au chat, à la souris et à la grenouille (les autres têtes ne la portent pas,
   leur ligne reste vide) ; elle prend la couleur du poil de sa couleur. Sur le chat, elle encadre la bouche ; sur la
-  grenouille, agrandie, sous les narines, ses bords sur les coins de la bouche et sa moustache sur le sourire ;
-  sur la souris, réduite au menton, sous la bouche, contre la mâchoire.
+  grenouille, élargie, sous les narines, ses côtés sur les coins de la bouche et le sourire dans son trou ; sur la souris,
+  petite, autour de la bouche.
   Une tête qui ne ressemble pas aux autres a ses réglages, pièce par pièce : sur la grenouille, la couronne se pose
   entre les dômes des yeux ; les oreilles du raton et du renard se rapprochent et s'enfoncent sur les autres
   têtes, celles du raton aussi bas que sur le chat. Un chapeau cache les oreilles et les cheveux choisis, touffes et
