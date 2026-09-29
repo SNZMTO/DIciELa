@@ -25,8 +25,7 @@ disable-model-invocation: true
    tests) ; ce que le développeur doit vérifier à la souris ; les questions ouvertes ; la prochaine étape ; le prompt de
    la session suivante, en un bloc prêt à coller.
 5. **Commit** (message court en français, sans fichier du développeur), puis `git push`. Si l'étape est finie et
-   vérifiée : fusion en avance rapide `git fetch . <branche>:main`, `git push origin main`. Une étape risquée (la
-   marche, les tâches et réservations, la sauvegarde) attend d'abord la revue que le développeur lance lui-même sur sa
-   branche (décision 77) : lui dire « branche prête pour `/code-review ultra` », puis fusionner après les corrections.
+   vérifiée : fusion en avance rapide `git fetch . <branche>:main`, `git push origin main`. Jamais de rappel ni d'arrêt
+   pour `/code-review ultra` (décision 136) : toute étape finie et testée se fusionne.
 6. **Dire au développeur** en quelques lignes : ce qui est fait, ce qui reste à vérifier par lui, et le prompt de la
    session suivante.
