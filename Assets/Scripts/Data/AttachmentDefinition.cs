@@ -72,6 +72,7 @@ namespace Diciela.Data
         public Vector3 Scale => _scale;
         public Vector3 Rotation => _rotation;
         public HeadDefinition Reference => _reference;
+        public SurfaceMap Shape => _shape;
 
         /// <summary>Vrai si sa taille est réglée : positive selon ses trois axes.</summary>
         public bool HasScale => _scale.x > 0f && _scale.y > 0f && _scale.z > 0f;
@@ -108,6 +109,5 @@ namespace Diciela.Data
             found = default;
             return false;
         }
-        public SurfaceMap Shape => _shape;
     }
 }

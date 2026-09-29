@@ -18,8 +18,7 @@ MonoBehaviour:
   _palette: {fileID: 11400000, guid: 00ce1454294615c4ea69527a7fc60753, type: 2}
   _worn:
   - {fileID: 11400000, guid: 6f682197c954ff94fa4b212d3f3c91d8, type: 2}
-  _refuses:
-  - {fileID: 11400000, guid: 63501f8cc8b9b32409144d672bb5ca5a, type: 2}
+  _refuses: []
   _crown: {x: 0, y: 1.8727874, z: -0.02546072}
   _face: {x: 0, y: 1.5419521, z: 0.34824303}
   _earRight: {x: 0.33646968, y: 1.7616428, z: -0.02546072}

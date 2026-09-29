@@ -35,7 +35,7 @@ namespace Diciela.View
                 spread = SpreadOf(appearance.Head, attachment) + offset.x;
                 offset.x = 0f;
             }
-            piece.localPosition = pair && TryRest(appearance.Head, attachment, offset, ref spread, out Vector3 rest)
+            piece.localPosition = pair && TryRest(appearance.Head, attachment, offset, scale, ref spread, out Vector3 rest)
                 ? rest
                 : PlaceOf(appearance, attachment, offset, scale, spread);
             piece.localRotation = Quaternion.Euler(attachment.Rotation) * piece.localRotation;
@@ -57,8 +57,8 @@ namespace Diciela.View
         // Une paire posée par sa base sur une autre tête que sa tête de référence : là où elle touchait sa tête de
         // référence, elle touche la tête choisie (Contact.TryRest), et elle glisse vers le milieu jusqu'à porter à plat
         // (spread reçoit son écart). Faux sur sa tête de référence, ou sans surfaces.
-        private static bool TryRest(HeadDefinition head, AttachmentDefinition attachment, Vector3 offset, ref float spread,
-            out Vector3 rest)
+        private static bool TryRest(HeadDefinition head, AttachmentDefinition attachment, Vector3 offset, Vector3 scale,
+            ref float spread, out Vector3 rest)
         {
             AttachmentSlotDefinition slot = attachment.Slot;
             HeadDefinition reference = attachment.Reference;
@@ -69,7 +69,7 @@ namespace Diciela.View
             float referenceSpread = attachment.Offset.x;
             Vector3 onReference = reference.PointOf(slot.Frame) + new Vector3(0f, attachment.Offset.y, attachment.Offset.z);
             SurfaceMap top = head.SurfaceOf(ContactAxis.Down), referenceTop = reference.SurfaceOf(ContactAxis.Down);
-            if (!Contact.TryTouch(ContactAxis.Down, referenceTop, attachment.Shape, onReference, attachment.Scale,
+            if (!Contact.TryTouch(ContactAxis.Down, referenceTop, attachment.Shape, onReference, scale,
                     out float touch, referenceSpread))
                 return false;
             onReference.y = touch + attachment.Offset.y;
@@ -77,7 +77,7 @@ namespace Diciela.View
             float bestAlong = 0f, bestUneven = float.MaxValue, bestSpread = spread;
             for (float inward = 0f; inward <= MaxInward + InwardStep * 0.5f; inward += InwardStep)
             {
-                if (!Contact.TryRest(top, referenceTop, attachment.Shape, rest, onReference, attachment.Scale,
+                if (!Contact.TryRest(top, referenceTop, attachment.Shape, rest, onReference, scale,
                         spread - inward, referenceSpread, out float along, out float uneven))
                     continue;
                 if (uneven < bestUneven)
