@@ -80,6 +80,7 @@ namespace Diciela.Tests.PlayMode
                 TestWorld.Fill(piece, "_slot", top);
                 TestWorld.Fill(piece, "_model", _rig.Character.transform.Find("root/pelvis/Queue d'office").gameObject);
                 TestWorld.Fill(piece, "_palette", _grey);
+                TestWorld.Fill(piece, "_scale", Vector3.one);
             }
             TestWorld.Fill(catalog, "_chimeraKind", kind);
             TestWorld.FillList(catalog, "_heads", catHead, _foxHead);

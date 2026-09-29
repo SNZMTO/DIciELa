@@ -5,12 +5,10 @@ using UnityEngine;
 namespace Diciela.EditorTools
 {
     /// <summary>
-    /// Crée les emplacements et les pièces qui manquent (GDD, section 6), depuis toutes les pièces à accrocher du pack
-    /// (Prefabs/Characters/Chr_Attach). Chaque emplacement reçoit son os ; chaque pièce, sa couleur d'origine et un point
-    /// d'accroche de départ, mesuré sur le premier corps (SAVOIR, 2.11) : sur la tête, sa base un peu sous le haut du
-    /// crâne ; sur la face, son dos contre l'avant de la face ; ailleurs, la place d'un os, ou le point que le pack donne
-    /// lui-même. Le développeur l'affine ensuite dans la fiche. Réexécutable : une fiche qui existe n'est jamais touchée,
-    /// sauf pour ce qui lui manque ; un point réglé à la main reste.
+    /// Les emplacements et les pièces du pack (GDD, section 6 ; SAVOIR, 2.11), depuis toutes les pièces à accrocher de
+    /// Prefabs/Characters/Chr_Attach. Chaque emplacement reçoit son os, son repère et son contact, déduits du pack et
+    /// réécrits à chaque passage ; chaque pièce, son modèle et sa couleur d'origine s'ils lui manquent. Leur réglage de
+    /// départ (décalage, taille) vient après, quand les têtes sont mesurées (AttachmentFitter).
     /// </summary>
     internal static class AttachmentBuilder
     {
@@ -18,77 +16,98 @@ namespace Diciela.EditorTools
         private const string Pieces = "Assets/Synty/PolygonFantasyVillage/Prefabs/Characters/Chr_Attach";
         // Les pièces du pack sont numérotées à partir de 01 ; aucune série ne va au-delà.
         private const int MaxPieceNumber = 20;
-        // Une pièce de tête s'enfonce d'au plus ce tiers de sa hauteur : une couronne reste dehors, un chapeau coiffe.
-        private const float HeadSinkPerHeight = 0.3f;
-        // Une pièce de la face entre de 5 cm dans le museau, qui dépasse des yeux.
-        private const float FaceSinkMeters = 0.05f;
+        private const int AllHuman = int.MaxValue;
 
-        // Deux points que le pack donne lui-même sur ses animaux : les cheveux de l'oiseau (Hair_14, sur
-        // SM_Chr_Bird_Female_01), où il pose une pièce faite pour une tête humaine ; la queue du chat (Tail_02).
-        private static readonly Vector3 HumanHeadPoint = new Vector3(0f, 1.714f, -0.107f);
-        private static readonly Vector3 TailRoot = new Vector3(0f, 0.618f, -0.139f);
-
-        private enum Fit
+        /// <summary>Pour qui une pièce du pack est dessinée, et autour de quoi.</summary>
+        public enum Design
         {
-            Point,
-            Bone,
-            Head,
-            Face
+            /// <summary>Pour une tête d'animal, ou pour le corps : à sa taille.</summary>
+            Animal,
+
+            /// <summary>Pour une tête humaine, autour de son os Head, où le pack la pose (chapeaux, oreilles).</summary>
+            HumanHead,
+
+            /// <summary>Pour une tête humaine, autour de son os Head, en l'enveloppant (cheveux, barbe).</summary>
+            HumanWrap,
+
+            /// <summary>Pour une tête humaine, autour de son propre point d'accroche (le groin, les boucles).</summary>
+            HumanPoint
         }
 
-        // Les emplacements, dans l'ordre des lignes de l'écran : l'os où s'accrochent leurs pièces, et comment se prend
-        // leur point de départ : un point du pack, la place de l'os, l'enfoncement au plus sous le haut du crâne, ou la
-        // hauteur sous les yeux.
-        private static readonly (string Name, string Bone, Fit Fit, float Meters, Vector3 Point)[] Slots =
+        /// <summary>Une pièce du pack, pour qui elle est dessinée, et si elle cache les oreilles.</summary>
+        public readonly struct PackPiece
         {
-            ("Queue", "pelvis", Fit.Point, 0f, TailRoot),
-            ("Oreilles", "head", Fit.Head, 0.1f, default),
-            ("Museau", "head", Fit.Face, 0.12f, default),
-            ("Cheveux", "head", Fit.Point, 0f, HumanHeadPoint),
-            ("Chapeau", "head", Fit.Head, 0.18f, default),
-            ("Visage", "head", Fit.Face, 0f, default),
-            ("Barbe", "head", Fit.Point, 0f, HumanHeadPoint),
-            ("BouclesOreilles", "head", Fit.Point, 0f, HumanHeadPoint),
-            ("Cou", "neck_01", Fit.Bone, 0f, default),
-            ("Dos", "spine_03", Fit.Bone, 0f, default),
-            ("Ceinture", "pelvis", Fit.Bone, 0f, default)
-        };
+            public PackPiece(AttachmentDefinition fiche, Design design, bool hidesEars)
+            {
+                Fiche = fiche;
+                Designed = design;
+                HidesEars = hidesEars;
+            }
 
-        // Les pièces : leur nom dans le pack, leur emplacement, leur nom de fichier.
-        private static readonly (string Pack, string Slot, string Name)[] Kinds =
-        {
-            ("Tail", "Queue", "Queue"),
-            ("Pig_Ear", "Oreilles", "OreillesCochon"),
-            ("Raccon_Ear", "Oreilles", "OreillesRaton"),
-            ("Goblin_Ear", "Oreilles", "OreillesGobelin"),
-            ("Snout", "Museau", "Museau"),
-            ("Hair", "Cheveux", "Cheveux"),
-            ("Hat", "Chapeau", "Chapeau"),
-            ("Helmet", "Chapeau", "Casque"),
-            ("Crown", "Chapeau", "Couronne"),
-            ("Flower", "Chapeau", "Fleur"),
-            ("Bow", "Chapeau", "Noeud"),
-            ("Glasses", "Visage", "Lunettes"),
-            ("Monocle", "Visage", "Monocle"),
-            ("Beard", "Barbe", "Barbe"),
-            ("Earring", "BouclesOreilles", "BouclesOreilles"),
-            ("Scarf", "Cou", "Echarpe"),
-            ("Bandana", "Cou", "Bandana"),
-            ("Cape", "Dos", "Cape"),
-            ("Backpack", "Dos", "SacADos"),
-            ("Pouch", "Ceinture", "Bourse"),
-            ("Canteen", "Ceinture", "Gourde"),
-            ("Potion", "Ceinture", "Potion")
-        };
+            public AttachmentDefinition Fiche { get; }
+            public Design Designed { get; }
+            public bool HidesEars { get; }
+        }
 
-        /// <summary>Les emplacements dans l'ordre de l'écran, puis les pièces dans le leur ; mesurés sur ce personnage.</summary>
-        public static void CreateMissing(GameObject character, List<PaletteDefinition> palettes,
-            List<AttachmentSlotDefinition> slots, List<AttachmentDefinition> pieces)
+        // Les emplacements, dans l'ordre des lignes de l'écran : leur os, leur repère, leur contact, et la règle de départ
+        // de leurs pièces que le pack ne pose nulle part (un chapeau entre de 2 cm dans le crâne, des cheveux de 1 cm).
+        private static readonly (string Name, string Bone, AttachmentFrame Frame, ContactAxis Contact, SlotRule Rule)[]
+            Slots =
+            {
+                ("Queue", "pelvis", AttachmentFrame.Body, ContactAxis.None, new SlotRule(SlotRule.Place.TailRoot, 0f)),
+                ("Oreilles", "head", AttachmentFrame.Ears, ContactAxis.None, new SlotRule(SlotRule.Place.Ears, 0f)),
+                ("Museau", "head", AttachmentFrame.Face, ContactAxis.Back, new SlotRule(SlotRule.Place.Nose, 0f)),
+                ("Cheveux", "head", AttachmentFrame.Crown, ContactAxis.Down, new SlotRule(SlotRule.Place.Crown, 0.01f)),
+                ("Chapeau", "head", AttachmentFrame.Crown, ContactAxis.Down, new SlotRule(SlotRule.Place.Crown, 0.02f)),
+                ("Visage", "head", AttachmentFrame.Face, ContactAxis.Back, new SlotRule(SlotRule.Place.Eyes, 0f)),
+                ("Barbe", "head", AttachmentFrame.Face, ContactAxis.Back, new SlotRule(SlotRule.Place.Nose, 0f)),
+                ("BouclesOreilles", "head", AttachmentFrame.Ears, ContactAxis.None, new SlotRule(SlotRule.Place.Ears, 0f)),
+                ("Cou", "neck_01", AttachmentFrame.Neck, ContactAxis.Back, new SlotRule(SlotRule.Place.UnderHead, 0f)),
+                ("Dos", "spine_03", AttachmentFrame.Body, ContactAxis.Forward, new SlotRule(SlotRule.Place.Back, 0f)),
+                ("Ceinture", "pelvis", AttachmentFrame.Body, ContactAxis.Back, new SlotRule(SlotRule.Place.Bone, 0f))
+            };
+
+        // Les pièces : leur nom dans le pack, leur emplacement, leur nom de fichier, jusqu'à quel numéro elles sont
+        // dessinées pour une tête humaine et autour de quoi (savoir du pack : les chapeaux 1 à 5, les cheveux 1 à 13, la
+        // barbe et les oreilles, autour de l'os Head ; le groin et les boucles, autour de leur point ; les chapeaux 6 à 8,
+        // la huppe 14 et le reste, à la taille des animaux), et si elles cachent d'office les oreilles (les chapeaux et le
+        // casque, qui couvrent le haut du crâne).
+        private static readonly (string Pack, string Slot, string Name, int HumanUpTo, Design Human, bool HidesEars)[]
+            Kinds =
+            {
+                ("Tail", "Queue", "Queue", 0, Design.Animal, false),
+                ("Pig_Ear", "Oreilles", "OreillesCochon", AllHuman, Design.HumanHead, false),
+                ("Raccon_Ear", "Oreilles", "OreillesRaton", AllHuman, Design.HumanHead, false),
+                ("Goblin_Ear", "Oreilles", "OreillesGobelin", AllHuman, Design.HumanHead, false),
+                ("Snout", "Museau", "Museau", AllHuman, Design.HumanPoint, false),
+                ("Hair", "Cheveux", "Cheveux", 13, Design.HumanWrap, false),
+                ("Hat", "Chapeau", "Chapeau", 5, Design.HumanHead, true),
+                ("Helmet", "Chapeau", "Casque", 0, Design.Animal, true),
+                ("Crown", "Chapeau", "Couronne", 0, Design.Animal, false),
+                ("Flower", "Chapeau", "Fleur", 0, Design.Animal, false),
+                ("Bow", "Chapeau", "Noeud", 0, Design.Animal, false),
+                ("Glasses", "Visage", "Lunettes", 0, Design.Animal, false),
+                ("Monocle", "Visage", "Monocle", 0, Design.Animal, false),
+                ("Beard", "Barbe", "Barbe", AllHuman, Design.HumanWrap, false),
+                ("Earring", "BouclesOreilles", "BouclesOreilles", AllHuman, Design.HumanPoint, false),
+                ("Scarf", "Cou", "Echarpe", 0, Design.Animal, false),
+                ("Bandana", "Cou", "Bandana", 0, Design.Animal, false),
+                ("Cape", "Dos", "Cape", 0, Design.Animal, false),
+                ("Backpack", "Dos", "SacADos", 0, Design.Animal, false),
+                ("Pouch", "Ceinture", "Bourse", 0, Design.Animal, false),
+                ("Canteen", "Ceinture", "Gourde", 0, Design.Animal, false),
+                ("Potion", "Ceinture", "Potion", 0, Design.Animal, false)
+            };
+
+        /// <summary>
+        /// Les emplacements dans l'ordre de l'écran, par nom de fichier ; os, repère et contact réécrits ; rules reçoit la
+        /// règle de départ de chacun.
+        /// </summary>
+        public static Dictionary<string, AttachmentSlotDefinition> CreateSlots(List<AttachmentSlotDefinition> slots,
+            Dictionary<AttachmentSlotDefinition, SlotRule> rules)
         {
-            Dictionary<string, Vector3> bones = PackMeasures.Measure(character, out PackMeasures.Head head);
-            var slotsByName = new Dictionary<string, AttachmentSlotDefinition>();
-            var fits = new Dictionary<string, (string Bone, Fit Fit, float Meters, Vector3 Point)>();
-            foreach ((string name, string bone, Fit fit, float meters, Vector3 point) in Slots)
+            var byName = new Dictionary<string, AttachmentSlotDefinition>();
+            foreach ((string name, string bone, AttachmentFrame frame, ContactAxis contact, SlotRule rule) in Slots)
             {
                 string id = name.ToLowerInvariant();
                 AttachmentSlotDefinition slot = EditorAssets.CreateIfMissing<AttachmentSlotDefinition>(
@@ -97,14 +116,25 @@ namespace Diciela.EditorTools
                         EditorAssets.Property(fiche, "_id").stringValue = id;
                         EditorAssets.Property(fiche, "_nameKey").stringValue = "emplacement." + id;
                     });
-                if (string.IsNullOrEmpty(slot.Bone))
-                    EditorAssets.Set(slot, fiche => EditorAssets.Property(fiche, "_bone").stringValue = bone);
-                slotsByName[name] = slot;
-                fits[name] = (bone, fit, meters, point);
+                EditorAssets.Set(slot, fiche =>
+                {
+                    EditorAssets.Property(fiche, "_bone").stringValue = bone;
+                    EditorAssets.Property(fiche, "_frame").enumValueIndex = (int)frame;
+                    EditorAssets.Property(fiche, "_contact").enumValueIndex = (int)contact;
+                });
+                byName[name] = slot;
+                rules[slot] = rule;
                 slots.Add(slot);
             }
+            return byName;
+        }
 
-            foreach ((string pack, string slot, string name) in Kinds)
+        /// <summary>Les pièces du pack, dans l'ordre de la table ; créées si elles manquent, modèle et couleur remplis.</summary>
+        public static List<PackPiece> CreatePieces(Dictionary<string, AttachmentSlotDefinition> slots,
+            List<PaletteDefinition> palettes)
+        {
+            var pieces = new List<PackPiece>();
+            foreach ((string pack, string slot, string name, int humanUpTo, Design human, bool hidesEars) in Kinds)
             {
                 for (int n = 1; n <= MaxPieceNumber; n++)
                 {
@@ -120,41 +150,14 @@ namespace Diciela.EditorTools
                             EditorAssets.Property(fiche, "_id").stringValue = id;
                             EditorAssets.Property(fiche, "_nameKey").stringValue = "piece." + id;
                         });
-                    EditorAssets.AssignIfMissing(piece, "_slot", slotsByName[slot]);
+                    EditorAssets.AssignIfMissing(piece, "_slot", slots[slot]);
                     EditorAssets.AssignIfMissing(piece, "_model", model);
                     EditorAssets.AssignIfMissing(piece, "_palette",
-                        AppearanceBuilder.PaletteOf(model.GetComponentInChildren<Renderer>(true), palettes));
-                    // Aucune pièce ne se pose aux pieds : un point nul est un point à remplir.
-                    if (piece.Anchor == Vector3.zero)
-                    {
-                        Vector3 anchor = AnchorOf(model, fits[slot], bones, head);
-                        EditorAssets.Set(piece, fiche => EditorAssets.Property(fiche, "_anchor").vector3Value = anchor);
-                    }
-                    pieces.Add(piece);
+                        PaletteBuilder.PaletteOf(model.GetComponentInChildren<Renderer>(true), palettes));
+                    pieces.Add(new PackPiece(piece, n <= humanUpTo ? human : Design.Animal, hidesEars));
                 }
             }
-        }
-
-        /// <summary>Le point de départ d'une pièce, selon la règle de son emplacement.</summary>
-        private static Vector3 AnchorOf(GameObject model, (string Bone, Fit Fit, float Meters, Vector3 Point) rule,
-            Dictionary<string, Vector3> bones, PackMeasures.Head head)
-        {
-            switch (rule.Fit)
-            {
-                case Fit.Point:
-                    return rule.Point;
-                case Fit.Bone:
-                    return bones[rule.Bone];
-            }
-
-            Bounds box = PackMeasures.BoxOf(model);
-            if (rule.Fit == Fit.Head)
-            {
-                float sink = Mathf.Min(rule.Meters, box.size.y * HeadSinkPerHeight);
-                return new Vector3(0f, head.Top - sink - box.min.y, head.Middle - box.center.z);
-            }
-            return new Vector3(0f, bones["eyes"].y - rule.Meters - box.center.y,
-                head.Front - FaceSinkMeters - box.min.z);
+            return pieces;
         }
     }
 }

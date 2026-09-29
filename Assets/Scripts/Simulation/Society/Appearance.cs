@@ -59,7 +59,7 @@ namespace Diciela.Simulation.Society
 
         /// <summary>
         /// L'apparence de départ que propose ce catalogue : sa première tête et son premier corps, dans leurs couleurs
-        /// d'origine, et les pièces que ce corps porte dans le pack, de sa couleur.
+        /// d'origine, avec les pièces que chacun porte d'office, de sa couleur (les oreilles du chat, sa queue).
         /// </summary>
         public static Appearance StartingIn(Catalog catalog)
         {
@@ -69,9 +69,11 @@ namespace Diciela.Simulation.Society
 
             HeadDefinition head = catalog.Heads[0];
             BodyDefinition body = catalog.Bodies[0];
-            var worn = new WornAttachment[body.Worn.Count];
-            for (int i = 0; i < worn.Length; i++)
-                worn[i] = new WornAttachment(body.Worn[i], body.Palette);
+            var worn = new List<WornAttachment>(head.Worn.Count + body.Worn.Count);
+            foreach (AttachmentDefinition piece in head.Worn)
+                worn.Add(new WornAttachment(piece, head.Palette));
+            foreach (AttachmentDefinition piece in body.Worn)
+                worn.Add(new WornAttachment(piece, body.Palette));
             return new Appearance(head, head.Palette, body, body.Palette, worn);
         }
     }

@@ -15,3 +15,5 @@ MonoBehaviour:
   _id: dos
   _nameKey: emplacement.dos
   _bone: spine_03
+  _frame: 0
+  _contact: 3

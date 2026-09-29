@@ -1,12 +1,13 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Diciela.Data
 {
     /// <summary>
-    /// La fiche d'une tête (GDD, section 6) : la tête d'un animal du pack, ses oreilles et son museau compris. Dans le
-    /// pack, elle est déjà une pièce à part du modèle, qu'aucun triangle ne relie au corps : le menu
-    /// DICIELA/Données/Créer les fiches manquantes l'en sépare, telle quelle (SAVOIR, 2.11). Elle se pose sur n'importe
-    /// quel corps, tous les animaux ayant le même squelette.
+    /// La fiche d'une tête (GDD, section 6) : le crâne d'un animal du pack, ses yeux et ses sourcils compris. Ce qui s'en
+    /// détache (ses oreilles, ses touffes, le museau du renard) devient des pièces qu'elle porte d'office et qu'on peut
+    /// changer. Le menu DICIELA/Données/Créer les fiches manquantes la découpe dans le modèle et mesure ses points, là où
+    /// se posent les pièces de la tête (SAVOIR, 2.11). Elle va sur n'importe quel corps, tous ayant le même squelette.
     /// </summary>
     [CreateAssetMenu(menuName = "DICIELA/Tête", fileName = "Tete")]
     public sealed class HeadDefinition : ScriptableObject
@@ -17,17 +18,72 @@ namespace Diciela.Data
         [Tooltip("La clé de son nom dans la table des textes (Assets/Localization/strings.csv).")]
         [SerializeField] private string _nameKey = "";
 
-        [Tooltip("Son maillage, séparé du modèle du pack par le menu (Assets/Art/Personnages), sur le squelette commun. " +
-                 "La vue s'en sert ; la simulation, jamais.")]
+        [Tooltip("Son crâne, découpé par le menu (Assets/Art/Personnages), sur le squelette commun. La vue s'en sert ; la " +
+                 "simulation, jamais.")]
         [SerializeField] private Mesh _mesh;
 
         [Tooltip("Sa couleur d'origine, celle que le pack lui donne : l'écran de création la remet quand on choisit cette " +
                  "tête.")]
         [SerializeField] private PaletteDefinition _palette;
 
+        [Tooltip("Les pièces qu'elle porte d'office : ce qui s'est détaché d'elle (oreilles, touffes, museau) et ce que le " +
+                 "pack pose sur sa tête (la huppe de l'oiseau). Rempli par le menu.")]
+        [SerializeField] private List<AttachmentDefinition> _worn = new List<AttachmentDefinition>();
+
+        [Tooltip("Les emplacements que son crâne tient déjà, soudés à lui (les oreilles du raton laveur) : l'écran n'y " +
+                 "propose rien d'autre. Rempli par le menu.")]
+        [SerializeField] private List<AttachmentSlotDefinition> _fused = new List<AttachmentSlotDefinition>();
+
+        [Tooltip("Le haut de son crâne, en mètres depuis les pieds du personnage debout (x à sa droite, y en haut, z " +
+                 "devant). Mesuré par le menu, jamais réglé à la main : une pièce se règle dans sa fiche.")]
+        [SerializeField] private Vector3 _crown;
+
+        [Tooltip("Le milieu de ses yeux, à leur avant. Mesuré par le menu.")]
+        [SerializeField] private Vector3 _face;
+
+        [Tooltip("Le milieu des places de ses deux oreilles, sur le crâne. Mesuré par le menu.")]
+        [SerializeField] private Vector3 _ears;
+
+        [Tooltip("Le bas de sa tête, sur la ligne du milieu. Mesuré par le menu.")]
+        [SerializeField] private Vector3 _neck;
+
+        [Tooltip("Le dessus de son crâne (hauteur selon x et z) : ce qui s'y pose descend jusqu'à le toucher. Mesuré par " +
+                 "le menu.")]
+        [SerializeField] private SurfaceMap _top = new SurfaceMap();
+
+        [Tooltip("L'avant de sa face, yeux compris (avancée selon x et y) : ce qui s'y pose recule jusqu'à le toucher. " +
+                 "Mesuré par le menu.")]
+        [SerializeField] private SurfaceMap _front = new SurfaceMap();
+
         public string Id => _id;
         public string NameKey => _nameKey;
         public Mesh Mesh => _mesh;
         public PaletteDefinition Palette => _palette;
+        public IReadOnlyList<AttachmentDefinition> Worn => _worn;
+        public IReadOnlyList<AttachmentSlotDefinition> Fused => _fused;
+
+        /// <summary>Sa surface pour ce contact : le dessus du crâne, l'avant de la face ; null pour les autres.</summary>
+        public SurfaceMap SurfaceOf(ContactAxis axis)
+        {
+            return axis == ContactAxis.Down ? _top : axis == ContactAxis.Back ? _front : null;
+        }
+
+        /// <summary>Le point d'où se mesurent les pièces de ce repère, sur cette tête ; les pieds pour le corps.</summary>
+        public Vector3 PointOf(AttachmentFrame frame)
+        {
+            switch (frame)
+            {
+                case AttachmentFrame.Crown:
+                    return _crown;
+                case AttachmentFrame.Face:
+                    return _face;
+                case AttachmentFrame.Ears:
+                    return _ears;
+                case AttachmentFrame.Neck:
+                    return _neck;
+                default:
+                    return Vector3.zero;
+            }
+        }
     }
 }

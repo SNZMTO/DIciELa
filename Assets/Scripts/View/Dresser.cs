@@ -9,10 +9,10 @@ namespace Diciela.View
     /// Habille un personnage d'une apparence (GDD, section 6 ; SAVOIR, 2.11), la seule façon de le faire, pour les
     /// habitants vus comme pour l'aperçu de l'écran de création. Le personnage du pack d'où vient le corps sert de
     /// squelette : tous les animaux ont le même. On lui retire ce qu'il porte (ses seize corps, ses pièces d'office, ses
-    /// capes cachées), puis il reçoit le corps et la tête choisis, chacun de sa couleur, sur ses os. Une petite cape qu'il
-    /// porte dans le pack reste, comme un habit, de la couleur du corps. Chaque pièce se pose droite, son pivot sur son
-    /// point d'accroche, puis s'accroche à l'os de son emplacement sans bouger ; sa couleur remplace la sienne. Les
-    /// couleurs se posent sur les matériaux partagés : une copie par personnage empêcherait le rendu de les regrouper.
+    /// capes cachées), puis il reçoit le corps et le crâne choisis, chacun de sa couleur, sur ses os. Une petite cape
+    /// qu'il porte dans le pack reste, comme un habit, de la couleur du corps. Chaque pièce se pose droite, son pivot au
+    /// point de son repère sur la tête choisie plus son décalage, à sa taille, puis s'accroche à l'os de son emplacement
+    /// sans bouger ; une pièce qu'une autre cache (des oreilles sous un chapeau) ne se pose pas.
     /// </summary>
     public static class Dresser
     {
@@ -23,9 +23,10 @@ namespace Diciela.View
         public static GameObject Dress(Appearance appearance, Transform parent)
         {
             BodyDefinition body = appearance.Body;
-            if (body.Model == null || body.Mesh == null || appearance.Head.Mesh == null)
+            HeadDefinition head = appearance.Head;
+            if (body.Model == null || body.Mesh == null || head.Mesh == null)
             {
-                Debug.LogError("DICIELA : le corps « " + body.Id + " » ou la tête « " + appearance.Head.Id +
+                Debug.LogError("DICIELA : le corps « " + body.Id + " » ou la tête « " + head.Id +
                                " » n'a pas son modèle.");
                 return null;
             }
@@ -38,11 +39,20 @@ namespace Diciela.View
                 return character;
             }
 
-            Recolor(character.GetComponentsInChildren<Renderer>(), body.Palette, appearance.BodyPalette);
+            PaletteSwap.Apply(character.GetComponentsInChildren<Renderer>(), body.Palette, appearance.BodyPalette);
             Part(character.transform, "Corps", body.Mesh, appearance.BodyPalette, skeleton);
-            Part(character.transform, "Tête", appearance.Head.Mesh, appearance.HeadPalette, skeleton);
+            Part(character.transform, "Tête", head.Mesh, appearance.HeadPalette, skeleton);
+            var hidden = new HashSet<AttachmentSlotDefinition>();
             foreach (WornAttachment worn in appearance.Attachments)
-                Attach(character.transform, worn);
+            {
+                foreach (AttachmentSlotDefinition slot in worn.Attachment.Hides)
+                    hidden.Add(slot);
+            }
+            foreach (WornAttachment worn in appearance.Attachments)
+            {
+                if (!hidden.Contains(worn.Attachment.Slot))
+                    Attach(character.transform, appearance, worn);
+            }
             return character;
         }
 
@@ -105,19 +115,20 @@ namespace Diciela.View
             skin.sharedMaterial = palette.CharacterMaterial;
         }
 
-        private static void Attach(Transform character, WornAttachment worn)
+        private static void Attach(Transform character, Appearance appearance, WornAttachment worn)
         {
             AttachmentDefinition attachment = worn.Attachment;
-            if (attachment.Model == null)
+            if (attachment.Model == null || !attachment.HasScale)
             {
-                Debug.LogError("DICIELA : la pièce « " + attachment.Id + " » n'a pas de modèle.");
+                Debug.LogError("DICIELA : la pièce « " + attachment.Id + " » n'a pas de modèle, ou pas de taille.");
                 return;
             }
 
-            // Posée dans les axes du personnage, telle que le pack la modèle, puis confiée à son os sans bouger.
+            // Posée dans les axes du personnage, telle que le modèle est fait, puis confiée à son os sans bouger.
             GameObject piece = Object.Instantiate(attachment.Model, character, false);
-            piece.transform.localPosition = attachment.Anchor;
-            Recolor(piece.GetComponentsInChildren<Renderer>(), attachment.Palette, worn.Palette);
+            piece.transform.localPosition = PlaceOf(appearance, attachment);
+            piece.transform.localScale = attachment.Scale;
+            PaletteSwap.Apply(piece.GetComponentsInChildren<Renderer>(), attachment.Palette, worn.Palette);
             Transform bone = Find(character, attachment.Slot.Bone);
             if (bone != null)
                 piece.transform.SetParent(bone, true);
@@ -127,31 +138,27 @@ namespace Diciela.View
         }
 
         /// <summary>
-        /// Remplace une couleur par une autre sur ces rendus, chaque matériau par celui de même sorte (personnage, objet),
-        /// là seulement où il est : une lentille de verre reste en verre.
+        /// La place du pivot : le point du repère sur la tête choisie plus le décalage ; sur l'axe de contact de
+        /// l'emplacement, la place où la pièce touche la tête ou le corps, plus le décalage sur cet axe.
         /// </summary>
-        private static void Recolor(Renderer[] renderers, PaletteDefinition own, PaletteDefinition chosen)
+        private static Vector3 PlaceOf(Appearance appearance, AttachmentDefinition attachment)
         {
-            if (own == null || own == chosen)
-                return;
-            foreach (Renderer renderer in renderers)
+            AttachmentSlotDefinition slot = attachment.Slot;
+            Vector3 place = appearance.Head.PointOf(slot.Frame) + attachment.Offset;
+            ContactAxis axis = slot.Contact;
+            if (axis == ContactAxis.None)
+                return place;
+            bool onBody = slot.TouchesBody;
+            SurfaceMap surface = onBody ? appearance.Body.SurfaceOf(axis) : appearance.Head.SurfaceOf(axis);
+            if (!Contact.TryTouch(axis, surface, attachment.Shape, place, attachment.Scale, out float along))
             {
-                Material[] materials = renderer.sharedMaterials;
-                bool changed = false;
-                for (int i = 0; i < materials.Length; i++)
-                {
-                    Material to = materials[i] == null ? null
-                        : materials[i] == own.CharacterMaterial ? chosen.CharacterMaterial
-                        : materials[i] == own.ObjectMaterial ? chosen.ObjectMaterial
-                        : null;
-                    if (to == null)
-                        continue;
-                    materials[i] = to;
-                    changed = true;
-                }
-                if (changed)
-                    renderer.sharedMaterials = materials;
+                Debug.LogWarning("DICIELA : la pièce « " + attachment.Id + " » ne touche pas « " +
+                                 (onBody ? appearance.Body.Id : appearance.Head.Id) + " ».");
+                return place;
             }
+            return axis == ContactAxis.Down
+                ? new Vector3(place.x, along + attachment.Offset.y, place.z)
+                : new Vector3(place.x, place.y, along + attachment.Offset.z);
         }
 
         private static Transform Find(Transform root, string name)

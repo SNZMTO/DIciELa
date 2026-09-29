@@ -15,3 +15,5 @@ MonoBehaviour:
   _id: ceinture
   _nameKey: emplacement.ceinture
   _bone: pelvis
+  _frame: 0
+  _contact: 2

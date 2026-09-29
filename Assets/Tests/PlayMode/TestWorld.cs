@@ -128,6 +128,10 @@ namespace Diciela.Tests.PlayMode
                 property.boolValue = flag;
             else if (value is Vector3 vector)
                 property.vector3Value = vector;
+            else if (value is Enum choice)
+                property.enumValueIndex = Convert.ToInt32(choice);
+            else if (value is SurfaceMap map)
+                property.boxedValue = map;
             else
                 property.objectReferenceValue = (Object)value;
             serialized.ApplyModifiedPropertiesWithoutUndo();

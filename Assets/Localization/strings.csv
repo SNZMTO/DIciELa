@@ -55,6 +55,17 @@ piece.oreillesraton_02,Oreilles de raton laveur 2,Raccoon ears 2
 piece.oreillesgobelin_01,Oreilles de gobelin 1,Goblin ears 1
 piece.oreillesgobelin_02,Oreilles de gobelin 2,Goblin ears 2
 piece.museau_01,Museau,Snout
+piece.oreilles_chat,Oreilles de chat,Cat ears
+piece.oreilles_cochon,Oreilles du cochon,Pig's ears
+piece.oreilles_lapin_a,Oreilles de lapin A,Rabbit ears A
+piece.oreilles_lapin_b,Oreilles de lapin B,Rabbit ears B
+piece.oreilles_renard,Oreilles de renard,Fox ears
+piece.oreilles_souris,Oreilles de souris,Mouse ears
+piece.touffes_cochon,Touffe du cochon,Pig's tuft
+piece.touffes_ratonlaveur,Touffe du raton laveur,Raccoon's tuft
+piece.touffes_renard,Touffe du renard,Fox's tuft
+piece.touffes_souris,Touffe de la souris,Mouse's tuft
+piece.museau_renard,Museau de renard,Fox snout
 piece.chapeau_01,Chapeau 1,Hat 1
 piece.chapeau_02,Chapeau 2,Hat 2
 piece.chapeau_03,Chapeau 3,Hat 3
@@ -85,6 +96,7 @@ piece.potion_01,Potion,Potion
 creation.titre,La Chimère,The Chimera
 creation.corps,Corps,Body
 creation.aucun,Aucun,None
+creation.soudees,Celles de la tête,The head's own
 creation.valider,C'est parti,Let's go
 creation.precedent,<,<
 creation.suivant,>,>

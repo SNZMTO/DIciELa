@@ -15,3 +15,5 @@ MonoBehaviour:
   _id: chapeau
   _nameKey: emplacement.chapeau
   _bone: head
+  _frame: 1
+  _contact: 1
