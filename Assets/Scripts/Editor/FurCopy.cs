@@ -9,8 +9,8 @@ namespace Diciela.EditorTools
     /// Une pièce du pack teinte comme le poil (SAVOIR, 2.11) : la barbe. Le pack la peint d'une teinte d'objet que ses
     /// douze couleurs laissent presque pareille (le gris du masque des cheveux, teinté de deux bruns à peine différents).
     /// La copie prend le matériau de personnage de sa couleur, et tous ses sommets vont sur la case du poil, que chaque
-    /// couleur teinte à sa façon : changer sa couleur change son poil. Deux copies réduites : le bas seul, sous la bouche
-    /// (le menton, pour un gros museau), et la barbe sans sa moustache (pour une bouche large, que ses côtés encadrent). Enregistrées dans
+    /// couleur teinte à sa façon : changer sa couleur change son poil. Une copie réduite ne garde que le bas, sous la bouche
+    /// (le menton, pour un gros museau). Enregistrées dans
     /// Assets/Art/Personnages/Pieces, le pack ne change pas.
     /// </summary>
     internal static class FurCopy
@@ -20,21 +20,17 @@ namespace Diciela.EditorTools
         // personnage teinte de la couleur du poil.
         private static readonly Vector2 Fur = new Vector2(0.027f, 0.187f);
         // Le menton : les triangles sous cette part de la hauteur de la barbe (sa moustache et ses favoris sont au-dessus).
-        // La moustache : au-dessus de cette part de sa hauteur, à moins de cette part de sa largeur du milieu.
         private const float ChinShare = 0.4f;
-        private const float MustacheFrom = 0.72f;
-        private const float MustacheHalfWidth = 0.28f;
 
         // Les copies : le nom ajouté, et ce qu'elle garde (la position d'un triangle, en parts de la boîte de la barbe).
         private static readonly (string Suffix, System.Func<Vector2, bool> Keeps)[] Cuts =
         {
-            ("_Menton", at => at.y < ChinShare),
-            ("_SansMoustache", at => at.y < MustacheFrom || Mathf.Abs(at.x - 0.5f) > MustacheHalfWidth)
+            ("_Menton", at => at.y < ChinShare)
         };
 
         /// <summary>
         /// La copie de ce modèle, teinte comme le poil de cette couleur (celle du modèle), sous ce nom ; et ses copies
-        /// réduites, sous ce nom suivi de _Menton et de _SansMoustache.
+        /// réduites, sous ce nom suivi de _Menton.
         /// </summary>
         public static GameObject Copy(GameObject model, string name, List<PaletteDefinition> palettes)
         {
