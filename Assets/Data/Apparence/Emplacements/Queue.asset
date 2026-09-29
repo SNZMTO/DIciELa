@@ -17,3 +17,4 @@ MonoBehaviour:
   _bone: pelvis
   _frame: 0
   _contact: 0
+  _pairs: 0

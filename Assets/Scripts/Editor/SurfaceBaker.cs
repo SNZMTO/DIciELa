@@ -35,11 +35,19 @@ namespace Diciela.EditorTools
                 from);
         }
 
-        /// <summary>Relève la face d'une pièce qui touche la surface de son contact, dans ses axes ; rien sans contact.</summary>
-        public static void ShapeOf(AttachmentDefinition piece, Vector3[] positions, List<int> triangles, ContactAxis axis)
+        /// <summary>
+        /// Relève la face d'une pièce qui touche la surface de son contact, dans ses axes, tournée de sa rotation ; rien sans
+        /// contact.
+        /// </summary>
+        public static void ShapeOf(AttachmentDefinition piece, Vector3[] modelPositions, List<int> triangles,
+            ContactAxis axis)
         {
-            if (axis == ContactAxis.None || positions.Length == 0)
+            if (axis == ContactAxis.None || modelPositions.Length == 0)
                 return;
+            Quaternion rotation = Quaternion.Euler(piece.Rotation);
+            var positions = new Vector3[modelPositions.Length];
+            for (int i = 0; i < positions.Length; i++)
+                positions[i] = rotation * modelPositions[i];
             var box = new Bounds(positions[0], Vector3.zero);
             foreach (Vector3 position in positions)
                 box.Encapsulate(position);

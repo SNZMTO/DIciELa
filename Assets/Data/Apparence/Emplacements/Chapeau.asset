@@ -17,3 +17,4 @@ MonoBehaviour:
   _bone: head
   _frame: 1
   _contact: 1
+  _pairs: 0

@@ -16,4 +16,5 @@ MonoBehaviour:
   _nameKey: emplacement.oreilles
   _bone: head
   _frame: 3
-  _contact: 0
+  _contact: 1
+  _pairs: 1

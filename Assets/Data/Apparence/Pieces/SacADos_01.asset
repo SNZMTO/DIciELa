@@ -18,8 +18,11 @@ MonoBehaviour:
   _model: {fileID: 6795481420457469495, guid: 5876875f939b61a4b8dfb6f275da8172, type: 3}
   _palette: {fileID: 11400000, guid: 82d3eb0161a8fcd49a80a3086ee0a5aa, type: 2}
   _offset: {x: 0, y: 0.8769, z: 0.12}
+  _rotation: {x: 0, y: 0, z: 0}
   _scale: {x: 0.7, y: 0.7, z: 0.7}
   _hides: []
+  _adjustments: []
+  _reference: {fileID: 11400000, guid: b101e7e10079f0b4db61f9549b700b64, type: 2}
   _coversBack: 0
   _shape:
     _origin: {x: -0.43349555, y: -0.5016243}

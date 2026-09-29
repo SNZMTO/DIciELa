@@ -80,7 +80,7 @@ namespace Diciela.Tests.PlayMode
             var crown = new Vector3(0f, 1.7f, 0.05f);
             var offset = new Vector3(0.1f, 0.2f, -0.1f);
             Material glass = _rig.Keep(new Material(_rig.OriginMaterial));
-            AttachmentDefinition piece = Piece("Chapeau de test", AttachmentFrame.Crown, ContactAxis.None, offset, 2f,
+            AttachmentDefinition piece = _rig.Piece("Chapeau de test", AttachmentFrame.Crown, ContactAxis.None, offset, 2f,
                 glass);
 #if UNITY_EDITOR
             TestWorld.Fill(_rig.Head, "_crown", crown);
@@ -108,7 +108,7 @@ namespace Diciela.Tests.PlayMode
             // sous son pivot partout. À taille 2, elle touche la bosse : son pivot à 1,9 + 0,2, moins 2 cm d'enfoncement.
             var top = new SurfaceMap(new Vector2(-0.5f, -0.5f), 0.5f, 2, 2, new[] { 1.8f, 1.9f, 1.8f, 1.9f });
             var under = new SurfaceMap(new Vector2(-0.5f, -0.5f), 0.5f, 2, 2, new[] { -0.1f, -0.1f, -0.1f, -0.1f });
-            AttachmentDefinition piece = Piece("Chapeau posé", AttachmentFrame.Crown, ContactAxis.Down,
+            AttachmentDefinition piece = _rig.Piece("Chapeau posé", AttachmentFrame.Crown, ContactAxis.Down,
                 new Vector3(0f, -0.02f, 0f), 2f, null);
 #if UNITY_EDITOR
             TestWorld.Fill(_rig.Head, "_top", top);
@@ -124,9 +124,9 @@ namespace Diciela.Tests.PlayMode
         [Test]
         public void APieceThatAnotherHidesIsNotWorn()
         {
-            AttachmentDefinition ears = Piece("Oreilles de test", AttachmentFrame.Ears, ContactAxis.None, Vector3.zero,
+            AttachmentDefinition ears = _rig.Piece("Oreilles de test", AttachmentFrame.Ears, ContactAxis.None, Vector3.zero,
                 1f, null);
-            AttachmentDefinition hat = Piece("Chapeau qui cache", AttachmentFrame.Crown, ContactAxis.None, Vector3.zero,
+            AttachmentDefinition hat = _rig.Piece("Chapeau qui cache", AttachmentFrame.Crown, ContactAxis.None, Vector3.zero,
                 1f, null);
 #if UNITY_EDITOR
             TestWorld.FillList(hat, "_hides", ears.Slot);
@@ -141,7 +141,7 @@ namespace Diciela.Tests.PlayMode
         [UnityTest]
         public IEnumerator ACapeReplacesTheLittleCapeTheBodyWears()
         {
-            AttachmentDefinition cape = Piece("Cape de test", AttachmentFrame.Body, ContactAxis.None, Vector3.zero, 1f,
+            AttachmentDefinition cape = _rig.Piece("Cape de test", AttachmentFrame.Body, ContactAxis.None, Vector3.zero, 1f,
                 null);
 #if UNITY_EDITOR
             TestWorld.Fill(cape, "_coversBack", true);
@@ -152,31 +152,6 @@ namespace Diciela.Tests.PlayMode
 
             Assert.IsNull(dressed.transform.Find("Capes/Petite cape"), "La cape choisie remplace sa petite cape.");
             Assert.IsNotNull(dressed.transform.Find("root/pelvis/head/Cape de test(Clone)"));
-        }
-
-        /// <summary>Une pièce de ce nom sur son propre emplacement de l'os head, dans la couleur d'origine du banc.</summary>
-        private AttachmentDefinition Piece(string name, AttachmentFrame frame, ContactAxis contact, Vector3 offset,
-            float scale, Material glass)
-        {
-            GameObject model = _rig.Keep(GameObject.CreatePrimitive(PrimitiveType.Cube));
-            model.name = name;
-            model.GetComponent<MeshRenderer>().sharedMaterials = glass != null
-                ? new[] { _rig.OriginMaterial, glass }
-                : new[] { _rig.OriginMaterial };
-            var slot = _rig.Keep(ScriptableObject.CreateInstance<AttachmentSlotDefinition>());
-            var piece = _rig.Keep(ScriptableObject.CreateInstance<AttachmentDefinition>());
-#if UNITY_EDITOR
-            TestWorld.Fill(slot, "_bone", "head");
-            TestWorld.Fill(slot, "_frame", frame);
-            TestWorld.Fill(slot, "_contact", contact);
-            TestWorld.Fill(piece, "_id", name);
-            TestWorld.Fill(piece, "_slot", slot);
-            TestWorld.Fill(piece, "_model", model);
-            TestWorld.Fill(piece, "_palette", _rig.Origin);
-            TestWorld.Fill(piece, "_offset", offset);
-            TestWorld.Fill(piece, "_scale", Vector3.one * scale);
-#endif
-            return piece;
         }
     }
 }

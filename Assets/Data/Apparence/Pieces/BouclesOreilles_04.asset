@@ -17,13 +17,16 @@ MonoBehaviour:
   _slot: {fileID: 11400000, guid: e6913190d2d351244ba8f122c69210b7, type: 2}
   _model: {fileID: 4758090854547419810, guid: f0f37032d729a704fb9491b92267cc09, type: 3}
   _palette: {fileID: 11400000, guid: 82d3eb0161a8fcd49a80a3086ee0a5aa, type: 2}
-  _offset: {x: 0.3052, y: 0.005874, z: 0.042763}
+  _offset: {x: 0.3052, y: -0.110209346, z: 0.042763}
+  _rotation: {x: 0, y: 0, z: 90}
   _scale: {x: 1.884, y: 1.884, z: 1.884}
   _hides: []
+  _adjustments: []
+  _reference: {fileID: 11400000, guid: b101e7e10079f0b4db61f9549b700b64, type: 2}
   _coversBack: 0
   _shape:
-    _origin: {x: 0, y: 0}
-    _cell: 0
-    _columns: 0
-    _rows: 0
-    _values: 
+    _origin: {x: -0.023701292, y: -0.06907715}
+    _cell: 0.005756425
+    _columns: 9
+    _rows: 24
+    _values: 00800080070007000700070000800080008000800d00edffedffedffedff0100008000800080f4ffd7ffd7ffd7ffd7ffe8ff008000800080dcffd4ffd4ffd4ffd4ffd9ff02000080f5ffd9ffd1ffd1ffd1ffd1ffd6ffe9ff0080e2ffd6ffcfffcfffcfffcfffd3ffe0ff0080e0ffd3ffccffccffccffccffd1ffddff0080ddffd1ffc9ffc9ffc9ffc9ffceffdaff0080daffceffc6ffc6ffc6ffc6ffcbffd7ff0080d7ffcbffc4ffc4ffc4ffc4ffc8ffd4ff0080d5ffc8ffc1ffc1ffc1ffc1ffc5ffd2ff0080d2ffc6ffbeffbeffbeffbeffc3ffcfff0080d2ffc6ffbeffbeffbeffbeffc3ffcfff0080d5ffc8ffc1ffc1ffc1ffc1ffc5ffd2ff0080d7ffcbffc4ffc4ffc4ffc4ffc8ffd4ff0080daffceffc6ffc6ffc6ffc6ffcbffd7ff0080ddffd1ffc9ffc9ffc9ffc9ffceffdaff0080e0ffd3ffccffccffccffccffd1ffddff0080e2ffd6ffcfffcfffcfffcfffd3ffe0ff0080f5ffd9ffd1ffd1ffd1ffd1ffd6ffe9ff00800080dcffd4ffd4ffd4ffd4ffd9ff020000800080f4ffd7ffd7ffd7ffd7ffe8ff0080008000800d00edffedffedffedff010000800080008000800700070007000700008000800080y

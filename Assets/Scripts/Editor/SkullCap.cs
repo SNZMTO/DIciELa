@@ -4,15 +4,19 @@ using UnityEngine;
 namespace Diciela.EditorTools
 {
     /// <summary>
-    /// Referme les trous d'un crâne découpé (là où des oreilles cousues ont été détachées, FusedEars) : chaque bord ouvert
+    /// Referme les trous d'un crâne découpé (là où des oreilles cousues ont été détachées, FusedEars), et le dessous
+    /// ouvert de ces oreilles : chaque bord ouvert
     /// devient un éventail de triangles vers son centre, en facettes comme le reste, d'une seule couleur (celle du bord) et
     /// mené par les mêmes os. Les oreilles propres de la tête, posées dessus, le cachent. Sert au maillage enregistré comme
     /// aux mesures de la tête. Un crâne fermé ne change pas.
     /// </summary>
     internal static class SkullCap
     {
-        /// <summary>Referme les bords ouverts de ce maillage à peau, en place.</summary>
-        public static void Close(Mesh mesh)
+        /// <summary>
+        /// Referme les bords ouverts de ce maillage (à peau ou non), en place : les couvercles vont dans son premier
+        /// sous-maillage, ou, apart, dans un sous-maillage à eux, ajouté à la fin (on les compte à part).
+        /// </summary>
+        public static void Close(Mesh mesh, bool apart = false)
         {
             var positions = new List<Vector3>(mesh.vertices);
             var all = new List<int>();
@@ -26,13 +30,13 @@ namespace Diciela.EditorTools
             var uvs = new List<Vector2>();
             mesh.GetUVs(0, uvs);
             var weights = new List<BoneWeight>(mesh.boneWeights);
-            var triangles = new List<int>(mesh.GetTriangles(0));
+            var triangles = apart ? new List<int>() : new List<int>(mesh.GetTriangles(0));
             foreach (List<int> loop in loops)
             {
                 // Le couvercle a ses propres sommets : une seule couleur et une seule orientation, celles du bord.
                 Vector3 normal = Normal(positions, loop);
                 Vector2 uv = uvs.Count > loop[0] ? uvs[loop[0]] : Vector2.zero;
-                BoneWeight weight = weights[loop[0]];
+                BoneWeight weight = weights.Count > loop[0] ? weights[loop[0]] : default;
                 var corners = new List<Vector3>();
                 foreach (int v in loop)
                     corners.Add(positions[v]);
@@ -45,7 +49,8 @@ namespace Diciela.EditorTools
                     normals.Add(normal);
                     if (uvs.Count > 0)
                         uvs.Add(uv);
-                    weights.Add(weight);
+                    if (weights.Count > 0)
+                        weights.Add(weight);
                 }
                 Fan(ring.GetRange(0, loop.Count), ring[loop.Count], triangles);
             }
@@ -54,8 +59,11 @@ namespace Diciela.EditorTools
                 mesh.SetNormals(normals);
             if (uvs.Count == positions.Count)
                 mesh.SetUVs(0, uvs);
-            mesh.boneWeights = weights.ToArray();
-            mesh.SetTriangles(triangles, 0);
+            if (weights.Count == positions.Count)
+                mesh.boneWeights = weights.ToArray();
+            if (apart)
+                mesh.subMeshCount++;
+            mesh.SetTriangles(triangles, apart ? mesh.subMeshCount - 1 : 0);
             mesh.RecalculateBounds();
         }
 

@@ -14,8 +14,8 @@ namespace Diciela.EditorTools
     /// diffèrent que par les cils et les oreilles du lapin), chacun sur son corps, habillé comme en jeu (Dresser), la tête
     /// avec ses pièces d'office, photographié de près hors de toute scène (Studio) de trois quarts puis de profil : une
     /// planche de 4 × 4 par pièce, deux animaux par ligne, rangée par emplacement dans Temp/Planches (hors Git). Plus les
-    /// mesures de chaque pièce sur chaque animal (PieceMeasures, Mesures.csv), et une planche des seize têtes, chacune nue
-    /// puis avec ses pièces d'office. Pour juger une pose de près, sans rien toucher à la scène ouverte.
+    /// mesures de chaque pièce sur chaque animal (PieceMeasures, Mesures.csv), une planche des seize têtes, chacune nue
+    /// puis avec ses pièces d'office, et celle de leurs repères (LandmarkSheet). Pour juger une pose de près, sans rien toucher à la scène ouverte.
     /// </summary>
     internal static class PieceSheets
     {
@@ -48,6 +48,7 @@ namespace Diciela.EditorTools
                     heads.Add(Wearing(studio, catalog, i, catalog.Heads[i].Worn));
                 }
                 studio.Save(heads, Columns, Folder + "/Tetes.jpg");
+                LandmarkSheet.Write(studio, catalog, Folder + "/Reperes.jpg");
             }
             File.WriteAllText(Folder + "/Mesures.csv", measures.ToString());
             Debug.Log("DICIELA : planches des pièces écrites dans " + Path.GetFullPath(Folder) + ".");
