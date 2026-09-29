@@ -17,3 +17,4 @@ MonoBehaviour:
   _bone: spine_03
   _frame: 0
   _contact: 3
+  _pairs: 0

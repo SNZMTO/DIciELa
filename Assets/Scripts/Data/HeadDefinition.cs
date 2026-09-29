@@ -37,8 +37,9 @@ namespace Diciela.Data
         [Tooltip("Le milieu de ses yeux, à leur avant. Mesuré par le menu.")]
         [SerializeField] private Vector3 _face;
 
-        [Tooltip("Le milieu des places de ses deux oreilles, sur le crâne. Mesuré par le menu.")]
-        [SerializeField] private Vector3 _ears;
+        [Tooltip("La place de son oreille droite sur le crâne (x positif) ; la gauche en est le miroir. Mesurée par le " +
+                 "menu.")]
+        [SerializeField] private Vector3 _earRight;
 
         [Tooltip("Le bas de sa tête, sur la ligne du milieu. Mesuré par le menu.")]
         [SerializeField] private Vector3 _neck;
@@ -57,13 +58,19 @@ namespace Diciela.Data
         public PaletteDefinition Palette => _palette;
         public IReadOnlyList<AttachmentDefinition> Worn => _worn;
 
+        /// <summary>La place de son oreille droite sur le crâne ; la gauche en est le miroir.</summary>
+        public Vector3 EarRight => _earRight;
+
         /// <summary>Sa surface pour ce contact : le dessus du crâne, l'avant de la face ; null pour les autres.</summary>
         public SurfaceMap SurfaceOf(ContactAxis axis)
         {
             return axis == ContactAxis.Down ? _top : axis == ContactAxis.Back ? _front : null;
         }
 
-        /// <summary>Le point d'où se mesurent les pièces de ce repère, sur cette tête ; les pieds pour le corps.</summary>
+        /// <summary>
+        /// Le point d'où se mesurent les pièces de ce repère, sur cette tête ; pour les oreilles, le milieu de leurs deux
+        /// places ; les pieds pour le corps.
+        /// </summary>
         public Vector3 PointOf(AttachmentFrame frame)
         {
             switch (frame)
@@ -73,7 +80,7 @@ namespace Diciela.Data
                 case AttachmentFrame.Face:
                     return _face;
                 case AttachmentFrame.Ears:
-                    return _ears;
+                    return new Vector3(0f, _earRight.y, _earRight.z);
                 case AttachmentFrame.Neck:
                     return _neck;
                 default:

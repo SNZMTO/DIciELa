@@ -114,7 +114,7 @@ namespace Diciela.EditorTools
                 else
                 {
                     AttachmentFitter.FitByRule(piece, rule, packPiece.Designed == AttachmentBuilder.Design.HumanPoint,
-                        geometries[piece], reference.Measures, human.Measures, bones, tailRoot, hides);
+                        geometries[piece], reference.Measures, reference.Head, human.Measures, bones, tailRoot, hides);
                 }
             }
         }

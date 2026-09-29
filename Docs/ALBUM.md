@@ -15,6 +15,20 @@
 
 ## Les captures
 
+### 29/09/2026 — étape 13e : les oreilles et les pièces réglées tête par tête
+
+Chaque paire d'oreilles se pose aux oreilles de la tête choisie, par sa base, sans flotter ; certaines pièces sont
+réglées pour une tête ou un corps qui ne ressemble pas aux autres, et les pièces couchées du pack sont redressées.
+Avant, puis après : les oreilles de cochon du pack sur la grenouille, de face et de trois quarts (sur les côtés, puis
+en haut, derrière les dômes des yeux) ; la cape 1 sur le raton, de dos (sa tunique la traversait). Puis, de face, de
+trois quarts et de dos : la souris aux oreilles du raton, au nœud 1 debout et au bandana ; le raton au grand nœud à
+l'arrière de la tête, rubans dans le dos ; la grenouille B à la couronne et aux boucles pendantes ; l'oiseau au groin
+monté sur le bec et aux anneaux droits.
+
+![Avant, puis après : les oreilles de cochon sur la grenouille, la cape 1 sur le raton](Album/2026-09-29_etape-13e_pieces-avant-apres.jpg)
+
+![Quatre Chimères aux pièces réglées, de face, de trois quarts et de dos](Album/2026-09-29_etape-13e_pieces-reglees.jpg)
+
 ### 29/09/2026 — étape 13d : proportions et places des pièces
 
 Chaque pièce revue sur les huit animaux, de trois quarts et de profil, par deux jurys : les repères du haut du crâne

@@ -24,6 +24,7 @@ namespace Diciela.EditorTools
         /// <summary>Reproduit une pose : son pivot à cette place, sur ce personnage (cette tête, ce corps), taille 1.</summary>
         public static void FitToPose(AttachmentDefinition piece, Vector3 pivot, HeadDefinition head, BodyDefinition body)
         {
+            Reference(piece, head);
             if (piece.HasScale)
                 return;
             AttachmentSlotDefinition slot = piece.Slot;
@@ -50,6 +51,7 @@ namespace Diciela.EditorTools
             HeadMeasures reference, HeadDefinition referenceHead, PackMeasures.Geometry geometry,
             AttachmentSlotDefinition[] hides)
         {
+            Reference(piece, referenceHead);
             if (piece.HasScale)
                 return;
             AttachmentSlotDefinition slot = piece.Slot;
@@ -80,9 +82,10 @@ namespace Diciela.EditorTools
         /// référence) ; hides : ce qu'elle cache (ou null).
         /// </summary>
         public static void FitByRule(AttachmentDefinition piece, SlotRule rule, bool human, PackMeasures.Geometry geometry,
-            HeadMeasures reference, HeadMeasures humanReference, Dictionary<string, Vector3> bones, Vector3 tailRoot,
-            AttachmentSlotDefinition[] hides)
+            HeadMeasures reference, HeadDefinition referenceHead, HeadMeasures humanReference,
+            Dictionary<string, Vector3> bones, Vector3 tailRoot, AttachmentSlotDefinition[] hides)
         {
+            Reference(piece, referenceHead);
             if (piece.HasScale)
                 return;
             AttachmentSlotDefinition slot = piece.Slot;
@@ -152,6 +155,12 @@ namespace Diciela.EditorTools
             return axis == ContactAxis.Down
                 ? new Vector3(offset.x, along, offset.z)
                 : new Vector3(offset.x, offset.y, along);
+        }
+
+        // La tête sur laquelle la pièce se règle : déduite du pack, réécrite à chaque passage.
+        private static void Reference(AttachmentDefinition piece, HeadDefinition head)
+        {
+            EditorAssets.Set(piece, fiche => EditorAssets.Property(fiche, "_reference").objectReferenceValue = head);
         }
 
         private static void Write(AttachmentDefinition piece, Vector3 offset, Vector3 scale, AttachmentSlotDefinition[] hides)

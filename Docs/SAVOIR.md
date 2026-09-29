@@ -307,7 +307,9 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   proche les triangles voisins qui ne sont pas de la teinte du crâne, la plus répandue). Un plan de coupe à la base
   mange le front : écarté. Les trous laissés se referment en éventail (`SkullCap`), chaque bord suivi arête par arête
   (un trou peut se toucher lui-même en un sommet), le centre à la hauteur de la moitié basse du bord ; les mesures de
-  la tête se prennent sur le crâne refermé, sans quoi un rayon file par le trou.
+  la tête se prennent sur le crâne refermé, sans quoi un rayon file par le trou. Dans la copie découpée, jamais dans le
+  pack, une teinte peut être repeinte (`PartRepaint`) : l'intérieur de l'oreille gauche du raton est peint du blanc de
+  sa face ; sur une autre tête, cette lèvre faisait un bandeau clair.
 - **Le crâne et le corps** restent des maillages à peau sur le squelette commun (`BodyCutter`), réécrits en place à
   chaque passage (même fichier, mêmes références) : copier champ par champ, jamais par copie sérialisée, qui garde
   l'ancien découpage des sommets (crânes en miettes). **Oreilles, touffes, museau** suivent à 100 % les os de la tête :
@@ -331,10 +333,33 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 - **Des repères stables d'une tête à l'autre** : le haut du crâne et les oreilles se tiennent à mi-profondeur de la tête,
   à hauteur des yeux (le milieu entre l'avant et l'arrière du crâne, sur la ligne du milieu). La place du point le plus
   haut d'un crâne plat varie de 17,5 cm d'une tête à l'autre (raton −9 cm, oiseau +9 cm) : une pièce réglée sur une tête
-  glissait d'autant sur une autre. Les oreilles se prennent depuis le haut de la ligne du milieu : les dômes des yeux de
-  la grenouille les relevaient de 7 cm. Changer un repère déplace toutes les pièces réglées dessus : on convertit leurs
+  glissait d'autant sur une autre. Les oreilles sont deux points, un de chaque côté : là où un rayon lancé à 50° depuis
+  le milieu de la tête (à mi-hauteur entre le haut de sa ligne du milieu et son bas) sort du crâne ; la fiche garde
+  celui de droite, la gauche en est le miroir (de 31 cm du milieu chez le cochon à 41 cm chez la grenouille). Changer un repère déplace toutes les pièces réglées dessus : on convertit leurs
   décalages pour qu'elles restent à leur place sur leur tête de référence (le chat A pour les pièces du pack ; la leur
   pour une pièce découpée ; l'oiseau pour la huppe).
+- **Une paire (des oreilles, deux boucles) est en deux moitiés** (`EarHalves`, `PiecePlacement`) : les triangles de
+  chaque côté du milieu, enfants « Droite » et « Gauche » d'un même prefab, le pivot au milieu ; une paire du pack est
+  copiée ainsi dans `Assets/Art/Personnages/Pieces`, le pack ne change pas. Un modèle du pack est dessiné autour de son
+  origine : une boucle seule déborde des deux côtés du milieu ; une paire se reconnaît à deux morceaux qu'aucun
+  triangle ne relie par-dessus le milieu. Chaque moitié s'écarte de l'écart entre les oreilles de la tête choisie et
+  celles de sa tête de référence (plus le x de son décalage et de ses réglages) ; une pièce d'un seul côté suit
+  l'oreille de son côté. Sur une autre tête que sa référence, une paire se pose par sa base (`Contact.TryRest`) : les
+  points de sa face à moins de 3 cm du dessus de sa tête de référence, là où elle y est posée, restent au contact ; le
+  plus bas touche, les autres s'enfoncent. Posée par son premier point de contact, une paire large flottait sur une
+  tête ronde (les oreilles du raton sur la souris).
+- **Le dessous d'une pièce découpée se referme** : des oreilles cousues au crâne (le raton) en sortent ouvertes par le
+  bas, et sur une tête plus étroite on voyait leur intérieur, en croissant clair. `SkullCap` le referme en éventail,
+  dans un sous-maillage à part, que le test de la découpe ne compte pas.
+- **Une pièce se tourne sur son pivot** (sa rotation, puis sa taille) ; sa face qui touche se remesure tournée : relancer
+  le menu des fiches. Le pack dessine couchés les nœuds, les anneaux et le bandana : aucun de ses personnages ne les
+  porte, sa scène de démonstration les aligne à 0°. Le casque est un morion : de profil, bord relevé devant et derrière,
+  la rosace sur le côté ; tourné d'un quart, il montrait son profil de face.
+- **Des réglages par porteur** (`WearerAdjustment`) : un décalage de plus sur des têtes (une pièce de la tête) ou des
+  corps (du cou à la queue). Les variantes A et B d'un animal ont les mêmes repères et les mêmes cartes : un réglage les
+  nomme toutes les deux. Un seul enfoncement ne va pas à tous les corps : celui qui plaque une cape contre le col évasé
+  du chat la fait entrer de 7 cm dans la tunique évasée du raton. L'enfoncement de la face d'une pièce dans un corps,
+  sous la taille, se calcule depuis les cartes, comme `Contact`, sans rien photographier.
 - **Une pièce tenue par un lien touche par ce lien** (les cordons d'une cape, l'anse d'une bourse, le nœud d'un
   bandana) : le contact l'arrête là, et le reste flotte à 10 ou 20 cm du corps. Son décalage sur l'axe de contact la
   plaque, le lien entrant dans le corps, où il ne se voit pas.
@@ -357,7 +382,11 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   (`Studio`, `PreviewRenderUtility`, qui rend avec l'URP) chaque pièce sur les huit animaux (têtes A), de trois quarts et
   de profil, en planches de 4 × 4 dans `Temp/Planches`, avec `Mesures.csv` (la boîte de chaque pièce rapportée au crâne
   ou au corps : `PieceMeasures`) ; le profil montre ce qui flotte ou s'enfonce, que le trois quarts cache ; une structure en C# se lit par copie : une boîte se construit dans une variable, pas dans une
-  propriété (`Bounds` restait réduit à un point). La planche en Play des têtes et des corps reste pour le cou.
+  propriété (`Bounds` restait réduit à un point). La planche en Play des têtes et des corps reste pour le cou. La
+  planche d'essais (`TrialSheet`) photographie des Chimères composées à la main dans `Temp/Planches/Essais.txt` (tête,
+  corps, pièces), de face, de trois quarts et de dos : pour choisir entre deux réglages, on en donne un à chaque variante
+  d'un animal, côte à côte. La planche des repères (`LandmarkSheet`) marque sur chaque tête le haut du crâne, les
+  oreilles, la face et le cou.
 
 ## 3. Pièges de Unity et de C#
 

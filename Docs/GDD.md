@@ -180,17 +180,24 @@
   nouvelle ; une pièce choisie par le joueur reste. Toutes les têtes sont ainsi sans oreilles, et chaque paire
   d'oreilles va sur chacune. Les autres museaux font la forme du visage : la ligne Museau y ajoute un nez.
 - **Règle.** Chaque pièce se pose sur la tête choisie, à son relief : un chapeau descend jusqu'à toucher le crâne, des
-  lunettes reculent contre la face, un sac avance contre le dos, une bourse recule contre le ventre. Un chapeau cache
-  les oreilles et les cheveux choisis, touffes et huppe comprises (ils restent choisis) ; la couronne, la fleur et les
-  nœuds non. Une cape remplace la petite cape que portent l'oiseau, le lapin, la souris et le cochon. Les pièces faites pour les
-  humains (cheveux, chapeaux 1 à 5, barbe, boucles d'oreilles, oreilles du pack, groin) sont agrandies pour une tête
-  d'animal, les cheveux et la barbe axe par axe pour épouser un crâne large et plat.
+  lunettes reculent contre la face, un sac avance contre le dos, une bourse recule contre le ventre. Des oreilles se
+  posent aux oreilles de la tête choisie, chacune de son côté, par leur base : aucune ne flotte ; une paire de boucles
+  d'oreilles fait de même, une boucle seule suit l'oreille de son côté. Les nœuds se tiennent debout (le grand à
+  l'arrière de la tête, ses rubans dans le dos), les anneaux pendent, le bandana tombe sur la poitrine. Une tête ou un
+  corps qui ne ressemble pas aux autres a ses réglages, pièce par pièce : sur la grenouille, les oreilles du pack et la
+  couronne se posent derrière les dômes des yeux, la couronne entre eux ; sur l'oiseau, un museau monte sur le bec ; une cape recule sur la
+  tunique évasée du raton, du renard et de la grenouille. Un chapeau cache les oreilles et les cheveux choisis, touffes
+  et huppe comprises (ils restent choisis) ; la couronne, la fleur et les nœuds non. Une cape remplace la petite cape
+  que portent l'oiseau, le lapin, la souris et le cochon. Les pièces faites pour les humains (cheveux, chapeaux 1 à 5,
+  barbe, boucles d'oreilles, oreilles du pack, groin) sont agrandies pour une tête d'animal, les cheveux et la barbe
+  axe par axe pour épouser un crâne large et plat.
 - **Règle.** Le temps attend « C'est parti » : la journée commence quand elle arrive.
 - **Règle.** Elle n'a pas de nom : c'est la Chimère.
 - **À toi.** Les noms des têtes, des corps, des couleurs et des pièces : un premier jet neutre (« Chat A »,
   « Couleur 4 », « Chapeau 6 », « Oreilles de chat »), à réécrire dans la table des textes. Toutes les pièces du pack
-  sont proposées ; certaines vont mal sur une tête d'animal (les cheveux humains, la boucle d'oreille 1, le bandana,
-  sans doute fait pour la tête) : à garder, à régler ou à retirer (décisions 110 et 111).
+  sont proposées ; certaines restent étranges sur une tête d'animal (les cheveux humains, dont des mèches de nuque
+  sortent de l'arrière du crâne ; un groin ou un museau sur le bec de l'oiseau, dont le bout dépasse ; des boucles
+  d'oreilles sur la grenouille, qui n'a pas d'oreilles) : à garder, à régler ou à retirer (décisions 110, 111 et 121).
 - **Règle.** Le joueur la place à un poste, comme un habitant, et elle y va ; on ne la dirige jamais directement, et
   elle ne prend jamais de poste d'elle-même. Sans poste, elle flâne (voir 7).
 - **Règle.** Elle travaille dans tous les domaines. Elle progresse lentement, mais plus haut que les habitants

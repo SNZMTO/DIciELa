@@ -59,6 +59,9 @@ namespace Diciela.EditorTools
             mesh.subMeshCount = parts.Length;
             for (int sub = 0; sub < parts.Length; sub++)
                 mesh.SetTriangles(parts[sub], sub);
+            // Une pièce détachée d'un crâne où elle était cousue (les oreilles du raton) a le dessous ouvert : on le
+            // referme, comme les autres pièces, fermées d'elles-mêmes ; le couvercle, dans un sous-maillage à lui.
+            SkullCap.Close(mesh, true);
             mesh.RecalculateBounds();
             part = new Part(mesh, pivot);
             return true;
@@ -77,11 +80,23 @@ namespace Diciela.EditorTools
                    (left.max - right.max).sqrMagnitude <= SameMeters * SameMeters;
         }
 
-        /// <summary>Enregistre la pièce sous ce nom (Chat_Oreilles), de ce matériau ; rend son prefab.</summary>
-        public static GameObject Save(Part part, string name, Material material)
+        /// <summary>
+        /// Enregistre la pièce sous ce nom (Oreilles_Chat), de ce matériau, en deux moitiés si elle va par paire (EarHalves) ;
+        /// rend son prefab.
+        /// </summary>
+        public static GameObject Save(Part part, string name, Material material, bool pair)
         {
             EditorAssets.EnsureFolder(Folder);
             part.Mesh.name = name;
+            if (pair)
+            {
+                var same = new Material[part.Mesh.subMeshCount];
+                for (int i = 0; i < same.Length; i++)
+                    same[i] = material;
+                GameObject halves = EarHalves.Save(part.Mesh, same, name, Quaternion.identity);
+                Object.DestroyImmediate(part.Mesh);
+                return halves;
+            }
             Mesh mesh = BodyCutter.Save(part.Mesh, Folder + "/" + name + ".asset");
             var model = new GameObject(name);
             try

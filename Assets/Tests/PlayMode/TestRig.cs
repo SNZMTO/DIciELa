@@ -77,6 +77,31 @@ namespace Diciela.Tests.PlayMode
             return palette;
         }
 
+        /// <summary>Une pièce de ce nom sur son propre emplacement de l'os head, dans la couleur d'origine du banc.</summary>
+        public AttachmentDefinition Piece(string name, AttachmentFrame frame, ContactAxis contact, Vector3 offset,
+            float scale, Material glass)
+        {
+            GameObject model = Keep(GameObject.CreatePrimitive(PrimitiveType.Cube));
+            model.name = name;
+            model.GetComponent<MeshRenderer>().sharedMaterials = glass != null
+                ? new[] { OriginMaterial, glass }
+                : new[] { OriginMaterial };
+            var slot = Keep(ScriptableObject.CreateInstance<AttachmentSlotDefinition>());
+            var piece = Keep(ScriptableObject.CreateInstance<AttachmentDefinition>());
+#if UNITY_EDITOR
+            TestWorld.Fill(slot, "_bone", "head");
+            TestWorld.Fill(slot, "_frame", frame);
+            TestWorld.Fill(slot, "_contact", contact);
+            TestWorld.Fill(piece, "_id", name);
+            TestWorld.Fill(piece, "_slot", slot);
+            TestWorld.Fill(piece, "_model", model);
+            TestWorld.Fill(piece, "_palette", Origin);
+            TestWorld.Fill(piece, "_offset", offset);
+            TestWorld.Fill(piece, "_scale", Vector3.one * scale);
+#endif
+            return piece;
+        }
+
         public T Keep<T>(T created) where T : Object
         {
             _created.Add(created);
