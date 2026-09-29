@@ -6,48 +6,40 @@ namespace Diciela.EditorTools
 {
     /// <summary>
     /// Les mesures des personnages et des pièces du pack, dans leur pose d'origine, chargés à part sans toucher la scène
-    /// ouverte : la place des os ; la tête du corps allumé (le haut du crâne et l'avant de la face, pris sur la ligne du
-    /// milieu, hors oreilles) ; la boîte d'une pièce autour de son pivot. Le monteur des pièces s'en sert pour leur
-    /// point d'accroche de départ (SAVOIR, 2.11).
+    /// ouverte : la place des os d'un personnage ; les triangles d'une pièce, ses maillages allumés dans ses propres axes
+    /// (ceux à peau pris dans leur pose), et leur boîte autour de son pivot. Les monteurs s'en servent pour mesurer la
+    /// face d'une pièce qui touche et son réglage de départ (SAVOIR, 2.11).
     /// </summary>
     internal static class PackMeasures
     {
-        // La ligne du milieu de la tête : à moins de 8 cm du plan de symétrie, les oreilles n'y sont pas.
-        private const float MiddleMeters = 0.08f;
-
-        /// <summary>La tête d'un personnage : le haut du crâne, l'avant de la face à hauteur des yeux, le milieu.</summary>
-        public readonly struct Head
+        /// <summary>Les triangles d'une pièce : leurs sommets, dans les axes de la pièce, et leurs indices.</summary>
+        public readonly struct Geometry
         {
-            public Head(float top, float front, float middle)
+            public Geometry(Vector3[] positions, List<int> triangles)
             {
-                Top = top;
-                Front = front;
-                Middle = middle;
+                Positions = positions;
+                Triangles = triangles;
+                // La boîte se construit dans une variable : une propriété de structure se lit par copie.
+                var box = new Bounds(positions.Length > 0 ? positions[0] : Vector3.zero, Vector3.zero);
+                foreach (Vector3 position in positions)
+                    box.Encapsulate(position);
+                Box = box;
             }
 
-            public float Top { get; }
-            public float Front { get; }
-            public float Middle { get; }
+            public Vector3[] Positions { get; }
+            public List<int> Triangles { get; }
+            public Bounds Box { get; }
         }
 
-        /// <summary>La place de chaque os de ce personnage, et sa tête : celle de son corps allumé.</summary>
-        public static Dictionary<string, Vector3> Measure(GameObject character, out Head head)
+        /// <summary>La place de chaque os de ce personnage.</summary>
+        public static Dictionary<string, Vector3> Bones(GameObject character)
         {
             var bones = new Dictionary<string, Vector3>();
-            head = default;
             GameObject root = PrefabUtility.LoadPrefabContents(AssetDatabase.GetAssetPath(character));
             try
             {
                 foreach (Transform bone in root.GetComponentsInChildren<Transform>(true))
                     bones[bone.name] = bone.position;
-                float eyes = bones["eyes"].y;
-                float neck = bones["head"].y;
-                foreach (Transform child in root.transform)
-                {
-                    var body = child.GetComponent<SkinnedMeshRenderer>();
-                    if (body != null && child.gameObject.activeSelf)
-                        head = HeadOf(body, neck, eyes);
-                }
             }
             finally
             {
@@ -56,56 +48,52 @@ namespace Diciela.EditorTools
             return bones;
         }
 
-        /// <summary>La boîte des maillages d'une pièce, autour de son pivot.</summary>
-        public static Bounds BoxOf(GameObject piece)
+        /// <summary>Les triangles des maillages allumés d'une pièce, dans ses axes.</summary>
+        public static Geometry GeometryOf(GameObject piece)
         {
+            var positions = new List<Vector3>();
+            var triangles = new List<int>();
             GameObject root = PrefabUtility.LoadPrefabContents(AssetDatabase.GetAssetPath(piece));
             try
             {
-                var box = new Bounds();
-                bool started = false;
-                foreach (MeshFilter filter in root.GetComponentsInChildren<MeshFilter>(true))
+                Matrix4x4 toPiece = root.transform.worldToLocalMatrix;
+                foreach (Renderer renderer in root.GetComponentsInChildren<Renderer>(false))
                 {
-                    if (filter.sharedMesh == null)
+                    Mesh mesh = MeshOf(renderer, out bool baked);
+                    if (mesh == null)
                         continue;
-                    Bounds local = filter.sharedMesh.bounds;
-                    for (int corner = 0; corner < 8; corner++)
-                    {
-                        var sign = new Vector3((corner & 1) == 0 ? -1f : 1f, (corner & 2) == 0 ? -1f : 1f,
-                            (corner & 4) == 0 ? -1f : 1f);
-                        Vector3 point = filter.transform.TransformPoint(local.center + Vector3.Scale(local.extents, sign));
-                        if (started)
-                            box.Encapsulate(point);
-                        else
-                            box = new Bounds(point, Vector3.zero);
-                        started = true;
-                    }
+                    // Un maillage à peau cuit dans sa pose, sans l'échelle de son rendu, a ses sommets dans les axes du rendu.
+                    Matrix4x4 toRoot = toPiece * renderer.transform.localToWorldMatrix;
+                    int first = positions.Count;
+                    foreach (Vector3 vertex in mesh.vertices)
+                        positions.Add(toRoot.MultiplyPoint3x4(vertex));
+                    foreach (int index in mesh.triangles)
+                        triangles.Add(first + index);
+                    if (baked)
+                        Object.DestroyImmediate(mesh);
                 }
-                return box;
             }
             finally
             {
                 PrefabUtility.UnloadPrefabContents(root);
             }
+            return new Geometry(positions.ToArray(), triangles);
         }
 
-        private static Head HeadOf(SkinnedMeshRenderer body, float neck, float eyes)
+        private static Mesh MeshOf(Renderer renderer, out bool baked)
         {
-            var baked = new Mesh();
-            body.BakeMesh(baked, true);
-            float top = float.MinValue, front = float.MinValue, back = float.MaxValue;
-            foreach (Vector3 vertex in baked.vertices)
+            baked = false;
+            if (renderer is SkinnedMeshRenderer skin)
             {
-                Vector3 point = body.transform.TransformPoint(vertex);
-                if (Mathf.Abs(point.x) > MiddleMeters || point.y < neck)
-                    continue;
-                top = Mathf.Max(top, point.y);
-                back = Mathf.Min(back, point.z);
-                if (Mathf.Abs(point.y - eyes) < 0.15f)
-                    front = Mathf.Max(front, point.z);
+                if (skin.sharedMesh == null)
+                    return null;
+                var mesh = new Mesh();
+                skin.BakeMesh(mesh, false);
+                baked = true;
+                return mesh;
             }
-            Object.DestroyImmediate(baked);
-            return new Head(top, front, (front + back) * 0.5f);
+            MeshFilter filter = renderer.GetComponent<MeshFilter>();
+            return filter != null ? filter.sharedMesh : null;
         }
     }
 }

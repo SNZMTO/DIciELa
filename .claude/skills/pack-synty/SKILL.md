@@ -53,7 +53,10 @@ jamais un bâtiment ni un décor de sa propre initiative ; les choix d'art sont 
   laveur, gobelin), museau (`Snout_01`), cheveux, barbes, chapeaux (`Hat_01` à `08`), capes, sacs, lunettes, monocle,
   couronne, boucles d'oreilles, fleur, écharpe… **Elles ne sont pas modelées à leur place sur le personnage** : debout,
   dans ses axes, leur pivot à leur point d'accroche ; on les pose sur ce point, puis on les confie à un os (SAVOIR 2.11).
-  Les chapeaux 1 à 5, les cheveux et la barbe sont à la taille des humains ; le reste, à celle des animaux.
+  Sont faits pour une tête humaine (environ trois fois plus petite) : les chapeaux 1 à 5, les cheveux 1 à 13, la
+  barbe, les boucles d'oreilles, les oreilles de cochon, de raton et de gobelin, le groin (`Snout_01`) ; le reste est à
+  la taille des animaux. Les modèles low poly sont fermés : un chapeau a un fond que la tête traverse. Les pièces du pack
+  ne sont pas lisibles en jeu (`isReadable: 0`) : toute mesure se fait dans l'éditeur.
 - Tous les personnages sont **riggés** (SkinnedMeshRenderer) mais **le pack n'a aucune animation** : un pack
   d'animations compatible est à acheter par le développeur. Posés tels quels, ils restent bras écartés (leur Animator
   n'a pas de contrôleur).
@@ -64,8 +67,11 @@ jamais un bâtiment ni un décor de sa propre initiative ; les choix d'art sont 
 - **Deux squelettes** : les animaux ont `head` à 1,21 m et mesurent 2,1 à 2,5 m, oreilles comprises (des têtes
   énormes) ; les humains ont `Head` à 1,57 m. L'oiseau, le lapin, la souris et le cochon portent d'office une petite
   cape, sous `CapesMini_01`, sur son propre squelette (`CapeRigMini_*`).
-- **La tête de chaque animal est un îlot** de son modèle : aucun triangle ne la relie au corps, qui est d'un seul tenant
-  (bras, jambes, habits). Elle se sépare selon ses os (`head`, `eyes`, `eyebrows`) et va sur le corps de n'importe quel
+- **La tête de chaque animal se sépare de son corps**, sans triangle commun ; elle-même est faite de morceaux fermés :
+  crâne, yeux, sourcils, et, selon l'animal, des oreilles (chat, cochon, lapin, renard, souris ; soudées au crâne chez le
+  raton laveur), des touffes (cochon, raton laveur, renard, souris), le museau (renard seul) : ceux-là se détachent sans
+  trou (SAVOIR 2.11). Le corps est d'un seul tenant
+  (bras, jambes, habits). La tête se sépare selon ses os (`head`, `eyes`, `eyebrows`) et va sur le corps de n'importe quel
   autre animal (SAVOIR 2.11). Le chat, le renard et l'oiseau portent d'office une pièce (deux queues, une huppe), copies
   des modèles de `Chr_Attach`.
 

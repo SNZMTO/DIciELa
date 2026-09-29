@@ -12,11 +12,10 @@ using Object = UnityEngine.Object;
 namespace Diciela.EditorTools
 {
     /// <summary>
-    /// Les planches de la Chimère (Docs/ALBUM.md), en Play, en grille autour de la Chimère (cachée le temps de la planche) :
-    /// chaque pièce du catalogue une fois, dans sa couleur d'origine, portée par un animal ; ou les animaux, chacun dans
-    /// sa tête puis sous la tête du suivant, de face et de dos. On y juge où tombe chaque pièce et chaque tête, la caméra
-    /// libre pour s'approcher et tourner autour ; on règle un point d'accroche dans sa fiche, puis on relance la planche.
-    /// Ce ne sont que des vues : la simulation n'en sait rien. La pose et le toucher restent coupés jusqu'à la fin du Play.
+    /// La planche des têtes et des corps (Docs/ALBUM.md), en Play, en grille autour de la Chimère (cachée le temps de la
+    /// planche) : les animaux, chacun sous sa tête puis sous celle du suivant, de face et de dos, la caméra libre pour
+    /// s'approcher et tourner autour. Les pièces, elles, se jugent sur leurs planches en fichiers (PieceSheets). Ce ne
+    /// sont que des vues : la simulation n'en sait rien. La pose et le toucher restent coupés jusqu'à la fin du Play.
     /// </summary>
     public static class ChimeraBoard
     {
@@ -29,24 +28,6 @@ namespace Diciela.EditorTools
         private const float BackDegrees = -25f;
         // La distance de la vue, en largeurs de la planche : de quoi la voir entière.
         private const float FramingWidths = 1.1f;
-
-        [MenuItem("DICIELA/Album/Planche de la Chimère, chaque pièce sur un corps")]
-        public static void Stage()
-        {
-            if (!TryPrepare(out Board board))
-                return;
-            int count = board.Catalog.Attachments.Count;
-            int rows = (count + Columns - 1) / Columns;
-            for (int i = 0; i < count; i++)
-            {
-                AttachmentDefinition piece = board.Catalog.Attachments[i];
-                HeadDefinition head = board.Catalog.Heads[i % board.Catalog.Heads.Count];
-                BodyDefinition body = board.Catalog.Bodies[i % board.Catalog.Bodies.Count];
-                board.Place(new Appearance(head, head.Palette, body, body.Palette,
-                    new[] { new WornAttachment(piece, piece.Palette) }), piece.Id + " sur " + body.Id, i, rows, FacingDegrees);
-            }
-            Debug.Log("DICIELA : planche de la Chimère prête, " + count + " pièces.");
-        }
 
         [MenuItem("DICIELA/Album/Planche des têtes et des corps, de face et de dos")]
         public static void StageAnimals()

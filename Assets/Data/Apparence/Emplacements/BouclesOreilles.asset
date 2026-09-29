@@ -15,3 +15,5 @@ MonoBehaviour:
   _id: bouclesoreilles
   _nameKey: emplacement.bouclesoreilles
   _bone: head
+  _frame: 3
+  _contact: 0

@@ -98,11 +98,12 @@ namespace Diciela.Tests.EditMode
         }
 
         [Test]
-        public void TheStartingAppearanceIsTheFirstHeadAndBodyInTheirColorsWearingWhatTheBodyWearsInThePack()
+        public void TheStartingAppearanceIsTheFirstHeadAndBodyInTheirColorsWearingWhatEachWearsInThePack()
         {
             PaletteDefinition red = _test.Keep(TestData.Palette("roux"));
             AttachmentDefinition tail = _test.Keep(TestData.Attachment("queue", _test.Keep(TestData.Slot("queue"))));
-            HeadDefinition cat = _test.Keep(TestData.Head("chat", red));
+            AttachmentDefinition ears = _test.Keep(TestData.Attachment("oreilles", _test.Keep(TestData.Slot("oreilles"))));
+            HeadDefinition cat = _test.Keep(TestData.Head("chat", red, ears));
             BodyDefinition dress = _test.Keep(TestData.Body("chat", _grey, tail));
 
             Appearance starting = Appearance.StartingIn(_test.Keep(TestData.Catalog(new[] { cat, _head },
@@ -112,9 +113,11 @@ namespace Diciela.Tests.EditMode
             Assert.AreSame(red, starting.HeadPalette);
             Assert.AreSame(dress, starting.Body);
             Assert.AreSame(_grey, starting.BodyPalette);
-            Assert.AreEqual(1, starting.Attachments.Count);
-            Assert.AreSame(tail, starting.Attachments[0].Attachment);
-            Assert.AreSame(_grey, starting.Attachments[0].Palette, "La queue du chat est de la couleur de son corps.");
+            Assert.AreEqual(2, starting.Attachments.Count);
+            Assert.AreSame(ears, starting.Attachments[0].Attachment);
+            Assert.AreSame(red, starting.Attachments[0].Palette, "Les oreilles du chat sont de la couleur de sa tête.");
+            Assert.AreSame(tail, starting.Attachments[1].Attachment);
+            Assert.AreSame(_grey, starting.Attachments[1].Palette, "La queue du chat est de la couleur de son corps.");
             Assert.Throws<ArgumentException>(() => Appearance.StartingIn(_test.Keep(TestData.Catalog(
                 Array.Empty<HeadDefinition>(), new[] { _body }))));
         }

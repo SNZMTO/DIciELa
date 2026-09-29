@@ -15,6 +15,24 @@
 
 ## Les captures
 
+### 29/09/2026 — étape 13b : têtes en morceaux, pièces à leur place, menu de bois
+
+L'écran de création prend un panneau de bois à facettes, ses fentes sombres et ses boutons dorés, générés en low poly.
+Les têtes se découpent : le crâne d'un côté, ses oreilles, ses touffes et le museau du renard de l'autre, qui deviennent
+des pièces ; la Chimère de départ porte les oreilles du chat, sur leur propre ligne. Les pièces se posent sur la tête
+choisie, à son relief, et celles des humains sont agrandies pour une tête d'animal. Les planches des pièces
+(`DICIELA/Album/Planches des pièces, sur chaque tête`) montrent chaque pièce sur les seize têtes : ici, chaque tête avec
+ses pièces d'office ; le chapeau à fleurs, posé sur chacune, qui cache ses oreilles (le raton laveur garde les siennes,
+soudées) ; les oreilles du lapin B sur les seize.
+
+![L'écran de création, le menu de bois, le chat et ses oreilles](Album/2026-09-29_etape-13b_ecran-de-creation.jpg)
+
+![Chaque tête avec ses pièces d'office](Album/2026-09-29_etape-13b_tetes-et-leurs-pieces.jpg)
+
+![Le chapeau à fleurs sur les seize têtes](Album/2026-09-29_etape-13b_chapeau-sur-les-seize-tetes.jpg)
+
+![Les oreilles du lapin B sur les seize têtes](Album/2026-09-29_etape-13b_oreilles-de-lapin-sur-les-seize-tetes.jpg)
+
 ### 29/09/2026 — étape 13 : têtes, corps et couleurs
 
 L'écran de création choisit maintenant une tête et un corps à part, chacun de sa couleur, puis la queue et chaque

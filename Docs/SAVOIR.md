@@ -287,43 +287,53 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 
 ### 2.11 Habiller un personnage du pack
 
-- **La tête est un îlot** : dans chaque modèle d'animal, aucun triangle ne relie la tête au corps (mesuré : zéro
-  triangle à cheval). On la sépare donc sans rien couper, selon les os qui la mènent (head, eyes, eyebrows : un
-  triangle y va si ses sommets les suivent pour moitié au moins), en deux maillages qui gardent poids et poses d'origine
-  des os (`BodyCutter`, dans `Assets/Art/Personnages`). Les seize animaux ont exactement le même squelette (mêmes
-  os, même ordre) : n'importe quelle tête va sur n'importe quel corps, sans jour au cou.
-- **Un seul corps allumé par prefab** : chaque prefab d'animal porte seize corps, dont quinze cachés qui pointent vers un
-  matériau absent du projet (roses si on les allume). On prend le prefab du corps voulu comme squelette.
-- **Habiller** (`Dresser`) : on retire ce que porte le prefab **par structure, jamais par nom** : les maillages à peau
-  enfants directs (ses corps), les maillages sans peau (ses pièces d'office, la queue du chat), les maillages à peau
-  cachés (ses capes cachées). On garde avant les os, l'os racine et la boîte (`localBounds`) du corps allumé : un
-  maillage à peau neuf sans cette boîte est jugé hors de vue et ne se montre pas, sans erreur. La tête et le corps
-  choisis y sont posés, chacun de sa couleur.
-- **Les couleurs** : deux familles de matériaux lisent les mêmes douze textures du pack, celle des personnages
-  (`Materials/Alts/Animal_Alts` : têtes, corps, queues) et celle des objets (`Materials/Alts` : chapeaux, capes,
-  lunettes…), au shader près. Une couleur du jeu tient les deux ; recolorer remplace chaque matériau par son pendant,
-  là seulement où il est (une lentille de verre reste en verre), dans `sharedMaterials`, jamais `.material`, qui
-  copierait le matériau par personnage et empêcherait le rendu de les regrouper.
-- **Les pièces** (`Chr_Attach`) ne sont pas modelées à leur place sur le personnage : chacune est debout, dans les axes
-  du personnage, son pivot à son point d'accroche. Le pack les pose lui-même par un os et un décalage réglé à la main,
-  dont la rotation revient à l'identité (la queue du chat sous `pelvis`, les cheveux de l'oiseau sous `head`). On pose
-  donc le pivot sur un point du personnage, en mètres depuis ses pieds, la pièce droite, puis on la confie à l'os de son
-  emplacement en gardant sa place : elle le suivra une fois animée. Les copies que le pack pose sur ses animaux ne sont
-  pas les prefabs de `Chr_Attach` : on les reconnaît à leur maillage.
-- **Deux squelettes** : les humains ont `Head` (1,57 m), les animaux `head` (1,21 m, à la base d'une tête énorme). Les
-  animaux mesurent 2,1 à 2,5 m oreilles comprises ; le haut du crâne va de 1,77 m (grenouille) à 2,08 m (cochon),
-  1,88 m pour le chat ; la face avance jusqu'à 0,45 m devant. Les chapeaux 1 à 5, les cheveux, la barbe et les boucles
-  d'oreilles sont à la taille des humains ; les chapeaux 6 à 8, le casque, la couronne, les lunettes, les oreilles et les
-  nœuds, à celle des animaux.
-- **Un premier point mesuré** (`PackMeasures`) : une pièce de tête pose sa base un peu sous le haut du crâne (de 30 %
-  de sa hauteur au plus, pour qu'une couronne reste dehors) ; une pièce de la face pose son dos contre l'avant de la
-  face ; une pièce faite pour une tête humaine va là où le pack pose les cheveux de l'oiseau ; les autres vont sur un
-  os, ou au point que le pack donne. Le reste se règle à l'œil, pièce par pièce.
-- **Les petites capes** de l'oiseau, du lapin, de la souris et du cochon, sous `CapesMini_01`, ont leur propre
-  squelette (`CapeRigMini_*`), pas celui du personnage : elles ne suivront pas l'animation du dos.
-- **Vérifier à l'œil** : les planches de la Chimère (`DICIELA/Album/…`), l'une avec chaque pièce sur un animal, l'autre
-  avec chaque animal sous sa tête et sous celle du suivant, de face et de dos ; l'écran de création montre une partie de
-  près, la caméra libre de tourner autour.
+- **La tête se découpe en morceaux** (`HeadShells`, `MeshShells`) : dans chaque modèle d'animal, les triangles de la
+  tête (ceux dont les sommets suivent pour moitié au moins head, eyes et eyebrows) forment des morceaux d'un seul tenant,
+  une fois les sommets soudés par leur position (le pack double un sommet à chaque couture et à chaque arête vive : la
+  connexité par indice ne sert à rien). Chaque morceau est fermé : on le détache sans trou. Le plus grand est le crâne ;
+  une paire de grands morceaux hors du milieu, dont le centre est au-dessus des yeux (leur bas descend plus bas qu'eux),
+  les oreilles ; de petits morceaux sur le haut, au milieu, les touffes ; un morceau au milieu, devant, sous les yeux,
+  le museau (le renard seul). Yeux, sourcils et moustaches restent au crâne. Une tête qui sort de ces nombres (0 ou 2
+  oreilles, 3 touffes au plus, 1 museau) arrête le menu. Les oreilles du raton laveur sont cousues à son crâne.
+- **Le crâne et le corps** restent des maillages à peau sur le squelette commun (`BodyCutter`), réécrits en place à
+  chaque passage (même fichier, mêmes références) : copier champ par champ, jamais par copie sérialisée, qui garde
+  l'ancien découpage des sommets (crânes en miettes). **Oreilles, touffes, museau** suivent à 100 % les os de la tête :
+  ils deviennent des pièces rigides, maillage et prefab (`HeadPartCutter`, `Assets/Art/Personnages/Pieces`), leur pivot
+  à leur base ; A et B ne rangent ni ne cousent leurs sommets pareil : une pièce est la même si elle a autant de
+  triangles, la même boîte et le même pivot à 5 mm près.
+- **Les seize animaux ont exactement le même squelette** : n'importe quelle tête va sur n'importe quel corps, sans jour
+  au cou. **Un seul corps allumé par prefab** : les quinze cachés pointent vers un matériau absent du projet.
+- **Habiller** (`Dresser`) : on retire ce que porte le prefab **par structure, jamais par nom** (ses corps, ses pièces
+  d'office, ses capes cachées), en gardant les os, l'os racine et la boîte du corps allumé (sans elle, un maillage à
+  peau neuf est jugé hors de vue). Le crâne et le corps choisis y sont posés, chacun de sa couleur (`PaletteSwap` :
+  chaque matériau par son pendant, personnage ou objet, dans `sharedMaterials`, jamais `.material`).
+- **Les pièces se posent sur la tête choisie, à son relief** : chaque tête a ses points (`HeadMeasures`, pris par des
+  rayons sur les triangles, jamais sur les sommets, trop clairsemés en low poly ; les rayons du milieu passent à 5 mm de
+  la couture, où ils fileraient entre deux triangles) et ses surfaces, cartes de 5 cm (`SurfaceMap`, `SurfaceBaker`) :
+  le dessus du crâne, l'avant de la face ; chaque corps, son dos et son ventre. Chaque pièce a la carte de sa face qui
+  touche. Une pièce se pose au point du repère de son emplacement plus son décalage, et, sur l'axe de contact, là où sa
+  face touche la surface (`Contact`, au jeu, en quelques centaines d'opérations : les modèles du pack ne sont pas
+  lisibles en jeu). Ce qui se mesure depuis les pieds ou au cou touche le corps ; le reste, la tête. Un chapeau cache
+  les oreilles choisies. Sur le raton laveur, le contact ne se prend que sur la bande du milieu du crâne : sinon ses
+  oreilles soudées portent le chapeau.
+- **Les chapeaux low poly ont un fond fermé** que la tête traverse : le contact seul les poserait comme un couvercle.
+  Une pièce humaine reprend l'enfoncement de son dessin sur son porteur ; un chapeau animal au fond fermé descend de
+  35 % de sa hauteur sous le contact (les chapeaux humains : de 20 à 80 %) ; un anneau ouvert (la couronne) reste posé.
+- **Le pack pose lui-même ses pièces** : les humains, cheveux, chapeaux et barbe à l'origine de leur os Head, droits ;
+  l'oiseau, sa huppe sous head ; le chat et le renard, leur queue sous pelvis. Ce sont des copies, reconnues à leur
+  maillage (`PackPoses`). Le réglage de départ d'une pièce (`AttachmentFitter`, écrit une fois, quand sa taille est
+  nulle) reprend cette pose ; une pièce humaine se ramène de la tête de son porteur à celle du chat, agrandie du rapport
+  des crânes à hauteur des sourcils (≈ 3 ; l'os eyebrows des animaux est au niveau des yeux : on mesure les sommets des
+  sourcils) ; les cheveux et la barbe, qui enveloppent le crâne, axe par axe (un crâne humain est haut et étroit, un
+  crâne d'animal large et plat), la frange aux sourcils ; sinon la règle de l'emplacement (`SlotRule`).
+- **Deux squelettes** : les humains ont `Head` (1,57 m ; 1,66 m pour la serveuse et le boucher), les animaux `head`
+  (1,21 m, à la base d'une tête énorme) ; le haut du crâne des animaux va de 1,87 à 1,93 m, 1,98 m sur les oreilles du
+  raton. **Les petites capes** de l'oiseau, du lapin, de la souris et du cochon ont leur propre squelette : elles ne
+  suivront pas l'animation du dos.
+- **Vérifier de près** : `DICIELA/Album/Planches des pièces, sur chaque tête (fichiers)` photographie hors scène
+  (`Studio`, `PreviewRenderUtility`, qui rend avec l'URP) chaque pièce sur les seize têtes, en planches de 4 × 4 dans
+  `Temp/Planches` ; une structure en C# se lit par copie : une boîte se construit dans une variable, pas dans une
+  propriété (`Bounds` restait réduit à un point). La planche en Play des têtes et des corps reste pour le cou.
 
 ## 3. Pièges de Unity et de C#
 

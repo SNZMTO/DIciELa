@@ -15,3 +15,5 @@ MonoBehaviour:
   _id: cheveux
   _nameKey: emplacement.cheveux
   _bone: head
+  _frame: 1
+  _contact: 1
