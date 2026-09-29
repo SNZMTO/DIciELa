@@ -29,6 +29,7 @@ MonoBehaviour:
     _offset: {x: -0.07, y: -0.11, z: 0}
     _model: {fileID: 0}
     _scale: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0}
   - _heads:
     - {fileID: 11400000, guid: 6f46a54e351c25344b024f6fab849356, type: 2}
     - {fileID: 11400000, guid: 0494ee1a8a5299b4b96346ae24d1d3d5, type: 2}
@@ -44,6 +45,7 @@ MonoBehaviour:
     _offset: {x: -0.07, y: -0.16, z: 0}
     _model: {fileID: 0}
     _scale: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0}
   _reference: {fileID: 11400000, guid: f116abfa388267c45b7eeaf7b356af52, type: 2}
   _shape:
     _origin: {x: -0.55776143, y: -0.14986823}
