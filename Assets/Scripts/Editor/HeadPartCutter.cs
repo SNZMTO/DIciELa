@@ -5,10 +5,10 @@ using UnityEngine;
 namespace Diciela.EditorTools
 {
     /// <summary>
-    /// Détache d'une tête du pack ses oreilles, ses touffes ou son museau (HeadShells) en une pièce rigide, comme celles
+    /// Détache d'une tête du pack ses oreilles ou ses touffes (HeadShells) en une pièce rigide, comme celles
     /// de Chr_Attach : ces morceaux ne suivent que les os de la tête, un maillage sans peau accroché à l'os head les porte
     /// aussi bien. Le maillage est debout, dans les axes du personnage, son pivot à sa base (le bas des oreilles et des
-    /// touffes, l'arrière du museau) ; il garde ses normales et ses coordonnées de texture. Enregistré avec son prefab dans
+    /// touffes) ; il garde ses normales et ses coordonnées de texture. Enregistré avec son prefab dans
     /// Assets/Art/Personnages/Pieces, refait en place à chaque passage.
     /// </summary>
     internal static class HeadPartCutter
@@ -43,9 +43,7 @@ namespace Diciela.EditorTools
             var box = new Bounds(positions[0], Vector3.zero);
             foreach (Vector3 position in positions)
                 box.Encapsulate(position);
-            Vector3 pivot = kind == HeadShells.Kind.Snout
-                ? new Vector3(0f, box.center.y, box.min.z)
-                : new Vector3(0f, box.min.y, box.center.z);
+            var pivot = new Vector3(0f, box.min.y, box.center.z);
             for (int i = 0; i < positions.Count; i++)
                 positions[i] -= pivot;
 

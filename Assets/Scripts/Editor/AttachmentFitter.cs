@@ -77,21 +77,19 @@ namespace Diciela.EditorTools
         }
 
         /// <summary>
-        /// Une pièce que le pack ne pose nulle part, posée par la règle de son emplacement sur la tête de référence ;
-        /// agrandie du rapport des crânes si elle est dessinée pour une tête humaine (humanReference : la tête humaine de
-        /// référence) ; hides : ce qu'elle cache (ou null).
+        /// Une pièce que le pack ne pose nulle part, dessinée pour un animal, posée par la règle de son emplacement sur la
+        /// tête de référence ; hides : ce qu'elle cache (ou null).
         /// </summary>
-        public static void FitByRule(AttachmentDefinition piece, SlotRule rule, bool human, PackMeasures.Geometry geometry,
-            HeadMeasures reference, HeadDefinition referenceHead, HeadMeasures humanReference,
-            Dictionary<string, Vector3> bones, Vector3 tailRoot, AttachmentSlotDefinition[] hides)
+        public static void FitByRule(AttachmentDefinition piece, SlotRule rule, PackMeasures.Geometry geometry,
+            HeadMeasures reference, HeadDefinition referenceHead, Dictionary<string, Vector3> bones, Vector3 tailRoot,
+            AttachmentSlotDefinition[] hides)
         {
             Reference(piece, referenceHead);
             if (piece.HasScale)
                 return;
             AttachmentSlotDefinition slot = piece.Slot;
-            float scale = human ? reference.BrowWidth / humanReference.BrowWidth : 1f;
             Bounds box = geometry.Box;
-            Vector3 center = box.center * scale;
+            Vector3 center = box.center;
             Vector3 offset;
             switch (rule.Where)
             {
@@ -111,19 +109,19 @@ namespace Diciela.EditorTools
                     offset = new Vector3(0f, reference.Nose.y - reference.Face.y, 0f);
                     break;
                 case SlotRule.Place.Ears:
-                    offset = new Vector3(PieceShape.IsSingle(geometry) ? reference.EarRight.x : 0f, 0f, 0f);
+                    offset = Vector3.zero;
                     break;
                 case SlotRule.Place.UnderHead:
-                    offset = new Vector3(-center.x, -box.max.y * scale + NeckTuck, -center.z);
+                    offset = new Vector3(-center.x, -box.max.y + NeckTuck, -center.z);
                     break;
                 default:
                     offset = bones[slot.Bone];
                     break;
             }
             float along = rule.Where == SlotRule.Place.Crown && PieceShape.ClosedBottom(piece.Shape, box)
-                ? -ClosedHatSinkPerHeight * box.size.y * scale
+                ? -ClosedHatSinkPerHeight * box.size.y
                 : -rule.Sink;
-            Write(piece, WithAlong(slot.Contact, offset, along), Vector3.one * scale, hides);
+            Write(piece, WithAlong(slot.Contact, offset, along), Vector3.one, hides);
         }
 
         private static Vector3 PointOf(HeadMeasures head, AttachmentFrame frame)

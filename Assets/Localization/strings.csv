@@ -38,7 +38,6 @@ couleur.11,Couleur 11,Colour 11
 couleur.12,Couleur 12,Colour 12
 emplacement.queue,Queue,Tail
 emplacement.oreilles,Oreilles,Ears
-emplacement.museau,Museau,Snout
 emplacement.visage,Visage,Face
 emplacement.cou,Cou,Neck
 emplacement.dos,Dos,Back
@@ -54,7 +53,6 @@ piece.oreillesraton_01,Oreilles de raton laveur 1,Raccoon ears 1
 piece.oreillesraton_02,Oreilles de raton laveur 2,Raccoon ears 2
 piece.oreillesgobelin_01,Oreilles de gobelin 1,Goblin ears 1
 piece.oreillesgobelin_02,Oreilles de gobelin 2,Goblin ears 2
-piece.museau_01,Museau,Snout
 piece.oreilles_chat,Oreilles de chat,Cat ears
 piece.oreilles_cochon,Oreilles du cochon,Pig's ears
 piece.oreilles_lapin_a,Oreilles de lapin A,Rabbit ears A
@@ -66,14 +64,6 @@ piece.touffes_cochon,Touffe du cochon,Pig's tuft
 piece.touffes_ratonlaveur,Touffe du raton laveur,Raccoon's tuft
 piece.touffes_renard,Touffe du renard,Fox's tuft
 piece.touffes_souris,Touffe de la souris,Mouse's tuft
-piece.museau_renard,Museau de renard,Fox snout
-piece.museau_cochon,Groin du cochon,Pig's snout
-piece.museau_ratonlaveur,Museau du raton laveur,Raccoon's muzzle
-piece.museau_souris,Museau de la souris,Mouse's muzzle
-piece.museau_oiseau,Bec de l'oiseau,Bird's beak
-piece.museau_chat,Museau du chat,Cat's muzzle
-piece.museau_lapin,Museau du lapin,Rabbit's muzzle
-piece.museau_grenouille,Bouche de la grenouille,Frog's mouth
 piece.chapeau_01,Chapeau 1,Hat 1
 piece.chapeau_02,Chapeau 2,Hat 2
 piece.chapeau_03,Chapeau 3,Hat 3
@@ -127,21 +117,5 @@ creation.tete,Tête,Head
 emplacement.cheveux,Cheveux,Hair
 emplacement.chapeau,Chapeau,Hat
 emplacement.barbe,Barbe,Beard
-emplacement.bouclesoreilles,Boucles d'oreilles,Earrings
-piece.cheveux_01,Cheveux 1,Hair 1
-piece.cheveux_02,Cheveux 2,Hair 2
-piece.cheveux_03,Cheveux 3,Hair 3
-piece.cheveux_04,Cheveux 4,Hair 4
-piece.cheveux_05,Cheveux 5,Hair 5
-piece.cheveux_06,Cheveux 6,Hair 6
-piece.cheveux_09,Cheveux 9,Hair 9
-piece.cheveux_10,Cheveux 10,Hair 10
-piece.cheveux_11,Cheveux 11,Hair 11
-piece.cheveux_12,Cheveux 12,Hair 12
-piece.cheveux_13,Cheveux 13,Hair 13
 piece.cheveux_14,Cheveux 14,Hair 14
 piece.barbe_01,Barbe,Beard
-piece.bouclesoreilles_01,Boucles d'oreilles 1,Earrings 1
-piece.bouclesoreilles_02,Boucles d'oreilles 2,Earrings 2
-piece.bouclesoreilles_03,Boucles d'oreilles 3,Earrings 3
-piece.bouclesoreilles_04,Boucles d'oreilles 4,Earrings 4

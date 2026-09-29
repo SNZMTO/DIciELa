@@ -15,7 +15,16 @@
 
 ## Les captures
 
-### 29/09/2026 — étape 13e (fin) : chaque tête porte son museau
+### 29/09/2026 — étape 13e (fin) : chaque tête garde son museau, la barbe prend la couleur du poil
+
+Le museau ne se change plus, la queue et les oreilles ne sont jamais vides ; plus de coiffures humaines ni de boucles
+d'oreilles. En haut, la barbe sur le chat en six couleurs : elle suit maintenant la couleur choisie. En bas, les
+oreilles du raton et du renard sur le chat, la souris, le lapin et le cochon, de trois quarts puis de dos : elles
+restent dans la silhouette du crâne.
+
+![La barbe en six couleurs, les oreilles du raton et du renard](Album/2026-09-29_etape-13e_barbe-et-oreilles.jpg)
+
+### 29/09/2026 — étape 13e (fin, premier jet) : chaque tête porte son museau
 
 Le museau de chaque animal se détache (le nez et la bouche du chat et du lapin, la bouche de la grenouille compris) et
 le museau est obligatoire. Chaque ligne, un museau sur les huit têtes : chat, cochon, grenouille, lapin, oiseau, raton

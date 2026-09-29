@@ -27,16 +27,12 @@ namespace Diciela.Data
                  "avancer contre le dos, ou rien. Rempli par le menu.")]
         [SerializeField] private ContactAxis _contact;
 
-        [Tooltip("Vrai si ses pièces peuvent aller par paires (les oreilles, deux boucles d'oreilles) : chaque moitié " +
-                 "suit l'oreille de son côté sur la tête choisie. Rempli par le menu.")]
+        [Tooltip("Vrai si ses pièces peuvent aller par paires (les oreilles) : chaque moitié suit l'oreille de son " +
+                 "côté sur la tête choisie, et la paire se pose par sa base. Rempli par le menu.")]
         [SerializeField] private bool _pairs;
 
-        [Tooltip("Vrai si ses pièces se posent par leur base sur une autre tête que la leur (les oreilles, les boucles, les " +
-                 "museaux) : ce qui touchait leur tête touche la tête choisie, le reste s'enfonce. Rempli par le menu.")]
-        [SerializeField] private bool _seated;
-
-        [Tooltip("Vrai si un personnage ne peut pas s'en passer (le museau) : chaque tête en porte un d'office et l'écran " +
-                 "de création ne propose pas « aucun ». Rempli par le menu.")]
+        [Tooltip("Vrai si un personnage ne peut pas s'en passer (la queue, les oreilles) : l'écran de création ne propose " +
+                 "pas « aucun ». Rempli par le menu.")]
         [SerializeField] private bool _required;
 
         public string Id => _id;
@@ -45,7 +41,6 @@ namespace Diciela.Data
         public AttachmentFrame Frame => _frame;
         public ContactAxis Contact => _contact;
         public bool Pairs => _pairs;
-        public bool Seated => _seated;
         public bool Required => _required;
 
         /// <summary>

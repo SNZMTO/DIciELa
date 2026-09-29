@@ -26,7 +26,7 @@ namespace Diciela.Data
                  "tête.")]
         [SerializeField] private PaletteDefinition _palette;
 
-        [Tooltip("Les pièces qu'elle porte d'office : ce qui s'est détaché d'elle (oreilles, touffes, museau) et ce que le " +
+        [Tooltip("Les pièces qu'elle porte d'office : ce qui s'est détaché d'elle (oreilles, touffes) et ce que le " +
                  "pack pose sur sa tête (la huppe de l'oiseau). Rempli par le menu.")]
         [SerializeField] private List<AttachmentDefinition> _worn = new List<AttachmentDefinition>();
 

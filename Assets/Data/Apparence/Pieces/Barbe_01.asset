@@ -15,7 +15,7 @@ MonoBehaviour:
   _id: barbe_01
   _nameKey: piece.barbe_01
   _slot: {fileID: 11400000, guid: 63501f8cc8b9b32409144d672bb5ca5a, type: 2}
-  _model: {fileID: 6781552619856527002, guid: 64fe5cc0ec98efb4a96936f0b046f081, type: 3}
+  _model: {fileID: 8132892891536774629, guid: a8f67848b3e9b234fae4969f1fddedb6, type: 3}
   _palette: {fileID: 11400000, guid: 82d3eb0161a8fcd49a80a3086ee0a5aa, type: 2}
   _offset: {x: 0, y: -0.07853, z: -0.112837}
   _rotation: {x: 0, y: 0, z: 0}

@@ -8,11 +8,10 @@ namespace Diciela.View
     /// La pose d'une pièce sur un personnage habillé (SAVOIR, 2.11), dans les axes du personnage : son pivot au point du
     /// repère de son emplacement sur la tête choisie, plus son décalage et son réglage sur cette tête (ou ce corps) ;
     /// sur l'axe de contact, là où sa face touche la tête ou le corps. Elle prend sa rotation, puis sa taille. Chaque
-    /// moitié d'une paire s'écarte (ou se rapproche) d'autant que les oreilles de la tête choisie sont plus écartées que
-    /// celles de la tête où la paire a été réglée (plus le x de son décalage et de son réglage) ; une pièce d'un seul côté
-    /// (une boucle d'oreille) suit l'oreille de son côté. Des oreilles, des boucles, un museau se posent par leur base :
-    /// là où ils touchaient leur tête de référence, ils touchent la tête choisie, le reste s'enfonce ; une paire glisse
-    /// vers le milieu jusqu'à ce que sa base porte à plat.
+    /// moitié d'une paire d'oreilles s'écarte (ou se rapproche) d'autant que les oreilles de la tête choisie sont plus
+    /// écartées que celles de la tête où la paire a été réglée (plus le x de son décalage et de son réglage), puis la paire
+    /// se pose par sa base : là où elle touchait sa tête de référence, elle touche la tête choisie, le reste s'enfonce ;
+    /// elle glisse vers le milieu jusqu'à ce que sa base porte à plat.
     /// </summary>
     internal static class PiecePlacement
     {
@@ -26,24 +25,18 @@ namespace Diciela.View
         /// <summary>Pose cette pièce, enfant du personnage, pour cette apparence.</summary>
         public static void Place(Transform piece, Appearance appearance, AttachmentDefinition attachment)
         {
-            float spread = SpreadOf(appearance.Head, attachment);
             bool pair = IsPair(piece);
             Vector3 offset = attachment.Offset + attachment.AdjustmentOn(appearance.Head, appearance.Body);
-            // Le x d'une paire l'écarte, chaque moitié de son côté ; une pièce d'un seul côté (hors du milieu) suit
-            // l'oreille de son côté.
+            float spread = 0f;
+            // Le x d'une paire l'écarte, chaque moitié de son côté.
             if (pair)
             {
-                spread += offset.x;
+                spread = SpreadOf(appearance.Head, attachment) + offset.x;
                 offset.x = 0f;
             }
-            else if (attachment.Offset.x != 0f)
-                offset.x += Mathf.Sign(attachment.Offset.x) * spread;
-            // Dans un emplacement à paires, seule une paire se pose par sa base ; une boucle seule suit son point.
-            bool seated = attachment.Slot.Seated && (pair || !attachment.Slot.Pairs);
-            piece.localPosition = seated &&
-                                  TryRest(appearance.Head, attachment, offset, ref spread, pair, out Vector3 rest)
+            piece.localPosition = pair && TryRest(appearance.Head, attachment, offset, ref spread, out Vector3 rest)
                 ? rest
-                : PlaceOf(appearance, attachment, offset, pair ? spread : 0f);
+                : PlaceOf(appearance, attachment, offset, spread);
             piece.localRotation = Quaternion.Euler(attachment.Rotation) * piece.localRotation;
             piece.localScale = attachment.Scale;
             if (pair)
@@ -60,33 +53,31 @@ namespace Diciela.View
             return head.EarRight.x - reference.EarRight.x;
         }
 
-        // Une pièce posée par sa base sur une autre tête que sa tête de référence : là où elle touchait sa tête de
-        // référence, elle touche la tête choisie (Contact.TryRest) ; une paire glisse vers le milieu jusqu'à porter à plat
+        // Une paire posée par sa base sur une autre tête que sa tête de référence : là où elle touchait sa tête de
+        // référence, elle touche la tête choisie (Contact.TryRest), et elle glisse vers le milieu jusqu'à porter à plat
         // (spread reçoit son écart). Faux sur sa tête de référence, ou sans surfaces.
         private static bool TryRest(HeadDefinition head, AttachmentDefinition attachment, Vector3 offset, ref float spread,
-            bool pair, out Vector3 rest)
+            out Vector3 rest)
         {
             AttachmentSlotDefinition slot = attachment.Slot;
             HeadDefinition reference = attachment.Reference;
             rest = default;
-            ContactAxis axis = slot.Contact;
-            if (reference == null || reference == head || (axis != ContactAxis.Down && axis != ContactAxis.Back))
+            if (reference == null || reference == head || slot.Contact != ContactAxis.Down)
                 return false;
-            // Sa place sur sa tête de référence, où une paire n'est écartée que du x de son décalage.
-            float referenceSpread = pair ? attachment.Offset.x : 0f;
-            Vector3 onReference = reference.PointOf(slot.Frame) + attachment.Offset;
-            if (pair)
-                onReference.x = reference.PointOf(slot.Frame).x;
-            if (!Contact.TryTouch(axis, reference.SurfaceOf(axis), attachment.Shape, onReference, attachment.Scale,
+            // Sa place sur sa tête de référence, où elle n'est écartée que du x de son décalage.
+            float referenceSpread = attachment.Offset.x;
+            Vector3 onReference = reference.PointOf(slot.Frame) + new Vector3(0f, attachment.Offset.y, attachment.Offset.z);
+            SurfaceMap top = head.SurfaceOf(ContactAxis.Down), referenceTop = reference.SurfaceOf(ContactAxis.Down);
+            if (!Contact.TryTouch(ContactAxis.Down, referenceTop, attachment.Shape, onReference, attachment.Scale,
                     out float touch, referenceSpread))
                 return false;
-            onReference = WithAlong(axis, onReference, touch + Along(axis, attachment.Offset));
+            onReference.y = touch + attachment.Offset.y;
             rest = head.PointOf(slot.Frame) + offset;
             float bestAlong = 0f, bestUneven = float.MaxValue, bestSpread = spread;
-            for (float inward = 0f; inward <= (pair ? MaxInward : 0f) + InwardStep * 0.5f; inward += InwardStep)
+            for (float inward = 0f; inward <= MaxInward + InwardStep * 0.5f; inward += InwardStep)
             {
-                if (!Contact.TryRest(axis, head.SurfaceOf(axis), reference.SurfaceOf(axis), attachment.Shape, rest,
-                        onReference, attachment.Scale, spread - inward, referenceSpread, out float along, out float uneven))
+                if (!Contact.TryRest(top, referenceTop, attachment.Shape, rest, onReference, attachment.Scale,
+                        spread - inward, referenceSpread, out float along, out float uneven))
                     continue;
                 if (uneven < bestUneven)
                     (bestAlong, bestUneven, bestSpread) = (along, uneven, spread - inward);
@@ -96,23 +87,8 @@ namespace Diciela.View
             if (bestUneven == float.MaxValue)
                 return false;
             spread = bestSpread;
-            rest = WithAlong(axis, rest, bestAlong + Along(axis, offset) - Along(axis, attachment.Offset));
+            rest.y = bestAlong + offset.y - attachment.Offset.y;
             return true;
-        }
-
-        // La coordonnée de ce point sur l'axe du contact (y pour descendre, z pour reculer), et ce point avec une autre.
-        private static float Along(ContactAxis axis, Vector3 point)
-        {
-            return axis == ContactAxis.Down ? point.y : point.z;
-        }
-
-        private static Vector3 WithAlong(ContactAxis axis, Vector3 point, float along)
-        {
-            if (axis == ContactAxis.Down)
-                point.y = along;
-            else
-                point.z = along;
-            return point;
         }
 
         // Une paire : deux moitiés au moins, enfants à maillage de son modèle.

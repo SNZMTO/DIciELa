@@ -12,7 +12,8 @@ namespace Diciela.EditorTools
     /// La planche d'essais (SAVOIR, 2.11) : des Chimères composées à la main, photographiées de face (comme dans
     /// l'atelier), de trois quarts d'en haut (comme en ville), de profil et de dos, une par ligne. La liste est un fichier texte,
     /// Temp/Planches/Essais.txt, une Chimère par ligne : l'identifiant de la tête, celui du corps, puis les noms des
-    /// fiches de ses pièces, séparés par des points-virgules (« grenouille_a;grenouille_a;Oreilles_Cochon »). Pour juger
+    /// fiches de ses pièces, séparés par des points-virgules (« grenouille_a;grenouille_a;Oreilles_Cochon »), chacune
+    /// suivie, au besoin, de @ et du nom de fichier de sa couleur (« Barbe_01@Couleur_05 »). Pour juger
     /// une combinaison sans passer par l'écran de création.
     /// </summary>
     internal static class TrialSheet
@@ -47,10 +48,19 @@ namespace Diciela.EditorTools
                     var worn = new List<WornAttachment>();
                     for (int i = 2; i < parts.Length; i++)
                     {
+                        // Une pièce, et après @ le nom de fichier d'une couleur (Barbe_01@Couleur_05) ; sinon la sienne.
+                        string[] named = parts[i].Trim().Split('@');
                         foreach (AttachmentDefinition piece in catalog.Attachments)
                         {
-                            if (piece != null && piece.name == parts[i].Trim())
-                                worn.Add(new WornAttachment(piece, piece.Palette));
+                            if (piece == null || piece.name != named[0])
+                                continue;
+                            PaletteDefinition palette = piece.Palette;
+                            foreach (PaletteDefinition other in catalog.Palettes)
+                            {
+                                if (named.Length > 1 && other != null && other.name == named[1])
+                                    palette = other;
+                            }
+                            worn.Add(new WornAttachment(piece, palette));
                         }
                     }
                     var holder = new GameObject("Essai");
