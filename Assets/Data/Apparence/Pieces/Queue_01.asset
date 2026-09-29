@@ -16,4 +16,5 @@ MonoBehaviour:
   _nameKey: piece.queue_01
   _slot: {fileID: 11400000, guid: 3f75005ea70a14f4eaee7eede1be488a, type: 2}
   _model: {fileID: 5845865757197340555, guid: dbb1fd86ff1940a44acad3fdb6b1449f, type: 3}
+  _palette: {fileID: 11400000, guid: 244ddca214292564a8573129cb1b6518, type: 2}
   _anchor: {x: 0, y: 0.618, z: -0.139}

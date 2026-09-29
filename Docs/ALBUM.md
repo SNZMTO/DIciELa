@@ -15,6 +15,18 @@
 
 ## Les captures
 
+### 29/09/2026 — étape 13 : têtes, corps et couleurs
+
+L'écran de création choisit maintenant une tête et un corps à part, chacun de sa couleur, puis la queue et chaque
+accessoire, chacun de la sienne : une ligne par partie, la pièce et sa couleur entre leurs flèches, toutes les pièces du
+pack proposées. On part du chat avec sa queue ; la caméra s'approche à 8 m. La planche des têtes et des corps
+(`DICIELA/Album/Planche des têtes et des corps, de face et de dos`) montre, au fond, les huit animaux au naturel ; au
+milieu, chaque corps sous la tête de l'animal suivant ; devant, les mêmes de dos. Les têtes tiennent au cou.
+
+![L'écran de création : une pièce et une couleur par ligne](Album/2026-09-29_etape-13_ecran-de-creation.jpg)
+
+![Les têtes et les corps : au naturel, croisés, puis de dos](Album/2026-09-29_etape-13_tetes-et-corps.jpg)
+
 ### 28/09/2026 — étape 12 : l'écran de création
 
 Une partie s'ouvre maintenant sur l'écran de création : un panneau à droite, la ville derrière, la Chimère à venir

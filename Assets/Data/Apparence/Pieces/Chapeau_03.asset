@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Diciela.Data::Diciela.Data.AttachmentDefinition
   _id: chapeau_03
   _nameKey: piece.chapeau_03
-  _slot: {fileID: 11400000, guid: 0a99e833d6253834caa80327a81c03cd, type: 2}
+  _slot: {fileID: 11400000, guid: 97259d6e8c293534e8497b1dfdfc6a24, type: 2}
   _model: {fileID: 3849463909264252880, guid: 2ac0174e95ebac8459271518954354d4, type: 3}
+  _palette: {fileID: 11400000, guid: 82d3eb0161a8fcd49a80a3086ee0a5aa, type: 2}
   _anchor: {x: 0, y: 1.7489504, z: 0.08338079}

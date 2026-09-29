@@ -16,4 +16,5 @@ MonoBehaviour:
   _nameKey: piece.sacados_01
   _slot: {fileID: 11400000, guid: 845a99f1ff227c043bcf27f441aae98a, type: 2}
   _model: {fileID: 6795481420457469495, guid: 5876875f939b61a4b8dfb6f275da8172, type: 3}
+  _palette: {fileID: 11400000, guid: 82d3eb0161a8fcd49a80a3086ee0a5aa, type: 2}
   _anchor: {x: -0.000000029802322, y: 0.95676064, z: -0.020261854}

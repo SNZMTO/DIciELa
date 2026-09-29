@@ -1,5 +1,6 @@
 /* L'écran de création de la Chimère (GDD, section 6) : un panneau à droite, la ville visible derrière ; une ligne par
-   choix, ses flèches de part et d'autre du choix ; le bouton qui valide en bas. Les couleurs sont celles de la barre. */
+   partie, sa pièce puis sa couleur, chacune entre ses flèches ; le bouton qui valide en bas. Les couleurs sont celles de
+   la barre. */
 
 .screen {
     flex-grow: 1;
@@ -9,7 +10,7 @@
 }
 
 .panel {
-    width: 520px;
+    width: 760px;
     padding: 18px 20px;
     background-color: rgba(34, 27, 20, 0.85);
     border-radius: 10px;
@@ -30,11 +31,11 @@
 .row {
     flex-direction: row;
     align-items: center;
-    height: 46px;
+    height: 42px;
 }
 
 .row-label {
-    width: 130px;
+    width: 180px;
     font-size: 20px;
     color: rgb(222, 206, 184);
 }
@@ -59,6 +60,18 @@
     font-size: 20px;
     -unity-text-align: middle-center;
     color: rgb(250, 240, 224);
+}
+
+.color {
+    width: 120px;
+    font-size: 18px;
+    -unity-text-align: middle-center;
+    color: rgb(222, 206, 184);
+}
+
+/* Une ligne sans pièce n'a pas de couleur : ses flèches se cachent, sans décaler les autres. */
+.hidden {
+    visibility: hidden;
 }
 
 .confirm {

@@ -15,4 +15,6 @@ MonoBehaviour:
   _id: cochon_b
   _nameKey: corps.cochon_b
   _model: {fileID: 593212813300651730, guid: 101dfc27220b93b44988a18187009380, type: 3}
+  _mesh: {fileID: 4300000, guid: 81dee63e2f40d204bb2a930e7faa1a05, type: 2}
   _palette: {fileID: 11400000, guid: 82d3eb0161a8fcd49a80a3086ee0a5aa, type: 2}
+  _worn: []

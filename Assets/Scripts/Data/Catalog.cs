@@ -6,8 +6,9 @@ namespace Diciela.Data
     /// <summary>
     /// Le catalogue : la fiche racine, qui mène à toutes les autres (ARCHITECTURE, section 9) ; le jeu ne charge que
     /// lui. Les familles de constructions, dans l'ordre des onglets de la barre ; la sorte de la Chimère ; ce que
-    /// l'écran de création propose, dans son ordre : les corps (le premier, avec sa couleur d'origine et sans pièce, est
-    /// l'apparence de départ), les couleurs, les emplacements et leurs pièces.
+    /// l'écran de création propose, dans son ordre : les têtes, les corps, les couleurs, les emplacements et leurs pièces.
+    /// La première tête et le premier corps, dans leurs couleurs d'origine, et les pièces que ce corps porte dans le pack,
+    /// de sa couleur, font l'apparence de départ.
     /// </summary>
     [CreateAssetMenu(menuName = "DICIELA/Catalogue", fileName = "Catalogue")]
     public sealed class Catalog : ScriptableObject
@@ -17,6 +18,9 @@ namespace Diciela.Data
 
         [Tooltip("La sorte de la Chimère, que le joueur crée au lancement d'une partie (GDD, section 6).")]
         [SerializeField] private VillagerKindDefinition _chimeraKind;
+
+        [Tooltip("Les têtes que propose l'écran de création, dans son ordre ; la première est celle de départ.")]
+        [SerializeField] private List<HeadDefinition> _heads = new List<HeadDefinition>();
 
         [Tooltip("Les corps que propose l'écran de création, dans son ordre ; le premier est celui de départ.")]
         [SerializeField] private List<BodyDefinition> _bodies = new List<BodyDefinition>();
@@ -32,6 +36,7 @@ namespace Diciela.Data
 
         public IReadOnlyList<StructureFamilyDefinition> Families => _families;
         public VillagerKindDefinition ChimeraKind => _chimeraKind;
+        public IReadOnlyList<HeadDefinition> Heads => _heads;
         public IReadOnlyList<BodyDefinition> Bodies => _bodies;
         public IReadOnlyList<PaletteDefinition> Palettes => _palettes;
         public IReadOnlyList<AttachmentSlotDefinition> AttachmentSlots => _attachmentSlots;

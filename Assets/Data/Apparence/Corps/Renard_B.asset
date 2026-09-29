@@ -15,4 +15,7 @@ MonoBehaviour:
   _id: renard_b
   _nameKey: corps.renard_b
   _model: {fileID: 3783256465832989184, guid: 1617174c7ca255244963f78b7069a5f9, type: 3}
+  _mesh: {fileID: 4300000, guid: bb65b49f7e979674cb6117d042d1192b, type: 2}
   _palette: {fileID: 11400000, guid: 8651efd2a2b9aed40be9bef93b6a65bf, type: 2}
+  _worn:
+  - {fileID: 11400000, guid: 038f27d5243a4b541901cebcbf86a5d8, type: 2}

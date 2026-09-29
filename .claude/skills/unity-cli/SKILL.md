@@ -73,7 +73,11 @@ En cas de doute, `unity list` (les outils du paquet `com.unity.pipeline`) ou la 
 - `console --tail N` rend un tableau dont la colonne Résultat est un JSON suivi d'autres colonnes : le couper au premier
   objet complet (c'est ce que fait `console_after.js`).
 - **Ne jamais conclure d'un Play muet** : vérifier que la simulation a vraiment travaillé (des lignes de journal).
+- **Le Play ne tourne que si Unity a le focus** (`runInBackground: 0` dans les réglages du projet) : ailleurs, il se fige
+  et une capture montre une image figée. `editor_focus` avant `editor_play`, et lire le nombre de pas dans la ligne
+  « monde arrêté après N pas » à l'`editor_stop` : un seul pas veut dire que rien n'a tourné.
 - **Captures** : `capture_game_view --source screen --width 1600 --height 900 --save_path Assets/Temp/x.png` (en Play ;
+  2400 × 1350 marche encore, 3840 × 2160 rend une image noire ou périmée ;
   la source `camera` manque l'UI Toolkit), puis supprimer `Assets/Temp` et son `.meta`. Pour vérifier, une capture seulement si
   c'est le seul moyen ; pour l'album, voir `Docs/ALBUM.md`. Le JPG de l'album se fait par PowerShell (`System.Drawing`,
   encodeur JPEG, qualité 88 : environ 100 Ko) ; Python n'est pas installé.

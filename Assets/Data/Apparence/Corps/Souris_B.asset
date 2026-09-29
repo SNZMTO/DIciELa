@@ -15,4 +15,6 @@ MonoBehaviour:
   _id: souris_b
   _nameKey: corps.souris_b
   _model: {fileID: 455014415989462923, guid: cc3bdfcf95751d741b4fae11d5e7c8b5, type: 3}
+  _mesh: {fileID: 4300000, guid: f81132e3e04ddbd4690dffba4c962718, type: 2}
   _palette: {fileID: 11400000, guid: 00c6d426d35349d479b91b6a4abcd027, type: 2}
+  _worn: []

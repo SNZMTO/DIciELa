@@ -98,18 +98,36 @@ namespace Diciela.Tests.EditMode
             return palette;
         }
 
-        /// <summary>Un corps sans personnage (la simulation ne le lit pas), dans cette couleur d'origine.</summary>
-        public static BodyDefinition Body(string id, PaletteDefinition palette)
+        /// <summary>Une tête sans maillage (la simulation ne le lit pas), dans cette couleur d'origine.</summary>
+        public static HeadDefinition Head(string id, PaletteDefinition palette)
+        {
+            HeadDefinition head = ScriptableObject.CreateInstance<HeadDefinition>();
+            var serialized = new SerializedObject(head);
+            Property(serialized, "_id").stringValue = id;
+            Property(serialized, "_palette").objectReferenceValue = palette;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            return head;
+        }
+
+        /// <summary>
+        /// Un corps sans personnage ni maillage (la simulation ne les lit pas), dans cette couleur d'origine, qui porte ces
+        /// pièces dans le pack.
+        /// </summary>
+        public static BodyDefinition Body(string id, PaletteDefinition palette, params AttachmentDefinition[] worn)
         {
             BodyDefinition body = ScriptableObject.CreateInstance<BodyDefinition>();
             var serialized = new SerializedObject(body);
             Property(serialized, "_id").stringValue = id;
             Property(serialized, "_palette").objectReferenceValue = palette;
+            SerializedProperty list = Property(serialized, "_worn");
+            list.arraySize = worn.Length;
+            for (int i = 0; i < worn.Length; i++)
+                list.GetArrayElementAtIndex(i).objectReferenceValue = worn[i];
             serialized.ApplyModifiedPropertiesWithoutUndo();
             return body;
         }
 
-        /// <summary>Un emplacement, et une pièce sans modèle à cet emplacement (sans emplacement si slot est null).</summary>
+        /// <summary>Une pièce sans modèle à cet emplacement (sans emplacement si slot est null).</summary>
         public static AttachmentDefinition Attachment(string id, AttachmentSlotDefinition slot)
         {
             AttachmentDefinition attachment = ScriptableObject.CreateInstance<AttachmentDefinition>();
@@ -120,17 +138,22 @@ namespace Diciela.Tests.EditMode
             return attachment;
         }
 
-        /// <summary>Un catalogue qui ne propose que ces corps, dans cet ordre.</summary>
-        public static Catalog Catalog(params BodyDefinition[] bodies)
+        /// <summary>Un catalogue qui ne propose que ces têtes et ces corps, dans cet ordre.</summary>
+        public static Catalog Catalog(HeadDefinition[] heads, BodyDefinition[] bodies)
         {
             Catalog catalog = ScriptableObject.CreateInstance<Catalog>();
             var serialized = new SerializedObject(catalog);
-            SerializedProperty list = Property(serialized, "_bodies");
-            list.arraySize = bodies.Length;
-            for (int i = 0; i < bodies.Length; i++)
-                list.GetArrayElementAtIndex(i).objectReferenceValue = bodies[i];
+            Fill(Property(serialized, "_heads"), heads);
+            Fill(Property(serialized, "_bodies"), bodies);
             serialized.ApplyModifiedPropertiesWithoutUndo();
             return catalog;
+        }
+
+        private static void Fill(SerializedProperty list, UnityEngine.Object[] items)
+        {
+            list.arraySize = items.Length;
+            for (int i = 0; i < items.Length; i++)
+                list.GetArrayElementAtIndex(i).objectReferenceValue = items[i];
         }
 
         public static AttachmentSlotDefinition Slot(string id)
