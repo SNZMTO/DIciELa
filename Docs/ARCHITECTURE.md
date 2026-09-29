@@ -212,8 +212,8 @@ sauvegardé.
 ## 9. Les fiches
 
 - Une fiche par chose : marchandise, recette, bâtiment, déco, plante, sorte d'emprise, sorte de tâche, poste,
-  statistique et sous-statistique, grandeur d'effet, sorte d'habitant, corps, couleur, emplacement et pièce, maître,
-  idée et déclencheur, réglages. Les listes ouvertes sont des fiches plutôt que des énumérations : ajouter une sous-statistique, c'est
+  statistique et sous-statistique, grandeur d'effet, sorte d'habitant, tête, corps, couleur, emplacement et pièce,
+  maître, idée et déclencheur, réglages. Les listes ouvertes sont des fiches plutôt que des énumérations : ajouter une sous-statistique, c'est
   ajouter une fiche.
 - Chaque fiche a un identifiant texte stable, que la sauvegarde cite ; jamais le nom du fichier. Un catalogue racine les
   rassemble ; le jeu ne charge que lui.
@@ -223,10 +223,11 @@ sauvegardé.
   source ; sans source, le même menu fait une boîte à la taille de la fiche, sa porte marquée ; un test vérifie que
   le modèle suit sa fiche. La fiche dit aussi si le bâtiment est unique, s'il est le logis de la Chimère et s'il se
   dresse dès la pose (la tente) : la simulation lit ces propriétés, jamais un nom. La fiche d'une sorte d'habitant
-  dit sa marche et sa flânerie ; son allure est l'apparence de chaque habitant : un corps (un personnage du pack, tel
-  quel, et sa couleur d'origine), une couleur (un matériau du pack), au plus une pièce par emplacement (une pièce du
-  pack et son point d'accroche ; l'emplacement dit l'os). La vue habille (SAVOIR 2.11) ; la simulation garde
-  l'apparence sans la lire. Le catalogue mène à la sorte de la Chimère et à ce que l'écran de création propose, dans son
+  dit sa marche et sa flânerie ; son allure est l'apparence de chaque habitant : une tête et un corps (chacun séparé
+  d'un personnage du pack par le menu des fiches, sur le squelette commun ; le corps garde son personnage et ce que
+  celui-ci porte dans le pack), chacun de sa couleur (une couleur : les deux matériaux du pack de même teinte, pour les
+  personnages et pour les objets), au plus une pièce par emplacement, de sa couleur (une pièce du pack et son point
+  d'accroche ; l'emplacement dit l'os). La vue habille (SAVOIR 2.11) ; la simulation garde l'apparence sans la lire. Le catalogue mène à la sorte de la Chimère et à ce que l'écran de création propose, dans son
   ordre.
 - Une fiche de réglages de la simulation tient le pas, la borne de pas par image, la durée de la journée et de ses
   phases, les mailles par mètre et les bornes de boucle. Une fiche de session dit quelle carte charger et où ranger
@@ -260,7 +261,8 @@ code.
 | logis de la Chimère | `ChimeraHome` | aller dormir ; se réveiller | `Bedtime` ; `Wake` | choisir ; toucher | `ChooseTool` ; `Touch` |
 | corps ; couleur (d'un corps) | `Body` ; `Palette` | emplacement ; pièce | `AttachmentSlot` ; `Attachment` | apparence ; habiller | `Appearance` ; `Dresser` |
 | écran de création | `CreationScreen` | aperçu de la Chimère | `AppearancePreview` | valider | `ConfirmControls` |
-| scène du démarrage | `GameStage` | point d'accroche | `Anchor` | | |
+| scène du démarrage | `GameStage` | point d'accroche | `Anchor` | tête ; pièce portée | `Head` ; `WornAttachment` |
+| choix de l'écran de création | `CreationChoices` | découpe (tête, corps) | `BodyCutter` | | |
 
 ## 10. La carte, les scènes et la sauvegarde
 

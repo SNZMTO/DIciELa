@@ -15,4 +15,6 @@ MonoBehaviour:
   _id: lapin_a
   _nameKey: corps.lapin_a
   _model: {fileID: 2684404703277580328, guid: fdd8d84cec5087a479e3a3b0c031b403, type: 3}
+  _mesh: {fileID: 4300000, guid: 8f6184492dc90bc41953028c1df2b43a, type: 2}
   _palette: {fileID: 11400000, guid: 00ce1454294615c4ea69527a7fc60753, type: 2}
+  _worn: []

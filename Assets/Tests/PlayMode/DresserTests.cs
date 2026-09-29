@@ -1,5 +1,6 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.Linq;
 using Diciela.Data;
 using Diciela.Simulation.Society;
 using Diciela.View;
@@ -11,103 +12,97 @@ using Object = UnityEngine.Object;
 namespace Diciela.Tests.PlayMode
 {
     /// <summary>
-    /// L'habillage (SAVOIR, 2.11), sur un petit personnage monté comme ceux du pack : un squelette (le bassin tourné de
-    /// 23°, la tête d'un autre angle), un corps allumé dans sa couleur d'origine, un corps caché. Habillé d'une autre
-    /// couleur et d'un chapeau, il perd son corps caché, prend la couleur choisie sur son matériau partagé, et le chapeau
-    /// pend à l'os de la tête, droit, son pivot sur son point d'accroche, où que soit posé le personnage.
+    /// L'habillage (SAVOIR, 2.11), sur le personnage de TestRig. Habillé, il perd ce qu'il portait (ses corps, sa pièce
+    /// d'office, sa cape cachée), garde sa petite cape, et reçoit la tête et le corps choisis sur ses propres os, chacun
+    /// de sa couleur ; la petite cape prend celle du corps. Une pièce pend à l'os de son emplacement, droite, son pivot sur
+    /// son point d'accroche, où que soit posé le personnage ; sa couleur remplace la sienne, et son verre reste du verre.
     /// </summary>
     public sealed class DresserTests
     {
         private static readonly Vector3 HeadTop = new Vector3(0f, 1.7f, -0.1f);
 
-        private readonly List<Object> _created = new List<Object>();
-        private Material _origin;
-        private Material _chosen;
-        private Appearance _appearance;
+        private TestRig _rig;
 
         [SetUp]
-        public void CreateCharacter()
+        public void CreateRig()
         {
-            Shader shader = Shader.Find("Hidden/InternalErrorShader");
-            _origin = Keep(new Material(shader));
-            _chosen = Keep(new Material(shader));
-
-            GameObject character = Keep(new GameObject("Personnage de test"));
-            Transform pelvis = Child(character.transform, "pelvis", new Vector3(0f, 0.55f, 0f), new Vector3(0f, 0f, 23f));
-            Child(pelvis, "head", new Vector3(0f, 0.66f, 0f), new Vector3(0f, 90f, 316f));
-            Child(character.transform, "Corps", Vector3.zero, Vector3.zero).gameObject.AddComponent<SkinnedMeshRenderer>()
-                .sharedMaterial = _origin;
-            Child(character.transform, "Corps caché", Vector3.zero, Vector3.zero).gameObject
-                .AddComponent<SkinnedMeshRenderer>().gameObject.SetActive(false);
-            GameObject hat = Keep(GameObject.CreatePrimitive(PrimitiveType.Cube));
-            hat.name = "Chapeau de test";
-
-            var origin = Keep(ScriptableObject.CreateInstance<PaletteDefinition>());
-            var chosen = Keep(ScriptableObject.CreateInstance<PaletteDefinition>());
-            var body = Keep(ScriptableObject.CreateInstance<BodyDefinition>());
-            var slot = Keep(ScriptableObject.CreateInstance<AttachmentSlotDefinition>());
-            var piece = Keep(ScriptableObject.CreateInstance<AttachmentDefinition>());
-#if UNITY_EDITOR
-            TestWorld.Fill(origin, "_material", _origin);
-            TestWorld.Fill(chosen, "_material", _chosen);
-            TestWorld.Fill(body, "_model", character);
-            TestWorld.Fill(body, "_palette", origin);
-            TestWorld.Fill(slot, "_bone", "head");
-            TestWorld.Fill(piece, "_slot", slot);
-            TestWorld.Fill(piece, "_model", hat);
-            TestWorld.Fill(piece, "_anchor", HeadTop);
-#endif
-            _appearance = new Appearance(body, chosen, new[] { piece });
+            _rig = new TestRig();
         }
 
         [TearDown]
-        public void DestroyCharacter()
+        public void DestroyRig()
         {
-            foreach (Object created in _created)
-                Object.Destroy(created);
-            _created.Clear();
+            _rig.Dispose();
         }
 
         [UnityTest]
-        public IEnumerator TheCharacterLosesItsHiddenBodyAndWearsTheChosenColor()
+        public IEnumerator TheCharacterWearsTheChosenHeadAndBodyOnItsOwnBonesAndNothingElse()
         {
-            GameObject dressed = Keep(Dresser.Dress(_appearance, null));
+            GameObject dressed = _rig.Keep(Dresser.Dress(
+                new Appearance(_rig.Head, _rig.Chosen, _rig.Body, _rig.Origin, Array.Empty<WornAttachment>()), null));
             yield return null;
 
-            SkinnedMeshRenderer[] skins = dressed.GetComponentsInChildren<SkinnedMeshRenderer>(true);
-            Assert.AreEqual(1, skins.Length, "Le corps caché est retiré.");
-            Assert.AreSame(_chosen, skins[0].sharedMaterial, "La couleur choisie remplace celle d'origine.");
-            Assert.AreSame(_origin, _appearance.Body.Model.GetComponentInChildren<SkinnedMeshRenderer>().sharedMaterial,
-                "Le modèle du pack ne change pas.");
+            SkinnedMeshRenderer[] parts = dressed.transform.Cast<Transform>()
+                .Select(child => child.GetComponent<SkinnedMeshRenderer>()).Where(skin => skin != null).ToArray();
+            Assert.AreEqual(new[] { "Corps", "Tête" }, parts.Select(skin => skin.name).ToArray(),
+                "Ses corps du pack sont retirés ; la tête et le corps choisis les remplacent.");
+            Transform pelvis = dressed.transform.Find("root/pelvis");
+            foreach (SkinnedMeshRenderer part in parts)
+            {
+                Assert.AreSame(pelvis, part.rootBone);
+                Assert.AreEqual(new[] { "root", "pelvis", "head" }, part.bones.Select(bone => bone.name).ToArray());
+                Assert.IsTrue(part.bones.All(bone => bone.IsChildOf(dressed.transform)), "Sur ses propres os.");
+            }
+            Assert.AreSame(_rig.Body.Mesh, parts[0].sharedMesh);
+            Assert.AreSame(_rig.OriginMaterial, parts[0].sharedMaterial);
+            Assert.AreSame(_rig.Head.Mesh, parts[1].sharedMesh);
+            Assert.AreSame(_rig.ChosenMaterial, parts[1].sharedMaterial);
+            Assert.IsEmpty(dressed.GetComponentsInChildren<MeshRenderer>(true), "Sa pièce d'office est retirée.");
+            Assert.IsNull(dressed.transform.Find("Capes/Cape cachée"), "Sa cape cachée est retirée.");
+            Assert.IsNotNull(dressed.transform.Find("Capes/Petite cape"), "Sa petite cape reste, comme un habit.");
+        }
+
+        [UnityTest]
+        public IEnumerator TheBodyColorDressesTheLittleCapeToo()
+        {
+            GameObject dressed = _rig.Keep(Dresser.Dress(
+                new Appearance(_rig.Head, _rig.Origin, _rig.Body, _rig.Chosen, Array.Empty<WornAttachment>()), null));
+            yield return null;
+
+            Assert.AreSame(_rig.ChosenMaterial, dressed.transform.Find("Corps").GetComponent<Renderer>().sharedMaterial);
+            Assert.AreSame(_rig.ChosenMaterial,
+                dressed.transform.Find("Capes/Petite cape").GetComponent<Renderer>().sharedMaterial);
         }
 
         [Test]
-        public void ThePieceHangsFromItsBoneUprightOnItsAnchorWhereverTheCharacterStands()
+        public void ThePieceHangsUprightFromItsBoneOnItsAnchorInItsColorAndKeepsItsGlass()
         {
-            var place = Keep(new GameObject("Place de test")).transform;
+            Material glass = _rig.Keep(new Material(_rig.OriginMaterial));
+            GameObject hat = _rig.Keep(GameObject.CreatePrimitive(PrimitiveType.Cube));
+            hat.name = "Chapeau de test";
+            hat.GetComponent<MeshRenderer>().sharedMaterials = new[] { _rig.OriginMaterial, glass };
+            var slot = _rig.Keep(ScriptableObject.CreateInstance<AttachmentSlotDefinition>());
+            var piece = _rig.Keep(ScriptableObject.CreateInstance<AttachmentDefinition>());
+#if UNITY_EDITOR
+            TestWorld.Fill(slot, "_bone", "head");
+            TestWorld.Fill(piece, "_slot", slot);
+            TestWorld.Fill(piece, "_model", hat);
+            TestWorld.Fill(piece, "_palette", _rig.Origin);
+            TestWorld.Fill(piece, "_anchor", HeadTop);
+#endif
+            Transform place = _rig.Keep(new GameObject("Place de test")).transform;
             place.SetPositionAndRotation(new Vector3(10f, 2f, -5f), Quaternion.Euler(0f, 135f, 0f));
 
-            GameObject dressed = Dresser.Dress(_appearance, place);
+            GameObject dressed = Dresser.Dress(new Appearance(_rig.Head, _rig.Origin, _rig.Body, _rig.Origin,
+                new[] { new WornAttachment(piece, _rig.Chosen) }), place);
 
-            Transform hat = dressed.transform.Find("pelvis/head/Chapeau de test(Clone)");
-            Assert.IsNotNull(hat, "Le chapeau pend à l'os de la tête.");
-            Assert.Less(Vector3.Distance(place.TransformPoint(HeadTop), hat.position), 1e-4f,
+            Transform worn = dressed.transform.Find("root/pelvis/head/Chapeau de test(Clone)");
+            Assert.IsNotNull(worn, "Le chapeau pend à l'os de la tête.");
+            Assert.Less(Vector3.Distance(place.TransformPoint(HeadTop), worn.position), 1e-4f,
                 "Son pivot est sur son point d'accroche, dans les axes du personnage.");
-            Assert.Less(Quaternion.Angle(place.rotation, hat.rotation), 0.01f, "Il est droit, comme le personnage.");
-        }
-
-        private static Transform Child(Transform parent, string name, Vector3 position, Vector3 angles)
-        {
-            var child = new GameObject(name).transform;
-            child.SetParent(parent, false);
-            child.SetLocalPositionAndRotation(position, Quaternion.Euler(angles));
-            return child;
-        }
-
-        private T Keep<T>(T created) where T : Object
-        {
-            _created.Add(created);
-            return created;
+            Assert.Less(Quaternion.Angle(place.rotation, worn.rotation), 0.01f, "Il est droit, comme le personnage.");
+            Assert.AreEqual(new[] { _rig.ChosenMaterial, glass }, worn.GetComponent<MeshRenderer>().sharedMaterials,
+                "Sa couleur remplace la sienne ; son verre reste du verre.");
         }
     }
 }

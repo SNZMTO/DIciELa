@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CameraSettings
   m_EditorClassIdentifier: Diciela.Data::Diciela.Data.CameraSettings
   _fieldOfView: 40
-  _nearDistance: 15
+  _nearDistance: 8
   _farDistance: 220
   _startDistance: 57
   _nearPitch: 25

@@ -15,4 +15,6 @@ MonoBehaviour:
   _id: ratonlaveur_b
   _nameKey: corps.ratonlaveur_b
   _model: {fileID: 3425370392285870904, guid: fe17ea4fb61a9a140a6a645f9bffd0cf, type: 3}
+  _mesh: {fileID: 4300000, guid: 1bd01034c7a642d4cb252107d3455f93, type: 2}
   _palette: {fileID: 11400000, guid: 88b5119577c9c5e48a2b23c61d76b809, type: 2}
+  _worn: []

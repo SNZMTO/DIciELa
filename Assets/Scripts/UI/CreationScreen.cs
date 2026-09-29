@@ -11,8 +11,8 @@ namespace Diciela.UI
 {
     /// <summary>
     /// L'écran de création de la Chimère (GDD, section 6), un panneau sur le côté, la ville visible derrière : son titre,
-    /// une ligne par choix avec ses flèches, et le bouton qui valide. C'est la vue (UI Toolkit, Creation.uxml) ; son
-    /// présentateur décide. Elle dit aussi aux gestes si le pointeur est sur elle.
+    /// une ligne par partie (sa pièce et sa couleur, chacune entre ses flèches), et le bouton qui valide. C'est la vue
+    /// (UI Toolkit, Creation.uxml) ; son présentateur décide. Elle dit aussi aux gestes si le pointeur est sur elle.
     /// </summary>
     [RequireComponent(typeof(UIDocument))]
     public sealed class CreationScreen : MonoBehaviour, ICreationView, IInterfaceArea
@@ -26,8 +26,12 @@ namespace Diciela.UI
         private const string LabelClass = "row-label";
         private const string ArrowClass = "arrow";
         private const string ChoiceClass = "choice";
+        private const string ColorClass = "color";
+        private const string HiddenClass = "hidden";
 
         private readonly List<Label> _choices = new List<Label>();
+        private readonly List<Label> _colors = new List<Label>();
+        private readonly List<VisualElement> _palettes = new List<VisualElement>();
         private UIDocument _document;
         private VisualElement _panel;
         private Label _title;
@@ -36,6 +40,7 @@ namespace Diciela.UI
         private CreationPresenter _presenter;
 
         public event Action<int, int> Stepped;
+        public event Action<int, int> Recolored;
         public event Action Confirmed;
 
         private void Awake()
@@ -79,6 +84,8 @@ namespace Diciela.UI
             _panel.AddToClassList(HiddenPanelClass);
             _rows.Clear();
             _choices.Clear();
+            _colors.Clear();
+            _palettes.Clear();
         }
 
         /// <summary>Valide le personnage : le bouton, ou Entrée par le geste « valider ».</summary>
@@ -94,25 +101,29 @@ namespace Diciela.UI
             _confirm.text = confirm;
             _rows.Clear();
             _choices.Clear();
+            _colors.Clear();
+            _palettes.Clear();
             for (int i = 0; i < labels.Count; i++)
             {
                 int row = i;
-                var line = new VisualElement();
-                line.AddToClassList(RowClass);
+                var line = Styled(new VisualElement(), RowClass);
                 line.Add(Styled(new Label(labels[i]), LabelClass));
-                line.Add(Styled(new Button(() => Stepped?.Invoke(row, -1)) { text = previous }, ArrowClass));
-                var choice = Styled(new Label(), ChoiceClass);
-                line.Add(choice);
-                line.Add(Styled(new Button(() => Stepped?.Invoke(row, 1)) { text = next }, ArrowClass));
-                _choices.Add(choice);
+                _choices.Add(Selector(line, ChoiceClass, previous, next, direction => Stepped?.Invoke(row, direction)));
+                var palette = Styled(new VisualElement(), RowClass);
+                _colors.Add(Selector(palette, ColorClass, previous, next, direction => Recolored?.Invoke(row, direction)));
+                _palettes.Add(palette);
+                line.Add(palette);
                 _rows.Add(line);
             }
         }
 
-        public void ShowChoice(int row, string choice)
+        public void ShowChoice(int row, string choice, string color)
         {
-            if (row >= 0 && row < _choices.Count)
-                _choices[row].text = choice;
+            if (row < 0 || row >= _choices.Count)
+                return;
+            _choices[row].text = choice;
+            _colors[row].text = color;
+            _palettes[row].EnableInClassList(HiddenClass, color.Length == 0);
         }
 
         /// <summary>
@@ -132,6 +143,16 @@ namespace Diciela.UI
         private void OnDestroy()
         {
             Hide();
+        }
+
+        /// <summary>Une flèche, un texte, une flèche, à la suite dans cette ligne ; rend le texte.</summary>
+        private static Label Selector(VisualElement line, string style, string previous, string next, Action<int> stepped)
+        {
+            line.Add(Styled(new Button(() => stepped(-1)) { text = previous }, ArrowClass));
+            var shown = Styled(new Label(), style);
+            line.Add(shown);
+            line.Add(Styled(new Button(() => stepped(1)) { text = next }, ArrowClass));
+            return shown;
         }
 
         private static T Styled<T>(T element, string style) where T : VisualElement

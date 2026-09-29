@@ -9,30 +9,35 @@ namespace Diciela.Tests.PlayMode
 {
     /// <summary>
     /// Le présentateur de l'écran de création (GDD, section 6), sur le petit monde des tests et une vue qui note ce
-    /// qu'on lui montre et joue les flèches du joueur. Un catalogue de deux corps (le chat, roux ; le renard, gris), de
-    /// deux couleurs et d'un emplacement, la tête, qui propose un chapeau et une couronne ; une table des textes écrite
-    /// ici.
+    /// qu'on lui montre et joue les flèches du joueur. Un catalogue de deux têtes et deux corps (le chat, roux ; le
+    /// renard, gris), montés sur le personnage de TestRig ; deux couleurs ; un emplacement, le chapeau, qui propose un
+    /// chapeau et une couronne, gris d'origine ; une table des textes écrite ici.
     /// </summary>
     public sealed class CreationPresenterTests
     {
         private const string Texts = "clé,fr\n" +
                                      "creation.titre,La Chimère\n" +
+                                     "creation.tete,Tête\n" +
                                      "creation.corps,Corps\n" +
-                                     "creation.couleur,Couleur\n" +
                                      "creation.aucun,Aucun\n" +
-                                     "creation.precedent,‹\n" +
-                                     "creation.suivant,›\n" +
+                                     "creation.precedent,<\n" +
+                                     "creation.suivant,>\n" +
                                      "creation.valider,C'est parti\n" +
+                                     "tete.chat,Chat\n" +
+                                     "tete.renard,Renard\n" +
                                      "corps.chat,Chat\n" +
                                      "corps.renard,Renard\n" +
                                      "couleur.roux,Roux\n" +
                                      "couleur.gris,Gris\n" +
-                                     "emplacement.tete,Tête\n" +
+                                     "emplacement.chapeau,Chapeau\n" +
                                      "piece.chapeau,Chapeau\n" +
                                      "piece.couronne,Couronne\n";
 
         private TestWorld _test;
-        private BodyDefinition _fox;
+        private TestRig _rig;
+        private HeadDefinition _foxHead;
+        private BodyDefinition _catBody;
+        private PaletteDefinition _red;
         private PaletteDefinition _grey;
         private AttachmentDefinition _hat;
         private AppearancePreview _preview;
@@ -44,37 +49,46 @@ namespace Diciela.Tests.PlayMode
         public void CreateScreen()
         {
             _test = new TestWorld();
-            var kind = _test.Keep(ScriptableObject.CreateInstance<VillagerKindDefinition>());
-            GameObject character = _test.Keep(new GameObject("Personnage de test"));
-            new GameObject("head").transform.SetParent(character.transform, false);
-            var red = Fiche<PaletteDefinition>("roux", "couleur.roux");
+            _rig = new TestRig();
+            var kind = _rig.Keep(ScriptableObject.CreateInstance<VillagerKindDefinition>());
+            _red = Fiche<PaletteDefinition>("roux", "couleur.roux");
             _grey = Fiche<PaletteDefinition>("gris", "couleur.gris");
-            var cat = Fiche<BodyDefinition>("chat", "corps.chat");
-            _fox = Fiche<BodyDefinition>("renard", "corps.renard");
-            var head = Fiche<AttachmentSlotDefinition>("tete", "emplacement.tete");
+            var catHead = Fiche<HeadDefinition>("chat", "tete.chat");
+            _foxHead = Fiche<HeadDefinition>("renard", "tete.renard");
+            _catBody = Fiche<BodyDefinition>("chat", "corps.chat");
+            var foxBody = Fiche<BodyDefinition>("renard", "corps.renard");
+            var top = Fiche<AttachmentSlotDefinition>("chapeau", "emplacement.chapeau");
             _hat = Fiche<AttachmentDefinition>("chapeau", "piece.chapeau");
             var crown = Fiche<AttachmentDefinition>("couronne", "piece.couronne");
-            var catalog = _test.Keep(ScriptableObject.CreateInstance<Catalog>());
+            var catalog = _rig.Keep(ScriptableObject.CreateInstance<Catalog>());
 #if UNITY_EDITOR
             TestWorld.Fill(kind, "_id", "chimere");
-            foreach ((BodyDefinition body, PaletteDefinition palette) in new[] { (cat, red), (_fox, _grey) })
+            foreach ((HeadDefinition head, PaletteDefinition palette) in new[] { (catHead, _red), (_foxHead, _grey) })
             {
-                TestWorld.Fill(body, "_model", character);
+                TestWorld.Fill(head, "_mesh", _rig.Head.Mesh);
+                TestWorld.Fill(head, "_palette", palette);
+            }
+            foreach ((BodyDefinition body, PaletteDefinition palette) in new[] { (_catBody, _red), (foxBody, _grey) })
+            {
+                TestWorld.Fill(body, "_model", _rig.Character);
+                TestWorld.Fill(body, "_mesh", _rig.Body.Mesh);
                 TestWorld.Fill(body, "_palette", palette);
             }
-            TestWorld.Fill(head, "_bone", "head");
+            TestWorld.Fill(top, "_bone", "head");
             foreach (AttachmentDefinition piece in new[] { _hat, crown })
             {
-                TestWorld.Fill(piece, "_slot", head);
-                TestWorld.Fill(piece, "_model", character);
+                TestWorld.Fill(piece, "_slot", top);
+                TestWorld.Fill(piece, "_model", _rig.Character.transform.Find("root/pelvis/Queue d'office").gameObject);
+                TestWorld.Fill(piece, "_palette", _grey);
             }
             TestWorld.Fill(catalog, "_chimeraKind", kind);
-            TestWorld.FillList(catalog, "_bodies", cat, _fox);
-            TestWorld.FillList(catalog, "_palettes", red, _grey);
-            TestWorld.FillList(catalog, "_attachmentSlots", head);
+            TestWorld.FillList(catalog, "_heads", catHead, _foxHead);
+            TestWorld.FillList(catalog, "_bodies", _catBody, foxBody);
+            TestWorld.FillList(catalog, "_palettes", _red, _grey);
+            TestWorld.FillList(catalog, "_attachmentSlots", top);
             TestWorld.FillList(catalog, "_attachments", _hat, crown);
 #endif
-            _preview = _test.Keep(new GameObject("Aperçu de test")).AddComponent<AppearancePreview>();
+            _preview = _rig.Keep(new GameObject("Aperçu de test")).AddComponent<AppearancePreview>();
             _view = new NotedCreationView();
             _started = 0;
             _presenter = new CreationPresenter(_view, catalog, TextTable.Parse(Texts, "fr"), _preview, _test.World,
@@ -85,49 +99,57 @@ namespace Diciela.Tests.PlayMode
         public void DestroyScreen()
         {
             _presenter.Dispose();
+            _rig.Dispose();
             _test.Dispose();
         }
 
         [Test]
-        public void TheScreenStartsFromTheFirstBodyInItsOwnColorWithoutPieces()
+        public void TheScreenStartsFromTheFirstHeadAndBodyInTheirColorsWithoutPieces()
         {
             Assert.AreEqual("La Chimère", _view.Title);
-            Assert.AreEqual(new[] { "Corps", "Couleur", "Tête" }, _view.Labels);
-            Assert.AreEqual(new[] { "Chat", "Roux", "Aucun" }, _view.Choices);
+            Assert.AreEqual(new[] { "Tête", "Corps", "Chapeau" }, _view.Labels);
+            Assert.AreEqual(new[] { "Chat", "Chat", "Aucun" }, _view.Choices);
+            Assert.AreEqual(new[] { "Roux", "Roux", "" }, _view.Colors, "Sans pièce, pas de couleur.");
             Assert.AreEqual(1, _preview.transform.childCount, "L'aperçu montre la Chimère à venir.");
         }
 
         [Test]
-        public void TheArrowsGoRoundEachRowWithNoneBeforeThePieces()
+        public void ThePieceArrowsGoRoundWithNoneFirstAndBringThePieceInItsOwnColor()
         {
             _view.Step(2, 1);
-            Assert.AreEqual("Chapeau", _view.Choices[2]);
+            Assert.AreEqual(("Chapeau", "Gris"), (_view.Choices[2], _view.Colors[2]));
+            _view.Recolor(2, 1);
+            Assert.AreEqual("Roux", _view.Colors[2]);
             _view.Step(2, 1);
-            Assert.AreEqual("Couronne", _view.Choices[2]);
+            Assert.AreEqual(("Couronne", "Gris"), (_view.Choices[2], _view.Colors[2]), "Une autre pièce, sa couleur.");
             _view.Step(2, 1);
-            Assert.AreEqual("Aucun", _view.Choices[2], "Après la dernière pièce, on revient à « aucun ».");
+            Assert.AreEqual(("Aucun", ""), (_view.Choices[2], _view.Colors[2]), "Après la dernière, « aucun ».");
+            _view.Recolor(2, 1);
+            Assert.AreEqual("", _view.Colors[2], "Sans pièce, rien à colorer.");
             _view.Step(2, -1);
             Assert.AreEqual("Couronne", _view.Choices[2], "Avant « aucun », la dernière pièce.");
-            _view.Step(1, -1);
-            Assert.AreEqual("Gris", _view.Choices[1], "Avant la première couleur, la dernière.");
         }
 
         [Test]
-        public void AnotherBodyComesInItsOwnColor()
+        public void TheHeadAndTheBodyTakeTheirColorsApartAndAnotherHeadComesInItsOwn()
         {
+            _view.Recolor(0, -1);
+            Assert.AreEqual(new[] { "Gris", "Roux" }, _view.Colors.GetRange(0, 2), "La tête change seule de couleur.");
+            _view.Step(0, 1);
+            Assert.AreEqual(("Renard", "Gris"), (_view.Choices[0], _view.Colors[0]));
             _view.Step(1, 1);
-            Assert.AreEqual(new[] { "Chat", "Gris" }, _view.Choices.GetRange(0, 2));
+            Assert.AreEqual(("Renard", "Gris"), (_view.Choices[1], _view.Colors[1]));
             _view.Step(0, 1);
-            Assert.AreEqual(new[] { "Renard", "Gris" }, _view.Choices.GetRange(0, 2));
-            _view.Step(0, 1);
-            Assert.AreEqual(new[] { "Chat", "Roux" }, _view.Choices.GetRange(0, 2), "Le chat revient roux.");
+            Assert.AreEqual(("Chat", "Roux"), (_view.Choices[0], _view.Colors[0]), "La tête du chat revient rousse.");
         }
 
         [Test]
         public void ValidatingSendsOneOrderWithTheChosenAppearanceThenTheScreenIsDone()
         {
             _view.Step(0, 1);
+            _view.Recolor(1, 1);
             _view.Step(2, 1);
+            _view.Recolor(2, 1);
             _view.Confirm();
             _view.Confirm();
             _view.Step(2, 1);
@@ -135,15 +157,19 @@ namespace Diciela.Tests.PlayMode
 
             Assert.AreEqual(1, _started, "Une seule validation.");
             Appearance appearance = _test.World.Villagers.Chimera.Appearance;
-            Assert.AreSame(_fox, appearance.Body);
-            Assert.AreSame(_grey, appearance.Palette);
-            CollectionAssert.AreEqual(new[] { _hat }, appearance.Attachments);
+            Assert.AreSame(_foxHead, appearance.Head);
+            Assert.AreSame(_grey, appearance.HeadPalette);
+            Assert.AreSame(_catBody, appearance.Body);
+            Assert.AreSame(_grey, appearance.BodyPalette);
+            Assert.AreEqual(1, appearance.Attachments.Count);
+            Assert.AreSame(_hat, appearance.Attachments[0].Attachment);
+            Assert.AreSame(_red, appearance.Attachments[0].Palette);
             Assert.AreEqual("Chapeau", _view.Choices[2], "Validé, l'écran ne change plus.");
         }
 
         private T Fiche<T>(string id, string nameKey) where T : ScriptableObject
         {
-            var fiche = _test.Keep(ScriptableObject.CreateInstance<T>());
+            var fiche = _rig.Keep(ScriptableObject.CreateInstance<T>());
 #if UNITY_EDITOR
             TestWorld.Fill(fiche, "_id", id);
             TestWorld.Fill(fiche, "_nameKey", nameKey);

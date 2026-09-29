@@ -15,4 +15,7 @@ MonoBehaviour:
   _id: chat_a
   _nameKey: corps.chat_a
   _model: {fileID: 2141610353401006500, guid: 4f99572d119932b499bccc5cdac84383, type: 3}
+  _mesh: {fileID: 4300000, guid: d07214df8c2ce294b9d19bd2d7e3e010, type: 2}
   _palette: {fileID: 11400000, guid: a044d4e6df3513d45968a9f4df51a8da, type: 2}
+  _worn:
+  - {fileID: 11400000, guid: 580db25603ad0d547bc41d0050af59e0, type: 2}

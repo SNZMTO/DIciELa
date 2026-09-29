@@ -16,4 +16,5 @@ MonoBehaviour:
   _nameKey: piece.cape_01
   _slot: {fileID: 11400000, guid: 845a99f1ff227c043bcf27f441aae98a, type: 2}
   _model: {fileID: 2452865851890699625, guid: 8fee7bb22ba1b004484fd5fec2427d04, type: 3}
+  _palette: {fileID: 11400000, guid: 82d3eb0161a8fcd49a80a3086ee0a5aa, type: 2}
   _anchor: {x: -0.000000029802322, y: 0.95676064, z: -0.020261854}

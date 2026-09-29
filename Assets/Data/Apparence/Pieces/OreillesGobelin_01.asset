@@ -16,4 +16,5 @@ MonoBehaviour:
   _nameKey: piece.oreillesgobelin_01
   _slot: {fileID: 11400000, guid: 237ba4d2efff1aa4c91544ec94af0605, type: 2}
   _model: {fileID: 8140010998165705884, guid: fd589638b076c714d8d7a148c22c183d, type: 3}
+  _palette: {fileID: 11400000, guid: 82d3eb0161a8fcd49a80a3086ee0a5aa, type: 2}
   _anchor: {x: 0, y: 1.8389173, z: 0.021660872}

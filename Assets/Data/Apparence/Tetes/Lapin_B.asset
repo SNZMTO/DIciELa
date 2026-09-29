@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9ef14ded5bd0eb49a8824adb059e4d5, type: 3}
+  m_Name: Lapin_B
+  m_EditorClassIdentifier: Diciela.Data::Diciela.Data.HeadDefinition
+  _id: lapin_b
+  _nameKey: tete.lapin_b
+  _mesh: {fileID: 4300000, guid: be299cf15a64b324fbd21909820eb0a6, type: 2}
+  _palette: {fileID: 11400000, guid: 00ce1454294615c4ea69527a7fc60753, type: 2}

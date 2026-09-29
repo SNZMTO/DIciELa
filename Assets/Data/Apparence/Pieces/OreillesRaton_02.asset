@@ -16,4 +16,5 @@ MonoBehaviour:
   _nameKey: piece.oreillesraton_02
   _slot: {fileID: 11400000, guid: 237ba4d2efff1aa4c91544ec94af0605, type: 2}
   _model: {fileID: 5214237367787145032, guid: 782569c5922de304c8a91855599cce00, type: 3}
+  _palette: {fileID: 11400000, guid: 82d3eb0161a8fcd49a80a3086ee0a5aa, type: 2}
   _anchor: {x: 0, y: 1.9172609, z: 0.048214212}

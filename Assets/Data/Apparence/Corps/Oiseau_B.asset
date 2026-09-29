@@ -15,4 +15,7 @@ MonoBehaviour:
   _id: oiseau_b
   _nameKey: corps.oiseau_b
   _model: {fileID: 7517139575663391313, guid: e7e5a0a6632a21a48bd2736ead791091, type: 3}
+  _mesh: {fileID: 4300000, guid: 3a76954e07a43d3468016e3c1d2a36fe, type: 2}
   _palette: {fileID: 11400000, guid: cb71a7174b591f94d986b46ffd850cf3, type: 2}
+  _worn:
+  - {fileID: 11400000, guid: 25865f595c0a2b94caec879a46b9ec0b, type: 2}

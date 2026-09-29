@@ -16,4 +16,5 @@ MonoBehaviour:
   _nameKey: piece.bandana_01
   _slot: {fileID: 11400000, guid: 356cda8f5f7095e40a4863bd623d7793, type: 2}
   _model: {fileID: 3331084449207049464, guid: 7ca49d8ddc1905d4fbed02bac4a08468, type: 3}
+  _palette: {fileID: 11400000, guid: 82d3eb0161a8fcd49a80a3086ee0a5aa, type: 2}
   _anchor: {x: -0.000000014901161, y: 1.1457688, z: -0.040436734}

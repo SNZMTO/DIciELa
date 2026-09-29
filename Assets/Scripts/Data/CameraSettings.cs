@@ -14,7 +14,7 @@ namespace Diciela.Data
         [SerializeField, Range(10f, 90f)] private float _fieldOfView = 40f;
 
         [Tooltip("Distance au sol la plus proche, en mètres : les habitants presque de face.")]
-        [SerializeField, Min(1f)] private float _nearDistance = 15f;
+        [SerializeField, Min(1f)] private float _nearDistance = 8f;
 
         [Tooltip("Distance au sol la plus lointaine, en mètres : la ville en maquette.")]
         [SerializeField, Min(1f)] private float _farDistance = 220f;

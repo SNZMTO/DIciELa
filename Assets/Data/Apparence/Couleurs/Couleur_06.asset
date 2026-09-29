@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Diciela.Data::Diciela.Data.PaletteDefinition
   _id: couleur_06
   _nameKey: couleur.06
-  _material: {fileID: 2100000, guid: 5fe8e8f7d550b4d4e828d15f6482ed49, type: 2}
+  _characterMaterial: {fileID: 2100000, guid: 5fe8e8f7d550b4d4e828d15f6482ed49, type: 2}
+  _objectMaterial: {fileID: 2100000, guid: c9f1352331267c4418168c2b3a06931b, type: 2}

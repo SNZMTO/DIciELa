@@ -100,23 +100,18 @@ namespace Diciela.Tests.PlayMode
         }
 
         /// <summary>
-        /// Une apparence sans pièce : un corps de ce modèle (aucun si null), dans une couleur sans matériau ; ses fiches
-        /// sont confiées à keep, pour être détruites avec le test.
+        /// Une apparence sans pièce ni modèle, pour un monde que personne ne regarde : une tête et un corps d'une couleur
+        /// sans matériau ; ses fiches sont confiées à keep, pour être détruites avec le test.
         /// </summary>
-        public static Appearance PlainAppearance(Action<Object> keep, GameObject model = null)
+        public static Appearance PlainAppearance(Action<Object> keep)
         {
             var palette = ScriptableObject.CreateInstance<PaletteDefinition>();
+            var head = ScriptableObject.CreateInstance<HeadDefinition>();
             var body = ScriptableObject.CreateInstance<BodyDefinition>();
             keep(palette);
+            keep(head);
             keep(body);
-#if UNITY_EDITOR
-            Fill(palette, "_id", "roux");
-            Fill(body, "_id", "chat");
-            Fill(body, "_palette", palette);
-            if (model != null)
-                Fill(body, "_model", model);
-#endif
-            return new Appearance(body, palette, Array.Empty<AttachmentDefinition>());
+            return new Appearance(head, palette, body, palette, Array.Empty<WornAttachment>());
         }
 
 #if UNITY_EDITOR

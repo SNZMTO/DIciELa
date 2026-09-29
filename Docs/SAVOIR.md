@@ -287,29 +287,43 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 
 ### 2.11 Habiller un personnage du pack
 
-- **Un corps, un prefab** : chaque prefab d'animal porte seize corps sur un même squelette, un seul allumé, mais les
-  quinze autres pointent vers un matériau absent du projet (roses si on les allume). On prend donc le prefab du corps
-  voulu, et l'on retire ses corps cachés à l'habillage : ils pèsent sans rien montrer.
-- **La couleur** : les douze matériaux d'animaux lisent des textures de couleurs rangées de la même façon ; on remplace
-  la couleur d'origine du corps par la choisie dans `sharedMaterials`, jamais `.material`, qui copierait le matériau par
-  personnage et empêcherait le rendu de les regrouper.
+- **La tête est un îlot** : dans chaque modèle d'animal, aucun triangle ne relie la tête au corps (mesuré : zéro
+  triangle à cheval). On la sépare donc sans rien couper, selon les os qui la mènent (head, eyes, eyebrows : un
+  triangle y va si ses sommets les suivent pour moitié au moins), en deux maillages qui gardent poids et poses d'origine
+  des os (`BodyCutter`, dans `Assets/Art/Personnages`). Les seize animaux ont exactement le même squelette (mêmes
+  os, même ordre) : n'importe quelle tête va sur n'importe quel corps, sans jour au cou.
+- **Un seul corps allumé par prefab** : chaque prefab d'animal porte seize corps, dont quinze cachés qui pointent vers un
+  matériau absent du projet (roses si on les allume). On prend le prefab du corps voulu comme squelette.
+- **Habiller** (`Dresser`) : on retire ce que porte le prefab **par structure, jamais par nom** : les maillages à peau
+  enfants directs (ses corps), les maillages sans peau (ses pièces d'office, la queue du chat), les maillages à peau
+  cachés (ses capes cachées). On garde avant les os, l'os racine et la boîte (`localBounds`) du corps allumé : un
+  maillage à peau neuf sans cette boîte est jugé hors de vue et ne se montre pas, sans erreur. La tête et le corps
+  choisis y sont posés, chacun de sa couleur.
+- **Les couleurs** : deux familles de matériaux lisent les mêmes douze textures du pack, celle des personnages
+  (`Materials/Alts/Animal_Alts` : têtes, corps, queues) et celle des objets (`Materials/Alts` : chapeaux, capes,
+  lunettes…), au shader près. Une couleur du jeu tient les deux ; recolorer remplace chaque matériau par son pendant,
+  là seulement où il est (une lentille de verre reste en verre), dans `sharedMaterials`, jamais `.material`, qui
+  copierait le matériau par personnage et empêcherait le rendu de les regrouper.
 - **Les pièces** (`Chr_Attach`) ne sont pas modelées à leur place sur le personnage : chacune est debout, dans les axes
   du personnage, son pivot à son point d'accroche. Le pack les pose lui-même par un os et un décalage réglé à la main,
-  dont la rotation revient à l'identité (la queue du chat sous `pelvis`, les cheveux de l'oiseau sous `head`, un
-  chapeau humain à l'identité sous `Head`). On pose donc le pivot sur un point du personnage, en mètres depuis ses pieds,
-  la pièce droite, puis on la confie à l'os de son emplacement en gardant sa place : elle le suivra une fois animée.
+  dont la rotation revient à l'identité (la queue du chat sous `pelvis`, les cheveux de l'oiseau sous `head`). On pose
+  donc le pivot sur un point du personnage, en mètres depuis ses pieds, la pièce droite, puis on la confie à l'os de son
+  emplacement en gardant sa place : elle le suivra une fois animée. Les copies que le pack pose sur ses animaux ne sont
+  pas les prefabs de `Chr_Attach` : on les reconnaît à leur maillage.
 - **Deux squelettes** : les humains ont `Head` (1,57 m), les animaux `head` (1,21 m, à la base d'une tête énorme). Les
   animaux mesurent 2,1 à 2,5 m oreilles comprises ; le haut du crâne va de 1,77 m (grenouille) à 2,08 m (cochon),
-  1,88 m pour le chat ; la face avance jusqu'à 0,45 m devant. Les chapeaux 1 à 5, la barbe et les cheveux sont à la
-  taille des humains ; les chapeaux 6 à 8, le casque, la couronne, les lunettes, les oreilles et les nœuds, à celle
-  des animaux.
+  1,88 m pour le chat ; la face avance jusqu'à 0,45 m devant. Les chapeaux 1 à 5, les cheveux, la barbe et les boucles
+  d'oreilles sont à la taille des humains ; les chapeaux 6 à 8, le casque, la couronne, les lunettes, les oreilles et les
+  nœuds, à celle des animaux.
 - **Un premier point mesuré** (`PackMeasures`) : une pièce de tête pose sa base un peu sous le haut du crâne (de 30 %
   de sa hauteur au plus, pour qu'une couronne reste dehors) ; une pièce de la face pose son dos contre l'avant de la
-  face ; les autres vont sur un os, ou au point que le pack donne. Le reste se règle à l'œil, pièce par pièce.
-- **Des capes d'office** : l'oiseau, le lapin, la souris et le cochon portent une petite cape, sous `CapesMini_01` ; une
-  cape du pack s'y ajoute.
-- **Vérifier à l'œil** : la planche de la Chimère (`DICIELA/Album/…`) pose chaque pièce sur un corps ; l'écran de
-  création montre une pièce de près, la caméra libre de tourner autour.
+  face ; une pièce faite pour une tête humaine va là où le pack pose les cheveux de l'oiseau ; les autres vont sur un
+  os, ou au point que le pack donne. Le reste se règle à l'œil, pièce par pièce.
+- **Les petites capes** de l'oiseau, du lapin, de la souris et du cochon, sous `CapesMini_01`, ont leur propre
+  squelette (`CapeRigMini_*`), pas celui du personnage : elles ne suivront pas l'animation du dos.
+- **Vérifier à l'œil** : les planches de la Chimère (`DICIELA/Album/…`), l'une avec chaque pièce sur un animal, l'autre
+  avec chaque animal sous sa tête et sous celle du suivant, de face et de dos ; l'écran de création montre une partie de
+  près, la caméra libre de tourner autour.
 
 ## 3. Pièges de Unity et de C#
 

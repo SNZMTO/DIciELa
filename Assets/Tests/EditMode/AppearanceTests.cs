@@ -8,24 +8,27 @@ using NUnit.Framework;
 namespace Diciela.Tests.EditMode
 {
     /// <summary>
-    /// L'apparence (GDD, section 6) : un corps, sa couleur, au plus une pièce par emplacement ; une apparence
-    /// incohérente ne se construit pas. La Chimère naît avec celle de son ordre, et la garde. Le catalogue propose
-    /// l'apparence de départ : son premier corps, dans sa couleur d'origine, sans pièce.
+    /// L'apparence (GDD, section 6) : une tête et un corps, chacun de sa couleur, au plus une pièce par emplacement,
+    /// chacune de la sienne ; une apparence incohérente ne se construit pas. La Chimère naît avec celle de son ordre, et la
+    /// garde. Le catalogue propose l'apparence de départ : sa première tête et son premier corps, dans leurs couleurs
+    /// d'origine, et les pièces que ce corps porte dans le pack, de sa couleur.
     /// </summary>
     public sealed class AppearanceTests
     {
         private TestChimera _test;
-        private PaletteDefinition _palette;
+        private PaletteDefinition _grey;
+        private HeadDefinition _head;
         private BodyDefinition _body;
-        private AttachmentSlotDefinition _head;
+        private AttachmentSlotDefinition _top;
 
         [SetUp]
         public void CreateData()
         {
             _test = new TestChimera();
-            _palette = _test.Keep(TestData.Palette("gris"));
-            _body = _test.Keep(TestData.Body("renard", _palette));
-            _head = _test.Keep(TestData.Slot("tete"));
+            _grey = _test.Keep(TestData.Palette("gris"));
+            _head = _test.Keep(TestData.Head("renard", _grey));
+            _body = _test.Keep(TestData.Body("renard", _grey));
+            _top = _test.Keep(TestData.Slot("chapeau"));
         }
 
         [TearDown]
@@ -35,46 +38,56 @@ namespace Diciela.Tests.EditMode
         }
 
         [Test]
-        public void AnAppearanceNeedsABodyAColorAndAListOfPieces()
+        public void AnAppearanceNeedsAHeadABodyTheirColorsAndAListOfPieces()
         {
-            var none = Array.Empty<AttachmentDefinition>();
-            Assert.Throws<ArgumentNullException>(() => new Appearance(null, _palette, none));
-            Assert.Throws<ArgumentNullException>(() => new Appearance(_body, null, none));
-            Assert.Throws<ArgumentNullException>(() => new Appearance(_body, _palette, null));
+            var none = Array.Empty<WornAttachment>();
+            Assert.Throws<ArgumentNullException>(() => new Appearance(null, _grey, _body, _grey, none));
+            Assert.Throws<ArgumentNullException>(() => new Appearance(_head, null, _body, _grey, none));
+            Assert.Throws<ArgumentNullException>(() => new Appearance(_head, _grey, null, _grey, none));
+            Assert.Throws<ArgumentNullException>(() => new Appearance(_head, _grey, _body, null, none));
+            Assert.Throws<ArgumentNullException>(() => new Appearance(_head, _grey, _body, _grey, null));
         }
 
         [Test]
-        public void AnAppearanceRefusesAMissingPieceAPieceWithoutSlotAndTwoPiecesInOneSlot()
+        public void AnAppearanceRefusesAPieceMissingItsSlotOrItsColorAndTwoPiecesInOneSlot()
         {
-            AttachmentDefinition hat = _test.Keep(TestData.Attachment("chapeau", _head));
-            AttachmentDefinition crown = _test.Keep(TestData.Attachment("couronne", _head));
+            AttachmentDefinition hat = _test.Keep(TestData.Attachment("chapeau", _top));
+            AttachmentDefinition crown = _test.Keep(TestData.Attachment("couronne", _top));
             AttachmentDefinition loose = _test.Keep(TestData.Attachment("perdue", null));
 
-            Assert.Throws<ArgumentException>(() => new Appearance(_body, _palette, new AttachmentDefinition[] { null }));
-            Assert.Throws<ArgumentException>(() => new Appearance(_body, _palette, new[] { loose }));
-            Assert.Throws<ArgumentException>(() => new Appearance(_body, _palette, new[] { hat, crown }));
+            Assert.Throws<ArgumentException>(() => Wearing(new WornAttachment(null, _grey)));
+            Assert.Throws<ArgumentException>(() => Wearing(new WornAttachment(loose, _grey)));
+            Assert.Throws<ArgumentException>(() => Wearing(new WornAttachment(hat, null)));
+            Assert.Throws<ArgumentException>(() => Wearing(new WornAttachment(hat, _grey),
+                new WornAttachment(crown, _grey)));
         }
 
         [Test]
         public void AnAppearanceKeepsItsPiecesWhateverBecomesOfTheListItCameFrom()
         {
-            AttachmentDefinition hat = _test.Keep(TestData.Attachment("chapeau", _head));
+            PaletteDefinition red = _test.Keep(TestData.Palette("roux"));
+            AttachmentDefinition hat = _test.Keep(TestData.Attachment("chapeau", _top));
             AttachmentDefinition tail = _test.Keep(TestData.Attachment("queue", _test.Keep(TestData.Slot("queue"))));
-            var pieces = new List<AttachmentDefinition> { hat, tail };
+            var pieces = new List<WornAttachment> { new WornAttachment(hat, red), new WornAttachment(tail, _grey) };
 
-            var appearance = new Appearance(_body, _palette, pieces);
+            var appearance = new Appearance(_head, red, _body, _grey, pieces);
             pieces.Clear();
 
+            Assert.AreSame(_head, appearance.Head);
+            Assert.AreSame(red, appearance.HeadPalette);
             Assert.AreSame(_body, appearance.Body);
-            Assert.AreSame(_palette, appearance.Palette);
-            CollectionAssert.AreEqual(new[] { hat, tail }, appearance.Attachments);
+            Assert.AreSame(_grey, appearance.BodyPalette);
+            Assert.AreEqual(2, appearance.Attachments.Count);
+            Assert.AreSame(hat, appearance.Attachments[0].Attachment);
+            Assert.AreSame(red, appearance.Attachments[0].Palette);
+            Assert.AreSame(tail, appearance.Attachments[1].Attachment);
         }
 
         [Test]
         public void TheChimeraIsBornWithTheAppearanceOfHerOrderAndKeepsIt()
         {
             PaletteDefinition green = _test.Keep(TestData.Palette("vert"));
-            var chosen = new Appearance(_body, green, new[] { _test.Keep(TestData.Attachment("chapeau", _head)) });
+            Appearance chosen = Wearing(new WornAttachment(_test.Keep(TestData.Attachment("chapeau", _top)), green));
             var world = new World(_test.Settings, TestData.FlatMap(40f));
 
             world.Submit(new CreateChimeraCommand(_test.Kind, chosen));
@@ -85,17 +98,30 @@ namespace Diciela.Tests.EditMode
         }
 
         [Test]
-        public void TheStartingAppearanceIsTheFirstBodyInItsOwnColorWithoutPieces()
+        public void TheStartingAppearanceIsTheFirstHeadAndBodyInTheirColorsWearingWhatTheBodyWearsInThePack()
         {
-            PaletteDefinition brown = _test.Keep(TestData.Palette("brun"));
-            BodyDefinition second = _test.Keep(TestData.Body("chat", brown));
+            PaletteDefinition red = _test.Keep(TestData.Palette("roux"));
+            AttachmentDefinition tail = _test.Keep(TestData.Attachment("queue", _test.Keep(TestData.Slot("queue"))));
+            HeadDefinition cat = _test.Keep(TestData.Head("chat", red));
+            BodyDefinition dress = _test.Keep(TestData.Body("chat", _grey, tail));
 
-            Appearance starting = Appearance.StartingIn(_test.Keep(TestData.Catalog(_body, second)));
+            Appearance starting = Appearance.StartingIn(_test.Keep(TestData.Catalog(new[] { cat, _head },
+                new[] { dress, _body })));
 
-            Assert.AreSame(_body, starting.Body);
-            Assert.AreSame(_palette, starting.Palette);
-            Assert.IsEmpty(starting.Attachments);
-            Assert.Throws<ArgumentException>(() => Appearance.StartingIn(_test.Keep(TestData.Catalog())));
+            Assert.AreSame(cat, starting.Head);
+            Assert.AreSame(red, starting.HeadPalette);
+            Assert.AreSame(dress, starting.Body);
+            Assert.AreSame(_grey, starting.BodyPalette);
+            Assert.AreEqual(1, starting.Attachments.Count);
+            Assert.AreSame(tail, starting.Attachments[0].Attachment);
+            Assert.AreSame(_grey, starting.Attachments[0].Palette, "La queue du chat est de la couleur de son corps.");
+            Assert.Throws<ArgumentException>(() => Appearance.StartingIn(_test.Keep(TestData.Catalog(
+                Array.Empty<HeadDefinition>(), new[] { _body }))));
+        }
+
+        private Appearance Wearing(params WornAttachment[] pieces)
+        {
+            return new Appearance(_head, _grey, _body, _grey, pieces);
         }
     }
 }

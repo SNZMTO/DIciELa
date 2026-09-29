@@ -11,8 +11,8 @@ namespace Diciela.Data
         // Les textes de l'écran de création (GDD, section 6) : son titre, ses deux premières lignes, le choix vide d'un
         // emplacement, les flèches, le bouton qui valide.
         public const string CreationTitle = "creation.titre";
+        public const string CreationHead = "creation.tete";
         public const string CreationBody = "creation.corps";
-        public const string CreationPalette = "creation.couleur";
         public const string CreationNone = "creation.aucun";
         public const string CreationPrevious = "creation.precedent";
         public const string CreationNext = "creation.suivant";
