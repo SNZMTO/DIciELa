@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Diciela.Data;
 using UnityEngine;
 
@@ -67,25 +68,34 @@ namespace Diciela.View
         }
 
         /// <summary>
-        /// La hauteur du pivot d'une paire posée par sa base, en descendant sur le dessus d'une tête : les points de sa face
-        /// qui touchaient (à BaseGap près) le dessus de sa tête de référence, où elle était posée à referencePivot, restent
-        /// au contact sur la tête choisie. Aucun ne flotte : l'un touche, les autres s'enfoncent, ce qui ne se voit pas ;
-        /// sur sa tête de référence, elle ne bouge pas. spread : l'écart de ses moitiés, comme pour TryTouch ;
-        /// referenceSpread, leur écart sur sa tête de référence. Faux si aucun de ces points ne se retrouve au-dessus de la
-        /// tête choisie.
+        /// La coordonnée, sur l'axe du contact (descendre sur le crâne ou reculer contre la face), du pivot d'une pièce
+        /// posée par sa base : les points de sa face qui touchaient (à BaseGap près) sa tête de référence, où elle était
+        /// posée à referencePivot, restent au contact sur la tête choisie. Sur le crâne, aucun ne flotte : l'un touche, les
+        /// autres s'enfoncent, ce qui ne se voit pas. Contre la face, souvent bombée, la moitié touche ou s'enfonce, l'autre
+        /// effleure : un museau à dos plat ne s'y enfouit pas. Sur sa tête de référence, elle ne bouge pas. spread : l'écart de ses
+        /// moitiés, comme pour TryTouch ; referenceSpread, leur écart sur sa tête de référence. uneven : de combien le point
+        /// qui s'enfonce le plus s'enfonce (zéro : la base porte à plat). Faux si aucun de ces points ne se retrouve devant
+        /// la tête choisie.
         /// </summary>
-        public static bool TryRest(SurfaceMap surface, SurfaceMap reference, SurfaceMap shape, Vector3 position,
-            Vector3 referencePivot, Vector3 scale, float spread, float referenceSpread, out float along)
+        public static bool TryRest(ContactAxis axis, SurfaceMap surface, SurfaceMap reference, SurfaceMap shape,
+            Vector3 position, Vector3 referencePivot, Vector3 scale, float spread, float referenceSpread, out float along,
+            out float uneven)
         {
             along = 0f;
-            if (surface == null || surface.IsEmpty || reference == null || reference.IsEmpty || shape == null ||
-                shape.IsEmpty || scale.x <= 0f || scale.y <= 0f || scale.z <= 0f)
+            uneven = 0f;
+            if ((axis != ContactAxis.Down && axis != ContactAxis.Back) || surface == null || surface.IsEmpty ||
+                reference == null || reference.IsEmpty || shape == null || shape.IsEmpty || scale.x <= 0f ||
+                scale.y <= 0f || scale.z <= 0f)
                 return false;
 
-            var pivot = new Vector2(position.x, position.z);
-            var referencePlane = new Vector2(referencePivot.x, referencePivot.z);
-            var inPlane = new Vector2(scale.x, scale.z);
-            float lowest = float.MaxValue, deepest = float.MinValue;
+            bool down = axis == ContactAxis.Down;
+            var pivot = new Vector2(position.x, down ? position.z : position.y);
+            var referencePlane = new Vector2(referencePivot.x, down ? referencePivot.z : referencePivot.y);
+            var inPlane = new Vector2(scale.x, down ? scale.z : scale.y);
+            float onAxis = down ? scale.y : scale.z;
+            float referenceAlong = down ? referencePivot.y : referencePivot.z;
+            var needs = new List<float>();
+            var gaps = new List<float>();
             for (int row = 0; row < surface.Rows; row++)
             {
                 for (int column = 0; column < surface.Columns; column++)
@@ -105,17 +115,22 @@ namespace Diciela.View
                         if (facing <= SurfaceMap.Empty || under <= SurfaceMap.Empty)
                             continue;
                         // Sur sa tête de référence, ce point de la base touchait-il ?
-                        float gap = referencePivot.y + scale.y * facing - under;
+                        float gap = referenceAlong + onAxis * facing - under;
                         if (gap > BaseGap)
                             continue;
-                        lowest = Mathf.Min(lowest, at - scale.y * facing);
-                        deepest = Mathf.Max(deepest, gap);
+                        needs.Add(at - onAxis * facing);
+                        gaps.Add(gap);
                     }
                 }
             }
-            if (lowest == float.MaxValue)
+            if (needs.Count == 0)
                 return false;
-            along = lowest + deepest;
+            needs.Sort();
+            gaps.Sort();
+            // Le point le plus bas touche (sur le crâne), ou celui du milieu (contre la face) ; sur la tête de référence, cela
+            // redonne la place de la pièce, le point qui touchait le plus loin de la tête.
+            along = down ? needs[0] + gaps[gaps.Count - 1] : needs[needs.Count / 2] + gaps[(gaps.Count - 1) / 2];
+            uneven = needs[needs.Count - 1] - needs[0];
             return true;
         }
     }

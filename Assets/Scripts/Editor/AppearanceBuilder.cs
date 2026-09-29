@@ -18,11 +18,15 @@ namespace Diciela.EditorTools
         private const string HumanReference = Characters + "/SM_Chr_Male_01.prefab";
 
         // Les animaux du pack, dans l'ordre de l'écran : le chat d'abord, la Chimère de départ, et la tête de référence des
-        // réglages.
-        private static readonly (string Pack, string Name)[] Animals =
+        // réglages. Savoir du pack : la profondeur (face vers l'avant) au-delà de laquelle un museau est cousu à la face,
+        // mesurée tête par tête (le groin, les museaux du raton et de la souris, le bec) ; les faces rondes du chat, du
+        // lapin et de la grenouille n'en ont pas, le museau du renard est à part.
+        private const float NoSnout = float.PositiveInfinity;
+        private static readonly (string Pack, string Name, float SnoutFront)[] Animals =
         {
-            ("Cat", "Chat"), ("Pig", "Cochon"), ("Frog", "Grenouille"), ("Bunny", "Lapin"), ("Bird", "Oiseau"),
-            ("Racoon", "RatonLaveur"), ("Fox", "Renard"), ("Mouse", "Souris")
+            ("Cat", "Chat", NoSnout), ("Pig", "Cochon", 0.37f), ("Frog", "Grenouille", NoSnout), ("Bunny", "Lapin", NoSnout),
+            ("Bird", "Oiseau", 0.37f), ("Racoon", "RatonLaveur", 0.37f), ("Fox", "Renard", NoSnout),
+            ("Mouse", "Souris", 0.38f)
         };
 
         public static void CreateMissing(Catalog catalog)
@@ -48,8 +52,8 @@ namespace Diciela.EditorTools
             var context = new AnimalContext(palettes, slotsByName, PackPoses.Read(), byMesh);
             var animals = new List<AnimalBuilder.Animal>();
             var ownPieces = new List<AttachmentDefinition>();
-            foreach ((string pack, string name) in Animals)
-                animals.AddRange(AnimalBuilder.Build(pack, name, context, ownPieces));
+            foreach ((string pack, string name, float snoutFront) in Animals)
+                animals.AddRange(AnimalBuilder.Build(pack, name, snoutFront, context, ownPieces));
 
             Fit(packPieces, geometries, rules, animals, context, new[] { slotsByName["Oreilles"], slotsByName["Cheveux"] });
             var heads = new List<HeadDefinition>();

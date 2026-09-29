@@ -175,14 +175,17 @@
   Entrée) la crée, et la ville s'ouvre sur elle, au point d'arrivée.
 - **Règle.** Une tête est un crâne, ses yeux et ses sourcils ; ce qui s'en détache (les oreilles du chat, du cochon, du
   lapin, du raton laveur, du renard et de la souris ; les touffes du cochon, du raton laveur, du renard et de la
-  souris ; le museau du renard) sont des pièces qu'elle porte d'office, qu'on peut changer. Changer de tête change ses
-  pièces : chaque ligne qui montrait une pièce de l'ancienne tête (ou rien, faute d'en avoir) prend celle de la
-  nouvelle ; une pièce choisie par le joueur reste. Toutes les têtes sont ainsi sans oreilles, et chaque paire
-  d'oreilles va sur chacune. Les autres museaux font la forme du visage : la ligne Museau y ajoute un nez.
+  souris ; le museau du renard, le groin du cochon, les museaux du raton laveur et de la souris, le bec de l'oiseau)
+  sont des pièces qu'elle porte d'office, qu'on peut changer. Changer de tête change ses pièces : chaque ligne qui
+  montrait une pièce de l'ancienne tête (ou rien, faute d'en avoir) prend celle de la nouvelle ; une pièce choisie par
+  le joueur reste. Toutes les têtes sont ainsi sans oreilles, et chaque paire d'oreilles va sur chacune ; un museau
+  choisi remplace celui de la tête. Le chat, le lapin et la grenouille ont une face ronde, sans museau à détacher : la
+  ligne Museau y pose le sien ; le cochon garde sa bouche et ses défenses.
 - **Règle.** Chaque pièce se pose sur la tête choisie, à son relief : un chapeau descend jusqu'à toucher le crâne, des
   lunettes reculent contre la face, un sac avance contre le dos, une bourse recule contre le ventre. Des oreilles se
-  posent aux oreilles de la tête choisie, chacune de son côté, par leur base : aucune ne flotte ; une paire de boucles
-  d'oreilles fait de même, une boucle seule suit l'oreille de son côté. Les nœuds se tiennent debout (le grand à
+  posent aux oreilles de la tête choisie, chacune de son côté, par leur base : aucune ne flotte, et sur une tête plus
+  ronde elles se rapprochent du milieu, sans déborder du crâne ; une paire de boucles d'oreilles fait de même, une
+  boucle seule suit l'oreille de son côté. Un museau se plaque contre la face par sa base, sans s'y enfouir. Les nœuds se tiennent debout (le grand à
   l'arrière de la tête, ses rubans dans le dos), les anneaux pendent, le bandana tombe sur la poitrine. Une tête ou un
   corps qui ne ressemble pas aux autres a ses réglages, pièce par pièce : sur la grenouille, les oreilles du pack et la
   couronne se posent derrière les dômes des yeux, la couronne entre eux ; sur l'oiseau, un museau monte sur le bec ; une cape recule sur la
