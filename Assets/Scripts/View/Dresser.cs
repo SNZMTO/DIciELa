@@ -10,8 +10,7 @@ namespace Diciela.View
     /// habitants vus comme pour l'aperçu de l'écran de création. Le personnage du pack d'où vient le corps sert de
     /// squelette : tous les animaux ont le même. On lui retire ce qu'il porte (ses seize corps, ses pièces d'office, ses
     /// capes cachées), puis il reçoit le corps et le crâne choisis, chacun de sa couleur, sur ses os. Une petite cape
-    /// qu'il porte dans le pack reste, comme un habit, de la couleur du corps, sauf sous une pièce qui couvre le dos (une
-    /// cape). Chaque pièce se pose (PiecePlacement), puis s'accroche à l'os de son emplacement sans bouger ; une pièce
+    /// qu'il porte dans le pack reste, comme un habit, de la couleur du corps. Chaque pièce se pose (PiecePlacement), puis s'accroche à l'os de son emplacement sans bouger ; une pièce
     /// qu'une autre cache (des oreilles sous un chapeau) ne se pose pas.
     /// </summary>
     public static class Dresser
@@ -33,10 +32,7 @@ namespace Diciela.View
 
             GameObject character = Object.Instantiate(body.Model, parent, false);
             character.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
-            bool coversBack = false;
-            foreach (WornAttachment worn in appearance.Attachments)
-                coversBack |= worn.Attachment.CoversBack;
-            if (!TryStrip(character.transform, coversBack, out Skeleton skeleton))
+            if (!TryStrip(character.transform, out Skeleton skeleton))
             {
                 Debug.LogError("DICIELA : le personnage de « " + body.Id + " » n'a pas de corps allumé.");
                 return character;
@@ -76,10 +72,10 @@ namespace Diciela.View
 
         /// <summary>
         /// Retire ce que porte le personnage du pack : ses corps (les maillages à peau enfants directs), ses pièces
-        /// d'office (ses maillages sans peau), ses capes cachées, et sa petite cape si une pièce couvre le dos. Faux s'il n'a
-        /// pas de corps allumé, dont on garde les os.
+        /// d'office (ses maillages sans peau) et ses capes cachées. Faux s'il n'a pas de corps allumé, dont on garde les
+        /// os.
         /// </summary>
-        private static bool TryStrip(Transform character, bool coversBack, out Skeleton skeleton)
+        private static bool TryStrip(Transform character, out Skeleton skeleton)
         {
             skeleton = default;
             bool found = false;
@@ -91,7 +87,7 @@ namespace Diciela.View
                     skeleton = new Skeleton(skin);
                     found = true;
                 }
-                if (body || !skin.gameObject.activeSelf || coversBack)
+                if (body || !skin.gameObject.activeSelf)
                     Remove(skin.gameObject);
             }
             foreach (MeshRenderer piece in character.GetComponentsInChildren<MeshRenderer>(true))
@@ -122,14 +118,15 @@ namespace Diciela.View
         private static void Attach(Transform character, Appearance appearance, WornAttachment worn)
         {
             AttachmentDefinition attachment = worn.Attachment;
-            if (attachment.Model == null || !attachment.HasScale)
+            GameObject model = attachment.ModelOn(appearance.Head, appearance.Body);
+            if (model == null || !attachment.HasScale)
             {
                 Debug.LogError("DICIELA : la pièce « " + attachment.Id + " » n'a pas de modèle, ou pas de taille.");
                 return;
             }
 
             // Posée dans les axes du personnage, telle que le modèle est fait, puis confiée à son os sans bouger.
-            GameObject piece = Object.Instantiate(attachment.Model, character, false);
+            GameObject piece = Object.Instantiate(model, character, false);
             PiecePlacement.Place(piece.transform, appearance, attachment);
             PaletteSwap.Apply(piece.GetComponentsInChildren<Renderer>(), attachment.Palette, worn.Palette);
             Transform bone = Find(character, attachment.Slot.Bone);

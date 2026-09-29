@@ -27,8 +27,8 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 5dca2e59fc77bad499cce384bb1c0b44, type: 2}
     _bodies: []
     _offset: {x: 0, y: -0.08, z: -0.06}
+    _model: {fileID: 0}
   _reference: {fileID: 11400000, guid: b101e7e10079f0b4db61f9549b700b64, type: 2}
-  _coversBack: 0
   _shape:
     _origin: {x: -0.4009191, y: -0.3740724}
     _cell: 0.033409927

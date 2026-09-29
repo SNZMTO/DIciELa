@@ -14,9 +14,6 @@ namespace Diciela.EditorTools
             /// <summary>Sur la place de l'os de l'emplacement.</summary>
             Bone,
 
-            /// <summary>Au dos, sa boîte centrée sur la hauteur de l'os.</summary>
-            Back,
-
             /// <summary>Centrée sur le haut du crâne.</summary>
             Crown,
 
@@ -26,11 +23,8 @@ namespace Diciela.EditorTools
             /// <summary>Au bout du nez.</summary>
             Nose,
 
-            /// <summary>Au milieu des oreilles pour une paire, à l'oreille droite pour un anneau seul.</summary>
-            Ears,
-
-            /// <summary>Sous la tête, son haut un peu caché par elle.</summary>
-            UnderHead
+            /// <summary>Au milieu des oreilles.</summary>
+            Ears
         }
 
         public SlotRule(Place place, float sink)
