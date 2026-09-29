@@ -15,6 +15,19 @@
 
 ## Les captures
 
+### 29/09/2026 — étape 13b (suite) : les oreilles du raton laveur se détachent
+
+Les oreilles du raton laveur, cousues à son crâne dans le pack, en sont découpées : toutes les têtes sont maintenant
+sans oreilles, et chaque paire se pose sur chacune. Le raton nu, puis avec ses oreilles (A et B) ; le raton nu sous
+huit angles (de dos, deux petites pointes de fourrure restent à la base des oreilles) ; ses oreilles sur les seize
+têtes.
+
+![Le raton nu, puis avec ses oreilles](Album/2026-09-29_etape-13b_raton-nu-et-avec-ses-oreilles.jpg)
+
+![Le raton nu sous huit angles](Album/2026-09-29_etape-13b_raton-nu-sous-huit-angles.jpg)
+
+![Les oreilles du raton sur les seize têtes](Album/2026-09-29_etape-13b_oreilles-du-raton-sur-les-seize-tetes.jpg)
+
 ### 29/09/2026 — étape 13b : têtes en morceaux, pièces à leur place, menu de bois
 
 L'écran de création prend un panneau de bois à facettes, ses fentes sombres et ses boutons dorés, générés en low poly.

@@ -20,8 +20,10 @@ namespace Diciela.EditorTools
         public static (Mesh Skull, Mesh Body) Cut(SkinnedMeshRenderer skin, HeadShells shells, string name)
         {
             EditorAssets.EnsureFolder(Folder);
-            Mesh skull = Save(Part(skin.sharedMesh, shells.TrianglesOf(HeadShells.Kind.Skull), name + "_Tete"),
-                Folder + "/" + name + "_Tete.asset");
+            Mesh skull = Part(skin.sharedMesh, shells.TrianglesOf(HeadShells.Kind.Skull), name + "_Tete");
+            // Des oreilles cousues détachées laissent un trou : on le referme.
+            SkullCap.Close(skull);
+            skull = Save(skull, Folder + "/" + name + "_Tete.asset");
             Mesh body = Save(Part(skin.sharedMesh, shells.TrianglesOf(HeadShells.Kind.Body), name + "_Corps"),
                 Folder + "/" + name + "_Corps.asset");
             return (skull, body);

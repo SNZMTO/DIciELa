@@ -10,28 +10,28 @@ namespace Diciela.Tests.EditMode
     /// <summary>
     /// La découpe des animaux du pack (SAVOIR, 2.11), lue dans le projet sans rien écrire : chaque silhouette est son
     /// modèle coupé au cou, le crâne ne garde que des sommets menés par les os de la tête, le corps aucun, et le crâne, le
-    /// corps et les pièces détachées de la tête ont ensemble tous les triangles du modèle. Chaque tête porte d'office les
-    /// pièces que son modèle a (des oreilles détachables pour cinq animaux, des touffes pour quatre, le museau du renard
-    /// seul, la huppe de l'oiseau) ; le raton laveur tient ses oreilles soudées. Chargés à part, sans toucher la scène.
+    /// corps et les pièces détachées de la tête ont ensemble tous les triangles du modèle (le crâne en a en plus pour
+    /// refermer les trous d'oreilles cousues : leur centre n'est pas un sommet du modèle). Chaque tête porte d'office les
+    /// pièces que son modèle a (des oreilles pour six animaux, même cousues au crâne chez le raton laveur, des touffes pour
+    /// quatre, le museau du renard seul, la huppe de l'oiseau). Chargés à part, sans toucher la scène.
     /// </summary>
     public sealed class HeadCutTests
     {
         private const string Cuts = "Assets/Art/Personnages/";
         private static readonly string[] HeadBones = { "head", "eyes", "eyebrows" };
 
-        // Ce que la tête de chaque animal porte d'office, par emplacement, et ce que son crâne tient soudé : savoir du pack.
-        private static readonly Dictionary<string, (string[] Worn, string[] Fused)> Expected =
-            new Dictionary<string, (string[], string[])>
-            {
-                { "chat", (new[] { "oreilles" }, new string[0]) },
-                { "cochon", (new[] { "oreilles", "cheveux" }, new string[0]) },
-                { "grenouille", (new string[0], new string[0]) },
-                { "lapin", (new[] { "oreilles" }, new string[0]) },
-                { "oiseau", (new[] { "cheveux" }, new string[0]) },
-                { "ratonlaveur", (new[] { "cheveux" }, new[] { "oreilles" }) },
-                { "renard", (new[] { "oreilles", "cheveux", "museau" }, new string[0]) },
-                { "souris", (new[] { "oreilles", "cheveux" }, new string[0]) }
-            };
+        // Ce que la tête de chaque animal porte d'office, par emplacement : savoir du pack.
+        private static readonly Dictionary<string, string[]> Expected = new Dictionary<string, string[]>
+        {
+            { "chat", new[] { "oreilles" } },
+            { "cochon", new[] { "oreilles", "cheveux" } },
+            { "grenouille", new string[0] },
+            { "lapin", new[] { "oreilles" } },
+            { "oiseau", new[] { "cheveux" } },
+            { "ratonlaveur", new[] { "oreilles", "cheveux" } },
+            { "renard", new[] { "oreilles", "cheveux", "museau" } },
+            { "souris", new[] { "oreilles", "cheveux" } }
+        };
 
         [Test]
         public void EveryHeadAndBodyIsTheirPackModelCutAtTheNeck()
@@ -55,7 +55,7 @@ namespace Diciela.Tests.EditMode
                     string[] bones = source.bones.Select(b => b.name).ToArray();
                     int parts = head.Worn.Where(w => w != null && AssetDatabase.GetAssetPath(w.Model).StartsWith(Cuts))
                         .Sum(w => w.Model.GetComponent<MeshFilter>().sharedMesh.triangles.Length);
-                    if (head.Mesh.triangles.Length + body.Mesh.triangles.Length + parts !=
+                    if (FromModel(head.Mesh, source.sharedMesh) + body.Mesh.triangles.Length + parts !=
                         source.sharedMesh.triangles.Length)
                         faults.Add(body.Id + " : le crâne, le corps et les pièces de la tête n'ont pas ensemble les " +
                                    "triangles du modèle.");
@@ -76,27 +76,40 @@ namespace Diciela.Tests.EditMode
         }
 
         [Test]
-        public void EveryHeadWearsThePiecesItsPackModelHasAndHoldsItsFusedEars()
+        public void EveryHeadWearsThePiecesItsPackModelHas()
         {
             Catalog catalog = ContentTests.LoadSingle<Catalog>();
             var faults = new List<string>();
             foreach (HeadDefinition head in catalog.Heads.Where(h => h != null))
             {
                 string animal = head.Id.Substring(0, head.Id.LastIndexOf('_'));
-                if (!Expected.TryGetValue(animal, out (string[] Worn, string[] Fused) expected))
+                if (!Expected.TryGetValue(animal, out string[] expected))
                 {
                     faults.Add(head.Id + " : animal inconnu du test.");
                     continue;
                 }
                 string worn = string.Join(", ", head.Worn.Select(w => w.Slot.Id).OrderBy(id => id));
-                string fused = string.Join(", ", head.Fused.Select(s => s.Id).OrderBy(id => id));
-                if (worn != string.Join(", ", expected.Worn.OrderBy(id => id)))
+                if (worn != string.Join(", ", expected.OrderBy(id => id)))
                     faults.Add(head.Id + " porte d'office « " + worn + " ».");
-                if (fused != string.Join(", ", expected.Fused.OrderBy(id => id)))
-                    faults.Add(head.Id + " tient soudés « " + fused + " ».");
             }
 
             Assert.IsEmpty(faults, string.Join("\n", faults));
+        }
+
+        // Les indices des triangles de ce maillage dont les trois coins sont à la place d'un sommet du modèle.
+        private static int FromModel(Mesh mesh, Mesh model)
+        {
+            var places = new HashSet<Vector3>(model.vertices);
+            Vector3[] vertices = mesh.vertices;
+            int[] triangles = mesh.triangles;
+            int count = 0;
+            for (int t = 0; t < triangles.Length; t += 3)
+            {
+                if (places.Contains(vertices[triangles[t]]) && places.Contains(vertices[triangles[t + 1]]) &&
+                    places.Contains(vertices[triangles[t + 2]]))
+                    count += 3;
+            }
+            return count;
         }
 
         private static float HeadShare(BoneWeight w, string[] bones)

@@ -18,7 +18,6 @@ namespace Diciela.EditorTools
         private const string Characters = "Assets/Synty/PolygonFantasyVillage/Prefabs/Characters";
         // Les surfaces : le dessus de la tête (x, z), l'avant de la face (x, y), le dos du corps (x, y), en cases de 5 cm.
         private static readonly Rect TopArea = Rect.MinMaxRect(-0.7f, -0.6f, 0.7f, 0.6f);
-        private static readonly Rect FusedTopArea = Rect.MinMaxRect(-0.25f, -0.6f, 0.25f, 0.6f);
         private static readonly Rect FrontArea = Rect.MinMaxRect(-0.7f, 0.9f, 0.7f, 2.1f);
         private static readonly Rect BackArea = Rect.MinMaxRect(-0.6f, 0.3f, 0.6f, 1.3f);
         private const float Cell = 0.05f;
@@ -48,11 +47,11 @@ namespace Diciela.EditorTools
         }
 
         /// <summary>
-        /// Les deux silhouettes de cet animal (pack : Cat ; name : Chat), fused : les emplacements que son crâne tient
-        /// soudés ; ownPieces reçoit les pièces détachées de ses têtes.
+        /// Les deux silhouettes de cet animal (pack : Cat ; name : Chat) ; ownPieces reçoit les pièces détachées de ses
+        /// têtes.
         /// </summary>
         public static List<Animal> Build(string pack, string name, AnimalContext context,
-            List<AttachmentSlotDefinition> fused, List<AttachmentDefinition> ownPieces)
+            List<AttachmentDefinition> ownPieces)
         {
             var cuts = new List<AnimalCut>();
             foreach ((string build, string letter) in Builds)
@@ -76,7 +75,7 @@ namespace Diciela.EditorTools
                 AnimalCut cut = cuts[i];
                 string file = name + "_" + Builds[i].Letter;
                 PaletteDefinition palette = cut.Palette(context.Palettes);
-                HeadDefinition head = Head(file, cut, palette, fused);
+                HeadDefinition head = Head(file, cut, palette);
                 BodyDefinition body = Body(file, cut, palette);
                 var worn = new List<AttachmentDefinition>();
                 foreach ((HeadShells.Kind kind, string part, string slot) in Parts)
@@ -100,8 +99,7 @@ namespace Diciela.EditorTools
             return animals;
         }
 
-        private static HeadDefinition Head(string file, AnimalCut cut, PaletteDefinition palette,
-            List<AttachmentSlotDefinition> fused)
+        private static HeadDefinition Head(string file, AnimalCut cut, PaletteDefinition palette)
         {
             string id = file.ToLowerInvariant();
             HeadDefinition head = EditorAssets.CreateIfMissing<HeadDefinition>(Folder + "/Tetes/" + file + ".asset",
@@ -112,10 +110,7 @@ namespace Diciela.EditorTools
                 });
             EditorAssets.AssignIfMissing(head, "_mesh", cut.Skull);
             EditorAssets.AssignIfMissing(head, "_palette", palette);
-            // Un crâne qui tient des pièces soudées (les oreilles du raton laveur) ne se touche que par la bande du milieu de
-            // son dôme : un chapeau y descend, et les oreilles traversent son bord.
-            SurfaceMap top = SurfaceBaker.Surface(cut.Positions, cut.SkullTriangles, ContactAxis.Down,
-                fused.Count > 0 ? FusedTopArea : TopArea, Cell);
+            SurfaceMap top = SurfaceBaker.Surface(cut.Positions, cut.SkullTriangles, ContactAxis.Down, TopArea, Cell);
             SurfaceMap front = SurfaceBaker.Surface(cut.Positions, cut.SkullTriangles, ContactAxis.Back, FrontArea, Cell);
             EditorAssets.Set(head, fiche =>
             {
@@ -125,7 +120,6 @@ namespace Diciela.EditorTools
                 EditorAssets.Property(fiche, "_neck").vector3Value = cut.Measures.Neck;
                 EditorAssets.Property(fiche, "_top").boxedValue = top;
                 EditorAssets.Property(fiche, "_front").boxedValue = front;
-                EditorAssets.SetList(EditorAssets.Property(fiche, "_fused"), fused);
             });
             return head;
         }

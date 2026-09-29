@@ -37,11 +37,11 @@ namespace Diciela.EditorTools
         }
 
         /// <summary>Pour chaque sommet, le premier sommet à sa place : les copies d'une couture deviennent un seul.</summary>
-        private static int[] Weld(Vector3[] positions)
+        public static int[] Weld(IReadOnlyList<Vector3> positions)
         {
             var first = new Dictionary<Vector3Int, int>();
-            var weld = new int[positions.Length];
-            for (int v = 0; v < positions.Length; v++)
+            var weld = new int[positions.Count];
+            for (int v = 0; v < positions.Count; v++)
             {
                 Vector3Int key = Vector3Int.RoundToInt(positions[v] * WeldPerMeter);
                 if (!first.TryGetValue(key, out int kept))

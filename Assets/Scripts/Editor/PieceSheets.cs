@@ -11,7 +11,7 @@ namespace Diciela.EditorTools
     /// <summary>
     /// Les planches des pièces (SAVOIR, 2.11) : chaque pièce du catalogue sur chacune des seize têtes, habillées comme en
     /// jeu (Dresser), la tête avec ses pièces d'office, photographiées de près hors de toute scène (Studio), une planche de
-    /// 4 × 4 par pièce, rangée par emplacement dans Temp/Planches (hors Git). Plus une planche par tête, nue puis avec ses
+    /// 4 × 4 par pièce, rangée par emplacement dans Temp/Planches (hors Git). Plus une planche des têtes, chacune nue puis avec ses
     /// pièces d'office. Pour juger une pose de près, sans rien toucher à la scène ouverte.
     /// </summary>
     internal static class PieceSheets
@@ -38,7 +38,7 @@ namespace Diciela.EditorTools
                 var heads = new List<Texture2D>();
                 for (int i = 0; i < catalog.Heads.Count; i++)
                 {
-                    heads.Add(Photo(studio, catalog, i, (AttachmentDefinition)null));
+                    heads.Add(Wearing(studio, catalog, i, new AttachmentDefinition[0]));
                     heads.Add(Wearing(studio, catalog, i, catalog.Heads[i].Worn));
                 }
                 studio.Save(heads, Columns, Folder + "/Tetes.jpg");

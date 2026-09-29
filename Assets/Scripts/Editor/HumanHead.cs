@@ -54,21 +54,8 @@ namespace Diciela.EditorTools
                     if ((head[triangles[t]] + head[triangles[t + 1]] + head[triangles[t + 2]]) / 3f >= Share)
                         skull.AddRange(new[] { triangles[t], triangles[t + 1], triangles[t + 2] });
                 }
-                var eyeVertices = new List<Vector3>();
-                float browSum = 0f;
-                int browCount = 0;
-                for (int v = 0; v < eyes.Length; v++)
-                {
-                    if (eyes[v] >= Share)
-                        eyeVertices.Add(positions[v]);
-                    if (brows[v] >= Share)
-                    {
-                        browSum += positions[v].y;
-                        browCount++;
-                    }
-                }
-                // Les sourcils se mesurent sur leurs sommets, comme chez les animaux.
-                HeadMeasures measures = HeadMeasures.Of(positions, skull, eyeVertices, browSum / Mathf.Max(1, browCount));
+                (List<Vector3> eyeVertices, float browHeight) = PackSkin.Features(positions, eyes, brows);
+                HeadMeasures measures = HeadMeasures.Of(positions, skull, eyeVertices, browHeight);
                 return new HumanHead(measures, PackSkin.Bone(skin, "Head"),
                     SurfaceBaker.Surface(positions, skull, ContactAxis.Down, TopArea, Cell),
                     SurfaceBaker.Surface(positions, skull, ContactAxis.Back, FrontArea, Cell));

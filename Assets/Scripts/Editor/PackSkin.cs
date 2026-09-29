@@ -10,6 +10,9 @@ namespace Diciela.EditorTools
     /// </summary>
     internal static class PackSkin
     {
+        // Un sommet est mené par un os quand celui-ci porte au moins la moitié de son poids.
+        private const float LedShare = 0.5f;
+
         /// <summary>Le corps allumé du personnage : le maillage à peau, enfant direct du prefab, qui se montre.</summary>
         public static SkinnedMeshRenderer VisibleBody(GameObject character)
         {
@@ -53,6 +56,28 @@ namespace Diciela.EditorTools
                            (counted[w.boneIndex2] ? w.weight2 : 0f) + (counted[w.boneIndex3] ? w.weight3 : 0f);
             }
             return share;
+        }
+
+        /// <summary>
+        /// Les sommets des yeux (menés pour moitié au moins par l'os des yeux) et la hauteur moyenne de ceux des sourcils :
+        /// on les mesure sur les sommets, l'os eyebrows des animaux étant au niveau des yeux.
+        /// </summary>
+        public static (List<Vector3> Eyes, float BrowHeight) Features(Vector3[] positions, float[] eyes, float[] brows)
+        {
+            var eyeVertices = new List<Vector3>();
+            float browSum = 0f;
+            int browCount = 0;
+            for (int v = 0; v < eyes.Length; v++)
+            {
+                if (eyes[v] >= LedShare)
+                    eyeVertices.Add(positions[v]);
+                if (brows[v] >= LedShare)
+                {
+                    browSum += positions[v].y;
+                    browCount++;
+                }
+            }
+            return (eyeVertices, browSum / Mathf.Max(1, browCount));
         }
 
         /// <summary>La place de cet os du personnage debout.</summary>

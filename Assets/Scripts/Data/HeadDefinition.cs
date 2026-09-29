@@ -5,8 +5,8 @@ namespace Diciela.Data
 {
     /// <summary>
     /// La fiche d'une tête (GDD, section 6) : le crâne d'un animal du pack, ses yeux et ses sourcils compris. Ce qui s'en
-    /// détache (ses oreilles, ses touffes, le museau du renard) devient des pièces qu'elle porte d'office et qu'on peut
-    /// changer. Le menu DICIELA/Données/Créer les fiches manquantes la découpe dans le modèle et mesure ses points, là où
+    /// détache (ses oreilles, même cousues au crâne, ses touffes, le museau du renard) devient des pièces qu'elle porte
+    /// d'office et qu'on peut changer. Le menu DICIELA/Données/Créer les fiches manquantes la découpe dans le modèle et mesure ses points, là où
     /// se posent les pièces de la tête (SAVOIR, 2.11). Elle va sur n'importe quel corps, tous ayant le même squelette.
     /// </summary>
     [CreateAssetMenu(menuName = "DICIELA/Tête", fileName = "Tete")]
@@ -29,10 +29,6 @@ namespace Diciela.Data
         [Tooltip("Les pièces qu'elle porte d'office : ce qui s'est détaché d'elle (oreilles, touffes, museau) et ce que le " +
                  "pack pose sur sa tête (la huppe de l'oiseau). Rempli par le menu.")]
         [SerializeField] private List<AttachmentDefinition> _worn = new List<AttachmentDefinition>();
-
-        [Tooltip("Les emplacements que son crâne tient déjà, soudés à lui (les oreilles du raton laveur) : l'écran n'y " +
-                 "propose rien d'autre. Rempli par le menu.")]
-        [SerializeField] private List<AttachmentSlotDefinition> _fused = new List<AttachmentSlotDefinition>();
 
         [Tooltip("Le haut de son crâne, en mètres depuis les pieds du personnage debout (x à sa droite, y en haut, z " +
                  "devant). Mesuré par le menu, jamais réglé à la main : une pièce se règle dans sa fiche.")]
@@ -60,7 +56,6 @@ namespace Diciela.Data
         public Mesh Mesh => _mesh;
         public PaletteDefinition Palette => _palette;
         public IReadOnlyList<AttachmentDefinition> Worn => _worn;
-        public IReadOnlyList<AttachmentSlotDefinition> Fused => _fused;
 
         /// <summary>Sa surface pour ce contact : le dessus du crâne, l'avant de la face ; null pour les autres.</summary>
         public SurfaceMap SurfaceOf(ContactAxis axis)

@@ -18,7 +18,6 @@ MonoBehaviour:
   _palette: {fileID: 11400000, guid: cb71a7174b591f94d986b46ffd850cf3, type: 2}
   _worn:
   - {fileID: 11400000, guid: 25865f595c0a2b94caec879a46b9ec0b, type: 2}
-  _fused: []
   _crown: {x: 0, y: 1.8650779, z: 0.08822888}
   _face: {x: 0, y: 1.4714316, z: 0.35678536}
   _ears: {x: 0, y: 1.7134486, z: 0.08822888}
