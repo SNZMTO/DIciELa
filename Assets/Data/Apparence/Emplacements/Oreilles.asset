@@ -18,5 +18,4 @@ MonoBehaviour:
   _frame: 3
   _contact: 1
   _pairs: 1
-  _seated: 1
-  _required: 0
+  _required: 1

@@ -7,9 +7,8 @@ namespace Diciela.EditorTools
     /// Les morceaux de la tête d'un animal du pack (SAVOIR, 2.11) : les triangles dont les sommets suivent pour moitié au
     /// moins les os de la tête, en morceaux d'un seul tenant (sommets soudés par leur position), chacun fermé. Le plus
     /// grand est le crâne ; une paire de grands morceaux hors du milieu, au-dessus des yeux, les oreilles ; de petits
-    /// morceaux en haut, au milieu, les touffes ; un morceau au milieu, devant, sous les yeux, le museau (le renard). Des
-    /// oreilles cousues au crâne (FusedEars) et un museau cousu à la face (FusedSnout) s'en détachent aussi ; le reste
-    /// (yeux, sourcils, moustaches) va avec le crâne. Positions du personnage debout : pieds à l'origine, face vers +z.
+    /// morceaux en haut, au milieu, les touffes. Des oreilles cousues au crâne (FusedEars) s'en détachent aussi ; le reste
+    /// (yeux, sourcils, moustaches, museau : chaque tête garde le sien) va avec le crâne. Positions du personnage debout : pieds à l'origine, face vers +z.
     /// </summary>
     internal sealed class HeadShells
     {
@@ -18,8 +17,7 @@ namespace Diciela.EditorTools
             Body,
             Skull,
             Ears,
-            Tufts,
-            Snout
+            Tufts
         }
 
         private const float HeadShare = 0.5f;
@@ -27,7 +25,7 @@ namespace Diciela.EditorTools
         // touffe, 40 au plus) et s'écarte de la ligne du milieu d'au moins ce nombre de mètres.
         private const int EarTriangles = 60;
         private const float MiddleMeters = 0.1f;
-        // Une touffe est au moins à cette hauteur au-dessus des yeux ; un museau, devant l'os des yeux.
+        // Une touffe est au moins à cette hauteur au-dessus des yeux.
         private const float TuftAboveEyes = 0.2f;
         private const int MaxTufts = 3;
         private static readonly HashSet<string> HeadBones = new HashSet<string> { "head", "eyes", "eyebrows" };
@@ -58,11 +56,8 @@ namespace Diciela.EditorTools
         /// <summary>La hauteur moyenne des sommets de ses sourcils (l'os eyebrows des animaux est plus bas, aux yeux).</summary>
         public float BrowHeight { get; }
 
-        /// <summary>
-        /// Les morceaux de ce corps allumé d'un personnage du pack ; snoutFront : la profondeur au-delà de laquelle sa face
-        /// porte un museau cousu (FusedSnout), ou l'infini s'il n'en a pas.
-        /// </summary>
-        public static HeadShells Of(SkinnedMeshRenderer skin, float snoutFront)
+        /// <summary>Les morceaux de ce corps allumé d'un personnage du pack.</summary>
+        public static HeadShells Of(SkinnedMeshRenderer skin)
         {
             Mesh source = skin.sharedMesh;
             (Vector3[] positions, Vector3[] normals) = PackSkin.Standing(skin);
@@ -111,12 +106,6 @@ namespace Diciela.EditorTools
                     kinds[firstOfSub[sub] + first / 3] = Kind.Ears;
             }
             (List<Vector3> eyeVertices, float browHeight) = PackSkin.Features(positions, eyes, brows);
-            // Un museau cousu à la face aussi, s'il n'y en a pas un à part (le renard) ; il est sous les oreilles cousues.
-            if (!counts.ContainsKey(Kind.Snout) && !float.IsInfinity(snoutFront))
-            {
-                foreach ((int sub, int first) in FusedSnout.Find(positions, triangles, shells, skull, eyeVertices, snoutFront))
-                    kinds[firstOfSub[sub] + first / 3] = Kind.Snout;
-            }
             return new HeadShells(positions, normals, eyeVertices, browHeight, triangles, kinds);
         }
 
@@ -174,8 +163,6 @@ namespace Diciela.EditorTools
                 return Kind.Ears;
             if (middle && mean.y > eyesHeight + TuftAboveEyes)
                 return Kind.Tufts;
-            if (middle && shell.Count >= EarTriangles / 2 && mean.y < eyesHeight)
-                return Kind.Snout;
             return Kind.Skull;
         }
 
@@ -184,17 +171,15 @@ namespace Diciela.EditorTools
             return (values[triangles[first]] + values[triangles[first + 1]] + values[triangles[first + 2]]) / 3f;
         }
 
-        // Une tête du pack a au plus une paire d'oreilles, trois touffes, un museau : une tête qui sort de ces formes
+        // Une tête du pack a au plus une paire d'oreilles et trois touffes : une tête qui sort de ces formes
         // arrête le menu plutôt que d'être mal coupée.
         private static void Check(SkinnedMeshRenderer skin, Dictionary<Kind, int> counts)
         {
             int ears = counts.TryGetValue(Kind.Ears, out int e) ? e : 0;
             int tufts = counts.TryGetValue(Kind.Tufts, out int t) ? t : 0;
-            int snouts = counts.TryGetValue(Kind.Snout, out int n) ? n : 0;
-            if ((ears != 0 && ears != 2) || tufts > MaxTufts || snouts > 1)
+            if ((ears != 0 && ears != 2) || tufts > MaxTufts)
                 throw new System.InvalidOperationException("DICIELA : la tête de " + skin.name + " ne se découpe pas comme " +
-                                                           "prévu (" + ears + " oreilles, " + tufts + " touffes, " + snouts +
-                                                           " museaux).");
+                                                           "prévu (" + ears + " oreilles, " + tufts + " touffes).");
         }
     }
 }

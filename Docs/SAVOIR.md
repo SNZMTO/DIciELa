@@ -297,9 +297,10 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   une fois les sommets soudés par leur position (le pack double un sommet à chaque couture et à chaque arête vive : la
   connexité par indice ne sert à rien). Chaque morceau est fermé : on le détache sans trou. Le plus grand est le crâne ;
   une paire de grands morceaux hors du milieu, dont le centre est au-dessus des yeux (leur bas descend plus bas qu'eux),
-  les oreilles ; de petits morceaux sur le haut, au milieu, les touffes ; un morceau au milieu, devant, sous les yeux,
-  le museau (le renard seul). Yeux, sourcils et moustaches restent au crâne. Une tête qui sort de ces nombres (0 ou 2
-  oreilles, 3 touffes au plus, 1 museau) arrête le menu.
+  les oreilles ; de petits morceaux sur le haut, au milieu, les touffes. Yeux, sourcils, moustaches et museau (celui du
+  renard est un morceau à part, il reste aussi) restent au crâne : un museau ne se change pas, et le découper laissait
+  des îlots flottants et des plaques (la bouche peinte de la grenouille). Une tête qui sort de ces nombres (0 ou 2
+  oreilles, 3 touffes au plus) arrête le menu.
 - **Les oreilles du raton laveur sont cousues à son crâne** (`FusedEars`) : dans une tête sans oreilles à part, le
   noyau d'une oreille est ce qui est mince au-dessus des yeux, sur les côtés (un rayon lancé vers l'intérieur ressort à
   moins de 30 cm, le dôme en fait plus de 60 ; un bord qui ne voit rien derrière lui compte aussi), un grand morceau
@@ -310,18 +311,9 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   la tête se prennent sur le crâne refermé, sans quoi un rayon file par le trou. Dans la copie découpée, jamais dans le
   pack, une teinte peut être repeinte (`PartRepaint`) : l'intérieur de l'oreille gauche du raton est peint du blanc de
   sa face ; sur une autre tête, cette lèvre faisait un bandeau clair.
-- **Un museau cousu à la face** (`FusedSnout`) : le groin du cochon, les museaux du raton, de la souris, du chat et du
-  lapin, le bec de l'oiseau font partie du crâne ; la bouche de la grenouille est une pastille à part (ses narines et
-  son sourire), prise avec les petits morceaux posés au milieu de la face. Ce que la découpe laisse flotter au milieu
-  de la face (le fond des narines du cochon) part avec le museau. Leur noyau est ce qui est tout entier plus en avant qu'une profondeur mesurée tête par
-  tête (savoir du pack, dans la table des animaux) : un seuil commun couperait la face ronde du chat, du lapin et de
-  la grenouille, qui avance de 6 cm au milieu. Tous les morceaux du noyau comptent (le bec a deux mâchoires). On y
-  ajoute de proche en proche ses flancs : les triangles voisins qui ne regardent pas vers l'avant (la face, si). Avec
-  le centre des triangles au lieu de leurs trois coins, la mâchoire du cochon partait avec le groin et pendait en
-  plaque rose sur les autres têtes.
 - **Le crâne et le corps** restent des maillages à peau sur le squelette commun (`BodyCutter`), réécrits en place à
   chaque passage (même fichier, mêmes références) : copier champ par champ, jamais par copie sérialisée, qui garde
-  l'ancien découpage des sommets (crânes en miettes). **Oreilles, touffes, museau** suivent à 100 % les os de la tête :
+  l'ancien découpage des sommets (crânes en miettes). **Oreilles et touffes** suivent à 100 % les os de la tête :
   ils deviennent des pièces rigides, maillage et prefab (`HeadPartCutter`, `Assets/Art/Personnages/Pieces`), leur pivot
   à leur base ; A et B ne rangent ni ne cousent leurs sommets pareil : une pièce est la même si elle a autant de
   triangles, la même boîte et le même pivot à 5 mm près.
@@ -347,25 +339,28 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   celui de droite, la gauche en est le miroir (de 31 cm du milieu chez le cochon à 41 cm chez la grenouille). Changer un repère déplace toutes les pièces réglées dessus : on convertit leurs
   décalages pour qu'elles restent à leur place sur leur tête de référence (le chat A pour les pièces du pack ; la leur
   pour une pièce découpée ; l'oiseau pour la huppe).
-- **Une paire (des oreilles, deux boucles) est en deux moitiés** (`EarHalves`, `PiecePlacement`) : les triangles de
-  chaque côté du milieu, enfants « Droite » et « Gauche » d'un même prefab, le pivot au milieu ; une paire du pack est
-  copiée ainsi dans `Assets/Art/Personnages/Pieces`, le pack ne change pas. Un modèle du pack est dessiné autour de son
-  origine : une boucle seule déborde des deux côtés du milieu ; une paire se reconnaît à deux morceaux qu'aucun
-  triangle ne relie par-dessus le milieu. Chaque moitié s'écarte de l'écart entre les oreilles de la tête choisie et
-  celles de sa tête de référence (plus le x de son décalage et de ses réglages) ; une pièce d'un seul côté suit
-  l'oreille de son côté. Sur une autre tête que sa référence, une paire se pose par sa base (`Contact.TryRest`) : les
-  points de sa face à moins de 3 cm du dessus de sa tête de référence, là où elle y est posée, restent au contact ; le
-  plus bas touche, les autres s'enfoncent. Posée par son premier point de contact, une paire large flottait sur une
-  tête ronde (les oreilles du raton sur la souris). Au bord d'un dôme, sa base déborde du crâne (des oreilles
-  décollées) : elle glisse vers le milieu, par pas de 1 cm, jusqu'à porter à plat (3 cm d'écart au plus). Un museau se
-  pose par sa base aussi, contre la face, mais par le point du milieu : sur une face bombée, « le plus bas touche »
-  enfouissait un museau à dos plat. Seule une paire se pose ainsi dans un emplacement à paires : une boucle seule,
-  sans appui sous elle, flottait.
+- **Une paire d'oreilles est en deux moitiés** (`EarHalves`, `PiecePlacement`) : les triangles de chaque côté du
+  milieu, enfants « Droite » et « Gauche » d'un même prefab, le pivot au milieu ; une paire du pack est copiée ainsi
+  dans `Assets/Art/Personnages/Pieces` (`PackCopy` aplatit le modèle), le pack ne change pas. Chaque moitié s'écarte de
+  l'écart entre les oreilles de la tête choisie et celles de sa tête de référence (plus le x de son décalage et de ses
+  réglages). Sur une autre tête que sa référence, une paire se pose par sa base (`Contact.TryRest`) : les points de sa
+  face à moins de 3 cm du dessus de sa tête de référence, là où elle y est posée, restent au contact ; le plus bas
+  touche, les autres s'enfoncent. Posée par son premier point de contact, une paire large flottait sur une tête ronde
+  (les oreilles du raton sur la souris). Au bord d'un dôme, sa base déborde du crâne (des oreilles décollées) : elle
+  glisse vers le milieu, par pas de 1 cm, jusqu'à porter à plat (3 cm d'écart au plus). Cela ne suffit pas aux oreilles
+  larges du raton et du renard : leurs réglages les rapprochent encore et les enfoncent sur les autres têtes ; juger de
+  dos, où la base extérieure dépasse de la silhouette du crâne.
+- **Une barbe se teint comme le poil** (`FurCopy`) : le pack la peint dans le masque des cheveux d'une texture d'objet,
+  que ses douze couleurs teintent de deux bruns presque pareils (les teintes `_Hair_Color` et `_Skin_Color` des
+  matériaux) : sa couleur ne changeait pas. Sa copie prend le matériau de personnage de sa couleur et tous ses sommets
+  vont sur une case blanche du masque de la peau, que chaque couleur d'animal teinte de son poil (huit teintes
+  différentes). Les douze textures de couleurs sont les mêmes là où il y a peau et cheveux : ce sont les teintes des
+  matériaux qui changent.
 - **Le dessous d'une pièce découpée se referme** : des oreilles cousues au crâne (le raton) en sortent ouvertes par le
   bas, et sur une tête plus étroite on voyait leur intérieur, en croissant clair. `SkullCap` le referme en éventail,
   dans un sous-maillage à part, que le test de la découpe ne compte pas.
 - **Une pièce se tourne sur son pivot** (sa rotation, puis sa taille) ; sa face qui touche se remesure tournée : relancer
-  le menu des fiches. Le pack dessine couchés les nœuds, les anneaux et le bandana : aucun de ses personnages ne les
+  le menu des fiches. Le pack dessine couchés les nœuds et le bandana : aucun de ses personnages ne les
   porte, sa scène de démonstration les aligne à 0°. Le casque est un morion : de profil, bord relevé devant et derrière,
   la rosace sur le côté ; tourné d'un quart, il montrait son profil de face.
 - **Des réglages par porteur** (`WearerAdjustment`) : un décalage de plus sur des têtes (une pièce de la tête) ou des

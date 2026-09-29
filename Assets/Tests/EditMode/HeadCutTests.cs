@@ -11,10 +11,10 @@ namespace Diciela.Tests.EditMode
     /// La découpe des animaux du pack (SAVOIR, 2.11), lue dans le projet sans rien écrire : chaque silhouette est son
     /// modèle coupé au cou, le crâne ne garde que des sommets menés par les os de la tête, le corps aucun, et le crâne, le
     /// corps et les pièces détachées de la tête ont ensemble tous les triangles du modèle (le crâne en a en plus pour
-    /// refermer les trous d'oreilles et de museaux cousus : leur centre n'est pas un sommet du modèle ; ces pièces, un
-    /// sous-maillage de plus pour refermer leur dessous ; une paire d'oreilles est en deux moitiés). Chaque tête porte d'office les
+    /// refermer les trous d'oreilles cousues : leur centre n'est pas un sommet du modèle ; ces oreilles, un sous-maillage de
+    /// plus pour refermer leur dessous ; une paire d'oreilles est en deux moitiés). Chaque tête porte d'office les
     /// pièces que son modèle a (des oreilles pour six animaux, même cousues au crâne chez le raton laveur, des touffes pour
-    /// quatre, un museau pour chacun, à part chez le renard, cousu à la face chez les autres, la huppe de l'oiseau). Chargés à part, sans toucher la scène.
+    /// quatre, la huppe de l'oiseau ; chacune garde son museau). Chargés à part, sans toucher la scène.
     /// </summary>
     public sealed class HeadCutTests
     {
@@ -24,14 +24,14 @@ namespace Diciela.Tests.EditMode
         // Ce que la tête de chaque animal porte d'office, par emplacement : savoir du pack.
         private static readonly Dictionary<string, string[]> Expected = new Dictionary<string, string[]>
         {
-            { "chat", new[] { "oreilles", "museau" } },
-            { "cochon", new[] { "oreilles", "cheveux", "museau" } },
-            { "grenouille", new[] { "museau" } },
-            { "lapin", new[] { "oreilles", "museau" } },
-            { "oiseau", new[] { "cheveux", "museau" } },
-            { "ratonlaveur", new[] { "oreilles", "cheveux", "museau" } },
-            { "renard", new[] { "oreilles", "cheveux", "museau" } },
-            { "souris", new[] { "oreilles", "cheveux", "museau" } }
+            { "chat", new[] { "oreilles" } },
+            { "cochon", new[] { "oreilles", "cheveux" } },
+            { "grenouille", new string[0] },
+            { "lapin", new[] { "oreilles" } },
+            { "oiseau", new[] { "cheveux" } },
+            { "ratonlaveur", new[] { "oreilles", "cheveux" } },
+            { "renard", new[] { "oreilles", "cheveux" } },
+            { "souris", new[] { "oreilles", "cheveux" } }
         };
 
         [Test]

@@ -25,8 +25,7 @@ namespace Diciela.EditorTools
         // Les morceaux détachables, le nom de leur fichier et leur emplacement.
         private static readonly (HeadShells.Kind Kind, string Name, string Slot)[] Parts =
         {
-            (HeadShells.Kind.Ears, "Oreilles", "Oreilles"), (HeadShells.Kind.Tufts, "Touffes", "Cheveux"),
-            (HeadShells.Kind.Snout, "Museau", "Museau")
+            (HeadShells.Kind.Ears, "Oreilles", "Oreilles"), (HeadShells.Kind.Tufts, "Touffes", "Cheveux")
         };
 
         /// <summary>Une silhouette montée : sa tête, son corps, les points de sa tête, son personnage du pack.</summary>
@@ -47,17 +46,17 @@ namespace Diciela.EditorTools
         }
 
         /// <summary>
-        /// Les deux silhouettes de cet animal (pack : Cat ; name : Chat ; snoutFront : la profondeur de son museau cousu,
-        /// l'infini s'il n'en a pas) ; ownPieces reçoit les pièces détachées de ses têtes.
+        /// Les deux silhouettes de cet animal (pack : Cat ; name : Chat) ; ownPieces reçoit les pièces détachées de ses
+        /// têtes.
         /// </summary>
-        public static List<Animal> Build(string pack, string name, float snoutFront, AnimalContext context,
+        public static List<Animal> Build(string pack, string name, AnimalContext context,
             List<AttachmentDefinition> ownPieces)
         {
             var cuts = new List<AnimalCut>();
             foreach ((string build, string letter) in Builds)
             {
                 var model = EditorAssets.Load<GameObject>(Characters + "/SM_Chr_" + pack + "_" + build + "_01.prefab");
-                cuts.Add(AnimalCut.Of(model, name + "_" + letter, snoutFront, BackArea, Cell));
+                cuts.Add(AnimalCut.Of(model, name + "_" + letter, BackArea, Cell));
             }
 
             // A et B partagent une pièce quand elle est la même ; sinon chacune a la sienne, nommée de sa lettre. Comparées

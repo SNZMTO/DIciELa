@@ -163,45 +163,41 @@
 ## 6. La Chimère
 
 - **Règle.** On la crée au lancement d'une partie, sur l'écran de création : une tête d'animal et un corps d'animal,
-  pas forcément le même, puis des morceaux d'autres animaux (oreilles, touffe, museau, queue) et des accessoires, au
-  plus un par emplacement ; chaque partie a sa couleur. Elle apparaît au point d'arrivée de la carte (voir 2).
+  pas forcément le même, puis des morceaux d'autres animaux (oreilles, touffe, queue) et des accessoires, au plus un
+  par emplacement ; chaque partie a sa couleur. Elle apparaît au point d'arrivée de la carte (voir 2).
 - **Règle.** L'écran de création est un panneau de bois sur le côté, dans un atelier hors de la carte, en low poly (un
   fond en alcôve, un sol, un socle) ; la Chimère à venir s'y tient de face sur le socle. On la fait tourner, avec A et
   E ou en la glissant au clic gauche ; elle garde son angle quand on change une pièce. Une ligne par partie, sa pièce
   et sa couleur, chacune entre ses flèches : la tête (seize), le corps et ses habits (seize), puis la queue, les
-  oreilles, le museau, les cheveux, le chapeau, le visage, la barbe, les boucles d'oreilles, le cou, le dos et la
-  ceinture, « aucun » en tête (sauf pour le museau). Les douze couleurs du pack vont sur n'importe quelle partie ; changer de partie lui
-  rend sa couleur d'origine. On part du chat, dans ses couleurs, avec ses oreilles et sa queue. « C'est parti » (ou
-  Entrée) la crée, et la ville s'ouvre sur elle, au point d'arrivée.
-- **Règle.** Une tête est un crâne, ses yeux et ses sourcils ; ce qui s'en détache (les oreilles du chat, du cochon, du
-  lapin, du raton laveur, du renard et de la souris ; les touffes du cochon, du raton laveur, du renard et de la
-  souris ; le museau du renard, le groin du cochon, les museaux du raton laveur et de la souris, le bec de l'oiseau)
-  sont des pièces qu'elle porte d'office, qu'on peut changer ; le nez et la bouche du chat et du lapin, la bouche
-  de la grenouille aussi : chaque tête porte son museau. Changer de tête change ses pièces : chaque ligne qui
-  montrait une pièce de l'ancienne tête (ou rien, faute d'en avoir) prend celle de la nouvelle ; une pièce choisie par
-  le joueur reste. Toutes les têtes sont ainsi sans oreilles, et chaque paire d'oreilles va sur chacune ; un museau
-  choisi remplace celui de la tête. Le museau est obligatoire : sa ligne ne propose pas « aucun ». Le cochon garde ses
-  défenses.
+  oreilles, les cheveux, le chapeau, le visage, la barbe, le cou, le dos et la ceinture. La tête, le corps, la queue et
+  les oreilles ont toujours une pièce ; les autres lignes ont « aucun » en tête. Les douze couleurs du pack vont sur
+  n'importe quelle partie ; changer de partie lui rend sa couleur d'origine. On part du chat, dans ses couleurs, avec
+  ses oreilles et sa queue. « C'est parti » (ou Entrée) la crée, et la ville s'ouvre sur elle, au point d'arrivée.
+- **Règle.** Une tête est un crâne, ses yeux, ses sourcils et son museau : chaque tête garde le sien, il ne se change
+  pas. Ce qui s'en détache (les oreilles du chat, du cochon, du lapin, du raton laveur, du renard et de la souris ; les
+  touffes du cochon, du raton laveur, du renard et de la souris) sont des pièces qu'elle porte d'office, qu'on peut
+  changer. Changer de tête change ses pièces : chaque ligne qui montrait une pièce de l'ancienne tête (ou rien, faute
+  d'en avoir) prend celle de la nouvelle ; une pièce choisie par le joueur reste, et une ligne qui ne peut pas être
+  vide garde sa pièce si la nouvelle tête n'en porte pas. Toutes les têtes sont ainsi sans oreilles, et chaque paire
+  d'oreilles va sur chacune.
 - **Règle.** Chaque pièce se pose sur la tête choisie, à son relief : un chapeau descend jusqu'à toucher le crâne, des
   lunettes reculent contre la face, un sac avance contre le dos, une bourse recule contre le ventre. Des oreilles se
   posent aux oreilles de la tête choisie, chacune de son côté, par leur base : aucune ne flotte, et sur une tête plus
-  ronde elles se rapprochent du milieu, sans déborder du crâne ; une paire de boucles d'oreilles fait de même, une
-  boucle seule suit l'oreille de son côté. Un museau se plaque contre la face par sa base, sans s'y enfouir. Les nœuds se tiennent debout (le grand à
-  l'arrière de la tête, ses rubans dans le dos), les anneaux pendent, le bandana tombe sur la poitrine. Une tête ou un
-  corps qui ne ressemble pas aux autres a ses réglages, pièce par pièce : sur la grenouille, les oreilles du pack et la
-  couronne se posent derrière les dômes des yeux, la couronne entre eux ; sur l'oiseau, un museau monte sur le bec ; une cape recule sur la
-  tunique évasée du raton, du renard et de la grenouille. Un chapeau cache les oreilles et les cheveux choisis, touffes
-  et huppe comprises (ils restent choisis) ; la couronne, la fleur et les nœuds non. Une cape remplace la petite cape
-  que portent l'oiseau, le lapin, la souris et le cochon. Les pièces faites pour les humains (cheveux, chapeaux 1 à 5,
-  barbe, boucles d'oreilles, oreilles du pack, groin) sont agrandies pour une tête d'animal, les cheveux et la barbe
-  axe par axe pour épouser un crâne large et plat.
+  ronde elles se rapprochent du milieu, sans déborder du crâne. Les nœuds se tiennent debout (le grand à l'arrière de
+  la tête, ses rubans dans le dos), le bandana tombe sur la poitrine ; le bandana et l'écharpe passent devant le col
+  des habits, les capes tombent des épaules. La barbe prend la couleur du poil de sa couleur. Une tête ou un corps qui
+  ne ressemble pas aux autres a ses réglages, pièce par pièce : sur la grenouille, les oreilles du pack et la couronne
+  se posent derrière les dômes des yeux, la couronne entre eux ; les oreilles du raton et du renard se rapprochent et
+  s'enfoncent sur les autres têtes ; une cape recule sur la tunique évasée du raton, du renard et de la grenouille. Un
+  chapeau cache les oreilles et les cheveux choisis, touffes et huppe comprises (ils restent choisis) ; la couronne, la
+  fleur et les nœuds non. Une cape remplace la petite cape que portent l'oiseau, le lapin, la souris et le cochon. Les
+  cheveux sont ceux des animaux (touffes, huppe) : les coiffures humaines du pack ne sont pas proposées. Les pièces
+  faites pour les humains (chapeaux 1 à 5, barbe, oreilles du pack) sont agrandies pour une tête d'animal, la barbe axe
+  par axe pour épouser un crâne large et plat.
 - **Règle.** Le temps attend « C'est parti » : la journée commence quand elle arrive.
 - **Règle.** Elle n'a pas de nom : c'est la Chimère.
 - **À toi.** Les noms des têtes, des corps, des couleurs et des pièces : un premier jet neutre (« Chat A »,
-  « Couleur 4 », « Chapeau 6 », « Oreilles de chat »), à réécrire dans la table des textes. Toutes les pièces du pack
-  sont proposées ; certaines restent étranges sur une tête d'animal (les cheveux humains, dont des mèches de nuque
-  sortent de l'arrière du crâne ; un groin ou un museau sur le bec de l'oiseau, dont le bout dépasse ; des boucles
-  d'oreilles sur la grenouille, qui n'a pas d'oreilles) : à garder, à régler ou à retirer (décisions 110, 111 et 121).
+  « Couleur 4 », « Chapeau 6 », « Oreilles de chat »), à réécrire dans la table des textes.
 - **Règle.** Le joueur la place à un poste, comme un habitant, et elle y va ; on ne la dirige jamais directement, et
   elle ne prend jamais de poste d'elle-même. Sans poste, elle flâne (voir 7).
 - **Règle.** Elle travaille dans tous les domaines. Elle progresse lentement, mais plus haut que les habitants
@@ -540,8 +536,7 @@
   leurs accessoires, leurs couleurs et leurs noms. À terme, un artiste payé fera de plus jolis personnages.
 - **Règle.** La tête de chaque animal du pack est une pièce à part de son modèle : elle se pose sur le corps de
   n'importe quel autre, tous les animaux ayant le même squelette. Le corps reste d'un seul tenant, bras, jambes et
-  habits ensemble. Les queues, oreilles et museaux de la Chimère sont des accessoires du pack ; ils s'ajoutent à la
-  tête, qui garde les siens (des oreilles de cochon sur une tête de chat lui en font quatre).
+  habits ensemble. Ses oreilles et ses touffes sont des pièces à part, qu'on change (voir 6) ; son museau reste à elle.
 - **Règle.** Ce qu'un animal porte dans le pack (la queue du chat et du renard, la huppe de l'oiseau) est un choix de
   l'écran comme un autre ; la petite cape de l'oiseau, du lapin, de la souris et du cochon reste avec son corps, comme
   un habit.
