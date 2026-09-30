@@ -1,31 +1,30 @@
 # DICIELA — état actuel
 
-**Branche** : `etape-13-tetes`, fusionnée dans `main` et poussée.
+**Branche** : `etape-14-hud`, fusionnée dans `main` et poussée.
 
-**Fait** : l'étape 13, les têtes, les corps et les pièces de la Chimère (décisions 103 à 135).
-- Seize têtes et seize corps du pack, découpés au cou, chacun de sa couleur ; les oreilles et les touffes se détachent
-  (même celles du raton, cousues au crâne) ; chaque tête garde son museau. Création dans un atelier hors carte.
-- Les oreilles vont par paires, suivent les oreilles de la tête choisie et se posent par leur base ; tête, corps,
-  queue et oreilles jamais vides ; la grenouille ne porte pas d'oreilles.
-- Réglages par tête (décalage, taille) : barbe teinte comme le poil, seulement sur le chat, la grenouille, le lapin et
-  la souris ; oreilles du raton et du renard enfoncées ailleurs. Plus de coiffures humaines, de boucles, de cou ni de dos.
-- Planches pour juger : `DICIELA/Album/Planche d'essais` (liste dans `Temp/Planches/Essais.txt`, vidée par Unity à sa
-  fermeture) et `Planches des pièces`.
-**EditMode 139/139, PlayMode 101/101.**
+**Fait** : l'étape 14, le HUD « fusion » dans Unity (décisions 137 à 146).
+- Une seule feuille de style (`Assets/UI/Fusion.uss`) ; polices Lilita One et Nunito ; faces vectorielles (feutre,
+  applique, creux, bulle) ; cadre de bois tiré de l'atlas du pack, son ombre générée ; icônes vectorielles. Menus
+  `DICIELA/Interface/Générer les images de l'interface` et `Photographier les constructions`.
+- L'interface grossit avec la hauteur de l'écran (référence 900 px, jamais sous 1, au moins 1280 × 720 de place) ;
+  réglage « Taille de l'interface » dans la fiche des réglages de l'interface (80 à 150 %). Nette jusqu'à la 4K.
+- La journée en haut à gauche, la barre de construction en bas (onglets, cartes avec vignette, raison en bulle),
+  l'écran de création dans la même langue. L'ancien panneau doré et son générateur sont supprimés.
+**EditMode 139/139, PlayMode 119/119** (dont le HUD rendu à huit tailles d'écran).
 
-**À vérifier par toi** (Play, atelier) : chaque tête avec ses oreilles et sa barbe ; les oreilles du raton et du
-renard sur les autres têtes, de dos (A et E) ; la grenouille sans ligne d'oreilles ; la barbe qui change de couleur ;
-la bourse à la hanche ; « Crête stylée » dans les cheveux.
+**À vérifier par toi** (Play) : survol et appui des boutons de feutre (ils montent, s'enfoncent) ; l'onglet ouvert et
+la carte en main restent enfoncés ; le repère de la journée avance, la phase change le soir ; les flèches de l'écran
+de création ; la vue Game à plusieurs tailles (1280 × 720, 1920 × 1080, 4K) : le HUD garde ses coins.
 
-**À toi** :
-1. Les noms en premier jet dans `strings.csv` (pièces, têtes, couleurs).
-2. Les accessoires de cou et de dos (retirés, décision 129) : les remettre plus tard, ou non.
-3. Les réglages fins restent dans les fiches (`Assets/Data/Apparence/Pieces`, champ « Adjustments »).
+**À toi** : les questions ouvertes du HUD (GDD 16 : une fiche à la fois, Échap, touches 1 à 9, fanions, couleur des
+familles suivantes, qui parle dans l'astuce) ; les noms de `strings.csv` ; les accessoires de cou et de dos.
 
-**Prochaine étape** : l'étape 14, le tas de départ et son poste « à tout faire » (GDD 6), premier travail de la
-Chimère. Ménage vers la 15.
+**Dette** : dans `Fusion.uss`, les faces répètent les couleurs de `:root` (variable dans une variable pas essayée).
+
+**Prochaine étape** : l'étape 15, le tas de départ et son poste « à tout faire » (GDD 6 et 7, décisions 137 à 141),
+avec ses pièces du HUD : les fanions du stock, la fiche du tas à droite, les infobulles, l'astuce. Ménage à la 16.
 
 **Prompt de la session suivante**
 
-> Lis CLAUDE.md et Docs/ETAT.md. Montre-moi le plan court de l'étape 14 : le tas de départ et son poste « à tout
-> faire ».
+> Lis CLAUDE.md et Docs/ETAT.md. Montre-moi le plan court de l'étape 15 : le tas de départ et son poste « à tout
+> faire », avec ses pièces du HUD (fanions, fiche du tas, infobulles, astuce).
