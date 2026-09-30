@@ -9,9 +9,11 @@ using UnityEngine.UIElements;
 namespace Diciela.UI
 {
     /// <summary>
-    /// La barre de construction, en bas de l'écran (GDD, section 16) : les familles en onglets, les constructions de la
-    /// famille ouverte, et au-dessus la raison d'un refus de pose. C'est la vue (UI Toolkit, BarreConstruction.uxml) ;
-    /// son présentateur décide. Elle dit aussi aux gestes si le pointeur est sur elle.
+    /// La barre de construction, en bas au centre de l'écran (GDD, section 16) : un cadre de bois, les familles en
+    /// onglets de feutre (leur pastel, leur icône), au-dessus les constructions de la famille ouverte en cartes (leur
+    /// vignette, leur nom), et au-dessus du cadre la raison d'un refus de pose, dans une bulle. L'onglet ouvert et la
+    /// carte en main restent enfoncés. C'est la vue (le bloc « bar » de Hud.uxml) ; son présentateur décide. Elle dit
+    /// aussi aux gestes si le pointeur est sur elle.
     /// </summary>
     [RequireComponent(typeof(UIDocument))]
     public sealed class BuildBar : MonoBehaviour, IBuildBarView, IInterfaceArea
@@ -20,16 +22,23 @@ namespace Diciela.UI
         private const string FamiliesName = "families";
         private const string StructuresName = "structures";
         private const string ReasonName = "reason";
-        private const string HiddenBarClass = "bar--hidden";
-        private const string HiddenReasonClass = "reason--hidden";
-        private const string ButtonClass = "button";
-        private const string SelectedClass = "button--selected";
+        private const string ReasonTextName = "reason-text";
+        private const string HiddenClass = "bloc-cache";
+        private const string OpenClass = "ouvert";
+        private const string PaleSuffix = "-pale";
+        private static readonly string[] TabClasses = { "feutre", "pan-10", "couture", "onglet" };
+        private static readonly string[] CardClasses = { "feutre", "pan-10", "carte" };
+        private const string TabIconClass = "onglet-icone";
+        private const string TabNameClass = "action";
+        private const string CardPictureClass = "carte-vignette";
+        private static readonly string[] CardNameClasses = { "t2", "carte-nom" };
 
         private UIDocument _document;
         private VisualElement _bar;
         private VisualElement _families;
         private VisualElement _structures;
-        private Label _reason;
+        private VisualElement _reason;
+        private Label _reasonText;
         private BuildBarPresenter _presenter;
 
         public event Action<int> FamilyChosen;
@@ -50,16 +59,18 @@ namespace Diciela.UI
             VisualElement bar = root.Q(BarName);
             VisualElement families = root.Q(FamiliesName);
             VisualElement structures = root.Q(StructuresName);
-            var reason = root.Q<Label>(ReasonName);
-            if (bar == null || families == null || structures == null || reason == null)
+            VisualElement reason = root.Q(ReasonName);
+            var reasonText = root.Q<Label>(ReasonTextName);
+            if (bar == null || families == null || structures == null || reason == null || reasonText == null)
                 throw new InvalidOperationException("La barre de construction ne trouve pas ses éléments (UXML).");
 
             _bar = bar;
             _families = families;
             _structures = structures;
             _reason = reason;
+            _reasonText = reasonText;
             _presenter = new BuildBarPresenter(this, catalog, texts, tool, world);
-            _bar.RemoveFromClassList(HiddenBarClass);
+            _bar.RemoveFromClassList(HiddenClass);
         }
 
         /// <summary>Cache la barre et oublie le monde.</summary>
@@ -69,7 +80,7 @@ namespace Diciela.UI
             _presenter = null;
             if (_bar == null)
                 return;
-            _bar.AddToClassList(HiddenBarClass);
+            _bar.AddToClassList(HiddenClass);
             _families.Clear();
             _structures.Clear();
             ShowReason("");
@@ -80,26 +91,55 @@ namespace Diciela.UI
             Hide();
         }
 
-        public void ShowFamilies(IReadOnlyList<string> names, int open)
+        public void ShowFamilies(IReadOnlyList<BuildBarFamily> families, int open)
         {
-            Fill(_families, names, index => FamilyChosen?.Invoke(index));
-            Select(_families, open);
+            _families.Clear();
+            for (int i = 0; i < families.Count; i++)
+            {
+                int index = i;
+                FeltButton tab = Button(TabClasses, Pastels.ClassOf(families[i].Pastel),
+                    () => FamilyChosen?.Invoke(index));
+                var icon = new VisualElement { pickingMode = PickingMode.Ignore };
+                icon.AddToClassList(TabIconClass);
+                if (families[i].Icon != null)
+                    icon.style.backgroundImage = Background.FromVectorImage(families[i].Icon);
+                tab.Add(icon);
+                tab.Add(Text(families[i].Name, TabNameClass));
+                tab.EnableInClassList(OpenClass, i == open);
+                _families.Add(tab);
+            }
         }
 
-        public void ShowStructures(IReadOnlyList<string> names)
+        public void ShowStructures(IReadOnlyList<BuildBarCard> cards)
         {
-            Fill(_structures, names, index => StructureChosen?.Invoke(index));
+            _structures.Clear();
+            for (int i = 0; i < cards.Count; i++)
+            {
+                int index = i;
+                FeltButton card = Button(CardClasses, Pastels.ClassOf(cards[i].Pastel) + PaleSuffix,
+                    () => StructureChosen?.Invoke(index));
+                if (cards[i].Picture != null)
+                {
+                    var picture = new VisualElement { pickingMode = PickingMode.Ignore };
+                    picture.AddToClassList(CardPictureClass);
+                    picture.style.backgroundImage = new StyleBackground(cards[i].Picture);
+                    card.Add(picture);
+                }
+                card.Add(Text(cards[i].Name, CardNameClasses));
+                _structures.Add(card);
+            }
         }
 
         public void SelectStructure(int index)
         {
-            Select(_structures, index);
+            for (int i = 0; i < _structures.childCount; i++)
+                _structures[i].EnableInClassList(OpenClass, i == index);
         }
 
         public void ShowReason(string text)
         {
-            _reason.text = text;
-            _reason.EnableInClassList(HiddenReasonClass, string.IsNullOrEmpty(text));
+            _reasonText.text = text;
+            _reason.EnableInClassList(HiddenClass, string.IsNullOrEmpty(text));
         }
 
         /// <summary>
@@ -109,29 +149,29 @@ namespace Diciela.UI
         public bool Contains(Vector2 screenPoint)
         {
             IPanel panel = _document != null ? _document.rootVisualElement?.panel : null;
-            if (panel == null || _bar == null || _bar.ClassListContains(HiddenBarClass))
+            if (panel == null || _bar == null || _bar.ClassListContains(HiddenClass))
                 return false;
             var fromTop = new Vector2(screenPoint.x, Screen.height - screenPoint.y);
             VisualElement picked = panel.Pick(RuntimePanelUtils.ScreenToPanel(panel, fromTop));
             return picked != null && (picked == _bar || _bar.Contains(picked));
         }
 
-        private static void Fill(VisualElement row, IReadOnlyList<string> names, Action<int> chosen)
+        private static FeltButton Button(string[] classes, string pastel, Action clicked)
         {
-            row.Clear();
-            for (int i = 0; i < names.Count; i++)
-            {
-                int index = i;
-                var button = new Button(() => chosen(index)) { text = names[i] };
-                button.AddToClassList(ButtonClass);
-                row.Add(button);
-            }
+            var button = new FeltButton();
+            foreach (string style in classes)
+                button.AddToClassList(style);
+            button.AddToClassList(pastel);
+            button.Clicked += clicked;
+            return button;
         }
 
-        private static void Select(VisualElement row, int selected)
+        private static Label Text(string text, params string[] classes)
         {
-            for (int i = 0; i < row.childCount; i++)
-                row[i].EnableInClassList(SelectedClass, i == selected);
+            var label = new Label(text) { pickingMode = PickingMode.Ignore };
+            foreach (string style in classes)
+                label.AddToClassList(style);
+            return label;
         }
     }
 }

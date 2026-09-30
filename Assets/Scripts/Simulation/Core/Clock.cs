@@ -56,6 +56,15 @@ namespace Diciela.Simulation.Core
 
         public DayPhase Phase { get; private set; }
 
+        /// <summary>La fin du travail, en part de la journée (de 0 à 1), telle que les pas la comptent.</summary>
+        public double WorkEndsAt => (double)_workEndStep / _stepsPerDay;
+
+        /// <summary>La fin de la soirée, en part de la journée : la nuit va de là à la fin.</summary>
+        public double EveningEndsAt => (double)_eveningEndStep / _stepsPerDay;
+
+        /// <summary>La part de la journée déjà passée, de 0 à 1.</summary>
+        public double DayProgress => (double)(StepCount % _stepsPerDay) / _stepsPerDay;
+
         /// <summary>La seule conversion du temps réel en heures de jeu (ARCHITECTURE, section 5).</summary>
         public double RealSecondsToGameHours(double realSeconds)
         {

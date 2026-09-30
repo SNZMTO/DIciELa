@@ -1,0 +1,31 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <Style src="Hud.uss" />
+    <ui:VisualElement name="screen" class="ecran" picking-mode="Ignore">
+        <Diciela.UI.WoodFrame name="journee" class="journee bloc-cache">
+            <ui:VisualElement class="journee-contenu">
+                <Diciela.UI.Facet class="applique ciel pan-6 journee-tuile">
+                    <ui:VisualElement class="journee-icone" picking-mode="Ignore" />
+                </Diciela.UI.Facet>
+                <ui:VisualElement class="journee-textes">
+                    <ui:VisualElement class="journee-ligne">
+                        <ui:Label name="jour" class="t2" />
+                        <ui:VisualElement class="journee-point" />
+                        <ui:Label name="phase" class="sous-titre" />
+                    </ui:VisualElement>
+                    <Diciela.UI.DayGauge name="jauge" class="creux pan-3 jauge" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </Diciela.UI.WoodFrame>
+        <ui:VisualElement name="bas" class="bas" picking-mode="Ignore">
+            <Diciela.UI.Facet name="reason" class="bulle raison bloc-cache" picking-mode="Ignore">
+                <ui:Label name="reason-text" class="libelle" picking-mode="Ignore" />
+            </Diciela.UI.Facet>
+            <Diciela.UI.WoodFrame name="bar" class="barre bloc-cache">
+                <ui:VisualElement class="barre-contenu">
+                    <ui:VisualElement name="structures" class="cartes" />
+                    <ui:VisualElement name="families" class="onglets" />
+                </ui:VisualElement>
+            </Diciela.UI.WoodFrame>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

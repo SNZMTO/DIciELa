@@ -50,19 +50,28 @@ namespace Diciela.UI
                 cut = Chamfer.Inner(cut, rim);
             }
             Chamfer.Fill(painter, box, cut, _look.Face);
-            if (_look.IsHollow || _look.HasRelief)
-            {
-                painter.BeginPath();
-                Chamfer.Trace(painter, box, cut);
-                painter.PushClip();
-                if (_look.IsHollow)
-                    DrawHollow(painter, box);
-                if (_look.HasRelief)
-                    DrawRelief(painter, box);
-                painter.PopClip();
-            }
+            painter.BeginPath();
+            Chamfer.Trace(painter, box, cut);
+            painter.PushClip();
+            DrawInside(painter, box);
+            if (_look.IsHollow)
+                DrawHollow(painter, box);
+            if (_look.HasRelief)
+                DrawRelief(painter, box);
+            painter.PopClip();
             if (_look.IsStitched)
                 DrawStitch(painter, box, cut);
+            DrawOver(painter, box);
+        }
+
+        /// <summary>Ce qu'une face plus précise peint sur la sienne, découpé à ses coins, sous l'ombre d'un creux.</summary>
+        protected virtual void DrawInside(Painter2D painter, Rect face)
+        {
+        }
+
+        /// <summary>Ce qu'une face plus précise peint par-dessus tout, sans découpe (un repère qui dépasse).</summary>
+        protected virtual void DrawOver(Painter2D painter, Rect face)
+        {
         }
 
         // Le creux : une ombre intérieure en haut, décalée puis fondue (un pixel par bande), et un filet de lumière en

@@ -4,8 +4,8 @@ using System.Collections.Generic;
 namespace Diciela.UI
 {
     /// <summary>
-    /// Ce que le présentateur de la barre de construction attend de sa vue (MVP) : montrer des noms, une sélection, une
-    /// raison, et dire ce que le joueur choisit. Les textes arrivent déjà traduits.
+    /// Ce que le présentateur de la barre de construction attend de sa vue (MVP) : montrer des onglets et des cartes, une
+    /// sélection, une raison, et dire ce que le joueur choisit. Les textes arrivent déjà traduits.
     /// </summary>
     public interface IBuildBarView
     {
@@ -15,11 +15,11 @@ namespace Diciela.UI
         /// <summary>Levé quand le joueur choisit une construction de la famille ouverte : son rang.</summary>
         event Action<int> StructureChosen;
 
-        /// <summary>Montre les familles, et laquelle est ouverte.</summary>
-        void ShowFamilies(IReadOnlyList<string> names, int open);
+        /// <summary>Montre les familles en onglets, et laquelle est ouverte.</summary>
+        void ShowFamilies(IReadOnlyList<BuildBarFamily> families, int open);
 
-        /// <summary>Montre les constructions de la famille ouverte.</summary>
-        void ShowStructures(IReadOnlyList<string> names);
+        /// <summary>Montre les constructions de la famille ouverte, en cartes.</summary>
+        void ShowStructures(IReadOnlyList<BuildBarCard> cards);
 
         /// <summary>Marque la construction en main (-1 : aucune).</summary>
         void SelectStructure(int index);

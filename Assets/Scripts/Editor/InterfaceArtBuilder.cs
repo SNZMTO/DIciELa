@@ -24,34 +24,14 @@ namespace Diciela.EditorTools
             EditorAssets.EnsureFolder(ImageFolder);
             int pixels = FramePainter.Size * FramePainter.Resolution;
             var frame = new FramePainter(palette, PackWood.Load(FramePainter.Tile));
-            Write(FramePath, pixels, frame.Paint(), true);
-            Write(ShadowPath, ShadowPainter.Size, new ShadowPainter(palette).Paint(), false);
+            // Le cadre se lit en triple résolution, lissé entre ses tailles ; l'ombre, floue, se lit telle quelle.
+            InterfaceImage.Save(FramePath, pixels, pixels, frame.Paint(), true);
+            InterfaceImage.Save(ShadowPath, ShadowPainter.Size, ShadowPainter.Size, new ShadowPainter(palette).Paint(), false);
             File.WriteAllText(FrameStylePath, FrameStyle());
             AssetDatabase.ImportAsset(FrameStylePath);
             InterfaceIconBuilder.CreateAll(palette);
             Debug.Log("DICIELA : images de l'interface générées : " + FramePath + ", " + ShadowPath + ", " +
                       FrameStylePath + ", " + InterfaceIconBuilder.Folder + ".");
-        }
-
-        // Le cadre se lit en triple résolution, lissé entre ses tailles (les mipmaps) quand l'interface est petite ;
-        // l'ombre, floue, se lit telle quelle.
-        private static void Write(string path, int size, Color[] pixels, bool mipmaps)
-        {
-            var texture = new Texture2D(size, size, TextureFormat.RGBA32, false);
-            texture.SetPixels(pixels);
-            texture.Apply();
-            File.WriteAllBytes(path, texture.EncodeToPNG());
-            Object.DestroyImmediate(texture);
-            AssetDatabase.ImportAsset(path);
-            var importer = (TextureImporter)AssetImporter.GetAtPath(path);
-            importer.textureType = TextureImporterType.Default;
-            importer.alphaIsTransparency = true;
-            importer.mipmapEnabled = mipmaps;
-            importer.npotScale = TextureImporterNPOTScale.None;
-            importer.wrapMode = TextureWrapMode.Clamp;
-            importer.filterMode = mipmaps ? FilterMode.Trilinear : FilterMode.Bilinear;
-            importer.textureCompression = TextureImporterCompression.Uncompressed;
-            importer.SaveAndReimport();
         }
 
         private static string FrameStyle()
