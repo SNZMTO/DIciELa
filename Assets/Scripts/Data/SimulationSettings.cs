@@ -3,7 +3,8 @@ using UnityEngine;
 namespace Diciela.Data
 {
     /// <summary>
-    /// Les réglages de la simulation : la durée d'un pas, la durée d'une journée et ses phases.
+    /// Les réglages de la simulation : la durée d'un pas, la durée d'une journée et ses phases, le maillage, la pose, et
+    /// le calcul du travail (la valeur pour une tâche, l'apport d'un expert, les ouvriers d'un chantier).
     /// La fiche fait foi (ARCHITECTURE, section 9) ; les valeurs écrites ici ne servent qu'à une fiche neuve.
     /// </summary>
     [CreateAssetMenu(menuName = "DICIELA/Réglages de la simulation", fileName = "SimulationSettings")]
