@@ -18,3 +18,5 @@ MonoBehaviour:
   _allowedColor: {r: 0.35, g: 0.85, b: 0.4, a: 0.5}
   _refusedColor: {r: 0.95, g: 0.3, b: 0.25, a: 0.5}
   _plannedColor: {r: 0.7, g: 0.85, b: 1, a: 0.45}
+  _markedColor: {r: 0.9, g: 0.35, b: 0.3, a: 0.85}
+  _markHeightMeters: 1.8

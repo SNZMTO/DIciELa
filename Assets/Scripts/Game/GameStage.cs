@@ -22,6 +22,7 @@ namespace Diciela.Game
         [SerializeField] private CameraControls _cameraControls;
         [SerializeField] private StructureViews _structureViews;
         [SerializeField] private VillagerViews _villagerViews;
+        [SerializeField] private NatureViews _natureViews;
         [SerializeField] private PlacementPreview _placementPreview;
         [SerializeField] private PlacementControls _placementControls;
         [SerializeField] private ChooseControls _chooseControls;
@@ -47,7 +48,8 @@ namespace Diciela.Game
 
         /// <summary>Vrai si la scène a toutes ses vues et tous ses gestes.</summary>
         public bool IsComplete => _cameraRig != null && _cameraControls != null && _structureViews != null &&
-                                  _villagerViews != null && _placementPreview != null && _placementControls != null &&
+                                  _villagerViews != null && _natureViews != null && _placementPreview != null &&
+                                  _placementControls != null &&
                                   _chooseControls != null && _buildBar != null && _dayBoard != null &&
                                   _placeSheet != null && _stockPennants != null && _tipBoard != null &&
                                   _escapeControls != null &&
@@ -55,11 +57,16 @@ namespace Diciela.Game
                                   _appearancePreview != null && _confirmControls != null && _atelier != null &&
                                   _previewControls != null;
 
-        /// <summary>Montre ce monde et ouvre l'écran de création ; à la validation, ouvre la ville, puis appelle started.</summary>
-        public void Open(World world, Catalog catalog, TextTable texts, PlacementSettings placement, Action started)
+        /// <summary>
+        /// Montre ce monde, dont les arbres sont peints sur le Terrain de cette carte, et ouvre l'écran de création ; à la
+        /// validation, ouvre la ville, puis appelle started.
+        /// </summary>
+        internal void Open(World world, Catalog catalog, TextTable texts, PlacementSettings placement, MapScene map,
+            Action started)
         {
             _structureViews.Show(world.Structures, world.Map.Relief);
             _villagerViews.Show(world.Villagers, world.Map.Relief);
+            _natureViews.Show(world.Nature, map.Terrain, map.NatureInstances, world.Map.Relief);
             _atelier.Show();
             _appearancePreview.Stand(_atelier.Spot);
             _creationScreen.Show(catalog, texts, _appearancePreview, world, () =>
@@ -112,6 +119,7 @@ namespace Diciela.Game
             _cameraRig.Hide();
             _structureViews.Hide();
             _villagerViews.Hide();
+            _natureViews.Hide();
         }
 
         // La Chimère naît au point d'arrivée, tournée vers le nord : la caméra se tourne pour la voir de face, part tout

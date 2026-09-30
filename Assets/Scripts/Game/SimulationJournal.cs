@@ -18,6 +18,7 @@ namespace Diciela.Game
         private const string Prefix = "DICIELA : ";
 
         private readonly World _world;
+        private readonly NatureJournal _nature;
 
         public SimulationJournal(World world)
         {
@@ -40,6 +41,7 @@ namespace Diciela.Game
             _world.Villagers.VillagerFellAsleep += OnVillagerFellAsleep;
             _world.Villagers.VillagerWokeUp += OnVillagerWokeUp;
             _world.Villagers.SleepRefused += OnSleepRefused;
+            _nature = new NatureJournal(world.Nature);
             Relief relief = _world.Map.Relief;
             Debug.Log(Prefix + "monde créé, carte de " + relief.SizeX.ToString("0") + " × " + relief.SizeZ.ToString("0") +
                       " m (relief de " + relief.SamplesX + " × " + relief.SamplesZ + " points), " +
@@ -64,6 +66,7 @@ namespace Diciela.Game
             _world.Villagers.VillagerFellAsleep -= OnVillagerFellAsleep;
             _world.Villagers.VillagerWokeUp -= OnVillagerWokeUp;
             _world.Villagers.SleepRefused -= OnSleepRefused;
+            _nature.Stop();
             foreach (Villager villager in _world.Villagers.All)
                 Debug.Log(Prefix + Describe(villager) + " est en " + villager.Position + ".");
             Debug.Log(Prefix + "monde arrêté après " + _world.Clock.StepCount + " pas, " + Describe(_world.Clock) + ".");

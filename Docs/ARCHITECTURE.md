@@ -306,8 +306,13 @@ code.
   une description : hauteurs en mètres, eaux et leur sorte, arbres, rochers, champs sauvages, point d'arrivée, avec des
   identifiants tirés de la position arrondie. Le relief entre le premier, lu sur le Terrain désigné par la racine de la
   carte (`MapRoot`), posé à l'origine ; hauteur et pente se lisent sur une même surface, par interpolation bilinéaire.
-  Le point d'arrivée est l'objet de la carte qui porte `ArrivalPoint` ; sans lui, le centre. Le reste entre avec les
-  systèmes qui s'en servent. `World` reçoit la description ; la ville témoin en fabrique une.
+  Le point d'arrivée est l'objet de la carte qui porte `ArrivalPoint` ; sans lui, le centre. Les arbres et les rochers
+  sont les instances du pinceau à arbres du Terrain dont le modèle est rangé dans une sorte (`NatureDefinition`) ; un
+  modèle rangé nulle part est dit dans la console et reste un décor. Chacun a un numéro dans l'ordre de la description,
+  et la lecture garde le numéro de son instance sur le Terrain : la vue le retrouve ainsi ; son identifiant de
+  sauvegarde se tirera de sa position arrondie. Le reste entre avec les systèmes qui s'en servent. `World` reçoit la
+  description ; la ville témoin en fabrique une. La partie joue sur une copie en mémoire du sol (`MapScene`), donnée au
+  Terrain et à son collider, détruite au départ : la carte du développeur n'est jamais modifiée (SAVOIR 2.5).
   L'empreinte de la description est sauvegardée : si la carte a été repeinte, les poses sont revérifiées par la fonction
   des ordres.
 - **La copie de travail du Terrain.** Ce qui modifie le sol en jeu travaille sur une copie en mémoire (`Instantiate`

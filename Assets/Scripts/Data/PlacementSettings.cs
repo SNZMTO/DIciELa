@@ -3,7 +3,8 @@ using UnityEngine;
 namespace Diciela.Data
 {
     /// <summary>
-    /// Les réglages de la pose (GDD, section 9) : tourner, et les couleurs de l'aperçu et du fantôme. Les valeurs
+    /// Les réglages de la pose (GDD, sections 2 et 9) : tourner, les couleurs de l'aperçu et du fantôme, et le fanion
+    /// des arbres et des rochers marqués à retirer. Les valeurs
     /// écrites ici ne servent qu'à une fiche neuve : la fiche fait foi.
     /// </summary>
     [CreateAssetMenu(menuName = "DICIELA/Réglages de la pose", fileName = "PlacementSettings")]
@@ -29,11 +30,19 @@ namespace Diciela.Data
         [Tooltip("Le fantôme : une construction posée qui attend d'être bâtie.")]
         [SerializeField] private Color _plannedColor = new Color(0.7f, 0.85f, 1f, 0.45f);
 
+        [Tooltip("Le fanion d'un arbre ou d'un rocher marqué à retirer, du même matériau translucide (remplaçant simple).")]
+        [SerializeField] private Color _markedColor = new Color(0.9f, 0.35f, 0.3f, 0.85f);
+
+        [Tooltip("La hauteur du fanion, en mètres, planté au pied de l'arbre ou du rocher marqué.")]
+        [SerializeField, Range(0.5f, 5f)] private float _markHeightMeters = 1.8f;
+
         public float RotationStepDegrees => _rotationStepDegrees;
         public float RotationDegreesPerPixel => _rotationDegreesPerPixel;
         public Material TranslucentMaterial => _translucentMaterial;
         public Color AllowedColor => _allowedColor;
         public Color RefusedColor => _refusedColor;
         public Color PlannedColor => _plannedColor;
+        public Color MarkedColor => _markedColor;
+        public float MarkHeightMeters => _markHeightMeters;
     }
 }

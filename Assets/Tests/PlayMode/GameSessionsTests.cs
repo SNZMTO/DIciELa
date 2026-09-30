@@ -13,8 +13,8 @@ namespace Diciela.Tests.PlayMode
     /// <summary>
     /// Deux parties de suite sur la scène de test, comme deux entrées en Play d'un projet qui ne recharge ni le code ni
     /// la scène : chacune crée un seul monde, sa Chimère validée à l'écran de création, et une pose y donne un seul
-    /// ordre, une seule ligne de journal et une seule construction vue. Le Terrain de la carte de test (son asset) sort
-    /// des deux parties inchangé.
+    /// ordre, une seule ligne de journal et une seule construction vue. Chaque partie joue sur une copie du sol : le
+    /// Terrain de la carte de test (son asset) sort des deux parties inchangé.
     /// </summary>
     public sealed class GameSessionsTests
     {
@@ -58,6 +58,9 @@ namespace Diciela.Tests.PlayMode
                         yield return null;
                     Assert.IsNotNull(controls.Tool, "Le monde de la partie " + session + " est né.");
                     TerrainData terrain = MapRoot.FindIn(SceneManager.GetSceneByPath(ScenePaths.MapTest)).Terrain.terrainData;
+#if UNITY_EDITOR
+                    Assert.IsFalse(UnityEditor.AssetDatabase.Contains(terrain), "La partie joue sur une copie du sol.");
+#endif
                     heightsBefore = heightsBefore ?? Heights(terrain);
 
                     controls.Tool.Begin(cabin);

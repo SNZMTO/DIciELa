@@ -9,9 +9,9 @@ using Object = UnityEngine.Object;
 namespace Diciela.Tests.PlayMode
 {
     /// <summary>
-    /// Le petit monde des tests de l'interface du tas : plat, 40 × 40 m, la Chimère née au centre (sauf si le test la
-    /// crée lui-même) ; le Bois et la Pierre ;
-    /// un tas de départ de 2 × 2 m qui tient 50 marchandises et ouvre le poste « à tout faire » (porter) ; le déroulé du
+    /// Le petit monde des tests de l'interface du tas : plat, 40 × 40 m (ou la carte donnée), la Chimère née au centre
+    /// (sauf si le test la crée lui-même) ; le Bois et la Pierre ; un tas de départ de 2 × 2 m qui tient 100
+    /// marchandises et ouvre le poste « à tout faire » (porter, puis défricher) ; le déroulé du
     /// départ, qui le pose avec 30 Bois et 20 Pierre quand la tente est plantée. Les fiches sont remplies par
     /// SerializedObject, le chemin de l'Inspector, et détruites avec lui.
     /// </summary>
@@ -20,7 +20,7 @@ namespace Diciela.Tests.PlayMode
         private readonly List<Object> _created = new List<Object>();
         private readonly VillagerKindDefinition _kind;
 
-        public TestPileTown(bool withChimera = true)
+        public TestPileTown(bool withChimera = true, MapDescription map = null)
         {
 #if UNITY_EDITOR
             var settings = Keep(ScriptableObject.CreateInstance<SimulationSettings>());
@@ -31,9 +31,15 @@ namespace Diciela.Tests.PlayMode
             TestWorld.FillList(trade, "_subStatistics", transport);
             var carry = Keep(ScriptableObject.CreateInstance<TaskKindDefinition>());
             TestWorld.Fill(carry, "_subStatistic", transport);
+            var landscape = Keep(ScriptableObject.CreateInstance<SubStatisticDefinition>());
+            var land = Keep(ScriptableObject.CreateInstance<StatisticDefinition>());
+            TestWorld.FillList(land, "_subStatistics", landscape);
+            var clear = Keep(ScriptableObject.CreateInstance<TaskKindDefinition>());
+            TestWorld.Fill(clear, "_work", (int)TaskWork.Clear);
+            TestWorld.Fill(clear, "_subStatistic", landscape);
             var slot = Keep(ScriptableObject.CreateInstance<WorkSlotDefinition>());
             TestWorld.Fill(slot, "_nameKey", "poste.a_tout_faire");
-            TestWorld.FillList(slot, "_tasks", carry);
+            TestWorld.FillList(slot, "_tasks", carry, clear);
             Pile = Keep(ScriptableObject.CreateInstance<StructureDefinition>());
             TestWorld.Fill(Pile, "_id", "tas");
             TestWorld.Fill(Pile, "_nameKey", "construction.tas_de_depart");
@@ -42,7 +48,7 @@ namespace Diciela.Tests.PlayMode
             TestWorld.Fill(Pile, "_hasDoor", false);
             TestWorld.Fill(Pile, "_unique", true);
             TestWorld.Fill(Pile, "_builtWhenPlaced", true);
-            TestWorld.Fill(Pile, "_storageCapacity", 50);
+            TestWorld.Fill(Pile, "_storageCapacity", 100);
             TestWorld.FillList(Pile, "_workSlots", slot);
             var opening = Keep(ScriptableObject.CreateInstance<OpeningDefinition>());
             TestWorld.Fill(opening, "_startingPile", Pile);
@@ -50,7 +56,7 @@ namespace Diciela.Tests.PlayMode
             Catalog = Keep(ScriptableObject.CreateInstance<Catalog>());
             TestWorld.Fill(Catalog, "_opening", opening);
             TestWorld.FillList(Catalog, "_goods", Wood, Stone);
-            TestWorld.FillList(Catalog, "_statistics", trade);
+            TestWorld.FillList(Catalog, "_statistics", trade, land);
             _kind = Keep(ScriptableObject.CreateInstance<VillagerKindDefinition>());
             TestWorld.Fill(_kind, "_id", "chimere");
             Tent = Keep(ScriptableObject.CreateInstance<StructureDefinition>());
@@ -60,7 +66,7 @@ namespace Diciela.Tests.PlayMode
             TestWorld.Fill(Tent, "_chimeraHome", true);
             TestWorld.Fill(Tent, "_builtWhenPlaced", true);
 
-            World = new World(settings, new MapDescription(new Relief(40f, 40f, 2, 2, new float[4])), Catalog);
+            World = new World(settings, map ?? new MapDescription(new Relief(40f, 40f, 2, 2, new float[4])), Catalog);
 #endif
             if (withChimera)
                 CreateTheChimera();
