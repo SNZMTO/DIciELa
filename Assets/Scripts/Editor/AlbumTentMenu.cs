@@ -1,6 +1,5 @@
 using Diciela.Controls;
 using Diciela.Data;
-using Diciela.Game;
 using Diciela.Simulation;
 using Diciela.Simulation.Land;
 using Diciela.Simulation.Society;
@@ -30,7 +29,7 @@ namespace Diciela.EditorTools
         [MenuItem("DICIELA/Album/Planter la tente près de la Chimère")]
         public static void PlantTheTent()
         {
-            World world = RunningWorld();
+            World world = AlbumWorld.Running();
             Villager chimera = world != null ? world.Villagers.Chimera : null;
             var controls = Object.FindAnyObjectByType<PlacementControls>();
             var cameraControls = Object.FindAnyObjectByType<CameraControls>();
@@ -66,7 +65,7 @@ namespace Diciela.EditorTools
         [MenuItem("DICIELA/Album/Toucher la tente")]
         public static void TouchTheTent()
         {
-            World world = RunningWorld();
+            World world = AlbumWorld.Running();
             Structure home = world != null ? world.Structures.ChimeraHome : null;
             var choose = Object.FindAnyObjectByType<ChooseControls>();
             var rig = Object.FindAnyObjectByType<CameraRig>();
@@ -80,12 +79,6 @@ namespace Diciela.EditorTools
             bool sent = choose.Tool.TouchAt(rig.Camera.WorldToScreenPoint(top));
             Debug.Log("DICIELA : mise en scène de l'album : la tente est touchée (" +
                       (sent ? "un ordre part" : "aucun ordre") + ").");
-        }
-
-        private static World RunningWorld()
-        {
-            var runner = Object.FindAnyObjectByType<GameRunner>();
-            return EditorApplication.isPlaying && runner != null ? runner.World : null;
         }
 
         private static Vector3 Ground(World world, Vector2 at)

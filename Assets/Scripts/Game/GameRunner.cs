@@ -54,7 +54,7 @@ namespace Diciela.Game
 
             _quitting = false;
             Application.quitting += OnQuitting;
-            _map = new MapScene(_session.MapScenePath);
+            _map = new MapScene(_session.MapScenePath, _catalog.Nature);
             StartCoroutine(LoadMapThenCreateWorld());
         }
 
@@ -92,7 +92,7 @@ namespace Diciela.Game
             try
             {
                 _journal = new SimulationJournal(_world);
-                _stage.Open(_world, _catalog, _texts, _placementSettings, StartTime);
+                _stage.Open(_world, _catalog, _texts, _placementSettings, _map, StartTime);
                 return true;
             }
             catch (Exception exception)

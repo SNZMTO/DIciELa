@@ -8,13 +8,14 @@ using UnityEngine.SceneManagement;
 namespace Diciela.EditorTools
 {
     /// <summary>
-    /// Installe la pose dans une scène racine : les constructions vues (« Constructions »), l'aperçu et les gestes de
-    /// la pose (« Pose »), le geste « toucher » (« Choisir »), reliés à leurs fiches, à l'asset d'actions, au
+    /// Installe la pose dans une scène racine : les constructions vues (« Constructions »), les arbres et rochers vus
+    /// (« Nature »), l'aperçu et les gestes de la pose (« Pose »), le geste « toucher » (« Choisir »), reliés à leurs fiches, à l'asset d'actions, au
     /// démarrage et à sa scène. Réexécutable : ce qui est déjà réglé n'est pas touché.
     /// </summary>
     internal static class PlacementBuilder
     {
         private const string StructuresObjectName = "Constructions";
+        private const string NatureObjectName = "Nature";
         private const string PlacementObjectName = "Pose";
         private const string ChooseObjectName = "Choisir";
 
@@ -26,6 +27,8 @@ namespace Diciela.EditorTools
 
             StructureViews views = EditorAssets.FindOrCreate<StructureViews>(scene, StructuresObjectName);
             EditorAssets.AssignIfMissing(views, "_settings", settings);
+            NatureViews nature = EditorAssets.FindOrCreate<NatureViews>(scene, NatureObjectName);
+            EditorAssets.AssignIfMissing(nature, "_settings", settings);
 
             PlacementPreview preview = EditorAssets.FindOrCreate<PlacementPreview>(scene, PlacementObjectName);
             EditorAssets.AssignIfMissing(preview, "_settings", settings);
@@ -42,6 +45,7 @@ namespace Diciela.EditorTools
 
             EditorAssets.AssignIfMissing(runner, "_placementSettings", settings);
             EditorAssets.AssignIfMissing(stage, "_structureViews", views);
+            EditorAssets.AssignIfMissing(stage, "_natureViews", nature);
             EditorAssets.AssignIfMissing(stage, "_placementPreview", preview);
             EditorAssets.AssignIfMissing(stage, "_placementControls", controls);
             EditorAssets.AssignIfMissing(stage, "_chooseControls", choose);
