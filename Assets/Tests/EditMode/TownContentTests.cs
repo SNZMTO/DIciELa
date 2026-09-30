@@ -18,7 +18,7 @@ namespace Diciela.Tests.EditMode
             // La tente vient en premier (GDD, section 6) : le catalogue a un logis de la Chimère, en tête de sa famille ;
             // il est unique, et il a une porte, devant laquelle elle se couche.
             var homes = new List<StructureDefinition>();
-            foreach (StructureFamilyDefinition family in ContentTests.LoadSingle<Catalog>().Families)
+            foreach (StructureFamilyDefinition family in ProjectContent.LoadSingle<Catalog>().Families)
             {
                 for (int i = 0; i < family.Structures.Count; i++)
                 {
@@ -37,7 +37,7 @@ namespace Diciela.Tests.EditMode
         [Test]
         public void TheStartingPileHoldsItsGoodsAndOpensAPost()
         {
-            Catalog catalog = ContentTests.LoadSingle<Catalog>();
+            Catalog catalog = ProjectContent.LoadSingle<Catalog>();
             Assert.IsNotNull(catalog.Opening, "Le catalogue n'a pas de déroulé du départ.");
             StructureDefinition pile = catalog.Opening.StartingPile;
             Assert.IsNotNull(pile, "Le déroulé du départ n'a pas de tas.");
@@ -56,7 +56,7 @@ namespace Diciela.Tests.EditMode
         [Test]
         public void EachSubStatisticIsInOneStatisticAndEachTaskReadsOne()
         {
-            Catalog catalog = ContentTests.LoadSingle<Catalog>();
+            Catalog catalog = ProjectContent.LoadSingle<Catalog>();
             var seen = new HashSet<SubStatisticDefinition>();
             var faults = new List<string>();
             foreach (StatisticDefinition statistic in catalog.Statistics)
@@ -67,7 +67,7 @@ namespace Diciela.Tests.EditMode
                         faults.Add(statistic.Id + " a une sous-statistique vide, ou déjà dans une statistique.");
                 }
             }
-            foreach (StructureDefinition structure in ContentTests.StructuresOf(catalog))
+            foreach (StructureDefinition structure in ProjectContent.StructuresOf(catalog))
             {
                 foreach (WorkSlotDefinition slot in structure.WorkSlots)
                 {
@@ -85,31 +85,6 @@ namespace Diciela.Tests.EditMode
             }
 
             Assert.IsEmpty(faults, string.Join("\n", faults));
-        }
-
-        /// <summary>Les clés des textes de la ville au travail, que le test des textes vérifie avec les autres.</summary>
-        internal static void AddTownKeys(Catalog catalog, List<string> keys)
-        {
-            StructureDefinition pile = ContentTests.StartingPileOf(catalog);
-            if (pile != null)
-                keys.Add(pile.NameKey);
-            foreach (GoodDefinition good in catalog.Goods)
-                keys.Add(good.NameKey);
-            foreach (StatisticDefinition statistic in catalog.Statistics)
-            {
-                keys.Add(statistic.NameKey);
-                foreach (SubStatisticDefinition subStatistic in statistic.SubStatistics)
-                    keys.Add(subStatistic.NameKey);
-            }
-            foreach (StructureDefinition structure in ContentTests.StructuresOf(catalog))
-            {
-                foreach (WorkSlotDefinition slot in structure.WorkSlots)
-                {
-                    keys.Add(slot.NameKey);
-                    foreach (TaskKindDefinition task in slot.Tasks)
-                        keys.Add(task.NameKey);
-                }
-            }
         }
 
         private static bool Contains(IReadOnlyList<GoodDefinition> goods, GoodDefinition good)

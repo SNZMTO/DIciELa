@@ -93,6 +93,20 @@ namespace Diciela.Tests.EditMode
         }
 
         [Test]
+        public void WithNoRoomWithinItsRadiusThePileIsNotLaid()
+        {
+            OpeningDefinition near = _town.Keep(TestData.Opening(_town.Pile, 1f, new GoodAmount(_town.Wood, 30)));
+            Catalog catalog = _town.Keep(TestData.TownCatalog(near, new[] { _town.Wood }, new StatisticDefinition[0]));
+            World world = _town.World(catalog);
+            // Un bloc de 2 × 2 m sur la place du tas : il faudrait aller à 2 m pour ne pas le chevaucher, au-delà du rayon.
+            TestTown.Place(world, _town.Keep(TestData.Structure("bloc", 2f, 2f, hasDoor: false)), 18.5f, 16.5f);
+            TestTown.Place(world, _town.Tent, 20f, 14f);
+
+            Assert.IsNotNull(world.Structures.ChimeraHome, "La tente se plante.");
+            Assert.IsNull(_town.PileOf(world), "Pas de place dans le rayon : pas de tas.");
+        }
+
+        [Test]
         public void WithoutAStartingPileNothingIsLaid()
         {
             World world = _town.World(TestData.EmptyCatalog);

@@ -25,7 +25,7 @@ namespace Diciela.Tests.EditMode
         [Test]
         public void TheCatalogLeadsToTheChimeraAndToEverythingHerScreenOffersOnce()
         {
-            Catalog catalog = ContentTests.LoadSingle<Catalog>();
+            Catalog catalog = ProjectContent.LoadSingle<Catalog>();
             VillagerKindDefinition chimera = catalog.ChimeraKind;
             Assert.IsNotNull(chimera, "Le catalogue ne mène pas à la sorte de la Chimère.");
             Assert.IsFalse(string.IsNullOrEmpty(chimera.Id), "La sorte de la Chimère n'a pas d'identifiant.");
@@ -56,7 +56,7 @@ namespace Diciela.Tests.EditMode
         [Test]
         public void EveryBodyShowsOneBodyInItsOwnColorOnTheSameSkeletonWithEverySlotBoneLookingNorth()
         {
-            Catalog catalog = ContentTests.LoadSingle<Catalog>();
+            Catalog catalog = ProjectContent.LoadSingle<Catalog>();
             var faults = new List<string>();
             string[] skeleton = null;
             foreach (BodyDefinition body in catalog.Bodies)

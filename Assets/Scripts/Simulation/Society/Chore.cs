@@ -99,9 +99,17 @@ namespace Diciela.Simulation.Society
             return Arrive(position, workTime);
         }
 
-        /// <summary>Il vient de sortir d'une construction posée sur lui : il repart d'ici vers le même but.</summary>
+        /// <summary>
+        /// Il vient de sortir d'une construction posée sur lui : il repart d'ici vers le même but. S'il bâtissait, il ne
+        /// bâtit plus d'où il a été poussé : il retourne d'abord aux abords du chantier.
+        /// </summary>
         public ChoreOutcome Resume(Vector2 position)
         {
+            if (_stage == Stage.Working)
+            {
+                _stage = Stage.ToSite;
+                return WalkTo(position, _shift.Site.Structure) ? ChoreOutcome.Continuing : End(ChoreOutcome.Failed);
+            }
             if (_stage != Stage.ToSource && _stage != Stage.ToSite)
                 return ChoreOutcome.Continuing;
             return _walk.TryResume(position) ? ChoreOutcome.Continuing : End(ChoreOutcome.Failed);

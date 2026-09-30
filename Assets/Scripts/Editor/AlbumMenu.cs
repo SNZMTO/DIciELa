@@ -3,6 +3,7 @@ using Diciela.Controls;
 using Diciela.Data;
 using Diciela.Game;
 using Diciela.Simulation;
+using Diciela.Simulation.Land;
 using Diciela.Simulation.Society;
 using Diciela.View;
 using UnityEditor;
@@ -14,7 +15,8 @@ namespace Diciela.EditorTools
     /// <summary>
     /// Les mises en scène de l'album (Docs/ALBUM.md), en Play. Poser trois cabanes : on se rapproche du centre de la vue,
     /// puis on tient l'outil de pose à la place de la souris, par les mêmes appels que les gestes, le temps d'une
-    /// capture ; les gestes de la caméra et de la pose restent coupés jusqu'à la fin du Play. Se rapprocher de la
+    /// capture ; les cabanes vont autour du logis de la Chimère (ou d'elle), à gauche, derrière et à droite vu de la
+    /// caméra, loin de la tente et du tas ; les gestes de la caméra et de la pose restent coupés jusqu'à la fin du Play. Se rapprocher de la
     /// Chimère : des crans de molette vers là où on la voit, comme le ferait la souris posée sur elle. Tourner la Chimère
     /// de l'atelier : de trois quarts, par le même appel que le glisser.
     /// </summary>
@@ -31,12 +33,13 @@ namespace Diciela.EditorTools
         // De trois quarts, sa face vers la droite de l'écran (comme un glisser vers la droite).
         private const float ThreeQuarterDegrees = -35f;
 
-        // Trois places, en fractions de l'écran, pour trois cabanes ; une place libre devant elles.
+        // Trois places pour trois cabanes, en mètres autour du logis de la Chimère, vues de la caméra (x à droite de
+        // l'écran, y vers le fond) : à gauche, derrière, à droite ; une place libre devant.
         private static readonly Vector2[] Places =
         {
-            new Vector2(0.36f, 0.5f), new Vector2(0.5f, 0.58f), new Vector2(0.64f, 0.5f)
+            new Vector2(-8f, 2f), new Vector2(0f, 9f), new Vector2(8f, 2f)
         };
-        private static readonly Vector2 FreePlace = new Vector2(0.5f, 0.34f);
+        private static readonly Vector2 FreePlace = new Vector2(0f, -10f);
 
         [MenuItem("DICIELA/Album/Poser trois cabanes, viser une place libre")]
         public static void StageFreePlace()
@@ -100,9 +103,11 @@ namespace Diciela.EditorTools
             var controls = Object.FindAnyObjectByType<PlacementControls>();
             var cameraControls = Object.FindAnyObjectByType<CameraControls>();
             var rig = Object.FindAnyObjectByType<CameraRig>();
-            if (controls == null || controls.Tool == null || cameraControls == null || rig == null)
+            var runner = Object.FindAnyObjectByType<GameRunner>();
+            if (controls == null || controls.Tool == null || cameraControls == null || rig == null || runner == null ||
+                runner.World == null || runner.World.Villagers.Chimera == null)
             {
-                Debug.LogError("DICIELA : le monde n'est pas encore né.");
+                Debug.LogError("DICIELA : le monde ou la Chimère n'est pas encore né.");
                 return;
             }
 
@@ -112,7 +117,7 @@ namespace Diciela.EditorTools
             PlacementTool tool = controls.Tool;
             Camera camera = rig.Camera;
             var cabin = EditorAssets.Load<StructureDefinition>(ContentBuilder.CabinPath);
-            rig.Zoom(ZoomNotches, OnScreen(camera, new Vector2(0.5f, 0.5f)));
+            rig.Zoom(ZoomNotches, camera.ViewportToScreenPoint(new Vector2(0.5f, 0.5f)));
 
             // Une pose par temps laissé au monde : l'outil n'envoie pas d'ordre tant que le précédent n'est pas joué.
             After(ZoomSeconds, () => tool.Begin(cabin));
@@ -134,10 +139,20 @@ namespace Diciela.EditorTools
             });
         }
 
-        /// <summary>Le point de l'écran à cette fraction de la vue, calculé par la caméra, qui connaît sa part d'écran.</summary>
-        private static Vector2 OnScreen(Camera camera, Vector2 fraction)
+        /// <summary>
+        /// Le point de l'écran où l'on voit cette place, en mètres autour du logis de la Chimère (ou d'elle, sans logis),
+        /// vue de la caméra : x vers la droite de l'écran, y vers le fond.
+        /// </summary>
+        private static Vector2 OnScreen(Camera camera, Vector2 around)
         {
-            return camera.ViewportToScreenPoint(fraction);
+            World world = Object.FindAnyObjectByType<GameRunner>().World;
+            Structure home = world.Structures.ChimeraHome;
+            Vector2 anchor = home != null ? home.Placement.Center : world.Villagers.Chimera.Position;
+            Vector3 right = Vector3.ProjectOnPlane(camera.transform.right, Vector3.up).normalized;
+            Vector3 ahead = Vector3.ProjectOnPlane(camera.transform.forward, Vector3.up).normalized;
+            Vector3 flat = right * around.x + ahead * around.y;
+            Vector2 at = anchor + new Vector2(flat.x, flat.z);
+            return camera.WorldToScreenPoint(new Vector3(at.x, world.Map.Relief.HeightAt(at.x, at.y), at.y));
         }
 
         /// <summary>Joue ce geste dans ce nombre de secondes, si le Play dure encore.</summary>

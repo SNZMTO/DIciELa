@@ -84,8 +84,11 @@ namespace Diciela.Simulation.Society
         /// <summary>Le poste qu'il tient ; null s'il n'en tient aucun.</summary>
         public WorkSlot Slot => _job.Slot;
 
-        /// <summary>Vrai pendant qu'il travaille sur un chantier, sur place.</summary>
-        public bool IsBuilding => _job.IsBuilding;
+        /// <summary>
+        /// Vrai pendant qu'il travaille sur un chantier, sur place ; pas quand une construction posée sur lui le pousse
+        /// dehors.
+        /// </summary>
+        public bool IsBuilding => _job.IsBuilding && !_exit.IsLeaving && !_exit.IsEnclosed;
 
         /// <summary>Vrai pendant qu'il marche vers son lit.</summary>
         public bool IsGoingToBed => _bedtime.IsGoing;

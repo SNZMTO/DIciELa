@@ -37,7 +37,7 @@ namespace Diciela.Tests.EditMode
         [Test]
         public void EveryHeadAndBodyIsTheirPackModelCutAtTheNeck()
         {
-            Catalog catalog = ContentTests.LoadSingle<Catalog>();
+            Catalog catalog = ProjectContent.LoadSingle<Catalog>();
             var faults = new List<string>();
             foreach (BodyDefinition body in catalog.Bodies)
             {
@@ -80,7 +80,7 @@ namespace Diciela.Tests.EditMode
         [Test]
         public void EveryHeadWearsThePiecesItsPackModelHas()
         {
-            Catalog catalog = ContentTests.LoadSingle<Catalog>();
+            Catalog catalog = ProjectContent.LoadSingle<Catalog>();
             var faults = new List<string>();
             foreach (HeadDefinition head in catalog.Heads.Where(h => h != null))
             {

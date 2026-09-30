@@ -8,7 +8,8 @@ namespace Diciela.Simulation
     /// Poser une construction, une opération qui touche plusieurs couches (ARCHITECTURE, section 3), par des appels
     /// vers le bas, dans cet ordre : le terrain la pose (ou la refuse) ; l'économie ouvre son stock si elle tient les
     /// marchandises de la ville, ou son chantier si elle attend d'être bâtie ; la société ouvre ses postes si elle est
-    /// bâtie ; puis le déroulé du départ la regarde (la tente plantée amène le tas de départ).
+    /// bâtie. Puis le déroulé du départ la regarde : si c'est le premier logis de la Chimère, le tas de départ se pose
+    /// de même à la place qu'il dit, et il le remplit.
     /// </summary>
     internal sealed class Placing
     {
@@ -26,8 +27,23 @@ namespace Diciela.Simulation
             _opening = opening;
         }
 
-        /// <summary>Pose la construction si les règles le permettent, et la rend ; sinon, null (le terrain dit pourquoi).</summary>
+        /// <summary>
+        /// Pose la construction si les règles le permettent, et la rend ; sinon, null (le terrain dit pourquoi).
+        /// </summary>
         public Structure Place(StructureDefinition definition, Placement placement)
+        {
+            Structure placed = PlaceOne(definition, placement);
+            if (placed != null &&
+                _opening.TryFindPileSpot(placed, _world, out StructureDefinition pile, out Placement spot))
+            {
+                Structure laid = PlaceOne(pile, spot);
+                if (laid != null)
+                    _opening.Fill(laid, _world.Warehouses);
+            }
+            return placed;
+        }
+
+        private Structure PlaceOne(StructureDefinition definition, Placement placement)
         {
             Structure placed = _world.Structures.Place(definition, placement);
             if (placed == null)
@@ -35,7 +51,6 @@ namespace Diciela.Simulation
             _world.Warehouses.Track(placed);
             _world.ConstructionSites.Track(placed);
             _world.WorkSlots.Track(placed);
-            _opening.Follow(placed, this, _world);
             return placed;
         }
     }
