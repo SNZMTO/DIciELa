@@ -55,11 +55,17 @@ namespace Diciela.EditorTools
                                     asset.AddActionMap(EscapeControls.MapName);
             added += AddButtonIfMissing(escape, EscapeControls.BackAction, "<Keyboard>/escape");
 
-            // Toucher ce qu'on voit : le clic gauche, quand l'outil de pose est au repos.
+            // Toucher ce qu'on voit : le clic gauche, quand aucun outil n'est en main.
             InputActionMap choose = asset.FindActionMap(ChooseControls.MapName) ??
                                     asset.AddActionMap(ChooseControls.MapName);
             added += AddButtonIfMissing(choose, ChooseControls.TouchAction, "<Mouse>/leftButton") +
                      AddPointerIfMissing(choose, ChooseControls.PointerAction);
+
+            // Marquer des arbres, l'outil « Retirer » en main : le clic gauche, le glisser et le pointeur.
+            InputActionMap clearing = asset.FindActionMap(ClearingControls.MapName) ??
+                                      asset.AddActionMap(ClearingControls.MapName);
+            added += AddButtonIfMissing(clearing, ClearingControls.MarkAction, "<Mouse>/leftButton") +
+                     AddPointerIfMissing(clearing, ClearingControls.PointerAction);
 
             // Valider ce que l'interface propose : Entrée, celle du pavé numérique comprise.
             InputActionMap confirm = asset.FindActionMap(ConfirmControls.MapName) ??

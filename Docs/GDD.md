@@ -621,6 +621,12 @@
   qu'il tient pour la ville (une marchandise par creux de lin), son poste et qui le tient, son bouton. Une seule fiche
   à la fois : la nouvelle remplace l'ancienne ; toucher autre chose, ou le sol, la ferme, comme sa croix. Échap ferme
   d'abord la fiche, puis lâche l'outil en main, puis ouvrira le menu ; l'interface ne prend pas le focus du clavier.
+- **Règle.** L'outil « Retirer » en main, un clic sur un arbre ou un rocher le marque, ou le démarque ; glisser tire un
+  cadre, et le relâcher marque tout ce dont le pied est dedans, du plus proche de son premier coin au plus loin. Un
+  arbre marqué porte un fanion à son pied. Un seul outil en main : prendre une carte lâche « Retirer », et l'inverse.
+- **À toi.** La place du bouton « Retirer » dans le HUD, son icône et le fanion des arbres marqués. Ma reco : un bouton
+  à hache au bout gauche de la barre de construction, hors des onglets, comme les outils de Timberborn. En attendant,
+  un menu de l'éditeur le prend en main (« DICIELA/Album/Prendre l'outil Retirer »).
 - **Règle.** Le stock paraît avec le premier entrepôt (le tas de départ) : un fanion par marchandise de l'étape en
   cours, son icône et son nombre ; un fanion à zéro reste, en douce. Au survol, une infobulle : un fanion dit sa
   marchandise ; la jauge dit ce qui suit, sans compter les heures. Une seule bulle pour tout le HUD.
