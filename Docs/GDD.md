@@ -612,9 +612,12 @@
 - **Règle.** Le stock paraît avec le premier entrepôt (le tas de départ) : un fanion par marchandise de l'étape en
   cours, son icône et son nombre ; un fanion à zéro reste, en douce. Au survol, une infobulle : un fanion dit sa
   marchandise ; la jauge dit ce qui suit, sans compter les heures. Une seule bulle pour tout le HUD.
+- **Règle.** L'astuce, en bas à gauche : le portrait de la Chimère (sa tête de face, photographiée à l'atelier quand
+  on valide) et une phrase du jeu, qui dit quoi faire ensuite au début d'une partie : planter la tente, puis mettre
+  la Chimère au tas, puis poser une première construction à bâtir ; ensuite, elle se tait. C'est le jeu qui parle.
+- **À toi.** La voix de la Chimère (ses répliques), avec son histoire.
 - **À toi.** Les questions ouvertes du HUD. Mes recos : les touches 1 à 9 prennent les cartes de la famille ouverte ;
-  chaque famille reçoit un pastel libre, dans l'ordre ; le bandeau de brique montre les animaux du pack. L'astuce
-  montre le portrait de la Chimère : qui parle, le jeu ou elle, est à toi (sa voix aussi).
+  chaque famille reçoit un pastel libre, dans l'ordre ; le bandeau de brique montre les animaux du pack.
 
 ## 17. Le premier jouable
 

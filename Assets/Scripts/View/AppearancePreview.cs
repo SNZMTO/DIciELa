@@ -11,6 +11,7 @@ namespace Diciela.View
     public sealed class AppearancePreview : MonoBehaviour
     {
         private GameObject _shown;
+        private Appearance _appearance;
         private Vector3 _place;
         private float _yawDegrees;
 
@@ -36,8 +37,18 @@ namespace Diciela.View
         public void Show(Appearance appearance)
         {
             Hide();
+            _appearance = appearance;
             _shown = Dresser.Dress(appearance, transform);
             Place();
+        }
+
+        /// <summary>
+        /// Le portrait de ce qu'on montre : sa tête de face, à l'atelier, en tant de pixels de côté ; null s'il n'y a
+        /// rien. La texture est à celui qui l'a demandée : il la détruit.
+        /// </summary>
+        public Texture2D TakePortrait(int pixels)
+        {
+            return _appearance == null ? null : Portrait.Take(_shown, _appearance.Head, pixels);
         }
 
         /// <summary>Retire ce qu'on montrait.</summary>
@@ -46,6 +57,7 @@ namespace Diciela.View
             if (_shown != null)
                 Destroy(_shown);
             _shown = null;
+            _appearance = null;
         }
 
         private void Place()

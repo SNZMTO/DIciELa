@@ -36,6 +36,8 @@ namespace Diciela.EditorTools
             EditorAssets.AssignIfMissing(stage, "_placeSheet", sheet);
             StockPennants stock = EditorAssets.GetOrAdd<StockPennants>(bar.gameObject);
             EditorAssets.AssignIfMissing(stage, "_stockPennants", stock);
+            TipBoard tip = EditorAssets.GetOrAdd<TipBoard>(bar.gameObject);
+            EditorAssets.AssignIfMissing(stage, "_tipBoard", tip);
 
             InterfaceScale scale = EditorAssets.GetOrAdd<InterfaceScale>(bar.gameObject);
             EditorAssets.AssignIfMissing(scale, "_panel", panel);

@@ -478,6 +478,9 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   (`InterfaceIconBuilder`). `PanelSettings.scale` se change à chaud ; en Play dans l'éditeur, c'est l'asset qui
   change, à lui rendre à la sortie. Une variable de style n'est pas sûrement héritée : une face lit les siennes sur
   ses propres classes. Pas de `line-height` en USS.
+- **Un texte qui revient à la ligne dans un bloc qui rétrécit** (`flex-shrink` dans une rangée, sous un `max-width`)
+  est mesuré à sa largeur d'avant : sa dernière ligne sort du cadre (l'astuce, étape 15). Donner au bloc une largeur
+  fixe et au texte `flex-grow: 1; flex-basis: 0`.
 - **Une feuille USS importée avant l'asset qu'elle cite** (une icône pas encore générée) affiche le triangle jaune
   d'Unity, et l'éditeur garde cette image invalide en mémoire jusqu'au prochain rechargement du domaine, même après
   avoir réimporté la feuille : générer les images avant d'écrire la feuille, sinon recompiler avant de juger.
