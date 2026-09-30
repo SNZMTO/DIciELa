@@ -8,9 +8,10 @@ using UnityEngine;
 namespace Diciela.Controls
 {
     /// <summary>
-    /// L'outil « choisir » : toucher une construction, en visant son modèle (ARCHITECTURE, section 11). Pour l'instant,
-    /// toucher le logis de la Chimère l'envoie s'y coucher, ou la réveille si elle dort ou y va (GDD, section 6). Les
-    /// gestes et les tests l'appellent par la même méthode.
+    /// L'outil « choisir » : toucher une construction, en visant son modèle (ARCHITECTURE, section 11). Toucher le logis
+    /// de la Chimère l'envoie s'y coucher, ou la réveille si elle dort ou y va (GDD, section 6) ; toucher une autre
+    /// construction, ou rien, le dit à qui l'écoute : l'interface y ouvre la fiche d'un lieu, ou la ferme (décision
+    /// 141). Les gestes et les tests l'appellent par la même méthode.
     /// </summary>
     public sealed class ChooseTool
     {
@@ -30,16 +31,21 @@ namespace Diciela.Controls
             _views = views;
         }
 
+        /// <summary>Levé quand on touche une construction autre que le logis de la Chimère, ou rien (null).</summary>
+        public event Action<Structure> Touched;
+
         /// <summary>Touche ce qu'on voit sous ce point de l'écran ; vrai si un ordre est envoyé.</summary>
         public bool TouchAt(Vector2 screenPoint)
         {
             Ray ray = _camera.ScreenPointToRay(screenPoint);
-            if (!_views.TryPick(ray, out Structure touched))
-                return false;
+            _views.TryPick(ray, out Structure touched);
 
             Villager chimera = _world.Villagers.Chimera;
-            if (chimera == null || !ReferenceEquals(touched, _world.Structures.ChimeraHome))
+            if (touched == null || chimera == null || !ReferenceEquals(touched, _world.Structures.ChimeraHome))
+            {
+                Touched?.Invoke(touched);
                 return false;
+            }
             if (chimera.IsAsleep || chimera.IsGoingToBed)
                 _world.Submit(new WakeChimeraCommand());
             else

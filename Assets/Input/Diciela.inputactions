@@ -313,16 +313,6 @@
                     "priority": 0
                 },
                 {
-                    "name": "Cancel",
-                    "type": "Button",
-                    "id": "95f66763-9552-4f44-a71b-e63f32d5cdda",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false,
-                    "priority": 0
-                },
-                {
                     "name": "Pointer",
                     "type": "PassThrough",
                     "id": "761a4db1-eb6d-4c04-9b31-4fdbda5f7118",
@@ -374,17 +364,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "Secondary",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "569ed5a4-2dfb-4996-9b92-47f77b90aa6f",
-                    "path": "<Keyboard>/escape",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Cancel",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -590,6 +569,35 @@
                     "processors": "",
                     "groups": "",
                     "action": "Pointer",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Escape",
+            "id": "542d8114-2a98-418b-a77c-de39a0e41971",
+            "actions": [
+                {
+                    "name": "Back",
+                    "type": "Button",
+                    "id": "8e3fd915-1e1c-4bb9-9eae-608349a7c01b",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "ae407d9c-c6b4-4716-8a99-b23fe9f59f72",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Back",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
