@@ -339,8 +339,12 @@ code.
   générée avec elles) ; les faces plates (`Facet` : applique, feutre, creux, bulle ; `FeltButton` pour celles qui se
   cliquent) se dessinent en vectoriel d'après leurs propriétés `--…`, que les états (`:hover`, `:active`, `.ouvert`)
   changent ; les icônes sont des images vectorielles générées. Aucun filtre USS. Le panneau garde ses pixels :
-  `InterfaceScale` lui donne son échelle d'après l'écran et le réglage. Les images, l'ombre et les icônes se refont
-  par `DICIELA/Interface/Générer les images de l'interface`.
+  `InterfaceScale` lui donne son échelle d'après l'écran (ou l'image où il se rend) et le réglage. Les images,
+  l'ombre et les icônes se refont par `DICIELA/Interface/Générer les images de l'interface`, les vignettes des
+  constructions par `DICIELA/Interface/Photographier les constructions`.
+- **Le HUD** est un seul document (`Hud.uxml`, sa mise en page dans `Hud.uss`), sur l'objet « Interface » : chaque
+  bloc a sa vue, qui cherche son sous-arbre par son nom, et son présentateur (la barre de construction, `BuildBar` ;
+  la journée, `DayBoard`). Le démarrage donne à la journée, à chaque image, la fraction du pas en cours.
 - **Aucun état statique modifiable** dans la simulation : le registre, le catalogue et les textes sont des objets
   créés par `Game`. Le Play de ce projet ne recharge ni le code ni la scène : `Game` crée le monde, la table des textes
   et l'outil de pose, et les libère à la sortie (les outils de l'éditeur lisent le monde en cours par

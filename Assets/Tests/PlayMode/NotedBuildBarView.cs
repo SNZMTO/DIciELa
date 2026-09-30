@@ -28,17 +28,19 @@ namespace Diciela.Tests.PlayMode
             FamilyChosen?.Invoke(family);
         }
 
-        public void ShowFamilies(IReadOnlyList<string> names, int open)
+        public void ShowFamilies(IReadOnlyList<BuildBarFamily> families, int open)
         {
             Families.Clear();
-            Families.AddRange(names);
+            foreach (BuildBarFamily family in families)
+                Families.Add(family.Name);
             OpenFamily = open;
         }
 
-        public void ShowStructures(IReadOnlyList<string> names)
+        public void ShowStructures(IReadOnlyList<BuildBarCard> cards)
         {
             Structures.Clear();
-            Structures.AddRange(names);
+            foreach (BuildBarCard card in cards)
+                Structures.Add(card.Name);
         }
 
         public void SelectStructure(int index)

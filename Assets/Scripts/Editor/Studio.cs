@@ -20,8 +20,13 @@ namespace Diciela.EditorTools
         private readonly PreviewRenderUtility _preview = new PreviewRenderUtility();
         private readonly int _cell;
 
-        /// <summary>Un banc dont chaque photo fait ce nombre de pixels de côté.</summary>
-        public Studio(int cell)
+        /// <summary>Un banc dont chaque photo fait ce nombre de pixels de côté, sur le fond gris des planches.</summary>
+        public Studio(int cell) : this(cell, Background)
+        {
+        }
+
+        /// <summary>Un banc dont chaque photo fait ce nombre de pixels de côté, sur ce fond.</summary>
+        public Studio(int cell, Color background)
         {
             _cell = cell;
             Camera camera = _preview.camera;
@@ -29,7 +34,7 @@ namespace Diciela.EditorTools
             camera.nearClipPlane = 0.05f;
             camera.farClipPlane = 60f;
             camera.clearFlags = CameraClearFlags.SolidColor;
-            camera.backgroundColor = Background;
+            camera.backgroundColor = background;
             _preview.lights[0].intensity = 1.3f;
             _preview.lights[0].transform.rotation = Quaternion.Euler(35f, -25f, 0f);
             _preview.lights[1].intensity = 0.7f;

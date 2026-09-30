@@ -15,6 +15,15 @@
 
 ## Les captures
 
+### 30/09/2026 — étape 14b : le HUD « fusion » dans le jeu
+
+Les deux premiers blocs du HUD dessiné pour le jeu : en haut à gauche, la journée (le jour, sa phase, la jauge du
+travail, de la soirée et de la nuit hachurée, le repère de l'heure) ; en bas, la barre de construction, un cadre de
+bois tiré du pack, la carte de la tente avec sa vignette, l'onglet Logement en feutre cousu ; au-dessus, la raison
+d'un refus de pose dans une bulle. Nets du 1280 × 720 à la 4K.
+
+![Le HUD fusion dans le jeu](Album/2026-09-30_etape-14b_hud-fusion.jpg)
+
 ### 29/09/2026 — étape 13e : la barbe sur la bouche de chaque tête
 
 La barbe encadre la bouche de chaque tête ; sous un bec ou un gros museau, elle se réduit au menton. De gauche à

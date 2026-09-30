@@ -483,7 +483,9 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   une ombre dure se dessine, une ombre floue se génère en image.
 - **Voir une interface sans Play ni capture** : un `PanelSettings` dont `targetTexture` est une RenderTexture sRGB
   (le projet est en couleurs linéaires) rend un document hors écran, à la taille voulue, 4K comprise ; lire les
-  pixels après `WaitForEndOfFrame` (l'image est à l'endroit).
+  pixels après `WaitForEndOfFrame` (l'image est à l'endroit). C'est ainsi que `HudLayoutTests` rend le vrai HUD à
+  huit tailles d'écran et mesure ses blocs (`worldBound`, en pixels de l'interface) : `InterfaceScale` prend la
+  taille de l'image quand le panneau se rend dans une image.
 - **Un monteur qui fabrique un prefab** le monte dans une scène d'aperçu (`EditorSceneManager.NewPreviewScene`) : la
   scène ouverte reste propre. **Un matériau URP translucide par script** reprend les réglages de l'Inspector
   (`BaseShaderGUI`) : surface transparente, mélange SrcAlpha / OneMinusSrcAlpha, pas d'écriture de profondeur, passes
