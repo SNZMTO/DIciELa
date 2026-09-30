@@ -71,22 +71,18 @@ namespace Diciela.Simulation
             spot = default;
             for (int ring = 0; ring <= maxRings && ring * step < best; ring++)
             {
-                for (int dy = -ring; dy <= ring; dy++)
+                foreach (Vector2Int offset in new SquareRing(ring))
                 {
-                    // Sur les rangées du bas et du haut de l'anneau, toutes les places ; entre elles, les deux des bords.
-                    int stride = dy == -ring || dy == ring ? 1 : 2 * ring;
-                    for (int dx = -ring; dx <= ring; dx += stride)
-                    {
-                        float distance = new Vector2(dx, dy).magnitude * step;
-                        if (distance > radius || distance >= best)
-                            continue;
-                        var candidate = new Placement(ideal + new Vector2(dx, dy) * step, rotation);
-                        if (world.PlacementRules.Check(pile, candidate) != PlacementResult.Ok)
-                            continue;
-                        found = true;
-                        best = distance;
-                        spot = candidate;
-                    }
+                    Vector2 shift = (Vector2)offset * step;
+                    float distance = shift.magnitude;
+                    if (distance > radius || distance >= best)
+                        continue;
+                    var candidate = new Placement(ideal + shift, rotation);
+                    if (world.PlacementRules.Check(pile, candidate) != PlacementResult.Ok)
+                        continue;
+                    found = true;
+                    best = distance;
+                    spot = candidate;
                 }
             }
             return found;
