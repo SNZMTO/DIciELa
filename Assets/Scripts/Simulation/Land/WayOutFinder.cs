@@ -48,31 +48,26 @@ namespace Diciela.Simulation.Land
             for (int ring = 1; ring <= maxRings; ring++)
             {
                 bool stillInside = false;
-                for (int dy = -ring; dy <= ring; dy++)
+                foreach (Vector2Int offset in new SquareRing(ring))
                 {
-                    // Sur les rangées du bas et du haut de l'anneau, toutes les mailles ; entre elles, les deux des bords.
-                    int stride = dy == -ring || dy == ring ? 1 : 2 * ring;
-                    for (int dx = -ring; dx <= ring; dx += stride)
+                    Vector2Int cell = center + offset;
+                    if (!_grid.Contains(cell))
+                        continue;
+                    if (_grid.OccupantAt(cell) == occupant)
                     {
-                        var cell = new Vector2Int(center.x + dx, center.y + dy);
-                        if (!_grid.Contains(cell))
-                            continue;
-                        if (_grid.OccupantAt(cell) == occupant)
-                        {
-                            stillInside = true;
-                            continue;
-                        }
-                        if (!_grid.IsWalkable(cell) || !_grid.Borders(cell, occupant))
-                            continue;
-                        int size = _islands.SizeOf(_islands.IslandOf(cell));
-                        float distance = Vector2.Distance(_grid.CellCenter(cell), point);
-                        if (size > bestSize || (size == bestSize && distance < bestDistance))
-                        {
-                            found = true;
-                            bestSize = size;
-                            bestDistance = distance;
-                            exit = cell;
-                        }
+                        stillInside = true;
+                        continue;
+                    }
+                    if (!_grid.IsWalkable(cell) || !_grid.Borders(cell, occupant))
+                        continue;
+                    int size = _islands.SizeOf(_islands.IslandOf(cell));
+                    float distance = Vector2.Distance(_grid.CellCenter(cell), point);
+                    if (size > bestSize || (size == bestSize && distance < bestDistance))
+                    {
+                        found = true;
+                        bestSize = size;
+                        bestDistance = distance;
+                        exit = cell;
                     }
                 }
                 // Les mailles qui la bordent sont au plus un anneau plus loin que sa dernière maille.
