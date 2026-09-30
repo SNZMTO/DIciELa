@@ -8,6 +8,8 @@ namespace Diciela.Data
     {
         private const string PlacementRefusalPrefix = "pose.refus.";
         private const string DayPhasePrefix = "journee.";
+        private const string DayNextPrefix = "journee.suite.";
+        private const string DayNotePrefix = "journee.note.";
 
         // Les textes de l'écran de création (GDD, section 6) : son titre, ses deux premières lignes, le choix vide d'un
         // emplacement, le bouton qui valide.
@@ -23,6 +25,10 @@ namespace Diciela.Data
         public const string SheetChimera = "fiche.la_chimere";
         public const string SheetFreeSlot = "fiche.poste_libre";
 
+        // Les fanions du stock (GDD, section 16) : l'infobulle d'un fanion ({marchandise} y est remplacé).
+        public const string StockTooltip = "fanion.infobulle";
+        public const string GoodParameter = "{marchandise}";
+
         // La journée, en haut à gauche (GDD, section 16) : son numéro ({jour} y est remplacé).
         public const string DayNumber = "journee.jour";
         public const string DayNumberParameter = "{jour}";
@@ -31,6 +37,18 @@ namespace Diciela.Data
         public static string PlacementRefusal(string reasonName)
         {
             return PlacementRefusalPrefix + reasonName;
+        }
+
+        /// <summary>L'infobulle de la journée, pendant cette phase : ce qui suit (Work → journee.suite.Work).</summary>
+        public static string DayNext(string phaseName)
+        {
+            return DayNextPrefix + phaseName;
+        }
+
+        /// <summary>La suite de l'infobulle de la journée, pendant cette phase (Night → journee.note.Night).</summary>
+        public static string DayNote(string phaseName)
+        {
+            return DayNotePrefix + phaseName;
         }
 
         /// <summary>La clé du nom d'une phase de la journée, d'après son nom (Evening → journee.Evening).</summary>

@@ -73,7 +73,7 @@ namespace Diciela.Tests.PlayMode
                             yield return null;
                             TextTable texts = TextTable.Parse(settings.Texts.text, settings.Language);
                             bar.Show(catalog, texts, world.Tool, world.World);
-                            day.Show(world.World.Clock, texts);
+                            day.Show(world.World.Clock, texts, new Tooltips(document));
                         }
                         for (int frame = 0; frame < SettleFrames; frame++)
                             yield return null;

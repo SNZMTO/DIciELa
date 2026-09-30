@@ -583,8 +583,8 @@
   qu'avec ce qu'il fait : le bouton du menu arrive avec le menu (la pause, les réglages).
 - **Règle.** On choisit quoi construire dans la barre du bas : les familles en onglets, chacune de son pastel avec son
   icône, et au-dessus de l'onglet ouvert, ses constructions en cartes : la vignette de la construction (une photo de
-  son modèle) et son nom ; ce qu'elle coûte et ce qu'elle offre (des lits) s'y ajouteront avec eux. L'onglet ouvert
-  et la carte en main restent enfoncés.
+  son modèle), son nom et ce qu'elle coûte (chaque marchandise, son icône et combien) ; ce qu'elle offre (des lits)
+  s'y ajoutera avec eux. L'onglet ouvert et la carte en main restent enfoncés.
 - **Règle.** La journée montre le jour, sa phase et une jauge : le travail, la soirée et la nuit hachurée, chacun à
   sa part de la journée ; ce qui est passé est plus sombre ; un repère marque l'heure.
 - **Règle.** L'interface se lit à toutes les tailles d'écran. Elle grossit avec la hauteur de l'écran, à partir d'une
@@ -609,11 +609,12 @@
   qu'il tient pour la ville (une marchandise par creux de lin), son poste et qui le tient, son bouton. Une seule fiche
   à la fois : la nouvelle remplace l'ancienne ; toucher autre chose, ou le sol, la ferme, comme sa croix. Échap ferme
   d'abord la fiche, puis lâche l'outil en main, puis ouvrira le menu ; l'interface ne prend pas le focus du clavier.
+- **Règle.** Le stock paraît avec le premier entrepôt (le tas de départ) : un fanion par marchandise de l'étape en
+  cours, son icône et son nombre ; un fanion à zéro reste, en douce. Au survol, une infobulle : un fanion dit sa
+  marchandise ; la jauge dit ce qui suit, sans compter les heures. Une seule bulle pour tout le HUD.
 - **À toi.** Les questions ouvertes du HUD. Mes recos : les touches 1 à 9 prennent les cartes de la famille ouverte ;
-  les fanions montrent les marchandises de l'étape en cours, et un fanion à zéro reste, en douce ; la jauge ne compte
-  pas les heures, son infobulle dit ce qui suit ; chaque famille reçoit un pastel libre, dans l'ordre ; le bandeau de
-  brique montre les animaux du pack. L'astuce montre le portrait de la Chimère : qui parle, le jeu ou elle, est à toi
-  (sa voix aussi).
+  chaque famille reçoit un pastel libre, dans l'ordre ; le bandeau de brique montre les animaux du pack. L'astuce
+  montre le portrait de la Chimère : qui parle, le jeu ou elle, est à toi (sa voix aussi).
 
 ## 17. Le premier jouable
 

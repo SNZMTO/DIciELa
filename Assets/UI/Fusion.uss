@@ -177,6 +177,32 @@
 .feutre.rose-pale:hover { --face: #FBE6EB; }
 .feutre.rose-pale:active, .feutre.rose-pale.ouvert { --face: #EFC7D1; }
 
+/* Le stock : la tringle de bois, ses pommeaux, les fanions de lin à bande de brique (Pennant) ; un fanion à zéro
+   reste, en douce. */
+.tringle-clair { height: 4px; background-color: #DDAA72; }
+.tringle-bois { height: 6px; background-color: #A96F3F; }
+.tringle-sombre { height: 4px; background-color: #6F4320; }
+
+.pommeau {
+    --face: #A96F3F;
+    --pan: 6;
+    --ombre: rgba(58, 30, 14, 0.3);
+    --ombre-y: 3;
+}
+
+.fanion {
+    --face: #FBF3E4;
+    --bande: #B34747;
+    --bande-hauteur: 9;
+    --pointe: 14;
+    --ombre: rgba(58, 30, 14, 0.3);
+    --ombre-y: 3;
+}
+
+.fanion-vide {
+    opacity: 0.55;
+}
+
 /* La jauge de la journée (DayGauge), un creux : travail, soirée, nuit hachurée ; ce qui est passé, plus sombre. */
 .jauge {
     --travail: #BFE3C6;

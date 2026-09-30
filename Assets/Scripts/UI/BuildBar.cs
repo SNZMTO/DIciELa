@@ -31,6 +31,9 @@ namespace Diciela.UI
         private const string TabNameClass = "action";
         private const string CardPictureClass = "carte-vignette";
         private static readonly string[] CardNameClasses = { "t2", "carte-nom" };
+        private static readonly string[] CostClasses = { "cout", "carte-cout" };
+        private const string CostLineClass = "carte-cout-ligne";
+        private const string CostIconClass = "carte-cout-icone";
 
         private UIDocument _document;
         private VisualElement _bar;
@@ -124,6 +127,8 @@ namespace Diciela.UI
                     card.Add(picture);
                 }
                 card.Add(Text(cards[i].Name, CardNameClasses));
+                if (cards[i].Cost != null && cards[i].Cost.Count > 0)
+                    card.Add(Cost(cards[i].Cost));
                 _structures.Add(card);
             }
         }
@@ -138,6 +143,27 @@ namespace Diciela.UI
         {
             _reasonText.text = text;
             _reason.EnableInClassList(HiddenClass, string.IsNullOrEmpty(text));
+        }
+
+        /// <summary>Le coût d'une carte : chaque marchandise, son icône et combien.</summary>
+        private static VisualElement Cost(IReadOnlyList<GoodAmount> cost)
+        {
+            var row = new VisualElement { pickingMode = PickingMode.Ignore };
+            foreach (string style in CostClasses)
+                row.AddToClassList(style);
+            foreach (GoodAmount goods in cost)
+            {
+                var line = new VisualElement { pickingMode = PickingMode.Ignore };
+                line.AddToClassList(CostLineClass);
+                var icon = new VisualElement { pickingMode = PickingMode.Ignore };
+                icon.AddToClassList(CostIconClass);
+                if (goods.Good != null && goods.Good.Icon != null)
+                    icon.style.backgroundImage = Background.FromVectorImage(goods.Good.Icon);
+                line.Add(icon);
+                line.Add(Text(goods.Amount.ToString(System.Globalization.CultureInfo.InvariantCulture)));
+                row.Add(line);
+            }
+            return row;
         }
 
         private static FeltButton Button(string[] classes, string pastel, Action clicked)

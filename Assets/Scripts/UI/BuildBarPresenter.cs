@@ -92,7 +92,8 @@ namespace Diciela.UI
                     if (!IsOffered(structure))
                         continue;
                     _offered.Add(structure);
-                    _cards.Add(new BuildBarCard(_texts.Get(structure.NameKey), structure.Picture, family.Pastel));
+                    _cards.Add(new BuildBarCard(_texts.Get(structure.NameKey), structure.Picture, family.Pastel,
+                        structure.Cost));
                 }
             }
             _view.ShowStructures(_cards);
