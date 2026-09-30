@@ -47,7 +47,7 @@ namespace Diciela.Tests.PlayMode
             Catalog catalog = LoadSingle<Catalog>();
             InterfaceSettings settings = LoadSingle<InterfaceSettings>();
             TextTable texts = TextTable.Parse(settings.Texts.text, settings.Language);
-            Assert.AreEqual(texts.Get(catalog.Families[0].Structures[0].NameKey), ((Button)structures[0]).text);
+            Assert.AreEqual(texts.Get(catalog.Families[0].Structures[0].NameKey), structures[0].Q<Label>().text);
 #endif
 
             VisualElement root = bar.GetComponent<UIDocument>().rootVisualElement;
@@ -67,7 +67,8 @@ namespace Diciela.Tests.PlayMode
         }
 
 #if UNITY_EDITOR
-        private static T LoadSingle<T>() where T : Object
+        /// <summary>La seule fiche de ce type dans le projet (les tests qui lisent les vraies données).</summary>
+        internal static T LoadSingle<T>() where T : Object
         {
             string[] guids = UnityEditor.AssetDatabase.FindAssets("t:" + typeof(T).Name);
             Assert.AreEqual(1, guids.Length, "Il faut une seule fiche " + typeof(T).Name + " dans le projet.");

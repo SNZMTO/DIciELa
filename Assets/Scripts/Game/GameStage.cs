@@ -25,6 +25,7 @@ namespace Diciela.Game
         [SerializeField] private PlacementControls _placementControls;
         [SerializeField] private ChooseControls _chooseControls;
         [SerializeField] private BuildBar _buildBar;
+        [SerializeField] private DayBoard _dayBoard;
         [SerializeField] private CreationScreen _creationScreen;
         [SerializeField] private AppearancePreview _appearancePreview;
         [SerializeField] private ConfirmControls _confirmControls;
@@ -36,7 +37,8 @@ namespace Diciela.Game
         /// <summary>Vrai si la scène a toutes ses vues et tous ses gestes.</summary>
         public bool IsComplete => _cameraRig != null && _cameraControls != null && _structureViews != null &&
                                   _villagerViews != null && _placementPreview != null && _placementControls != null &&
-                                  _chooseControls != null && _buildBar != null && _creationScreen != null &&
+                                  _chooseControls != null && _buildBar != null && _dayBoard != null &&
+                                  _creationScreen != null &&
                                   _appearancePreview != null && _confirmControls != null && _atelier != null &&
                                   _previewControls != null;
 
@@ -56,10 +58,11 @@ namespace Diciela.Game
             _confirmControls.Bind(_creationScreen.Confirm);
         }
 
-        /// <summary>Donne aux habitants vus la fraction du pas en cours.</summary>
+        /// <summary>Donne aux habitants vus et à la journée la fraction du pas en cours.</summary>
         public void Follow(float stepFraction, float deltaSeconds)
         {
             _villagerViews.Follow(stepFraction, deltaSeconds);
+            _dayBoard.Follow(stepFraction);
         }
 
         /// <summary>Délie et cache tout ce qui a pu être montré : chaque Hide accepte de n'avoir rien à cacher.</summary>
@@ -74,6 +77,7 @@ namespace Diciela.Game
             _appearancePreview.Hide();
             _atelier.Hide();
             _buildBar.Hide();
+            _dayBoard.Hide();
             if (_placementTool != null)
             {
                 _placementTool.Cancel();
@@ -99,6 +103,7 @@ namespace Diciela.Game
             _cameraRig.PullBack();
             _placementTool = new PlacementTool(world, _cameraRig.Camera, _placementPreview, placement);
             _buildBar.Show(catalog, texts, _placementTool, world);
+            _dayBoard.Show(world.Clock, texts);
             _cameraControls.Bind(_buildBar);
             _placementControls.Bind(_placementTool, _buildBar);
             _chooseControls.Bind(new ChooseTool(world, _cameraRig.Camera, _structureViews), _placementTool, _buildBar);

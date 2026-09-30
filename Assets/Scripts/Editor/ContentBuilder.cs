@@ -58,6 +58,9 @@ namespace Diciela.EditorTools
                 });
             // La tente vient en premier (GDD, section 6) : en tête de sa famille, si elle n'y est pas encore.
             InsertFirstIfMissing(housing, "_structures", tent);
+            // L'icône de son onglet ; son pastel, le rose, est celui par défaut de la fiche (décision 142).
+            EditorAssets.AssignIfMissing(housing, "_icon",
+                EditorAssets.Load<UnityEngine.UIElements.VectorImage>(InterfaceIconBuilder.Folder + "/maison.asset"));
             VillagerKindDefinition chimera = EditorAssets.CreateIfMissing<VillagerKindDefinition>(ChimeraPath,
                 fiche => EditorAssets.Property(fiche, "_id").stringValue = "chimere");
 

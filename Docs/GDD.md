@@ -572,8 +572,12 @@
 - **Règle.** La journée en haut à gauche ; le stock en fanions sous une tringle, en haut au centre ; la fiche du lieu
   touché à droite ; la barre de construction en bas au centre ; l'astuce en bas à gauche. Un bouton n'apparaît
   qu'avec ce qu'il fait : le bouton du menu arrive avec le menu (la pause, les réglages).
-- **Règle.** On choisit quoi construire dans la barre du bas : les familles en onglets, et au-dessus de l'onglet
-  ouvert, ses constructions en cartes (leur image, leur nom, ce qu'elles coûtent).
+- **Règle.** On choisit quoi construire dans la barre du bas : les familles en onglets, chacune de son pastel avec son
+  icône, et au-dessus de l'onglet ouvert, ses constructions en cartes : la vignette de la construction (une photo de
+  son modèle) et son nom ; ce qu'elle coûte et ce qu'elle offre (des lits) s'y ajouteront avec eux. L'onglet ouvert
+  et la carte en main restent enfoncés.
+- **Règle.** La journée montre le jour, sa phase et une jauge : le travail, la soirée et la nuit hachurée, chacun à
+  sa part de la journée ; ce qui est passé est plus sombre ; un repère marque l'heure.
 - **Règle.** L'interface se lit à toutes les tailles d'écran. Elle grossit avec la hauteur de l'écran, à partir d'une
   référence de 900 px, et selon le réglage « Taille de l'interface » ; elle ne rétrécit jamais sous sa taille de
   référence et se garde au moins 1280 × 720 de place. Chaque bloc tient à son coin ou à son bord : sur un écran large,

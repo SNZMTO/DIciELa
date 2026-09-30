@@ -3,6 +3,7 @@
     "rootNamespace": "Diciela.Tests.PlayMode",
     "references": [
         "Diciela.Data",
+        "Diciela.Simulation.Core",
         "Diciela.Simulation.Land",
         "Diciela.Simulation.Society",
         "Diciela.View",

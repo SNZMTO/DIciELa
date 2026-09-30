@@ -178,6 +178,7 @@ GameObject:
   - component: {fileID: 250348211}
   - component: {fileID: 250348210}
   - component: {fileID: 250348213}
+  - component: {fileID: 250348214}
   m_Layer: 0
   m_Name: Interface
   m_TagString: Untagged
@@ -211,7 +212,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
   m_PanelSettings: {fileID: 11400000, guid: bf6dd8f8b4c6b5b4fa39a4d3996c982f, type: 2}
   m_ParentUI: {fileID: 0}
-  sourceAsset: {fileID: 9197481963319205126, guid: 63f7ce2268a7eb5488f2ec70e370e433, type: 3}
+  sourceAsset: {fileID: 9197481963319205126, guid: 99b205c41543dec4eb555eb7c7756861, type: 3}
   m_SortingOrder: 0
   m_Position: 0
   m_WorldSpaceSizeMode: 1
@@ -249,6 +250,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Diciela.UI::Diciela.UI.InterfaceScale
   _panel: {fileID: 11400000, guid: bf6dd8f8b4c6b5b4fa39a4d3996c982f, type: 2}
   _settings: {fileID: 11400000, guid: 7ce8faf8898188c4cb1d113cf9c4d0f1, type: 2}
+--- !u!114 &250348214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250348209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24681713565a68f469df3817d61e6691, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Diciela.UI::Diciela.UI.DayBoard
 --- !u!1 &497507848
 GameObject:
   m_ObjectHideFlags: 0
@@ -495,6 +508,7 @@ MonoBehaviour:
   _placementControls: {fileID: 497507849}
   _chooseControls: {fileID: 747521501}
   _buildBar: {fileID: 250348210}
+  _dayBoard: {fileID: 250348214}
   _creationScreen: {fileID: 1839956355}
   _appearancePreview: {fileID: 1209326657}
   _confirmControls: {fileID: 1927762277}

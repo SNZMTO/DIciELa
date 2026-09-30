@@ -23,7 +23,8 @@ namespace Diciela.UI
         private readonly PlacementTool _tool;
         private readonly World _world;
         private readonly bool _catalogHasAHome;
-        private readonly List<string> _names = new List<string>();
+        private readonly List<BuildBarFamily> _families = new List<BuildBarFamily>();
+        private readonly List<BuildBarCard> _cards = new List<BuildBarCard>();
         private readonly List<StructureDefinition> _offered = new List<StructureDefinition>();
         private int _openFamily;
 
@@ -65,10 +66,10 @@ namespace Diciela.UI
                 return;
 
             _openFamily = index;
-            _names.Clear();
+            _families.Clear();
             foreach (StructureFamilyDefinition family in families)
-                _names.Add(_texts.Get(family.NameKey));
-            _view.ShowFamilies(_names, index);
+                _families.Add(new BuildBarFamily(_texts.Get(family.NameKey), family.Icon, family.Pastel));
+            _view.ShowFamilies(_families, index);
             ShowOpenFamily();
         }
 
@@ -82,18 +83,19 @@ namespace Diciela.UI
         private void ShowOpenFamily()
         {
             _offered.Clear();
-            _names.Clear();
+            _cards.Clear();
             if (_openFamily < _catalog.Families.Count)
             {
-                foreach (StructureDefinition structure in _catalog.Families[_openFamily].Structures)
+                StructureFamilyDefinition family = _catalog.Families[_openFamily];
+                foreach (StructureDefinition structure in family.Structures)
                 {
                     if (!IsOffered(structure))
                         continue;
                     _offered.Add(structure);
-                    _names.Add(_texts.Get(structure.NameKey));
+                    _cards.Add(new BuildBarCard(_texts.Get(structure.NameKey), structure.Picture, family.Pastel));
                 }
             }
-            _view.ShowStructures(_names);
+            _view.ShowStructures(_cards);
             OnCurrentChanged();
         }
 

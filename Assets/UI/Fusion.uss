@@ -77,6 +77,11 @@
     font-size: 20px;
 }
 
+/* Ce que dit un bouton. */
+.action {
+    font-size: 20px;
+}
+
 /* Les faces (Facet) : les mesures communes, puis la matière, le pastel et les pans. */
 
 .facette {
@@ -126,6 +131,8 @@
    et reste enfoncé quand il est ouvert (un onglet), la lèvre en haut et ce qu'il porte descendu. Son ombre, dure, est
    dessinée par la face (--ombre). */
 .feutre {
+    --face: #EFD3A4;
+    --levre: #CFAE78;
     --ombre: rgba(58, 30, 14, 0.3);
     --ombre-y: 3;
     transition-property: translate;
@@ -164,6 +171,25 @@
 .feutre.rose-pale { --face: #F9DCE3; --levre: #E3B3C0; }
 .feutre.rose-pale:hover { --face: #FBE6EB; }
 .feutre.rose-pale:active, .feutre.rose-pale.ouvert { --face: #EFC7D1; }
+
+/* La jauge de la journée (DayGauge), un creux : travail, soirée, nuit hachurée ; ce qui est passé, plus sombre. */
+.jauge {
+    --travail: #BFE3C6;
+    --travail-passe: #9AC6A3;
+    --soiree: #F9C7A5;
+    --soiree-passee: #E0A383;
+    --nuit: #DBC1EA;
+    --nuit-passee: #B99ECB;
+    --hachure: rgba(74, 46, 59, 0.16);
+    --hachure-trait: 2;
+    --hachure-pas: 5;
+    --separateur: #76566A;
+    --separateur-largeur: 2;
+    --repere: #4A2E3B;
+    --repere-largeur: 16;
+    --repere-hauteur: 12;
+    --repere-depasse: 9;
+}
 
 /* Le cadre de bois (WoodFrame) : ses images, son ombre et ses mesures sont dans Cadre.uss, générée. Aucun filtre USS
    dans l'interface : un filtre sur un grand bloc se rend flou en 4K. */

@@ -24,3 +24,4 @@ MonoBehaviour:
   _builtWhenPlaced: 1
   _sourceModel: {fileID: 0}
   _model: {fileID: 7510285388598871692, guid: ef2f324fa2d68ac46a7389097c29512b, type: 3}
+  _picture: {fileID: 2800000, guid: 48de88d5bced7e64394bf36507af7a2b, type: 3}

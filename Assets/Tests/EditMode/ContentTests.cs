@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Diciela.Data;
+using Diciela.Simulation.Core;
 using Diciela.Simulation.Land;
 using NUnit.Framework;
 using UnityEditor;
@@ -81,8 +82,10 @@ namespace Diciela.Tests.EditMode
             keys.AddRange(new[]
             {
                 TextKeys.CreationTitle, TextKeys.CreationHead, TextKeys.CreationBody, TextKeys.CreationNone,
-                TextKeys.CreationPrevious, TextKeys.CreationNext, TextKeys.CreationConfirm
+                TextKeys.CreationPrevious, TextKeys.CreationNext, TextKeys.CreationConfirm, TextKeys.DayNumber
             });
+            foreach (DayPhase phase in Enum.GetValues(typeof(DayPhase)))
+                keys.Add(TextKeys.DayPhase(phase.ToString()));
             foreach (PlacementResult result in Enum.GetValues(typeof(PlacementResult)))
             {
                 if (result != PlacementResult.Ok)

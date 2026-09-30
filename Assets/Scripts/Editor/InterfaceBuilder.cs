@@ -10,15 +10,16 @@ namespace Diciela.EditorTools
 {
     /// <summary>
     /// Installe l'interface dans une scène racine : le panneau UI Toolkit (ses réglages et son thème) et sa taille à
-    /// l'écran, la barre de construction (« Interface ») et l'écran de création (« Création »), chacun avec son document,
-    /// reliés à la scène du démarrage. Réexécutable : ce qui est déjà réglé n'est pas touché.
+    /// l'écran ; le HUD (« Interface » : la barre de construction et la journée, sur un même document) et l'écran de
+    /// création (« Création »), chacun avec son document, reliés à la scène du démarrage. Réexécutable : ce qui est déjà
+    /// réglé n'est pas touché.
     /// </summary>
     internal static class InterfaceBuilder
     {
         private const string Folder = "Assets/UI";
         private const string PanelPath = Folder + "/Panneau.asset";
         private const string ThemePath = Folder + "/Theme.tss";
-        private const string BarLayoutPath = Folder + "/BarreConstruction.uxml";
+        private const string HudLayoutPath = Folder + "/Hud.uxml";
         private const string CreationLayoutPath = Folder + "/Creation.uxml";
         private const string InterfaceObjectName = "Interface";
         private const string CreationObjectName = "Création";
@@ -27,8 +28,10 @@ namespace Diciela.EditorTools
         {
             PanelSettings panel = Panel();
             BuildBar bar = EditorAssets.FindOrCreate<BuildBar>(scene, InterfaceObjectName);
-            Document(bar, panel, BarLayoutPath);
+            Document(bar, panel, HudLayoutPath);
             EditorAssets.AssignIfMissing(stage, "_buildBar", bar);
+            DayBoard day = EditorAssets.GetOrAdd<DayBoard>(bar.gameObject);
+            EditorAssets.AssignIfMissing(stage, "_dayBoard", day);
 
             InterfaceScale scale = EditorAssets.GetOrAdd<InterfaceScale>(bar.gameObject);
             EditorAssets.AssignIfMissing(scale, "_panel", panel);

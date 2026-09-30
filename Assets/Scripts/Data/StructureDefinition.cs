@@ -51,6 +51,10 @@ namespace Diciela.Data
                  "l'empreinte, son origine au sol. La vue le montre ; la simulation ne s'en sert pas.")]
         [SerializeField] private GameObject _model;
 
+        [Tooltip("Sa vignette dans la barre : une photo de son modèle, prise par le menu DICIELA/Interface/Photographier " +
+                 "les constructions.")]
+        [SerializeField] private Texture2D _picture;
+
         public string Id => _id;
         public string NameKey => _nameKey;
         public float WidthMeters => _widthMeters;
@@ -63,5 +67,6 @@ namespace Diciela.Data
         public bool BuiltWhenPlaced => _builtWhenPlaced;
         public GameObject SourceModel => _sourceModel;
         public GameObject Model => _model;
+        public Texture2D Picture => _picture;
     }
 }

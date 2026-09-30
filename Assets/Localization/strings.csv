@@ -109,3 +109,7 @@ emplacement.chapeau,Chapeau,Hat
 emplacement.barbe,Barbe,Beard
 piece.cheveux_14,Crête stylée,Stylish crest
 piece.barbe_01,Barbe,Beard
+journee.jour,Jour {jour},Day {jour}
+journee.Work,Travail,Work
+journee.Evening,Soirée,Evening
+journee.Night,Nuit,Night

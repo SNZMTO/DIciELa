@@ -3,6 +3,7 @@
     "rootNamespace": "Diciela.UI",
     "references": [
         "Diciela.Data",
+        "Diciela.Simulation.Core",
         "Diciela.Simulation.Land",
         "Diciela.Controls",
         "Diciela.Simulation",

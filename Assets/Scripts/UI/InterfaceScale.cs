@@ -6,8 +6,8 @@ namespace Diciela.UI
 {
     /// <summary>
     /// La taille de l'interface à l'écran (GDD, section 16 ; décision 144) : il donne au panneau son échelle chaque fois
-    /// que l'écran ou le réglage change. Dans l'éditeur, le panneau est un asset : son échelle d'origine lui est rendue à
-    /// la sortie, pour que le Play ne le modifie pas.
+    /// que l'écran (ou l'image où le panneau se rend) ou le réglage change. Dans l'éditeur, le panneau est un asset :
+    /// son échelle d'origine lui est rendue à la sortie, pour que le Play ne le modifie pas.
     /// </summary>
     public sealed class InterfaceScale : MonoBehaviour
     {
@@ -45,7 +45,11 @@ namespace Diciela.UI
 
         private void Update()
         {
-            var screen = new Vector2Int(Screen.width, Screen.height);
+            // Un panneau qui se rend dans une image (hors de l'écran) prend la taille de cette image.
+            RenderTexture target = _panel.targetTexture;
+            Vector2Int screen = target != null
+                ? new Vector2Int(target.width, target.height)
+                : new Vector2Int(Screen.width, Screen.height);
             if (screen == _screen && Mathf.Approximately(_settings.Size, _size))
                 return;
             _screen = screen;

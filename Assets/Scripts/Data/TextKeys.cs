@@ -7,6 +7,7 @@ namespace Diciela.Data
     public static class TextKeys
     {
         private const string PlacementRefusalPrefix = "pose.refus.";
+        private const string DayPhasePrefix = "journee.";
 
         // Les textes de l'écran de création (GDD, section 6) : son titre, ses deux premières lignes, le choix vide d'un
         // emplacement, les flèches, le bouton qui valide.
@@ -18,10 +19,20 @@ namespace Diciela.Data
         public const string CreationNext = "creation.suivant";
         public const string CreationConfirm = "creation.valider";
 
+        // La journée, en haut à gauche (GDD, section 16) : son numéro ({jour} y est remplacé).
+        public const string DayNumber = "journee.jour";
+        public const string DayNumberParameter = "{jour}";
+
         /// <summary>La clé de la raison d'un refus de pose, d'après son nom (OutsideMap → pose.refus.OutsideMap).</summary>
         public static string PlacementRefusal(string reasonName)
         {
             return PlacementRefusalPrefix + reasonName;
+        }
+
+        /// <summary>La clé du nom d'une phase de la journée, d'après son nom (Evening → journee.Evening).</summary>
+        public static string DayPhase(string phaseName)
+        {
+            return DayPhasePrefix + phaseName;
         }
     }
 }
