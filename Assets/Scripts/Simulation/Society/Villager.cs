@@ -12,8 +12,9 @@ namespace Diciela.Simulation.Society
     /// qu'il fait. Sa place est sa position, en mètres sur le plan XZ ; il garde aussi celle du pas d'avant, pour que la
     /// vue le montre entre les deux. Avec un poste, il y travaille ; sans poste, il flâne ; envoyé dormir, il laisse sa
     /// tâche (il garde son poste), va à son lit, s'y couche et n'en bouge plus jusqu'à ce qu'on le réveille. Une
-    /// construction posée sur lui ne l'arrête pas : il en sort à pied, puis reprend ce qu'il faisait. Chaque pas tire son
-    /// hasard de son numéro et du numéro du pas : les mêmes ordres rejouent la même partie.
+    /// construction posée sur lui ne l'arrête pas : il laisse sa tâche, en sort à pied, puis reprend sa marche vers son lit
+    /// ou son travail. Chaque pas tire son hasard de son numéro et du numéro du pas : les mêmes ordres rejouent la même
+    /// partie.
     /// </summary>
     public sealed class Villager
     {
@@ -84,11 +85,8 @@ namespace Diciela.Simulation.Society
         /// <summary>Le poste qu'il tient ; null s'il n'en tient aucun.</summary>
         public WorkSlot Slot => _job.Slot;
 
-        /// <summary>
-        /// Vrai pendant qu'il travaille sur un chantier, sur place ; pas quand une construction posée sur lui le pousse
-        /// dehors.
-        /// </summary>
-        public bool IsBuilding => _job.IsBuilding && !_exit.IsLeaving && !_exit.IsEnclosed;
+        /// <summary>Vrai pendant qu'il travaille sur un chantier, sur place.</summary>
+        public bool IsBuilding => _job.IsBuilding;
 
         /// <summary>Vrai pendant qu'il marche vers son lit.</summary>
         public bool IsGoingToBed => _bedtime.IsGoing;
@@ -110,6 +108,10 @@ namespace Diciela.Simulation.Society
             HashRandom random = RandomOfTheStep();
             if (_exit.Step(ref position, out bool justLeft))
             {
+                // Poussé hors de sa place, il laisse sa tâche, comme pour aller dormir : ce qu'il porte retourne à la
+                // ville et ses réservations sont rendues ; il en reprendra une une fois dehors (décision 156).
+                if (_job.HasTask)
+                    _job.Interrupt();
                 if (justLeft)
                     ResumeAfterLeaving(position, ref random);
             }
@@ -174,7 +176,10 @@ namespace Diciela.Simulation.Society
             return new HashRandom(Id, unchecked((int)_services.Clock.StepCount));
         }
 
-        /// <summary>Il vient de sortir d'une construction posée sur lui : il reprend ce qu'il faisait, d'ici.</summary>
+        /// <summary>
+        /// Il vient de sortir d'une construction posée sur lui : il reprend d'ici sa marche vers son lit, son travail ou
+        /// sa flânerie.
+        /// </summary>
         private void ResumeAfterLeaving(Vector2 position, ref HashRandom random)
         {
             if (_bedtime.IsGoing)

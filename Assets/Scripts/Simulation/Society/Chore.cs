@@ -100,22 +100,6 @@ namespace Diciela.Simulation.Society
         }
 
         /// <summary>
-        /// Il vient de sortir d'une construction posée sur lui : il repart d'ici vers le même but. S'il bâtissait, il ne
-        /// bâtit plus d'où il a été poussé : il retourne d'abord aux abords du chantier.
-        /// </summary>
-        public ChoreOutcome Resume(Vector2 position)
-        {
-            if (_stage == Stage.Working)
-            {
-                _stage = Stage.ToSite;
-                return WalkTo(position, _shift.Site.Structure) ? ChoreOutcome.Continuing : End(ChoreOutcome.Failed);
-            }
-            if (_stage != Stage.ToSource && _stage != Stage.ToSite)
-                return ChoreOutcome.Continuing;
-            return _walk.TryResume(position) ? ChoreOutcome.Continuing : End(ChoreOutcome.Failed);
-        }
-
-        /// <summary>
         /// La tâche s'arrête là : sa marche aussi, ce qui est encore réservé est rendu, et ce qu'il porte retourne à la
         /// ville.
         /// </summary>

@@ -88,8 +88,8 @@ namespace Diciela.UI
             }
             _view.ShowStock(_lines);
 
-            WorkSlot slot = FirstSlot();
             Villager chimera = _world.Villagers.Chimera;
+            WorkSlot slot = ShownSlot(chimera);
             if (slot == null)
                 _view.ShowSlot("", "");
             else
@@ -107,8 +107,11 @@ namespace Diciela.UI
             return ReferenceEquals(slot.Holder, chimera) ? _texts.Get(TextKeys.SheetChimera) : "";
         }
 
-        private WorkSlot FirstSlot()
+        /// <summary>Le poste que la fiche montre : celui que la Chimère tient ici, sinon le premier du lieu.</summary>
+        private WorkSlot ShownSlot(Villager chimera)
         {
+            if (chimera != null && IsHere(chimera))
+                return chimera.Slot;
             foreach (WorkSlot slot in _world.WorkSlots.All)
             {
                 if (ReferenceEquals(slot.Workplace, Place))

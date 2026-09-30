@@ -48,6 +48,7 @@ namespace Diciela.Tests.EditMode
             foreach (GoodAmount goods in catalog.Opening.StartingGoods)
             {
                 Assert.IsTrue(Contains(catalog.Goods, goods.Good), "Le tas tient une marchandise hors du catalogue.");
+                Assert.GreaterOrEqual(goods.Amount, 1, "Le tas tient une ligne vide.");
                 total += goods.Amount;
             }
             Assert.LessOrEqual(total, pile.StorageCapacity, "Le tas ne tient pas son contenu de départ.");
@@ -67,7 +68,7 @@ namespace Diciela.Tests.EditMode
                         faults.Add(statistic.Id + " a une sous-statistique vide, ou déjà dans une statistique.");
                 }
             }
-            foreach (StructureDefinition structure in ProjectContent.StructuresOf(catalog))
+            foreach (StructureDefinition structure in catalog.AllStructures())
             {
                 foreach (WorkSlotDefinition slot in structure.WorkSlots)
                 {
@@ -81,6 +82,8 @@ namespace Diciela.Tests.EditMode
                 {
                     if (!Contains(catalog.Goods, cost.Good))
                         faults.Add(structure.Id + " coûte une marchandise hors du catalogue.");
+                    if (cost.Amount < 1)
+                        faults.Add(structure.Id + " a une ligne de coût vide.");
                 }
             }
 
