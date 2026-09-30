@@ -57,6 +57,7 @@ namespace Diciela.Tests.PlayMode
                 var day = host.AddComponent<DayBoard>();
                 var sheet = host.AddComponent<PlaceSheet>();
                 var stock = host.AddComponent<StockPennants>();
+                var tip = host.AddComponent<TipBoard>();
                 var scale = host.AddComponent<InterfaceScale>();
                 TestWorld.Fill(scale, "_panel", panel);
                 TestWorld.Fill(scale, "_settings", settings);
@@ -85,6 +86,7 @@ namespace Diciela.Tests.PlayMode
                             stock.Show(town.World, town.Catalog, texts, tooltips);
                             sheet.Show(town.World, texts);
                             sheet.Touch(town.PlacedPile);
+                            tip.Show(town.World, texts, null);
                         }
                         for (int frame = 0; frame < SettleFrames; frame++)
                             yield return null;
@@ -103,6 +105,7 @@ namespace Diciela.Tests.PlayMode
                     day.Hide();
                     sheet.Hide();
                     stock.Hide();
+                    tip.Hide();
                 }
             }
             Assert.IsEmpty(faults, string.Join("\n", faults));
@@ -118,6 +121,7 @@ namespace Diciela.Tests.PlayMode
             Rect bar = root.Q("bar").worldBound;
             Rect sheet = root.Q("fiche").worldBound;
             Rect stock = root.Q(className: "stock-corps").worldBound;
+            Rect tip = root.Q("astuce").worldBound;
             string at = screen.x + " × " + screen.y + " : ";
             if (Mathf.Abs(day.xMin - Side) > Tolerance || Mathf.Abs(day.yMin - Top) > Tolerance)
                 faults.Add(at + "la journée n'est pas à 24 px du bord et 20 du haut (" + day + ").");
@@ -129,7 +133,9 @@ namespace Diciela.Tests.PlayMode
                 faults.Add(at + "la fiche n'est pas à 24 px du bord et 20 du haut (" + sheet + " dans " + room + ").");
             if (Mathf.Abs(stock.center.x - room.width * 0.5f) > Tolerance || Mathf.Abs(stock.yMin - StockTop) > Tolerance)
                 faults.Add(at + "les fanions ne sont pas au milieu, à 24 px du haut (" + stock + ").");
-            Rect[] blocks = { day, stock, sheet, bar };
+            if (Mathf.Abs(tip.xMin - Side) > Tolerance || Mathf.Abs(room.height - tip.yMax - Bottom) > Tolerance)
+                faults.Add(at + "l'astuce n'est pas à 24 px du bord et du bas (" + tip + " dans " + room + ").");
+            Rect[] blocks = { day, stock, sheet, bar, tip };
             foreach (Rect block in blocks)
             {
                 if (block.xMin < 0f || block.yMin < 0f || block.xMax > room.width || block.yMax > room.height)

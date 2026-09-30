@@ -275,3 +275,40 @@
     position: absolute;
     max-width: 320px;
 }
+
+/* L'astuce, en bas à gauche : le portrait de la Chimère et une phrase. Sa largeur est fixe : un texte qui revient à
+   la ligne dans un bloc qui rétrécit serait mesuré à sa largeur d'avant, et sa dernière ligne sortirait du cadre. */
+
+.astuce {
+    position: absolute;
+    left: 24px;
+    bottom: 24px;
+    width: 416px;
+}
+
+.astuce-contenu {
+    flex-direction: row;
+    align-items: center;
+    padding: 10px 18px 10px 10px;
+}
+
+.astuce-tuile {
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+}
+
+.astuce-portrait {
+    width: 48px;
+    height: 48px;
+    -unity-background-scale-mode: scale-and-crop;
+}
+
+.astuce-texte {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0;
+    margin-left: 12px;
+}

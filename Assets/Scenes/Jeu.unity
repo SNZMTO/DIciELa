@@ -181,6 +181,7 @@ GameObject:
   - component: {fileID: 250348214}
   - component: {fileID: 250348215}
   - component: {fileID: 250348216}
+  - component: {fileID: 250348217}
   m_Layer: 0
   m_Name: Interface
   m_TagString: Untagged
@@ -288,6 +289,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c06948a1c5c395540a56ddb6d4914426, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Diciela.UI::Diciela.UI.StockPennants
+--- !u!114 &250348217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250348209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08470098933d12b4aab19bd6a2a429a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Diciela.UI::Diciela.UI.TipBoard
 --- !u!1 &456663517
 GameObject:
   m_ObjectHideFlags: 0
@@ -582,6 +595,7 @@ MonoBehaviour:
   _dayBoard: {fileID: 250348214}
   _placeSheet: {fileID: 250348215}
   _stockPennants: {fileID: 250348216}
+  _tipBoard: {fileID: 250348217}
   _escapeControls: {fileID: 456663518}
   _creationScreen: {fileID: 1839956355}
   _appearancePreview: {fileID: 1209326657}

@@ -46,6 +46,14 @@
                 </Diciela.UI.FeltButton>
             </ui:VisualElement>
         </Diciela.UI.WoodFrame>
+        <Diciela.UI.WoodFrame name="astuce" class="astuce bloc-cache">
+            <ui:VisualElement class="astuce-contenu">
+                <Diciela.UI.Facet class="applique lavande pan-6 astuce-tuile">
+                    <ui:VisualElement name="astuce-portrait" class="astuce-portrait" picking-mode="Ignore" />
+                </Diciela.UI.Facet>
+                <ui:Label name="astuce-texte" class="prose astuce-texte" />
+            </ui:VisualElement>
+        </Diciela.UI.WoodFrame>
         <ui:VisualElement name="bas" class="bas" picking-mode="Ignore">
             <Diciela.UI.Facet name="reason" class="bulle raison bloc-cache" picking-mode="Ignore">
                 <ui:Label name="reason-text" class="libelle" picking-mode="Ignore" />

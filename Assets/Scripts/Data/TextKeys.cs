@@ -25,6 +25,11 @@ namespace Diciela.Data
         public const string SheetChimera = "fiche.la_chimere";
         public const string SheetFreeSlot = "fiche.poste_libre";
 
+        // L'astuce (GDD, section 16 ; décision 154) : ce qu'il y a à faire ensuite, au début d'une partie.
+        public const string TipTent = "astuce.tente";
+        public const string TipPile = "astuce.tas";
+        public const string TipCabin = "astuce.cabane";
+
         // Les fanions du stock (GDD, section 16) : l'infobulle d'un fanion ({marchandise} y est remplacé).
         public const string StockTooltip = "fanion.infobulle";
         public const string GoodParameter = "{marchandise}";
