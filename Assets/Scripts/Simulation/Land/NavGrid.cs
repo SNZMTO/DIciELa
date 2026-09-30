@@ -82,6 +82,20 @@ namespace Diciela.Simulation.Land
                    IsWalkable(new Vector2Int(cell.x, cell.y + step.y));
         }
 
+        /// <summary>Vrai si l'une des quatre voisines de cette maille est couverte par cet occupant.</summary>
+        public bool Borders(Vector2Int cell, int occupant)
+        {
+            return IsHeldBy(new Vector2Int(cell.x - 1, cell.y), occupant) ||
+                   IsHeldBy(new Vector2Int(cell.x + 1, cell.y), occupant) ||
+                   IsHeldBy(new Vector2Int(cell.x, cell.y - 1), occupant) ||
+                   IsHeldBy(new Vector2Int(cell.x, cell.y + 1), occupant);
+        }
+
+        private bool IsHeldBy(Vector2Int cell, int occupant)
+        {
+            return Contains(cell) && _occupant[IndexOf(cell)] == occupant;
+        }
+
         /// <summary>Le milieu de cette maille, en mètres sur le plan XZ.</summary>
         public Vector2 CellCenter(Vector2Int cell)
         {

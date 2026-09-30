@@ -40,7 +40,7 @@ namespace Diciela.Tests.EditMode
         /// </summary>
         public World World(float size = 40f, Vector2? arrival = null)
         {
-            var world = new World(Settings, TestData.FlatMap(size, arrival));
+            var world = new World(Settings, TestData.FlatMap(size, arrival), TestData.EmptyCatalog);
             world.Submit(new CreateChimeraCommand(Kind, Appearance));
             world.Step();
             return world;

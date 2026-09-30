@@ -15,6 +15,15 @@ MonoBehaviour:
   _families:
   - {fileID: 11400000, guid: b8ca46d660a54394682b6beea31b4aed, type: 2}
   _chimeraKind: {fileID: 11400000, guid: 6f852c15c2b34904c91165f54350ffdb, type: 2}
+  _opening: {fileID: 11400000, guid: 5f1be715bcd2f7d4ea5ebe7cd8d40508, type: 2}
+  _goods:
+  - {fileID: 11400000, guid: 66ef54aedacec184faa974adebaddff0, type: 2}
+  - {fileID: 11400000, guid: cdf728502b1356442ae522146e1539f0, type: 2}
+  _statistics:
+  - {fileID: 11400000, guid: 4cacbe39ee25c4c499c82b47dd623b9f, type: 2}
+  - {fileID: 11400000, guid: f49c707efdf1f84458d2b0a9e0de37b7, type: 2}
+  - {fileID: 11400000, guid: c37fdd1d00f606a41841bac5b37b414d, type: 2}
+  - {fileID: 11400000, guid: c4db2f4eea7d3634e81eeed0fe00802b, type: 2}
   _heads:
   - {fileID: 11400000, guid: b101e7e10079f0b4db61f9549b700b64, type: 2}
   - {fileID: 11400000, guid: 4b53f20ee8a69dd41aadab0d862d81de, type: 2}

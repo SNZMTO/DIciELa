@@ -25,6 +25,12 @@ namespace Diciela.Simulation.Land
         /// <summary>Sa place et son angle.</summary>
         public Placement Placement { get; }
 
-        public StructureState State { get; }
+        public StructureState State { get; private set; }
+
+        /// <summary>Son chantier est fini : elle sert. Seules les constructions l'appellent.</summary>
+        internal void BecomeBuilt()
+        {
+            State = StructureState.Built;
+        }
     }
 }

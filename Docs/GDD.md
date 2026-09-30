@@ -214,12 +214,14 @@
   chose d'abord n'est pas refusé.
 - **Règle.** La Chimère dort quand le joueur le veut : il touche son logis (la tente, puis sa maison), et elle va s'y
   coucher : elle marche jusqu'à sa porte, entre, et on ne la voit plus. Le joueur la réveille en touchant de nouveau
-  son logis, même quand elle y va encore : elle flâne alors devant sa porte. Endormie, elle quitte son poste jusqu'à ce
-  que le joueur la réveille ; son sommeil n'a pas d'autre effet.
+  son logis, même quand elle y va encore : elle flâne alors devant sa porte. Envoyée dormir, elle laisse sa tâche (ce
+  qu'elle porte retourne au stock) ; endormie, elle ne travaille pas, mais garde son poste, où elle retourne à son
+  réveil ; son sommeil n'a pas d'autre effet.
 - **Règle.** Si elle ne peut pas rejoindre sa porte, elle ne part pas se coucher ; si sa porte est coupée d'elle en
   chemin, elle y renonce et flâne.
 - **Règle.** Le stock de départ est un tas posé au sol près de la tente, qui sert d'entrepôt jusqu'au premier
-  entrepôt. Il se pose de lui-même quand la tente est plantée, à droite de sa porte, sinon au plus près. Il porte un
+  entrepôt. Il se pose de lui-même quand la tente est plantée, à droite de sa porte vue de face, contre sa façade et du
+  même angle, sinon au plus près. Il porte un
   poste « à tout faire » (porter, bâtir, récolter, défricher, dans cet ordre), que tient la Chimère ; le poste
   disparaît avec le tas, quand le tas est vide et que la loge, un entrepôt et la cabane du paysagiste sont bâtis
   (sinon, plus personne ne retirerait les arbres et les rochers).
@@ -273,7 +275,11 @@
   comme dans Oxygen Not Included.
 - **Règle.** Le poste « à tout faire » choisit ses tâches dans cet ordre : porter, bâtir, récolter, défricher.
 - **Règle.** On ne travaille que pendant les heures de travail. Si la journée finit pendant une tâche, l'habitant
-  finit l'étape en cours, dépose ce qu'il porte, puis part en soirée ; la Chimère, elle, flâne près de son poste.
+  finit l'étape en cours, dépose ce qu'il porte, puis part en soirée ; la Chimère, elle, flâne près de son poste. Une
+  marche commencée se finit, mais arrivé au stock, on n'y prend plus rien ; le travail sur un chantier s'arrête tout de
+  suite ; on n'entame rien d'autre avant le matin.
+- **Règle.** Une tâche qui échoue (son but n'est plus joignable) : l'habitant rend au stock ce qu'il porte, garde son
+  poste, et flâne une pause avant d'en reprendre une. Retiré de son poste, il laisse sa tâche de même.
 - **À toi.** Une pastille ou plusieurs quand un lieu cumule les pannes ? Ma reco : une seule, la plus urgente :
   injoignable, pas de force, personne au poste, pas de graines ou d'ingrédients, stock plein.
 - **À toi.** Quel poste tient un premier habitant avant que son lieu de travail existe (voir 6) ? Ma reco : un poste
@@ -330,6 +336,9 @@
 - **Règle.** La file des chantiers est visible et le joueur en change l'ordre. Un chantier qui attend ses matériaux
   laisse passer les suivants. Annuler rend au stock les matériaux déjà livrés.
 - **Défaut.** Trois ouvriers au plus sur un chantier ; les chantiers se servent dans l'ordre de la file.
+- **Règle.** On ne bâtit un chantier qu'une fois tous ses matériaux livrés. Un porteur ne porte qu'une marchandise par
+  voyage ; il la prend au stock le plus proche. Quand le chantier est fini, ses matériaux sont pris dans la
+  construction.
 - **Règle.** Pose libre : aucune case pour le joueur, on parle en mètres. La porte d'un bâtiment reste dégagée : rien ne
   se pose devant. Un bâtiment qu'on ne peut plus atteindre le montre.
 - **Règle.** Rien ne se chevauche, même de quelques centimètres, et on ne se glisse pas entre deux constructions plus

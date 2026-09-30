@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Diciela.Data;
 using Diciela.Simulation.Core;
+using Diciela.Simulation.Economy;
 using Diciela.Simulation.Land;
 using UnityEngine;
 
@@ -17,27 +18,19 @@ namespace Diciela.Simulation.Society
     {
         private readonly List<Villager> _all = new List<Villager>();
         private readonly List<VillagerHappening> _happened = new List<VillagerHappening>();
+        private readonly VillagerServices _services;
         private readonly NavGrid _grid;
-        private readonly Islands _islands;
-        private readonly PathFinder _finder;
-        private readonly Clock _clock;
         private int _nextId = 1;
 
-        public Villagers(NavGrid grid, Islands islands, PathFinder finder, Clock clock)
+        /// <summary>
+        /// Les habitants de ce monde : ils vivent sur ce maillage, à cette horloge, prennent leurs tâches ici, tiennent
+        /// les postes de cette table, et leurs statistiques suivent celles-ci.
+        /// </summary>
+        public Villagers(NavGrid grid, Islands islands, PathFinder finder, Clock clock, Surroundings surroundings,
+            TaskOffers offers, WorkSlots slots, StatisticTable statistics)
         {
-            if (ReferenceEquals(grid, null))
-                throw new ArgumentNullException(nameof(grid));
-            if (ReferenceEquals(islands, null))
-                throw new ArgumentNullException(nameof(islands));
-            if (ReferenceEquals(finder, null))
-                throw new ArgumentNullException(nameof(finder));
-            if (ReferenceEquals(clock, null))
-                throw new ArgumentNullException(nameof(clock));
-
+            _services = new VillagerServices(clock, grid, islands, finder, surroundings, offers, slots, statistics);
             _grid = grid;
-            _islands = islands;
-            _finder = finder;
-            _clock = clock;
         }
 
         /// <summary>Levé quand un habitant arrive en ville : pour l'instant, la Chimère, à sa création.</summary>
@@ -63,6 +56,17 @@ namespace Diciela.Simulation.Society
         /// <summary>La Chimère, une fois créée ; null avant.</summary>
         public Villager Chimera { get; private set; }
 
+        /// <summary>L'habitant qui porte ce numéro ; null s'il n'y en a pas.</summary>
+        public Villager Find(int id)
+        {
+            foreach (Villager villager in _all)
+            {
+                if (villager.Id == id)
+                    return villager;
+            }
+            return null;
+        }
+
         /// <summary>
         /// Crée la Chimère au point d'arrivée, sur le milieu de sa maille, avec cette apparence. Une seule par monde : si
         /// elle existe déjà, faux, rien ne change, et <see cref="ChimeraRefused"/> le dira. Seul l'ordre « créer la
@@ -80,8 +84,7 @@ namespace Diciela.Simulation.Society
 
             Vector2Int cell = _grid.CellOf(arrivalPoint);
             cell = new Vector2Int(Math.Clamp(cell.x, 0, _grid.Width - 1), Math.Clamp(cell.y, 0, _grid.Depth - 1));
-            var chimera = new Villager(_nextId++, kind, appearance, _grid.CellCenter(cell), _grid, _islands, _finder,
-                _clock);
+            var chimera = new Villager(_nextId++, kind, appearance, _grid.CellCenter(cell), _services);
             _all.Add(chimera);
             Chimera = chimera;
             _happened.Add(VillagerHappening.Of(VillagerHappening.Kinds.Arrived, chimera));

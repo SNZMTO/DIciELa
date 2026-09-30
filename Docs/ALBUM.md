@@ -15,6 +15,14 @@
 
 ## Les captures
 
+### 30/09/2026 — étape 15a : le tas de départ se pose avec la tente
+
+La tente plantée (la boîte avec sa porte), le tas de départ s'est posé de lui-même à droite de la porte vue de face,
+contre la façade : 30 Bois et 20 Pierre pour la ville, et le poste « à tout faire ». Il se voit en boîte tant que son
+modèle n'est pas choisi. La cabane est seule dans la barre : la tente, unique, l'a quittée.
+
+![Le tas de départ à droite de la porte de la tente](Album/2026-09-30_etape-15a_tas-de-depart.jpg)
+
 ### 30/09/2026 — étape 14c : l'écran de création dans la « fusion »
 
 Le panneau de bois doré est remplacé par la langue du HUD : un cadre de bois, le titre en Lilita, chaque pièce et

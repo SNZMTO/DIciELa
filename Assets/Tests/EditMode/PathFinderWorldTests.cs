@@ -43,7 +43,7 @@ namespace Diciela.Tests.EditMode
 
         private World CabinWorld()
         {
-            var world = new World(_settings, TestData.FlatMap(20f));
+            var world = new World(_settings, TestData.FlatMap(20f), TestData.EmptyCatalog);
             world.Submit(new PlaceStructureCommand(_cabin, new Placement(new Vector2(10f, 10f), 0f)));
             world.Step();
             Assert.AreEqual(StructureState.Planned, world.Structures.All[0].State);
@@ -100,7 +100,7 @@ namespace Diciela.Tests.EditMode
             SimulationSettings gameScale = TestData.Settings(0.1f, 10f, 0.5f, 0.25f, cellsPerMeter: 4);
             try
             {
-                var world = new World(gameScale, TestData.FlatMap(500f));
+                var world = new World(gameScale, TestData.FlatMap(500f), TestData.EmptyCatalog);
                 Assert.AreEqual(2000, world.Grid.Width);
                 var starts = new[] { new Vector2Int(0, 0) };
                 var goals = new[] { new Vector2Int(1999, 1500) };

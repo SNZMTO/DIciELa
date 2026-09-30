@@ -24,7 +24,7 @@ namespace Diciela.Simulation
 
         internal override void Execute(World world)
         {
-            world.Structures.Place(Definition, Placement);
+            world.Placing.Place(Definition, Placement);
         }
     }
 }

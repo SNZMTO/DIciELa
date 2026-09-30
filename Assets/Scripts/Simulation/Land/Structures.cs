@@ -7,8 +7,9 @@ namespace Diciela.Simulation.Land
     /// <summary>
     /// Les constructions posées sur la carte (ARCHITECTURE, section 4) : la vérité, dont le maillage est déduit et tenu
     /// à jour ici. Une pose passe par les règles de pose, qu'elles créent et qui les lisent ; refusée, elle ne change
-    /// rien et dit pourquoi. Les événements d'un pas attendent la fin de leur couche, dans une seule file, dans l'ordre
-    /// des poses (ARCHITECTURE, section 5).
+    /// rien et dit pourquoi. Une construction posée en fantôme devient bâtie quand son chantier est fini. Les événements
+    /// d'un pas attendent la fin de leur couche, dans une seule file, dans l'ordre où ils sont arrivés (ARCHITECTURE,
+    /// section 5).
     /// </summary>
     public sealed class Structures
     {
@@ -33,6 +34,9 @@ namespace Diciela.Simulation.Land
         /// <summary>Levé quand une pose est refusée, avec sa fiche, sa place et la raison.</summary>
         public event Action<StructureDefinition, Placement, PlacementResult> PlacementRefused;
 
+        /// <summary>Levé quand le chantier d'une construction est fini : elle est bâtie, elle sert.</summary>
+        public event Action<Structure> StructureBuilt;
+
         public IReadOnlyList<Structure> All => _all;
 
         /// <summary>Les règles de pose, que le monde montre au-dessus de lui (World.PlacementRules).</summary>
@@ -55,6 +59,17 @@ namespace Diciela.Simulation.Land
             }
         }
 
+        /// <summary>La construction qui porte ce numéro ; null s'il n'y en a pas.</summary>
+        public Structure Find(int id)
+        {
+            foreach (Structure structure in _all)
+            {
+                if (structure.Id == id)
+                    return structure;
+            }
+            return null;
+        }
+
         /// <summary>Vrai si une construction de cette fiche est posée.</summary>
         public bool IsPlaced(StructureDefinition definition)
         {
@@ -67,17 +82,17 @@ namespace Diciela.Simulation.Land
         }
 
         /// <summary>
-        /// Pose la construction si les règles le permettent ; sinon, la refuse, et <see cref="PlacementRefused"/> le dira
-        /// avec les événements du pas. Seul l'ordre « poser » l'appelle, au début d'un pas ; au-dessus de la simulation,
-        /// on vérifie avec les règles de pose.
+        /// Pose la construction si les règles le permettent et la rend ; sinon, la refuse, rend null, et
+        /// <see cref="PlacementRefused"/> le dira avec les événements du pas. Seul le monde l'appelle, au début d'un pas ;
+        /// au-dessus de la simulation, on vérifie avec les règles de pose.
         /// </summary>
-        internal PlacementResult Place(StructureDefinition definition, Placement placement)
+        internal Structure Place(StructureDefinition definition, Placement placement)
         {
             PlacementResult result = _rules.Check(definition, placement);
             if (result != PlacementResult.Ok)
             {
-                _happened.Add(new Happening(null, definition, placement, result));
-                return result;
+                _happened.Add(Happening.Refused(definition, placement, result));
+                return null;
             }
 
             var structure = new Structure(_nextId++, definition, placement);
@@ -85,8 +100,23 @@ namespace Diciela.Simulation.Land
             _grid.SetOccupant(PlacementRules.Footprint(definition, placement), structure.Id);
             if (definition.HasDoor)
                 _grid.AddDoorway(_rules.Doorway(definition, placement));
-            _happened.Add(new Happening(structure, definition, placement, result));
-            return result;
+            _happened.Add(Happening.Of(HappeningKind.Placed, structure));
+            return structure;
+        }
+
+        /// <summary>
+        /// Le chantier de cette construction est fini : elle devient bâtie. Seule l'économie l'appelle, quand le dernier
+        /// travail est fait.
+        /// </summary>
+        internal void Finish(Structure structure)
+        {
+            if (ReferenceEquals(structure, null))
+                throw new ArgumentNullException(nameof(structure));
+            if (structure.State != StructureState.Planned)
+                throw new InvalidOperationException("La construction n° " + structure.Id + " n'attend pas d'être bâtie.");
+
+            structure.BecomeBuilt();
+            _happened.Add(Happening.Of(HappeningKind.Built, structure));
         }
 
         /// <summary>Livre les événements du pas, dans leur ordre, puis vide la file. Seul le monde l'appelle.</summary>
@@ -97,10 +127,18 @@ namespace Diciela.Simulation.Land
                 for (int i = 0; i < _happened.Count; i++)
                 {
                     Happening happening = _happened[i];
-                    if (happening.Result == PlacementResult.Ok)
-                        StructurePlaced?.Invoke(happening.Placed);
-                    else
-                        PlacementRefused?.Invoke(happening.Definition, happening.Placement, happening.Result);
+                    switch (happening.Kind)
+                    {
+                        case HappeningKind.Placed:
+                            StructurePlaced?.Invoke(happening.Structure);
+                            break;
+                        case HappeningKind.Built:
+                            StructureBuilt?.Invoke(happening.Structure);
+                            break;
+                        default:
+                            PlacementRefused?.Invoke(happening.Definition, happening.Placement, happening.Result);
+                            break;
+                    }
                 }
             }
             finally
@@ -109,22 +147,41 @@ namespace Diciela.Simulation.Land
             }
         }
 
-        /// <summary>Une pose jouée, en attendant d'être annoncée : la construction posée, ou la raison du refus.</summary>
+        private enum HappeningKind
+        {
+            Placed,
+            Refused,
+            Built
+        }
+
+        /// <summary>Ce qui est arrivé à une construction, en attendant d'être annoncé : posée, refusée ou bâtie.</summary>
         private readonly struct Happening
         {
-            public Happening(Structure placed, StructureDefinition definition, Placement placement,
-                PlacementResult result)
+            private Happening(HappeningKind kind, Structure structure, StructureDefinition definition,
+                Placement placement, PlacementResult result)
             {
-                Placed = placed;
+                Kind = kind;
+                Structure = structure;
                 Definition = definition;
                 Placement = placement;
                 Result = result;
             }
 
-            public Structure Placed { get; }
+            public HappeningKind Kind { get; }
+            public Structure Structure { get; }
             public StructureDefinition Definition { get; }
             public Placement Placement { get; }
             public PlacementResult Result { get; }
+
+            public static Happening Of(HappeningKind kind, Structure structure)
+            {
+                return new Happening(kind, structure, structure.Definition, structure.Placement, PlacementResult.Ok);
+            }
+
+            public static Happening Refused(StructureDefinition definition, Placement placement, PlacementResult result)
+            {
+                return new Happening(HappeningKind.Refused, null, definition, placement, result);
+            }
         }
     }
 }

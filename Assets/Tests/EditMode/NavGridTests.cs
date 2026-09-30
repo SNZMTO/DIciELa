@@ -30,7 +30,7 @@ namespace Diciela.Tests.EditMode
         [Test]
         public void ACellOutsideTheGridIsAnError()
         {
-            NavGrid grid = new World(_settings, TestData.FlatMap()).Grid;
+            NavGrid grid = new World(_settings, TestData.FlatMap(), TestData.EmptyCatalog).Grid;
             var outside = new[] { new Vector2Int(-1, 5), new Vector2Int(20, 5), new Vector2Int(5, -1), new Vector2Int(5, 20) };
 
             Assert.IsTrue(grid.Contains(new Vector2Int(19, 19)));

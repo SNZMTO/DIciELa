@@ -70,7 +70,7 @@ namespace Diciela.Game
         {
             try
             {
-                _world = new World(_settings, _map.Description);
+                _world = new World(_settings, _map.Description, _catalog);
                 _texts = TextTable.Parse(_interfaceSettings.Texts != null ? _interfaceSettings.Texts.text : null,
                     _interfaceSettings.Language);
                 return true;

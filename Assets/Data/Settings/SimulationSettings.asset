@@ -20,3 +20,7 @@ MonoBehaviour:
   _cellsPerMeter: 4
   _maxBuildSlopeDegrees: 15
   _doorClearanceMeters: 1.5
+  _statisticScale: 100
+  _subStatisticShare: 0.8
+  _expertWorkRate: 3
+  _maxBuildersPerSite: 3

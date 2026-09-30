@@ -12,8 +12,8 @@ namespace Diciela.Tests.EditMode
     /// <summary>
     /// Le contenu du jeu, lu dans le projet sans rien écrire (ARCHITECTURE, section 12) : un seul catalogue, qui mène à
     /// chaque fiche de construction une seule fois ; des identifiants uniques ; chaque texte cité a sa clé, non vide,
-    /// dans chaque langue de la table (constructions, têtes, corps, couleurs, emplacements, pièces) ; chaque modèle préparé suit
-    /// sa fiche. La Chimère a ses tests à part.
+    /// dans chaque langue de la table (constructions, têtes, corps, couleurs, emplacements, pièces, la ville au travail) ;
+    /// chaque modèle préparé suit sa fiche. La Chimère et la ville au travail ont leurs tests à part.
     /// </summary>
     public sealed class ContentTests
     {
@@ -44,11 +44,17 @@ namespace Diciela.Tests.EditMode
                 }
             }
 
+            StructureDefinition pile = StartingPileOf(catalog);
+            if (pile != null && !reached.Add(pile))
+                faults.Add(pile.name + " est dans une famille : le tas de départ se pose de lui-même.");
+            else if (pile != null && (string.IsNullOrEmpty(pile.Id) || !structureIds.Add(pile.Id)))
+                faults.Add(pile.name + " : identifiant vide, ou déjà pris.");
+
             foreach (string guid in AssetDatabase.FindAssets("t:" + nameof(StructureDefinition)))
             {
                 string path = AssetDatabase.GUIDToAssetPath(guid);
                 if (!reached.Contains(AssetDatabase.LoadAssetAtPath<StructureDefinition>(path)))
-                    faults.Add(path + " n'est dans aucune famille du catalogue.");
+                    faults.Add(path + " n'est ni dans une famille du catalogue, ni le tas de départ.");
             }
 
             Assert.IsEmpty(faults, string.Join("\n", faults));
@@ -79,6 +85,7 @@ namespace Diciela.Tests.EditMode
                 keys.Add(slot.NameKey);
             foreach (AttachmentDefinition attachment in catalog.Attachments)
                 keys.Add(attachment.NameKey);
+            TownContentTests.AddTownKeys(catalog, keys);
             keys.AddRange(new[]
             {
                 TextKeys.CreationTitle, TextKeys.CreationHead, TextKeys.CreationBody, TextKeys.CreationNone,
@@ -114,34 +121,31 @@ namespace Diciela.Tests.EditMode
             // supérieur), la porte sur la façade.
             const float Centimeter = 0.01f;
             var faults = new List<string>();
-            foreach (StructureFamilyDefinition family in LoadSingle<Catalog>().Families)
+            foreach (StructureDefinition structure in StructuresOf(LoadSingle<Catalog>()))
             {
-                foreach (StructureDefinition structure in family.Structures)
+                if (structure.Model == null)
                 {
-                    if (structure.Model == null)
-                    {
-                        faults.Add(structure.Id + " n'a pas de modèle préparé.");
-                        continue;
-                    }
-                    MeshFilter[] filters = structure.Model.GetComponentsInChildren<MeshFilter>(true);
-                    var renderer = structure.Model.GetComponent<MeshRenderer>();
-                    if (filters.Length != 1 || renderer == null || filters[0].gameObject != structure.Model ||
-                        renderer.sharedMaterials.Length != filters[0].sharedMesh.subMeshCount)
-                    {
-                        faults.Add(structure.Id + " n'a pas de modèle préparé d'un seul maillage, depuis sa source.");
-                        continue;
-                    }
-
-                    Bounds box = filters[0].sharedMesh.bounds;
-                    if (Mathf.Abs(box.center.x) > Centimeter || Mathf.Abs(box.center.z) > Centimeter)
-                        faults.Add(structure.Id + " : le modèle n'est pas centré sur son empreinte (" + box.center + ").");
-                    if (!Fits(box.size.x, structure.WidthMeters) || !Fits(box.size.z, structure.DepthMeters))
-                        faults.Add(structure.Id + " : le modèle mesure " + box.size.x + " × " + box.size.z +
-                                   " m, sa fiche " + structure.WidthMeters + " × " + structure.DepthMeters + " m.");
-                    if (structure.HasDoor && Mathf.Abs(structure.DoorOffsetMeters) + structure.DoorWidthMeters * 0.5f >
-                        structure.WidthMeters * 0.5f + Centimeter)
-                        faults.Add(structure.Id + " : sa porte déborde de sa façade.");
+                    faults.Add(structure.Id + " n'a pas de modèle préparé.");
+                    continue;
                 }
+                MeshFilter[] filters = structure.Model.GetComponentsInChildren<MeshFilter>(true);
+                var renderer = structure.Model.GetComponent<MeshRenderer>();
+                if (filters.Length != 1 || renderer == null || filters[0].gameObject != structure.Model ||
+                    renderer.sharedMaterials.Length != filters[0].sharedMesh.subMeshCount)
+                {
+                    faults.Add(structure.Id + " n'a pas de modèle préparé d'un seul maillage, depuis sa source.");
+                    continue;
+                }
+
+                Bounds box = filters[0].sharedMesh.bounds;
+                if (Mathf.Abs(box.center.x) > Centimeter || Mathf.Abs(box.center.z) > Centimeter)
+                    faults.Add(structure.Id + " : le modèle n'est pas centré sur son empreinte (" + box.center + ").");
+                if (!Fits(box.size.x, structure.WidthMeters) || !Fits(box.size.z, structure.DepthMeters))
+                    faults.Add(structure.Id + " : le modèle mesure " + box.size.x + " × " + box.size.z +
+                               " m, sa fiche " + structure.WidthMeters + " × " + structure.DepthMeters + " m.");
+                if (structure.HasDoor && Mathf.Abs(structure.DoorOffsetMeters) + structure.DoorWidthMeters * 0.5f >
+                    structure.WidthMeters * 0.5f + Centimeter)
+                    faults.Add(structure.Id + " : sa porte déborde de sa façade.");
             }
 
             Assert.IsEmpty(faults, string.Join("\n", faults));
@@ -149,26 +153,21 @@ namespace Diciela.Tests.EditMode
             bool Fits(float model, float fiche) => model <= fiche + 0.001f && model >= fiche - Centimeter - 0.001f;
         }
 
-        [Test]
-        public void TheCatalogHasOneChimeraHomeFirstUniqueWithADoor()
+        /// <summary>Les constructions du catalogue : celles de ses familles, puis le tas de départ.</summary>
+        internal static List<StructureDefinition> StructuresOf(Catalog catalog)
         {
-            // La tente vient en premier (GDD, section 6) : le catalogue a un logis de la Chimère, en tête de sa famille ;
-            // il est unique, et il a une porte, devant laquelle elle se couche.
-            var homes = new List<StructureDefinition>();
-            foreach (StructureFamilyDefinition family in LoadSingle<Catalog>().Families)
-            {
-                for (int i = 0; i < family.Structures.Count; i++)
-                {
-                    StructureDefinition structure = family.Structures[i];
-                    if (!structure.IsChimeraHome)
-                        continue;
-                    homes.Add(structure);
-                    Assert.AreEqual(0, i, structure.Id + " n'est pas en tête de sa famille.");
-                    Assert.IsTrue(structure.IsUnique, structure.Id + " n'est pas unique.");
-                    Assert.IsTrue(structure.HasDoor, structure.Id + " n'a pas de porte.");
-                }
-            }
-            Assert.AreEqual(1, homes.Count, "Le catalogue doit avoir un seul logis de la Chimère : la tente.");
+            var structures = new List<StructureDefinition>();
+            foreach (StructureFamilyDefinition family in catalog.Families)
+                structures.AddRange(family.Structures);
+            StructureDefinition pile = StartingPileOf(catalog);
+            if (pile != null)
+                structures.Add(pile);
+            return structures;
+        }
+
+        internal static StructureDefinition StartingPileOf(Catalog catalog)
+        {
+            return catalog.Opening != null ? catalog.Opening.StartingPile : null;
         }
 
         /// <summary>La seule fiche de ce type dans le projet ; il y en a une, et une seule.</summary>

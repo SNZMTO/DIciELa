@@ -33,7 +33,7 @@ namespace Diciela.Tests.EditMode
 
         private World WorldWithACabin()
         {
-            var world = new World(_settings, TestData.SlopedMap(20, 0f));
+            var world = new World(_settings, TestData.SlopedMap(20, 0f), TestData.EmptyCatalog);
             world.Submit(new PlaceStructureCommand(_cabin, new Placement(new Vector2(10f, 10f), 0f)));
             world.Step();
             Assert.AreEqual(1, world.Structures.All.Count);

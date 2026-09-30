@@ -89,7 +89,8 @@ namespace Diciela.Tests.EditMode
             List<Vector2Int> starts, List<Vector2Int> goals)
         {
             int size = blocked.GetLength(0);
-            var world = new World(settings, TestData.FlatMap((float)size / settings.CellsPerMeter));
+            var world = new World(settings, TestData.FlatMap((float)size / settings.CellsPerMeter),
+                TestData.EmptyCatalog);
             Assert.AreEqual(size, world.Grid.Width, "Le terrain a une maille par case du dessin.");
 
             int count = 0;

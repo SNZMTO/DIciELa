@@ -33,6 +33,12 @@ namespace Diciela.Data
         [Tooltip("La vitesse à laquelle le personnage se tourne vers où il va, à l'écran, en degrés par seconde.")]
         [SerializeField, Min(1f)] private float _turnDegreesPerSecond = 540f;
 
+        [Tooltip("La valeur de départ de chacune de ses sous-statistiques (GDD, sections 5 et 6).")]
+        [SerializeField, Min(0f)] private float _startingStatistic = 10f;
+
+        [Tooltip("Les marchandises qu'il porte à pied en un voyage (GDD, section 6).")]
+        [SerializeField, Min(1)] private int _carryCapacity = 5;
+
         public string Id => _id;
         public float WalkMetersPerSecond => _walkMetersPerSecond;
         public float WanderRadiusMeters => _wanderRadiusMeters;
@@ -40,5 +46,7 @@ namespace Diciela.Data
         public float WanderPauseMinHours => _wanderPauseMinHours;
         public float WanderPauseMaxHours => _wanderPauseMaxHours;
         public float TurnDegreesPerSecond => _turnDegreesPerSecond;
+        public float StartingStatistic => _startingStatistic;
+        public int CarryCapacity => _carryCapacity;
     }
 }

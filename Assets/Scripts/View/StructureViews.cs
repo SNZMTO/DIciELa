@@ -9,7 +9,8 @@ namespace Diciela.View
     /// <summary>
     /// Les constructions posées, vues (ARCHITECTURE, section 11) : à l'ouverture, celles qui existent déjà ; ensuite,
     /// chaque construction posée, par l'événement de la simulation, jamais par une photographie. Tant qu'elle attend
-    /// d'être bâtie, une construction se voit en fantôme translucide (GDD, section 9) ; bâtie, avec ses matériaux. On
+    /// d'être bâtie, une construction se voit en fantôme translucide (GDD, section 9) ; bâtie, avec ses matériaux : son
+    /// chantier fini, son fantôme laisse place au modèle. On
     /// touche une construction en visant son modèle, pas le sol : vu de biais, le toit d'une maison cache le sol
     /// derrière elle.
     /// </summary>
@@ -46,13 +47,17 @@ namespace Diciela.View
             foreach (Structure structure in structures.All)
                 OnStructurePlaced(structure);
             structures.StructurePlaced += OnStructurePlaced;
+            structures.StructureBuilt += OnStructureBuilt;
         }
 
         /// <summary>Cesse de suivre le monde et retire ce qu'on montrait.</summary>
         public void Hide()
         {
             if (_structures != null)
+            {
                 _structures.StructurePlaced -= OnStructurePlaced;
+                _structures.StructureBuilt -= OnStructureBuilt;
+            }
             _structures = null;
             _relief = null;
             foreach (Shown shown in _shown)
@@ -95,6 +100,20 @@ namespace Diciela.View
             if (structure.State == StructureState.Planned)
                 new TranslucentModel(view, _settings.TranslucentMaterial).SetColor(_settings.PlannedColor);
             _shown.Add(new Shown { Structure = structure, Transform = view.transform, LocalBox = LocalBox(view) });
+        }
+
+        /// <summary>Son chantier est fini : le fantôme part, le modèle bâti prend sa place.</summary>
+        private void OnStructureBuilt(Structure structure)
+        {
+            for (int i = 0; i < _shown.Count; i++)
+            {
+                if (!ReferenceEquals(_shown[i].Structure, structure))
+                    continue;
+                Destroy(_shown[i].Transform.gameObject);
+                _shown.RemoveAt(i);
+                break;
+            }
+            OnStructurePlaced(structure);
         }
 
         /// <summary>La boîte des maillages de ce modèle, dans son propre repère.</summary>

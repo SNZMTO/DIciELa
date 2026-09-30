@@ -19,6 +19,7 @@ namespace Diciela.Tests.PlayMode
                                      "journee.Night,Nuit\n";
 
         private SimulationSettings _settings;
+        private Catalog _catalog;
         private World _world;
         private NotedDayBoardView _view;
         private DayBoardPresenter _presenter;
@@ -28,7 +29,8 @@ namespace Diciela.Tests.PlayMode
         {
             _settings = ScriptableObject.CreateInstance<SimulationSettings>();
             var map = new MapDescription(new Relief(100f, 100f, 2, 2, new[] { 10f, 10f, 10f, 10f }));
-            _world = new World(_settings, map);
+            _catalog = ScriptableObject.CreateInstance<Catalog>();
+            _world = new World(_settings, map, _catalog);
             _view = new NotedDayBoardView();
             _presenter = new DayBoardPresenter(_view, _world.Clock, TextTable.Parse(Texts, "fr"));
         }
@@ -38,6 +40,7 @@ namespace Diciela.Tests.PlayMode
         {
             _presenter.Dispose();
             Object.Destroy(_settings);
+            Object.Destroy(_catalog);
         }
 
         [Test]

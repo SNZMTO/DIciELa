@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b592b1158ce5d24ca9a0c48052a9e4f, type: 3}
+  m_Name: Poste_AToutFaire
+  m_EditorClassIdentifier: Diciela.Data::Diciela.Data.WorkSlotDefinition
+  _id: a_tout_faire
+  _nameKey: poste.a_tout_faire
+  _tasks:
+  - {fileID: 11400000, guid: 22faeb1d658d88d4ca1f762265a6ae5f, type: 2}
+  - {fileID: 11400000, guid: 4518a75038071944c96435e661528ad3, type: 2}

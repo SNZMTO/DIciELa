@@ -111,3 +111,26 @@ journee.jour,Jour {jour},Day {jour}
 journee.Work,Travail,Work
 journee.Evening,Soirée,Evening
 journee.Night,Nuit,Night
+construction.tas_de_depart,Tas de départ,Starting pile
+marchandise.bois,Bois,Wood
+marchandise.pierre,Pierre,Stone
+statistique.terre,Terre,Land
+statistique.batisse,Bâtisse,Building
+statistique.artisanat,Artisanat,Craft
+statistique.echange,Échange,Trade
+sous-statistique.culture,Culture,Farming
+sous-statistique.coupe,Coupe,Woodcutting
+sous-statistique.extraction,Extraction,Quarrying
+sous-statistique.paysage,Paysage,Landscaping
+sous-statistique.construction,Construction,Construction
+sous-statistique.terrassement,Terrassement,Earthworks
+sous-statistique.amenagement,Aménagement,Fitting out
+sous-statistique.travail_bois,Bois,Woodwork
+sous-statistique.travail_fil,Fil,Textiles
+sous-statistique.travail_pierre,Pierre,Stonework
+sous-statistique.transport,Transport,Hauling
+sous-statistique.troc,Troc,Barter
+sous-statistique.expedition,Expédition,Expeditions
+tache.porter,Porter,Carry
+tache.batir,Bâtir,Build
+poste.a_tout_faire,À tout faire,Odd jobs

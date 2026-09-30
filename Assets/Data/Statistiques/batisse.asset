@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 163911fc9521f1e4daf69a001afd3562, type: 3}
+  m_Name: batisse
+  m_EditorClassIdentifier: Diciela.Data::Diciela.Data.StatisticDefinition
+  _id: batisse
+  _nameKey: statistique.batisse
+  _subStatistics:
+  - {fileID: 11400000, guid: 4e6b8d4594f732a4aa0049bb0fae0f9d, type: 2}
+  - {fileID: 11400000, guid: 1e7583c82d87f0e4cb19afe2ad8e5108, type: 2}
+  - {fileID: 11400000, guid: 9d16a6cfe005ecf42a2cb47f6930964c, type: 2}

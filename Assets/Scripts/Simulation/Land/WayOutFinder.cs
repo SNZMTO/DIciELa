@@ -62,7 +62,7 @@ namespace Diciela.Simulation.Land
                             stillInside = true;
                             continue;
                         }
-                        if (!_grid.IsWalkable(cell) || !Borders(cell, occupant))
+                        if (!_grid.IsWalkable(cell) || !_grid.Borders(cell, occupant))
                             continue;
                         int size = _islands.SizeOf(_islands.IslandOf(cell));
                         float distance = Vector2.Distance(_grid.CellCenter(cell), point);
@@ -80,20 +80,6 @@ namespace Diciela.Simulation.Land
                     break;
             }
             return found;
-        }
-
-        /// <summary>Vrai si l'une des quatre voisines de cette maille est à cet occupant.</summary>
-        private bool Borders(Vector2Int cell, int occupant)
-        {
-            return IsHeldBy(new Vector2Int(cell.x - 1, cell.y), occupant) ||
-                   IsHeldBy(new Vector2Int(cell.x + 1, cell.y), occupant) ||
-                   IsHeldBy(new Vector2Int(cell.x, cell.y - 1), occupant) ||
-                   IsHeldBy(new Vector2Int(cell.x, cell.y + 1), occupant);
-        }
-
-        private bool IsHeldBy(Vector2Int cell, int occupant)
-        {
-            return _grid.Contains(cell) && _grid.OccupantAt(cell) == occupant;
         }
     }
 }

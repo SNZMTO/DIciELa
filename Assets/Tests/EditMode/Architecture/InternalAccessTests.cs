@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using Diciela.Simulation;
 using Diciela.Simulation.Core;
+using Diciela.Simulation.Economy;
 using Diciela.Simulation.Land;
 using Diciela.Simulation.Society;
 using NUnit.Framework;
@@ -31,6 +32,8 @@ namespace Diciela.Tests.EditMode.Architecture
             (typeof(NavGrid), "SetOccupant"),
             (typeof(NavGrid), "AddDoorway"),
             (typeof(Structures), "Place"),
+            (typeof(Structures), "Finish"),
+            (typeof(Structure), "BecomeBuilt"),
             (typeof(Structures), "DeliverEvents"),
             (typeof(Villagers), "CreateChimera"),
             (typeof(Villagers), "SendChimeraToBed"),
@@ -41,6 +44,47 @@ namespace Diciela.Tests.EditMode.Architecture
             (typeof(Villager), "TryGoToBed"),
             (typeof(Villager), "WakeUp"),
             (typeof(Command), "Execute"),
+            (typeof(Inventory), "Add"),
+            (typeof(Inventory), "Remove"),
+            (typeof(Inventory), "Reserve"),
+            (typeof(Inventory), "Release"),
+            (typeof(GoodsLedger), "Created"),
+            (typeof(GoodsLedger), "Destroyed"),
+            (typeof(Warehouses), "Track"),
+            (typeof(Warehouses), "Create"),
+            (typeof(Warehouses), "Reserve"),
+            (typeof(Warehouses), "Release"),
+            (typeof(Warehouses), "Take"),
+            (typeof(Warehouses), "ReturnToTown"),
+            (typeof(Warehouses), "DeliverEvents"),
+            (typeof(ConstructionSite), "Promise"),
+            (typeof(ConstructionSite), "Unpromise"),
+            (typeof(ConstructionSite), "Receive"),
+            (typeof(ConstructionSite), "AddBuilder"),
+            (typeof(ConstructionSite), "RemoveBuilder"),
+            (typeof(ConstructionSite), "AddWork"),
+            (typeof(ConstructionSite), "MarkFinished"),
+            (typeof(ConstructionSites), "Track"),
+            (typeof(ConstructionSites), "Receive"),
+            (typeof(ConstructionSites), "Work"),
+            (typeof(ConstructionSites), "DeliverEvents"),
+            (typeof(Delivery), "MarkPickedUp"),
+            (typeof(Delivery), "MarkOver"),
+            (typeof(BuildShift), "MarkOver"),
+            (typeof(TaskOffers), "TryTakeDelivery"),
+            (typeof(TaskOffers), "TryTakeBuilding"),
+            (typeof(TaskOffers), "PickUp"),
+            (typeof(TaskOffers), "DropOff"),
+            (typeof(TaskOffers), "Cancel"),
+            (typeof(TaskOffers), "Work"),
+            (typeof(TaskOffers), "Leave"),
+            (typeof(WorkSlot), "SetHolder"),
+            (typeof(WorkSlots), "Track"),
+            (typeof(WorkSlots), "Assign"),
+            (typeof(WorkSlots), "Unassign"),
+            (typeof(WorkSlots), "DeliverEvents"),
+            (typeof(Villager), "TakeSlot"),
+            (typeof(Villager), "LeaveSlot"),
         };
 
         [Test]
