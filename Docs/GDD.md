@@ -165,7 +165,7 @@
 - **Règle.** On la crée au lancement d'une partie, sur l'écran de création : une tête d'animal et un corps d'animal,
   pas forcément le même, puis des morceaux d'autres animaux (oreilles, touffe, queue) et des accessoires, au plus un
   par emplacement ; chaque partie a sa couleur. Elle apparaît au point d'arrivée de la carte (voir 2).
-- **Règle.** L'écran de création est un panneau de bois sur le côté, dans un atelier hors de la carte, en low poly (un
+- **Règle.** L'écran de création est un panneau sur le côté, dans le langage du HUD (voir 16), dans un atelier hors de la carte, en low poly (un
   fond en alcôve, un sol, un socle) ; la Chimère à venir s'y tient de face sur le socle. On la fait tourner, avec A et
   E ou en la glissant au clic gauche ; elle garde son angle quand on change une pièce. Une ligne par partie, sa pièce
   et sa couleur, chacune entre ses flèches : la tête (seize), le corps et ses habits (seize), puis la queue, les
@@ -219,12 +219,17 @@
 - **Règle.** Si elle ne peut pas rejoindre sa porte, elle ne part pas se coucher ; si sa porte est coupée d'elle en
   chemin, elle y renonce et flâne.
 - **Règle.** Le stock de départ est un tas posé au sol près de la tente, qui sert d'entrepôt jusqu'au premier
-  entrepôt. Il porte un poste « à tout faire » (porter, bâtir, récolter, défricher), que tient la Chimère ; le poste
-  disparaît avec le tas, quand le tas est vide et que la loge et un entrepôt sont bâtis.
-- **À toi.** Entre la fin du tas de départ et la cabane du paysagiste, personne ne retire les arbres et les rochers.
-  Ma reco : le poste « à tout faire » dure jusqu'à ce que la cabane du paysagiste soit bâtie, elle aussi.
-- **Défaut.** Le tas de départ tient 50 marchandises. La Place, la cabane et les premiers bâtiments ne demandent que du
-  Bois et de la Pierre ; le stock de départ suffit à la Place et à deux cabanes.
+  entrepôt. Il se pose de lui-même quand la tente est plantée, à droite de sa porte, sinon au plus près. Il porte un
+  poste « à tout faire » (porter, bâtir, récolter, défricher, dans cet ordre), que tient la Chimère ; le poste
+  disparaît avec le tas, quand le tas est vide et que la loge, un entrepôt et la cabane du paysagiste sont bâtis
+  (sinon, plus personne ne retirerait les arbres et les rochers).
+- **Règle.** Le joueur y met la Chimère en touchant le tas : sa fiche s'ouvre sur le côté, avec « Y mettre la
+  Chimère » ou « Retirer la Chimère ». Tant que la carte n'a ni arbres ni champs sauvages à traiter, le poste ne
+  fait que porter et bâtir.
+- **Défaut.** Le tas de départ fait 2 × 2 m et tient 50 marchandises : 30 Bois et 20 Pierre. La Place, la cabane et
+  les premiers bâtiments ne demandent que du Bois et de la Pierre ; le stock de départ suffit à la Place et à deux
+  cabanes. Une cabane coûte 10 Bois et 5 Pierre et demande 2 h de travail à un débutant ; à pied, on porte 5
+  marchandises par voyage.
 - **Règle.** Les premiers habitants arrivent vite, un par un, à mesure que les lits le permettent. Chacun est fort dans
   une discipline, apporte l'idée de son lieu de travail et le bâtit avec la Chimère, avant même la loge. Ils restent en
   ville comme habitants ordinaires ; ce ne sont pas des maîtres.
@@ -252,7 +257,8 @@
   graines, pas d'ingrédients, stock plein, pas de force, injoignable.
 - **Règle.** La cadence d'un bâtiment est la somme de ce qu'apporte chaque habitant présent à son poste ; chacun apporte
   selon sa valeur pour la tâche.
-- **Défaut.** Un expert apporte environ trois fois ce qu'apporte un débutant.
+- **Défaut.** Un expert apporte environ trois fois ce qu'apporte un débutant : l'apport croît en ligne droite avec la
+  valeur pour la tâche, ×1 à 0, ×3 à 100.
 - **Règle.** Un habitant sans poste (un arrivant, ou celui dont le bâtiment est rangé) prend tout seul le poste libre
   qui lui va le mieux ; s'il n'y en a aucun, il flâne et ne travaille pas. Le joueur réaffecte qui il veut.
 - **Règle.** Flâner, c'est aller à un point libre tiré autour de l'endroit où l'on s'est mis à flâner, s'y arrêter un
@@ -265,10 +271,9 @@
   (les ouvriers : chantiers, canaux, décos), l'entrepôt (les charretiers), la cabane du paysagiste (les paysagistes).
 - **À toi.** Un habitant en pleine tâche est-il interrompu par une tâche plus urgente ? Ma reco : non, il va au bout,
   comme dans Oxygen Not Included.
-- **À toi.** Dans quel ordre le poste « à tout faire » choisit-il ses tâches ? Ma reco : porter, bâtir, récolter,
-  défricher.
-- **À toi.** La journée finit pendant une tâche. Ma reco : l'habitant finit l'étape en cours, dépose ce qu'il porte,
-  puis part en soirée.
+- **Règle.** Le poste « à tout faire » choisit ses tâches dans cet ordre : porter, bâtir, récolter, défricher.
+- **Règle.** On ne travaille que pendant les heures de travail. Si la journée finit pendant une tâche, l'habitant
+  finit l'étape en cours, dépose ce qu'il porte, puis part en soirée ; la Chimère, elle, flâne près de son poste.
 - **À toi.** Une pastille ou plusieurs quand un lieu cumule les pannes ? Ma reco : une seule, la plus urgente :
   injoignable, pas de force, personne au poste, pas de graines ou d'ingrédients, stock plein.
 - **À toi.** Quel poste tient un premier habitant avant que son lieu de travail existe (voir 6) ? Ma reco : un poste
