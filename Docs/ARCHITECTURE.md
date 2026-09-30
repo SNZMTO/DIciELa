@@ -290,6 +290,8 @@ code.
 | statistique, sous-statistique | `StatisticDefinition`, `SubStatisticDefinition` | table des statistiques ; celles d'un habitant | `StatisticTable` ; `VillagerStatistics` | ce que consulte un habitant | `VillagerServices` |
 | arbre ou rocher (de la carte) ; sa sorte ; ceux de la carte | `NatureItem` ; `NatureDefinition` ; `Nature` | marquer, démarquer (à retirer) ; défricher | `Mark`, `Unmark` ; `Clear`, `Clearing` | geste (d'une sorte de tâche) ; but d'une tâche | `Gesture` ; `ChoreGoal` |
 | place retenue (dans un stock) | `SpaceReserved` | ce qu'on peut rejoindre à pied | `Reach` | anneau carré (de mailles) | `SquareRing` |
+| outil « Retirer » ; ses gestes | `ClearingTool` ; `ClearingControls` | outil en main | `IHeldTool` | cadre tiré à la souris | `ISelectionFrame`, `SelectionFrame` |
+| arbres vus ; leurs boîtes | `NatureViews` ; `NatureBoxes` | fanion (d'un arbre marqué) | `Mark`, `MarkMesh` | copie du sol | `MapScene` |
 
 ## 10. La carte, les scènes et la sauvegarde
 
@@ -339,8 +341,10 @@ code.
   (`CameraControls`) ; ses chiffres sont dans une fiche. La visée de la pose passe après elle (SAVOIR 2.8).
 - **Les gestes** : un seul asset d'actions, monté par un script d'éditeur. Les raccourcis se lient au caractère, le
   déplacement à la position (SAVOIR 3). Un geste appartient à la ville ou à l'interface dès l'enfoncement ; clic ou
-  glisser se décide au relâchement (SAVOIR 2.8). Sans outil de pose en main, un clic gauche touche la construction dont
-  le modèle est sous le pointeur : la vue dit laquelle (SAVOIR 2.7), l'outil « choisir » en fait un ordre. Un panneau
+  glisser se décide au relâchement (SAVOIR 2.8). Sans outil en main, un clic gauche touche la construction dont le
+  modèle est sous le pointeur : la vue dit laquelle (SAVOIR 2.7), l'outil « choisir » en fait un ordre. Un outil en
+  main (`IHeldTool` : poser, retirer ; un seul à la fois) prend le clic gauche ; l'outil « Retirer » vise un arbre par
+  la boîte de son modèle et marque ce que contient le cadre qu'on tire, que l'interface dessine (`ISelectionFrame`). Un panneau
   ouvert rend la ville muette ; les conteneurs plein écran de l'interface ne captent pas le pointeur. Les gestes ne
   connaissent pas l'interface : elle leur dit seulement où elle est (`IInterfaceArea`), et `Game` les relie.
 - **L'ouverture d'une partie** : la scène du démarrage (`GameStage`) montre le monde (constructions, habitants) et ouvre

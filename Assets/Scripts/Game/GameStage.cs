@@ -26,6 +26,7 @@ namespace Diciela.Game
         [SerializeField] private PlacementPreview _placementPreview;
         [SerializeField] private PlacementControls _placementControls;
         [SerializeField] private ChooseControls _chooseControls;
+        [SerializeField] private ClearingControls _clearingControls;
         [SerializeField] private BuildBar _buildBar;
         [SerializeField] private DayBoard _dayBoard;
         [SerializeField] private PlaceSheet _placeSheet;
@@ -43,13 +44,15 @@ namespace Diciela.Game
 
         private PlacementTool _placementTool;
         private ChooseTool _chooseTool;
+        private ClearingTool _clearingTool;
+        private SelectionFrame _selectionFrame;
         private Texture2D _portrait;
         private Tooltips _tooltips;
 
         /// <summary>Vrai si la scène a toutes ses vues et tous ses gestes.</summary>
         public bool IsComplete => _cameraRig != null && _cameraControls != null && _structureViews != null &&
                                   _villagerViews != null && _natureViews != null && _placementPreview != null &&
-                                  _placementControls != null &&
+                                  _placementControls != null && _clearingControls != null &&
                                   _chooseControls != null && _buildBar != null && _dayBoard != null &&
                                   _placeSheet != null && _stockPennants != null && _tipBoard != null &&
                                   _escapeControls != null &&
@@ -92,7 +95,13 @@ namespace Diciela.Game
             _previewControls.Bind(null, null);
             _placementControls.Bind(null, null);
             _chooseControls.Bind(null, null, null);
+            _clearingControls.Bind(null, null, null);
             _escapeControls.Bind();
+            if (_clearingTool != null)
+                _clearingTool.ActiveChanged -= OnClearingToolChanged;
+            _clearingTool = null;
+            _selectionFrame?.Dispose();
+            _selectionFrame = null;
             if (_chooseTool != null)
                 _chooseTool.Touched -= _placeSheet.Touch;
             _chooseTool = null;
@@ -112,6 +121,7 @@ namespace Diciela.Game
             _portrait = null;
             if (_placementTool != null)
             {
+                _placementTool.CurrentChanged -= OnPlacementChanged;
                 _placementTool.Cancel();
                 _placementTool.Dispose();
             }
@@ -149,8 +159,26 @@ namespace Diciela.Game
             _placementControls.Bind(_placementTool, hud);
             _chooseTool = new ChooseTool(world, _cameraRig.Camera, _structureViews);
             _chooseTool.Touched += _placeSheet.Touch;
-            _chooseControls.Bind(_chooseTool, _placementTool, hud);
-            _escapeControls.Bind(_placeSheet, _placementTool);
+            _clearingTool = new ClearingTool(world, _cameraRig.Camera, _natureViews);
+            _clearingTool.ActiveChanged += OnClearingToolChanged;
+            _placementTool.CurrentChanged += OnPlacementChanged;
+            _selectionFrame = new SelectionFrame(document);
+            _clearingControls.Bind(_clearingTool, _selectionFrame, hud);
+            _chooseControls.Bind(_chooseTool, new IHeldTool[] { _placementTool, _clearingTool }, hud);
+            _escapeControls.Bind(_placeSheet, _placementTool, _clearingTool);
+        }
+
+        // Un seul outil en main : prendre l'outil « Retirer » lâche la carte, prendre une carte lâche l'outil.
+        private void OnClearingToolChanged()
+        {
+            if (_clearingTool.IsActive)
+                _placementTool.Cancel();
+        }
+
+        private void OnPlacementChanged()
+        {
+            if (_placementTool.IsActive)
+                _clearingTool.Escape();
         }
     }
 }

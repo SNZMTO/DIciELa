@@ -592,6 +592,7 @@ MonoBehaviour:
   _placementPreview: {fileID: 497507850}
   _placementControls: {fileID: 497507849}
   _chooseControls: {fileID: 747521501}
+  _clearingControls: {fileID: 1823210986}
   _buildBar: {fileID: 250348210}
   _dayBoard: {fileID: 250348214}
   _placeSheet: {fileID: 250348215}
@@ -918,6 +919,52 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1823210985
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1823210987}
+  - component: {fileID: 1823210986}
+  m_Layer: 0
+  m_Name: Retirer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1823210986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1823210985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 308337546a7d7db4b866a5bd463f360f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Diciela.Controls::Diciela.Controls.ClearingControls
+  _actions: {fileID: -944628639613478452, guid: ce45850f9084e5e49a79d052550d59e4, type: 3}
+  _gestures: {fileID: 11400000, guid: 9e430839a075b79499fb905491d5c58f, type: 2}
+--- !u!4 &1823210987
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1823210985}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1839956354
 GameObject:
   m_ObjectHideFlags: 0
@@ -1094,3 +1141,4 @@ SceneRoots:
   - {fileID: 61688055}
   - {fileID: 456663519}
   - {fileID: 1874915668}
+  - {fileID: 1823210987}

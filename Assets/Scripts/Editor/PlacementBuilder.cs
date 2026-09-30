@@ -9,13 +9,14 @@ namespace Diciela.EditorTools
 {
     /// <summary>
     /// Installe la pose dans une scène racine : les constructions vues (« Constructions »), les arbres et rochers vus
-    /// (« Nature »), l'aperçu et les gestes de la pose (« Pose »), le geste « toucher » (« Choisir »), reliés à leurs fiches, à l'asset d'actions, au
+    /// (« Nature »), l'aperçu et les gestes de la pose (« Pose »), les gestes de l'outil « Retirer » (« Retirer »), le geste « toucher » (« Choisir »), reliés à leurs fiches, à l'asset d'actions, au
     /// démarrage et à sa scène. Réexécutable : ce qui est déjà réglé n'est pas touché.
     /// </summary>
     internal static class PlacementBuilder
     {
         private const string StructuresObjectName = "Constructions";
         private const string NatureObjectName = "Nature";
+        private const string ClearingObjectName = "Retirer";
         private const string PlacementObjectName = "Pose";
         private const string ChooseObjectName = "Choisir";
 
@@ -39,6 +40,10 @@ namespace Diciela.EditorTools
             EditorAssets.AssignIfMissing(controls, "_settings", settings);
             EditorAssets.AssignIfMissing(controls, "_gestures", gestures);
 
+            ClearingControls clearing = EditorAssets.FindOrCreate<ClearingControls>(scene, ClearingObjectName);
+            EditorAssets.AssignIfMissing(clearing, "_actions", actions);
+            EditorAssets.AssignIfMissing(clearing, "_gestures", gestures);
+
             ChooseControls choose = EditorAssets.FindOrCreate<ChooseControls>(scene, ChooseObjectName);
             EditorAssets.AssignIfMissing(choose, "_actions", actions);
             EditorAssets.AssignIfMissing(choose, "_gestures", gestures);
@@ -49,6 +54,7 @@ namespace Diciela.EditorTools
             EditorAssets.AssignIfMissing(stage, "_placementPreview", preview);
             EditorAssets.AssignIfMissing(stage, "_placementControls", controls);
             EditorAssets.AssignIfMissing(stage, "_chooseControls", choose);
+            EditorAssets.AssignIfMissing(stage, "_clearingControls", clearing);
         }
     }
 }

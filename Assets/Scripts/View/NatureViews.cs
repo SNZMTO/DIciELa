@@ -13,7 +13,8 @@ namespace Diciela.View
     /// joue une copie, chacun retrouvé par le numéro de son instance. Retiré, il disparaît : sa taille passe à 0, sans
     /// renuméroter les autres. Marqué, un fanion se dresse à son pied (remplaçant simple, du matériau translucide) ; tous
     /// les fanions se dessinent d'un seul appel instancié par image, refaits seulement quand les marques changent : des
-    /// centaines ne coûtent presque rien. La vue suit les événements de la simulation, jamais une photographie.
+    /// centaines ne coûtent presque rien. On vise un arbre par la boîte de son modèle (NatureBoxes). La vue suit les
+    /// événements de la simulation, jamais une photographie.
     /// </summary>
     public sealed class NatureViews : MonoBehaviour
     {
@@ -31,6 +32,7 @@ namespace Diciela.View
         private Terrain _terrain;
         private IReadOnlyList<int> _instances;
         private Relief _relief;
+        private NatureBoxes _boxes;
         private Mesh _mesh;
         private Material _material;
         private RenderParams _params;
@@ -68,6 +70,8 @@ namespace Diciela.View
                 worldBounds = new Bounds(size * 0.5f, size)
             };
 
+            if (terrain != null)
+                _boxes = new NatureBoxes(nature, terrain.terrainData, instances, relief);
             foreach (NatureItem item in nature.All)
             {
                 if (item.IsRemoved)
@@ -92,6 +96,7 @@ namespace Diciela.View
             _terrain = null;
             _instances = null;
             _relief = null;
+            _boxes = null;
             _marks.Clear();
             if (_mesh != null)
                 Object.Destroy(_mesh);
@@ -99,6 +104,16 @@ namespace Diciela.View
                 Object.Destroy(_material);
             _mesh = null;
             _material = null;
+        }
+
+        /// <summary>
+        /// L'arbre ou le rocher debout dont le modèle est touché le premier par ce rayon (en général, celui du pointeur) ;
+        /// faux s'il n'en touche aucun, ou si rien n'est peint.
+        /// </summary>
+        public bool TryPick(Ray ray, out NatureItem picked)
+        {
+            picked = null;
+            return _boxes != null && _boxes.TryPick(ray, out picked);
         }
 
         private void OnDestroy()

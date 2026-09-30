@@ -312,3 +312,12 @@
     flex-basis: 0;
     margin-left: 12px;
 }
+
+/* Le cadre qu'on tire avec l'outil « Retirer » : du lin translucide bordé de bois (remplaçant simple). */
+.cadre-selection {
+    position: absolute;
+    background-color: rgba(251, 243, 228, 0.2);
+    border-width: 2px;
+    border-color: var(--bois);
+    border-radius: 4px;
+}

@@ -14,7 +14,7 @@ namespace Diciela.Controls
     /// ordre envoyé attend d'être joué avant le suivant ; posé ou refusé, l'aperçu se refait. Les gestes et les tests
     /// l'appellent par les mêmes méthodes. Celui qui le crée le libère (Dispose).
     /// </summary>
-    public sealed class PlacementTool : IDisposable, IEscapable
+    public sealed class PlacementTool : IDisposable, IEscapable, IHeldTool
     {
         private readonly World _world;
         private readonly Camera _camera;
