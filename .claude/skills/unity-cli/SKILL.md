@@ -57,7 +57,9 @@ En cas de doute, `unity list` (les outils du paquet `com.unity.pipeline`) ou la 
   `completed`, refuse de partir en Play).
 - **Jamais de campagne PlayMode après une erreur de compilation** : la campagne resterait en file, puis toutes les
   suivantes rendraient 0 test jusqu'au redémarrage d'Unity. Si une campagne PlayMode rend 0 test alors que `list_tests`
-  en voit, c'est ce blocage : demander le redémarrage.
+  en voit, c'est ce blocage : essayer une fois `recompile` (attendre `editor_status` prêt), puis une campagne ; encore
+  0 test, demander le redémarrage. Il est aussi arrivé sans erreur de compilation, après un Play et une retouche d'USS
+  (étape 15) : une recompilation l'a levé, la cause reste inconnue.
 - Pas de `run_tests --filter`. Enchaîner des campagnes, chacune ayant rendu, ne fige rien.
 - Une campagne peut rouvrir les scènes et réenregistrer un prefab que le développeur avait ouvert : `git status` avant,
   et prévenir.
