@@ -17,6 +17,12 @@ namespace Diciela.Data
         public const string CreationNone = "creation.aucun";
         public const string CreationConfirm = "creation.valider";
 
+        // La fiche d'un lieu (GDD, section 16 ; décision 141) : son bouton, et qui tient son poste.
+        public const string SheetPutChimera = "fiche.mettre_chimere";
+        public const string SheetRemoveChimera = "fiche.retirer_chimere";
+        public const string SheetChimera = "fiche.la_chimere";
+        public const string SheetFreeSlot = "fiche.poste_libre";
+
         // La journée, en haut à gauche (GDD, section 16) : son numéro ({jour} y est remplacé).
         public const string DayNumber = "journee.jour";
         public const string DayNumberParameter = "{jour}";

@@ -179,6 +179,7 @@ GameObject:
   - component: {fileID: 250348210}
   - component: {fileID: 250348213}
   - component: {fileID: 250348214}
+  - component: {fileID: 250348215}
   m_Layer: 0
   m_Name: Interface
   m_TagString: Untagged
@@ -262,6 +263,63 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24681713565a68f469df3817d61e6691, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Diciela.UI::Diciela.UI.DayBoard
+--- !u!114 &250348215
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250348209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbb34176ca15d29439a8b059d0d1b1a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Diciela.UI::Diciela.UI.PlaceSheet
+--- !u!1 &456663517
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 456663519}
+  - component: {fileID: 456663518}
+  m_Layer: 0
+  m_Name: "\xC9chap"
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &456663518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 456663517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc128b8d0801624449949635f366b20b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Diciela.Controls::Diciela.Controls.EscapeControls
+  _actions: {fileID: -944628639613478452, guid: ce45850f9084e5e49a79d052550d59e4, type: 3}
+--- !u!4 &456663519
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 456663517}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &497507848
 GameObject:
   m_ObjectHideFlags: 0
@@ -824,6 +882,8 @@ MonoBehaviour:
   _chooseControls: {fileID: 747521501}
   _buildBar: {fileID: 250348210}
   _dayBoard: {fileID: 250348214}
+  _placeSheet: {fileID: 250348215}
+  _escapeControls: {fileID: 456663518}
   _creationScreen: {fileID: 1839956355}
   _appearancePreview: {fileID: 1209326657}
   _confirmControls: {fileID: 1927762277}
@@ -958,3 +1018,4 @@ SceneRoots:
   - {fileID: 1839956357}
   - {fileID: 1057168150}
   - {fileID: 61688055}
+  - {fileID: 456663519}

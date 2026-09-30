@@ -12,6 +12,7 @@
         "Diciela.UI",
         "Diciela.Simulation.Core",
         "Diciela.Simulation.Land",
+        "Diciela.Simulation.Economy",
         "Diciela.Simulation.Society",
         "Diciela.Simulation"
     ],
