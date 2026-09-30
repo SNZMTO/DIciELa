@@ -14,3 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Diciela.Data::Diciela.Data.InterfaceSettings
   _texts: {fileID: 4900000, guid: 99f42a8f7a3cac24698702affd66ec42, type: 3}
   _language: fr
+  _referenceHeight: 900
+  _minimumRoom: {x: 1280, y: 720}
+  _size: 1

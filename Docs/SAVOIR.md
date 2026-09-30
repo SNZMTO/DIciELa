@@ -469,6 +469,21 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   `RuntimePanelUtils.ScreenToPanel`, mettre la racine du document en `PickingMode.Ignore`, et vérifier que l'élément
   trouvé par `panel.Pick` est bien dans la barre. Le test inverse la conversion d'UI Toolkit pour viser le milieu de
   la barre.
+- **UI Toolkit en Unity 6.6** (essai de l'étape 14) : une police `.ttf` se donne telle quelle
+  (`-unity-font-definition: url("….ttf")`) et reste nette à toute taille ; chaque graisse est un fichier, et le style
+  reste `normal`, sinon Unity épaissit par-dessus. `-unity-slice-scale` règle aussi le pas de la répétition
+  (`-unity-slice-type: tiled`) : une image en triple résolution, à l'échelle 1/3, se répète à sa taille. Le tracé
+  vectoriel (`generateVisualContent`, `Painter2D`) fait les pointillés (`SetDashPattern`) et le découpage (`PushClip`),
+  et s'enregistre en image (`SaveToVectorImage`), mais rangé au ras de son dessin : lui rendre sa boîte
+  (`InterfaceIconBuilder`). `PanelSettings.scale` se change à chaud ; en Play dans l'éditeur, c'est l'asset qui
+  change, à lui rendre à la sortie. Une variable de style n'est pas sûrement héritée : une face lit les siennes sur
+  ses propres classes. Pas de `line-height` en USS.
+- **Un filtre USS sur un grand bloc se rend en basse résolution** : une ombre portée (`filter: drop-shadow(…)`) sur
+  un panneau de 416 × 500 rendait flous, en 4K, son texte et ses boutons. Aucun filtre sur ce qui contient du texte :
+  une ombre dure se dessine, une ombre floue se génère en image.
+- **Voir une interface sans Play ni capture** : un `PanelSettings` dont `targetTexture` est une RenderTexture sRGB
+  (le projet est en couleurs linéaires) rend un document hors écran, à la taille voulue, 4K comprise ; lire les
+  pixels après `WaitForEndOfFrame` (l'image est à l'endroit).
 - **Un monteur qui fabrique un prefab** le monte dans une scène d'aperçu (`EditorSceneManager.NewPreviewScene`) : la
   scène ouverte reste propre. **Un matériau URP translucide par script** reprend les réglages de l'Inspector
   (`BaseShaderGUI`) : surface transparente, mélange SrcAlpha / OneMinusSrcAlpha, pas d'écriture de profondeur, passes

@@ -559,8 +559,26 @@
 - **À toi.** Des saisons, plus tard ? Le pack n'en a que des bouts, et aucun bâtiment ni arbre d'hiver (détail dans la
   procédure `pack-synty`). Ma reco : non ; si le rythme en demande un jour, un événement du temps plutôt que quatre
   décors, comme les sécheresses de Timberborn.
-- **Règle.** On choisit quoi construire dans une barre en bas de l'écran : les familles en onglets, puis leurs
-  constructions.
+- **Règle.** L'interface parle une seule langue, la « fusion » : le bois porte (les cadres), le lin porte le texte, le
+  rouge brique décore sans jamais informer, le laiton fixe (les clous du grand panneau). Tout ce qui se clique est un
+  feutre pastel en relief : un reflet en haut, une lèvre en bas, une ombre dessous. Un pastel posé à plat ne se clique
+  pas ; un creux de lin contient une valeur qu'on lit. Les coins sont coupés, jamais arrondis ; ni noir ni blanc pur.
+- **Règle.** Chaque pastel a son rôle : menthe pour l'action principale, sable pour l'action neutre, rose pour la
+  famille Logement (rose pâle pour ses cartes), beurre pour les marchandises, ciel pour la journée, lavande pour la
+  Chimère. Seule exception, la jauge de la journée : menthe pour le travail, pêche pour la soirée, lavande hachurée
+  pour la nuit.
+- **Règle.** Deux polices : Lilita One pour les titres, Nunito pour le reste. Aucun texte sous 18 px à la taille de
+  référence.
+- **Règle.** La journée en haut à gauche ; le stock en fanions sous une tringle, en haut au centre ; la fiche du lieu
+  touché à droite ; la barre de construction en bas au centre ; l'astuce en bas à gauche. Un bouton n'apparaît
+  qu'avec ce qu'il fait : le bouton du menu arrive avec le menu (la pause, les réglages).
+- **Règle.** On choisit quoi construire dans la barre du bas : les familles en onglets, et au-dessus de l'onglet
+  ouvert, ses constructions en cartes (leur image, leur nom, ce qu'elles coûtent).
+- **Règle.** L'interface se lit à toutes les tailles d'écran. Elle grossit avec la hauteur de l'écran, à partir d'une
+  référence de 900 px, et selon le réglage « Taille de l'interface » ; elle ne rétrécit jamais sous sa taille de
+  référence et se garde au moins 1280 × 720 de place. Chaque bloc tient à son coin ou à son bord : sur un écran large,
+  le milieu reste libre. Le plus petit écran visé est 1280 × 720 ; ce qui ne tient pas défile.
+- **Défaut.** « Taille de l'interface » : 100 %, de 80 à 150 %. Les blocs à 24 px du bord de l'écran, 20 px en haut.
 - **Règle.** Sans rien en main, un clic gauche touche la construction qu'on voit sous le pointeur : on vise son modèle,
   pas le sol derrière lui. Pour l'instant, toucher le logis de la Chimère la couche ou la réveille (voir 6).
 - **Règle.** Tant que le modèle d'une construction n'est pas choisi, elle se voit en boîte à sa taille, sa porte
@@ -573,6 +591,12 @@
 - **À toi.** Le reste du plan de l'interface ; le son et la musique. Ma reco : chaque panneau naît avec son système
   (la liste des habitants avec eux, l'étal avec le troc), sur le côté, la ville visible derrière, comme dans
   Timberborn ; le son et la musique après le premier jouable, avec un pack acheté, comme l'art.
+- **À toi.** Les questions ouvertes du HUD. Mes recos : une seule fiche ouverte à la fois, la nouvelle remplace
+  l'ancienne ; Échap ferme d'abord la fiche, puis lâche l'outil en main, puis ouvre le menu ; les touches 1 à 9
+  prennent les cartes de la famille ouverte ; l'interface ne prend pas le focus du clavier ; les fanions montrent les
+  marchandises de l'étape en cours, et un fanion à zéro reste, en douce ; la jauge ne compte pas les heures, son
+  infobulle dit ce qui suit ; chaque famille reçoit un pastel libre, dans l'ordre ; le bandeau de brique montre les
+  animaux du pack. L'astuce montre le portrait de la Chimère : qui parle, le jeu ou elle, est à toi (sa voix aussi).
 
 ## 17. Le premier jouable
 
