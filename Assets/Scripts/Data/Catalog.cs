@@ -53,5 +53,19 @@ namespace Diciela.Data
         public IReadOnlyList<PaletteDefinition> Palettes => _palettes;
         public IReadOnlyList<AttachmentSlotDefinition> AttachmentSlots => _attachmentSlots;
         public IReadOnlyList<AttachmentDefinition> Attachments => _attachments;
+
+        /// <summary>
+        /// Toutes les constructions du catalogue : celles des familles, dans leur ordre, puis le tas de départ. Une liste
+        /// neuve à chaque appel : pour les outils de l'éditeur et les tests de contenu, jamais à chaque pas.
+        /// </summary>
+        public List<StructureDefinition> AllStructures()
+        {
+            var structures = new List<StructureDefinition>();
+            foreach (StructureFamilyDefinition family in _families)
+                structures.AddRange(family.Structures);
+            if (_opening != null && _opening.StartingPile != null)
+                structures.Add(_opening.StartingPile);
+            return structures;
+        }
     }
 }

@@ -70,8 +70,7 @@ namespace Diciela.Tests.EditMode
             Structure pile = _town.PileOf(world);
             Assert.IsNotNull(pile, "Le tas trouve une autre place.");
             float away = Vector2.Distance(pile.Placement.Center, new Vector2(18.5f, 16.5f));
-            Assert.Greater(away, 1.9f, "Il ne chevauche pas le bloc.");
-            Assert.Less(away, 3f, "Il reste au plus près.");
+            Assert.AreEqual(2f, away, 0.001f, "Au plus près sans chevaucher le bloc : à 2 m, le long d'un côté.");
         }
 
         [Test]
@@ -95,10 +94,11 @@ namespace Diciela.Tests.EditMode
         [Test]
         public void WithNoRoomWithinItsRadiusThePileIsNotLaid()
         {
-            OpeningDefinition near = _town.Keep(TestData.Opening(_town.Pile, 1f, new GoodAmount(_town.Wood, 30)));
+            OpeningDefinition near = _town.Keep(TestData.Opening(_town.Pile, 1.9f, new GoodAmount(_town.Wood, 30)));
             Catalog catalog = _town.Keep(TestData.TownCatalog(near, new[] { _town.Wood }, new StatisticDefinition[0]));
             World world = _town.World(catalog);
-            // Un bloc de 2 × 2 m sur la place du tas : il faudrait aller à 2 m pour ne pas le chevaucher, au-delà du rayon.
+            // Un bloc de 2 × 2 m sur la place du tas : il faudrait aller à 2 m pour ne pas le chevaucher, au-delà des 1,9 m
+            // du rayon.
             TestTown.Place(world, _town.Keep(TestData.Structure("bloc", 2f, 2f, hasDoor: false)), 18.5f, 16.5f);
             TestTown.Place(world, _town.Tent, 20f, 14f);
 

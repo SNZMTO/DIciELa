@@ -11,7 +11,8 @@ namespace Diciela.Tests.PlayMode
     /// <summary>
     /// L'outil « choisir » et les constructions vues, sur le petit monde des tests (le sol à 10 m) : la Chimère y naît
     /// au centre, (50,125 ; 50,125) ; sa tente de 3 × 3 m, une boîte de 2,5 m de haut, est plantée en (50 ; 45), porte
-    /// au nord. Toucher la tente l'envoie dormir, la toucher encore la réveille ; toucher autre chose ne fait rien. On
+    /// au nord. Toucher la tente l'envoie dormir, la toucher encore la réveille ; toucher autre chose ne fait rien ; chaque
+    /// toucher, la tente comprise, est dit à qui l'écoute (la fiche d'un lieu s'y ferme). On
     /// vise le modèle, pas le sol : vu de biais, le haut de la tente cache le sol derrière elle. Bâtie, la tente se voit
     /// avec ses matériaux ; une cabane qui attend ses bâtisseurs, en fantôme translucide.
     /// </summary>
@@ -47,7 +48,12 @@ namespace Diciela.Tests.PlayMode
         [Test]
         public void TouchingTheTentSendsHerToBedAndTouchingAgainWakesHer()
         {
+            Structure heard = null;
+            _tool.Touched += touched => heard = touched;
+
             Assert.IsTrue(_tool.TouchAt(_test.OnScreen(TentTop)));
+            Assert.AreSame(_test.World.Structures.ChimeraHome, heard,
+                "Toucher la tente se dit aussi : la fiche ouverte se ferme.");
             _test.World.Step();
             Assert.IsTrue(Chimera.IsGoingToBed, "Elle va se coucher.");
 

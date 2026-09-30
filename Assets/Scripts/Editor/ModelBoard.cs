@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Diciela.Controls;
 using Diciela.Data;
 using Diciela.Game;
@@ -43,26 +44,21 @@ namespace Diciela.EditorTools
             Relief relief = MapReader.Read(terrain.terrainData, terrain.transform.position).Relief;
             Catalog catalog = EditorAssets.Load<Catalog>(ContentBuilder.CatalogPath);
 
+            List<StructureDefinition> structures = catalog.AllStructures();
             float total = -GapMeters;
-            foreach (StructureFamilyDefinition family in catalog.Families)
-            {
-                foreach (StructureDefinition structure in family.Structures)
-                    total += ModelsOf(structure).Length * (structure.WidthMeters + GapMeters);
-            }
+            foreach (StructureDefinition structure in structures)
+                total += ModelsOf(structure).Length * (structure.WidthMeters + GapMeters);
 
             float x = (relief.SizeX - total) * 0.5f;
             float z = relief.SizeZ * 0.5f;
-            foreach (StructureFamilyDefinition family in catalog.Families)
+            foreach (StructureDefinition structure in structures)
             {
-                foreach (StructureDefinition structure in family.Structures)
+                foreach (GameObject model in ModelsOf(structure))
                 {
-                    foreach (GameObject model in ModelsOf(structure))
-                    {
-                        GameObject view = ModelPose.Instantiate(model, null, "Planche : " + model.name);
-                        ModelPose.Place(view.transform, new Placement(new Vector2(x + structure.WidthMeters * 0.5f, z), 0f),
-                            relief);
-                        x += structure.WidthMeters + GapMeters;
-                    }
+                    GameObject view = ModelPose.Instantiate(model, null, "Planche : " + model.name);
+                    ModelPose.Place(view.transform, new Placement(new Vector2(x + structure.WidthMeters * 0.5f, z), 0f),
+                        relief);
+                    x += structure.WidthMeters + GapMeters;
                 }
             }
 

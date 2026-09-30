@@ -39,6 +39,9 @@ namespace Diciela.Simulation.Society
         /// <summary>Le poste qu'il tient ; null s'il n'en tient aucun.</summary>
         public WorkSlot Slot { get; private set; }
 
+        /// <summary>Vrai tant qu'une tâche est en cours.</summary>
+        public bool HasTask => _chore.IsActive;
+
         /// <summary>Vrai pendant qu'il travaille sur un chantier, sur place.</summary>
         public bool IsBuilding => _chore.IsBuilding;
 
@@ -95,16 +98,14 @@ namespace Diciela.Simulation.Society
         }
 
         /// <summary>
-        /// Il vient de sortir d'une construction posée sur lui : il reprend sa marche d'ici, ou sa flânerie près du
-        /// poste. Faux s'il ne tient aucun poste.
+        /// Il vient de sortir d'une construction posée sur lui (sa tâche laissée en y entrant) : il reprend sa flânerie
+        /// près du poste. Faux s'il ne tient aucun poste.
         /// </summary>
         public bool Resume(Vector2 position, ref HashRandom random)
         {
             if (Slot == null)
                 return false;
-            if (_chore.IsActive)
-                Follow(_chore.Resume(position));
-            else if (_idle)
+            if (_idle)
                 _wander.Resume(position, ref random);
             return true;
         }
