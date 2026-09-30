@@ -1,5 +1,4 @@
 using Diciela.Controls;
-using Diciela.Game;
 using Diciela.Simulation;
 using Diciela.Simulation.Land;
 using Diciela.Simulation.Society;
@@ -22,7 +21,7 @@ namespace Diciela.EditorTools
         [MenuItem("DICIELA/Album/Toucher le tas")]
         public static void TouchThePile()
         {
-            World world = RunningWorld();
+            World world = AlbumWorld.Running();
             Structure pile = world != null ? PileOf(world) : null;
             var choose = Object.FindAnyObjectByType<ChooseControls>();
             var rig = Object.FindAnyObjectByType<CameraRig>();
@@ -41,7 +40,7 @@ namespace Diciela.EditorTools
         [MenuItem("DICIELA/Album/Mettre la Chimère au tas")]
         public static void AssignTheChimera()
         {
-            World world = RunningWorld();
+            World world = AlbumWorld.Running();
             Structure pile = world != null ? PileOf(world) : null;
             Villager chimera = world != null ? world.Villagers.Chimera : null;
             if (pile == null || chimera == null)
@@ -61,12 +60,6 @@ namespace Diciela.EditorTools
                     return structure;
             }
             return null;
-        }
-
-        private static World RunningWorld()
-        {
-            var runner = Object.FindAnyObjectByType<GameRunner>();
-            return EditorApplication.isPlaying && runner != null ? runner.World : null;
         }
     }
 }

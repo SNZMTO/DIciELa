@@ -178,8 +178,14 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   près. Ses calques (TerrainLayer) sont ceux du pack.
 - **Piège : modifier un Terrain en Play modifie l'asset pour de bon** (`SetHeights`, `SetAlphamaps`, arbres), et il
   s'écrit au prochain enregistrement du projet. Pour modifier le sol, le jeu prend une copie en mémoire
-  (`Object.Instantiate(terrainData)`), donnée au `Terrain` **et** au `TerrainCollider`, jamais enregistrée ; un test
-  PlayMode (deux parties de suite) vérifie que les hauteurs de l'asset n'ont pas bougé.
+  (`Object.Instantiate(terrainData)`, dans `MapScene`), donnée au `Terrain` **et** au `TerrainCollider`, jamais
+  enregistrée, détruite une fois la carte déchargée ; un test PlayMode (deux parties de suite) vérifie que la partie
+  joue sur une copie et que les hauteurs de l'asset n'ont pas bougé.
+- **Retirer un arbre peint** : `TerrainData.SetTreeInstance(index, instance)` avec une largeur et une hauteur 0 ; la
+  fonction refuse de changer la place ou le modèle, et ne renumérote rien, si bien que le numéro d'instance lu au
+  lancement reste bon. Le Terrain dessine des milliers d'arbres à bas coût ; ce qu'on y ajoute (les fanions des arbres
+  marqués) se dessine d'un seul appel instancié par image (`Graphics.RenderMeshInstanced`, par lots de 1 023), refait
+  seulement quand les marques changent.
 - **Un Terrain range ses hauteurs par marches de 1 / 32 766 de sa hauteur totale** (3 mm pour 100 m) : une pente lue
   sur une maille de 1 m bouge de quelques centièmes de degré. Un test sur un Terrain tolère cet écart ; la
   simulation lit le relief une fois, en mètres, au lancement.
