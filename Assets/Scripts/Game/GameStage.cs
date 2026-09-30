@@ -29,6 +29,7 @@ namespace Diciela.Game
         [SerializeField] private DayBoard _dayBoard;
         [SerializeField] private PlaceSheet _placeSheet;
         [SerializeField] private StockPennants _stockPennants;
+        [SerializeField] private TipBoard _tipBoard;
         [SerializeField] private EscapeControls _escapeControls;
         [SerializeField] private CreationScreen _creationScreen;
         [SerializeField] private AppearancePreview _appearancePreview;
@@ -36,14 +37,19 @@ namespace Diciela.Game
         [SerializeField] private Atelier _atelier;
         [SerializeField] private PreviewControls _previewControls;
 
+        // Le portrait de l'astuce : 48 px de l'interface, en triple résolution.
+        private const int PortraitPixels = 144;
+
         private PlacementTool _placementTool;
         private ChooseTool _chooseTool;
+        private Texture2D _portrait;
 
         /// <summary>Vrai si la scène a toutes ses vues et tous ses gestes.</summary>
         public bool IsComplete => _cameraRig != null && _cameraControls != null && _structureViews != null &&
                                   _villagerViews != null && _placementPreview != null && _placementControls != null &&
                                   _chooseControls != null && _buildBar != null && _dayBoard != null &&
-                                  _placeSheet != null && _stockPennants != null && _escapeControls != null &&
+                                  _placeSheet != null && _stockPennants != null && _tipBoard != null &&
+                                  _escapeControls != null &&
                                   _creationScreen != null &&
                                   _appearancePreview != null && _confirmControls != null && _atelier != null &&
                                   _previewControls != null;
@@ -90,6 +96,10 @@ namespace Diciela.Game
             _dayBoard.Hide();
             _placeSheet.Hide();
             _stockPennants.Hide();
+            _tipBoard.Hide();
+            if (_portrait != null)
+                Destroy(_portrait);
+            _portrait = null;
             if (_placementTool != null)
             {
                 _placementTool.Cancel();
@@ -108,6 +118,8 @@ namespace Diciela.Game
             _confirmControls.Bind(null);
             _previewControls.Bind(null, null);
             _creationScreen.Hide();
+            // Le portrait de l'astuce, pris à l'atelier avant qu'il se cache (décision 154).
+            _portrait = _appearancePreview.TakePortrait(PortraitPixels);
             _appearancePreview.Hide();
             _atelier.Hide();
             _cameraRig.Show(world.Map);
@@ -120,6 +132,7 @@ namespace Diciela.Game
             _dayBoard.Show(world.Clock, texts, tooltips);
             _stockPennants.Show(world, catalog, texts, tooltips);
             _placeSheet.Show(world, texts);
+            _tipBoard.Show(world, texts, _portrait);
             var hud = new HudArea(document);
             _cameraControls.Bind(hud);
             _placementControls.Bind(_placementTool, hud);

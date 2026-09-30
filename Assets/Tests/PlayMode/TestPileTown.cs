@@ -9,7 +9,8 @@ using Object = UnityEngine.Object;
 namespace Diciela.Tests.PlayMode
 {
     /// <summary>
-    /// Le petit monde des tests de l'interface du tas : plat, 40 × 40 m, la Chimère née au centre ; le Bois et la Pierre ;
+    /// Le petit monde des tests de l'interface du tas : plat, 40 × 40 m, la Chimère née au centre (sauf si le test la
+    /// crée lui-même) ; le Bois et la Pierre ;
     /// un tas de départ de 2 × 2 m qui tient 50 marchandises et ouvre le poste « à tout faire » (porter) ; le déroulé du
     /// départ, qui le pose avec 30 Bois et 20 Pierre quand la tente est plantée. Les fiches sont remplies par
     /// SerializedObject, le chemin de l'Inspector, et détruites avec lui.
@@ -17,8 +18,9 @@ namespace Diciela.Tests.PlayMode
     internal sealed class TestPileTown : IDisposable
     {
         private readonly List<Object> _created = new List<Object>();
+        private readonly VillagerKindDefinition _kind;
 
-        public TestPileTown()
+        public TestPileTown(bool withChimera = true)
         {
 #if UNITY_EDITOR
             var settings = Keep(ScriptableObject.CreateInstance<SimulationSettings>());
@@ -49,8 +51,8 @@ namespace Diciela.Tests.PlayMode
             TestWorld.Fill(Catalog, "_opening", opening);
             TestWorld.FillList(Catalog, "_goods", Wood, Stone);
             TestWorld.FillList(Catalog, "_statistics", trade);
-            var kind = Keep(ScriptableObject.CreateInstance<VillagerKindDefinition>());
-            TestWorld.Fill(kind, "_id", "chimere");
+            _kind = Keep(ScriptableObject.CreateInstance<VillagerKindDefinition>());
+            TestWorld.Fill(_kind, "_id", "chimere");
             Tent = Keep(ScriptableObject.CreateInstance<StructureDefinition>());
             TestWorld.Fill(Tent, "_widthMeters", 3f);
             TestWorld.Fill(Tent, "_depthMeters", 3f);
@@ -59,9 +61,16 @@ namespace Diciela.Tests.PlayMode
             TestWorld.Fill(Tent, "_builtWhenPlaced", true);
 
             World = new World(settings, new MapDescription(new Relief(40f, 40f, 2, 2, new float[4])), Catalog);
-            World.Submit(new CreateChimeraCommand(kind, TestWorld.PlainAppearance(o => Keep(o))));
-            World.Step();
 #endif
+            if (withChimera)
+                CreateTheChimera();
+        }
+
+        /// <summary>Crée la Chimère par son ordre, au centre de la carte.</summary>
+        public void CreateTheChimera()
+        {
+            World.Submit(new CreateChimeraCommand(_kind, TestWorld.PlainAppearance(o => Keep(o))));
+            World.Step();
         }
 
         public World World { get; }

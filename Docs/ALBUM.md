@@ -15,6 +15,14 @@
 
 ## Les captures
 
+### 30/09/2026 — étape 15d : l'astuce et le portrait de la Chimère
+
+En bas à gauche, l'astuce : le portrait de la Chimère (sa tête de face, prise à l'atelier quand on valide) dans une
+tuile lavande, et la phrase du jeu qui dit quoi faire ensuite : planter la tente, puis la mettre au tas.
+
+![L'astuce : planter la tente](Album/2026-09-30_etape-15d_astuce-tente.jpg)
+![L'astuce : mettre la Chimère au tas](Album/2026-09-30_etape-15d_astuce-tas.jpg)
+
 ### 30/09/2026 — étape 15c : les fanions du stock et le coût des cartes
 
 En haut au centre, le stock de la ville paraît avec le tas : une tringle de bois et ses pommeaux, un fanion de lin à
