@@ -602,6 +602,56 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Clearing",
+            "id": "dc91531a-0012-40e1-a621-ea8fe0801254",
+            "actions": [
+                {
+                    "name": "Mark",
+                    "type": "Button",
+                    "id": "ca81d442-6b76-4302-b113-fb3e922dc898",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "Pointer",
+                    "type": "PassThrough",
+                    "id": "1ee603c0-1452-4ab3-82a7-d01bbed8f36c",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "788bcf48-22ed-4c44-ac94-acbd0f3b0c56",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Mark",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "870a06b9-f9b3-4ff9-a690-a480d44dd1b8",
+                    "path": "<Pointer>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pointer",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []
