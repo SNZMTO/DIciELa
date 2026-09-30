@@ -1,0 +1,169 @@
+/* La « fusion » (GDD, section 16 ; décisions 142 et 145) : la seule feuille des couleurs, des tailles et des polices
+   de l'interface ; les vues ne font que poser ses classes. Le bois porte, le lin porte le texte, la brique décore, le
+   laiton fixe ; tout ce qui se clique est un feutre en relief. Ni noir ni blanc pur. Le générateur des images de
+   l'interface lit ses couleurs ici (le bloc :root). Les faces (Facet) lisent leurs propriétés --… sur leurs classes. */
+
+:root {
+    --encre: #4A2E3B;
+    --douce: #76566A;
+    --lin: #FBF3E4;
+    --lin-ombre: rgba(58, 30, 14, 0.16);
+    --cadre-ombre-dure: rgba(58, 30, 14, 0.42);
+    --cadre-ombre-douce: rgba(58, 30, 14, 0.2);
+    --trame-trait: rgba(120, 80, 60, 0.03);
+    --trame-chaine: rgba(120, 80, 60, 0.02);
+    --brique: #B34747;
+    --glyphe: #EFCB9F;
+    --filigrane: #E0C7A2;
+    --rose: #F4B9CB;
+    --lavande: #DBC1EA;
+    --ciel: #B7D9EE;
+    --menthe: #BFE3C6;
+    --beurre: #F8DE95;
+    --peche: #F9C7A5;
+    --sable: #EFD3A4;
+    --bois-clair: #DDAA72;
+    --bois: #A96F3F;
+    --bois-sombre: #6F4320;
+    --bois-nuit: #5A3417;
+    -unity-font-definition: url("Polices/Nunito-ExtraBold.ttf");
+    -unity-font-style: normal;
+    font-size: 18px;
+    color: var(--encre);
+}
+
+/* Les textes. Chaque graisse est son fichier : le style reste normal, sinon Unity épaissit par-dessus. */
+
+.t1, .t2, .t3 {
+    -unity-font-definition: url("Polices/LilitaOne-Regular.ttf");
+    letter-spacing: 0.4px;
+}
+
+.t1 { font-size: 30px; }
+.t2 { font-size: 24px; }
+.t3 { font-size: 22px; }
+
+.nom {
+    -unity-font-definition: url("Polices/Nunito-Black.ttf");
+    font-size: 20px;
+}
+
+.nom-vide {
+    font-size: 20px;
+    color: var(--douce);
+}
+
+.libelle {
+    font-size: 18px;
+}
+
+.prose, .sous-titre {
+    -unity-font-definition: url("Polices/Nunito-Bold.ttf");
+    font-size: 18px;
+    white-space: normal;
+}
+
+.sous-titre, .douce {
+    color: var(--douce);
+}
+
+.nombre {
+    -unity-font-definition: url("Polices/Nunito-Black.ttf");
+    font-size: 24px;
+}
+
+.cout {
+    -unity-font-definition: url("Polices/Nunito-Black.ttf");
+    font-size: 20px;
+}
+
+/* Les faces (Facet) : les mesures communes, puis la matière, le pastel et les pans. */
+
+.facette {
+    --levre-hauteur: 3;
+    --reflet-hauteur: 2;
+    --reflet-couleur: #FFF8EA;
+    --reflet-part: 0.25;
+    --creux-decalage: 2;
+    --creux-flou: 3;
+    --fil-retrait: 8;
+    --fil-epaisseur: 2;
+    --fil-trait: 6;
+    --fil-espace: 4;
+}
+
+.pan-3 { --pan: 3; }
+.pan-4 { --pan: 4; }
+.pan-6 { --pan: 6; }
+.pan-8 { --pan: 8; }
+.pan-10 { --pan: 10; }
+.pan-12 { --pan: 12; }
+
+/* Un pastel posé à plat : il ne se clique pas. */
+.applique.ciel { --face: #B7D9EE; }
+.applique.lavande { --face: #DBC1EA; }
+.applique.beurre { --face: #F8DE95; }
+
+/* Un creux de lin : il contient une valeur qu'on lit. */
+.creux {
+    --face: #ECE0CB;
+    --creux-ombre: rgba(58, 30, 14, 0.16);
+    --creux-lumiere: rgba(255, 251, 242, 0.7);
+}
+
+/* La bulle d'une infobulle : du lin dans un liseré de paille. */
+.bulle {
+    --face: #FBF3E4;
+    --lisere: #D9C29C;
+    --lisere-largeur: 2;
+    --pan: 6;
+    --ombre: rgba(58, 30, 14, 0.3);
+    --ombre-y: 3;
+    padding: 8px 14px;
+}
+
+/* Le feutre : il se clique ; son relief (lèvre, reflet, ombre) le dit. Il se soulève au survol, s'enfonce à l'appui,
+   et reste enfoncé quand il est ouvert (un onglet), la lèvre en haut et ce qu'il porte descendu. Son ombre, dure, est
+   dessinée par la face (--ombre). */
+.feutre {
+    --ombre: rgba(58, 30, 14, 0.3);
+    --ombre-y: 3;
+    transition-property: translate;
+    transition-duration: 0.12s;
+    transition-timing-function: ease-out-cubic;
+}
+
+.feutre:hover {
+    translate: 0 -2px;
+    --ombre: rgba(58, 30, 14, 0.28);
+    --ombre-y: 5;
+}
+
+.feutre:active, .feutre.ouvert {
+    translate: 0 2px;
+    --ombre: rgba(58, 30, 14, 0.32);
+    --ombre-y: 1;
+}
+
+.feutre.ouvert { --enfonce: 1; }
+.feutre.ouvert > * { translate: 0 3px; }
+.feutre.couture { --couture: 1; }
+
+.feutre.menthe { --face: #BFE3C6; --levre: #9AC6A3; --fil: #5F9470; }
+.feutre.menthe:hover { --face: #CCE9D1; }
+.feutre.menthe:active, .feutre.menthe.ouvert { --face: #B3D1B8; }
+
+.feutre.sable { --face: #EFD3A4; --levre: #CFAE78; --fil: #9C7A45; }
+.feutre.sable:hover { --face: #F2DCB6; }
+.feutre.sable:active, .feutre.sable.ouvert { --face: #DCC297; }
+
+.feutre.rose { --face: #F4B9CB; --levre: #DB8FA6; --fil: #B8667F; }
+.feutre.rose:hover { --face: #F6C7D5; }
+.feutre.rose:active, .feutre.rose.ouvert { --face: #E3ABBD; }
+
+.feutre.rose-pale { --face: #F9DCE3; --levre: #E3B3C0; }
+.feutre.rose-pale:hover { --face: #FBE6EB; }
+.feutre.rose-pale:active, .feutre.rose-pale.ouvert { --face: #EFC7D1; }
+
+/* Le cadre de bois (WoodFrame) : ses images, son ombre et ses mesures sont dans Cadre.uss, générée. Aucun filtre USS
+   dans l'interface : un filtre sur un grand bloc se rend flou en 4K. */

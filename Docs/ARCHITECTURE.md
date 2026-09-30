@@ -332,6 +332,15 @@ code.
   premier pas se joue aussitôt : la Chimère naît au point d'arrivée dans la même image.
 - **L'interface** suit le patron MVP : un présentateur écoute la simulation et remplit son panneau. Pour les écrans
   chargés (l'étal, la liste des habitants), la liaison de données de UI Toolkit reste possible.
+- **Le dessin de l'interface** (décisions 144 et 145) : une seule feuille, `Assets/UI/Fusion.uss`, importée par le
+  thème, tient les couleurs, les tailles et les polices ; les vues ne posent que ses classes, et les générateurs
+  d'images lisent ses couleurs. Une façon de dessiner par matière : le cadre de bois (`WoodFrame`) pose sous son
+  contenu deux images générées, son ombre et sa face tirée de l'atlas du pack, découpées en neuf (`Cadre.uss`,
+  générée avec elles) ; les faces plates (`Facet` : applique, feutre, creux, bulle ; `FeltButton` pour celles qui se
+  cliquent) se dessinent en vectoriel d'après leurs propriétés `--…`, que les états (`:hover`, `:active`, `.ouvert`)
+  changent ; les icônes sont des images vectorielles générées. Aucun filtre USS. Le panneau garde ses pixels :
+  `InterfaceScale` lui donne son échelle d'après l'écran et le réglage. Les images, l'ombre et les icônes se refont
+  par `DICIELA/Interface/Générer les images de l'interface`.
 - **Aucun état statique modifiable** dans la simulation : le registre, le catalogue et les textes sont des objets
   créés par `Game`. Le Play de ce projet ne recharge ni le code ni la scène : `Game` crée le monde, la table des textes
   et l'outil de pose, et les libère à la sortie (les outils de l'éditeur lisent le monde en cours par

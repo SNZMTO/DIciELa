@@ -177,6 +177,7 @@ GameObject:
   - component: {fileID: 250348212}
   - component: {fileID: 250348211}
   - component: {fileID: 250348210}
+  - component: {fileID: 250348213}
   m_Layer: 0
   m_Name: Interface
   m_TagString: Untagged
@@ -234,6 +235,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &250348213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250348209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd8ded98fe08fe346a503758b3f415b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Diciela.UI::Diciela.UI.InterfaceScale
+  _panel: {fileID: 11400000, guid: bf6dd8f8b4c6b5b4fa39a4d3996c982f, type: 2}
+  _settings: {fileID: 11400000, guid: 7ce8faf8898188c4cb1d113cf9c4d0f1, type: 2}
 --- !u!1 &497507848
 GameObject:
   m_ObjectHideFlags: 0
