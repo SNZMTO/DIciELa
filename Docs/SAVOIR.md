@@ -100,7 +100,8 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   Quand une grandeur changera l'allure (une lanterne, une route pour la charrette), elle se relira **à chaque mètre
   parcouru** et à chaque coin, pas seulement aux coins : une lanterne au milieu d'un long segment doit compter.
 - **Sortir d'une construction posée sur soi** : tout droit, à travers elle, vers le milieu d'une maille libre qui la
-  **borde** (`WayOutFinder`), jamais derrière une autre ; puis reprendre ce qu'on faisait. Parmi ces mailles, celles
+  **borde** (`WayOutFinder`), jamais derrière une autre ; on laisse sa tâche en commençant à sortir, puis on reprend
+  sa marche vers son lit ou son travail. Parmi ces mailles, celles
   du plus grand îlot (les îlots comptent leurs mailles), puis la plus proche : la maille libre la plus proche peut être
   une poche que la construction vient de fermer, où l'on resterait pour toujours. La recherche va par anneaux autour
   de sa maille ; la construction est d'un seul tenant, donc un anneau qui n'en a plus aucune maille dit qu'elle est
@@ -108,6 +109,10 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   maillage change pendant qu'on sort, on revérifie sa maille de sortie. Piège connu : la ligne droite vers une maille
   du bord peut effleurer le coin d'une construction collée à celle qu'on quitte, le temps d'un pas ; seule une sortie
   qui suivrait le maillage l'éviterait.
+- **Chercher la place la plus proche par anneaux carrés** (`SquareRing`, le seul parcours par anneaux) : un anneau ne
+  range pas ses places par distance, ses coins sont à √2 fois son rang, plus loin que le milieu de l'anneau suivant.
+  Pour la plus proche, on continue tant que le rang de l'anneau reste sous la meilleure distance trouvée, et on écarte
+  ce qui dépasse le rayon cherché (le tas de départ, `Opening`).
 - **Flâner sans dériver** : tirer le point suivant autour de l'endroit où l'on s'est mis à flâner, pas autour de soi ;
   de saut en saut, un tirage autour de soi traverse la carte. Le tirer sur son îlot : il est joignable par
   construction, et un point sans issue n'est qu'une pause de plus. Si l'endroit où l'on flânait est pris, ou coupé de
