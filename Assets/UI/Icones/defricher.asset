@@ -1,0 +1,1098 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19100, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: defricher
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.VectorImage
+  version: 1
+  atlas: {fileID: 0}
+  vertices:
+  - position: {x: 4.5, y: 18, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 13.5, y: 9, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 8.25, y: 12.75, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 0, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 4.5, y: 18, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 13.5, y: 9, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 5.9142137, y: 19.414213, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 1, y: 2, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 14.914213, y: 10.414213, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 1, y: 2, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 4.5, y: 18, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 3, y: 16.5, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 8.25, y: 12.75, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 0, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 4.5, y: 18, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 3, y: 16.5, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 3.0857863, y: 19.414213, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 1, y: 2, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 1.5857863, y: 17.914213, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 1, y: 2, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 12, y: 7.5, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 3, y: 16.5, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 8.25, y: 12.75, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 0, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 12, y: 7.5, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 3, y: 16.5, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 10.585787, y: 6.0857863, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 1, y: 2, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 1.5857865, y: 15.085787, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 1, y: 2, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 12, y: 7.5, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 13.5, y: 9, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 8.25, y: 12.75, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 0, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 12, y: 7.5, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 13.5, y: 9, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 13.414213, y: 6.0857863, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 1, y: 2, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 14.914213, y: 7.5857863, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 1, y: 2, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 17, y: 11, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 18, y: 6.5, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 16, y: 8, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 0, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 17, y: 11, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 18, y: 6.5, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 18.952374, y: 11.433861, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 1, y: 2, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 19.952374, y: 6.933861, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 1, y: 2, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 17, y: 11, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 14, y: 9.5, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 16, y: 8, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 0, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 17, y: 11, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 14, y: 9.5, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 16.105574, y: 12.788855, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 1, y: 2, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 13.105573, y: 11.288855, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 1, y: 2, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 14, y: 9.5, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 12.5, y: 7, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 18, y: 6.5, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 0, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 14, y: 9.5, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 12.5, y: 7, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 12.285014, y: 10.528992, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 1, y: 2, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 10.785014, y: 8.028992, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 1, y: 2, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 13, y: 2, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 18, y: 6.5, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 12.5, y: 7, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 0, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 13, y: 2, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 18, y: 6.5, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 14.33793, y: 0.51341164, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 1, y: 2, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 19.337929, y: 5.0134115, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 1, y: 2, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 10, y: 4, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 12.5, y: 7, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 12.75, y: 4.5, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 0, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 10, y: 4, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 12.5, y: 7, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 8.463557, y: 5.280369, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 1, y: 2, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 10.963557, y: 8.280369, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 1, y: 2, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 10, y: 4, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 13, y: 2, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 12.75, y: 4.5, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 0, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 10, y: 4, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 13, y: 2, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 8.890599, y: 2.3358994, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 1, y: 2, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 11.890599, y: 0.33589935, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 4282068554
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 1, y: 2, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 16.3, y: 9, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 1944384507
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 17, y: 6.5, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 1944384507
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 16, y: 6, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 1944384507
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 0, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 16.3, y: 9, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 1944384507
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 17, y: 6.5, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 1944384507
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 18.225927, y: 9.539261, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 1944384507
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 1, y: 2, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 18.925928, y: 7.0392604, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 1944384507
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 1, y: 2, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 16.3, y: 9, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 1944384507
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 15, y: 5.5, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 1944384507
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 16, y: 6, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 1944384507
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 0, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 16.3, y: 9, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 1944384507
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 15, y: 5.5, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 1944384507
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 14.425149, y: 9.696373, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 1944384507
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 1, y: 2, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 13.12515, y: 6.1963725, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 1944384507
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 1, y: 2, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 14, y: 3.5, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 1944384507
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 15, y: 5.5, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 1944384507
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 16, y: 6, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 1944384507
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 0, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 14, y: 3.5, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 1944384507
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 15, y: 5.5, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 1944384507
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 12.211145, y: 4.3944273, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 1944384507
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 1, y: 2, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 13.211145, y: 6.3944273, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 1944384507
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 1, y: 2, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 14, y: 3.5, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 1944384507
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 17, y: 6.5, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 1944384507
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 16, y: 6, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 1944384507
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 0, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 14, y: 3.5, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 1944384507
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 17, y: 6.5, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 1944384507
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 0, y: 1, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 15.414213, y: 2.0857863, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 1944384507
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 1, y: 2, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  - position: {x: 18.414213, y: 5.0857863, z: 0}
+    tint:
+      serializedVersion: 2
+      rgba: 1944384507
+    uv: {x: 0, y: 0}
+    settingIndex: 0
+    circle: {x: 1, y: 2, z: -9999.9, w: -9999.9}
+    vertexFlags: 8
+    oldFlags:
+      serializedVersion: 2
+      rgba: 0
+  indices: 0000020001000300040005000400060005000700080009000a000c000b000b000c000d000e0010000f0011001200130012001400130015001600170018001a00190019001a001b001c001e001d001f00200021002000220021002300240025002600280027002700280029002a002b002c002d002f002e002e002f00300031003200330034003600350035003600370038003a0039003b003c003d003c003e003d003f004000410042004400430043004400450046004800470049004a004b004a004c004b004d004e004f0050005200510051005200530054005600550057005800590058005a0059005b005c005d005e0060005f005f0060006100t
+  settings: []
+  size: {x: 20, y: 20}

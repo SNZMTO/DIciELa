@@ -6,9 +6,9 @@ namespace Diciela.Simulation.Land
 {
     /// <summary>
     /// Le maillage : un quadrillage invisible, plus fin que le mètre, qui dit ce qui occupe chaque maille (SAVOIR, 2.1).
-    /// Il est déduit des constructions, jamais sauvegardé : chaque maille garde l'identifiant de ce qui la couvre (0 :
-    /// libre) et le nombre de portes qui en ont besoin pour rester dégagées. Une maille se désigne par un Vector2Int :
-    /// en x sa colonne, en y sa rangée sur l'axe z du monde.
+    /// Il est déduit des constructions et des arbres et rochers, jamais sauvegardé : chaque maille garde l'identifiant de
+    /// ce qui la couvre (0 : libre ; négatif : un arbre ou un rocher) et le nombre de portes qui en ont besoin pour rester
+    /// dégagées. Une maille se désigne par un Vector2Int : en x sa colonne, en y sa rangée sur l'axe z du monde.
     /// </summary>
     public sealed class NavGrid
     {
@@ -119,6 +119,21 @@ namespace Diciela.Simulation.Land
         {
             foreach (Vector2Int cell in CellsCoveredBy(rect))
                 _occupant[IndexOf(cell)] = occupant;
+            Version++;
+        }
+
+        /// <summary>
+        /// Libère les mailles du rectangle que tient encore cet occupant, et elles seules : un arbre retiré ne libère pas
+        /// la maille que son voisin, peint contre lui, a gardée.
+        /// </summary>
+        internal void ReleaseOccupant(RotatedRect rect, int occupant)
+        {
+            foreach (Vector2Int cell in CellsCoveredBy(rect))
+            {
+                int index = IndexOf(cell);
+                if (_occupant[index] == occupant)
+                    _occupant[index] = 0;
+            }
             Version++;
         }
 

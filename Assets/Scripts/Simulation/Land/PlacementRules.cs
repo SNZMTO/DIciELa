@@ -109,17 +109,26 @@ namespace Diciela.Simulation.Land
             return false;
         }
 
-        /// <summary>Une empreinte ne recouvre ni une autre construction, ni le devant d'une porte.</summary>
+        /// <summary>
+        /// Une empreinte ne recouvre ni une autre construction, ni un arbre ou un rocher, ni le devant d'une porte. Une
+        /// construction dessous l'emporte : retirer l'arbre n'y changerait rien.
+        /// </summary>
         private PlacementResult CheckFootprintCells(RotatedRect footprint)
         {
+            bool natureInTheWay = false;
             bool blocksADoor = false;
             foreach (Vector2Int cell in _grid.CellsCoveredBy(footprint))
             {
-                if (_grid.OccupantAt(cell) != 0)
+                int occupant = _grid.OccupantAt(cell);
+                if (occupant > 0)
                     return PlacementResult.Overlaps;
+                if (occupant < 0)
+                    natureInTheWay = true;
                 if (_grid.IsDoorway(cell))
                     blocksADoor = true;
             }
+            if (natureInTheWay)
+                return PlacementResult.NatureInTheWay;
             return blocksADoor ? PlacementResult.BlocksADoor : PlacementResult.Ok;
         }
 

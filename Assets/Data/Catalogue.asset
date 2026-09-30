@@ -16,6 +16,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b8ca46d660a54394682b6beea31b4aed, type: 2}
   _chimeraKind: {fileID: 11400000, guid: 6f852c15c2b34904c91165f54350ffdb, type: 2}
   _opening: {fileID: 11400000, guid: 5f1be715bcd2f7d4ea5ebe7cd8d40508, type: 2}
+  _nature:
+  - {fileID: 11400000, guid: a818e0fa99a21944ca0833614f8fd4d6, type: 2}
+  - {fileID: 11400000, guid: bb02470ad0228224d857d947456e789e, type: 2}
   _goods:
   - {fileID: 11400000, guid: 66ef54aedacec184faa974adebaddff0, type: 2}
   - {fileID: 11400000, guid: cdf728502b1356442ae522146e1539f0, type: 2}

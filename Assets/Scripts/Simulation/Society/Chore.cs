@@ -8,32 +8,23 @@ using UnityEngine;
 namespace Diciela.Simulation.Society
 {
     /// <summary>
-    /// La tâche en cours d'un habitant (ARCHITECTURE, section 7) : une suite d'étapes, chacune avec son issue d'échec.
-    /// Porter : aller à l'entrepôt, prendre, aller au chantier, déposer. Bâtir : aller au chantier, y travailler. Quand le
-    /// travail s'arrête, il finit sa marche et dépose ce qu'il porte, mais n'entame pas l'étape suivante ; le travail sur
-    /// un chantier s'arrête tout de suite (décisions 140 et 149). Échec : le but n'est plus joignable ; ce qu'il porte
-    /// retourne à la ville et ses réservations sont rendues. La marche est celle de l'habitant.
+    /// La tâche en cours d'un habitant (ARCHITECTURE, section 7) : marcher jusqu'où mène son geste, y faire ce que le geste
+    /// dit, travailler sur place, et ainsi de suite. Les gestes : porter, bâtir, défricher, un par valeur de TaskWork.
+    /// Quand le travail s'arrête, il finit sa marche et dépose ce qu'il porte, mais n'entame pas l'étape suivante ; le
+    /// travail sur place s'arrête tout de suite (décisions 140 et 149). Échec : le but n'est plus joignable ; ce qu'il
+    /// porte retourne à la ville et ses réservations sont rendues. La marche est celle de l'habitant.
     /// </summary>
     internal sealed class Chore
     {
-        private enum Stage
-        {
-            None,
-            ToSource,
-            ToSite,
-            Working
-        }
-
         private readonly VillagerServices _services;
         private readonly VillagerStatistics _statistics;
-        private readonly Inventory _load;
         private readonly Walk _walk;
         private readonly float _metersPerStep;
         private readonly List<Vector2Int> _cells = new List<Vector2Int>();
-        private Delivery _delivery;
-        private BuildShift _shift;
+        private readonly Gesture[] _gestures;
+        private Gesture _gesture;
         private TaskKindDefinition _task;
-        private Stage _stage;
+        private bool _working;
 
         public Chore(VillagerServices services, VillagerStatistics statistics, Inventory load, Walk walk,
             float metersPerStep)
@@ -43,16 +34,22 @@ namespace Diciela.Simulation.Society
 
             _services = services;
             _statistics = statistics;
-            _load = load;
             _walk = walk;
             _metersPerStep = metersPerStep;
+            // Un geste par valeur de TaskWork, à sa place : Carry, Build, Clear.
+            _gestures = new Gesture[]
+            {
+                new CarryGesture(services.Offers, load),
+                new BuildGesture(services.Offers),
+                new ClearGesture(services.Clearings, load)
+            };
         }
 
         /// <summary>Vrai tant qu'une tâche est en cours.</summary>
-        public bool IsActive => _stage != Stage.None;
+        public bool IsActive => _gesture != null;
 
         /// <summary>Vrai pendant qu'il travaille sur un chantier, sur place.</summary>
-        public bool IsBuilding => _stage == Stage.Working;
+        public bool IsBuilding => _working && _task.Work == TaskWork.Build;
 
         /// <summary>
         /// Prend une tâche de cette sorte, pour un habitant sur cet îlot, à ce point, et part ; faux s'il n'y a rien de
@@ -60,17 +57,15 @@ namespace Diciela.Simulation.Society
         /// </summary>
         public bool TryTake(TaskKindDefinition task, int island, Vector2 position)
         {
-            TaskOffers offers = _services.Offers;
-            if (task.Work == TaskWork.Carry && offers.TryTakeDelivery(island, position, _load.Capacity, out Delivery delivery))
-            {
-                _delivery = delivery;
-                return Begin(task, Stage.ToSource, position, delivery.Source);
-            }
-            if (task.Work == TaskWork.Build && offers.TryTakeBuilding(island, out BuildShift shift))
-            {
-                _shift = shift;
-                return Begin(task, Stage.ToSite, position, shift.Site.Structure);
-            }
+            Gesture gesture = _gestures[(int)task.Work];
+            if (!gesture.TryTake(island, position))
+                return false;
+            _gesture = gesture;
+            _task = task;
+            _working = false;
+            if (WalkTo(position))
+                return true;
+            End(ChoreOutcome.Failed);
             return false;
         }
 
@@ -80,15 +75,12 @@ namespace Diciela.Simulation.Society
         public ChoreOutcome Step(ref Vector2 position, bool workTime, out Structure built)
         {
             built = null;
-            if (_stage == Stage.Working)
+            if (_working)
             {
                 if (!workTime)
                     return End(ChoreOutcome.Done);
                 double hours = _statistics.WorkRateFor(_task) * _services.Clock.HoursPerStep;
-                if (!_services.Offers.Work(_shift, hours))
-                    return ChoreOutcome.Continuing;
-                built = _shift.Site.Structure;
-                return End(ChoreOutcome.Done);
+                return Follow(_gesture.Work(hours, out built), position);
             }
 
             WalkOutcome outcome = _walk.IsWalking ? _walk.Advance(ref position, _metersPerStep) : WalkOutcome.Lost;
@@ -96,7 +88,7 @@ namespace Diciela.Simulation.Society
                 return ChoreOutcome.Continuing;
             if (outcome == WalkOutcome.Lost)
                 return End(ChoreOutcome.Failed);
-            return Arrive(position, workTime);
+            return Follow(_gesture.Arrive(workTime), position);
         }
 
         /// <summary>
@@ -105,61 +97,42 @@ namespace Diciela.Simulation.Society
         /// </summary>
         public void Stop()
         {
-            if (_stage == Stage.None)
+            if (_gesture == null)
                 return;
             _walk.Stop();
             End(ChoreOutcome.Done);
         }
 
-        private bool Begin(TaskKindDefinition task, Stage stage, Vector2 position, Structure target)
+        /// <summary>Fait ce que le geste demande : marcher vers son nouveau but, travailler sur place, ou finir.</summary>
+        private ChoreOutcome Follow(GestureStep step, Vector2 position)
         {
-            _task = task;
-            _stage = stage;
-            if (WalkTo(position, target))
-                return true;
-            End(ChoreOutcome.Failed);
-            return false;
+            switch (step)
+            {
+                case GestureStep.Walk:
+                    _working = false;
+                    return WalkTo(position) ? ChoreOutcome.Continuing : End(ChoreOutcome.Failed);
+                case GestureStep.Work:
+                    _working = true;
+                    return ChoreOutcome.Continuing;
+                default:
+                    return End(ChoreOutcome.Done);
+            }
         }
 
-        /// <summary>Il est au bout de sa marche : l'étape suivante, si le travail n'est pas fini.</summary>
-        private ChoreOutcome Arrive(Vector2 position, bool workTime)
+        /// <summary>Part vers les abords du but du geste ; faux s'ils ne sont pas joignables d'ici.</summary>
+        private bool WalkTo(Vector2 position)
         {
-            if (_stage == Stage.ToSite && _delivery != null)
-            {
-                // Il dépose ce qu'il porte, même le travail fini : c'est la fin de son étape.
-                _services.Offers.DropOff(_delivery, _load);
-                _delivery = null;
-                return End(ChoreOutcome.Done);
-            }
-            if (!workTime)
-                return End(ChoreOutcome.Done);
-            if (_stage == Stage.ToSite)
-            {
-                _stage = Stage.Working;
-                return ChoreOutcome.Continuing;
-            }
-            _services.Offers.PickUp(_delivery, _load);
-            _stage = Stage.ToSite;
-            return WalkTo(position, _delivery.Site.Structure) ? ChoreOutcome.Continuing : End(ChoreOutcome.Failed);
-        }
-
-        /// <summary>Part vers les abords de cette construction ; faux s'ils ne sont pas joignables d'ici.</summary>
-        private bool WalkTo(Vector2 position, Structure structure)
-        {
-            _services.Surroundings.Collect(structure, _cells);
+            ChoreGoal goal = _gesture.Goal;
+            _services.Surroundings.Collect(goal.Footprint, goal.Occupant, _cells);
             return _walk.TryStart(position, _cells);
         }
 
         private ChoreOutcome End(ChoreOutcome outcome)
         {
-            if (_delivery != null)
-                _services.Offers.Cancel(_delivery, _load);
-            if (_shift != null)
-                _services.Offers.Leave(_shift);
-            _delivery = null;
-            _shift = null;
+            _gesture.Stop();
+            _gesture = null;
             _task = null;
-            _stage = Stage.None;
+            _working = false;
             return outcome;
         }
     }

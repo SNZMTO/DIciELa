@@ -26,7 +26,7 @@ MonoBehaviour:
   _workHours: 0
   _workSlots:
   - {fileID: 11400000, guid: efdeee55abb7a0c408de680db580711a, type: 2}
-  _storageCapacity: 50
+  _storageCapacity: 100
   _sourceModel: {fileID: 0}
   _model: {fileID: 9059437479225551520, guid: 34856802af9b08d4690b787778f35ce2, type: 3}
   _picture: {fileID: 0}

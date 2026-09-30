@@ -5,10 +5,10 @@ namespace Diciela.Data
 {
     /// <summary>
     /// Le catalogue : la fiche racine, qui mène à toutes les autres (ARCHITECTURE, section 9) ; le jeu ne charge que
-    /// lui. Les familles de constructions, dans l'ordre des onglets de la barre ; la sorte de la Chimère ; ce que
-    /// l'écran de création propose, dans son ordre : les têtes, les corps, les couleurs, les emplacements et leurs pièces.
-    /// La première tête et le premier corps, dans leurs couleurs d'origine, et les pièces que ce corps porte dans le pack,
-    /// de sa couleur, font l'apparence de départ.
+    /// lui. Les familles de constructions, dans l'ordre des onglets de la barre ; la sorte de la Chimère ; les sortes
+    /// d'arbres et de rochers de la carte ; ce que l'écran de création propose, dans son ordre : les têtes, les corps, les
+    /// couleurs, les emplacements et leurs pièces. La première tête et le premier corps, dans leurs couleurs d'origine, et
+    /// les pièces que ce corps porte dans le pack, de sa couleur, font l'apparence de départ.
     /// </summary>
     [CreateAssetMenu(menuName = "DICIELA/Catalogue", fileName = "Catalogue")]
     public sealed class Catalog : ScriptableObject
@@ -21,6 +21,9 @@ namespace Diciela.Data
 
         [Tooltip("Le déroulé du départ : le tas de départ et son contenu (GDD, section 6).")]
         [SerializeField] private OpeningDefinition _opening;
+
+        [Tooltip("Les sortes d'arbres et de rochers que le développeur peint sur la carte (GDD, section 2).")]
+        [SerializeField] private List<NatureDefinition> _nature = new List<NatureDefinition>();
 
         [Tooltip("Les marchandises, dans l'ordre des fanions du stock (GDD, section 16).")]
         [SerializeField] private List<GoodDefinition> _goods = new List<GoodDefinition>();
@@ -46,6 +49,7 @@ namespace Diciela.Data
         public IReadOnlyList<StructureFamilyDefinition> Families => _families;
         public VillagerKindDefinition ChimeraKind => _chimeraKind;
         public OpeningDefinition Opening => _opening;
+        public IReadOnlyList<NatureDefinition> Nature => _nature;
         public IReadOnlyList<GoodDefinition> Goods => _goods;
         public IReadOnlyList<StatisticDefinition> Statistics => _statistics;
         public IReadOnlyList<HeadDefinition> Heads => _heads;

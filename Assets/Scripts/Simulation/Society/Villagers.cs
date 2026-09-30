@@ -27,9 +27,10 @@ namespace Diciela.Simulation.Society
         /// les postes de cette table, et leurs statistiques suivent celles-ci.
         /// </summary>
         public Villagers(NavGrid grid, Islands islands, PathFinder finder, Clock clock, Surroundings surroundings,
-            TaskOffers offers, WorkSlots slots, StatisticTable statistics)
+            TaskOffers offers, ClearingOffers clearings, WorkSlots slots, StatisticTable statistics)
         {
-            _services = new VillagerServices(clock, grid, islands, finder, surroundings, offers, slots, statistics);
+            _services = new VillagerServices(clock, grid, islands, finder, surroundings, offers, clearings, slots,
+                statistics);
             _grid = grid;
         }
 

@@ -25,7 +25,10 @@ namespace Diciela.Tests.EditMode
             return catalog.Opening != null ? catalog.Opening.StartingPile : null;
         }
 
-        /// <summary>Les clés des textes de la ville au travail : le tas, les marchandises, les statistiques, les postes.</summary>
+        /// <summary>
+        /// Les clés des textes de la ville au travail : le tas, les marchandises, les statistiques, les postes, les arbres et
+        /// les rochers.
+        /// </summary>
         public static void AddTownKeys(Catalog catalog, List<string> keys)
         {
             StructureDefinition pile = StartingPileOf(catalog);
@@ -33,6 +36,8 @@ namespace Diciela.Tests.EditMode
                 keys.Add(pile.NameKey);
             foreach (GoodDefinition good in catalog.Goods)
                 keys.Add(good.NameKey);
+            foreach (NatureDefinition nature in catalog.Nature)
+                keys.Add(nature.NameKey);
             foreach (StatisticDefinition statistic in catalog.Statistics)
             {
                 keys.Add(statistic.NameKey);

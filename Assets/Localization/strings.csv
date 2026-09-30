@@ -8,6 +8,7 @@ pose.refus.Overlaps,La place est prise,Something is in the way
 pose.refus.BlocksADoor,"Devant une porte, rien ne se pose",Nothing goes in front of a door
 pose.refus.DoorBlocked,Sa porte serait bouchée,Its door would be blocked
 pose.refus.AlreadyPlaced,Déjà posée : une seule par ville,Already placed: one per town
+pose.refus.NatureInTheWay,Un arbre ou un rocher est dans le chemin : retire-le d'abord,A tree or a rock is in the way: clear it first
 corps.chat_a,Chat A,Cat A
 corps.chat_b,Chat B,Cat B
 corps.cochon_a,Cochon A,Pig A
@@ -114,6 +115,8 @@ journee.Night,Nuit,Night
 construction.tas_de_depart,Tas de départ,Starting pile
 marchandise.bois,Bois,Wood
 marchandise.pierre,Pierre,Stone
+nature.arbre,Arbre,Tree
+nature.rocher,Rocher,Rock
 statistique.terre,Terre,Land
 statistique.batisse,Bâtisse,Building
 statistique.artisanat,Artisanat,Craft
@@ -133,6 +136,7 @@ sous-statistique.troc,Troc,Barter
 sous-statistique.expedition,Expédition,Expeditions
 tache.porter,Porter,Carry
 tache.batir,Bâtir,Build
+tache.defricher,Défricher,Clear
 poste.a_tout_faire,À tout faire,Odd jobs
 fiche.mettre_chimere,Y mettre la Chimère,Put the Chimera here
 fiche.retirer_chimere,Retirer la Chimère,Take the Chimera away
