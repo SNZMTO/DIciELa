@@ -15,6 +15,13 @@
 
 ## Les captures
 
+### 30/09/2026 — étape 14c : l'écran de création dans la « fusion »
+
+Le panneau de bois doré est remplacé par la langue du HUD : un cadre de bois, le titre en Lilita, chaque pièce et
+sa couleur dans un creux de lin entre deux chevrons de feutre, et le grand bouton menthe cousu qui valide.
+
+![L'écran de création dans la fusion](Album/2026-09-30_etape-14c_creation-fusion.jpg)
+
 ### 30/09/2026 — étape 14b : le HUD « fusion » dans le jeu
 
 Les deux premiers blocs du HUD dessiné pour le jeu : en haut à gauche, la journée (le jour, sa phase, la jauge du

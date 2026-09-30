@@ -85,8 +85,6 @@ creation.titre,La Chimère,The Chimera
 creation.corps,Corps,Body
 creation.aucun,Aucun,None
 creation.valider,C'est parti,Let's go
-creation.precedent,<,<
-creation.suivant,>,>
 tete.chat_a,Chat A,Cat A
 tete.chat_b,Chat B,Cat B
 tete.cochon_a,Cochon A,Pig A

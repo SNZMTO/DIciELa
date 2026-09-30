@@ -34,7 +34,7 @@ namespace Diciela.Tests.PlayMode
             Confirmed?.Invoke();
         }
 
-        public void ShowRows(string title, string confirm, string previous, string next, IReadOnlyList<string> labels)
+        public void ShowRows(string title, string confirm, IReadOnlyList<string> labels)
         {
             Title = title;
             Labels.Clear();

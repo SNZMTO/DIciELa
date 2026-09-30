@@ -45,8 +45,7 @@ namespace Diciela.UI
             _view.Stepped += OnStepped;
             _view.Recolored += OnRecolored;
             _view.Confirmed += OnConfirmed;
-            _view.ShowRows(texts.Get(TextKeys.CreationTitle), texts.Get(TextKeys.CreationConfirm),
-                texts.Get(TextKeys.CreationPrevious), texts.Get(TextKeys.CreationNext), labels);
+            _view.ShowRows(texts.Get(TextKeys.CreationTitle), texts.Get(TextKeys.CreationConfirm), labels);
             Show();
         }
 
