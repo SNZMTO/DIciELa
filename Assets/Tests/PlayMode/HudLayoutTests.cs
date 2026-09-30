@@ -11,16 +11,19 @@ namespace Diciela.Tests.PlayMode
 {
     /// <summary>
     /// Le HUD à toutes les tailles d'écran (GDD, section 16 ; décision 144), rendu hors écran de 1280 × 720 à la 4K,
-    /// écrans larges compris : la journée tient au coin haut-gauche, à 24 px du bord et 20 du haut ; la barre au milieu
-    /// du bas, à 24 px ; tout reste dans l'écran, sans que deux blocs se chevauchent. C'est le vrai HUD (sa mise en page,
-    /// la feuille du jeu, ses vues, ses présentateurs, sa taille), avec le catalogue et les textes du projet, sur un
-    /// petit monde en mémoire. Les marges attendues sont celles du GDD.
+    /// écrans larges compris : la journée tient au coin haut-gauche, à 24 px du bord et 20 du haut ; la fiche du tas,
+    /// ouverte, au coin haut-droit ; le stock en fanions au milieu du haut, à 24 px ; la barre au milieu du bas, à 24 px ;
+    /// tout reste dans l'écran, sans que deux blocs se chevauchent. C'est le vrai HUD (sa mise en page, la feuille du jeu,
+    /// ses vues, ses présentateurs, sa taille), avec le catalogue et les textes du projet pour la barre et la journée, et
+    /// le petit monde du tas pour la fiche et les fanions. Les marges attendues sont celles du GDD.
     /// </summary>
     public sealed class HudLayoutTests
     {
         private const float Side = 24f;
         private const float Top = 20f;
         private const float Bottom = 24f;
+        // La tringle des fanions pend à 24 px du haut, comme dans la maquette.
+        private const float StockTop = 24f;
         private const float Tolerance = 0.5f;
         private const int SettleFrames = 4;
 
@@ -40,6 +43,7 @@ namespace Diciela.Tests.PlayMode
             var catalog = BuildBarTests.LoadSingle<Catalog>();
             var faults = new List<string>();
             using (var world = new TestWorld())
+            using (var town = new TestPileTown())
             {
                 var panel = world.Keep(ScriptableObject.CreateInstance<PanelSettings>());
                 panel.themeStyleSheet = theme;
@@ -51,6 +55,8 @@ namespace Diciela.Tests.PlayMode
                 document.visualTreeAsset = layout;
                 var bar = host.AddComponent<BuildBar>();
                 var day = host.AddComponent<DayBoard>();
+                var sheet = host.AddComponent<PlaceSheet>();
+                var stock = host.AddComponent<StockPennants>();
                 var scale = host.AddComponent<InterfaceScale>();
                 TestWorld.Fill(scale, "_panel", panel);
                 TestWorld.Fill(scale, "_settings", settings);
@@ -72,8 +78,13 @@ namespace Diciela.Tests.PlayMode
                             host.SetActive(true);
                             yield return null;
                             TextTable texts = TextTable.Parse(settings.Texts.text, settings.Language);
+                            var tooltips = new Tooltips(document);
                             bar.Show(catalog, texts, world.Tool, world.World);
-                            day.Show(world.World.Clock, texts, new Tooltips(document));
+                            day.Show(world.World.Clock, texts, tooltips);
+                            town.PlantTheTent();
+                            stock.Show(town.World, town.Catalog, texts, tooltips);
+                            sheet.Show(town.World, texts);
+                            sheet.Touch(town.PlacedPile);
                         }
                         for (int frame = 0; frame < SettleFrames; frame++)
                             yield return null;
@@ -90,6 +101,8 @@ namespace Diciela.Tests.PlayMode
                     }
                     bar.Hide();
                     day.Hide();
+                    sheet.Hide();
+                    stock.Hide();
                 }
             }
             Assert.IsEmpty(faults, string.Join("\n", faults));
@@ -103,6 +116,8 @@ namespace Diciela.Tests.PlayMode
             Rect room = root.panel.visualTree.layout;
             Rect day = root.Q("journee").worldBound;
             Rect bar = root.Q("bar").worldBound;
+            Rect sheet = root.Q("fiche").worldBound;
+            Rect stock = root.Q(className: "stock-corps").worldBound;
             string at = screen.x + " × " + screen.y + " : ";
             if (Mathf.Abs(day.xMin - Side) > Tolerance || Mathf.Abs(day.yMin - Top) > Tolerance)
                 faults.Add(at + "la journée n'est pas à 24 px du bord et 20 du haut (" + day + ").");
@@ -110,13 +125,24 @@ namespace Diciela.Tests.PlayMode
                 faults.Add(at + "la barre n'est pas à 24 px du bas (" + bar + " dans " + room + ").");
             if (Mathf.Abs(bar.center.x - room.width * 0.5f) > Tolerance)
                 faults.Add(at + "la barre n'est pas au milieu (" + bar + " dans " + room + ").");
-            foreach (Rect block in new[] { day, bar })
+            if (Mathf.Abs(room.width - sheet.xMax - Side) > Tolerance || Mathf.Abs(sheet.yMin - Top) > Tolerance)
+                faults.Add(at + "la fiche n'est pas à 24 px du bord et 20 du haut (" + sheet + " dans " + room + ").");
+            if (Mathf.Abs(stock.center.x - room.width * 0.5f) > Tolerance || Mathf.Abs(stock.yMin - StockTop) > Tolerance)
+                faults.Add(at + "les fanions ne sont pas au milieu, à 24 px du haut (" + stock + ").");
+            Rect[] blocks = { day, stock, sheet, bar };
+            foreach (Rect block in blocks)
             {
                 if (block.xMin < 0f || block.yMin < 0f || block.xMax > room.width || block.yMax > room.height)
                     faults.Add(at + "un bloc sort de l'écran (" + block + " dans " + room + ").");
             }
-            if (day.Overlaps(bar))
-                faults.Add(at + "la journée et la barre se chevauchent.");
+            for (int i = 0; i < blocks.Length; i++)
+            {
+                for (int j = i + 1; j < blocks.Length; j++)
+                {
+                    if (blocks[i].Overlaps(blocks[j]))
+                        faults.Add(at + "deux blocs se chevauchent (" + blocks[i] + ", " + blocks[j] + ").");
+                }
+            }
         }
     }
 }
