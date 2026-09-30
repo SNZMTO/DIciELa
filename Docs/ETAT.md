@@ -1,6 +1,6 @@
 # DICIELA — état actuel
 
-**Branche** : `etape-17c-outil-retirer`, fusionnée dans `main` et poussée.
+**Branche** : `etape-17d-verification`, fusionnée dans `main` et poussée.
 
 **Fait** : les étapes 15 et 16 (le tas, son poste, le HUD, le ménage et la revue ; décisions 147 à 156), puis 17a à
 17c, le défrichage (décisions 157 à 161).
@@ -11,7 +11,7 @@
   Les tâches passent par des gestes (porter, bâtir, défricher) ; une forêt de 5 000 arbres reste rapide.
 - 17b : la partie joue sur une copie du sol ; les arbres peints au modèle rangé sont lus ; retiré, un arbre quitte le
   Terrain ; marqué, un fanion (remplaçant) se dresse à son pied. 17c : l'outil « Retirer » (clic, cadre, Échap).
-**EditMode 173/173, PlayMode 136/136**, Plays sans erreur.
+**EditMode 174/174, PlayMode 136/136** (un bosquet défriché sur plusieurs jours, le bilan juste), Plays sans erreur.
 
 **À vérifier par toi** : peins quelques arbres (Terrain › Paint Trees, un modèle du pack), glisse ce modèle dans
 `Assets/Data/Nature/Arbre` (liste Modèles) ; Play, la tente, la Chimère au tas, « DICIELA/Album/Prendre l'outil
