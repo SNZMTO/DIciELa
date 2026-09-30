@@ -10,6 +10,9 @@ namespace Diciela.Data
         Carry = 0,
 
         /// <summary>Bâtir : travailler sur un chantier dont les matériaux sont livrés.</summary>
-        Build = 1
+        Build = 1,
+
+        /// <summary>Défricher : retirer un arbre ou un rocher marqué, et porter ce qu'il rend à un entrepôt.</summary>
+        Clear = 2
     }
 }

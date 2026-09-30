@@ -6,17 +6,19 @@ using UnityEngine.UIElements;
 namespace Diciela.EditorTools
 {
     /// <summary>
-    /// Crée le contenu de la ville au travail qui manque (GDD, sections 5 à 7 ; décisions 137 à 139) : le Bois et la
-    /// Pierre, les quatre statistiques et leurs sous-statistiques, les tâches « porter » et « bâtir », le poste « à tout
-    /// faire », le tas de départ et le déroulé du départ, le coût de la cabane, et leur place dans le catalogue.
+    /// Crée le contenu de la ville au travail qui manque (GDD, sections 2 et 5 à 7 ; décisions 137 à 139 et 157 à 160) :
+    /// le Bois et la Pierre, les quatre statistiques et leurs sous-statistiques, les tâches « porter », « bâtir » et
+    /// « défricher », le poste « à tout faire », le tas de départ et le déroulé du départ, le coût de la cabane, l'arbre
+    /// et le rocher (sans modèle : le développeur y range ceux qu'il peint), et leur place dans le catalogue.
     /// Réexécutable : une fiche qui existe n'est jamais touchée, sauf pour ce qui lui manque (une liste vide, un
-    /// nombre à 0).
+    /// nombre à 0, la tâche « défricher » au poste).
     /// </summary>
     internal static class TownContentBuilder
     {
         private const string GoodsFolder = "Assets/Data/Marchandises";
         private const string StatisticsFolder = "Assets/Data/Statistiques";
         private const string WorkFolder = "Assets/Data/Travail";
+        private const string NatureFolder = "Assets/Data/Nature";
         internal const string PilePath = "Assets/Data/Structures/TasDeDepart.asset";
         private const string OpeningPath = "Assets/Data/Depart.asset";
 
@@ -41,14 +43,20 @@ namespace Diciela.EditorTools
 
             TaskKindDefinition carry = Task("Tache_Porter", "porter", TaskWork.Carry, subStatistics["transport"]);
             TaskKindDefinition build = Task("Tache_Batir", "batir", TaskWork.Build, subStatistics["construction"]);
-            // Récolter et défricher s'ajouteront avec les arbres et les champs sauvages (décision 139).
+            TaskKindDefinition clear = Task("Tache_Defricher", "defricher", TaskWork.Clear, subStatistics["paysage"]);
+            // Récolter s'ajoutera avec les champs sauvages, entre bâtir et défricher (décision 139).
             WorkSlotDefinition oddJobs = EditorAssets.CreateIfMissing<WorkSlotDefinition>(
                 WorkFolder + "/Poste_AToutFaire.asset", fiche =>
                 {
                     EditorAssets.Property(fiche, "_id").stringValue = "a_tout_faire";
                     EditorAssets.Property(fiche, "_nameKey").stringValue = "poste.a_tout_faire";
-                    EditorAssets.SetList(EditorAssets.Property(fiche, "_tasks"), new[] { carry, build });
+                    EditorAssets.SetList(EditorAssets.Property(fiche, "_tasks"), new[] { carry, build, clear });
                 });
+            if (!Contains(oddJobs.Tasks, clear))
+            {
+                var tasks = new List<TaskKindDefinition>(oddJobs.Tasks) { clear };
+                EditorAssets.Set(oddJobs, fiche => EditorAssets.SetList(EditorAssets.Property(fiche, "_tasks"), tasks));
+            }
 
             StructureDefinition pile = EditorAssets.CreateIfMissing<StructureDefinition>(PilePath, fiche =>
             {
@@ -59,7 +67,7 @@ namespace Diciela.EditorTools
                 EditorAssets.Property(fiche, "_hasDoor").boolValue = false;
                 EditorAssets.Property(fiche, "_unique").boolValue = true;
                 EditorAssets.Property(fiche, "_builtWhenPlaced").boolValue = true;
-                EditorAssets.Property(fiche, "_storageCapacity").intValue = 50;
+                EditorAssets.Property(fiche, "_storageCapacity").intValue = 100;
                 EditorAssets.SetList(EditorAssets.Property(fiche, "_workSlots"), new[] { oddJobs });
             });
             // Le pack a des tas de bûches et de pierres ; le choix est au développeur : une boîte en attendant.
@@ -78,7 +86,14 @@ namespace Diciela.EditorTools
             if (cabin.WorkHours <= 0f)
                 EditorAssets.Set(cabin, fiche => EditorAssets.Property(fiche, "_workHours").floatValue = 2f);
 
+            // Un arbre rend 3 Bois pour 30 min de travail, un rocher 2 Pierre pour 45 min (décision 160).
+            NatureDefinition tree = Nature("Arbre", "arbre", 1f, wood, 3, 0.5f);
+            NatureDefinition rock = Nature("Rocher", "rocher", 1.5f, stone, 2, 0.75f);
+
             EditorAssets.AssignIfMissing(catalog, "_opening", opening);
+            if (catalog.Nature.Count == 0)
+                EditorAssets.Set(catalog, fiche =>
+                    EditorAssets.SetList(EditorAssets.Property(fiche, "_nature"), new[] { tree, rock }));
             if (catalog.Goods.Count == 0)
                 EditorAssets.Set(catalog, fiche =>
                     EditorAssets.SetList(EditorAssets.Property(fiche, "_goods"), new[] { wood, stone }));
@@ -131,6 +146,30 @@ namespace Diciela.EditorTools
                 EditorAssets.Property(fiche, "_work").enumValueIndex = (int)work;
                 EditorAssets.Property(fiche, "_subStatistic").objectReferenceValue = reads;
             });
+        }
+
+        private static NatureDefinition Nature(string file, string id, float size, GoodDefinition good, int amount,
+            float workHours)
+        {
+            return EditorAssets.CreateIfMissing<NatureDefinition>(NatureFolder + "/" + file + ".asset", fiche =>
+            {
+                EditorAssets.Property(fiche, "_id").stringValue = id;
+                EditorAssets.Property(fiche, "_nameKey").stringValue = "nature." + id;
+                EditorAssets.Property(fiche, "_widthMeters").floatValue = size;
+                EditorAssets.Property(fiche, "_depthMeters").floatValue = size;
+                SetAmount(EditorAssets.Property(fiche, "_yield"), good, amount);
+                EditorAssets.Property(fiche, "_workHours").floatValue = workHours;
+            });
+        }
+
+        private static bool Contains(IReadOnlyList<TaskKindDefinition> tasks, TaskKindDefinition task)
+        {
+            foreach (TaskKindDefinition each in tasks)
+            {
+                if (each == task)
+                    return true;
+            }
+            return false;
         }
 
         private static VectorImage Icon(string name)

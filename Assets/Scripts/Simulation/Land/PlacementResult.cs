@@ -24,6 +24,8 @@ namespace Diciela.Simulation.Land
         DoorBlocked = 5,
 
         /// <summary>Elle est unique, et déjà posée : une seule dans la ville (GDD, section 9).</summary>
-        AlreadyPlaced = 6
+        AlreadyPlaced = 6,
+        /// <summary>Un arbre ou un rocher est sous l'empreinte : il faut d'abord le retirer (GDD, section 2).</summary>
+        NatureInTheWay = 7
     }
 }
