@@ -127,7 +127,7 @@ namespace Diciela.Tests.EditMode
             // supérieur), la porte sur la façade.
             const float Centimeter = 0.01f;
             var faults = new List<string>();
-            foreach (StructureDefinition structure in ProjectContent.StructuresOf(ProjectContent.LoadSingle<Catalog>()))
+            foreach (StructureDefinition structure in ProjectContent.LoadSingle<Catalog>().AllStructures())
             {
                 if (structure.Model == null)
                 {

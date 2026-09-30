@@ -24,11 +24,8 @@ namespace Diciela.EditorTools
         public static void PrepareAll()
         {
             Catalog catalog = EditorAssets.Load<Catalog>(ContentBuilder.CatalogPath);
-            foreach (StructureFamilyDefinition family in catalog.Families)
-            {
-                foreach (StructureDefinition structure in family.Structures)
-                    Prepare(structure);
-            }
+            foreach (StructureDefinition structure in catalog.AllStructures())
+                Prepare(structure);
             AssetDatabase.SaveAssets();
         }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Diciela.Data;
 
 namespace Diciela.Simulation.Society
@@ -33,14 +34,13 @@ namespace Diciela.Simulation.Society
         /// <summary>Sa statistique globale : la moyenne des sous-statistiques de cette statistique.</summary>
         public float GlobalOf(StatisticDefinition statistic)
         {
+            // Une boucle for : chaque ouvrier la lit à chaque pas de travail, et un foreach sur la liste en lecture seule
+            // créerait un objet à chaque fois.
+            IReadOnlyList<SubStatisticDefinition> subStatistics = statistic.SubStatistics;
             float sum = 0f;
-            int count = 0;
-            foreach (SubStatisticDefinition subStatistic in statistic.SubStatistics)
-            {
-                sum += ValueOf(subStatistic);
-                count++;
-            }
-            return count == 0 ? 0f : sum / count;
+            for (int i = 0; i < subStatistics.Count; i++)
+                sum += ValueOf(subStatistics[i]);
+            return subStatistics.Count == 0 ? 0f : sum / subStatistics.Count;
         }
 
         /// <summary>Sa valeur pour cette sorte de tâche : sa sous-statistique, mêlée de sa statistique globale.</summary>

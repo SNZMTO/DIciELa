@@ -1,15 +1,18 @@
+using Diciela.Data;
 using Diciela.Simulation;
 using Diciela.Simulation.Economy;
 using Diciela.Simulation.Land;
 using Diciela.Simulation.Society;
 using NUnit.Framework;
+using UnityEngine;
 
 namespace Diciela.Tests.EditMode
 {
     /// <summary>
-    /// Le travail interrompu (GDD, section 6 ; décisions 46 et 150), par les ordres du joueur : envoyée dormir ou retirée
-    /// pendant qu'elle porte, la Chimère rend sa charge au tas ; endormie, elle garde son poste, et réveillée, elle
-    /// reprend le travail ; retirée, elle n'a plus de poste.
+    /// Le travail interrompu (GDD, sections 6 et 9 ; décisions 46, 150 et 156), par les ordres du joueur : envoyée dormir,
+    /// retirée, ou couverte par une construction pendant qu'elle porte, la Chimère rend sa charge au tas ; endormie, elle
+    /// garde son poste, et réveillée, elle reprend le travail ; retirée, elle n'a plus de poste ; couverte, elle sort,
+    /// puis reprend le travail.
     /// </summary>
     public sealed class InterruptedWorkTests
     {
@@ -62,6 +65,23 @@ namespace Diciela.Tests.EditMode
 
             Send(new WakeChimeraCommand());
             TestGrids.StepUntil(_world, () => _chimera.Load.Total > 0, 2000, "le travail repris");
+        }
+
+        [Test]
+        public void CoveredSheGivesHerLoadBackThenGoesBackToWork()
+        {
+            for (int i = 0; i < 30; i++)
+                _world.Step();
+            Assert.Greater(_chimera.Load.Total, 0, "Elle porte encore, en chemin.");
+            Vector2 cell = _world.Grid.CellCenter(_world.Grid.CellOf(_chimera.Position));
+            StructureDefinition crate = _town.Keep(TestData.Structure("caisse", 1f, 1f, hasDoor: false));
+
+            Assert.IsNotNull(TestTown.Place(_world, crate, cell.x, cell.y), "La caisse se pose sur elle.");
+
+            Assert.AreEqual(0, _chimera.Load.Total, "Couverte, elle laisse sa tâche : sa charge est rendue.");
+            Assert.AreEqual(50, _pileStock.Total, "Le tas a tout repris.");
+            Assert.IsNotNull(_chimera.Slot, "Elle garde son poste.");
+            TestGrids.StepUntil(_world, () => _chimera.Load.Total > 0, 2000, "le travail repris, une fois sortie");
         }
 
         [Test]

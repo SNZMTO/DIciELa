@@ -19,18 +19,6 @@ namespace Diciela.Tests.EditMode
             return AssetDatabase.LoadAssetAtPath<T>(AssetDatabase.GUIDToAssetPath(guids[0]));
         }
 
-        /// <summary>Les constructions du catalogue : celles de ses familles, puis le tas de départ.</summary>
-        public static List<StructureDefinition> StructuresOf(Catalog catalog)
-        {
-            var structures = new List<StructureDefinition>();
-            foreach (StructureFamilyDefinition family in catalog.Families)
-                structures.AddRange(family.Structures);
-            StructureDefinition pile = StartingPileOf(catalog);
-            if (pile != null)
-                structures.Add(pile);
-            return structures;
-        }
-
         /// <summary>Le tas de départ du catalogue ; null s'il n'en a pas.</summary>
         public static StructureDefinition StartingPileOf(Catalog catalog)
         {
@@ -51,7 +39,7 @@ namespace Diciela.Tests.EditMode
                 foreach (SubStatisticDefinition subStatistic in statistic.SubStatistics)
                     keys.Add(subStatistic.NameKey);
             }
-            foreach (StructureDefinition structure in StructuresOf(catalog))
+            foreach (StructureDefinition structure in catalog.AllStructures())
             {
                 foreach (WorkSlotDefinition slot in structure.WorkSlots)
                 {
