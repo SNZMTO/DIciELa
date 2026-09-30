@@ -1,3 +1,4 @@
+using Diciela.Data;
 using Diciela.Game;
 using Diciela.UI;
 using UnityEditor;
@@ -8,9 +9,9 @@ using UnityEngine.UIElements;
 namespace Diciela.EditorTools
 {
     /// <summary>
-    /// Installe l'interface dans une scène racine : le panneau UI Toolkit (ses réglages et son thème), la barre de
-    /// construction (« Interface ») et l'écran de création (« Création »), chacun avec son document, reliés à la scène du
-    /// démarrage. Réexécutable : ce qui est déjà réglé n'est pas touché.
+    /// Installe l'interface dans une scène racine : le panneau UI Toolkit (ses réglages et son thème) et sa taille à
+    /// l'écran, la barre de construction (« Interface ») et l'écran de création (« Création »), chacun avec son document,
+    /// reliés à la scène du démarrage. Réexécutable : ce qui est déjà réglé n'est pas touché.
     /// </summary>
     internal static class InterfaceBuilder
     {
@@ -22,16 +23,17 @@ namespace Diciela.EditorTools
         private const string InterfaceObjectName = "Interface";
         private const string CreationObjectName = "Création";
 
-        // L'écran de référence : l'interface garde sa taille relative, à mi-chemin entre la largeur et la hauteur.
-        private static readonly Vector2Int ReferenceResolution = new Vector2Int(1920, 1080);
-        private const float WidthOrHeight = 0.5f;
-
         public static void EnsureIn(Scene scene, GameStage stage)
         {
-            PanelSettings panel = PanelIfMissing();
+            PanelSettings panel = Panel();
             BuildBar bar = EditorAssets.FindOrCreate<BuildBar>(scene, InterfaceObjectName);
             Document(bar, panel, BarLayoutPath);
             EditorAssets.AssignIfMissing(stage, "_buildBar", bar);
+
+            InterfaceScale scale = EditorAssets.GetOrAdd<InterfaceScale>(bar.gameObject);
+            EditorAssets.AssignIfMissing(scale, "_panel", panel);
+            EditorAssets.AssignIfMissing(scale, "_settings",
+                EditorAssets.Load<InterfaceSettings>(DataAssetBuilder.InterfaceSettingsPath));
 
             CreationScreen creation = EditorAssets.FindOrCreate<CreationScreen>(scene, CreationObjectName);
             Document(creation, panel, CreationLayoutPath);
@@ -51,20 +53,31 @@ namespace Diciela.EditorTools
             EditorUtility.SetDirty(document);
         }
 
-        private static PanelSettings PanelIfMissing()
+        /// <summary>
+        /// Le panneau, créé s'il manque. Il garde ses pixels (taille constante) : c'est InterfaceScale qui lui donne son
+        /// échelle d'après l'écran (décision 144) ; un panneau réglé autrement y est ramené.
+        /// </summary>
+        private static PanelSettings Panel()
         {
-            PanelSettings existing = AssetDatabase.LoadAssetAtPath<PanelSettings>(PanelPath);
-            if (existing != null)
-                return existing;
-
-            var panel = ScriptableObject.CreateInstance<PanelSettings>();
-            panel.themeStyleSheet = EditorAssets.Load<ThemeStyleSheet>(ThemePath);
-            panel.scaleMode = PanelScaleMode.ScaleWithScreenSize;
-            panel.referenceResolution = ReferenceResolution;
-            panel.screenMatchMode = PanelScreenMatchMode.MatchWidthOrHeight;
-            panel.match = WidthOrHeight;
-            AssetDatabase.CreateAsset(panel, PanelPath);
-            Debug.Log("DICIELA : panneau d'interface créé : " + PanelPath + ".");
+            PanelSettings panel = AssetDatabase.LoadAssetAtPath<PanelSettings>(PanelPath);
+            if (panel == null)
+            {
+                panel = ScriptableObject.CreateInstance<PanelSettings>();
+                panel.themeStyleSheet = EditorAssets.Load<ThemeStyleSheet>(ThemePath);
+                panel.scaleMode = PanelScaleMode.ConstantPixelSize;
+                panel.scale = 1f;
+                AssetDatabase.CreateAsset(panel, PanelPath);
+                Debug.Log("DICIELA : panneau d'interface créé : " + PanelPath + ".");
+                return panel;
+            }
+            if (panel.scaleMode != PanelScaleMode.ConstantPixelSize || !Mathf.Approximately(panel.scale, 1f))
+            {
+                panel.scaleMode = PanelScaleMode.ConstantPixelSize;
+                panel.scale = 1f;
+                EditorUtility.SetDirty(panel);
+                AssetDatabase.SaveAssetIfDirty(panel);
+                Debug.Log("DICIELA : panneau d'interface ramené à la taille constante, que règle InterfaceScale.");
+            }
             return panel;
         }
     }

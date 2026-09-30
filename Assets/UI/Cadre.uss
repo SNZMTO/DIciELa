@@ -1,0 +1,35 @@
+/* Généré par DICIELA/Interface/Générer les images de l'interface : ne pas retoucher. Le cadre de
+   bois (WoodFrame, décision 145) : son ombre, puis sa face en triple résolution, coins fixes, bords
+   et milieu répétés ; son contenu à l'intérieur de la bordure. */
+
+.cadre {
+    padding: 12px;
+}
+
+.cadre-ombre {
+    position: absolute;
+    left: -44px;
+    top: -44px;
+    right: -44px;
+    bottom: -44px;
+    background-image: url("Images/CadreOmbre.png");
+    -unity-slice-left: 72;
+    -unity-slice-top: 72;
+    -unity-slice-right: 72;
+    -unity-slice-bottom: 72;
+}
+
+.cadre-face {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("Images/Cadre.png");
+    -unity-slice-left: 84;
+    -unity-slice-top: 84;
+    -unity-slice-right: 84;
+    -unity-slice-bottom: 84;
+    -unity-slice-scale: 0.333333px;
+    -unity-slice-type: tiled;
+}
