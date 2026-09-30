@@ -34,6 +34,8 @@ namespace Diciela.EditorTools
             EditorAssets.AssignIfMissing(stage, "_dayBoard", day);
             PlaceSheet sheet = EditorAssets.GetOrAdd<PlaceSheet>(bar.gameObject);
             EditorAssets.AssignIfMissing(stage, "_placeSheet", sheet);
+            StockPennants stock = EditorAssets.GetOrAdd<StockPennants>(bar.gameObject);
+            EditorAssets.AssignIfMissing(stage, "_stockPennants", stock);
 
             InterfaceScale scale = EditorAssets.GetOrAdd<InterfaceScale>(bar.gameObject);
             EditorAssets.AssignIfMissing(scale, "_panel", panel);

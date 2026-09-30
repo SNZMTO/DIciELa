@@ -26,14 +26,17 @@ namespace Diciela.UI
         private Label _phase;
         private DayGauge _gauge;
         private DayBoardPresenter _presenter;
+        private bool _tooltipAttached;
 
         private void Awake()
         {
             _document = GetComponent<UIDocument>();
         }
 
-        /// <summary>Montre la journée de cette horloge ; appelé par le démarrage quand la ville s'ouvre.</summary>
-        public void Show(Clock clock, TextTable texts)
+        /// <summary>
+        /// Montre la journée de cette horloge, avec son infobulle ; appelé par le démarrage quand la ville s'ouvre.
+        /// </summary>
+        public void Show(Clock clock, TextTable texts, Tooltips tooltips)
         {
             Hide();
             VisualElement root = _document.rootVisualElement;
@@ -49,6 +52,11 @@ namespace Diciela.UI
             _phase = phase;
             _gauge = gauge;
             _presenter = new DayBoardPresenter(this, clock, texts);
+            if (!_tooltipAttached)
+            {
+                tooltips.Attach(_board, () => _presenter != null ? _presenter.Tooltip() : ("", ""));
+                _tooltipAttached = true;
+            }
             _board.RemoveFromClassList(HiddenClass);
         }
 
