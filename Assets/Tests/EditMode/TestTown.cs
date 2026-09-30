@@ -12,12 +12,14 @@ namespace Diciela.Tests.EditMode
 {
     /// <summary>
     /// Le banc de la ville au travail : les réglages du banc de la Chimère (un pas de 0,1 s, 300 pas par heure de jeu,
-    /// deux mailles par mètre, 1 m libre devant une porte), ou une journée plus courte ; deux statistiques de deux
-    /// sous-statistiques (Bâtisse : construction, terrassement ; Échange : transport, troc) ; le Bois et la Pierre ;
-    /// porter (transport) et bâtir (construction) ; le poste « à tout faire » (porter, puis bâtir) ; un tas de départ de
-    /// 2 × 2 m qui tient 50 marchandises et ouvre ce poste, posé avec 30 Bois et 20 Pierre ; la tente de 3 × 3 m ; une
-    /// cabane de 4 × 4 m qui coûte 10 Bois et 5 Pierre et 2 h de travail. La Chimère commence à 10 partout et porte 5
-    /// marchandises. Ses mondes sont plats, 40 × 40 m ; les fiches qu'il crée sont détruites avec lui.
+    /// deux mailles par mètre, 1 m libre devant une porte), ou une journée plus courte ; trois statistiques de deux
+    /// sous-statistiques (Bâtisse : construction, terrassement ; Échange : transport, troc ; Terre : paysage, coupe) ; le
+    /// Bois et la Pierre ; porter (transport), bâtir (construction) et défricher (paysage) ; le poste « à tout faire »
+    /// (porter, puis bâtir, puis défricher) ; un tas de départ de 2 × 2 m qui tient 100 marchandises et ouvre ce poste,
+    /// posé avec 30 Bois et 20 Pierre ; la tente de 3 × 3 m ; une cabane de 4 × 4 m qui coûte 10 Bois et 5 Pierre et 2 h
+    /// de travail ; un arbre (pied de 1 m, 3 Bois, 30 min) et un rocher (pied de 1,5 m, 2 Pierre, 45 min). La Chimère
+    /// commence à 10 partout et porte 5 marchandises. Ses mondes sont plats, 40 × 40 m, nus ou avec les arbres et
+    /// rochers qu'on leur donne ; les fiches qu'il crée sont détruites avec lui.
     /// </summary>
     internal sealed class TestTown : IDisposable
     {
@@ -35,15 +37,20 @@ namespace Diciela.Tests.EditMode
             var building = Keep(TestData.Statistic("batisse", construction,
                 Keep(TestData.SubStatistic("terrassement"))));
             var trade = Keep(TestData.Statistic("echange", transport, Keep(TestData.SubStatistic("troc"))));
+            SubStatisticDefinition landscape = Keep(TestData.SubStatistic("paysage"));
+            var land = Keep(TestData.Statistic("terre", landscape, Keep(TestData.SubStatistic("coupe"))));
             Carry = Keep(TestData.TaskKind("porter", TaskWork.Carry, transport));
             Build = Keep(TestData.TaskKind("batir", TaskWork.Build, construction));
-            OddJobs = Keep(TestData.WorkSlot("a_tout_faire", Carry, Build));
-            Pile = Keep(TestData.Pile("tas", 2f, 50, OddJobs));
+            Clear = Keep(TestData.TaskKind("defricher", TaskWork.Clear, landscape));
+            OddJobs = Keep(TestData.WorkSlot("a_tout_faire", Carry, Build, Clear));
+            Pile = Keep(TestData.Pile("tas", 2f, 100, OddJobs));
             Tent = Keep(TestData.Home());
             Cabin = Keep(TestData.Structure("cabane", 4f, 4f));
             TestData.Cost(Cabin, 2f, new GoodAmount(Wood, 10), new GoodAmount(Stone, 5));
+            Tree = Keep(TestData.Nature("arbre", 1f, new GoodAmount(Wood, 3), 0.5f));
+            Rock = Keep(TestData.Nature("rocher", 1.5f, new GoodAmount(Stone, 2), 0.75f));
             Opening = Keep(TestData.Opening(Pile, 16f, new GoodAmount(Wood, 30), new GoodAmount(Stone, 20)));
-            Catalog = Keep(TestData.TownCatalog(Opening, new[] { Wood, Stone }, new[] { building, trade }));
+            Catalog = Keep(TestData.TownCatalog(Opening, new[] { Wood, Stone }, new[] { building, trade, land }));
         }
 
         public SimulationSettings Settings { get; }
@@ -51,17 +58,23 @@ namespace Diciela.Tests.EditMode
         public GoodDefinition Stone { get; }
         public TaskKindDefinition Carry { get; }
         public TaskKindDefinition Build { get; }
+        public TaskKindDefinition Clear { get; }
         public WorkSlotDefinition OddJobs { get; }
         public StructureDefinition Pile { get; }
         public StructureDefinition Tent { get; }
         public StructureDefinition Cabin { get; }
+        public NatureDefinition Tree { get; }
+        public NatureDefinition Rock { get; }
         public OpeningDefinition Opening { get; }
         public Catalog Catalog { get; }
 
-        /// <summary>Un monde plat de 40 m où la Chimère vient de naître au centre, sans rien de posé.</summary>
-        public World World(Catalog catalog = null)
+        /// <summary>
+        /// Un monde plat de 40 m où la Chimère vient de naître au centre, sans rien de posé ; avec ces arbres et rochers,
+        /// s'il y en a.
+        /// </summary>
+        public World World(Catalog catalog = null, IReadOnlyList<NatureSpot> nature = null)
         {
-            var world = new World(Settings, TestData.FlatMap(40f), catalog ?? Catalog);
+            var world = new World(Settings, TestData.FlatMap(40f, null, nature), catalog ?? Catalog);
             world.Submit(new CreateChimeraCommand(_chimera.Kind, _chimera.Appearance));
             world.Step();
             return world;
@@ -71,9 +84,9 @@ namespace Diciela.Tests.EditMode
         /// Un monde où la tente est plantée en (20 ; 14), porte au nord (le tas se pose donc de lui-même), et où la
         /// Chimère est mise au tas, par les ordres du joueur.
         /// </summary>
-        public World WorkingWorld()
+        public World WorkingWorld(IReadOnlyList<NatureSpot> nature = null)
         {
-            World world = World();
+            World world = World(null, nature);
             Place(world, Tent, 20f, 14f);
             Structure pile = PileOf(world);
             world.Submit(new AssignVillagerCommand(world.Villagers.Chimera.Id, pile.Id));

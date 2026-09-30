@@ -28,6 +28,7 @@ namespace Diciela.Simulation
             Clock = new Clock(settings);
             Map = map;
             Grid = new NavGrid(map.Relief, new GridMetrics(settings.CellsPerMeter));
+            Nature = new Nature(Grid, map.Nature);
             Islands = new Islands(Grid);
             PathFinder = new PathFinder(Grid, Islands);
             Structures = new Structures(Grid, map.Relief, settings);
@@ -36,8 +37,9 @@ namespace Diciela.Simulation
             Warehouses = new Warehouses(Ledger);
             ConstructionSites = new ConstructionSites(Structures, Warehouses, Ledger);
             var offers = new TaskOffers(Warehouses, ConstructionSites, Islands, surroundings, settings);
+            Clearings = new ClearingOffers(Nature, Warehouses, Islands, surroundings);
             WorkSlots = new WorkSlots();
-            Villagers = new Villagers(Grid, Islands, PathFinder, Clock, surroundings, offers, WorkSlots,
+            Villagers = new Villagers(Grid, Islands, PathFinder, Clock, surroundings, offers, Clearings, WorkSlots,
                 new StatisticTable(catalog.Statistics, settings));
             Placing = new Placing(this, new Opening(catalog.Opening));
         }
@@ -60,6 +62,12 @@ namespace Diciela.Simulation
         public PlacementRules PlacementRules => Structures.Rules;
 
         public Structures Structures { get; }
+
+        /// <summary>Les arbres et les rochers de la carte : ceux qui restent, ceux que le joueur a marqués.</summary>
+        public Nature Nature { get; }
+
+        /// <summary>Les arbres et les rochers à retirer, comme tâches à prendre, et le travail déjà fait sur eux.</summary>
+        public ClearingOffers Clearings { get; }
 
         /// <summary>Le bilan des marchandises : ce qui est né et ce qui a disparu, par cause.</summary>
         public GoodsLedger Ledger { get; }
@@ -116,6 +124,7 @@ namespace Diciela.Simulation
         private void DeliverEvents()
         {
             Structures.DeliverEvents();
+            Nature.DeliverEvents();
             Warehouses.DeliverEvents();
             ConstructionSites.DeliverEvents();
             WorkSlots.DeliverEvents();

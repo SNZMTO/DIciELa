@@ -10,6 +10,9 @@ namespace Diciela.Simulation.Economy
         StartingPile = 0,
 
         /// <summary>Les matériaux d'un chantier fini, pris dans la construction.</summary>
-        Construction = 1
+        Construction = 1,
+
+        /// <summary>Ce que rend un arbre ou un rocher retiré (GDD, section 2).</summary>
+        Clearing = 2
     }
 }

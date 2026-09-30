@@ -68,6 +68,25 @@ namespace Diciela.Tests.EditMode
             return task;
         }
 
+        /// <summary>
+        /// Une sorte d'arbre ou de rocher dont le pied prend size mètres de côté, qui rend ceci une fois retirée et demande
+        /// tant d'heures de travail à un débutant.
+        /// </summary>
+        public static NatureDefinition Nature(string id, float size, GoodAmount yield, float workHours)
+        {
+            NatureDefinition nature = ScriptableObject.CreateInstance<NatureDefinition>();
+            var serialized = new SerializedObject(nature);
+            Property(serialized, "_id").stringValue = id;
+            Property(serialized, "_widthMeters").floatValue = size;
+            Property(serialized, "_depthMeters").floatValue = size;
+            SerializedProperty amount = Property(serialized, "_yield");
+            amount.FindPropertyRelative("_good").objectReferenceValue = yield.Good;
+            amount.FindPropertyRelative("_amount").intValue = yield.Amount;
+            Property(serialized, "_workHours").floatValue = workHours;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            return nature;
+        }
+
         /// <summary>Un poste dont les tâches se choisissent dans cet ordre.</summary>
         public static WorkSlotDefinition WorkSlot(string id, params TaskKindDefinition[] tasks)
         {

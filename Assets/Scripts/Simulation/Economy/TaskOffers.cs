@@ -16,10 +16,8 @@ namespace Diciela.Simulation.Economy
     {
         private readonly Warehouses _warehouses;
         private readonly ConstructionSites _sites;
-        private readonly Islands _islands;
-        private readonly Surroundings _surroundings;
+        private readonly Reach _reach;
         private readonly int _maxBuilders;
-        private readonly List<Vector2Int> _cells = new List<Vector2Int>();
 
         public TaskOffers(Warehouses warehouses, ConstructionSites sites, Islands islands, Surroundings surroundings,
             SimulationSettings settings)
@@ -37,8 +35,7 @@ namespace Diciela.Simulation.Economy
 
             _warehouses = warehouses;
             _sites = sites;
-            _islands = islands;
-            _surroundings = surroundings;
+            _reach = new Reach(islands, surroundings);
             _maxBuilders = settings.MaxBuildersPerSite;
         }
 
@@ -63,7 +60,7 @@ namespace Diciela.Simulation.Economy
                         continue;
                     if (!checkedReach)
                     {
-                        reachable = IsReachable(site.Structure, island);
+                        reachable = _reach.IsReachable(site.Structure, island);
                         checkedReach = true;
                     }
                     if (!reachable)
@@ -93,7 +90,7 @@ namespace Diciela.Simulation.Economy
             for (int i = 0; i < queue.Count; i++)
             {
                 ConstructionSite site = queue[i];
-                if (!site.IsSupplied || site.Builders >= _maxBuilders || !IsReachable(site.Structure, island))
+                if (!site.IsSupplied || site.Builders >= _maxBuilders || !_reach.IsReachable(site.Structure, island))
                     continue;
                 site.AddBuilder();
                 shift = new BuildShift(site);
@@ -163,7 +160,7 @@ namespace Diciela.Simulation.Economy
                     continue;
                 Structure warehouse = _warehouses.StructureAt(i);
                 float distance = Vector2.Distance(warehouse.Placement.Center, from);
-                if (distance < best && IsReachable(warehouse, island))
+                if (distance < best && _reach.IsReachable(warehouse, island))
                 {
                     best = distance;
                     nearest = warehouse;
@@ -172,18 +169,5 @@ namespace Diciela.Simulation.Economy
             return nearest;
         }
 
-        /// <summary>Vrai si l'un des abords de cette construction est sur cet îlot.</summary>
-        private bool IsReachable(Structure structure, int island)
-        {
-            if (island == 0)
-                return false;
-            _surroundings.Collect(structure, _cells);
-            for (int i = 0; i < _cells.Count; i++)
-            {
-                if (_islands.IslandOf(_cells[i]) == island)
-                    return true;
-            }
-            return false;
-        }
     }
 }

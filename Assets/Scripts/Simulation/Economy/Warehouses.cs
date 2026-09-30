@@ -8,9 +8,9 @@ namespace Diciela.Simulation.Economy
     /// <summary>
     /// Ce qui tient les marchandises de la ville (GDD, section 8) : le tas de départ, puis les entrepôts ; toute
     /// construction bâtie dont la fiche dit qu'elle en tient. Le stock de la ville est ce qu'ils tiennent, un chiffre par
-    /// marchandise. Seule fonction qui fait naître des marchandises (<see cref="Create"/>), et seule qui rend à la ville
-    /// ce qu'un porteur n'a pas livré (<see cref="ReturnToTown"/>). Les événements d'un pas attendent la fin de leur
-    /// couche (ARCHITECTURE, section 5).
+    /// marchandise. Seule fonction qui fait naître des marchandises (<c>Create</c>, dans un entrepôt ou dans la charge
+    /// d'un habitant), et seule qui rend à la ville ce qu'un porteur n'a pas livré (<see cref="ReturnToTown"/>). Les
+    /// événements d'un pas attendent la fin de leur couche (ARCHITECTURE, section 5).
     /// </summary>
     public sealed class Warehouses
     {
@@ -82,6 +82,36 @@ namespace Diciela.Simulation.Economy
             Changed(warehouse);
         }
 
+        /// <summary>
+        /// Fait naître ces marchandises dans la charge d'un habitant, pour cette cause : ce que rend un arbre abattu.
+        /// </summary>
+        internal void Create(Inventory load, GoodDefinition good, int amount, GoodsCause cause)
+        {
+            load.Add(good, amount);
+            _ledger.Created(good, amount, cause);
+        }
+
+        /// <summary>Retient dans cet entrepôt la place de ce qu'un habitant y apportera.</summary>
+        internal void ReserveSpace(Structure warehouse, int amount)
+        {
+            Required(warehouse).ReserveSpace(amount);
+        }
+
+        internal void ReleaseSpace(Structure warehouse, int amount)
+        {
+            Required(warehouse).ReleaseSpace(amount);
+        }
+
+        /// <summary>L'habitant range dans cet entrepôt ce qu'il porte, à la place qu'on lui avait retenue.</summary>
+        internal void Store(Structure warehouse, Inventory load, GoodDefinition good, int amount)
+        {
+            Inventory stock = Required(warehouse);
+            stock.ReleaseSpace(amount);
+            load.Remove(good, amount, false);
+            stock.Add(good, amount);
+            Changed(warehouse);
+        }
+
         /// <summary>Promet ces marchandises à un porteur : elles restent là, personne d'autre ne les prend.</summary>
         internal void Reserve(Structure warehouse, GoodDefinition good, int amount)
         {
@@ -103,8 +133,9 @@ namespace Diciela.Simulation.Economy
 
         /// <summary>
         /// Rend à la ville tout ce que tient cette charge : chaque marchandise va dans les entrepôts qui ont la place,
-        /// dans l'ordre où ils ont servi. Tant que seul le tas de départ fait naître des marchandises, la place où elles
-        /// étaient reste libre ; une ville sans place pour elles est une erreur.
+        /// dans l'ordre où ils ont servi. Ce qui revient avait sa place : prise dans un entrepôt, la place d'où elle vient
+        /// est restée libre ; née d'un arbre abattu, sa place retenue est rendue juste avant. Une ville sans place pour
+        /// elles est une erreur.
         /// </summary>
         internal void ReturnToTown(Inventory load)
         {

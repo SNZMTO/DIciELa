@@ -115,7 +115,8 @@ sauvegardé.
 |---|---|---|
 | l'heure, le jour | le temps | la phase |
 | la carte peinte | reçue au lancement ; seule son empreinte est sauvegardée | le relief creusé, l'eau |
-| arbres et rochers retirés ; champ sauvage : désigné, récolté, minuterie | le terrain | — |
+| arbres et rochers : marqués (dans l'ordre des marques), retirés ; champ sauvage : désigné, récolté, minuterie | le terrain | le maillage |
+| le travail déjà fait sur un arbre ou un rocher marqué ; qui l'a pris | l'économie | — |
 | tracés et plantations : forme, sorte, état (en chantier, bâti) | le terrain | les coûts du maillage ; les champs, leur surface, leurs postes |
 | une construction : sorte, place, angle, niveau, état (fantôme, bâtie, en déplacement avec sa place visée, rangée) | le terrain | le maillage et ses îlots ; la réserve ; le logis de la Chimère (la construction bâtie que sa fiche dit être son logis) |
 | un chantier : rang dans la file, livraisons déposées, avancement | l'économie | — |
@@ -195,8 +196,11 @@ sauvegardé.
   disponible ; il garde son poste.
 - La journée d'un habitant (travail, soirée, nuit) est une petite machine à états au-dessus de ses tâches : son travail
   (`Job` : le poste tenu, le choix de la tâche dans l'ordre du poste, la flânerie près du poste) et sa tâche en cours
-  (`Chore` : ses étapes et leurs issues d'échec). Ce qu'une tâche réserve vit dans l'économie (`Delivery`,
-  `BuildShift`) ; la sorte de tâche dit, par une valeur fixe de sa fiche, quel geste le code joue (`TaskWork`).
+  (`Chore` : marcher jusqu'au but de son geste, y faire ce qu'il dit, travailler sur place ; chaque marche a son issue
+  d'échec). La sorte de tâche dit, par une valeur fixe de sa fiche, quel geste le code joue (`TaskWork`) ; chaque geste
+  (`Gesture` : porter, bâtir, défricher) est le seul à parler à l'économie. Ce qu'une tâche réserve vit dans
+  l'économie (`Delivery`, `BuildShift`, `Clearing`), jusqu'à la place retenue dans un entrepôt pour ce qu'on y
+  apportera.
 - La cadence d'un lieu est la somme de ce qu'apportent les présents. Qui est présent se déduit des tâches en cours ; le
   plafond d'ouvriers d'un chantier et l'effet d'un maître lisent la même donnée.
 - Les compteurs restent chez leur source : l'économie compte la production par marchandise ; la société lève
@@ -284,6 +288,8 @@ code.
 | entrepôts (ce qui tient les marchandises de la ville) | `Warehouses` | poser (l'opération du monde) | `Placing` | travail ; tâche en cours | `Job` ; `Chore` |
 | fiche (d'un lieu) | `PlaceSheet` | Échap ; ce qu'il referme | `EscapeControls` ; `IEscapable` | là où est le HUD | `HudArea` |
 | statistique, sous-statistique | `StatisticDefinition`, `SubStatisticDefinition` | table des statistiques ; celles d'un habitant | `StatisticTable` ; `VillagerStatistics` | ce que consulte un habitant | `VillagerServices` |
+| arbre ou rocher (de la carte) ; sa sorte ; ceux de la carte | `NatureItem` ; `NatureDefinition` ; `Nature` | marquer, démarquer (à retirer) ; défricher | `Mark`, `Unmark` ; `Clear`, `Clearing` | geste (d'une sorte de tâche) ; but d'une tâche | `Gesture` ; `ChoreGoal` |
+| place retenue (dans un stock) | `SpaceReserved` | ce qu'on peut rejoindre à pied | `Reach` | anneau carré (de mailles) | `SquareRing` |
 
 ## 10. La carte, les scènes et la sauvegarde
 

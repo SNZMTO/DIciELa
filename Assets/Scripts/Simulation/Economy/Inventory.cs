@@ -7,7 +7,8 @@ namespace Diciela.Simulation.Economy
     /// <summary>
     /// Un stock (ARCHITECTURE, section 3) : ce que tient un entrepôt, un tas au sol, la charge d'un porteur. Son contenu,
     /// une ligne par marchandise dans l'ordre où elle est entrée, et sa place. Il garde aussi ses réservations, jamais
-    /// sauvegardées : ce qui est promis à un porteur n'est plus disponible pour un autre (ARCHITECTURE, section 7).
+    /// sauvegardées : ce qui est promis à un porteur n'est plus disponible pour un autre, et la place retenue pour ce
+    /// qu'on lui apporte n'est plus libre pour autre chose (ARCHITECTURE, section 7).
     /// </summary>
     public sealed class Inventory
     {
@@ -29,8 +30,11 @@ namespace Diciela.Simulation.Economy
         /// <summary>Le nombre de marchandises qu'il tient.</summary>
         public int Total { get; private set; }
 
-        /// <summary>La place qui reste.</summary>
-        public int FreeSpace => Capacity - Total;
+        /// <summary>La place retenue pour ce qu'on lui apporte : elle n'est plus libre.</summary>
+        public int SpaceReserved { get; private set; }
+
+        /// <summary>La place qui reste, sans celle qui est retenue.</summary>
+        public int FreeSpace => Capacity - Total - SpaceReserved;
 
         /// <summary>Le nombre de lignes : les marchandises qu'il a tenues, dans l'ordre où elles sont entrées.</summary>
         public int LineCount => _goods.Count;
@@ -96,6 +100,24 @@ namespace Diciela.Simulation.Economy
             if (AvailableOf(good) < amount)
                 throw new InvalidOperationException("Le stock n'a pas " + amount + " de cette marchandise à promettre.");
             _reserved[LineOf(good)] += amount;
+        }
+
+        /// <summary>Retient de la place pour ce qu'on lui apportera : personne d'autre ne la prend.</summary>
+        internal void ReserveSpace(int amount)
+        {
+            CheckAmount(amount);
+            if (amount > FreeSpace)
+                throw new InvalidOperationException("Le stock n'a pas la place de retenir " + amount + " de plus.");
+            SpaceReserved += amount;
+        }
+
+        /// <summary>Rend de la place retenue : elle redevient libre.</summary>
+        internal void ReleaseSpace(int amount)
+        {
+            CheckAmount(amount);
+            if (amount > SpaceReserved)
+                throw new InvalidOperationException("Le stock n'a pas retenu la place de " + amount + ".");
+            SpaceReserved -= amount;
         }
 
         /// <summary>Rend une promesse : les marchandises redeviennent disponibles.</summary>

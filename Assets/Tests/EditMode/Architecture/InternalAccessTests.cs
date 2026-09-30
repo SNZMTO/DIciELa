@@ -31,6 +31,13 @@ namespace Diciela.Tests.EditMode.Architecture
             (typeof(Clock), "Advance"),
             (typeof(NavGrid), "SetOccupant"),
             (typeof(NavGrid), "AddDoorway"),
+            (typeof(NavGrid), "ReleaseOccupant"),
+            (typeof(Nature), "Mark"),
+            (typeof(Nature), "Unmark"),
+            (typeof(Nature), "Remove"),
+            (typeof(Nature), "DeliverEvents"),
+            (typeof(NatureItem), "SetMarked"),
+            (typeof(NatureItem), "BecomeRemoved"),
             (typeof(Structures), "Place"),
             (typeof(Structures), "Finish"),
             (typeof(Structure), "BecomeBuilt"),
@@ -48,6 +55,8 @@ namespace Diciela.Tests.EditMode.Architecture
             (typeof(Inventory), "Remove"),
             (typeof(Inventory), "Reserve"),
             (typeof(Inventory), "Release"),
+            (typeof(Inventory), "ReserveSpace"),
+            (typeof(Inventory), "ReleaseSpace"),
             (typeof(GoodsLedger), "Created"),
             (typeof(GoodsLedger), "Destroyed"),
             (typeof(Warehouses), "Track"),
@@ -56,6 +65,9 @@ namespace Diciela.Tests.EditMode.Architecture
             (typeof(Warehouses), "Release"),
             (typeof(Warehouses), "Take"),
             (typeof(Warehouses), "ReturnToTown"),
+            (typeof(Warehouses), "ReserveSpace"),
+            (typeof(Warehouses), "ReleaseSpace"),
+            (typeof(Warehouses), "Store"),
             (typeof(Warehouses), "DeliverEvents"),
             (typeof(ConstructionSite), "Promise"),
             (typeof(ConstructionSite), "Unpromise"),
@@ -78,6 +90,12 @@ namespace Diciela.Tests.EditMode.Architecture
             (typeof(TaskOffers), "Cancel"),
             (typeof(TaskOffers), "Work"),
             (typeof(TaskOffers), "Leave"),
+            (typeof(Clearing), "MarkFelled"),
+            (typeof(Clearing), "MarkOver"),
+            (typeof(ClearingOffers), "TryTakeClearing"),
+            (typeof(ClearingOffers), "Work"),
+            (typeof(ClearingOffers), "Store"),
+            (typeof(ClearingOffers), "Cancel"),
             (typeof(WorkSlot), "SetHolder"),
             (typeof(WorkSlots), "Track"),
             (typeof(WorkSlots), "Assign"),
@@ -93,12 +111,19 @@ namespace Diciela.Tests.EditMode.Architecture
             var faults = new List<string>();
             foreach ((Type owner, string name) in Mutators)
             {
-                MethodInfo method = owner.GetMethod(name,
-                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                if (method == null)
+                // Toutes les formes d'une fonction : une seconde forme publique ouvrirait la même porte.
+                int found = 0;
+                foreach (MethodInfo method in owner.GetMethods(
+                             BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+                {
+                    if (method.Name != name)
+                        continue;
+                    found++;
+                    if (!method.IsAssembly)
+                        faults.Add(owner.Name + "." + name + " doit rester internal : au-dessus, on envoie des ordres.");
+                }
+                if (found == 0)
                     faults.Add(owner.Name + "." + name + " est introuvable.");
-                else if (!method.IsAssembly)
-                    faults.Add(owner.Name + "." + name + " doit rester internal : au-dessus, on envoie des ordres.");
             }
 
             Assert.IsEmpty(faults, string.Join("\n", faults));

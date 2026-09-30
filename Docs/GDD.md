@@ -39,8 +39,15 @@
 - **Règle.** En ville, rien ne limite la pose, sauf l'eau, les pentes trop raides, et les arbres et rochers de la carte
   tant qu'on ne les a pas retirés.
 - **Défaut.** Pente maximale pour poser un bâtiment : 15°.
-- **Règle.** Les paysagistes retirent les arbres et les rochers de la carte : un arbre rend un peu de Bois, un rocher un
-  peu de Pierre. Au début, la Chimère s'en charge, à son poste « à tout faire ».
+- **Règle.** Le développeur peint les arbres et les rochers sur le Terrain de la carte, au pinceau à arbres, avec les
+  modèles du pack ; chaque modèle est rangé dans une sorte, arbre ou rocher. Debout, un arbre ou un rocher prend sa
+  place au sol : on ne le traverse pas, rien ne se pose dessus.
+- **Règle.** Le joueur marque les arbres et les rochers à retirer, et peut les démarquer ; ils se retirent dans l'ordre
+  où il les a marqués. Les paysagistes les retirent ; au début, la Chimère, à son poste « à tout faire ». Le défricheur
+  y travaille sur place, puis porte ce qu'il rend à l'entrepôt le plus proche qui a la place, retenue dès qu'il prend
+  l'arbre : sans place nulle part, rien ne se retire. Le travail fait sur un arbre se garde si le défricheur s'en va.
+- **Défaut.** Un arbre prend 1 m au sol, rend 3 Bois et demande 30 min de travail à un débutant ; un rocher prend
+  1,5 m, rend 2 Pierre et demande 45 min.
 - **Règle.** Les ressources de base (bois, pierre, terre à cultiver) ne dépendent d'aucun gisement : un bûcheron ou une
   carrière produit où qu'on le pose.
 - **Règle.** Chaque monde tire au hasard ce qui pousse sur ses champs sauvages : il garantit les plantes des premières
@@ -228,11 +235,11 @@
 - **Règle.** Le joueur y met la Chimère en touchant le tas : sa fiche s'ouvre sur le côté, avec « Y mettre la
   Chimère » ou « Retirer la Chimère ». Tant que la carte n'a ni arbres ni champs sauvages à traiter, le poste ne
   fait que porter et bâtir.
-- **Défaut.** Le tas de départ fait 2 × 2 m et tient 50 marchandises : 30 Bois et 20 Pierre. La Place, la cabane et
-  les premiers bâtiments ne demandent que du Bois et de la Pierre ; le stock de départ suffit à la Place et à deux
-  cabanes. Une cabane coûte 10 Bois et 5 Pierre et demande 2 h de travail à un débutant ; à pied, on porte 5
-  marchandises par voyage. Si sa place est prise, le tas se pose à la place libre la plus proche, à 16 m au plus ;
-  au-delà, il ne se pose pas.
+- **Défaut.** Le tas de départ fait 2 × 2 m et tient 100 marchandises : 30 Bois et 20 Pierre au départ, et la place
+  de ce que rendent les premiers arbres et rochers. La Place, la cabane et les premiers bâtiments ne demandent que du
+  Bois et de la Pierre ; le stock de départ suffit à la Place et à deux cabanes. Une cabane coûte 10 Bois et 5 Pierre
+  et demande 2 h de travail à un débutant ; à pied, on porte 5 marchandises par voyage. Si sa place est prise, le tas
+  se pose à la place libre la plus proche, à 16 m au plus ; au-delà, il ne se pose pas.
 - **Règle.** Les premiers habitants arrivent vite, un par un, à mesure que les lits le permettent. Chacun est fort dans
   une discipline, apporte l'idée de son lieu de travail et le bâtit avec la Chimère, avant même la loge. Ils restent en
   ville comme habitants ordinaires ; ce ne sont pas des maîtres.
@@ -356,8 +363,10 @@
   son trajet coupé en cherche un autre ; qui se trouve dessous en sort à pied, tout droit, par le sol libre qui la
   borde, jamais celui qu'une autre construction cache : du côté où il est le plus vaste (jamais une poche qu'elle vient
   de fermer), au plus près.
-- **À toi.** Retirer un arbre ou en planter un passe-t-il par la file des chantiers ? Ma reco : non, ce sont des tâches
-  des paysagistes, dans l'ordre où le joueur les a désignées.
+- **Règle.** Retirer un arbre ou un rocher ne passe pas par la file des chantiers : c'est une tâche des défricheurs,
+  dans l'ordre où le joueur les a marqués (voir 2).
+- **À toi.** Planter un arbre passe-t-il par la file des chantiers ? Ma reco : non, c'est une tâche des paysagistes,
+  dans l'ordre où le joueur les a posés.
 - **Règle.** Ranger ou déplacer un bâtiment est un tout petit chantier : il se déconstruit en quelques secondes et se
   reconstruit de même, sans nouveaux matériaux. Pendant un déplacement, ses travailleurs gardent leur poste et
   attendent.

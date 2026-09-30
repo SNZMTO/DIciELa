@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Diciela.Data;
 using Diciela.Simulation.Land;
 using UnityEditor;
@@ -64,9 +65,10 @@ namespace Diciela.Tests.EditMode
         /// Une carte plate de size mètres de côté (10 par défaut), à 0 m de hauteur ; son point d'arrivée, s'il est
         /// donné, sinon le centre.
         /// </summary>
-        public static MapDescription FlatMap(float size = 10f, Vector2? arrival = null)
+        public static MapDescription FlatMap(float size = 10f, Vector2? arrival = null,
+            IReadOnlyList<NatureSpot> nature = null)
         {
-            return new MapDescription(new Relief(size, size, 2, 2, new float[4]), arrival);
+            return new MapDescription(new Relief(size, size, 2, 2, new float[4]), arrival, nature);
         }
 
         /// <summary>
