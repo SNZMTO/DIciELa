@@ -18,8 +18,8 @@ namespace Diciela.UI
         /// <summary>Levé quand le joueur valide son personnage.</summary>
         event Action Confirmed;
 
-        /// <summary>Montre le titre, le bouton qui valide, les flèches et les lignes, par leurs noms.</summary>
-        void ShowRows(string title, string confirm, string previous, string next, IReadOnlyList<string> labels);
+        /// <summary>Montre le titre, le bouton qui valide et les lignes, par leurs noms.</summary>
+        void ShowRows(string title, string confirm, IReadOnlyList<string> labels);
 
         /// <summary>Écrit la pièce et la couleur d'une ligne ; une couleur vide cache ses flèches.</summary>
         void ShowChoice(int row, string choice, string color);

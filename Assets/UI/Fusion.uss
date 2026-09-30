@@ -32,6 +32,11 @@
     color: var(--encre);
 }
 
+/* Un bloc caché (la barre avant la ville, la raison sans refus). */
+.bloc-cache {
+    display: none;
+}
+
 /* Les textes. Chaque graisse est son fichier : le style reste normal, sinon Unity épaissit par-dessus. */
 
 .t1, .t2, .t3 {

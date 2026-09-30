@@ -478,6 +478,9 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   (`InterfaceIconBuilder`). `PanelSettings.scale` se change à chaud ; en Play dans l'éditeur, c'est l'asset qui
   change, à lui rendre à la sortie. Une variable de style n'est pas sûrement héritée : une face lit les siennes sur
   ses propres classes. Pas de `line-height` en USS.
+- **Une feuille USS importée avant l'asset qu'elle cite** (une icône pas encore générée) affiche le triangle jaune
+  d'Unity, et l'éditeur garde cette image invalide en mémoire jusqu'au prochain rechargement du domaine, même après
+  avoir réimporté la feuille : générer les images avant d'écrire la feuille, sinon recompiler avant de juger.
 - **Un filtre USS sur un grand bloc se rend en basse résolution** : une ombre portée (`filter: drop-shadow(…)`) sur
   un panneau de 416 × 500 rendait flous, en 4K, son texte et ses boutons. Aucun filtre sur ce qui contient du texte :
   une ombre dure se dessine, une ombre floue se génère en image.

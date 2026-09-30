@@ -6,10 +6,6 @@
     flex-grow: 1;
 }
 
-.bloc-cache {
-    display: none;
-}
-
 /* La journée, en haut à gauche. */
 
 .journee {

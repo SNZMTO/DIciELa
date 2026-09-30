@@ -87,6 +87,9 @@ namespace Diciela.EditorTools
                 F("encre", 13f, 9f, 11f, 7f, 2f, 16f, 4f, 18f), F("encre", 11f, 2f, 18f, 9f, 15f, 12f, 8f, 5f),
                 Faded("#FBF3E4", 0.45f, 11f, 3f, 16f, 8f, 15f, 9f, 10f, 4f)
             });
+            // Les flèches d'un choix : deux chevrons à l'encre.
+            yield return new Icon("precedent", 20f, new[] { F("encre", 12.5f, 3.5f, 15f, 6f, 11f, 10f, 15f, 14f, 12.5f, 16.5f, 6f, 10f) });
+            yield return new Icon("suivant", 20f, new[] { F("encre", 7.5f, 3.5f, 14f, 10f, 7.5f, 16.5f, 5f, 14f, 9f, 10f, 5f, 6f) });
             yield return new Icon("croix", 36f, new[]
             {
                 F("encre", 10f, 12.5f, 12.5f, 10f, 26f, 23.5f, 23.5f, 26f),
