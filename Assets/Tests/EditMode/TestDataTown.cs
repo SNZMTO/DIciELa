@@ -104,11 +104,13 @@ namespace Diciela.Tests.EditMode
             serialized.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        public static OpeningDefinition Opening(StructureDefinition pile, params GoodAmount[] goods)
+        /// <summary>Le déroulé du départ : ce tas, ce contenu ; le tas se cherche une place dans ce rayon, en mètres.</summary>
+        public static OpeningDefinition Opening(StructureDefinition pile, float searchMeters, params GoodAmount[] goods)
         {
             OpeningDefinition opening = ScriptableObject.CreateInstance<OpeningDefinition>();
             var serialized = new SerializedObject(opening);
             Property(serialized, "_startingPile").objectReferenceValue = pile;
+            Property(serialized, "_pileSearchMeters").floatValue = searchMeters;
             FillAmounts(Property(serialized, "_startingGoods"), goods);
             serialized.ApplyModifiedPropertiesWithoutUndo();
             return opening;

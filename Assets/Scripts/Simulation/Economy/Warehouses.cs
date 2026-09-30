@@ -27,7 +27,7 @@ namespace Diciela.Simulation.Economy
             _ledger = ledger;
         }
 
-        /// <summary>Levé quand ce que tient un entrepôt change, une fois par pas au plus.</summary>
+        /// <summary>Levé quand un entrepôt s'ouvre, ou que ce qu'il tient change ; une fois par pas au plus.</summary>
         public event Action<Structure> StockChanged;
 
         /// <summary>Le nombre d'entrepôts, dans l'ordre où ils ont servi.</summary>
@@ -70,6 +70,7 @@ namespace Diciela.Simulation.Economy
                 return;
             _structures.Add(structure);
             _stocks.Add(new Inventory(structure.Definition.StorageCapacity));
+            Changed(structure);
         }
 
         /// <summary>Fait naître ces marchandises dans cet entrepôt, pour cette cause.</summary>

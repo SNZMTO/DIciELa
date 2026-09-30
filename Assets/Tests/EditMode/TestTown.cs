@@ -42,7 +42,7 @@ namespace Diciela.Tests.EditMode
             Tent = Keep(TestData.Home());
             Cabin = Keep(TestData.Structure("cabane", 4f, 4f));
             TestData.Cost(Cabin, 2f, new GoodAmount(Wood, 10), new GoodAmount(Stone, 5));
-            Opening = Keep(TestData.Opening(Pile, new GoodAmount(Wood, 30), new GoodAmount(Stone, 20)));
+            Opening = Keep(TestData.Opening(Pile, 16f, new GoodAmount(Wood, 30), new GoodAmount(Stone, 20)));
             Catalog = Keep(TestData.TownCatalog(Opening, new[] { Wood, Stone }, new[] { building, trade }));
         }
 

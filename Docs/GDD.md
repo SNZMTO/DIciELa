@@ -231,7 +231,8 @@
 - **Défaut.** Le tas de départ fait 2 × 2 m et tient 50 marchandises : 30 Bois et 20 Pierre. La Place, la cabane et
   les premiers bâtiments ne demandent que du Bois et de la Pierre ; le stock de départ suffit à la Place et à deux
   cabanes. Une cabane coûte 10 Bois et 5 Pierre et demande 2 h de travail à un débutant ; à pied, on porte 5
-  marchandises par voyage.
+  marchandises par voyage. Si sa place est prise, le tas se pose au plus près, à 16 m au plus ; au-delà, il ne se
+  pose pas.
 - **Règle.** Les premiers habitants arrivent vite, un par un, à mesure que les lits le permettent. Chacun est fort dans
   une discipline, apporte l'idée de son lieu de travail et le bâtit avec la Chimère, avant même la loge. Ils restent en
   ville comme habitants ordinaires ; ce ne sont pas des maîtres.
@@ -336,9 +337,10 @@
 - **Règle.** La file des chantiers est visible et le joueur en change l'ordre. Un chantier qui attend ses matériaux
   laisse passer les suivants. Annuler rend au stock les matériaux déjà livrés.
 - **Défaut.** Trois ouvriers au plus sur un chantier ; les chantiers se servent dans l'ordre de la file.
-- **Règle.** On ne bâtit un chantier qu'une fois tous ses matériaux livrés. Un porteur ne porte qu'une marchandise par
-  voyage ; il la prend au stock le plus proche. Quand le chantier est fini, ses matériaux sont pris dans la
-  construction.
+- **Règle.** On ne bâtit un chantier qu'une fois tous ses matériaux livrés, et seulement à ses abords : un ouvrier
+  poussé plus loin (une construction posée sur lui) y retourne avant de reprendre. Un porteur ne porte qu'une
+  marchandise par voyage ; il la prend au stock le plus proche. Quand le chantier est fini, ses matériaux sont pris
+  dans la construction.
 - **Règle.** Pose libre : aucune case pour le joueur, on parle en mètres. La porte d'un bâtiment reste dégagée : rien ne
   se pose devant. Un bâtiment qu'on ne peut plus atteindre le montre.
 - **Règle.** Rien ne se chevauche, même de quelques centimètres, et on ne se glisse pas entre deux constructions plus
