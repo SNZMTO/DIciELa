@@ -82,7 +82,7 @@ namespace Diciela.Tests.EditMode
             keys.AddRange(new[]
             {
                 TextKeys.CreationTitle, TextKeys.CreationHead, TextKeys.CreationBody, TextKeys.CreationNone,
-                TextKeys.CreationPrevious, TextKeys.CreationNext, TextKeys.CreationConfirm, TextKeys.DayNumber
+                TextKeys.CreationConfirm, TextKeys.DayNumber
             });
             foreach (DayPhase phase in Enum.GetValues(typeof(DayPhase)))
                 keys.Add(TextKeys.DayPhase(phase.ToString()));
