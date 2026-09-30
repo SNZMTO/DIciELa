@@ -15,6 +15,14 @@
 
 ## Les captures
 
+### 30/09/2026 — étape 15c : les fanions du stock et le coût des cartes
+
+En haut au centre, le stock de la ville paraît avec le tas : une tringle de bois et ses pommeaux, un fanion de lin à
+bande de brique par marchandise, son icône et son nombre (le Bois et la Pierre, après une livraison). La carte de la
+cabane montre ce qu'elle coûte.
+
+![Les fanions du stock et le coût de la cabane](Album/2026-09-30_etape-15c_fanions-et-couts.jpg)
+
 ### 30/09/2026 — étape 15b : la fiche du tas, la Chimère au travail
 
 On touche le tas : sa fiche s'ouvre en haut à droite, un cadre de bois, le Bois et la Pierre dans des creux de lin, le

@@ -36,6 +36,16 @@ namespace Diciela.UI
             _clock.PhaseChanged -= OnPhaseChanged;
         }
 
+        /// <summary>
+        /// Ce que dit l'infobulle de la journée : ce qui suit la phase en cours, et une note sur elle ; elle ne compte
+        /// pas les heures (décision 153).
+        /// </summary>
+        public (string Title, string Detail) Tooltip()
+        {
+            string phase = _clock.Phase.ToString();
+            return (_texts.Get(TextKeys.DayNext(phase)), _texts.Get(TextKeys.DayNote(phase)));
+        }
+
         /// <summary>Place le repère : la part de la journée passée, plus la fraction du pas en cours.</summary>
         public void Follow(float stepFraction)
         {

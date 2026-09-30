@@ -16,6 +16,18 @@
                 </ui:VisualElement>
             </ui:VisualElement>
         </Diciela.UI.WoodFrame>
+        <ui:VisualElement name="stock" class="stock bloc-cache" picking-mode="Ignore">
+            <ui:VisualElement class="stock-corps" picking-mode="Ignore">
+                <ui:VisualElement class="tringle" picking-mode="Ignore">
+                    <ui:VisualElement class="tringle-clair" picking-mode="Ignore" />
+                    <ui:VisualElement class="tringle-bois" picking-mode="Ignore" />
+                    <ui:VisualElement class="tringle-sombre" picking-mode="Ignore" />
+                    <Diciela.UI.Facet class="pommeau pommeau-gauche" picking-mode="Ignore" />
+                    <Diciela.UI.Facet class="pommeau pommeau-droit" picking-mode="Ignore" />
+                </ui:VisualElement>
+                <ui:VisualElement name="fanions" class="fanions" picking-mode="Ignore" />
+            </ui:VisualElement>
+        </ui:VisualElement>
         <Diciela.UI.WoodFrame name="fiche" class="fiche bloc-cache">
             <ui:VisualElement class="fiche-contenu">
                 <ui:VisualElement class="fiche-tete">
@@ -45,5 +57,9 @@
                 </ui:VisualElement>
             </Diciela.UI.WoodFrame>
         </ui:VisualElement>
+        <Diciela.UI.Facet name="infobulle" class="bulle infobulle bloc-cache" picking-mode="Ignore">
+            <ui:Label name="infobulle-titre" class="libelle" picking-mode="Ignore" />
+            <ui:Label name="infobulle-suite" class="sous-titre" picking-mode="Ignore" />
+        </Diciela.UI.Facet>
     </ui:VisualElement>
 </ui:UXML>

@@ -94,6 +94,24 @@
     align-items: center;
 }
 
+.carte-cout {
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 6px;
+}
+
+.carte-cout-ligne {
+    flex-direction: row;
+    align-items: center;
+    margin: 0 8px;
+}
+
+.carte-cout-icone {
+    width: 24px;
+    height: 24px;
+    margin-right: 5px;
+}
+
 .carte-vignette {
     align-self: stretch;
     height: 120px;
@@ -186,4 +204,74 @@
     padding: 0 16px 3px 16px;
     align-items: center;
     justify-content: center;
+}
+
+/* Le stock en fanions sous une tringle, en haut au centre ; la tringle déborde de 30 px de chaque côté. */
+
+.stock {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 24px;
+    align-items: center;
+}
+
+.stock-corps {
+    padding: 0 30px;
+}
+
+.tringle {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 14px;
+}
+
+.pommeau {
+    position: absolute;
+    top: -4px;
+    width: 22px;
+    height: 22px;
+}
+
+.pommeau-gauche {
+    left: -9px;
+}
+
+.pommeau-droit {
+    right: -9px;
+}
+
+.fanions {
+    flex-direction: row;
+    justify-content: center;
+    padding-top: 12px;
+}
+
+.fanion {
+    min-width: 112px;
+    margin: 0 9px;
+    padding: 18px 12px 22px 8px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.fanion-icone {
+    width: 40px;
+    height: 40px;
+    margin-right: 6px;
+}
+
+.fanion .nombre {
+    min-width: 36px;
+    -unity-text-align: middle-right;
+}
+
+/* L'infobulle : placée par son code, sous ou au-dessus de ce qu'on survole. */
+
+.infobulle {
+    position: absolute;
+    max-width: 320px;
 }

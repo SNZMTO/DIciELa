@@ -16,7 +16,9 @@ namespace Diciela.Tests.PlayMode
     public sealed class DayBoardPresenterTests
     {
         private const string Texts = "clé,fr\njournee.jour,Jour {jour}\njournee.Work,Travail\njournee.Evening,Soirée\n" +
-                                     "journee.Night,Nuit\n";
+                                     "journee.Night,Nuit\n" +
+                                     "journee.suite.Work,\"Travail, puis soirée\"\njournee.note.Work,Note du travail\n" +
+                                     "journee.suite.Evening,\"Soirée, puis nuit\"\njournee.note.Evening,Note du soir\n";
 
         private SimulationSettings _settings;
         private Catalog _catalog;
@@ -41,6 +43,15 @@ namespace Diciela.Tests.PlayMode
             _presenter.Dispose();
             Object.Destroy(_settings);
             Object.Destroy(_catalog);
+        }
+
+        [Test]
+        public void TheTooltipSaysWhatComesNextWithoutCountingHours()
+        {
+            Assert.AreEqual(("Travail, puis soirée", "Note du travail"), _presenter.Tooltip());
+            for (int step = 0; step < 100000 && _world.Clock.Phase == DayPhase.Work; step++)
+                _world.Step();
+            Assert.AreEqual(("Soirée, puis nuit", "Note du soir"), _presenter.Tooltip());
         }
 
         [Test]

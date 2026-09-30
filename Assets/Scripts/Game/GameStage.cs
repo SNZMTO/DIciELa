@@ -28,6 +28,7 @@ namespace Diciela.Game
         [SerializeField] private BuildBar _buildBar;
         [SerializeField] private DayBoard _dayBoard;
         [SerializeField] private PlaceSheet _placeSheet;
+        [SerializeField] private StockPennants _stockPennants;
         [SerializeField] private EscapeControls _escapeControls;
         [SerializeField] private CreationScreen _creationScreen;
         [SerializeField] private AppearancePreview _appearancePreview;
@@ -42,7 +43,7 @@ namespace Diciela.Game
         public bool IsComplete => _cameraRig != null && _cameraControls != null && _structureViews != null &&
                                   _villagerViews != null && _placementPreview != null && _placementControls != null &&
                                   _chooseControls != null && _buildBar != null && _dayBoard != null &&
-                                  _placeSheet != null && _escapeControls != null &&
+                                  _placeSheet != null && _stockPennants != null && _escapeControls != null &&
                                   _creationScreen != null &&
                                   _appearancePreview != null && _confirmControls != null && _atelier != null &&
                                   _previewControls != null;
@@ -88,6 +89,7 @@ namespace Diciela.Game
             _buildBar.Hide();
             _dayBoard.Hide();
             _placeSheet.Hide();
+            _stockPennants.Hide();
             if (_placementTool != null)
             {
                 _placementTool.Cancel();
@@ -113,9 +115,12 @@ namespace Diciela.Game
             _cameraRig.PullBack();
             _placementTool = new PlacementTool(world, _cameraRig.Camera, _placementPreview, placement);
             _buildBar.Show(catalog, texts, _placementTool, world);
-            _dayBoard.Show(world.Clock, texts);
+            var document = _buildBar.GetComponent<UnityEngine.UIElements.UIDocument>();
+            var tooltips = new Tooltips(document);
+            _dayBoard.Show(world.Clock, texts, tooltips);
+            _stockPennants.Show(world, catalog, texts, tooltips);
             _placeSheet.Show(world, texts);
-            var hud = new HudArea(_buildBar.GetComponent<UnityEngine.UIElements.UIDocument>());
+            var hud = new HudArea(document);
             _cameraControls.Bind(hud);
             _placementControls.Bind(_placementTool, hud);
             _chooseTool = new ChooseTool(world, _cameraRig.Camera, _structureViews);

@@ -90,10 +90,14 @@ namespace Diciela.Tests.EditMode
             {
                 TextKeys.CreationTitle, TextKeys.CreationHead, TextKeys.CreationBody, TextKeys.CreationNone,
                 TextKeys.CreationConfirm, TextKeys.DayNumber, TextKeys.SheetPutChimera, TextKeys.SheetRemoveChimera,
-                TextKeys.SheetChimera, TextKeys.SheetFreeSlot
+                TextKeys.SheetChimera, TextKeys.SheetFreeSlot, TextKeys.StockTooltip
             });
             foreach (DayPhase phase in Enum.GetValues(typeof(DayPhase)))
+            {
                 keys.Add(TextKeys.DayPhase(phase.ToString()));
+                keys.Add(TextKeys.DayNext(phase.ToString()));
+                keys.Add(TextKeys.DayNote(phase.ToString()));
+            }
             foreach (PlacementResult result in Enum.GetValues(typeof(PlacementResult)))
             {
                 if (result != PlacementResult.Ok)
