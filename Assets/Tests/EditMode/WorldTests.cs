@@ -28,7 +28,7 @@ namespace Diciela.Tests.EditMode
         [Test]
         public void AStepAdvancesTheClockByOneStep()
         {
-            var world = new World(_settings, TestData.FlatMap());
+            var world = new World(_settings, TestData.FlatMap(), TestData.EmptyCatalog);
 
             world.Step();
             world.Step();
@@ -41,7 +41,7 @@ namespace Diciela.Tests.EditMode
         {
             var map = TestData.FlatMap();
 
-            var world = new World(_settings, map);
+            var world = new World(_settings, map, TestData.EmptyCatalog);
 
             Assert.AreSame(map, world.Map);
         }
@@ -54,7 +54,7 @@ namespace Diciela.Tests.EditMode
             StructureDefinition block = TestData.Structure("bloc", 2f, 2f, hasDoor: false);
             try
             {
-                var world = new World(_settings, TestData.FlatMap());
+                var world = new World(_settings, TestData.FlatMap(), TestData.EmptyCatalog);
                 var heard = new List<string>();
                 world.Structures.StructurePlaced +=
                     structure => heard.Add("posée " + structure.Id + ", " + world.Structures.All.Count);
@@ -75,10 +75,11 @@ namespace Diciela.Tests.EditMode
         }
 
         [Test]
-        public void RefusesMissingSettingsOrMap()
+        public void RefusesMissingSettingsMapOrCatalog()
         {
-            Assert.Throws<ArgumentNullException>(() => new World(null, TestData.FlatMap()));
-            Assert.Throws<ArgumentNullException>(() => new World(_settings, null));
+            Assert.Throws<ArgumentNullException>(() => new World(null, TestData.FlatMap(), TestData.EmptyCatalog));
+            Assert.Throws<ArgumentNullException>(() => new World(_settings, null, TestData.EmptyCatalog));
+            Assert.Throws<ArgumentNullException>(() => new World(_settings, TestData.FlatMap(), null));
         }
     }
 }

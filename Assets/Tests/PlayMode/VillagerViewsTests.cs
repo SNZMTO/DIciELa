@@ -34,7 +34,7 @@ namespace Diciela.Tests.PlayMode
             TestWorld.Fill(_kind, "_id", "chimere");
 #endif
             var map = new MapDescription(new Relief(100f, 100f, 2, 2, new[] { 10f, 10f, 10f, 10f }));
-            _world = new World(settings, map);
+            _world = new World(settings, map, Keep(ScriptableObject.CreateInstance<Catalog>()));
             _views = Keep(new GameObject("Habitants de test")).AddComponent<VillagerViews>();
             _views.Show(_world.Villagers, map.Relief);
             _world.Submit(new CreateChimeraCommand(_kind, _rig.Plain));

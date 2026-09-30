@@ -39,7 +39,7 @@ namespace Diciela.Tests.PlayMode
             Cabin = Keep(ScriptableObject.CreateInstance<StructureDefinition>());
             Tent = Keep(ScriptableObject.CreateInstance<StructureDefinition>());
             var map = new MapDescription(new Relief(100f, 100f, 2, 2, new[] { 10f, 10f, 10f, 10f }));
-            World = new World(simulation, map);
+            World = new World(simulation, map, Keep(ScriptableObject.CreateInstance<Catalog>()));
 
             var rig = Keep(new GameObject("Caméra de test", typeof(Camera))).AddComponent<CameraRig>();
             Preview = Keep(new GameObject("Aperçu de test")).AddComponent<PlacementPreview>();

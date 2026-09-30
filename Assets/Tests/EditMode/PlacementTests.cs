@@ -46,7 +46,7 @@ namespace Diciela.Tests.EditMode
 
         private World NewWorld(MapDescription map)
         {
-            var world = new World(_settings, map);
+            var world = new World(_settings, map, TestData.EmptyCatalog);
             world.Structures.PlacementRefused += (definition, placement, reason) => _refusals.Add(reason);
             return world;
         }

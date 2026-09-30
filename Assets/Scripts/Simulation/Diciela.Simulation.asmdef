@@ -5,6 +5,7 @@
         "Diciela.Data",
         "Diciela.Simulation.Core",
         "Diciela.Simulation.Land",
+        "Diciela.Simulation.Economy",
         "Diciela.Simulation.Society"
     ],
     "includePlatforms": [],

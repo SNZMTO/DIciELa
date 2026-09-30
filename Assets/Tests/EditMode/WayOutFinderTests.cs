@@ -36,7 +36,7 @@ namespace Diciela.Tests.EditMode
 
         private World Place(float size, params (StructureDefinition Definition, float X, float Z)[] structures)
         {
-            var world = new World(_settings, TestData.FlatMap(size));
+            var world = new World(_settings, TestData.FlatMap(size), TestData.EmptyCatalog);
             foreach ((StructureDefinition definition, float x, float z) in structures)
                 world.Submit(new PlaceStructureCommand(definition, new Placement(new Vector2(x, z), 0f)));
             world.Step();

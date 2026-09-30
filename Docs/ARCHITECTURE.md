@@ -101,8 +101,10 @@ la société, qui voit tout ce qui est en dessous.
 - **Le monde.** `World` assemble les systèmes et les appelle dans l'ordre du pas, rien d'autre. À côté, chacune dans
   sa classe : le traitement des ordres ; les déclencheurs (une condition mène à une récompense : idée, réplique,
   tenue) ;
-  le déroulé du départ ; les opérations qui touchent plusieurs couches (la maison de la Chimère qui remplace la tente),
-  faites par des appels vers le bas dans un ordre écrit ; la capture et la restauration.
+  le déroulé du départ ; les opérations qui touchent plusieurs couches, faites par des appels vers le bas dans un ordre
+  écrit (poser : le terrain, puis l'économie ouvre un stock ou un chantier, la société des postes, puis le déroulé du
+  départ la regarde ; plus tard, la maison de la Chimère qui remplace la tente) ; la capture et la restauration. Le
+  monde reçoit les réglages, la carte et le catalogue, d'où il tire le déroulé du départ et les statistiques.
 
 ## 4. Qui possède quoi
 
@@ -191,7 +193,10 @@ sauvegardé.
 - Une tâche est une suite de pas (aller, travailler, prendre, déposer), chacun avec une issue d'échec : destination
   perdue, chemin introuvable, délai dépassé. L'habitant rend alors ce qu'il porte, relâche ses réservations et redevient
   disponible ; il garde son poste.
-- La journée d'un habitant (travail, soirée, nuit) est une petite machine à états au-dessus de ses tâches.
+- La journée d'un habitant (travail, soirée, nuit) est une petite machine à états au-dessus de ses tâches : son travail
+  (`Job` : le poste tenu, le choix de la tâche dans l'ordre du poste, la flânerie près du poste) et sa tâche en cours
+  (`Chore` : ses étapes et leurs issues d'échec). Ce qu'une tâche réserve vit dans l'économie (`Delivery`,
+  `BuildShift`) ; la sorte de tâche dit, par une valeur fixe de sa fiche, quel geste le code joue (`TaskWork`).
 - La cadence d'un lieu est la somme de ce qu'apportent les présents. Qui est présent se déduit des tâches en cours ; le
   plafond d'ouvriers d'un chantier et l'effet d'un maître lisent la même donnée.
 - Les compteurs restent chez leur source : l'économie compte la production par marchandise ; la société lève
@@ -275,6 +280,9 @@ code.
 | repère (d'un emplacement) | `AttachmentFrame` | contact ; carte de surface | `ContactAxis` ; `SurfaceMap` | oreilles cousues ; couvercle | `FusedEars` ; `SkullCap` |
 | atelier ; ses gestes | `Atelier` ; `PreviewControls` | tourner (la Chimère) | `Turn` | reculer (la caméra) | `PullBack` |
 | pose (d'une pièce) ; paire, moitié ; obligatoire | `PiecePlacement` ; `Pairs`, `EarHalves` ; `Required` | rotation ; réglage (par tête, par corps) | `Rotation` ; `WearerAdjustment` | tête de référence ; se poser par sa base | `Reference` ; `Contact.TryRest` |
+| abords (d'une construction) | `Surroundings` | livraison ; place d'ouvrier | `Delivery` ; `BuildShift` | bilan des marchandises ; cause | `GoodsLedger` ; `GoodsCause` |
+| entrepôts (ce qui tient les marchandises de la ville) | `Warehouses` | poser (l'opération du monde) | `Placing` | travail ; tâche en cours | `Job` ; `Chore` |
+| statistique, sous-statistique | `StatisticDefinition`, `SubStatisticDefinition` | table des statistiques ; celles d'un habitant | `StatisticTable` ; `VillagerStatistics` | ce que consulte un habitant | `VillagerServices` |
 
 ## 10. La carte, les scènes et la sauvegarde
 

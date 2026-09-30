@@ -4,7 +4,8 @@
     "references": [
         "Diciela.Data",
         "Diciela.Simulation.Core",
-        "Diciela.Simulation.Land"
+        "Diciela.Simulation.Land",
+        "Diciela.Simulation.Economy"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

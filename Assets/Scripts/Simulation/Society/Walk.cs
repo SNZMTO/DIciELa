@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Diciela.Simulation.Society
 {
     /// <summary>
-    /// La marche d'un habitant vers une maille (SAVOIR, 2.1) : il suit la ligne tendue de son trajet, et l'avancement se
+    /// La marche d'un habitant vers une maille, ou vers la plus proche de plusieurs (les abords d'une construction ; SAVOIR, 2.1) : il suit la ligne tendue de son trajet, et l'avancement se
     /// compte en distance. Le trajet se garde avec la version du maillage où il a été vérifié : quand elle change, on
     /// revérifie le reste de la ligne, et l'on ne cherche un autre trajet que si une construction la coupe, but compris.
     /// La ligne part du milieu de la maille où il se trouve, qu'il a pu dépasser : il la rejoint sans reculer. Issue
@@ -19,7 +19,7 @@ namespace Diciela.Simulation.Society
         private readonly PathFinder _finder;
         private readonly Path _path = new Path();
         private readonly Vector2Int[] _start = new Vector2Int[1];
-        private readonly Vector2Int[] _goal = new Vector2Int[1];
+        private readonly List<Vector2Int> _goals = new List<Vector2Int>();
         private int _next;
         private Vector2 _join;
         private int _checkedVersion;
@@ -38,17 +38,30 @@ namespace Diciela.Simulation.Society
         /// <summary>Vrai tant qu'il marche vers son but.</summary>
         public bool IsWalking { get; private set; }
 
-        /// <summary>La maille visée par la dernière marche.</summary>
-        public Vector2Int Goal => _goal[0];
-
         /// <summary>Le trajet suivi, dont la ligne tendue ; il ne vaut que pendant la marche.</summary>
         public Path Path => _path;
 
         /// <summary>Part de ce point vers le milieu de cette maille ; faux si elle n'est pas joignable d'ici.</summary>
         public bool TryStart(Vector2 from, Vector2Int goal)
         {
-            _goal[0] = goal;
+            _goals.Clear();
+            _goals.Add(goal);
             return TryResume(from);
+        }
+
+        /// <summary>
+        /// Part de ce point vers la plus proche de ces mailles ; faux si aucune n'est joignable d'ici. La liste est lue
+        /// tout de suite : l'appelant peut la réutiliser.
+        /// </summary>
+        public bool TryStart(Vector2 from, IReadOnlyList<Vector2Int> goals)
+        {
+            _goals.Clear();
+            for (int i = 0; i < goals.Count; i++)
+                _goals.Add(goals[i]);
+            if (_goals.Count > 0)
+                return TryResume(from);
+            IsWalking = false;
+            return false;
         }
 
         /// <summary>Repart de ce point vers le même but, par un nouveau trajet ; faux s'il n'est plus joignable.</summary>
@@ -57,7 +70,7 @@ namespace Diciela.Simulation.Society
             _start[0] = _grid.CellOf(from);
             _checkedVersion = _grid.Version;
             _next = 0;
-            IsWalking = _finder.TryFindPath(_start, _goal, _path);
+            IsWalking = _finder.TryFindPath(_start, _goals, _path);
             if (IsWalking)
                 _join = JoinPoint(from);
             return IsWalking;
@@ -91,7 +104,8 @@ namespace Diciela.Simulation.Society
 
         /// <summary>
         /// Avance le marcheur de cette distance le long de sa ligne, d'un coin à l'autre. Si le maillage a changé et
-        /// qu'une construction coupe le reste de la ligne, il cherche d'abord un autre trajet, depuis là où il est.
+        /// qu'une construction coupe le reste de la ligne, il cherche d'abord un autre trajet, depuis là où il est, vers
+        /// les mêmes buts.
         /// </summary>
         public WalkOutcome Advance(ref Vector2 position, float meters)
         {
@@ -138,7 +152,8 @@ namespace Diciela.Simulation.Society
                 if (!StraightLine.IsClear(_grid, _grid.CellOf(corners[i]), _grid.CellOf(corners[i + 1])))
                     return false;
             }
-            return _grid.IsWalkable(_goal[0]);
+            IReadOnlyList<Vector2Int> cells = _path.Cells;
+            return _grid.IsWalkable(cells[cells.Count - 1]);
         }
     }
 }

@@ -1,30 +1,27 @@
 # DICIELA — état actuel
 
-**Branche** : `etape-14-hud`, fusionnée dans `main` et poussée.
+**Branche** : `etape-15-tas`, 15a commité, pas encore fusionné (15b et 15c viennent).
 
-**Fait** : l'étape 14, le HUD « fusion » dans Unity (décisions 137 à 146).
-- Une seule feuille de style (`Assets/UI/Fusion.uss`) ; polices Lilita One et Nunito ; faces vectorielles (feutre,
-  applique, creux, bulle) ; cadre de bois tiré de l'atlas du pack, son ombre générée ; icônes vectorielles. Menus
-  `DICIELA/Interface/Générer les images de l'interface` et `Photographier les constructions`.
-- L'interface grossit avec la hauteur de l'écran (référence 900 px, jamais sous 1, au moins 1280 × 720 de place) ;
-  réglage « Taille de l'interface » dans la fiche des réglages de l'interface (80 à 150 %). Nette jusqu'à la 4K.
-- La journée en haut à gauche, la barre de construction en bas (onglets, cartes avec vignette, raison en bulle),
-  l'écran de création dans la même langue. L'ancien panneau doré et son générateur sont supprimés.
-**EditMode 139/139, PlayMode 119/119** (dont le HUD rendu à huit tailles d'écran).
+**Fait** : l'étape 15a, la simulation du tas de départ et de son poste « à tout faire » (décisions 147 à 151).
+- L'économie entre dans le code (`Diciela.Simulation.Economy`) : stocks, entrepôts (le tas), chantiers et leur file,
+  tâches à prendre, bilan des marchandises. Le monde reçoit le catalogue.
+- La tente plantée, le tas se pose à droite de sa porte vue de face (30 Bois, 20 Pierre) et ouvre son poste. Ordres
+  « affecter » et « retirer ». Une cabane posée devient un chantier : la Chimère y porte 5 par voyage, puis la bâtit
+  (1 h 40 à 10 partout). Le soir, elle finit sa marche, dépose, flâne près du tas. Endormie ou retirée, elle rend sa
+  charge au tas. Menu `DICIELA/Données/Créer les fiches manquantes` pour les fiches.
+**EditMode 153/153, PlayMode 119/119.**
 
-**À vérifier par toi** (Play) : survol et appui des boutons de feutre (ils montent, s'enfoncent) ; l'onglet ouvert et
-la carte en main restent enfoncés ; le repère de la journée avance, la phase change le soir ; les flèches de l'écran
-de création ; la vue Game à plusieurs tailles (1280 × 720, 1920 × 1080, 4K) : le HUD garde ses coins.
+**À vérifier par toi** (Play) : la tente plantée, le tas apparaît à droite de sa porte, vu de face. On ne peut pas
+encore y mettre la Chimère au clic : la fiche du tas vient avec 15b.
 
-**À toi** : les questions ouvertes du HUD (GDD 16 : une fiche à la fois, Échap, touches 1 à 9, fanions, couleur des
-familles suivantes, qui parle dans l'astuce) ; les noms de `strings.csv` ; les accessoires de cou et de dos.
+**À toi** : le modèle du tas (le pack a des tas de bûches et de pierres ; une boîte de 2,5 m en attendant) ; qui parle
+dans l'astuce ; les questions ouvertes du HUD (GDD 16) ; les noms de `strings.csv` ; les accessoires de cou et de dos.
 
 **Dette** : dans `Fusion.uss`, les faces répètent les couleurs de `:root` (variable dans une variable pas essayée).
 
-**Prochaine étape** : l'étape 15, le tas de départ et son poste « à tout faire » (GDD 6 et 7, décisions 137 à 141),
-avec ses pièces du HUD : les fanions du stock, la fiche du tas à droite, les infobulles, l'astuce. Ménage à la 16.
+**Prochaine étape** : 15b, la fiche du tas (toucher le tas, « Y mettre la Chimère » / « Retirer la Chimère », une seule
+fiche à la fois, Échap la ferme) ; puis 15c, les fanions du stock, les infobulles, l'astuce, le coût sur les cartes.
 
 **Prompt de la session suivante**
 
-> Lis CLAUDE.md et Docs/ETAT.md. Montre-moi le plan court de l'étape 15 : le tas de départ et son poste « à tout
-> faire », avec ses pièces du HUD (fanions, fiche du tas, infobulles, astuce).
+> Lis CLAUDE.md et Docs/ETAT.md. Continue l'étape 15 : 15b, la fiche du tas, puis 15c (fanions, infobulles, astuce).

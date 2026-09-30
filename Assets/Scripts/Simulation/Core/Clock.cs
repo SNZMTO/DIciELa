@@ -62,6 +62,9 @@ namespace Diciela.Simulation.Core
         /// <summary>La fin de la soirée, en part de la journée : la nuit va de là à la fin.</summary>
         public double EveningEndsAt => (double)_eveningEndStep / _stepsPerDay;
 
+        /// <summary>Les heures de jeu que dure un pas : ce qu'un travail avance à chaque pas, à ×1.</summary>
+        public double HoursPerStep => HoursPerDay / _stepsPerDay;
+
         /// <summary>La part de la journée déjà passée, de 0 à 1.</summary>
         public double DayProgress => (double)(StepCount % _stepsPerDay) / _stepsPerDay;
 

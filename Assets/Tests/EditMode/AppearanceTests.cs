@@ -88,7 +88,7 @@ namespace Diciela.Tests.EditMode
         {
             PaletteDefinition green = _test.Keep(TestData.Palette("vert"));
             Appearance chosen = Wearing(new WornAttachment(_test.Keep(TestData.Attachment("chapeau", _top)), green));
-            var world = new World(_test.Settings, TestData.FlatMap(40f));
+            var world = new World(_test.Settings, TestData.FlatMap(40f), TestData.EmptyCatalog);
 
             world.Submit(new CreateChimeraCommand(_test.Kind, chosen));
             world.Submit(new CreateChimeraCommand(_test.Kind, _test.Appearance));
