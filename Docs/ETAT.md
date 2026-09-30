@@ -20,8 +20,7 @@ journée (infobulles) ; Échap ferme la fiche, puis lâche la carte en main.
 **À toi** : le modèle du tas (une boîte de 2,5 m en attendant) ; qui parle dans l'astuce ; les autres questions du HUD
 (GDD 16) ; les noms de `strings.csv` ; les accessoires de cou et de dos.
 
-**Dette** : dans `Fusion.uss`, les faces répètent les couleurs de `:root` (variable dans une variable pas essayée).
-Le menu `DICIELA/Album/Poser trois cabanes` n'en pose plus qu'une : le tas prend la place des deux autres.
+**Dette** : `Fusion.uss` répète les couleurs de `:root` ; `Album/Poser trois cabanes` n'en pose plus qu'une (le tas).
 
 **Prochaine étape** : 15d, l'astuce en bas à gauche (le portrait de la Chimère, ce qu'il faut faire ensuite) ; puis
 fusion de l'étape 15 dans `main`, et l'étape 16, le ménage.
