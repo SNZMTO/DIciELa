@@ -33,6 +33,20 @@ namespace Diciela.Data
         [Tooltip("Profondeur laissée libre devant une porte, en mètres (GDD, section 9).")]
         [SerializeField, Min(0f)] private float _doorClearanceMeters = 1.5f;
 
+        [Tooltip("La plus haute valeur d'une statistique : elles vont de 0 à elle (GDD, section 5).")]
+        [SerializeField, Min(1f)] private float _statisticScale = 100f;
+
+        [Tooltip("La part de la sous-statistique dans la valeur pour une tâche ; le reste vient de la statistique " +
+                 "globale (GDD, section 5).")]
+        [SerializeField, Range(0f, 1f)] private float _subStatisticShare = 0.8f;
+
+        [Tooltip("Ce qu'apporte au travail un habitant à la plus haute valeur, en fois ce qu'apporte un débutant (à 0) ; " +
+                 "l'apport croît en ligne droite entre les deux (GDD, section 7).")]
+        [SerializeField, Min(1f)] private float _expertWorkRate = 3f;
+
+        [Tooltip("Le nombre d'ouvriers au plus sur un chantier (GDD, section 9).")]
+        [SerializeField, Min(1)] private int _maxBuildersPerSite = 3;
+
         public float StepSeconds => _stepSeconds;
         public int CellsPerMeter => _cellsPerMeter;
         public float MaxBuildSlopeDegrees => _maxBuildSlopeDegrees;
@@ -41,5 +55,9 @@ namespace Diciela.Data
         public float DayLengthSeconds => _dayLengthSeconds;
         public float WorkFraction => _workFraction;
         public float EveningFraction => _eveningFraction;
+        public float StatisticScale => _statisticScale;
+        public float SubStatisticShare => _subStatisticShare;
+        public float ExpertWorkRate => _expertWorkRate;
+        public int MaxBuildersPerSite => _maxBuildersPerSite;
     }
 }

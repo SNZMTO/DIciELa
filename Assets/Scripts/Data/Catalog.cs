@@ -19,6 +19,15 @@ namespace Diciela.Data
         [Tooltip("La sorte de la Chimère, que le joueur crée au lancement d'une partie (GDD, section 6).")]
         [SerializeField] private VillagerKindDefinition _chimeraKind;
 
+        [Tooltip("Le déroulé du départ : le tas de départ et son contenu (GDD, section 6).")]
+        [SerializeField] private OpeningDefinition _opening;
+
+        [Tooltip("Les marchandises, dans l'ordre des fanions du stock (GDD, section 16).")]
+        [SerializeField] private List<GoodDefinition> _goods = new List<GoodDefinition>();
+
+        [Tooltip("Les statistiques et leurs sous-statistiques (GDD, section 5).")]
+        [SerializeField] private List<StatisticDefinition> _statistics = new List<StatisticDefinition>();
+
         [Tooltip("Les têtes que propose l'écran de création, dans son ordre ; la première est celle de départ.")]
         [SerializeField] private List<HeadDefinition> _heads = new List<HeadDefinition>();
 
@@ -36,6 +45,9 @@ namespace Diciela.Data
 
         public IReadOnlyList<StructureFamilyDefinition> Families => _families;
         public VillagerKindDefinition ChimeraKind => _chimeraKind;
+        public OpeningDefinition Opening => _opening;
+        public IReadOnlyList<GoodDefinition> Goods => _goods;
+        public IReadOnlyList<StatisticDefinition> Statistics => _statistics;
         public IReadOnlyList<HeadDefinition> Heads => _heads;
         public IReadOnlyList<BodyDefinition> Bodies => _bodies;
         public IReadOnlyList<PaletteDefinition> Palettes => _palettes;

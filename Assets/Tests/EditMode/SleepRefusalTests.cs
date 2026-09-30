@@ -76,7 +76,7 @@ namespace Diciela.Tests.EditMode
         [Test]
         public void WithoutChimeraBothOrdersAreRefused()
         {
-            var world = new World(_test.Settings, TestData.FlatMap(40f));
+            var world = new World(_test.Settings, TestData.FlatMap(40f), TestData.EmptyCatalog);
             world.Villagers.SleepRefused += _refusals.Add;
 
             world.Submit(new SendChimeraToBedCommand());

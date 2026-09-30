@@ -6,7 +6,8 @@ namespace Diciela.EditorTools
 {
     /// <summary>
     /// Crée le contenu qui manque : les fiches de la tente et de la cabane et leurs modèles, leur famille, la sorte de la
-    /// Chimère, le catalogue et ce que l'écran de création propose (AppearanceBuilder ; GDD, sections 6, 9 et 16).
+    /// Chimère, le catalogue et ce que l'écran de création propose (AppearanceBuilder ; GDD, sections 6, 9 et 16), puis
+    /// la ville au travail (TownContentBuilder).
     /// Réexécutable : une fiche qui existe n'est jamais touchée, sauf pour ce qui lui manque.
     /// </summary>
     internal static class ContentBuilder
@@ -68,6 +69,7 @@ namespace Diciela.EditorTools
                 fiche => SetList(EditorAssets.Property(fiche, "_families"), housing));
             EditorAssets.AssignIfMissing(catalog, "_chimeraKind", chimera);
             AppearanceBuilder.CreateMissing(catalog);
+            TownContentBuilder.CreateMissing(catalog, cabin);
         }
 
         private static void SetList(SerializedProperty list, params Object[] items)

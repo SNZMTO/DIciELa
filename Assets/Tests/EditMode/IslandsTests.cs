@@ -110,7 +110,7 @@ namespace Diciela.Tests.EditMode
             StructureDefinition smallBlock = TestData.Structure("petit bloc", 0.25f, 0.25f, hasDoor: false);
             try
             {
-                var world = new World(gameScale, TestData.FlatMap(500f));
+                var world = new World(gameScale, TestData.FlatMap(500f), TestData.EmptyCatalog);
                 var goal = new Vector2Int(1000, 1000);
                 for (int x = 997; x <= 1003; x++)
                 {

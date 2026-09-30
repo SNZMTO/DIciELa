@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Diciela.Data
@@ -43,6 +44,20 @@ namespace Diciela.Data
         [Tooltip("Dressée dès qu'on la pose, sans chantier : la tente, que la Chimère plante d'un coup (GDD, section 9).")]
         [SerializeField] private bool _builtWhenPlaced;
 
+        [Tooltip("Ce que son chantier demande en matériaux (GDD, section 9) ; vide pour ce qui se dresse dès la pose.")]
+        [SerializeField] private List<GoodAmount> _cost = new List<GoodAmount>();
+
+        [Tooltip("Les heures de travail que son chantier demande à un débutant (valeur 0 pour la tâche) ; un habitant " +
+                 "plus fort bâtit plus vite (GDD, section 7).")]
+        [SerializeField, Min(0f)] private float _workHours;
+
+        [Tooltip("Les postes qu'elle ouvre, une fois bâtie (GDD, section 7).")]
+        [SerializeField] private List<WorkSlotDefinition> _workSlots = new List<WorkSlotDefinition>();
+
+        [Tooltip("Les marchandises qu'elle tient pour la ville, comme un entrepôt (le tas de départ, puis l'entrepôt) ; " +
+                 "0 : elle n'en tient pas (GDD, section 8).")]
+        [SerializeField, Min(0)] private int _storageCapacity;
+
         [Tooltip("Le modèle du pack, tel quel : la source que le menu DICIELA/Contenu/Préparer les modèles mesure et " +
                  "fusionne. Vide tant que le modèle n'est pas choisi : le menu fait alors une boîte à la taille de la fiche.")]
         [SerializeField] private GameObject _sourceModel;
@@ -65,6 +80,10 @@ namespace Diciela.Data
         public bool IsUnique => _unique;
         public bool IsChimeraHome => _chimeraHome;
         public bool BuiltWhenPlaced => _builtWhenPlaced;
+        public IReadOnlyList<GoodAmount> Cost => _cost;
+        public float WorkHours => _workHours;
+        public IReadOnlyList<WorkSlotDefinition> WorkSlots => _workSlots;
+        public int StorageCapacity => _storageCapacity;
         public GameObject SourceModel => _sourceModel;
         public GameObject Model => _model;
         public Texture2D Picture => _picture;

@@ -10,7 +10,7 @@ namespace Diciela.Tests.EditMode
     /// La seule fabrique de fiches des tests : elle crée une fiche en mémoire et la remplit par SerializedObject, le
     /// chemin de l'Inspector (ARCHITECTURE, section 12). Chaque test détruit ses fiches en fin de test.
     /// </summary>
-    internal static class TestData
+    internal static partial class TestData
     {
         public static SimulationSettings Settings(float stepSeconds, float dayLengthSeconds, float workFraction,
             float eveningFraction, int maxStepsPerFrame = 10, int cellsPerMeter = 2, float maxBuildSlopeDegrees = 15f,

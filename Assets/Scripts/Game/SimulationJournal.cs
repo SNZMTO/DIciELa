@@ -2,6 +2,7 @@ using System;
 using Diciela.Data;
 using Diciela.Simulation;
 using Diciela.Simulation.Core;
+using Diciela.Simulation.Economy;
 using Diciela.Simulation.Land;
 using Diciela.Simulation.Society;
 using UnityEngine;
@@ -28,6 +29,11 @@ namespace Diciela.Game
             _world.Clock.PhaseChanged += OnPhaseChanged;
             _world.Structures.StructurePlaced += OnStructurePlaced;
             _world.Structures.PlacementRefused += OnPlacementRefused;
+            _world.Structures.StructureBuilt += OnStructureBuilt;
+            _world.ConstructionSites.GoodsReceived += OnGoodsReceived;
+            _world.WorkSlots.VillagerAssigned += OnVillagerAssigned;
+            _world.WorkSlots.VillagerUnassigned += OnVillagerUnassigned;
+            _world.WorkSlots.AssignmentRefused += OnAssignmentRefused;
             _world.Villagers.VillagerArrived += OnVillagerArrived;
             _world.Villagers.ChimeraRefused += OnChimeraRefused;
             _world.Villagers.VillagerWentToBed += OnVillagerWentToBed;
@@ -47,6 +53,11 @@ namespace Diciela.Game
             _world.Clock.PhaseChanged -= OnPhaseChanged;
             _world.Structures.StructurePlaced -= OnStructurePlaced;
             _world.Structures.PlacementRefused -= OnPlacementRefused;
+            _world.Structures.StructureBuilt -= OnStructureBuilt;
+            _world.ConstructionSites.GoodsReceived -= OnGoodsReceived;
+            _world.WorkSlots.VillagerAssigned -= OnVillagerAssigned;
+            _world.WorkSlots.VillagerUnassigned -= OnVillagerUnassigned;
+            _world.WorkSlots.AssignmentRefused -= OnAssignmentRefused;
             _world.Villagers.VillagerArrived -= OnVillagerArrived;
             _world.Villagers.ChimeraRefused -= OnChimeraRefused;
             _world.Villagers.VillagerWentToBed -= OnVillagerWentToBed;
@@ -113,6 +124,37 @@ namespace Diciela.Game
             PlacementResult reason)
         {
             Debug.Log(Prefix + "pose refusée (" + definition.Id + " " + Describe(placement) + ") : " + reason + ".");
+        }
+
+        private static void OnStructureBuilt(Structure structure)
+        {
+            Debug.Log(Prefix + "construction n° " + structure.Id + " (" + structure.Definition.Id + ") bâtie.");
+        }
+
+        private static void OnGoodsReceived(ConstructionSite site)
+        {
+            string goods = "";
+            for (int line = 0; line < site.LineCount; line++)
+                goods += (line > 0 ? ", " : "") + site.GoodAt(line).Id + " " + site.DeliveredAt(line) + "/" +
+                         site.NeededAt(line);
+            Debug.Log(Prefix + "livraison au chantier n° " + site.Structure.Id + " : " + goods + ".");
+        }
+
+        private static void OnVillagerAssigned(Villager villager, WorkSlot slot)
+        {
+            Debug.Log(Prefix + Describe(villager) + " prend le poste « " + slot.Definition.Id + " » de la construction n° " +
+                      slot.Workplace.Id + ".");
+        }
+
+        private static void OnVillagerUnassigned(Villager villager, WorkSlot slot)
+        {
+            Debug.Log(Prefix + Describe(villager) + " quitte le poste « " + slot.Definition.Id + " » de la construction n° " +
+                      slot.Workplace.Id + ".");
+        }
+
+        private static void OnAssignmentRefused(AssignmentRefusal reason)
+        {
+            Debug.Log(Prefix + "ordre « affecter » ou « retirer » refusé : " + reason + ".");
         }
 
         private static string Describe(Placement placement)

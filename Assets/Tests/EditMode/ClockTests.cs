@@ -29,7 +29,7 @@ namespace Diciela.Tests.EditMode
         {
             SimulationSettings settings = TestData.Settings(step, day, work, evening);
             _created.Add(settings);
-            return new World(settings, TestData.FlatMap());
+            return new World(settings, TestData.FlatMap(), TestData.EmptyCatalog);
         }
 
         private static void PlaySteps(World world, int steps)
