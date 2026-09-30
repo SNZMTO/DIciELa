@@ -43,6 +43,7 @@ namespace Diciela.Game
         private PlacementTool _placementTool;
         private ChooseTool _chooseTool;
         private Texture2D _portrait;
+        private Tooltips _tooltips;
 
         /// <summary>Vrai si la scène a toutes ses vues et tous ses gestes.</summary>
         public bool IsComplete => _cameraRig != null && _cameraControls != null && _structureViews != null &&
@@ -97,6 +98,8 @@ namespace Diciela.Game
             _placeSheet.Hide();
             _stockPennants.Hide();
             _tipBoard.Hide();
+            _tooltips?.Hide();
+            _tooltips = null;
             if (_portrait != null)
                 Destroy(_portrait);
             _portrait = null;
@@ -128,9 +131,9 @@ namespace Diciela.Game
             _placementTool = new PlacementTool(world, _cameraRig.Camera, _placementPreview, placement);
             _buildBar.Show(catalog, texts, _placementTool, world);
             var document = _buildBar.GetComponent<UnityEngine.UIElements.UIDocument>();
-            var tooltips = new Tooltips(document);
-            _dayBoard.Show(world.Clock, texts, tooltips);
-            _stockPennants.Show(world, catalog, texts, tooltips);
+            _tooltips = new Tooltips(document);
+            _dayBoard.Show(world.Clock, texts, _tooltips);
+            _stockPennants.Show(world, catalog, texts, _tooltips);
             _placeSheet.Show(world, texts);
             _tipBoard.Show(world, texts, _portrait);
             var hud = new HudArea(document);

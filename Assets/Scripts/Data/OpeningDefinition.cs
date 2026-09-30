@@ -16,7 +16,12 @@ namespace Diciela.Data
         [Tooltip("Ce que tient le tas de départ quand il se pose.")]
         [SerializeField] private List<GoodAmount> _startingGoods = new List<GoodAmount>();
 
+        [Tooltip("Si sa place est prise, le tas se pose au plus près, mais pas plus loin que ce rayon, en mètres ; " +
+                 "au-delà, il ne se pose pas.")]
+        [SerializeField, Min(0f)] private float _pileSearchMeters = 16f;
+
         public StructureDefinition StartingPile => _startingPile;
         public IReadOnlyList<GoodAmount> StartingGoods => _startingGoods;
+        public float PileSearchMeters => _pileSearchMeters;
     }
 }

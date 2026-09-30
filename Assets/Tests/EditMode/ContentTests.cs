@@ -20,7 +20,7 @@ namespace Diciela.Tests.EditMode
         [Test]
         public void TheCatalogReachesEveryStructureOnce()
         {
-            Catalog catalog = LoadSingle<Catalog>();
+            Catalog catalog = ProjectContent.LoadSingle<Catalog>();
             var familyIds = new HashSet<string>();
             var structureIds = new HashSet<string>();
             var reached = new HashSet<StructureDefinition>();
@@ -44,7 +44,7 @@ namespace Diciela.Tests.EditMode
                 }
             }
 
-            StructureDefinition pile = StartingPileOf(catalog);
+            StructureDefinition pile = ProjectContent.StartingPileOf(catalog);
             if (pile != null && !reached.Add(pile))
                 faults.Add(pile.name + " est dans une famille : le tas de départ se pose de lui-même.");
             else if (pile != null && (string.IsNullOrEmpty(pile.Id) || !structureIds.Add(pile.Id)))
@@ -63,12 +63,12 @@ namespace Diciela.Tests.EditMode
         [Test]
         public void EveryCitedTextExistsInEveryLanguage()
         {
-            InterfaceSettings settings = LoadSingle<InterfaceSettings>();
+            InterfaceSettings settings = ProjectContent.LoadSingle<InterfaceSettings>();
             Assert.IsNotNull(settings.Texts, "Les réglages de l'interface n'ont pas leur table des textes.");
             string csv = settings.Texts.text;
 
             var keys = new List<string>();
-            Catalog catalog = LoadSingle<Catalog>();
+            Catalog catalog = ProjectContent.LoadSingle<Catalog>();
             foreach (StructureFamilyDefinition family in catalog.Families)
             {
                 keys.Add(family.NameKey);
@@ -85,7 +85,7 @@ namespace Diciela.Tests.EditMode
                 keys.Add(slot.NameKey);
             foreach (AttachmentDefinition attachment in catalog.Attachments)
                 keys.Add(attachment.NameKey);
-            TownContentTests.AddTownKeys(catalog, keys);
+            ProjectContent.AddTownKeys(catalog, keys);
             keys.AddRange(new[]
             {
                 TextKeys.CreationTitle, TextKeys.CreationHead, TextKeys.CreationBody, TextKeys.CreationNone,
@@ -127,7 +127,7 @@ namespace Diciela.Tests.EditMode
             // supérieur), la porte sur la façade.
             const float Centimeter = 0.01f;
             var faults = new List<string>();
-            foreach (StructureDefinition structure in StructuresOf(LoadSingle<Catalog>()))
+            foreach (StructureDefinition structure in ProjectContent.StructuresOf(ProjectContent.LoadSingle<Catalog>()))
             {
                 if (structure.Model == null)
                 {
@@ -157,31 +157,6 @@ namespace Diciela.Tests.EditMode
             Assert.IsEmpty(faults, string.Join("\n", faults));
 
             bool Fits(float model, float fiche) => model <= fiche + 0.001f && model >= fiche - Centimeter - 0.001f;
-        }
-
-        /// <summary>Les constructions du catalogue : celles de ses familles, puis le tas de départ.</summary>
-        internal static List<StructureDefinition> StructuresOf(Catalog catalog)
-        {
-            var structures = new List<StructureDefinition>();
-            foreach (StructureFamilyDefinition family in catalog.Families)
-                structures.AddRange(family.Structures);
-            StructureDefinition pile = StartingPileOf(catalog);
-            if (pile != null)
-                structures.Add(pile);
-            return structures;
-        }
-
-        internal static StructureDefinition StartingPileOf(Catalog catalog)
-        {
-            return catalog.Opening != null ? catalog.Opening.StartingPile : null;
-        }
-
-        /// <summary>La seule fiche de ce type dans le projet ; il y en a une, et une seule.</summary>
-        internal static T LoadSingle<T>() where T : UnityEngine.Object
-        {
-            string[] guids = AssetDatabase.FindAssets("t:" + typeof(T).Name);
-            Assert.AreEqual(1, guids.Length, "Il faut une seule fiche " + typeof(T).Name + " dans le projet.");
-            return AssetDatabase.LoadAssetAtPath<T>(AssetDatabase.GUIDToAssetPath(guids[0]));
         }
 
         /// <summary>Les langues de la table : les colonnes de sa première ligne, après celle des clés.</summary>

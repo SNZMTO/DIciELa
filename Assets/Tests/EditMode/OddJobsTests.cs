@@ -123,6 +123,34 @@ namespace Diciela.Tests.EditMode
             Assert.Less(lastNightDistance, 9f, "La nuit, elle flâne près du tas (6 m autour de ses abords).");
         }
 
+        [Test]
+        public void PushedOffTheSiteSheWalksBackBeforeBuildingAgain()
+        {
+            World world = _town.WorkingWorld();
+            // La porte à l'est : elle arrive de l'ouest ou du sud, où un mur peut se poser.
+            Structure cabin = TestTown.Place(world, _town.Cabin, 28f, 20f, 90f);
+            Villager chimera = world.Villagers.Chimera;
+            TestGrids.StepUntil(world, () => chimera.IsBuilding, 4000, "la Chimère au travail");
+
+            // Un mur de 50 cm tout le long du côté où elle bâtit, posé sur elle : elle en sort du côté opposé au chantier.
+            Vector2 at = chimera.Position;
+            bool west = at.x < 26f;
+            StructureDefinition wall = _town.Keep(TestData.Structure("mur", west ? 0.5f : 5f, west ? 5f : 0.5f,
+                hasDoor: false));
+            Structure placed = TestTown.Place(world, wall, west ? 25.75f : 28f, west ? 20f : 17.75f);
+            Assert.IsNotNull(placed, "Le mur se pose sur elle, contre le chantier.");
+
+            bool farAndBuilding = false;
+            TestGrids.StepUntil(world, () =>
+            {
+                Vector2Int cell = world.Grid.CellOf(chimera.Position);
+                if (chimera.IsBuilding && world.Grid.IsWalkable(cell) && !world.Grid.Borders(cell, cabin.Id))
+                    farAndBuilding = true;
+                return cabin.State == StructureState.Built;
+            }, 8000, "la cabane bâtie");
+            Assert.IsFalse(farAndBuilding, "Elle ne bâtit qu'aux abords du chantier.");
+        }
+
         private static int CountLines(Inventory load)
         {
             int lines = 0;
