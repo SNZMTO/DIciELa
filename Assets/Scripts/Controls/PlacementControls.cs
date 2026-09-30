@@ -7,7 +7,7 @@ namespace Diciela.Controls
     /// <summary>
     /// Les gestes de la pose (GDD, section 9 ; SAVOIR, 2.8) : le pointeur vise ; R bref tourne d'un cran, R tenu en
     /// bougeant la souris tourne au degré (le curseur est tenu et la visée attend) ; un clic gauche pose ; un clic droit
-    /// bref ou Échap pose l'outil de côté. Il lit les actions et appelle l'outil, rien d'autre. Il passe après la caméra
+    /// bref pose l'outil de côté (Échap aussi, par son geste à lui). Il lit les actions et appelle l'outil, rien d'autre. Il passe après la caméra
     /// (ordre 100) : la visée se fait avec la vue de l'image qu'on va voir, jamais celle d'avant.
     /// </summary>
     [DefaultExecutionOrder(100)]
@@ -17,7 +17,6 @@ namespace Diciela.Controls
         public const string PlaceAction = "Place";
         public const string RotateAction = "Rotate";
         public const string SecondaryAction = "Secondary";
-        public const string CancelAction = "Cancel";
         public const string PointerAction = "Pointer";
         public const string LookAction = "Look";
 
@@ -35,7 +34,6 @@ namespace Diciela.Controls
         private InputAction _place;
         private InputAction _rotate;
         private InputAction _secondary;
-        private InputAction _cancel;
         private InputAction _pointer;
         private InputAction _look;
         private CursorGrip _rotateGrip;
@@ -70,7 +68,6 @@ namespace Diciela.Controls
             _place = _map.FindAction(PlaceAction, true);
             _rotate = _map.FindAction(RotateAction, true);
             _secondary = _map.FindAction(SecondaryAction, true);
-            _cancel = _map.FindAction(CancelAction, true);
             _pointer = _map.FindAction(PointerAction, true);
             _look = _map.FindAction(LookAction, true);
             _map.Enable();
@@ -126,7 +123,7 @@ namespace Diciela.Controls
                 Tool.Confirm();
 
             _secondaryGesture.Update(_secondary.IsPressed(), pointer, threshold, onInterface);
-            if (_secondaryGesture.Clicked || _cancel.WasPressedThisFrame())
+            if (_secondaryGesture.Clicked)
                 Tool.Cancel();
         }
 

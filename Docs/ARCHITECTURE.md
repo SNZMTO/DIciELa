@@ -282,6 +282,7 @@ code.
 | pose (d'une pièce) ; paire, moitié ; obligatoire | `PiecePlacement` ; `Pairs`, `EarHalves` ; `Required` | rotation ; réglage (par tête, par corps) | `Rotation` ; `WearerAdjustment` | tête de référence ; se poser par sa base | `Reference` ; `Contact.TryRest` |
 | abords (d'une construction) | `Surroundings` | livraison ; place d'ouvrier | `Delivery` ; `BuildShift` | bilan des marchandises ; cause | `GoodsLedger` ; `GoodsCause` |
 | entrepôts (ce qui tient les marchandises de la ville) | `Warehouses` | poser (l'opération du monde) | `Placing` | travail ; tâche en cours | `Job` ; `Chore` |
+| fiche (d'un lieu) | `PlaceSheet` | Échap ; ce qu'il referme | `EscapeControls` ; `IEscapable` | là où est le HUD | `HudArea` |
 | statistique, sous-statistique | `StatisticDefinition`, `SubStatisticDefinition` | table des statistiques ; celles d'un habitant | `StatisticTable` ; `VillagerStatistics` | ce que consulte un habitant | `VillagerServices` |
 
 ## 10. La carte, les scènes et la sauvegarde
@@ -352,7 +353,9 @@ code.
   constructions par `DICIELA/Interface/Photographier les constructions`.
 - **Le HUD** est un seul document (`Hud.uxml`, sa mise en page dans `Hud.uss`), sur l'objet « Interface » : chaque
   bloc a sa vue, qui cherche son sous-arbre par son nom, et son présentateur (la barre de construction, `BuildBar` ;
-  la journée, `DayBoard`). Le démarrage donne à la journée, à chaque image, la fraction du pas en cours.
+  la journée, `DayBoard` ; la fiche du lieu touché, `PlaceSheet`). Le démarrage donne à la journée, à chaque image, la
+  fraction du pas en cours. Tout le HUD dit aux gestes où il est (`HudArea`) ; l'outil « choisir » dit ce qu'on a
+  touché, et le démarrage le relie à la fiche. Échap est une pile (`EscapeControls`) : la fiche, puis l'outil en main.
 - **Aucun état statique modifiable** dans la simulation : le registre, le catalogue et les textes sont des objets
   créés par `Game`. Le Play de ce projet ne recharge ni le code ni la scène : `Game` crée le monde, la table des textes
   et l'outil de pose, et les libère à la sortie (les outils de l'éditeur lisent le monde en cours par

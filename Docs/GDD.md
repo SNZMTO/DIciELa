@@ -599,17 +599,21 @@
 - **Règle.** La cabane a le modèle `Bld_Preset_Shed_02` du pack ; `House_03` est pressentie pour la maison.
 - **Règle.** Une construction se pose la porte au niveau du sol : ses fondations s'enfoncent, et cachent le vide sous
   elle sur une pente. Son empreinte est la boîte de son modèle, accessoires compris : rien ne se chevauche à l'écran.
-- **À toi.** Le modèle de la tente, que le pack n'a pas. En attendant, une boîte.
+- **À toi.** Le modèle de la tente, que le pack n'a pas, et celui du tas de départ (le pack a des tas de bûches et de
+  pierres). En attendant, une boîte chacun.
 - **Défaut.** La tente mesure 3 × 3 m, sa porte 1,2 m de large ; sa boîte fait 2,5 m de haut.
 - **À toi.** Le reste du plan de l'interface ; le son et la musique. Ma reco : chaque panneau naît avec son système
   (la liste des habitants avec eux, l'étal avec le troc), sur le côté, la ville visible derrière, comme dans
   Timberborn ; le son et la musique après le premier jouable, avec un pack acheté, comme l'art.
-- **À toi.** Les questions ouvertes du HUD. Mes recos : une seule fiche ouverte à la fois, la nouvelle remplace
-  l'ancienne ; Échap ferme d'abord la fiche, puis lâche l'outil en main, puis ouvre le menu ; les touches 1 à 9
-  prennent les cartes de la famille ouverte ; l'interface ne prend pas le focus du clavier ; les fanions montrent les
-  marchandises de l'étape en cours, et un fanion à zéro reste, en douce ; la jauge ne compte pas les heures, son
-  infobulle dit ce qui suit ; chaque famille reçoit un pastel libre, dans l'ordre ; le bandeau de brique montre les
-  animaux du pack. L'astuce montre le portrait de la Chimère : qui parle, le jeu ou elle, est à toi (sa voix aussi).
+- **Règle.** Toucher un lieu de travail ouvre sa fiche, à droite (en haut tant que le menu n'existe pas) : son nom, ce
+  qu'il tient pour la ville (une marchandise par creux de lin), son poste et qui le tient, son bouton. Une seule fiche
+  à la fois : la nouvelle remplace l'ancienne ; toucher autre chose, ou le sol, la ferme, comme sa croix. Échap ferme
+  d'abord la fiche, puis lâche l'outil en main, puis ouvrira le menu ; l'interface ne prend pas le focus du clavier.
+- **À toi.** Les questions ouvertes du HUD. Mes recos : les touches 1 à 9 prennent les cartes de la famille ouverte ;
+  les fanions montrent les marchandises de l'étape en cours, et un fanion à zéro reste, en douce ; la jauge ne compte
+  pas les heures, son infobulle dit ce qui suit ; chaque famille reçoit un pastel libre, dans l'ordre ; le bandeau de
+  brique montre les animaux du pack. L'astuce montre le portrait de la Chimère : qui parle, le jeu ou elle, est à toi
+  (sa voix aussi).
 
 ## 17. Le premier jouable
 

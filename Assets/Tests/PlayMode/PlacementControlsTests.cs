@@ -10,8 +10,8 @@ namespace Diciela.Tests.PlayMode
 {
     /// <summary>
     /// Les gestes de la pose, joués par une souris et un clavier simulés sur les vraies actions du jeu et le petit monde
-    /// des tests : viser, poser au clic gauche, tourner à R bref ou tenu, poser l'outil de côté au clic droit bref ou à
-    /// Échap. Un faux panneau d'interface occupe le bas de l'écran.
+    /// des tests : viser, poser au clic gauche, tourner à R bref ou tenu, poser l'outil de côté au clic droit bref (Échap a
+    /// son geste à lui). Un faux panneau d'interface occupe le bas de l'écran.
     /// </summary>
     public sealed class PlacementControlsTests : GestureFixture
     {
@@ -141,12 +141,5 @@ namespace Diciela.Tests.PlayMode
             Assert.IsTrue(_test.Tool.IsActive, "Un clic droit glissé tire la vue, il ne pose pas l'outil de côté.");
         }
 
-        [UnityTest]
-        public IEnumerator EscapePutsTheToolAside()
-        {
-            yield return Click(Keyboard.escapeKey);
-
-            Assert.IsFalse(_test.Tool.IsActive);
-        }
     }
 }

@@ -15,6 +15,16 @@
 
 ## Les captures
 
+### 30/09/2026 — étape 15b : la fiche du tas, la Chimère au travail
+
+On touche le tas : sa fiche s'ouvre en haut à droite, un cadre de bois, le Bois et la Pierre dans des creux de lin, le
+poste « À tout faire » libre et le bouton menthe « Y mettre la Chimère ». Mise au poste, la Chimère porte 10 Bois et
+5 Pierre au chantier de la cabane (la fiche suit : 20 et 15), puis la bâtit ; le fantôme laisse place au modèle.
+
+![La fiche du tas](Album/2026-09-30_etape-15b_fiche-du-tas.jpg)
+![La Chimère au tas, la cabane en chantier](Album/2026-09-30_etape-15b_chimere-au-tas.jpg)
+![La cabane bâtie](Album/2026-09-30_etape-15b_cabane-batie.jpg)
+
 ### 30/09/2026 — étape 15a : le tas de départ se pose avec la tente
 
 La tente plantée (la boîte avec sa porte), le tas de départ s'est posé de lui-même à droite de la porte vue de face,

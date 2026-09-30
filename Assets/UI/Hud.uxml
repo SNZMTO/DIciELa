@@ -16,6 +16,24 @@
                 </ui:VisualElement>
             </ui:VisualElement>
         </Diciela.UI.WoodFrame>
+        <Diciela.UI.WoodFrame name="fiche" class="fiche bloc-cache">
+            <ui:VisualElement class="fiche-contenu">
+                <ui:VisualElement class="fiche-tete">
+                    <ui:Label name="fiche-titre" class="t2 fiche-titre" />
+                    <Diciela.UI.FeltButton name="fiche-fermer" class="feutre sable pan-6 fiche-fermer">
+                        <ui:VisualElement class="fiche-croix" picking-mode="Ignore" />
+                    </Diciela.UI.FeltButton>
+                </ui:VisualElement>
+                <ui:VisualElement name="fiche-stock" class="fiche-stock" />
+                <ui:VisualElement name="fiche-poste" class="fiche-poste">
+                    <ui:Label name="fiche-poste-nom" class="nom" />
+                    <ui:Label name="fiche-poste-qui" class="sous-titre" />
+                </ui:VisualElement>
+                <Diciela.UI.FeltButton name="fiche-bouton" class="feutre menthe pan-10 couture fiche-bouton">
+                    <ui:Label name="fiche-bouton-texte" class="action" picking-mode="Ignore" />
+                </Diciela.UI.FeltButton>
+            </ui:VisualElement>
+        </Diciela.UI.WoodFrame>
         <ui:VisualElement name="bas" class="bas" picking-mode="Ignore">
             <Diciela.UI.Facet name="reason" class="bulle raison bloc-cache" picking-mode="Ignore">
                 <ui:Label name="reason-text" class="libelle" picking-mode="Ignore" />

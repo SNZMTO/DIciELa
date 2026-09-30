@@ -12,11 +12,10 @@ namespace Diciela.UI
     /// La barre de construction, en bas au centre de l'écran (GDD, section 16) : un cadre de bois, les familles en
     /// onglets de feutre (leur pastel, leur icône), au-dessus les constructions de la famille ouverte en cartes (leur
     /// vignette, leur nom), et au-dessus du cadre la raison d'un refus de pose, dans une bulle. L'onglet ouvert et la
-    /// carte en main restent enfoncés. C'est la vue (le bloc « bar » de Hud.uxml) ; son présentateur décide. Elle dit
-    /// aussi aux gestes si le pointeur est sur elle.
+    /// carte en main restent enfoncés. C'est la vue (le bloc « bar » de Hud.uxml) ; son présentateur décide.
     /// </summary>
     [RequireComponent(typeof(UIDocument))]
-    public sealed class BuildBar : MonoBehaviour, IBuildBarView, IInterfaceArea
+    public sealed class BuildBar : MonoBehaviour, IBuildBarView
     {
         private const string BarName = "bar";
         private const string FamiliesName = "families";
@@ -54,7 +53,6 @@ namespace Diciela.UI
         {
             Hide();
             VisualElement root = _document.rootVisualElement;
-            root.pickingMode = PickingMode.Ignore;
             // Tous les éléments d'abord, rangés seulement s'ils sont là : une barre à moitié trouvée ne se cache plus.
             VisualElement bar = root.Q(BarName);
             VisualElement families = root.Q(FamiliesName);
@@ -140,20 +138,6 @@ namespace Diciela.UI
         {
             _reasonText.text = text;
             _reason.EnableInClassList(HiddenClass, string.IsNullOrEmpty(text));
-        }
-
-        /// <summary>
-        /// Vrai si le pointeur est sur un élément de la barre. Le pointeur compte depuis le bas de l'écran, UI Toolkit
-        /// depuis le haut : on retourne l'axe vertical avant de chercher l'élément (SAVOIR, section 3).
-        /// </summary>
-        public bool Contains(Vector2 screenPoint)
-        {
-            IPanel panel = _document != null ? _document.rootVisualElement?.panel : null;
-            if (panel == null || _bar == null || _bar.ClassListContains(HiddenClass))
-                return false;
-            var fromTop = new Vector2(screenPoint.x, Screen.height - screenPoint.y);
-            VisualElement picked = panel.Pick(RuntimePanelUtils.ScreenToPanel(panel, fromTop));
-            return picked != null && (picked == _bar || _bar.Contains(picked));
         }
 
         private static FeltButton Button(string[] classes, string pastel, Action clicked)

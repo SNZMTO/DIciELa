@@ -126,6 +126,8 @@ namespace Diciela.Tests.PlayMode
                 property.floatValue = number;
             else if (value is bool flag)
                 property.boolValue = flag;
+            else if (value is int whole)
+                property.intValue = whole;
             else if (value is Vector3 vector)
                 property.vector3Value = vector;
             else if (value is Enum choice)

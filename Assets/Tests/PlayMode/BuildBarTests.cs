@@ -55,9 +55,10 @@ namespace Diciela.Tests.PlayMode
             Vector2 unit = RuntimePanelUtils.ScreenToPanel(root.panel, Vector2.one) - origin;
             Vector2 center = root.Q("bar").worldBound.center;
             var fromTop = new Vector2((center.x - origin.x) / unit.x, (center.y - origin.y) / unit.y);
-            Assert.IsTrue(bar.Contains(new Vector2(fromTop.x, Screen.height - fromTop.y)),
+            var hud = new HudArea(bar.GetComponent<UIDocument>());
+            Assert.IsTrue(hud.Contains(new Vector2(fromTop.x, Screen.height - fromTop.y)),
                 "Le milieu de la barre est sur l'interface.");
-            Assert.IsFalse(bar.Contains(new Vector2(Screen.width * 0.5f, Screen.height * 0.5f)),
+            Assert.IsFalse(hud.Contains(new Vector2(Screen.width * 0.5f, Screen.height * 0.5f)),
                 "Le milieu de l'écran est la ville.");
 
             LogAssert.Expect(LogType.Log, new Regex("^DICIELA : monde arrêté"));

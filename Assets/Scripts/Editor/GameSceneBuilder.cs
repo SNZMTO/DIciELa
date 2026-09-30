@@ -22,6 +22,7 @@ namespace Diciela.EditorTools
         private const string VillagersObjectName = "Habitants";
         private const string PreviewObjectName = "Aperçu de la Chimère";
         private const string ConfirmObjectName = "Valider";
+        private const string EscapeObjectName = "Échap";
         private const string TurnObjectName = "Tourner la Chimère";
 
         [MenuItem("DICIELA/Scènes/Monter les scènes")]
@@ -96,6 +97,10 @@ namespace Diciela.EditorTools
             EditorAssets.AssignIfMissing(confirm, "_actions",
                 EditorAssets.Load<UnityEngine.InputSystem.InputActionAsset>(InputActionsBuilder.ActionsPath));
             EditorAssets.AssignIfMissing(stage, "_confirmControls", confirm);
+            EscapeControls escape = EditorAssets.FindOrCreate<EscapeControls>(scene, EscapeObjectName);
+            EditorAssets.AssignIfMissing(escape, "_actions",
+                EditorAssets.Load<UnityEngine.InputSystem.InputActionAsset>(InputActionsBuilder.ActionsPath));
+            EditorAssets.AssignIfMissing(stage, "_escapeControls", escape);
             EditorAssets.AssignIfMissing(stage, "_atelier", AtelierBuilder.EnsureIn(scene));
             PreviewControls turn = EditorAssets.FindOrCreate<PreviewControls>(scene, TurnObjectName);
             EditorAssets.AssignIfMissing(turn, "_actions",

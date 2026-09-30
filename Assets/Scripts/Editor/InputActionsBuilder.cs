@@ -47,9 +47,13 @@ namespace Diciela.EditorTools
             added += AddButtonIfMissing(placement, PlacementControls.PlaceAction, "<Mouse>/leftButton") +
                      AddButtonIfMissing(placement, PlacementControls.RotateAction, "<Keyboard>/#(r)") +
                      AddButtonIfMissing(placement, PlacementControls.SecondaryAction, "<Mouse>/rightButton") +
-                     AddButtonIfMissing(placement, PlacementControls.CancelAction, "<Keyboard>/escape") +
                      AddPointerIfMissing(placement, PlacementControls.PointerAction) +
                      AddLookIfMissing(placement, PlacementControls.LookAction);
+
+            // Échap a son geste à lui, une pile (décision 152).
+            InputActionMap escape = asset.FindActionMap(EscapeControls.MapName) ??
+                                    asset.AddActionMap(EscapeControls.MapName);
+            added += AddButtonIfMissing(escape, EscapeControls.BackAction, "<Keyboard>/escape");
 
             // Toucher ce qu'on voit : le clic gauche, quand l'outil de pose est au repos.
             InputActionMap choose = asset.FindActionMap(ChooseControls.MapName) ??

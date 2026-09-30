@@ -116,3 +116,74 @@
     height: 34px;
     margin-right: 8px;
 }
+
+/* La fiche du lieu touché, en haut à droite ; le menu, quand il viendra, se posera au-dessus. */
+
+.fiche {
+    position: absolute;
+    right: 24px;
+    top: 20px;
+    width: 300px;
+}
+
+.fiche-contenu {
+    padding: 14px 16px 18px 18px;
+}
+
+.fiche-tete {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.fiche-titre {
+    flex-shrink: 1;
+}
+
+.fiche-fermer {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    margin-left: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.fiche-croix {
+    width: 20px;
+    height: 20px;
+    background-image: url("Icones/croix.asset");
+}
+
+.fiche-stock {
+    margin-bottom: 8px;
+}
+
+.fiche-ligne {
+    flex-direction: row;
+    align-items: center;
+    padding: 6px 14px 6px 10px;
+    margin-bottom: 6px;
+}
+
+.fiche-icone {
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+}
+
+.fiche-ligne-nom {
+    flex-grow: 1;
+}
+
+.fiche-poste {
+    margin: 4px 0 14px 2px;
+}
+
+.fiche-bouton {
+    height: 52px;
+    padding: 0 16px 3px 16px;
+    align-items: center;
+    justify-content: center;
+}
