@@ -1,30 +1,31 @@
 # DICIELA — état actuel
 
-**Branches** : `etape-23-couche`, `etape-24-campement`, `etape-25-feuilles`, l'une sur l'autre, commitées et poussées,
-**pas fusionnées** : pas encore vues rendues. `main` : l'étape 22, poussée.
+**Branches** : `etape-23-couche`, `-24-campement`, `-25-feuilles`, `-26-revue`, l'une sur l'autre, commitées et poussées,
+**pas fusionnées** (pas encore vues rendues) ; `main` : l'étape 22. Une fois vues : `git fetch . etape-26-revue:main`,
+puis `git push origin main`.
 
-**Fait** :
-- 21 à 22 : le campement d'objets du pack (170), la caméra plus proche (171), le ménage de la revue du code (172, 173).
-- 23 : la couche du campement, un repère « Couche » dans sa composition ; endormie, la Chimère y est couchée.
-- 24 : le campement fait tout : stock de départ (100 places, 30 Bois, 20 Pierre) et poste « à tout faire » ; bûches et
-  pierres dans sa composition ; plus de tas ; sa fiche : « Y mettre la Chimère », « Aller dormir » ou « Réveiller » (174).
-- 25 : sur un chantier, les feuilles du pack gardent leur texture, leur détourage et leurs faces, fantôme compris (175).
-**EditMode 172/172, PlayMode 169/169.**
+**Fait** : 23, la Chimère couchée sur la couche du campement ; 24, le campement fait tout (stock de départ, poste « à
+tout faire », sa fiche et ses boutons, décision 174) ; 25, les feuilles du pack sur un chantier (175) ; 26, les
+corrections sûres de la revue « max » : bouton lavande, renoncement au coucher annoncé, réveil devant la porte (le GDD
+et la décision 96 font foi), source du pack perdue refusée, variantes du chantier gardées au build, tests qui quittent
+leur scène même en échouant, garde-fou des statiques. **EditMode 174/174, PlayMode 169/169.**
 
-**À faire en premier** : Unity au premier plan trois minutes, pour les captures (départ, campement, fiche, chantiers et
-leurs feuilles, fanions, Chimère couchée) ; les juger, l'album (21 à 25), puis fusionner 23, 24 et 25.
+**À faire en premier** : Unity au premier plan quelques minutes (le Play court et les captures de 26 n'ont pas pu se
+faire : une autre application était devant) ; juger les captures, l'album (21 à 26), puis fusionner.
 
-**À vérifier par toi** : le tas de pierres au fond du campement se voit-il ? La Chimère est-elle couchée sur le tapis, la
-tête sur le coussin ? La composition (`Assets/Art/Compositions/Campement.prefab`) et son repère « Couche » sont à toi.
-L'aperçu de pose dessine encore les feuilles en carrés pleins ; reco : lui donner le fantôme du chantier.
+**À vérifier par toi** : sur la fiche du campement, « Aller dormir » est lavande et cousu comme le menthe (la lèvre et
+le fil sont mes teintes, tirées de `--lavande` : `.feutre.lavande` dans `Fusion.uss`) ; réveillée en chemin, la Chimère
+retourne flâner devant sa porte ; le tas de pierres du campement se voit ; elle dort sur le tapis, la tête au coussin.
+
+**Reste de la revue** (un plan court chacun, à valider) : 27, les gestes (le clic qui ferme la roue pose la
+construction en main, déjà sur `main` ; la roue près d'un bord ; l'appui adopté par l'outil suivant) ; 28, les matières
+du chantier (tiges du lierre, frange du chaume, shader inconnu signalé) ; 29, la simulation (arbres qui partagent des
+mailles, qui s'arme quand tu rangeras tes modèles ; retour de charge, ton « À toi » du GDD 8 ; logis bâti par chantier).
 
 **À toi** : peindre la carte et ranger tes modèles (`Assets/Data/Nature`) ; le fanion des arbres marqués ; l'icône des
 outils et le plateau de la roue ; les pastels et le bandeau de brique (GDD 16) ; la voix de la Chimère ; les noms.
-
-**Dette** : `Fusion.uss` répète les couleurs de `:root` ; à trois cartes, le panneau chevauchera l'astuce en 720 p.
-
-**Prochaine étape** : les touches 1 à 9 du panneau ouvert ; puis GDD 17. Après, une session de ménage.
+**Dette** : `Fusion.uss` répète `:root` ; à trois cartes, le panneau chevauchera l'astuce en 720 p.
+**Prochaine étape** : 27, puis 28 et 29 ; puis les touches 1 à 9 du panneau ouvert ; puis GDD 17.
 
 **Prompt de la session suivante**
-
 > Lis CLAUDE.md et Docs/ETAT.md. Mes réponses : … Continue avec tes recos.
