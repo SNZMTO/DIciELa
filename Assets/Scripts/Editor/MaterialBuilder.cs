@@ -5,8 +5,8 @@ using UnityEngine.Rendering;
 namespace Diciela.EditorTools
 {
     /// <summary>
-    /// Crée les matériaux qui manquent, sur le shader Lit d'URP. Un matériau qui existe n'est jamais touché : ses
-    /// réglages se font dans l'Inspector.
+    /// Crée les matériaux qui manquent, sur le shader Lit d'URP ou sur un shader du projet. Un matériau qui existe n'est
+    /// jamais touché : ses réglages se font dans l'Inspector.
     /// </summary>
     internal static class MaterialBuilder
     {
@@ -49,6 +49,19 @@ namespace Diciela.EditorTools
             material.SetShaderPassEnabled("ShadowCaster", false);
             material.renderQueue = (int)RenderQueue.Transparent;
             return Save(material, path);
+        }
+
+        /// <summary>Un matériau sur ce shader du projet, à ses réglages par défaut (le chantier qui monte, son fantôme).</summary>
+        public static Material OnShaderIfMissing(string path, string shaderName)
+        {
+            Material existing = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (existing != null)
+                return existing;
+
+            Shader shader = Shader.Find(shaderName);
+            if (shader == null)
+                throw new System.InvalidOperationException("Le shader « " + shaderName + " » est introuvable.");
+            return Save(new Material(shader), path);
         }
 
         private static Material Save(Material material, string path)

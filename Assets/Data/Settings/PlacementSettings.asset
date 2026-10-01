@@ -18,5 +18,11 @@ MonoBehaviour:
   _allowedColor: {r: 0.35, g: 0.85, b: 0.4, a: 0.5}
   _refusedColor: {r: 0.95, g: 0.3, b: 0.25, a: 0.5}
   _plannedColor: {r: 0.7, g: 0.85, b: 1, a: 0.45}
+  _siteMaterial: {fileID: 2100000, guid: 2e861400a205bf3448939bce69df84ff, type: 2}
+  _siteGhostMaterial: {fileID: 2100000, guid: 967ef1b5395006a4d919f283fb6f4cb9, type: 2}
+  _waveAmplitude: 0.08
+  _waveLength: 1.6
+  _waveSeconds: 3
+  _siteSoftness: 0.25
   _markedColor: {r: 0.9, g: 0.35, b: 0.3, a: 0.85}
   _markHeightMeters: 1.8

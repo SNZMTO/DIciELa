@@ -23,6 +23,8 @@ namespace Diciela.EditorTools
         internal const string InterfaceSettingsPath = SettingsFolder + "/InterfaceSettings.asset";
         private const string TextsPath = "Assets/Localization/strings.csv";
         private const string TranslucentMaterialPath = "Assets/Art/Vue/Translucide.mat";
+        private const string SiteMaterialPath = "Assets/Art/Vue/Chantier.mat";
+        private const string SiteGhostMaterialPath = "Assets/Art/Vue/ChantierFantome.mat";
 
         [MenuItem("DICIELA/Données/Créer les fiches manquantes")]
         public static void CreateMissingAssets()
@@ -36,9 +38,13 @@ namespace Diciela.EditorTools
             EditorAssets.CreateIfMissing<MapCreationSettings>(TestMapCreationPath, FillTestMapCreation);
             EditorAssets.CreateIfMissing<CameraSettings>(CameraSettingsPath, null);
             EditorAssets.CreateIfMissing<GestureSettings>(GestureSettingsPath, null);
-            EditorAssets.CreateIfMissing<PlacementSettings>(PlacementSettingsPath, fiche =>
+            var placement = EditorAssets.CreateIfMissing<PlacementSettings>(PlacementSettingsPath, fiche =>
                 EditorAssets.Property(fiche, "_translucentMaterial").objectReferenceValue =
                     MaterialBuilder.TranslucentIfMissing(TranslucentMaterialPath));
+            EditorAssets.AssignIfMissing(placement, "_siteMaterial",
+                MaterialBuilder.OnShaderIfMissing(SiteMaterialPath, "Diciela/Chantier"));
+            EditorAssets.AssignIfMissing(placement, "_siteGhostMaterial",
+                MaterialBuilder.OnShaderIfMissing(SiteGhostMaterialPath, "Diciela/ChantierFantome"));
             EditorAssets.CreateIfMissing<InterfaceSettings>(InterfaceSettingsPath, fiche =>
                 EditorAssets.Property(fiche, "_texts").objectReferenceValue = EditorAssets.Load<TextAsset>(TextsPath));
             ContentBuilder.CreateMissing();
