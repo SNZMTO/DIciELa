@@ -8,7 +8,8 @@ namespace Diciela.EditorTools
     /// <summary>
     /// Génère les images de l'interface « fusion » (décision 145) : le cadre de bois, tiré de l'atlas du pack, en triple
     /// résolution ; son ombre portée ; la feuille qui les découpe en neuf (Cadre.uss), dont les mesures se déduisent des
-    /// peintres ; les icônes. Réexécutable : tout est refait en place.
+    /// peintres ; les icônes ; les images du panneau de bois brun de l'écran de création (MenuArtBuilder, décision 162).
+    /// Réexécutable : tout est refait en place.
     /// </summary>
     internal static class InterfaceArtBuilder
     {
@@ -30,8 +31,10 @@ namespace Diciela.EditorTools
             File.WriteAllText(FrameStylePath, FrameStyle());
             AssetDatabase.ImportAsset(FrameStylePath);
             InterfaceIconBuilder.CreateAll(palette);
+            MenuArtBuilder.CreateAll();
+            AssetDatabase.Refresh();
             Debug.Log("DICIELA : images de l'interface générées : " + FramePath + ", " + ShadowPath + ", " +
-                      FrameStylePath + ", " + InterfaceIconBuilder.Folder + ".");
+                      FrameStylePath + ", " + InterfaceIconBuilder.Folder + ", " + MenuArtBuilder.Folder + ".");
         }
 
         private static string FrameStyle()

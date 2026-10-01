@@ -19,6 +19,9 @@ namespace Diciela.UI
         private const int BodyRow = 1;
         private const int FirstSlotRow = 2;
         private const int None = -1;
+        // Les identifiants des deux premières lignes ; les suivantes prennent celui de leur emplacement.
+        private const string HeadRowId = "tete";
+        private const string BodyRowId = "corps";
 
         private readonly Catalog _catalog;
         private readonly List<List<AttachmentDefinition>> _offered = new List<List<AttachmentDefinition>>();
@@ -61,6 +64,14 @@ namespace Diciela.UI
         }
 
         public int Rows => _pieces.Length;
+
+        /// <summary>L'identifiant de cette ligne : « tete », « corps », puis celui de l'emplacement ; il choisit son icône.</summary>
+        public string RowId(int row)
+        {
+            if (row == HeadRow)
+                return HeadRowId;
+            return row == BodyRow ? BodyRowId : _catalog.AttachmentSlots[row - FirstSlotRow].Id;
+        }
 
         /// <summary>La clé du nom de cette ligne.</summary>
         public string LabelKey(int row)
