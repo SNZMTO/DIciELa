@@ -551,11 +551,13 @@
   arrive habillé d'accessoires du pack, composés par le développeur ; le sol s'adapte sous et autour de ce qu'on pose
   (de la terre sous un bâtiment, l'herbe écartée) ; les routes se peignent dans le sol. À regarder : Manor Lords et
   Foundation, deux jeux dont les villes bâties par les joueurs ressemblent à des maquettes.
-- **Règle.** Caméra en perspective, comme la démo (champ de vision autour de 40°). Caméra de gestion à main invisible :
-  se déplacer (clavier, bords de l'écran, clic droit glissé qui tire le sol), tourner (A et E en AZERTY, ou le bouton
-  du milieu glissé de gauche à droite), zoomer à la molette, vers l'endroit que vise la souris. En zoomant, elle
-  s'abaisse doucement, d'autant à chaque cran : de loin, la ville en maquette ; de près, les habitants presque de face.
-  On part à mi-chemin des crans.
+- **Règle.** Caméra en perspective, un peu plus serrée que la démo du pack, pour faire maquette. Caméra de gestion à
+  main invisible : se déplacer (clavier, bords de l'écran, clic droit glissé qui tire le sol), tourner (A et E en
+  AZERTY, ou le bouton du milieu glissé de gauche à droite), zoomer à la molette, vers l'endroit que vise la souris.
+  En zoomant, elle s'abaisse doucement, d'autant à chaque cran : de loin, la ville en maquette ; de près, les
+  habitants presque de face. On part tout près de la Chimère et de son campement, la vue assez basse.
+- **Défaut.** Champ de vision : 35°. Au départ, 25 m, la vue inclinée d'environ 32° ; de près (8 m), 22,5°, le plus
+  bas que permet l'horizon ; de loin (220 m), 50°.
 - **Règle.** Le bouton du milieu glissé de haut en bas incline la vue, en plus de ce que donne le zoom, et le zoom
   garde ce choix. Le haut de l'écran reste au moins 5° sous l'horizon, car la carte n'a pas de décor au-delà, et la
   vue ne dépasse pas 80°, une vue d'oiseau (Défauts).
