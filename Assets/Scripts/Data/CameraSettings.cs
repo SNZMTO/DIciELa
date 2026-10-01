@@ -10,8 +10,8 @@ namespace Diciela.Data
     public sealed class CameraSettings : ScriptableObject
     {
         [Header("Vue")]
-        [Tooltip("Champ de vision vertical, en degrés (la démo du pack : autour de 40°).")]
-        [SerializeField, Range(10f, 90f)] private float _fieldOfView = 40f;
+        [Tooltip("Champ de vision vertical, en degrés : 35, un peu plus serré que la démo du pack (40), plus maquette.")]
+        [SerializeField, Range(10f, 90f)] private float _fieldOfView = 35f;
 
         [Tooltip("Distance au sol la plus proche, en mètres : les habitants presque de face.")]
         [SerializeField, Min(1f)] private float _nearDistance = 8f;
@@ -19,14 +19,15 @@ namespace Diciela.Data
         [Tooltip("Distance au sol la plus lointaine, en mètres : la ville en maquette.")]
         [SerializeField, Min(1f)] private float _farDistance = 220f;
 
-        [Tooltip("Distance au sol au lancement, en mètres : 57, autant de crans de molette pour avancer que pour reculer.")]
-        [SerializeField, Min(1f)] private float _startDistance = 57f;
+        [Tooltip("Distance au sol au lancement, en mètres : 25, près de la Chimère et de son campement.")]
+        [SerializeField, Min(1f)] private float _startDistance = 25f;
 
-        [Tooltip("Inclinaison de la vue au plus près, en degrés sous l'horizon.")]
-        [SerializeField, Range(5f, 89f)] private float _nearPitch = 25f;
+        [Tooltip("Inclinaison de la vue au plus près, en degrés sous l'horizon : 22,5, le plus bas permis " +
+                 "(la moitié du champ de vision, plus la marge de l'horizon).")]
+        [SerializeField, Range(5f, 89f)] private float _nearPitch = 22.5f;
 
         [Tooltip("Inclinaison de la vue au plus loin, en degrés sous l'horizon.")]
-        [SerializeField, Range(5f, 89f)] private float _farPitch = 60f;
+        [SerializeField, Range(5f, 89f)] private float _farPitch = 50f;
 
         [Tooltip("Inclinaison la plus forte, en degrés sous l'horizon, même en inclinant soi-même : la vue d'oiseau.")]
         [SerializeField, Range(5f, 90f)] private float _maxPitch = 80f;

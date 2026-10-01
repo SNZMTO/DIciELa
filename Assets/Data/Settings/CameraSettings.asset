@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75dd444dc3a0c2f46be2a0d9e93c5415, type: 3}
   m_Name: CameraSettings
   m_EditorClassIdentifier: Diciela.Data::Diciela.Data.CameraSettings
-  _fieldOfView: 40
+  _fieldOfView: 35
   _nearDistance: 8
   _farDistance: 220
-  _startDistance: 57
-  _nearPitch: 25
-  _farPitch: 60
+  _startDistance: 25
+  _nearPitch: 22.5
+  _farPitch: 50
   _maxPitch: 80
   _horizonMarginDegrees: 5
   _groundClearance: 2
