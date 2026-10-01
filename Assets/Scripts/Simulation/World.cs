@@ -72,7 +72,7 @@ namespace Diciela.Simulation
         /// <summary>Le bilan des marchandises : ce qui est né et ce qui a disparu, par cause.</summary>
         public GoodsLedger Ledger { get; }
 
-        /// <summary>Ce qui tient les marchandises de la ville : le tas de départ, puis les entrepôts.</summary>
+        /// <summary>Ce qui tient les marchandises de la ville : le campement, puis les entrepôts.</summary>
         public Warehouses Warehouses { get; }
 
         /// <summary>Les chantiers et leur file.</summary>

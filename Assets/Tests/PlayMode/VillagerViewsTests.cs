@@ -110,25 +110,26 @@ namespace Diciela.Tests.PlayMode
         }
 
         [Test]
-        public void AsleepSheIsHiddenAndWokenSheIsSeenAgain()
+        public void AsleepInAHomeWithoutACouchSheIsHiddenAndWokenSheIsSeenAgain()
         {
-            // Sa tente de 3 × 3 m, plantée en (50 ; 45), porte au nord : elle y va, s'y couche, et on ne la voit plus.
-            var tent = Keep(ScriptableObject.CreateInstance<StructureDefinition>());
+            // Son logis de 3 × 3 m, sans couche (comme la future maison), posé en (50 ; 45), porte au nord : elle y va, y
+            // entre, et on ne la voit plus.
+            var home = Keep(ScriptableObject.CreateInstance<StructureDefinition>());
 #if UNITY_EDITOR
-            TestWorld.Fill(tent, "_widthMeters", 3f);
-            TestWorld.Fill(tent, "_depthMeters", 3f);
-            TestWorld.Fill(tent, "_unique", true);
-            TestWorld.Fill(tent, "_chimeraHome", true);
-            TestWorld.Fill(tent, "_builtWhenPlaced", true);
+            TestWorld.Fill(home, "_widthMeters", 3f);
+            TestWorld.Fill(home, "_depthMeters", 3f);
+            TestWorld.Fill(home, "_unique", true);
+            TestWorld.Fill(home, "_chimeraHome", true);
+            TestWorld.Fill(home, "_builtWhenPlaced", true);
 #endif
             Villager chimera = _world.Villagers.Chimera;
-            _world.Submit(new PlaceStructureCommand(tent, new Placement(new Vector2(50f, 45f), 0f)));
+            _world.Submit(new PlaceStructureCommand(home, new Placement(new Vector2(50f, 45f), 0f)));
             _world.Submit(new SendChimeraToBedCommand());
             for (int step = 0; step < 2000 && !chimera.IsAsleep; step++)
                 _world.Step();
 
-            Assert.IsTrue(chimera.IsAsleep, "Elle a rejoint sa tente.");
-            Assert.IsFalse(Shown.gameObject.activeSelf, "Endormie, elle est dans sa tente.");
+            Assert.IsTrue(chimera.IsAsleep, "Elle a rejoint son logis.");
+            Assert.IsFalse(Shown.gameObject.activeSelf, "Endormie, elle est entrée dans son logis.");
 
             _world.Submit(new WakeChimeraCommand());
             _world.Step();

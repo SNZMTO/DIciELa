@@ -29,9 +29,9 @@ namespace Diciela.Tests.EditMode
             _test.Dispose();
         }
 
-        private World WorldWithTent()
+        private World WorldWithCamp()
         {
-            World world = TestBedroom.WorldWithTent(_test);
+            World world = TestBedroom.WorldWithCamp(_test);
             world.Villagers.SleepRefused += _refusals.Add;
             return world;
         }
@@ -58,7 +58,7 @@ namespace Diciela.Tests.EditMode
         [Test]
         public void SheIsNotSentTwiceNorWokenWhenUp()
         {
-            World world = WorldWithTent();
+            World world = WorldWithCamp();
 
             world.Submit(new WakeChimeraCommand());
             world.Step();
@@ -89,7 +89,7 @@ namespace Diciela.Tests.EditMode
         [Test]
         public void ADoorShutInIsOutOfReach()
         {
-            World world = WorldWithTent();
+            World world = WorldWithCamp();
             Villager chimera = world.Villagers.Chimera;
             TestBedroom.EncloseTheDoor(world, _test);
             world.Step();
@@ -107,7 +107,7 @@ namespace Diciela.Tests.EditMode
         {
             // Un bloc de 2 × 2 m posé sur elle : elle en sort à pied, en quelques pas. Tant qu'elle est sur le bloc, sa
             // porte est hors d'atteinte ; sur le sol libre, l'ordre passe, même avant la fin de sa sortie.
-            World world = WorldWithTent();
+            World world = WorldWithCamp();
             Villager chimera = world.Villagers.Chimera;
             TestBedroom.Place(world, _test.Block(2f, 2f), chimera.Position.x, chimera.Position.y);
             world.Step();
@@ -127,7 +127,7 @@ namespace Diciela.Tests.EditMode
         [Test]
         public void SheGivesUpWhenHerDoorIsShutOnHerWay()
         {
-            World world = WorldWithTent();
+            World world = WorldWithCamp();
             Villager chimera = world.Villagers.Chimera;
 
             world.Submit(new SendChimeraToBedCommand());

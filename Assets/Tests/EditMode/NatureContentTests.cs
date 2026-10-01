@@ -37,23 +37,23 @@ namespace Diciela.Tests.EditMode
         }
 
         [Test]
-        public void ThePileHasRoomForWhatEachSortYields()
+        public void TheCampHasRoomForWhatEachSortYields()
         {
             Catalog catalog = ProjectContent.LoadSingle<Catalog>();
             int starting = 0;
             foreach (GoodAmount goods in catalog.Opening.StartingGoods)
                 starting += goods.Amount;
-            int room = catalog.Opening.StartingPile.StorageCapacity - starting;
+            int room = ProjectContent.CampOf(catalog).StorageCapacity - starting;
             foreach (NatureDefinition nature in catalog.Nature)
-                Assert.GreaterOrEqual(room, nature.Yield.Amount, "Plein dès le départ, le tas n'aurait pas la place de ce " +
-                                                                   "que rend " + nature.Id + " : rien ne se défricherait.");
+                Assert.GreaterOrEqual(room, nature.Yield.Amount, "Plein dès le départ, le campement n'aurait pas la place " +
+                                                                   "de ce que rend " + nature.Id + " : rien ne se défricherait.");
         }
 
         [Test]
         public void TheOddJobsPostClearsLast()
         {
-            StructureDefinition pile = ProjectContent.LoadSingle<Catalog>().Opening.StartingPile;
-            IReadOnlyList<TaskKindDefinition> tasks = pile.WorkSlots[0].Tasks;
+            StructureDefinition camp = ProjectContent.CampOf(ProjectContent.LoadSingle<Catalog>());
+            IReadOnlyList<TaskKindDefinition> tasks = camp.WorkSlots[0].Tasks;
             Assert.AreEqual(TaskWork.Clear, tasks[tasks.Count - 1].Work, "Porter, bâtir, puis défricher (décision 139).");
         }
 

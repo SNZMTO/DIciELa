@@ -10,26 +10,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2865aac5748c02846858e8a8cb4e3eab, type: 3}
-  m_Name: TasDeDepart
+  m_Name: Campement
   m_EditorClassIdentifier: Diciela.Data::Diciela.Data.StructureDefinition
-  _id: tas_de_depart
-  _nameKey: construction.tas_de_depart
-  _widthMeters: 2.7
-  _depthMeters: 1.06
-  _hasDoor: 0
-  _doorOffsetMeters: 0
-  _doorWidthMeters: 1.5
-  _hasBed: 0
-  _bedFeet: {x: 0, y: 0, z: 0}
-  _bedHeadingDegrees: 0
+  _id: campement
+  _nameKey: construction.campement
+  _widthMeters: 5.34
+  _depthMeters: 4.52
+  _hasDoor: 1
+  _doorOffsetMeters: -0.12
+  _doorWidthMeters: 1.4
+  _hasBed: 1
+  _bedFeet: {x: -1.84, y: 0.2, z: 0.81}
+  _bedHeadingDegrees: 180
   _unique: 1
-  _chimeraHome: 0
+  _chimeraHome: 1
   _builtWhenPlaced: 1
   _cost: []
   _workHours: 0
   _workSlots:
   - {fileID: 11400000, guid: efdeee55abb7a0c408de680db580711a, type: 2}
   _storageCapacity: 100
-  _sourceModel: {fileID: 7534952635967488081, guid: dd2ff37b33bb83140aadc1d7084dd615, type: 3}
-  _model: {fileID: 9059437479225551520, guid: 34856802af9b08d4690b787778f35ce2, type: 3}
-  _picture: {fileID: 0}
+  _sourceModel: {fileID: 9071609515276711932, guid: 5d4eb190ab7f5e74cad04a93f40dbf4b, type: 3}
+  _model: {fileID: 7260408593367818035, guid: 34c8205f80806744b96df438f24efd48, type: 3}
+  _picture: {fileID: 2800000, guid: 809a7121aa89d9a4b812edef696900c3, type: 3}

@@ -9,7 +9,7 @@ namespace Diciela.UI
     /// <summary>
     /// Le présentateur des fanions du stock (GDD, section 16 ; décision 153) : le stock de la ville, un fanion par
     /// marchandise du catalogue (celles de l'étape en cours : le Bois et la Pierre), qui paraît avec le premier entrepôt
-    /// (le tas de départ). Un fanion à zéro reste, en douce. Il écoute les entrepôts : les fanions ne photographient
+    /// (le campement). Un fanion à zéro reste, en douce. Il écoute les entrepôts : les fanions ne photographient
     /// jamais.
     /// </summary>
     public sealed class StockPennantsPresenter : IDisposable

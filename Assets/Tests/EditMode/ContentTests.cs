@@ -44,17 +44,11 @@ namespace Diciela.Tests.EditMode
                 }
             }
 
-            StructureDefinition pile = ProjectContent.StartingPileOf(catalog);
-            if (pile != null && !reached.Add(pile))
-                faults.Add(pile.name + " est dans une famille : le tas de départ se pose de lui-même.");
-            else if (pile != null && (string.IsNullOrEmpty(pile.Id) || !structureIds.Add(pile.Id)))
-                faults.Add(pile.name + " : identifiant vide, ou déjà pris.");
-
             foreach (string guid in AssetDatabase.FindAssets("t:" + nameof(StructureDefinition)))
             {
                 string path = AssetDatabase.GUIDToAssetPath(guid);
                 if (!reached.Contains(AssetDatabase.LoadAssetAtPath<StructureDefinition>(path)))
-                    faults.Add(path + " n'est ni dans une famille du catalogue, ni le tas de départ.");
+                    faults.Add(path + " n'est dans aucune famille du catalogue.");
             }
 
             Assert.IsEmpty(faults, string.Join("\n", faults));
@@ -90,8 +84,8 @@ namespace Diciela.Tests.EditMode
             {
                 TextKeys.CreationTitle, TextKeys.CreationHead, TextKeys.CreationBody, TextKeys.CreationNone,
                 TextKeys.CreationConfirm, TextKeys.DayNumber, TextKeys.SheetPutChimera, TextKeys.SheetRemoveChimera,
-                TextKeys.SheetChimera, TextKeys.SheetFreeSlot, TextKeys.StockTooltip, TextKeys.TipTent, TextKeys.TipPile,
-                TextKeys.TipCabin, TextKeys.BuildTool, TextKeys.BuildToolDetail, TextKeys.ClearingTool,
+                TextKeys.SheetChimera, TextKeys.SheetFreeSlot, TextKeys.SheetSleep, TextKeys.SheetWake,
+                TextKeys.StockTooltip, TextKeys.TipCamp, TextKeys.TipPost, TextKeys.TipCabin, TextKeys.BuildTool, TextKeys.BuildToolDetail, TextKeys.ClearingTool,
                 TextKeys.ClearingToolDetail, TextKeys.ToolsTooltip, TextKeys.ToolsTooltipDetail
             });
             foreach (DayPhase phase in Enum.GetValues(typeof(DayPhase)))

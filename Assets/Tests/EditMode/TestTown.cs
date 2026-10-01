@@ -15,8 +15,8 @@ namespace Diciela.Tests.EditMode
     /// deux mailles par mètre, 1 m libre devant une porte), ou une journée plus courte ; trois statistiques de deux
     /// sous-statistiques (Bâtisse : construction, terrassement ; Échange : transport, troc ; Terre : paysage, coupe) ; le
     /// Bois et la Pierre ; porter (transport), bâtir (construction) et défricher (paysage) ; le poste « à tout faire »
-    /// (porter, puis bâtir, puis défricher) ; un tas de départ de 2 × 2 m qui tient 100 marchandises et ouvre ce poste,
-    /// posé avec 30 Bois et 20 Pierre ; la tente de 3 × 3 m ; une cabane de 4 × 4 m qui coûte 10 Bois et 5 Pierre et 2 h
+    /// (porter, puis bâtir, puis défricher) ; le campement de 3 × 3 m, qui tient 100 marchandises et ouvre ce poste, et
+    /// reçoit 30 Bois et 20 Pierre quand on l'installe ; une cabane de 4 × 4 m qui coûte 10 Bois et 5 Pierre et 2 h
     /// de travail ; un arbre (pied de 1 m, 3 Bois, 30 min) et un rocher (pied de 1,5 m, 2 Pierre, 45 min). La Chimère
     /// commence à 10 partout et porte 5 marchandises. Ses mondes sont plats, 40 × 40 m, nus ou avec les arbres et
     /// rochers qu'on leur donne ; les fiches qu'il crée sont détruites avec lui.
@@ -43,13 +43,12 @@ namespace Diciela.Tests.EditMode
             Build = Keep(TestData.TaskKind("batir", TaskWork.Build, construction));
             Clear = Keep(TestData.TaskKind("defricher", TaskWork.Clear, landscape));
             OddJobs = Keep(TestData.WorkSlot("a_tout_faire", Carry, Build, Clear));
-            Pile = Keep(TestData.Pile("tas", 2f, 100, OddJobs));
-            Tent = Keep(TestData.Home());
+            Camp = Keep(TestData.Home("campement", 3f, true, 100, OddJobs));
             Cabin = Keep(TestData.Structure("cabane", 4f, 4f));
             TestData.Cost(Cabin, 2f, new GoodAmount(Wood, 10), new GoodAmount(Stone, 5));
             Tree = Keep(TestData.Nature("arbre", 1f, new GoodAmount(Wood, 3), 0.5f));
             Rock = Keep(TestData.Nature("rocher", 1.5f, new GoodAmount(Stone, 2), 0.75f));
-            Opening = Keep(TestData.Opening(Pile, 16f, new GoodAmount(Wood, 30), new GoodAmount(Stone, 20)));
+            Opening = Keep(TestData.Opening(new GoodAmount(Wood, 30), new GoodAmount(Stone, 20)));
             Catalog = Keep(TestData.TownCatalog(Opening, new[] { Wood, Stone }, new[] { building, trade, land }));
         }
 
@@ -60,8 +59,7 @@ namespace Diciela.Tests.EditMode
         public TaskKindDefinition Build { get; }
         public TaskKindDefinition Clear { get; }
         public WorkSlotDefinition OddJobs { get; }
-        public StructureDefinition Pile { get; }
-        public StructureDefinition Tent { get; }
+        public StructureDefinition Camp { get; }
         public StructureDefinition Cabin { get; }
         public NatureDefinition Tree { get; }
         public NatureDefinition Rock { get; }
@@ -81,15 +79,15 @@ namespace Diciela.Tests.EditMode
         }
 
         /// <summary>
-        /// Un monde où la tente est plantée en (20 ; 14), porte au nord (le tas se pose donc de lui-même), et où la
-        /// Chimère est mise au tas, par les ordres du joueur.
+        /// Un monde où le campement est installé en (20 ; 14), porte au nord (il reçoit donc le stock de départ), et où
+        /// la Chimère est mise à son poste, par les ordres du joueur.
         /// </summary>
         public World WorkingWorld(IReadOnlyList<NatureSpot> nature = null)
         {
             World world = World(null, nature);
-            Place(world, Tent, 20f, 14f);
-            Structure pile = PileOf(world);
-            world.Submit(new AssignVillagerCommand(world.Villagers.Chimera.Id, pile.Id));
+            Place(world, Camp, 20f, 14f);
+            Structure camp = CampOf(world);
+            world.Submit(new AssignVillagerCommand(world.Villagers.Chimera.Id, camp.Id));
             world.Step();
             return world;
         }
@@ -115,15 +113,10 @@ namespace Diciela.Tests.EditMode
             world.Step();
         }
 
-        /// <summary>Le tas de départ de ce monde ; null s'il n'est pas posé.</summary>
-        public Structure PileOf(World world)
+        /// <summary>Le campement de ce monde, qui tient le stock ; null s'il n'est pas installé.</summary>
+        public static Structure CampOf(World world)
         {
-            foreach (Structure structure in world.Structures.All)
-            {
-                if (ReferenceEquals(structure.Definition, Pile))
-                    return structure;
-            }
-            return null;
+            return world.Structures.ChimeraHome;
         }
 
         /// <summary>Les marchandises de la ville, où qu'elles soient : entrepôts, charges, chantiers.</summary>

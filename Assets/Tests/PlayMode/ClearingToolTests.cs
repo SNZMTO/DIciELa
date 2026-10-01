@@ -17,7 +17,7 @@ namespace Diciela.Tests.PlayMode
     public sealed class ClearingToolTests
     {
         private TestPaintedNature _painted;
-        private TestPileTown _town;
+        private TestCampTown _town;
         private Camera _camera;
         private ClearingTool _tool;
 
@@ -29,7 +29,7 @@ namespace Diciela.Tests.PlayMode
             LogAssert.ignoreFailingMessages = true;
             try
             {
-                _town = new TestPileTown(true, _painted.Read(instances));
+                _town = new TestCampTown(true, _painted.Read(instances));
             }
             finally
             {

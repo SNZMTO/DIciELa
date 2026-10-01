@@ -8,8 +8,9 @@ namespace Diciela.EditorTools
     /// <summary>
     /// Crée le contenu de la ville au travail qui manque (GDD, sections 2 et 5 à 7 ; décisions 137 à 139 et 157 à 160) :
     /// le Bois et la Pierre, les quatre statistiques et leurs sous-statistiques, les tâches « porter », « bâtir » et
-    /// « défricher », le poste « à tout faire », le tas de départ et le déroulé du départ, le coût de la cabane, l'arbre
-    /// et le rocher (sans modèle : le développeur y range ceux qu'il peint), et leur place dans le catalogue.
+    /// « défricher », le poste « à tout faire », le stock et le poste du campement, le déroulé du départ (le stock de
+    /// départ), le coût de la cabane, l'arbre et le rocher (sans modèle : le développeur y range ceux qu'il peint), et leur
+    /// place dans le catalogue.
     /// Réexécutable : une fiche qui existe n'est jamais touchée, sauf pour ce qui lui manque (une liste vide, un
     /// nombre à 0, la tâche « défricher » au poste).
     /// </summary>
@@ -19,7 +20,6 @@ namespace Diciela.EditorTools
         private const string StatisticsFolder = "Assets/Data/Statistiques";
         private const string WorkFolder = "Assets/Data/Travail";
         private const string NatureFolder = "Assets/Data/Nature";
-        internal const string PilePath = "Assets/Data/Structures/TasDeDepart.asset";
         private const string OpeningPath = "Assets/Data/Depart.asset";
 
         // Les statistiques et leurs sous-statistiques (GDD, section 5) : l'identifiant de la statistique, puis ceux de
@@ -32,7 +32,7 @@ namespace Diciela.EditorTools
             new[] { "echange", "transport", "troc", "expedition" }
         };
 
-        public static void CreateMissing(Catalog catalog, StructureDefinition cabin)
+        public static void CreateMissing(Catalog catalog, StructureDefinition camp, StructureDefinition cabin)
         {
             GoodDefinition wood = Good("Bois", "bois");
             GoodDefinition stone = Good("Pierre", "pierre");
@@ -58,27 +58,15 @@ namespace Diciela.EditorTools
                 EditorAssets.Set(oddJobs, fiche => EditorAssets.SetList(EditorAssets.Property(fiche, "_tasks"), tasks));
             }
 
-            StructureDefinition pile = EditorAssets.CreateIfMissing<StructureDefinition>(PilePath, fiche =>
-            {
-                EditorAssets.Property(fiche, "_id").stringValue = "tas_de_depart";
-                EditorAssets.Property(fiche, "_nameKey").stringValue = "construction.tas_de_depart";
-                EditorAssets.Property(fiche, "_widthMeters").floatValue = 2f;
-                EditorAssets.Property(fiche, "_depthMeters").floatValue = 2f;
-                EditorAssets.Property(fiche, "_hasDoor").boolValue = false;
-                EditorAssets.Property(fiche, "_unique").boolValue = true;
-                EditorAssets.Property(fiche, "_builtWhenPlaced").boolValue = true;
-                EditorAssets.Property(fiche, "_storageCapacity").intValue = 100;
-                EditorAssets.SetList(EditorAssets.Property(fiche, "_workSlots"), new[] { oddJobs });
-            });
-            // Le pack a des tas de bûches et de pierres ; le choix est au développeur : une boîte en attendant.
-            if (pile.Model == null)
-                ModelPreparer.Prepare(pile);
-
+            // Le campement fait tout au départ (décision 172) : il tient 100 marchandises pour la ville et ouvre le poste
+            // « à tout faire » ; le déroulé du départ lui donne 30 Bois et 20 Pierre quand on l'installe.
+            if (camp.StorageCapacity <= 0)
+                EditorAssets.Set(camp, fiche => EditorAssets.Property(fiche, "_storageCapacity").intValue = 100);
+            if (camp.WorkSlots.Count == 0)
+                EditorAssets.Set(camp, fiche => EditorAssets.SetList(EditorAssets.Property(fiche, "_workSlots"),
+                    new[] { oddJobs }));
             OpeningDefinition opening = EditorAssets.CreateIfMissing<OpeningDefinition>(OpeningPath, fiche =>
-            {
-                EditorAssets.Property(fiche, "_startingPile").objectReferenceValue = pile;
-                SetAmounts(EditorAssets.Property(fiche, "_startingGoods"), wood, 30, stone, 20);
-            });
+                SetAmounts(EditorAssets.Property(fiche, "_startingGoods"), wood, 30, stone, 20));
 
             // Une cabane coûte 10 Bois et 5 Pierre, et demande 2 h de travail à un débutant (décision 137).
             if (cabin.Cost.Count == 0)

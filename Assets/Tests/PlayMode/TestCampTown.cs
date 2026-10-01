@@ -9,18 +9,18 @@ using Object = UnityEngine.Object;
 namespace Diciela.Tests.PlayMode
 {
     /// <summary>
-    /// Le petit monde des tests de l'interface du tas : plat, 40 × 40 m (ou la carte donnée), la Chimère née au centre
-    /// (sauf si le test la crée lui-même) ; le Bois et la Pierre ; un tas de départ de 2 × 2 m qui tient 100
-    /// marchandises et ouvre le poste « à tout faire » (porter, puis défricher) ; le déroulé du
-    /// départ, qui le pose avec 30 Bois et 20 Pierre quand la tente est plantée. Les fiches sont remplies par
-    /// SerializedObject, le chemin de l'Inspector, et détruites avec lui.
+    /// Le petit monde des tests de l'interface du campement : plat, 40 × 40 m (ou la carte donnée), la Chimère née au
+    /// centre (sauf si le test la crée lui-même) ; le Bois et la Pierre ; un campement de 3 × 3 m qui tient 100
+    /// marchandises et ouvre le poste « à tout faire » (porter, puis défricher) ; le déroulé du départ, qui lui donne
+    /// 30 Bois et 20 Pierre quand on l'installe. Les fiches sont remplies par SerializedObject, le chemin de
+    /// l'Inspector, et détruites avec lui.
     /// </summary>
-    internal sealed class TestPileTown : IDisposable
+    internal sealed class TestCampTown : IDisposable
     {
         private readonly List<Object> _created = new List<Object>();
         private readonly VillagerKindDefinition _kind;
 
-        public TestPileTown(bool withChimera = true, MapDescription map = null)
+        public TestCampTown(bool withChimera = true, MapDescription map = null)
         {
 #if UNITY_EDITOR
             var settings = Keep(ScriptableObject.CreateInstance<SimulationSettings>());
@@ -40,18 +40,7 @@ namespace Diciela.Tests.PlayMode
             var slot = Keep(ScriptableObject.CreateInstance<WorkSlotDefinition>());
             TestWorld.Fill(slot, "_nameKey", "poste.a_tout_faire");
             TestWorld.FillList(slot, "_tasks", carry, clear);
-            Pile = Keep(ScriptableObject.CreateInstance<StructureDefinition>());
-            TestWorld.Fill(Pile, "_id", "tas");
-            TestWorld.Fill(Pile, "_nameKey", "construction.tas_de_depart");
-            TestWorld.Fill(Pile, "_widthMeters", 2f);
-            TestWorld.Fill(Pile, "_depthMeters", 2f);
-            TestWorld.Fill(Pile, "_hasDoor", false);
-            TestWorld.Fill(Pile, "_unique", true);
-            TestWorld.Fill(Pile, "_builtWhenPlaced", true);
-            TestWorld.Fill(Pile, "_storageCapacity", 100);
-            TestWorld.FillList(Pile, "_workSlots", slot);
             var opening = Keep(ScriptableObject.CreateInstance<OpeningDefinition>());
-            TestWorld.Fill(opening, "_startingPile", Pile);
             FillGoods(opening, "_startingGoods", new GoodAmount(Wood, 30), new GoodAmount(Stone, 20));
             Catalog = Keep(ScriptableObject.CreateInstance<Catalog>());
             TestWorld.Fill(Catalog, "_opening", opening);
@@ -59,12 +48,16 @@ namespace Diciela.Tests.PlayMode
             TestWorld.FillList(Catalog, "_statistics", trade, land);
             _kind = Keep(ScriptableObject.CreateInstance<VillagerKindDefinition>());
             TestWorld.Fill(_kind, "_id", "chimere");
-            Tent = Keep(ScriptableObject.CreateInstance<StructureDefinition>());
-            TestWorld.Fill(Tent, "_widthMeters", 3f);
-            TestWorld.Fill(Tent, "_depthMeters", 3f);
-            TestWorld.Fill(Tent, "_unique", true);
-            TestWorld.Fill(Tent, "_chimeraHome", true);
-            TestWorld.Fill(Tent, "_builtWhenPlaced", true);
+            Camp = Keep(ScriptableObject.CreateInstance<StructureDefinition>());
+            TestWorld.Fill(Camp, "_id", "campement");
+            TestWorld.Fill(Camp, "_nameKey", "construction.campement");
+            TestWorld.Fill(Camp, "_widthMeters", 3f);
+            TestWorld.Fill(Camp, "_depthMeters", 3f);
+            TestWorld.Fill(Camp, "_unique", true);
+            TestWorld.Fill(Camp, "_chimeraHome", true);
+            TestWorld.Fill(Camp, "_builtWhenPlaced", true);
+            TestWorld.Fill(Camp, "_storageCapacity", 100);
+            TestWorld.FillList(Camp, "_workSlots", slot);
 
             World = new World(settings, map ?? new MapDescription(new Relief(40f, 40f, 2, 2, new float[4])), Catalog);
 #endif
@@ -83,27 +76,15 @@ namespace Diciela.Tests.PlayMode
         public Catalog Catalog { get; }
         public GoodDefinition Wood { get; }
         public GoodDefinition Stone { get; }
-        public StructureDefinition Pile { get; }
-        public StructureDefinition Tent { get; }
+        public StructureDefinition Camp { get; }
 
-        /// <summary>Le tas de départ, une fois posé ; null avant.</summary>
-        public Structure PlacedPile
-        {
-            get
-            {
-                foreach (Structure structure in World.Structures.All)
-                {
-                    if (ReferenceEquals(structure.Definition, Pile))
-                        return structure;
-                }
-                return null;
-            }
-        }
+        /// <summary>Le campement, une fois installé ; null avant.</summary>
+        public Structure PlacedCamp => World.Structures.ChimeraHome;
 
-        /// <summary>Plante la tente en (20 ; 14), porte au nord, par l'ordre « poser » : le tas se pose avec elle.</summary>
-        public void PlantTheTent()
+        /// <summary>Installe le campement en (20 ; 14), porte au nord, par l'ordre « poser » : il reçoit le stock de départ.</summary>
+        public void InstallTheCamp()
         {
-            World.Submit(new PlaceStructureCommand(Tent, new Placement(new Vector2(20f, 14f), 0f)));
+            World.Submit(new PlaceStructureCommand(Camp, new Placement(new Vector2(20f, 14f), 0f)));
             World.Step();
         }
 

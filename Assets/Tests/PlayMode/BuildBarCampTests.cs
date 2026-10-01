@@ -6,16 +6,16 @@ using UnityEngine;
 namespace Diciela.Tests.PlayMode
 {
     /// <summary>
-    /// La tente d'abord, dans le panneau Construire (GDD, section 6 ; décision 95) : tant que la Chimère n'a pas de
-    /// logis, le panneau ne propose que la tente ; une fois plantée, la tente s'en va (elle est unique), l'outil de pose la
+    /// Le campement d'abord, dans le panneau Construire (GDD, section 6 ; décision 95) : tant que la Chimère n'a pas de
+    /// logis, le panneau ne propose que le campement ; une fois installé, le campement s'en va (il est unique), l'outil de pose la
     /// lâche, et le reste de la famille s'ouvre. Sur le petit monde des tests, un catalogue d'une famille (Logement : la
-    /// tente, puis la cabane) et une table des textes écrite ici.
+    /// campement, puis la cabane) et une table des textes écrite ici.
     /// </summary>
-    public sealed class BuildBarTentTests
+    public sealed class BuildBarCampTests
     {
         private const string Texts = "clé,fr\n" +
                                      "famille.logement,Logement\n" +
-                                     "construction.tente,Tente\n" +
+                                     "construction.campement,Campement\n" +
                                      "construction.cabane,Cabane\n" +
                                      "pose.refus.AlreadyPlaced,Déjà posée\n";
 
@@ -31,7 +31,7 @@ namespace Diciela.Tests.PlayMode
             var catalog = _test.Keep(ScriptableObject.CreateInstance<Catalog>());
 #if UNITY_EDITOR
             TestWorld.Fill(housing, "_nameKey", "famille.logement");
-            TestWorld.FillList(housing, "_structures", _test.Tent, _test.Cabin);
+            TestWorld.FillList(housing, "_structures", _test.Camp, _test.Cabin);
             TestWorld.FillList(catalog, "_families", housing);
 #endif
             _view = new NotedBuildBarView();
@@ -46,18 +46,18 @@ namespace Diciela.Tests.PlayMode
         }
 
         [Test]
-        public void BeforeTheTentTheBarOffersOnlyTheTent()
+        public void BeforeTheCampTheBarOffersOnlyTheCamp()
         {
             Assert.AreEqual(new[] { "Logement" }, _view.Families);
-            Assert.AreEqual(new[] { "Tente" }, _view.Structures);
+            Assert.AreEqual(new[] { "Campement" }, _view.Structures);
 
             _view.Choose(0);
-            Assert.AreSame(_test.Tent, _test.Tool.Current);
+            Assert.AreSame(_test.Camp, _test.Tool.Current);
             Assert.AreEqual(0, _view.Selected);
         }
 
         [Test]
-        public void OncePlantedTheTentLeavesTheBarAndTheCabinComes()
+        public void OncePlantedTheCampLeavesTheBarAndTheCabinComes()
         {
             _view.Choose(0);
             _test.Tool.AimAt(_test.OnScreen(TestWorld.Center));
@@ -65,7 +65,7 @@ namespace Diciela.Tests.PlayMode
             _test.World.Step();
 
             Assert.AreEqual(1, _test.World.Structures.All.Count);
-            Assert.IsFalse(_test.Tool.IsActive, "L'outil lâche la tente : elle ne se pose plus nulle part.");
+            Assert.IsFalse(_test.Tool.IsActive, "L'outil lâche le campement : il ne se pose plus nulle part.");
             Assert.AreEqual(new[] { "Cabane" }, _view.Structures);
             Assert.AreEqual(-1, _view.Selected);
             Assert.AreEqual("", _view.Reason);

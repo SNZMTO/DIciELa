@@ -12,7 +12,7 @@ namespace Diciela.UI
     /// textes, met dans la main de l'outil de pose la construction choisie, et dit pourquoi une pose est refusée. Le
     /// panneau s'ouvre à la demande (la roue des outils, sa touche) et se ferme quand on prend une carte, pour dégager la
     /// vue pendant la pose, ou par Échap (décision 168). Il ne propose que ce qui se pose encore : une construction unique
-    /// posée s'en va. La tente d'abord (GDD, section 6) : tant que la Chimère n'a pas de logis, il ne propose que son
+    /// posée s'en va. Le campement d'abord (GDD, section 6) : tant que la Chimère n'a pas de logis, il ne propose que son
     /// logis, si le catalogue en a un ; c'est une consigne du panneau, pas une règle des ordres (décision 95). Il écoute
     /// l'outil et les poses : le panneau ne photographie jamais.
     /// </summary>

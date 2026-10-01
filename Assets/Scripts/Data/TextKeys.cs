@@ -24,10 +24,12 @@ namespace Diciela.Data
         public const string SheetRemoveChimera = "fiche.retirer_chimere";
         public const string SheetChimera = "fiche.la_chimere";
         public const string SheetFreeSlot = "fiche.poste_libre";
+        public const string SheetSleep = "fiche.dormir";
+        public const string SheetWake = "fiche.reveiller";
 
         // L'astuce (GDD, section 16 ; décision 154) : ce qu'il y a à faire ensuite, au début d'une partie.
-        public const string TipTent = "astuce.tente";
-        public const string TipPile = "astuce.tas";
+        public const string TipCamp = "astuce.campement";
+        public const string TipPost = "astuce.poste";
         public const string TipCabin = "astuce.cabane";
 
         // La roue des outils (GDD, section 16 ; décision 168) : le nom et l'usage de chaque outil, dans la bulle du

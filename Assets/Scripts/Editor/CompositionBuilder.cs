@@ -20,7 +20,7 @@ namespace Diciela.EditorTools
         private const string Folder = "Assets/Art/Compositions";
         private const string DoorName = "Door";
 
-        [MenuItem("DICIELA/Contenu/Composer le campement et le tas")]
+        [MenuItem("DICIELA/Contenu/Composer le campement")]
         public static void ComposeAll()
         {
             foreach (PackComposition composition in PackComposition.All)

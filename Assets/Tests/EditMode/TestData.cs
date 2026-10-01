@@ -48,15 +48,18 @@ namespace Diciela.Tests.EditMode
 
         /// <summary>
         /// Un logis de la Chimère, unique, de size mètres de côté, porte de 1 m au milieu de sa façade nord (GDD, section
-        /// 6). Par défaut, la tente : dressée dès la pose ; sinon, une maison qui attend ses bâtisseurs.
+        /// 6). Par défaut, le campement : dressé dès la pose ; sinon, une maison qui attend ses bâtisseurs.
         /// </summary>
-        public static StructureDefinition Home(string id = "tente", float size = 3f, bool builtWhenPlaced = true)
+        public static StructureDefinition Home(string id = "campement", float size = 3f, bool builtWhenPlaced = true,
+            int capacity = 0, params WorkSlotDefinition[] slots)
         {
             StructureDefinition home = Structure(id, size, size);
             var serialized = new SerializedObject(home);
             Property(serialized, "_unique").boolValue = true;
             Property(serialized, "_chimeraHome").boolValue = true;
             Property(serialized, "_builtWhenPlaced").boolValue = builtWhenPlaced;
+            Property(serialized, "_storageCapacity").intValue = capacity;
+            Fill(Property(serialized, "_workSlots"), slots);
             serialized.ApplyModifiedPropertiesWithoutUndo();
             return home;
         }

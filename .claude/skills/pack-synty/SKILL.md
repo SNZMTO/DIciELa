@@ -83,7 +83,7 @@ jamais un bâtiment ni un décor de sa propre initiative ; les choix d'art sont 
 - **Accessoires utiles** : roue à eau (`SM_Prop_WaterWheel_01`), ponts (`SM_Bld_Bridge_01` à `03`), lanternes (3),
   bancs, fontaines, puits, enclume, établis, brouette, charrettes (`Vehicles/`, 4), bûches, souches, piles de bois et de
   rochers, planches, haches, pioche, étendoirs, bottes de foin.
-- **Pas de modèle tout fait** pour la tente, l'étal, la scierie, le moulin à eau (seulement sa roue), l'atelier de tissu
+- **Pas de modèle tout fait** pour la tente (le campement est composé d'objets du pack), l'étal, la scierie, le moulin à eau (seulement sa roue), l'atelier de tissu
   (ni métier à tisser ni rouet), la carrière, les échafaudages : le développeur les compose, sinon un remplaçant simple.
 - **Cultures** : des plants de citrouilles (`SM_Env_Pumpkin_Leaves_01`, `02`), des feuillages
   (`SM_Env_Plant_Leaves_01`, `02`), des vignes (`SM_Env_Vine_*`), des fleurs sauvages, un buisson, des jardinières

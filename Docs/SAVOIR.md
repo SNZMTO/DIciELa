@@ -118,7 +118,7 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 - **Chercher la place la plus proche par anneaux carrés** (`SquareRing`, le seul parcours par anneaux) : un anneau ne
   range pas ses places par distance, ses coins sont à √2 fois son rang, plus loin que le milieu de l'anneau suivant.
   Pour la plus proche, on continue tant que le rang de l'anneau reste sous la meilleure distance trouvée, et on écarte
-  ce qui dépasse le rayon cherché (le tas de départ, `Opening`).
+  ce qui dépasse le rayon cherché.
 - **Flâner sans dériver** : tirer le point suivant autour de l'endroit où l'on s'est mis à flâner, pas autour de soi ;
   de saut en saut, un tirage autour de soi traverse la carte. Le tirer sur son îlot : il est joignable par
   construction, et un point sans issue n'est qu'une pause de plus. Si l'endroit où l'on flânait est pris, ou coupé de
@@ -216,7 +216,7 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   sur la boîte.
 - **Un menu de diagnostic** vise le centre de triangles tirés sur chaque modèle et compte les fautes : c'est la preuve
   que la visée tient.
-- **Toucher une construction vise son modèle, jamais le sol** : vu de biais, le haut d'une tente cache le sol derrière
+- **Toucher une construction vise son modèle, jamais le sol** : vu de biais, le haut d'une cabane cache le sol derrière
   elle, et le rayon qui touche son toit retombe hors de son empreinte. Aujourd'hui, la vue (`StructureViews.TryPick`)
   vise la boîte des maillages dans le repère du modèle, qui tourne avec lui (jamais `Renderer.bounds`, droite et plus
   large) ; les triangles viendront avec le premier modèle creux.
@@ -440,6 +440,9 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 
 ## 3. Pièges de Unity et de C#
 
+- **Restaurer un fichier suivi par Git LFS** (les images, les maillages) : `git show HEAD:chemin` rend le pointeur, pas
+  le fichier ; l'écrire à sa place remplace l'image par trois lignes de texte. Passer par `git show HEAD:chemin | git lfs
+  smudge chemin`, vers un fichier à part, puis le copier.
 - **En EditMode, `Awake` et `OnEnable` ne se déclenchent pas** : un composant créé dans un test n'est pas abonné. La
   logique va dans des classes C# pures, testables sans scène.
 - **Démarrage rapide du Play** (Enter Play Mode Options, actif dans ce projet : ni le domaine ni la scène ne sont

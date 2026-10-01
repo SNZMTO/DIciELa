@@ -37,7 +37,7 @@ namespace Diciela.Tests.PlayMode
 
         private readonly List<Object> _created = new List<Object>();
         private TestPaintedNature _painted;
-        private TestPileTown _town;
+        private TestCampTown _town;
         private Camera _camera;
         private ClearingControls _controls;
         private NotedFrame _frame;
@@ -50,7 +50,7 @@ namespace Diciela.Tests.PlayMode
             LogAssert.ignoreFailingMessages = true;
             try
             {
-                _town = new TestPileTown(true, _painted.Read(instances));
+                _town = new TestCampTown(true, _painted.Read(instances));
             }
             finally
             {

@@ -7,7 +7,7 @@ namespace Diciela.Simulation.Land
 {
     /// <summary>
     /// Les abords d'une construction, ou d'un arbre ou d'un rocher : les mailles libres qui le bordent (l'une de leurs
-    /// quatre voisines est à lui). C'est là qu'on se tient pour le servir : prendre dans un tas, livrer un chantier, y
+    /// quatre voisines est à lui). C'est là qu'on se tient pour le servir : prendre dans un stock, livrer un chantier, y
     /// travailler, abattre un arbre. On les cherche
     /// dans son empreinte élargie de deux mailles de chaque côté : une maille couverte déborde d'au plus une maille, et
     /// sa voisine d'une de plus. Rien n'est alloué : la liste est celle de l'appelant.

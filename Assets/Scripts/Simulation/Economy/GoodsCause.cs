@@ -6,8 +6,8 @@ namespace Diciela.Simulation.Economy
     /// </summary>
     public enum GoodsCause
     {
-        /// <summary>Le contenu du tas de départ, posé avec lui (GDD, section 6).</summary>
-        StartingPile = 0,
+        /// <summary>Le stock de départ, que reçoit le campement quand on l'installe (GDD, section 6).</summary>
+        StartingStock = 0,
 
         /// <summary>Les matériaux d'un chantier fini, pris dans la construction.</summary>
         Construction = 1,
