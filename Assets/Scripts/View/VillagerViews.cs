@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Diciela.Data;
 using Diciela.Simulation.Land;
 using Diciela.Simulation.Society;
 using UnityEngine;
@@ -11,8 +12,9 @@ namespace Diciela.View
     /// qui sont déjà là ; ensuite, chaque arrivée, par l'événement de la simulation. À chaque image, le
     /// démarrage donne la fraction du pas en cours : chaque personnage se montre à cette fraction du chemin entre sa
     /// place au pas d'avant et celle du dernier pas (SAVOIR, 2.2), posé sur le sol, et se tourne vers où il va, sans
-    /// à-coup. Le pack n'a pas d'animations : il glisse. Endormi, il est entré dans son logis : on ne le voit plus
-    /// jusqu'à ce qu'il se réveille.
+    /// à-coup. Le pack n'a pas d'animations : il glisse. Endormie, la Chimère est couchée sur la couche de son logis, sur
+    /// le dos, la tête vers où le dit sa fiche ; un logis sans couche, elle y est entrée : on ne la voit plus. Réveillée,
+    /// elle se relève devant sa porte, où la simulation l'a toujours tenue.
     /// </summary>
     public sealed class VillagerViews : MonoBehaviour
     {
@@ -24,22 +26,27 @@ namespace Diciela.View
             public Villager Villager;
             public Transform Transform;
             public float YawDegrees;
+            public bool Lying;
         }
 
         private readonly List<Shown> _shown = new List<Shown>();
         private Villagers _villagers;
+        private Structures _structures;
         private Relief _relief;
 
-        /// <summary>Montre les habitants de ce monde, puis suit leurs arrivées.</summary>
-        public void Show(Villagers villagers, Relief relief)
+        /// <summary>Montre les habitants de ce monde, couchés dans leur logis s'ils dorment, puis suit leurs arrivées.</summary>
+        public void Show(Villagers villagers, Structures structures, Relief relief)
         {
             if (ReferenceEquals(villagers, null))
                 throw new ArgumentNullException(nameof(villagers));
+            if (ReferenceEquals(structures, null))
+                throw new ArgumentNullException(nameof(structures));
             if (ReferenceEquals(relief, null))
                 throw new ArgumentNullException(nameof(relief));
 
             Hide();
             _villagers = villagers;
+            _structures = structures;
             _relief = relief;
             foreach (Villager villager in villagers.All)
                 OnVillagerArrived(villager);
@@ -58,6 +65,7 @@ namespace Diciela.View
                 _villagers.VillagerWokeUp -= OnVillagerSleepChanged;
             }
             _villagers = null;
+            _structures = null;
             _relief = null;
             foreach (Shown shown in _shown)
                 Destroy(shown.Transform.gameObject);
@@ -71,7 +79,10 @@ namespace Diciela.View
         public void Follow(float stepFraction, float deltaSeconds)
         {
             foreach (Shown shown in _shown)
-                Place(shown, stepFraction, deltaSeconds);
+            {
+                if (!shown.Lying)
+                    Place(shown, stepFraction, deltaSeconds);
+            }
         }
 
         private void OnDestroy()
@@ -92,18 +103,46 @@ namespace Diciela.View
             view.name = villager.Kind.Id + " n° " + villager.Id;
             var shown = new Shown { Villager = villager, Transform = view.transform };
             _shown.Add(shown);
-            Place(shown, 1f, 0f);
-            view.SetActive(!villager.IsAsleep);
+            ShowSleep(shown);
         }
 
-        /// <summary>Il s'est endormi dans son logis, ou s'est réveillé : on le cache, ou on le montre de nouveau.</summary>
+        /// <summary>Il s'est endormi dans son logis, ou s'est réveillé.</summary>
         private void OnVillagerSleepChanged(Villager villager)
         {
             foreach (Shown shown in _shown)
             {
                 if (ReferenceEquals(shown.Villager, villager))
-                    shown.Transform.gameObject.SetActive(!villager.IsAsleep);
+                    ShowSleep(shown);
             }
+        }
+
+        // Endormi : couché sur la couche de son logis, s'il en a une, sinon caché ; éveillé : debout là où il est.
+        private void ShowSleep(Shown shown)
+        {
+            Structure home = shown.Villager.IsAsleep ? HomeWithABedOf(shown.Villager) : null;
+            shown.Lying = home != null;
+            if (shown.Lying)
+                LayDown(shown, home);
+            else
+                Place(shown, 1f, 0f);
+            shown.Transform.gameObject.SetActive(!shown.Villager.IsAsleep || shown.Lying);
+        }
+
+        // Seule la Chimère dort sur ordre, dans son logis (GDD, section 6) ; ce logis, s'il a une couche.
+        private Structure HomeWithABedOf(Villager villager)
+        {
+            Structure home = ReferenceEquals(villager, _villagers.Chimera) ? _structures.ChimeraHome : null;
+            return home != null && home.Definition.HasBed ? home : null;
+        }
+
+        // Sur le dos, les pieds au repère de la couche, la tête vers où le dit la fiche, le visage vers le ciel.
+        private void LayDown(Shown shown, Structure home)
+        {
+            StructureDefinition definition = home.Definition;
+            Vector3 feet = ModelPose.PointOf(home.Placement, _relief, definition.BedFeet);
+            Vector3 head = ModelPose.Rotation(home.Placement) * Quaternion.Euler(0f, definition.BedHeadingDegrees, 0f) *
+                           Vector3.forward;
+            shown.Transform.SetPositionAndRotation(feet, Quaternion.LookRotation(Vector3.up, head));
         }
 
         private void Place(Shown shown, float stepFraction, float deltaSeconds)

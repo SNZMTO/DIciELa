@@ -5,8 +5,8 @@ namespace Diciela.Data
 {
     /// <summary>
     /// La fiche d'une construction : bâtiment, déco, la Place. Son modèle du pack (la source) et le modèle préparé
-    /// depuis lui ; son empreinte au sol et sa porte, mesurées sur le modèle par le menu DICIELA/Contenu/Préparer les
-    /// modèles (SAVOIR, 2.9). Sans modèle du pack, le même menu lui fait une boîte à la taille de sa fiche, sa porte
+    /// depuis lui ; son empreinte au sol, sa porte et sa couche, mesurées sur le modèle par le menu DICIELA/Contenu/
+    /// Préparer les modèles (SAVOIR, 2.9). Sans modèle du pack, le même menu lui fait une boîte à la taille de sa fiche, sa porte
     /// marquée (GDD, section 16). À l'angle 0, la construction regarde vers le nord (+z), où s'ouvre sa porte.
     /// </summary>
     [CreateAssetMenu(menuName = "DICIELA/Construction", fileName = "Construction")]
@@ -32,6 +32,17 @@ namespace Diciela.Data
 
         [Tooltip("Largeur de la porte, en mètres.")]
         [SerializeField, Min(0.25f)] private float _doorWidthMeters = 1.5f;
+
+        [Tooltip("Vrai si la Chimère y dort couchée sur une couche qu'on voit (le campement) ; faux : elle entre, et on " +
+                 "ne la voit plus (GDD, section 6). Mesurée sur le modèle, d'après son objet « Couche ».")]
+        [SerializeField] private bool _hasBed;
+
+        [Tooltip("Où se posent ses pieds sur la couche, en mètres, dans le repère du modèle à l'angle 0 (x vers l'est, " +
+                 "y vers le haut, z vers le nord).")]
+        [SerializeField] private Vector3 _bedFeet;
+
+        [Tooltip("Vers où va sa tête, depuis ses pieds, en degrés depuis le nord vers l'est, à l'angle 0.")]
+        [SerializeField] private float _bedHeadingDegrees;
 
         [Tooltip("Une seule dans la ville : la tente puis la maison de la Chimère, la Place, les grands projets (GDD, " +
                  "section 9).")]
@@ -77,6 +88,9 @@ namespace Diciela.Data
         public bool HasDoor => _hasDoor;
         public float DoorOffsetMeters => _doorOffsetMeters;
         public float DoorWidthMeters => _doorWidthMeters;
+        public bool HasBed => _hasBed;
+        public Vector3 BedFeet => _bedFeet;
+        public float BedHeadingDegrees => _bedHeadingDegrees;
         public bool IsUnique => _unique;
         public bool IsChimeraHome => _chimeraHome;
         public bool BuiltWhenPlaced => _builtWhenPlaced;

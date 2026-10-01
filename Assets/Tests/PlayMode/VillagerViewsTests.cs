@@ -14,7 +14,8 @@ namespace Diciela.Tests.PlayMode
     /// <summary>
     /// Les habitants vus : un monde plat de 100 × 100 m à 10 m de haut, aux réglages par défaut (quatre mailles par
     /// mètre, 15 cm par pas), la Chimère créée par son ordre, habillée du personnage de TestRig.
-    /// Elle naît au centre, dans la maille (200 ; 200), dont le milieu est (50,125 ; 50,125).
+    /// Elle naît au centre, dans la maille (200 ; 200), dont le milieu est (50,125 ; 50,125). Endormie, elle est couchée
+    /// sur la couche de son logis s'il en a une, sinon on ne la voit plus.
     /// </summary>
     public sealed class VillagerViewsTests
     {
@@ -36,7 +37,7 @@ namespace Diciela.Tests.PlayMode
             var map = new MapDescription(new Relief(100f, 100f, 2, 2, new[] { 10f, 10f, 10f, 10f }));
             _world = new World(settings, map, Keep(ScriptableObject.CreateInstance<Catalog>()));
             _views = Keep(new GameObject("Habitants de test")).AddComponent<VillagerViews>();
-            _views.Show(_world.Villagers, map.Relief);
+            _views.Show(_world.Villagers, _world.Structures, map.Relief);
             _world.Submit(new CreateChimeraCommand(_kind, _rig.Plain));
             _world.Step();
         }
@@ -132,6 +133,42 @@ namespace Diciela.Tests.PlayMode
             _world.Submit(new WakeChimeraCommand());
             _world.Step();
             Assert.IsTrue(Shown.gameObject.activeSelf, "Réveillée, elle sort.");
+        }
+
+        [Test]
+        public void OnTheCouchOfHerHomeSheLiesOnHerBackHeadTowardThePillow()
+        {
+            // Son campement de 3 × 3 m, planté en (50 ; 45), tourné d'un quart de tour (l'entrée à l'est) ; sa couche, les
+            // pieds en (-0,5 ; 0,2 ; 0,4) du modèle, la tête vers son sud. Tournés, les pieds sont en (50,4 ; 10,2 ; 45,5),
+            // et la tête va vers l'ouest.
+            var camp = Keep(ScriptableObject.CreateInstance<StructureDefinition>());
+#if UNITY_EDITOR
+            TestWorld.Fill(camp, "_widthMeters", 3f);
+            TestWorld.Fill(camp, "_depthMeters", 3f);
+            TestWorld.Fill(camp, "_unique", true);
+            TestWorld.Fill(camp, "_chimeraHome", true);
+            TestWorld.Fill(camp, "_builtWhenPlaced", true);
+            TestWorld.Fill(camp, "_hasBed", true);
+            TestWorld.Fill(camp, "_bedFeet", new Vector3(-0.5f, 0.2f, 0.4f));
+            TestWorld.Fill(camp, "_bedHeadingDegrees", 180f);
+#endif
+            Villager chimera = _world.Villagers.Chimera;
+            _world.Submit(new PlaceStructureCommand(camp, new Placement(new Vector2(50f, 45f), 90f)));
+            _world.Submit(new SendChimeraToBedCommand());
+            for (int step = 0; step < 2000 && !chimera.IsAsleep; step++)
+                _world.Step();
+            _views.Follow(1f, 1f);
+
+            Assert.IsTrue(chimera.IsAsleep, "Elle a rejoint son campement.");
+            Assert.IsTrue(Shown.gameObject.activeSelf, "Endormie sur sa couche, on la voit.");
+            AssertNear(new Vector3(50.4f, 10.2f, 45.5f), Shown.position);
+            AssertNear(Vector3.left, Shown.up);
+            AssertNear(Vector3.up, Shown.forward);
+
+            _world.Submit(new WakeChimeraCommand());
+            _world.Step();
+            _views.Follow(1f, 1f);
+            AssertNear(Vector3.up, Shown.up);
         }
 
         [UnityTest]
