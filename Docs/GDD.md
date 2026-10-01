@@ -362,8 +362,12 @@
   clic gauche pose ; l'outil reste en main pour la suivante, sauf après une construction unique ; un clic droit bref ou
   Échap le pose de côté.
 - **Défaut.** Le cran de rotation : 15°.
-- **Règle.** Une construction posée attend ses bâtisseurs en fantôme translucide ; bâtie, elle se voit avec ses
-  matériaux. Dès sa pose, elle prend sa place : on ne traverse pas plus un fantôme qu'un bâtiment. Qui marche et voit
+- **Défaut.** La ligne qui monte : une vague de 8 cm de haut et de 1,6 m de long, qui passe en 3 s ; une bande floue
+  de 25 cm sous elle. Les couleurs du liseré, des étincelles et du fantôme se règlent dans leur matériau.
+- **Règle.** Une construction posée attend ses bâtisseurs en fantôme translucide. Pendant qu'on la bâtit, elle monte :
+  sa vraie matière, avec les matériaux de son modèle, sous une ligne qui monte de ses fondations à son sommet au
+  rythme du travail fait ; le fantôme au-dessus. La ligne ondule doucement, son bord est flou, un liseré doré la
+  souligne, semé d'étincelles. Bâtie, elle se voit avec ses matériaux. Dès sa pose, elle prend sa place : on ne traverse pas plus un fantôme qu'un bâtiment. Qui marche et voit
   son trajet coupé en cherche un autre ; qui se trouve dessous en sort à pied, tout droit, par le sol libre qui la
   borde, jamais celui qu'une autre construction cache : du côté où il est le plus vaste (jamais une poche qu'elle vient
   de fermer), au plus près.

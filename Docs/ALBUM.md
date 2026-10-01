@@ -15,6 +15,16 @@
 
 ## Les captures
 
+### 01/10/2026 — étape 19 : le chantier qui monte
+
+Pendant qu'on la bâtit, la cabane monte : sa vraie matière, le bois et la pierre du pack, sous une ligne qui suit le
+travail fait ; le fantôme au-dessus. La ligne ondule, la matière s'effrite sous elle et le fantôme s'y efface, un
+liseré doré la souligne, semé d'étincelles qui clignotent. Ce qu'une capture ne montre pas : la vague qui passe.
+
+![Le chantier à mi-hauteur](Album/2026-10-01_etape-19_chantier-a-mi-hauteur.jpg)
+
+![Le chantier presque fini](Album/2026-10-01_etape-19_chantier-presque-fini.jpg)
+
 ### 01/10/2026 — étape 18d : le HUD en jeu revient comme avant
 
 La matière et les détails des étapes 18b et 18c sont retirés : le HUD en jeu retrouve la fusion d'avant. L'écran de

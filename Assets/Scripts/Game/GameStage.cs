@@ -67,7 +67,7 @@ namespace Diciela.Game
         internal void Open(World world, Catalog catalog, TextTable texts, PlacementSettings placement, MapScene map,
             Action started)
         {
-            _structureViews.Show(world.Structures, world.Map.Relief);
+            _structureViews.Show(world.Structures, world.ConstructionSites, world.Map.Relief);
             _villagerViews.Show(world.Villagers, world.Map.Relief);
             _natureViews.Show(world.Nature, map.Terrain, map.NatureInstances, world.Map.Relief);
             _atelier.Show();

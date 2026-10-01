@@ -14,7 +14,7 @@ namespace Diciela.Tests.PlayMode
     /// au nord. Toucher la tente l'envoie dormir, la toucher encore la réveille ; toucher autre chose ne fait rien ; chaque
     /// toucher, la tente comprise, est dit à qui l'écoute (la fiche d'un lieu s'y ferme). On
     /// vise le modèle, pas le sol : vu de biais, le haut de la tente cache le sol derrière elle. Bâtie, la tente se voit
-    /// avec ses matériaux ; une cabane qui attend ses bâtisseurs, en fantôme translucide.
+    /// avec ses matériaux ; une cabane qui attend ses bâtisseurs, en chantier (décision 166).
     /// </summary>
     public sealed class ChooseToolTests
     {
@@ -90,14 +90,14 @@ namespace Diciela.Tests.PlayMode
         }
 
         [Test]
-        public void TheBuiltTentShowsItsMaterialsAndACabinIsAGhost()
+        public void TheBuiltTentShowsItsMaterialsAndACabinIsASite()
         {
             _test.World.Submit(new PlaceStructureCommand(_test.Cabin, new Placement(new Vector2(60f, 60f), 0f)));
             _test.World.Step();
 
-            Material translucent = _test.Settings.TranslucentMaterial;
-            Assert.AreNotSame(translucent, ViewOf(0).GetComponentInChildren<Renderer>().sharedMaterial, "La tente.");
-            Assert.AreSame(translucent, ViewOf(1).GetComponentInChildren<Renderer>().sharedMaterial, "La cabane.");
+            Shader site = _test.Settings.SiteMaterial.shader;
+            Assert.AreNotSame(site, ViewOf(0).GetComponentInChildren<Renderer>().sharedMaterial.shader, "La tente.");
+            Assert.AreSame(site, ViewOf(1).GetComponentInChildren<Renderer>().sharedMaterial.shader, "La cabane.");
         }
 
         private Transform ViewOf(int index)
