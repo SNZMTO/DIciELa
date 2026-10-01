@@ -1,6 +1,6 @@
 clé,fr,en
 famille.logement,Logement,Housing
-construction.tente,Tente,Tent
+construction.tente,Campement,Camp
 construction.cabane,Cabane,Cabin
 pose.refus.OutsideMap,Hors de la carte,Outside the map
 pose.refus.TooSteep,Trop pentu,Too steep
@@ -149,7 +149,7 @@ journee.suite.Night,"Nuit, puis travail","Night, then work"
 journee.note.Work,"Le soir, chacun finit sa marche et dépose ce qu'il porte.","In the evening, everyone finishes their walk and puts down what they carry."
 journee.note.Evening,"La nuit, rien ne se produit.","At night, nothing is produced."
 journee.note.Night,Le travail reprend au matin.,Work starts again in the morning.
-astuce.tente,"Ouvre les outils, en bas à droite, puis Construire : pose la tente, c'est là que dort la Chimère.","Open the tools, at the bottom right, then Build: place the tent, that's where the Chimera sleeps."
+astuce.tente,"Ouvre les outils, en bas à droite, puis Construire : installe le campement, c'est là que dort la Chimère.","Open the tools, at the bottom right, then Build: set up the camp, that's where the Chimera sleeps."
 astuce.tas,"Clique sur le tas, puis sur « Y mettre la Chimère » : à ce poste, elle porte, bâtit et défriche.","Click the pile, then on ""Put the Chimera here"": at this post, she carries, builds and clears."
 astuce.cabane,"Pose une cabane : la Chimère y portera le Bois et la Pierre, puis la bâtira.","Place a cabin: the Chimera will carry the Wood and the Stone there, then build it."
 outil.construire,Construire,Build

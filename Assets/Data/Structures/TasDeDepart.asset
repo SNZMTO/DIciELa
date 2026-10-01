@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Diciela.Data::Diciela.Data.StructureDefinition
   _id: tas_de_depart
   _nameKey: construction.tas_de_depart
-  _widthMeters: 2
-  _depthMeters: 2
+  _widthMeters: 2.7
+  _depthMeters: 1.06
   _hasDoor: 0
   _doorOffsetMeters: 0
   _doorWidthMeters: 1.5
@@ -27,6 +27,6 @@ MonoBehaviour:
   _workSlots:
   - {fileID: 11400000, guid: efdeee55abb7a0c408de680db580711a, type: 2}
   _storageCapacity: 100
-  _sourceModel: {fileID: 0}
+  _sourceModel: {fileID: 7534952635967488081, guid: dd2ff37b33bb83140aadc1d7084dd615, type: 3}
   _model: {fileID: 9059437479225551520, guid: 34856802af9b08d4690b787778f35ce2, type: 3}
   _picture: {fileID: 0}

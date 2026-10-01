@@ -10,10 +10,11 @@ using UnityEngine;
 namespace Diciela.EditorTools
 {
     /// <summary>
-    /// Les mises en scène de la tente pour l'album (Docs/ALBUM.md), en Play, par les mêmes appels que les gestes.
-    /// Planter la tente : on se rapproche de la Chimère, puis on tient l'outil de pose à la place de la souris ; la tente
-    /// se plante devant elle, porte tournée vers la caméra, et les gestes de la caméra et de la pose restent coupés
-    /// jusqu'à la fin du Play. Toucher la tente : comme un clic sur elle, qui envoie la Chimère dormir ou la réveille.
+    /// Les mises en scène du campement (le logis de départ, d'identifiant « tente ») pour l'album (Docs/ALBUM.md), en
+    /// Play, par les mêmes appels que les gestes. L'installer : on se rapproche de la Chimère, puis on tient l'outil de
+    /// pose à la place de la souris ; le campement s'installe devant elle, entrée tournée vers la caméra, et les gestes de
+    /// la caméra et de la pose restent coupés jusqu'à la fin du Play. Le toucher : comme un clic sur lui, qui envoie la
+    /// Chimère dormir ou la réveille.
     /// </summary>
     public static class AlbumTentMenu
     {
@@ -26,7 +27,7 @@ namespace Diciela.EditorTools
         // Où l'on vise la tente pour la toucher : à cette hauteur au-dessus de son centre, en mètres.
         private const float TouchHeight = 1f;
 
-        [MenuItem("DICIELA/Album/Planter la tente près de la Chimère")]
+        [MenuItem("DICIELA/Album/Installer le campement près de la Chimère")]
         public static void PlantTheTent()
         {
             World world = AlbumWorld.Running();
@@ -36,7 +37,7 @@ namespace Diciela.EditorTools
             var rig = Object.FindAnyObjectByType<CameraRig>();
             if (chimera == null || controls == null || controls.Tool == null || cameraControls == null || rig == null)
             {
-                Debug.LogError("DICIELA : on plante la tente en Play, une fois la Chimère née.");
+                Debug.LogError("DICIELA : on installe le campement en Play, une fois la Chimère née.");
                 return;
             }
 
@@ -57,12 +58,12 @@ namespace Diciela.EditorTools
                 tool.RotateBy(Mathf.Atan2(-ahead.x, -ahead.y) * Mathf.Rad2Deg);
                 tool.AimAt(camera.WorldToScreenPoint(Ground(world, center)));
                 bool sent = tool.Confirm();
-                Debug.Log("DICIELA : mise en scène de l'album : la tente " + (sent ? "est plantée" : "ne se plante pas") +
+                Debug.Log("DICIELA : mise en scène de l'album : le campement " + (sent ? "est installé" : "ne s'installe pas") +
                           " (" + tool.Result + ").");
             });
         }
 
-        [MenuItem("DICIELA/Album/Toucher la tente")]
+        [MenuItem("DICIELA/Album/Toucher le campement")]
         public static void TouchTheTent()
         {
             World world = AlbumWorld.Running();
@@ -77,7 +78,7 @@ namespace Diciela.EditorTools
 
             Vector3 top = Ground(world, home.Placement.Center) + Vector3.up * TouchHeight;
             bool sent = choose.Tool.TouchAt(rig.Camera.WorldToScreenPoint(top));
-            Debug.Log("DICIELA : mise en scène de l'album : la tente est touchée (" +
+            Debug.Log("DICIELA : mise en scène de l'album : le campement est touché (" +
                       (sent ? "un ordre part" : "aucun ordre") + ").");
         }
 

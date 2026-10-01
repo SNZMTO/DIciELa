@@ -54,7 +54,7 @@ namespace Diciela.EditorTools
                         (definition.DepthMeters - DoorThickness) * 0.5f);
                     pieces.Add(AddBox(root, at, new Vector3(definition.DoorWidthMeters, DoorHeight, DoorThickness), door));
                 }
-                return ModelMerger.Save(definition.name, pieces, out report);
+                return ModelMerger.Save(definition.name, pieces, new List<GameObject>(), out report);
             }
             finally
             {
