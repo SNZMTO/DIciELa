@@ -5,7 +5,7 @@ namespace Diciela.EditorTools
     /// <summary>
     /// Un modèle fait d'objets du pack tels quels (SAVOIR, 2.9 ; décision 170) : son nom, la fiche de la construction dont
     /// il devient le modèle source, et ses objets, chacun à sa place. Les deux du jeu : le campement, logis de départ de la
-    /// Chimère (un feu, une couche, un coffre, un sac, une marmite ; deux pierres plates sous un objet « Door » font son
+    /// Chimère (un foyer, une couche, un coffre, un sac, une marmite ; deux pierres plates sous un objet « Door » font son
     /// entrée), et le tas de départ (une pile de bûches et un tas de pierres : ce qu'il contient). Les rochers du pack sont
     /// à l'échelle du paysage : le foyer et le tas de pierres en sont des réductions.
     /// </summary>
@@ -51,11 +51,10 @@ namespace Diciela.EditorTools
 
         public static readonly PackComposition[] All =
         {
-            // Le cercle de pierres du pack (6,2 m, un cercle de place) réduit au quart fait le foyer ; la flamme de
-            // bougie du pack, agrandie, fait le feu.
+            // Le cercle de pierres du pack (6,2 m, un cercle de place) réduit au quart fait le foyer. Pas de flamme : un
+            // effet de particules dans ces modèles fait planter Unity après une campagne PlayMode (SAVOIR, 2.9).
             new PackComposition("Campement", ContentBuilder.TentPath,
                 new Piece("Environment/SM_Env_Stone_Ring_01", 0f, 0.1f, scale: 0.25f),
-                new Piece("FX/FX_Candle_Flame_01", 0f, 0.1f, y: 0.05f, scale: 5f),
                 new Piece("Props/SM_Prop_Picnic_Rug_01", -1.75f, -0.1f),
                 new Piece("Props/SM_Prop_Pillow_01", -1.75f, -0.95f, y: 0.05f),
                 new Piece("Props/SM_Prop_Cooking_Pot_01", 0.95f, -0.75f, 30f),

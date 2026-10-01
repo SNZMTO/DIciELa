@@ -632,8 +632,8 @@
 - **Règle.** La cabane a le modèle `Bld_Preset_Shed_02` du pack ; `House_03` est pressentie pour la maison.
 - **Règle.** Une construction se pose la porte au niveau du sol : ses fondations s'enfoncent, et cachent le vide sous
   elle sur une pente. Son empreinte est la boîte de son modèle, accessoires compris : rien ne se chevauche à l'écran.
-- **Règle.** Le campement est fait avec les moyens du bord, d'objets du pack tels quels : un feu au milieu (le cercle de
-  pierres du pack, réduit au quart, et sa flamme agrandie), une couche à gauche (un tapis et un coussin), un coffre, un
+- **Règle.** Le campement est fait avec les moyens du bord, d'objets du pack tels quels : un foyer au milieu (le cercle de
+  pierres du pack, réduit au quart), une couche à gauche (un tapis et un coussin), un coffre, un
   sac et une marmite ; deux pierres plates font son entrée. Il mesure 4,6 × 3,5 m, son entrée 1,4 m : la boîte de sa
   composition. À côté, le tas de départ est un petit tas de matériaux : une pile de bûches et un tas de pierres du pack
   (réduit au cinquième), ce qu'il contient. Les deux compositions sont au développeur.
