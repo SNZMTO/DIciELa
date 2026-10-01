@@ -30,6 +30,8 @@ namespace Diciela.Tests.PlayMode
             Settings = Keep(ScriptableObject.CreateInstance<PlacementSettings>());
             var cameraSettings = Keep(ScriptableObject.CreateInstance<CameraSettings>());
             var translucent = Keep(new Material(Shader.Find("Universal Render Pipeline/Lit")));
+            var site = Keep(new Material(Shader.Find("Diciela/Chantier")));
+            var siteGhost = Keep(new Material(Shader.Find("Diciela/ChantierFantome")));
             GameObject model = Keep(GameObject.CreatePrimitive(PrimitiveType.Cube));
             GameObject tentModel = Keep(new GameObject("Tente de test"));
             GameObject tentBox = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -46,6 +48,8 @@ namespace Diciela.Tests.PlayMode
             Views = Keep(new GameObject("Constructions de test")).AddComponent<StructureViews>();
 #if UNITY_EDITOR
             Fill(Settings, "_translucentMaterial", translucent);
+            Fill(Settings, "_siteMaterial", site);
+            Fill(Settings, "_siteGhostMaterial", siteGhost);
             Fill(Cabin, "_id", "cabane");
             Fill(Cabin, "_nameKey", "construction.cabane");
             Fill(Cabin, "_model", model);
@@ -64,7 +68,7 @@ namespace Diciela.Tests.PlayMode
 #endif
             rig.Show(map);
             Camera = rig.Camera;
-            Views.Show(World.Structures, map.Relief);
+            Views.Show(World.Structures, World.ConstructionSites, map.Relief);
             Tool = new PlacementTool(World, Camera, Preview, Settings);
         }
 

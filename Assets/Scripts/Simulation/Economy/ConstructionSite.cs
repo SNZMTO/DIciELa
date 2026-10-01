@@ -85,6 +85,9 @@ namespace Diciela.Simulation.Economy
         /// <summary>Le travail demandé, en heures d'un débutant.</summary>
         public double WorkNeeded => Structure.Definition.WorkHours;
 
+        /// <summary>La part du travail faite, de 0 à 1 ; un chantier sans travail demandé est à 1.</summary>
+        public double Progress => WorkNeeded > 0d ? System.Math.Min(1d, WorkDone / WorkNeeded) : 1d;
+
         /// <summary>Le nombre d'ouvriers qui y vont ou y travaillent.</summary>
         public int Builders { get; private set; }
 

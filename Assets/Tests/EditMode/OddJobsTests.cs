@@ -12,8 +12,9 @@ namespace Diciela.Tests.EditMode
     /// <summary>
     /// Le poste « à tout faire » tenu par la Chimère (GDD, sections 6, 7 et 9 ; décisions 137 à 140), par les ordres du
     /// joueur : elle porte d'abord tous les matériaux de la cabane, 5 par voyage, puis la bâtit ; à 10 partout, elle y
-    /// apporte ×1,2, et les 2 h d'un débutant lui prennent 1 h 40 (500 pas). Le Bois consommé disparaît du bilan. Le
-    /// soir, elle cesse de bâtir tout de suite, ne prend plus rien, et flâne près du tas ; le matin, elle reprend.
+    /// apporte ×1,2, et les 2 h d'un débutant lui prennent 1 h 40 (500 pas) ; l'avancement du chantier (que suit sa
+    /// ligne qui monte) va de 0 à 1 au fil de ces pas. Le Bois consommé disparaît du bilan. Le soir, elle cesse de bâtir
+    /// tout de suite, ne prend plus rien, et flâne près du tas ; le matin, elle reprend.
     /// </summary>
     public sealed class OddJobsTests
     {
@@ -40,6 +41,8 @@ namespace Diciela.Tests.EditMode
             Villager chimera = world.Villagers.Chimera;
             long firstBuildingStep = -1;
             bool builtBeforeSupplied = false;
+            double progressAtStart = -1d;
+            double progressHalfway = -1d;
 
             TestGrids.StepUntil(world, () =>
             {
@@ -47,12 +50,18 @@ namespace Diciela.Tests.EditMode
                 {
                     firstBuildingStep = world.Clock.StepCount;
                     builtBeforeSupplied = !site.IsSupplied;
+                    progressAtStart = site.Progress;
                 }
+                if (firstBuildingStep >= 0 && world.Clock.StepCount == firstBuildingStep + 250)
+                    progressHalfway = site.Progress;
                 return cabin.State == StructureState.Built;
             }, 4000, "la cabane bâtie");
 
             Assert.IsFalse(builtBeforeSupplied, "On ne bâtit qu'une fois tous les matériaux livrés.");
             Assert.AreEqual(500, world.Clock.StepCount - firstBuildingStep, 1, "2 h d'un débutant, à ×1,2 : 1 h 40.");
+            Assert.AreEqual(0d, progressAtStart, 0.01d, "Rien n'est bâti au premier pas.");
+            Assert.AreEqual(0.5d, progressHalfway, 0.01d, "À 250 pas sur 500, la moitié.");
+            Assert.AreEqual(1d, site.Progress, "Fini.");
             Assert.AreEqual(20, world.Warehouses.CityStockOf(_town.Wood));
             Assert.AreEqual(15, world.Warehouses.CityStockOf(_town.Stone));
             Assert.AreEqual(10, world.Ledger.DestroyedOf(_town.Wood), "Le Bois de la cabane est pris dans la construction.");

@@ -288,6 +288,16 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   plus deux réglages) dessine d'un coup les copies d'un même maillage ; fusionner aussi les niveaux de loin.
 - **Vérifier à l'œil** : la planche des modèles (`DICIELA/Album/…`) pose côte à côte le modèle du pack et le modèle
   préparé, vus du côté de la porte. Un fantôme translucide ne montre ni la porte ni le sol.
+- **Couper un modèle du pack à une hauteur** (le chantier qui monte, décision 166) : ses matériaux sont des Shader
+  Graph de Synty (`_Albedo_Map`, `_Normal_Map`, `_Normal_Amount`…), qu'on ne retouche pas. On en fait à l'exécution
+  une copie sur un shader du projet (`Diciela/Chantier`, le Lit d'URP repris), propriétés recopiées une à une sous les
+  noms du Lit ; une copie par matériau d'origine, partagée par tous les chantiers, détruite avec la vue. La hauteur et
+  la vague passent par un `MaterialPropertyBlock` par couche : aucun matériau par chantier (le bloc sort ces maillages
+  du SRP Batcher, ce qui reste léger pour quelques dizaines de chantiers). La coupe doit valoir aussi pour les passes
+  ShadowCaster, DepthOnly et DepthNormals, sinon la moitié pas bâtie fait de l'ombre : celles d'URP n'ont pas la
+  position dans le monde, le shader a donc les siennes. Sans MSAA, un bord adouci se fait par une trame (Bayer 4 × 4)
+  sur la vraie matière, et le flou par le calque transparent du fantôme. Une erreur de variante d'un shader n'apparaît
+  qu'au rendu : chercher « Shader error in » dans `Logs/Editor.log` après un Play.
 
 ### 2.10 L'ambiance
 
