@@ -116,7 +116,12 @@ namespace Diciela.EditorTools
                 model.AddComponent<MeshRenderer>().sharedMaterials = materials.ToArray();
                 foreach (GameObject effect in effects)
                 {
-                    GameObject copy = Object.Instantiate(effect, model.transform);
+                    // Une instance du prefab d'origine (celui du pack), jamais la copie d'un objet de la scène de la
+                    // préparation, qui est lui-même la partie d'une instance.
+                    GameObject original = PrefabUtility.GetCorrespondingObjectFromOriginalSource(effect);
+                    GameObject copy = original != null
+                        ? (GameObject)PrefabUtility.InstantiatePrefab(original, model.transform)
+                        : Object.Instantiate(effect, model.transform);
                     copy.name = effect.name;
                     copy.transform.SetPositionAndRotation(effect.transform.position, effect.transform.rotation);
                     copy.transform.localScale = effect.transform.lossyScale;
