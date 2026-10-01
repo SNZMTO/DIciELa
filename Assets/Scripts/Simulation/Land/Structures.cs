@@ -43,7 +43,7 @@ namespace Diciela.Simulation.Land
         internal PlacementRules Rules => _rules;
 
         /// <summary>
-        /// Le logis de la Chimère : la construction bâtie que sa fiche dit être son logis (la tente, puis sa maison) ;
+        /// Le logis de la Chimère : la construction bâtie que sa fiche dit être son logis (le campement, puis sa maison) ;
         /// null tant qu'elle n'en a pas (GDD, section 6).
         /// </summary>
         public Structure ChimeraHome

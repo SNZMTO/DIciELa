@@ -10,7 +10,7 @@ namespace Diciela.Tests.PlayMode
 {
     /// <summary>
     /// Les fanions du stock et leur présentateur (GDD, section 16 ; décision 153), sur une vue qui note : rien tant que
-    /// la ville n'a pas d'entrepôt ; la tente plantée, un fanion par marchandise du catalogue (le Bois, 30 ; la Pierre,
+    /// la ville n'a pas d'entrepôt ; le campement installé, un fanion par marchandise du catalogue (le Bois, 30 ; la Pierre,
     /// 20), chacun avec son infobulle ; les nombres suivent le stock, jusqu'à zéro, où le fanion reste.
     /// </summary>
     public sealed class StockPennantsPresenterTests
@@ -37,14 +37,14 @@ namespace Diciela.Tests.PlayMode
             }
         }
 
-        private TestPileTown _town;
+        private TestCampTown _town;
         private NotedView _view;
         private StockPennantsPresenter _presenter;
 
         [SetUp]
         public void CreateTown()
         {
-            _town = new TestPileTown();
+            _town = new TestCampTown();
             _view = new NotedView();
             _presenter = new StockPennantsPresenter(_view, _town.World, _town.Catalog, TextTable.Parse(Texts, "fr"));
         }
@@ -61,7 +61,7 @@ namespace Diciela.Tests.PlayMode
         {
             Assert.IsFalse(_view.Shown, "Sans entrepôt, pas de stock à montrer.");
 
-            _town.PlantTheTent();
+            _town.InstallTheCamp();
 
             Assert.IsTrue(_view.Shown);
             Assert.AreEqual(2, _view.Pennants.Count);
@@ -73,9 +73,9 @@ namespace Diciela.Tests.PlayMode
         [Test]
         public void ThePennantsFollowTheStockDownToZero()
         {
-            _town.PlantTheTent();
+            _town.InstallTheCamp();
             World world = _town.World;
-            world.Submit(new AssignVillagerCommand(world.Villagers.Chimera.Id, _town.PlacedPile.Id));
+            world.Submit(new AssignVillagerCommand(world.Villagers.Chimera.Id, _town.PlacedCamp.Id));
             world.Submit(new PlaceStructureCommand(_town.Cabin(new GoodAmount(_town.Stone, 20)),
                 new Placement(new Vector2(28f, 20f), 0f)));
             for (int step = 0; step < 6000 && _view.Pennants[1].Count > 0; step++)

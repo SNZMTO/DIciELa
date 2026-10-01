@@ -19,21 +19,26 @@ namespace Diciela.Tests.EditMode
             return AssetDatabase.LoadAssetAtPath<T>(AssetDatabase.GUIDToAssetPath(guids[0]));
         }
 
-        /// <summary>Le tas de départ du catalogue ; null s'il n'en a pas.</summary>
-        public static StructureDefinition StartingPileOf(Catalog catalog)
+        /// <summary>
+        /// Le campement du catalogue : le logis de la Chimère qui s'installe d'un coup (GDD, section 6) ; null s'il n'en a
+        /// pas.
+        /// </summary>
+        public static StructureDefinition CampOf(Catalog catalog)
         {
-            return catalog.Opening != null ? catalog.Opening.StartingPile : null;
+            foreach (StructureDefinition structure in catalog.AllStructures())
+            {
+                if (structure.IsChimeraHome && structure.BuiltWhenPlaced)
+                    return structure;
+            }
+            return null;
         }
 
         /// <summary>
-        /// Les clés des textes de la ville au travail : le tas, les marchandises, les statistiques, les postes, les arbres et
-        /// les rochers.
+        /// Les clés des textes de la ville au travail : les marchandises, les statistiques, les postes, les arbres et les
+        /// rochers.
         /// </summary>
         public static void AddTownKeys(Catalog catalog, List<string> keys)
         {
-            StructureDefinition pile = StartingPileOf(catalog);
-            if (pile != null)
-                keys.Add(pile.NameKey);
             foreach (GoodDefinition good in catalog.Goods)
                 keys.Add(good.NameKey);
             foreach (NatureDefinition nature in catalog.Nature)

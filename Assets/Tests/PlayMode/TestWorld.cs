@@ -14,7 +14,7 @@ namespace Diciela.Tests.PlayMode
     /// <summary>
     /// Un petit monde monté en mémoire pour les tests de la pose : plat, 100 × 100 m à 10 m de haut ; la caméra de
     /// gestion qui le montre ; l'aperçu, les constructions vues, une cabane de 4 × 4 m (un cube d'un mètre pour modèle),
-    /// une tente de 3 × 3 m (unique, logis de la Chimère, dressée dès la pose ; une boîte de 3 × 2,5 × 3 m pour modèle),
+    /// un campement de 3 × 3 m (unique, logis de la Chimère, dressé dès la pose ; une boîte de 3 × 2,5 × 3 m pour modèle),
     /// l'outil de pose et l'outil « Retirer » (sans arbre vu : la carte n'en a pas). Les fiches ont leurs valeurs par
     /// défaut, remplies par SerializedObject, le chemin de l'Inspector.
     /// </summary>
@@ -39,7 +39,7 @@ namespace Diciela.Tests.PlayMode
             tentBox.transform.localPosition = new Vector3(0f, 1.25f, 0f);
             tentBox.transform.localScale = new Vector3(3f, 2.5f, 3f);
             Cabin = Keep(ScriptableObject.CreateInstance<StructureDefinition>());
-            Tent = Keep(ScriptableObject.CreateInstance<StructureDefinition>());
+            Camp = Keep(ScriptableObject.CreateInstance<StructureDefinition>());
             var map = new MapDescription(new Relief(100f, 100f, 2, 2, new[] { 10f, 10f, 10f, 10f }));
             World = new World(simulation, map, Keep(ScriptableObject.CreateInstance<Catalog>()));
 
@@ -53,15 +53,15 @@ namespace Diciela.Tests.PlayMode
             Fill(Cabin, "_id", "cabane");
             Fill(Cabin, "_nameKey", "construction.cabane");
             Fill(Cabin, "_model", model);
-            Fill(Tent, "_id", "tente");
-            Fill(Tent, "_nameKey", "construction.tente");
-            Fill(Tent, "_widthMeters", 3f);
-            Fill(Tent, "_depthMeters", 3f);
-            Fill(Tent, "_doorWidthMeters", 1.2f);
-            Fill(Tent, "_unique", true);
-            Fill(Tent, "_chimeraHome", true);
-            Fill(Tent, "_builtWhenPlaced", true);
-            Fill(Tent, "_model", tentModel);
+            Fill(Camp, "_id", "campement");
+            Fill(Camp, "_nameKey", "construction.campement");
+            Fill(Camp, "_widthMeters", 3f);
+            Fill(Camp, "_depthMeters", 3f);
+            Fill(Camp, "_doorWidthMeters", 1.2f);
+            Fill(Camp, "_unique", true);
+            Fill(Camp, "_chimeraHome", true);
+            Fill(Camp, "_builtWhenPlaced", true);
+            Fill(Camp, "_model", tentModel);
             Fill(rig, "_settings", cameraSettings);
             Fill(Preview, "_settings", Settings);
             Fill(Views, "_settings", Settings);
@@ -79,7 +79,7 @@ namespace Diciela.Tests.PlayMode
         public PlacementPreview Preview { get; }
         public StructureViews Views { get; }
         public StructureDefinition Cabin { get; }
-        public StructureDefinition Tent { get; }
+        public StructureDefinition Camp { get; }
         public PlacementTool Tool { get; }
         public ClearingTool Clearing { get; }
 

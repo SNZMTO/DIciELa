@@ -164,7 +164,7 @@ namespace Diciela.Game
             var hud = new HudArea(document);
             _cameraControls.Bind(hud);
             _placementControls.Bind(_placementTool, hud);
-            _chooseTool = new ChooseTool(world, _cameraRig.Camera, _structureViews);
+            _chooseTool = new ChooseTool(_cameraRig.Camera, _structureViews);
             _chooseTool.Touched += _placeSheet.Touch;
             _selectionFrame = new SelectionFrame(document);
             _clearingControls.Bind(_clearingTool, _selectionFrame, hud);

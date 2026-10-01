@@ -15,7 +15,7 @@ namespace Diciela.Tests.EditMode
         [Test]
         public void TheCatalogHasOneChimeraHomeFirstUniqueWithADoor()
         {
-            // La tente vient en premier (GDD, section 6) : le catalogue a un logis de la Chimère, en tête de sa famille ;
+            // Le campement vient en premier (GDD, section 6) : le catalogue a un logis de la Chimère, en tête de sa famille ;
             // il est unique, et il a une porte, devant laquelle elle se couche.
             var homes = new List<StructureDefinition>();
             foreach (StructureFamilyDefinition family in ProjectContent.LoadSingle<Catalog>().Families)
@@ -31,27 +31,27 @@ namespace Diciela.Tests.EditMode
                     Assert.IsTrue(structure.HasDoor, structure.Id + " n'a pas de porte.");
                 }
             }
-            Assert.AreEqual(1, homes.Count, "Le catalogue doit avoir un seul logis de la Chimère : la tente.");
+            Assert.AreEqual(1, homes.Count, "Le catalogue doit avoir un seul logis de la Chimère : le campement.");
         }
 
         [Test]
-        public void TheStartingPileHoldsItsGoodsAndOpensAPost()
+        public void TheCampHoldsTheStartingGoodsAndOpensAPost()
         {
             Catalog catalog = ProjectContent.LoadSingle<Catalog>();
             Assert.IsNotNull(catalog.Opening, "Le catalogue n'a pas de déroulé du départ.");
-            StructureDefinition pile = catalog.Opening.StartingPile;
-            Assert.IsNotNull(pile, "Le déroulé du départ n'a pas de tas.");
-            Assert.IsTrue(pile.BuiltWhenPlaced && pile.IsUnique, "Le tas se pose d'un coup, une seule fois.");
-            Assert.IsNotEmpty(pile.WorkSlots, "Le tas ouvre le poste « à tout faire ».");
+            StructureDefinition camp = ProjectContent.CampOf(catalog);
+            Assert.IsNotNull(camp, "Le catalogue n'a pas de campement.");
+            Assert.IsTrue(camp.IsUnique, "Le campement s'installe une seule fois.");
+            Assert.IsNotEmpty(camp.WorkSlots, "Le campement ouvre le poste « à tout faire ».");
 
             int total = 0;
             foreach (GoodAmount goods in catalog.Opening.StartingGoods)
             {
-                Assert.IsTrue(Contains(catalog.Goods, goods.Good), "Le tas tient une marchandise hors du catalogue.");
-                Assert.GreaterOrEqual(goods.Amount, 1, "Le tas tient une ligne vide.");
+                Assert.IsTrue(Contains(catalog.Goods, goods.Good), "Le stock de départ a une marchandise hors du catalogue.");
+                Assert.GreaterOrEqual(goods.Amount, 1, "Le stock de départ a une ligne vide.");
                 total += goods.Amount;
             }
-            Assert.LessOrEqual(total, pile.StorageCapacity, "Le tas ne tient pas son contenu de départ.");
+            Assert.LessOrEqual(total, camp.StorageCapacity, "Le campement ne tient pas le stock de départ.");
         }
 
         [Test]

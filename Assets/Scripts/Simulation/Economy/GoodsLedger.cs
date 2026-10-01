@@ -22,6 +22,18 @@ namespace Diciela.Simulation.Economy
             return SumOf(good, _created);
         }
 
+        /// <summary>Combien de marchandises sont nées de cette cause, toutes marchandises comprises.</summary>
+        public int CreatedBy(GoodsCause cause)
+        {
+            int sum = 0;
+            for (int i = 0; i < _causes.Count; i++)
+            {
+                if (_causes[i] == cause)
+                    sum += _created[i];
+            }
+            return sum;
+        }
+
         /// <summary>Combien de cette marchandise ont disparu, toutes causes comprises.</summary>
         public int DestroyedOf(GoodDefinition good)
         {

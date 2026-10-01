@@ -19,7 +19,7 @@ namespace Diciela.Data
         [Tooltip("La sorte de la Chimère, que le joueur crée au lancement d'une partie (GDD, section 6).")]
         [SerializeField] private VillagerKindDefinition _chimeraKind;
 
-        [Tooltip("Le déroulé du départ : le tas de départ et son contenu (GDD, section 6).")]
+        [Tooltip("Le déroulé du départ : le stock de départ, que reçoit le campement (GDD, section 6).")]
         [SerializeField] private OpeningDefinition _opening;
 
         [Tooltip("Les sortes d'arbres et de rochers que le développeur peint sur la carte (GDD, section 2).")]
@@ -59,16 +59,14 @@ namespace Diciela.Data
         public IReadOnlyList<AttachmentDefinition> Attachments => _attachments;
 
         /// <summary>
-        /// Toutes les constructions du catalogue : celles des familles, dans leur ordre, puis le tas de départ. Une liste
-        /// neuve à chaque appel : pour les outils de l'éditeur et les tests de contenu, jamais à chaque pas.
+        /// Toutes les constructions du catalogue : celles des familles, dans leur ordre. Une liste neuve à chaque appel :
+        /// pour les outils de l'éditeur et les tests de contenu, jamais à chaque pas.
         /// </summary>
         public List<StructureDefinition> AllStructures()
         {
             var structures = new List<StructureDefinition>();
             foreach (StructureFamilyDefinition family in _families)
                 structures.AddRange(family.Structures);
-            if (_opening != null && _opening.StartingPile != null)
-                structures.Add(_opening.StartingPile);
             return structures;
         }
     }

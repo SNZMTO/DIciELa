@@ -49,12 +49,12 @@ namespace Diciela.Tests.PlayMode
         {
             var instances = new List<int>();
             LogAssert.Expect(LogType.Warning, new Regex("n'est rangé dans aucune sorte"));
-            var town = new TestPileTown(true, _painted.Read(instances));
+            var town = new TestCampTown(true, _painted.Read(instances));
             try
             {
                 _painted.Show(town.World.Nature, instances, town.World.Map.Relief);
-                town.PlantTheTent();
-                town.World.Submit(new AssignVillagerCommand(town.World.Villagers.Chimera.Id, town.PlacedPile.Id));
+                town.InstallTheCamp();
+                town.World.Submit(new AssignVillagerCommand(town.World.Villagers.Chimera.Id, town.PlacedCamp.Id));
                 town.World.Submit(new MarkForClearingCommand(new[] { 1 }));
                 NatureItem first = town.World.Nature.Find(1);
                 for (int step = 0; step < 6000 && !first.IsRemoved; step++)

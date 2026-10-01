@@ -10,7 +10,7 @@ namespace Diciela.Tests.EditMode
 {
     /// <summary>
     /// Le travail interrompu (GDD, sections 6 et 9 ; décisions 46, 150 et 156), par les ordres du joueur : envoyée dormir,
-    /// retirée, ou couverte par une construction pendant qu'elle porte, la Chimère rend sa charge au tas ; endormie, elle
+    /// retirée, ou couverte par une construction pendant qu'elle porte, la Chimère rend sa charge au campement ; endormie, elle
     /// garde son poste, et réveillée, elle reprend le travail ; retirée, elle n'a plus de poste ; couverte, elle sort,
     /// puis reprend le travail.
     /// </summary>
@@ -19,7 +19,7 @@ namespace Diciela.Tests.EditMode
         private TestTown _town;
         private World _world;
         private Villager _chimera;
-        private Inventory _pileStock;
+        private Inventory _campStock;
 
         [SetUp]
         public void CreateTown()
@@ -28,8 +28,8 @@ namespace Diciela.Tests.EditMode
             _world = _town.WorkingWorld();
             TestTown.Place(_world, _town.Cabin, 28f, 20f);
             _chimera = _world.Villagers.Chimera;
-            _pileStock = _world.Warehouses.StockOf(_town.PileOf(_world));
-            TestGrids.StepUntil(_world, () => _chimera.Load.Total > 0, 2000, "une charge prise au tas");
+            _campStock = _world.Warehouses.StockOf(TestTown.CampOf(_world));
+            TestGrids.StepUntil(_world, () => _chimera.Load.Total > 0, 2000, "une charge prise au campement");
         }
 
         [TearDown]
@@ -47,13 +47,13 @@ namespace Diciela.Tests.EditMode
         [Test]
         public void SentToBedSheGivesHerLoadBackAndKeepsHerPost()
         {
-            Assert.AreEqual(45, _pileStock.Total, "Elle a pris 5 marchandises au tas.");
+            Assert.AreEqual(45, _campStock.Total, "Elle a pris 5 marchandises au campement.");
 
             Send(new SendChimeraToBedCommand());
 
             Assert.IsTrue(_chimera.IsGoingToBed);
             Assert.AreEqual(0, _chimera.Load.Total, "Sa charge est rendue.");
-            Assert.AreEqual(50, _pileStock.Total, "Le tas a tout repris.");
+            Assert.AreEqual(50, _campStock.Total, "Le campement a tout repris.");
             Assert.IsNotNull(_chimera.Slot, "Endormie, elle garde son poste.");
             Assert.AreEqual(_world.Ledger.CreatedOf(_town.Wood), TestTown.EverywhereOf(_world, _town.Wood));
 
@@ -61,7 +61,7 @@ namespace Diciela.Tests.EditMode
             for (int i = 0; i < 300; i++)
                 _world.Step();
             Assert.IsTrue(_chimera.IsAsleep);
-            Assert.AreEqual(50, _pileStock.Total, "Endormie, elle ne travaille pas.");
+            Assert.AreEqual(50, _campStock.Total, "Endormie, elle ne travaille pas.");
 
             Send(new WakeChimeraCommand());
             TestGrids.StepUntil(_world, () => _chimera.Load.Total > 0, 2000, "le travail repris");
@@ -79,7 +79,7 @@ namespace Diciela.Tests.EditMode
             Assert.IsNotNull(TestTown.Place(_world, crate, cell.x, cell.y), "La caisse se pose sur elle.");
 
             Assert.AreEqual(0, _chimera.Load.Total, "Couverte, elle laisse sa tâche : sa charge est rendue.");
-            Assert.AreEqual(50, _pileStock.Total, "Le tas a tout repris.");
+            Assert.AreEqual(50, _campStock.Total, "Le campement a tout repris.");
             Assert.IsNotNull(_chimera.Slot, "Elle garde son poste.");
             TestGrids.StepUntil(_world, () => _chimera.Load.Total > 0, 2000, "le travail repris, une fois sortie");
         }
@@ -91,10 +91,10 @@ namespace Diciela.Tests.EditMode
 
             Assert.IsNull(_chimera.Slot);
             Assert.AreEqual(0, _chimera.Load.Total);
-            Assert.AreEqual(50, _pileStock.Total);
+            Assert.AreEqual(50, _campStock.Total);
             for (int i = 0; i < 600; i++)
                 _world.Step();
-            Assert.AreEqual(50, _pileStock.Total, "Sans poste, elle ne porte plus rien.");
+            Assert.AreEqual(50, _campStock.Total, "Sans poste, elle ne porte plus rien.");
         }
     }
 }

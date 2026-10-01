@@ -41,9 +41,7 @@
                     <ui:Label name="fiche-poste-nom" class="nom" />
                     <ui:Label name="fiche-poste-qui" class="sous-titre" />
                 </ui:VisualElement>
-                <Diciela.UI.FeltButton name="fiche-bouton" class="feutre menthe pan-10 couture fiche-bouton">
-                    <ui:Label name="fiche-bouton-texte" class="action" picking-mode="Ignore" />
-                </Diciela.UI.FeltButton>
+                <ui:VisualElement name="fiche-actions" class="fiche-actions" />
             </ui:VisualElement>
         </Diciela.UI.WoodFrame>
         <Diciela.UI.WoodFrame name="astuce" class="astuce bloc-cache">

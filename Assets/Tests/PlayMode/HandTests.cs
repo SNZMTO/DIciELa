@@ -56,9 +56,9 @@ namespace Diciela.Tests.PlayMode
         {
             _test.Tool.Begin(_test.Cabin);
 
-            _test.Tool.Begin(_test.Tent);
+            _test.Tool.Begin(_test.Camp);
 
-            Assert.AreSame(_test.Tent, _test.Tool.Current);
+            Assert.AreSame(_test.Camp, _test.Tool.Current);
         }
 
         [Test]

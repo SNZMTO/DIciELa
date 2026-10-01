@@ -8,7 +8,7 @@ namespace Diciela.Tests.EditMode
 {
     /// <summary>
     /// Le sommeil de la Chimère, par les ordres « dormir » et « réveiller » (GDD, section 6), sur le banc de TestBedroom :
-    /// elle marche jusqu'à la porte de sa tente et s'y couche, sans plus bouger ; réveillée, elle flâne devant sa porte ;
+    /// elle marche jusqu'à la porte de son campement et s'y couche, sans plus bouger ; réveillée, elle flâne devant sa porte ;
     /// touchée de nouveau en chemin, elle reste debout. Les refus ont leurs tests à part (SleepRefusalTests).
     /// </summary>
     public sealed class SleepTests
@@ -32,7 +32,7 @@ namespace Diciela.Tests.EditMode
         [Test]
         public void SheWalksToHerDoorAndFallsAsleepThere()
         {
-            World world = TestBedroom.WorldWithTent(_test);
+            World world = TestBedroom.WorldWithCamp(_test);
             Villager chimera = world.Villagers.Chimera;
             var wentToBed = new List<Villager>();
             var fellAsleep = new List<Villager>();
@@ -43,7 +43,7 @@ namespace Diciela.Tests.EditMode
             world.Submit(new SendChimeraToBedCommand());
             world.Step();
             Assert.IsTrue(chimera.IsGoingToBed);
-            Assert.IsTrue(chimera.IsWalking, "Elle marche vers sa tente.");
+            Assert.IsTrue(chimera.IsWalking, "Elle marche vers son campement.");
             Assert.AreEqual(new[] { chimera }, wentToBed);
 
             TestGrids.StepUntil(world, () =>
@@ -69,7 +69,7 @@ namespace Diciela.Tests.EditMode
         [Test]
         public void WokenSheGetsUpAtHerDoorAndWandersAround()
         {
-            World world = TestBedroom.WorldWithTent(_test);
+            World world = TestBedroom.WorldWithCamp(_test);
             Villager chimera = world.Villagers.Chimera;
             TestBedroom.SleepUntilAsleep(world);
             var wokeUp = new List<Villager>();
@@ -82,7 +82,7 @@ namespace Diciela.Tests.EditMode
             Assert.IsFalse(chimera.IsAsleep);
             Assert.AreEqual(TestBedroom.Bed, chimera.Position, "Elle se lève devant sa porte, et y fait d'abord une pause.");
             TestGrids.StepUntil(world, () => chimera.Position != TestBedroom.Bed, 3000, "sa flânerie");
-            // Flâner la mène à 6 m au plus de sa porte ; le tour de la tente peut l'en écarter un peu plus.
+            // Flâner la mène à 6 m au plus de sa porte ; le tour du campement peut l'en écarter un peu plus.
             for (int step = 0; step < 3000; step++)
             {
                 world.Step();
@@ -94,7 +94,7 @@ namespace Diciela.Tests.EditMode
         [Test]
         public void TouchedAgainOnHerWaySheStaysUp()
         {
-            World world = TestBedroom.WorldWithTent(_test);
+            World world = TestBedroom.WorldWithCamp(_test);
             Villager chimera = world.Villagers.Chimera;
             var wokeUp = new List<Villager>();
             world.Villagers.VillagerWokeUp += wokeUp.Add;

@@ -98,22 +98,6 @@ namespace Diciela.Tests.EditMode
             return slot;
         }
 
-        /// <summary>
-        /// Un tas au sol de size mètres de côté, sans porte, unique, posé d'un coup, qui tient capacity marchandises pour
-        /// la ville et ouvre ces postes.
-        /// </summary>
-        public static StructureDefinition Pile(string id, float size, int capacity, params WorkSlotDefinition[] slots)
-        {
-            StructureDefinition pile = Structure(id, size, size, hasDoor: false);
-            var serialized = new SerializedObject(pile);
-            Property(serialized, "_unique").boolValue = true;
-            Property(serialized, "_builtWhenPlaced").boolValue = true;
-            Property(serialized, "_storageCapacity").intValue = capacity;
-            Fill(Property(serialized, "_workSlots"), slots);
-            serialized.ApplyModifiedPropertiesWithoutUndo();
-            return pile;
-        }
-
         /// <summary>Donne à cette construction son coût et les heures de travail que son chantier demande à un débutant.</summary>
         public static void Cost(StructureDefinition definition, float workHours, params GoodAmount[] cost)
         {
@@ -123,13 +107,11 @@ namespace Diciela.Tests.EditMode
             serialized.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        /// <summary>Le déroulé du départ : ce tas, ce contenu ; le tas se cherche une place dans ce rayon, en mètres.</summary>
-        public static OpeningDefinition Opening(StructureDefinition pile, float searchMeters, params GoodAmount[] goods)
+        /// <summary>Le déroulé du départ : le stock de départ, que reçoit le premier logis de la Chimère.</summary>
+        public static OpeningDefinition Opening(params GoodAmount[] goods)
         {
             OpeningDefinition opening = ScriptableObject.CreateInstance<OpeningDefinition>();
             var serialized = new SerializedObject(opening);
-            Property(serialized, "_startingPile").objectReferenceValue = pile;
-            Property(serialized, "_pileSearchMeters").floatValue = searchMeters;
             FillAmounts(Property(serialized, "_startingGoods"), goods);
             serialized.ApplyModifiedPropertiesWithoutUndo();
             return opening;
