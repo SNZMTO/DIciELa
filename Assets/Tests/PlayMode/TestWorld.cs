@@ -14,9 +14,9 @@ namespace Diciela.Tests.PlayMode
     /// <summary>
     /// Un petit monde monté en mémoire pour les tests de la pose : plat, 100 × 100 m à 10 m de haut ; la caméra de
     /// gestion qui le montre ; l'aperçu, les constructions vues, une cabane de 4 × 4 m (un cube d'un mètre pour modèle),
-    /// une tente de 3 × 3 m (unique, logis de la Chimère, dressée dès la pose ; une boîte de 3 × 2,5 × 3 m pour modèle)
-    /// et l'outil de pose. Les fiches ont leurs valeurs par défaut, remplies par SerializedObject, le chemin de
-    /// l'Inspector.
+    /// une tente de 3 × 3 m (unique, logis de la Chimère, dressée dès la pose ; une boîte de 3 × 2,5 × 3 m pour modèle),
+    /// l'outil de pose et l'outil « Retirer » (sans arbre vu : la carte n'en a pas). Les fiches ont leurs valeurs par
+    /// défaut, remplies par SerializedObject, le chemin de l'Inspector.
     /// </summary>
     internal sealed class TestWorld : IDisposable
     {
@@ -70,6 +70,7 @@ namespace Diciela.Tests.PlayMode
             Camera = rig.Camera;
             Views.Show(World.Structures, World.ConstructionSites, map.Relief);
             Tool = new PlacementTool(World, Camera, Preview, Settings);
+            Clearing = new ClearingTool(World, Camera, Keep(new GameObject("Arbres de test")).AddComponent<NatureViews>());
         }
 
         public World World { get; }
@@ -80,6 +81,7 @@ namespace Diciela.Tests.PlayMode
         public StructureDefinition Cabin { get; }
         public StructureDefinition Tent { get; }
         public PlacementTool Tool { get; }
+        public ClearingTool Clearing { get; }
 
         /// <summary>Le point de l'écran où l'on voit ce point du sol.</summary>
         public Vector2 OnScreen(Vector3 ground)

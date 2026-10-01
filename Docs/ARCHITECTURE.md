@@ -292,6 +292,7 @@ code.
 | place retenue (dans un stock) | `SpaceReserved` | ce qu'on peut rejoindre à pied | `Reach` | anneau carré (de mailles) | `SquareRing` |
 | outil « Retirer » ; ses gestes | `ClearingTool` ; `ClearingControls` | outil en main | `IHeldTool` | cadre tiré à la souris | `ISelectionFrame`, `SelectionFrame` |
 | arbres vus ; leurs boîtes | `NatureViews` ; `NatureBoxes` | fanion (d'un arbre marqué) | `Mark`, `MarkMesh` | copie du sol | `MapScene` |
+| onglet, carte (de la barre) | `Tab`, `Card` (`BuildBarElements`) | bouton de l'outil « Retirer » | `ClearingChosen`, `ShowClearing` | infobulle | `Tooltips` |
 
 ## 10. La carte, les scènes et la sauvegarde
 
@@ -343,9 +344,10 @@ code.
   déplacement à la position (SAVOIR 3). Un geste appartient à la ville ou à l'interface dès l'enfoncement ; clic ou
   glisser se décide au relâchement (SAVOIR 2.8). Sans outil en main, un clic gauche touche la construction dont le
   modèle est sous le pointeur : la vue dit laquelle (SAVOIR 2.7), l'outil « choisir » en fait un ordre. Un outil en
-  main (`IHeldTool` : poser, retirer ; un seul à la fois) prend le clic gauche ; l'outil « Retirer » vise un arbre par
-  la boîte de son modèle et marque ce que contient le cadre qu'on tire, que l'interface dessine (`ISelectionFrame`). Un panneau
-  ouvert rend la ville muette ; les conteneurs plein écran de l'interface ne captent pas le pointeur. Les gestes ne
+  main (`IHeldTool` : poser, retirer ; un seul à la fois, et `Game` lâche l'un quand on prend l'autre) prend le clic
+  gauche ; la barre de construction les met en main (une carte, le bouton de l'outil « Retirer »). L'outil « Retirer »
+  vise un arbre par la boîte de son modèle et marque ce que contient le cadre qu'on tire, que l'interface dessine
+  (`ISelectionFrame`). Un panneau ouvert rend la ville muette ; les conteneurs plein écran de l'interface ne captent pas le pointeur. Les gestes ne
   connaissent pas l'interface : elle leur dit seulement où elle est (`IInterfaceArea`), et `Game` les relie.
 - **L'ouverture d'une partie** : la scène du démarrage (`GameStage`) montre le monde (constructions, habitants) et ouvre
   l'écran de création dans l'atelier (`Atelier` : un décor généré loin de la carte, sa lumière, sa caméra) ; l'aperçu
@@ -367,7 +369,8 @@ code.
   l'ombre et les icônes se refont par `DICIELA/Interface/Générer les images de l'interface`, les vignettes des
   constructions par `DICIELA/Interface/Photographier les constructions`.
 - **Le HUD** est un seul document (`Hud.uxml`, sa mise en page dans `Hud.uss`), sur l'objet « Interface » : chaque
-  bloc a sa vue, qui cherche son sous-arbre par son nom, et son présentateur (la barre de construction, `BuildBar` ;
+  bloc a sa vue, qui cherche son sous-arbre par son nom, et son présentateur (la barre de construction, `BuildBar`,
+  dont les onglets et les cartes se font dans `BuildBarElements` ;
   la journée, `DayBoard` ; la fiche du lieu touché, `PlaceSheet` ; le stock en fanions, `StockPennants` ; l'astuce,
   `TipBoard`, dont le portrait est pris à l'atelier par la vue, `Portrait`) ; une seule bulle sert d'infobulle à tous
   (`Tooltips`), chaque vue dit ce qu'elle montre au survol. Le démarrage donne à la journée, à chaque image, la

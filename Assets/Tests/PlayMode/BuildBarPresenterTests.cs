@@ -7,8 +7,8 @@ namespace Diciela.Tests.PlayMode
 {
     /// <summary>
     /// Le présentateur de la barre de construction, sur le petit monde des tests et une vue qui note ce qu'on lui montre
-    /// et joue les choix du joueur. Un catalogue de deux familles (Logement : la cabane ; Décor : un banc), une table des
-    /// textes écrite ici.
+    /// et joue les choix du joueur. Un catalogue de deux familles (Logement : la cabane ; Décor : un banc), sans logis :
+    /// le bouton de l'outil « Retirer » est là dès le départ ; une table des textes écrite ici.
     /// </summary>
     public sealed class BuildBarPresenterTests
     {
@@ -17,7 +17,9 @@ namespace Diciela.Tests.PlayMode
                                      "famille.decor,Décor\n" +
                                      "construction.cabane,Cabane\n" +
                                      "construction.banc,Banc\n" +
-                                     "pose.refus.Overlaps,La place est prise\n";
+                                     "pose.refus.Overlaps,La place est prise\n" +
+                                     "outil.retirer,Retirer\n" +
+                                     "outil.retirer.suite,Marque un arbre\n";
 
         private TestWorld _test;
         private StructureDefinition _bench;
@@ -42,7 +44,8 @@ namespace Diciela.Tests.PlayMode
             TestWorld.FillList(catalog, "_families", housing, decor);
 #endif
             _view = new NotedBuildBarView();
-            _presenter = new BuildBarPresenter(_view, catalog, TextTable.Parse(Texts, "fr"), _test.Tool, _test.World);
+            _presenter = new BuildBarPresenter(_view, catalog, TextTable.Parse(Texts, "fr"), _test.Tool, _test.Clearing,
+                _test.World);
         }
 
         [TearDown]
@@ -116,6 +119,38 @@ namespace Diciela.Tests.PlayMode
 
             Assert.AreEqual(0, _view.OpenFamily);
             Assert.AreEqual(new[] { "Cabane" }, _view.Structures);
+        }
+
+        [Test]
+        public void TheClearingButtonTakesTheToolAndASecondClickReleasesIt()
+        {
+            Assert.IsTrue(_view.ClearingShown, "Sans logis au catalogue, la barre propose tout, l'outil compris.");
+            Assert.IsFalse(_view.ClearingHeld);
+
+            _view.ClickClearing();
+            Assert.IsTrue(_test.Clearing.IsActive, "Le bouton prend l'outil en main.");
+            Assert.IsTrue(_view.ClearingHeld, "En main, le bouton reste enfoncé.");
+
+            _view.ClickClearing();
+            Assert.IsFalse(_test.Clearing.IsActive, "Un second clic le lâche.");
+            Assert.IsFalse(_view.ClearingHeld);
+        }
+
+        [Test]
+        public void EscapeReleasesTheClearingButton()
+        {
+            _view.ClickClearing();
+
+            Assert.IsTrue(_test.Clearing.Escape(), "Échap lâche l'outil en main.");
+
+            Assert.IsFalse(_view.ClearingHeld);
+            Assert.IsTrue(_view.ClearingShown, "Lâché, le bouton reste là.");
+        }
+
+        [Test]
+        public void TheClearingButtonSaysWhatItDoes()
+        {
+            Assert.AreEqual(("Retirer", "Marque un arbre"), _presenter.ClearingTooltip());
         }
 
         [Test]

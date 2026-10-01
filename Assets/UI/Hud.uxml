@@ -60,8 +60,13 @@
             </Diciela.UI.Facet>
             <Diciela.UI.WoodFrame name="bar" class="barre bloc-cache">
                 <ui:VisualElement class="barre-contenu">
-                    <ui:VisualElement name="structures" class="cartes" />
-                    <ui:VisualElement name="families" class="onglets" />
+                    <Diciela.UI.FeltButton name="outil-retirer" class="feutre sable pan-10 outil bloc-cache">
+                        <ui:VisualElement class="outil-icone hache" picking-mode="Ignore" />
+                    </Diciela.UI.FeltButton>
+                    <ui:VisualElement class="barre-choix">
+                        <ui:VisualElement name="structures" class="cartes" />
+                        <ui:VisualElement name="families" class="onglets" />
+                    </ui:VisualElement>
                 </ui:VisualElement>
             </Diciela.UI.WoodFrame>
         </ui:VisualElement>

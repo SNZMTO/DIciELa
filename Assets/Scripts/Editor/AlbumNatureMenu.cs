@@ -10,8 +10,8 @@ namespace Diciela.EditorTools
     /// <summary>
     /// La mise en scène du défrichage pour l'album et les essais (Docs/ALBUM.md), en Play : marquer les arbres et les
     /// rochers les plus proches de la Chimère, du plus proche au plus loin, par l'ordre même qu'envoie l'outil
-    /// « Retirer » ; si la carte n'en a aucun de peint près d'elle, il le dit. Et prendre l'outil en main, en attendant
-    /// sa place dans le HUD.
+    /// « Retirer » ; si la carte n'en a aucun de peint près d'elle, il le dit. Et prendre l'outil en main, comme le fait
+    /// son bouton dans la barre, que le CLI ne sait pas cliquer.
     /// </summary>
     public static class AlbumNatureMenu
     {

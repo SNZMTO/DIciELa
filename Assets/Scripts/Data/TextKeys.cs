@@ -30,6 +30,10 @@ namespace Diciela.Data
         public const string TipPile = "astuce.tas";
         public const string TipCabin = "astuce.cabane";
 
+        // Le bouton de l'outil « Retirer », au bout de la barre (GDD, section 16) : son infobulle, son nom et son usage.
+        public const string ClearingTool = "outil.retirer";
+        public const string ClearingToolDetail = "outil.retirer.suite";
+
         // Les fanions du stock (GDD, section 16) : l'infobulle d'un fanion ({marchandise} y est remplacé).
         public const string StockTooltip = "fanion.infobulle";
         public const string GoodParameter = "{marchandise}";
