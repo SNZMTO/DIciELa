@@ -10,26 +10,13 @@ namespace Diciela.EditorTools
     /// <summary>
     /// La mise en scène du défrichage pour l'album et les essais (Docs/ALBUM.md), en Play : marquer les arbres et les
     /// rochers les plus proches de la Chimère, du plus proche au plus loin, par l'ordre même qu'envoie l'outil
-    /// « Retirer » ; si la carte n'en a aucun de peint près d'elle, il le dit. Et prendre l'outil en main, comme le fait
-    /// son bouton dans la barre, que le CLI ne sait pas cliquer.
+    /// « Retirer » ; si la carte n'en a aucun de peint près d'elle, il le dit. L'outil se prend par sa touche (X), que le
+    /// CLI sait presser.
     /// </summary>
     public static class AlbumNatureMenu
     {
         private const int MarkedCount = 6;
         private const float SearchMeters = 30f;
-
-        [MenuItem("DICIELA/Album/Prendre l'outil Retirer")]
-        public static void TakeTheClearingTool()
-        {
-            var controls = Object.FindAnyObjectByType<Diciela.Controls.ClearingControls>();
-            if (!EditorApplication.isPlaying || controls == null || controls.Tool == null)
-            {
-                Debug.LogError("DICIELA : on prend l'outil « Retirer » en Play, une fois la ville ouverte.");
-                return;
-            }
-            controls.Tool.Take();
-            Debug.Log("DICIELA : mise en scène de l'album : l'outil « Retirer » est en main.");
-        }
 
         [MenuItem("DICIELA/Album/Marquer les arbres près de la Chimère")]
         public static void MarkNearTheChimera()

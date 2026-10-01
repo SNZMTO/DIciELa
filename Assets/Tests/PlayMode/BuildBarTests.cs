@@ -12,9 +12,10 @@ using UnityEngine.UIElements;
 namespace Diciela.Tests.PlayMode
 {
     /// <summary>
-    /// La barre de construction dans la scène de test, une fois la Chimère créée : elle montre le catalogue du jeu, dans
-    /// la langue de ses réglages (lus dans le projet), et dit aux gestes quand le pointeur est sur elle. Le pointeur compte depuis le bas de
-    /// l'écran, UI Toolkit depuis le haut : l'attendu se calcule par la conversion d'UI Toolkit, inversée.
+    /// Le panneau Construire dans la scène de test, une fois la Chimère créée, ouvert comme le fait la roue des outils :
+    /// il montre le catalogue du jeu, dans la langue de ses réglages (lus dans le projet), et dit aux gestes quand le
+    /// pointeur est sur lui. Le pointeur compte depuis le bas de l'écran, UI Toolkit depuis le haut : l'attendu se
+    /// calcule par la conversion d'UI Toolkit, inversée.
     /// </summary>
     public sealed class BuildBarTests
     {
@@ -36,8 +37,11 @@ namespace Diciela.Tests.PlayMode
             {
                 yield return null;
                 bar = Object.FindAnyObjectByType<BuildBar>();
+                if (bar != null && !bar.IsOpen)
+                    bar.Open();
                 structures = bar != null ? bar.GetComponent<UIDocument>().rootVisualElement.Q("structures") : null;
-                if (structures != null && structures.childCount > 0 && !float.IsNaN(structures.worldBound.width))
+                // Ouvert, le panneau se mesure à l'image suivante : caché, il mesure 0.
+                if (structures != null && structures.childCount > 0 && structures.worldBound.width > 0f)
                     break;
             }
             Assert.IsNotNull(structures, "La barre de la scène de test doit exister.");

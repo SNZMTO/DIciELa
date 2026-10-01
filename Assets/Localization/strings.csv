@@ -149,8 +149,12 @@ journee.suite.Night,"Nuit, puis travail","Night, then work"
 journee.note.Work,"Le soir, chacun finit sa marche et dépose ce qu'il porte.","In the evening, everyone finishes their walk and puts down what they carry."
 journee.note.Evening,"La nuit, rien ne se produit.","At night, nothing is produced."
 journee.note.Night,Le travail reprend au matin.,Work starts again in the morning.
-astuce.tente,"Pose la tente, dans l'onglet Logement : c'est là que dort la Chimère.","Place the tent, in the Housing tab: that's where the Chimera sleeps."
+astuce.tente,"Ouvre les outils, en bas à droite, puis Construire : pose la tente, c'est là que dort la Chimère.","Open the tools, at the bottom right, then Build: place the tent, that's where the Chimera sleeps."
 astuce.tas,"Clique sur le tas, puis sur « Y mettre la Chimère » : à ce poste, elle porte, bâtit et défriche.","Click the pile, then on ""Put the Chimera here"": at this post, she carries, builds and clears."
 astuce.cabane,"Pose une cabane : la Chimère y portera le Bois et la Pierre, puis la bâtira.","Place a cabin: the Chimera will carry the Wood and the Stone there, then build it."
+outil.construire,Construire,Build
+outil.construire.suite,"Choisis une construction, puis pose-la dans la ville.","Pick a building, then place it in the town."
 outil.retirer,Retirer,Remove
 outil.retirer.suite,"Clique sur un arbre ou un rocher pour le marquer à retirer, ou le démarquer ; glisse pour en marquer plusieurs.","Click a tree or a rock to mark it for removal, or unmark it; drag to mark several."
+outils.infobulle,Outils,Tools
+outils.infobulle.suite,"Ou tiens {touche} : la roue s'ouvre sous le pointeur.","Or hold {touche}: the wheel opens under the pointer."

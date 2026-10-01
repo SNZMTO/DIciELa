@@ -71,16 +71,9 @@
     max-width: 416px;
 }
 
-/* Au bout gauche, l'outil « Retirer », au pied, à la hauteur des onglets ; puis les cartes au-dessus des onglets,
-   centrées les unes sur les autres. */
 .barre-contenu {
-    flex-direction: row;
-    align-items: flex-end;
-    padding: 21px 18px;
-}
-
-.barre-choix {
     align-items: center;
+    padding: 21px 18px;
 }
 
 .cartes {
@@ -92,25 +85,6 @@
     flex-direction: row;
     justify-content: center;
     margin-top: 12px;
-}
-
-.outil {
-    width: 56px;
-    height: 56px;
-    margin-right: 18px;
-    padding-bottom: 3px;
-    flex-shrink: 0;
-    align-items: center;
-    justify-content: center;
-}
-
-.outil-icone {
-    width: 34px;
-    height: 34px;
-}
-
-.hache {
-    background-image: url("Icones/defricher.asset");
 }
 
 .carte {
@@ -346,4 +320,100 @@
     border-width: 2px;
     border-color: var(--bois);
     border-radius: 4px;
+}
+
+/* Les outils (décision 168) : leur icône en bas à droite, la touche de la roue sur une étiquette de lin. */
+.outils {
+    position: absolute;
+    right: 24px;
+    bottom: 24px;
+    width: 64px;
+    height: 64px;
+    padding-bottom: 3px;
+    align-items: center;
+    justify-content: center;
+}
+
+.outils-icone {
+    width: 40px;
+    height: 40px;
+    background-image: url("Icones/outils.asset");
+}
+
+.touche {
+    position: absolute;
+    right: -8px;
+    bottom: -8px;
+    min-width: 30px;
+    height: 30px;
+    padding: 0 7px;
+    align-items: center;
+    justify-content: center;
+}
+
+/* La roue des outils : un fond plein écran qui prend le pointeur tant qu'elle est ouverte ; autour du point où elle
+   s'ouvre, chaque outil à sa place fixe (Construire en haut, Retirer en bas), la bulle de l'outil visé au milieu.
+   Fermée, elle reste en page, invisible : elle se mesure avant de s'ouvrir, pour tenir dans l'écran. Les outils se
+   placent par leurs marges, pas par translate, que le feutre garde pour se soulever. */
+.roue {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.roue-fermee {
+    visibility: hidden;
+}
+
+.roue-centre {
+    position: absolute;
+    width: 0;
+    height: 0;
+}
+
+.roue-outil {
+    position: absolute;
+    width: 76px;
+    height: 76px;
+    margin-left: -38px;
+    margin-top: -38px;
+    padding-bottom: 3px;
+    align-items: center;
+    justify-content: center;
+}
+
+.roue-haut {
+    left: 0;
+    top: -132px;
+}
+
+.roue-bas {
+    left: 0;
+    top: 132px;
+}
+
+.roue-icone {
+    width: 46px;
+    height: 46px;
+}
+
+.marteau {
+    background-image: url("Icones/batir.asset");
+}
+
+.hache {
+    background-image: url("Icones/defricher.asset");
+}
+
+.roue-bulle {
+    position: absolute;
+    translate: -50% -50%;
+    max-width: 240px;
+    align-items: center;
+}
+
+.roue-texte {
+    -unity-text-align: middle-center;
 }

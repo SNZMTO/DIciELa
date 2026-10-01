@@ -270,7 +270,7 @@ code.
 | savoir de la ville | `Knowledge` | monde | `World` | pastille | `StatusBadge` |
 | déroulé du départ | `Opening` | instantané | `Snapshot` | description de la carte | `MapDescription` |
 | place et angle | `Placement` | règles de pose | `PlacementRules` | aperçu ; fantôme (posé, pas bâti) | `Preview` ; `Planned` |
-| outil de pose | `PlacementTool` | barre de construction | `BuildBar` | famille ; catalogue | `StructureFamilyDefinition` ; `Catalog` |
+| outil de pose | `PlacementTool` | panneau Construire | `BuildBar` | famille ; catalogue | `StructureFamilyDefinition` ; `Catalog` |
 | table des textes | `TextTable` | zone de l'interface | `IInterfaceArea` | routine de pose | `ModelPose` |
 | trajet ; sa recherche | `Path` ; `PathFinder` | modèle du pack ; préparé | `SourceModel` ; `Model` | îlot ; les îlots | `Island` ; `Islands` |
 | ligne tendue ; la tendre | `Path.Corners` ; `PathTightener` | ligne droite (libre ou non) | `StraightLine` | marche | `Walk` |
@@ -292,7 +292,8 @@ code.
 | place retenue (dans un stock) | `SpaceReserved` | ce qu'on peut rejoindre à pied | `Reach` | anneau carré (de mailles) | `SquareRing` |
 | outil « Retirer » ; ses gestes | `ClearingTool` ; `ClearingControls` | outil en main | `IHeldTool` | cadre tiré à la souris | `ISelectionFrame`, `SelectionFrame` |
 | arbres vus ; leurs boîtes | `NatureViews` ; `NatureBoxes` | fanion (d'un arbre marqué) | `Mark`, `MarkMesh` | copie du sol | `MapScene` |
-| onglet, carte (de la barre) | `Tab`, `Card` (`BuildBarElements`) | bouton de l'outil « Retirer » | `ClearingChosen`, `ShowClearing` | infobulle | `Tooltips` |
+| onglet, carte (du panneau Construire) | `Tab`, `Card` (`BuildBarElements`) | roue des outils ; son anneau | `ToolWheel` ; `WheelRing` | infobulle | `Tooltips` |
+| gestes des outils ; outil choisi | `ToolControls` ; `ToolChoice` | touches des outils | `IToolKeys` | ouvrir, fermer (un panneau) | `Open`, `Close` (`IBuildMenu`) |
 
 ## 10. La carte, les scènes et la sauvegarde
 
@@ -345,7 +346,9 @@ code.
   glisser se décide au relâchement (SAVOIR 2.8). Sans outil en main, un clic gauche touche la construction dont le
   modèle est sous le pointeur : la vue dit laquelle (SAVOIR 2.7), l'outil « choisir » en fait un ordre. Un outil en
   main (`IHeldTool` : poser, retirer ; un seul à la fois, et `Game` lâche l'un quand on prend l'autre) prend le clic
-  gauche ; la barre de construction les met en main (une carte, le bouton de l'outil « Retirer »). L'outil « Retirer »
+  gauche. La roue des outils les prend : Retirer en main, ou Construire, qui ouvre le panneau Construire, dont une
+  carte met la construction en main ; ses gestes (`ToolControls` : la touche de la roue tenue, celle de chaque outil)
+  ne la connaissent que par `IToolWheel`, et elle lit leurs touches par `IToolKeys`. L'outil « Retirer »
   vise un arbre par la boîte de son modèle et marque ce que contient le cadre qu'on tire, que l'interface dessine
   (`ISelectionFrame`). Un panneau ouvert rend la ville muette ; les conteneurs plein écran de l'interface ne captent pas le pointeur. Les gestes ne
   connaissent pas l'interface : elle leur dit seulement où elle est (`IInterfaceArea`), et `Game` les relie.
@@ -369,13 +372,15 @@ code.
   l'ombre et les icônes se refont par `DICIELA/Interface/Générer les images de l'interface`, les vignettes des
   constructions par `DICIELA/Interface/Photographier les constructions`.
 - **Le HUD** est un seul document (`Hud.uxml`, sa mise en page dans `Hud.uss`), sur l'objet « Interface » : chaque
-  bloc a sa vue, qui cherche son sous-arbre par son nom, et son présentateur (la barre de construction, `BuildBar`,
-  dont les onglets et les cartes se font dans `BuildBarElements` ;
+  bloc a sa vue, qui cherche son sous-arbre par son nom, et son présentateur (le panneau Construire, `BuildBar`,
+  ouvert à la demande par `IBuildMenu`, dont les onglets et les cartes se font dans `BuildBarElements` ; la roue des
+  outils, `ToolWheel`, son anneau `WheelRing` et ses mesures `WheelGeometry` ;
   la journée, `DayBoard` ; la fiche du lieu touché, `PlaceSheet` ; le stock en fanions, `StockPennants` ; l'astuce,
   `TipBoard`, dont le portrait est pris à l'atelier par la vue, `Portrait`) ; une seule bulle sert d'infobulle à tous
   (`Tooltips`), chaque vue dit ce qu'elle montre au survol. Le démarrage donne à la journée, à chaque image, la
   fraction du pas en cours. Tout le HUD dit aux gestes où il est (`HudArea`) ; l'outil « choisir » dit ce qu'on a
-  touché, et le démarrage le relie à la fiche. Échap est une pile (`EscapeControls`) : la fiche, puis l'outil en main.
+  touché, et le démarrage le relie à la fiche. Échap est une pile (`EscapeControls`) : la fiche, la roue, le panneau Construire, puis l'outil
+  en main.
 - **Aucun état statique modifiable** dans la simulation : le registre, le catalogue et les textes sont des objets
   créés par `Game`. Le Play de ce projet ne recharge ni le code ni la scène : `Game` crée le monde, la table des textes
   et l'outil de pose, et les libère à la sortie (les outils de l'éditeur lisent le monde en cours par

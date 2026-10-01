@@ -91,7 +91,8 @@ namespace Diciela.Tests.EditMode
                 TextKeys.CreationTitle, TextKeys.CreationHead, TextKeys.CreationBody, TextKeys.CreationNone,
                 TextKeys.CreationConfirm, TextKeys.DayNumber, TextKeys.SheetPutChimera, TextKeys.SheetRemoveChimera,
                 TextKeys.SheetChimera, TextKeys.SheetFreeSlot, TextKeys.StockTooltip, TextKeys.TipTent, TextKeys.TipPile,
-                TextKeys.TipCabin, TextKeys.ClearingTool, TextKeys.ClearingToolDetail
+                TextKeys.TipCabin, TextKeys.BuildTool, TextKeys.BuildToolDetail, TextKeys.ClearingTool,
+                TextKeys.ClearingToolDetail, TextKeys.ToolsTooltip, TextKeys.ToolsTooltipDetail
             });
             foreach (DayPhase phase in Enum.GetValues(typeof(DayPhase)))
             {
