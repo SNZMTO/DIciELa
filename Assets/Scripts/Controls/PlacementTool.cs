@@ -47,7 +47,7 @@ namespace Diciela.Controls
         }
 
         /// <summary>Levé quand la construction en main change : choisie, ou posée de côté.</summary>
-        public event Action CurrentChanged;
+        public event Action HeldChanged;
 
         /// <summary>Levé quand la réponse des règles de pose à la place visée change.</summary>
         public event Action ResultChanged;
@@ -72,7 +72,7 @@ namespace Diciela.Controls
             Current = definition;
             _aimed = false;
             SetResult(PlacementResult.Ok);
-            CurrentChanged?.Invoke();
+            HeldChanged?.Invoke();
         }
 
         /// <summary>Vise le sol sous ce point de l'écran ; hors du sol, l'aperçu se cache.</summary>
@@ -146,7 +146,7 @@ namespace Diciela.Controls
             Current = null;
             _aimed = false;
             SetResult(PlacementResult.Ok);
-            CurrentChanged?.Invoke();
+            HeldChanged?.Invoke();
         }
 
         private void OnStructurePlaced(Structure structure)

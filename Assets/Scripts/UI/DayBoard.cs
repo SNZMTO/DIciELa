@@ -18,7 +18,6 @@ namespace Diciela.UI
         private const string DayName = "jour";
         private const string PhaseName = "phase";
         private const string GaugeName = "jauge";
-        private const string HiddenClass = "bloc-cache";
 
         private UIDocument _document;
         private VisualElement _board;
@@ -26,7 +25,7 @@ namespace Diciela.UI
         private Label _phase;
         private DayGauge _gauge;
         private DayBoardPresenter _presenter;
-        private bool _tooltipAttached;
+        private IDisposable _tooltip;
 
         private void Awake()
         {
@@ -52,12 +51,8 @@ namespace Diciela.UI
             _phase = phase;
             _gauge = gauge;
             _presenter = new DayBoardPresenter(this, clock, texts);
-            if (!_tooltipAttached)
-            {
-                tooltips.Attach(_board, () => _presenter != null ? _presenter.Tooltip() : ("", ""));
-                _tooltipAttached = true;
-            }
-            _board.RemoveFromClassList(HiddenClass);
+            _tooltip = tooltips.Attach(_board, () => _presenter != null ? _presenter.Tooltip() : ("", ""));
+            _board.RemoveFromClassList(StyleClasses.Hidden);
         }
 
         /// <summary>Place le repère de l'heure entre deux pas.</summary>
@@ -71,7 +66,9 @@ namespace Diciela.UI
         {
             _presenter?.Dispose();
             _presenter = null;
-            _board?.AddToClassList(HiddenClass);
+            _tooltip?.Dispose();
+            _tooltip = null;
+            _board?.AddToClassList(StyleClasses.Hidden);
         }
 
         private void OnDestroy()

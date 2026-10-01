@@ -33,7 +33,7 @@ namespace Diciela.Controls
         }
 
         /// <summary>Levé quand on prend l'outil en main, ou qu'on le lâche.</summary>
-        public event Action ActiveChanged;
+        public event Action HeldChanged;
 
         /// <summary>Vrai tant qu'il est en main.</summary>
         public bool IsActive { get; private set; }
@@ -44,7 +44,7 @@ namespace Diciela.Controls
             if (IsActive)
                 return;
             IsActive = true;
-            ActiveChanged?.Invoke();
+            HeldChanged?.Invoke();
         }
 
         /// <summary>Le lâche ; faux s'il n'était pas en main.</summary>
@@ -53,7 +53,7 @@ namespace Diciela.Controls
             if (!IsActive)
                 return false;
             IsActive = false;
-            ActiveChanged?.Invoke();
+            HeldChanged?.Invoke();
             return true;
         }
 

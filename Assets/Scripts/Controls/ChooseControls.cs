@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Diciela.Data;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -9,7 +8,7 @@ namespace Diciela.Controls
     /// Le geste « toucher » (ARCHITECTURE, section 11) : un clic gauche sur la ville, quand aucun outil n'est en main,
     /// touche ce qu'on voit sous le pointeur. Un clic qui commence sur l'interface lui appartient, et un glisser n'est pas
     /// un clic (SAVOIR, 2.8). Il lit les actions et appelle l'outil « choisir », rien d'autre ; un outil en main (poser,
-    /// retirer), le clic gauche est à lui. Il passe après la caméra (ordre 100) : il vise avec la vue de l'image qu'on va voir.
+    /// retirer : la main le dit), le clic gauche est à lui. Il passe après la caméra (ordre 100) : il vise avec la vue de l'image qu'on va voir.
     /// </summary>
     [DefaultExecutionOrder(100)]
     public sealed class ChooseControls : MonoBehaviour
@@ -24,7 +23,7 @@ namespace Diciela.Controls
         [Tooltip("La fiche des réglages des gestes : le seuil du clic ou glisser (Assets/Data/Settings).")]
         [SerializeField] private GestureSettings _gestures;
 
-        private IReadOnlyList<IHeldTool> _heldTools;
+        private Hand _hand;
         private IInterfaceArea _interfaceArea;
         private InputActionMap _map;
         private InputAction _touch;
@@ -35,13 +34,13 @@ namespace Diciela.Controls
         public ChooseTool Tool { get; private set; }
 
         /// <summary>
-        /// Relie le geste à l'outil « choisir » du monde qui vient de naître, aux outils qu'on prend en main (qui ont le
-        /// clic tant qu'ils le sont) et à l'interface, sur laquelle il se tait ; null le rend muet.
+        /// Relie le geste à l'outil « choisir » du monde qui vient de naître, à la main (un outil en main a le clic) et à
+        /// l'interface, sur laquelle il se tait ; null le rend muet.
         /// </summary>
-        public void Bind(ChooseTool tool, IReadOnlyList<IHeldTool> heldTools, IInterfaceArea interfaceArea)
+        public void Bind(ChooseTool tool, Hand hand, IInterfaceArea interfaceArea)
         {
             Tool = tool;
-            _heldTools = heldTools;
+            _hand = hand;
             _interfaceArea = interfaceArea;
             _touchGesture = default;
         }
@@ -71,7 +70,7 @@ namespace Diciela.Controls
 
         private void LateUpdate()
         {
-            if (Tool == null || AToolIsHeld())
+            if (Tool == null || (_hand != null && _hand.IsHolding))
             {
                 _touchGesture = default;
                 return;
@@ -82,16 +81,6 @@ namespace Diciela.Controls
             _touchGesture.Update(_touch.IsPressed(), pointer, _gestures.DragThresholdPixels, onInterface);
             if (_touchGesture.Clicked)
                 Tool.TouchAt(pointer);
-        }
-
-        private bool AToolIsHeld()
-        {
-            for (int i = 0; _heldTools != null && i < _heldTools.Count; i++)
-            {
-                if (_heldTools[i] != null && _heldTools[i].IsActive)
-                    return true;
-            }
-            return false;
         }
     }
 }

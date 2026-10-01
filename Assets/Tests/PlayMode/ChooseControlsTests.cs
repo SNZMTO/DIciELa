@@ -21,6 +21,7 @@ namespace Diciela.Tests.PlayMode
 
         private TestWorld _test;
         private ChooseControls _controls;
+        private Hand _hand;
 
         public override void Setup()
         {
@@ -43,12 +44,14 @@ namespace Diciela.Tests.PlayMode
             _test.World.Submit(new PlaceStructureCommand(_test.Tent, new Placement(new Vector2(50f, 45f), 0f)));
             _test.World.Step();
             var bar = new TestInterface(new Rect(0f, 0f, Screen.width, Screen.height * 0.2f));
-            _controls.Bind(new ChooseTool(_test.World, _test.Camera, _test.Views), new IHeldTool[] { _test.Tool }, bar);
+            _hand = new Hand(_test.Tool);
+            _controls.Bind(new ChooseTool(_test.World, _test.Camera, _test.Views), _hand, bar);
         }
 
         public override void TearDown()
         {
             _controls.enabled = false;
+            _hand.Dispose();
             _test.Dispose();
             base.TearDown();
         }

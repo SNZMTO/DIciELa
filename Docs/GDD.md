@@ -218,32 +218,30 @@
 - **Règle.** Selon où elle travaille, elle débloque des répliques, des tenues et des idées.
 - **Règle.** Personne ne la connaît. Elle arrive dans un lieu vide, avec des trous de mémoire et quelques idées.
 - **À toi.** Son histoire, que tu écriras.
-- **Règle.** Le campement vient en premier, la Place en deuxième. Le campement est son logis de départ, et seulement
-  cela : il n'a ni stock ni poste. Il s'installe d'un coup, sans chantier.
+- **Règle.** Le campement vient en premier, la Place en deuxième. Au départ, le campement fait tout : il est le logis de
+  la Chimère, le stock de départ et le poste « à tout faire ». Il s'installe d'un coup, sans chantier.
 - **Règle.** Tant que la Chimère n'a pas de logis, le panneau Construire ne propose que le campement ; installé, le
   campement quitte le panneau (il est unique) et le reste s'ouvre. C'est une consigne du panneau : un ordre qui poserait autre
   chose d'abord n'est pas refusé.
-- **Règle.** La Chimère dort quand le joueur le veut : il touche son logis (le campement, puis sa maison), et elle va s'y
-  coucher : elle marche jusqu'à sa porte, entre, et on ne la voit plus. Le joueur la réveille en touchant de nouveau
-  son logis, même quand elle y va encore : elle flâne alors devant sa porte. Envoyée dormir, elle laisse sa tâche (ce
+- **Règle.** La Chimère dort quand le joueur le veut : « Aller dormir », dans la fiche de son logis (le campement, puis sa
+  maison), et elle va s'y coucher : elle marche jusqu'à sa porte ; au campement, elle s'allonge sur sa couche, où on la
+  voit dormir ; dans un logis sans couche, elle entre et on ne la voit plus. « Réveiller », dans la même fiche, la
+  réveille, même quand elle y va encore : elle flâne alors devant sa porte. Envoyée dormir, elle laisse sa tâche (ce
   qu'elle porte retourne au stock) ; endormie, elle ne travaille pas, mais garde son poste, où elle retourne à son
   réveil ; son sommeil n'a pas d'autre effet.
 - **Règle.** Si elle ne peut pas rejoindre sa porte, elle ne part pas se coucher ; si sa porte est coupée d'elle en
   chemin, elle y renonce et flâne.
-- **Règle.** Le stock de départ est un tas posé au sol près du campement, qui sert d'entrepôt jusqu'au premier
-  entrepôt. Il se pose de lui-même quand le campement est installé, à droite de son entrée vue de face, contre sa
-  façade et du même angle, sinon au plus près. Il porte un poste « à tout faire » (porter, bâtir, récolter,
-  défricher, dans cet ordre), que tient la Chimère ; le poste disparaît avec le tas, quand le tas est vide et que la
-  loge, un entrepôt et la cabane du paysagiste sont bâtis (sinon, plus personne ne retirerait les arbres et les
-  rochers).
-- **Règle.** Le joueur y met la Chimère en touchant le tas : sa fiche s'ouvre sur le côté, avec « Y mettre la
-  Chimère » ou « Retirer la Chimère ». Tant que la carte n'a ni arbres ni champs sauvages à traiter, le poste ne
-  fait que porter et bâtir.
-- **Défaut.** Le tas de départ fait 2,7 × 1,1 m (la boîte de sa composition) et tient 100 marchandises : 30 Bois et 20 Pierre au départ, et la place
-  de ce que rendent les premiers arbres et rochers. La Place, la cabane et les premiers bâtiments ne demandent que du
+- **Règle.** Le campement tient le stock de départ, qu'il reçoit quand on l'installe, et sert d'entrepôt jusqu'au
+  premier entrepôt. Il porte un poste « à tout faire » (porter, bâtir, récolter, défricher, dans cet ordre), que tient
+  la Chimère. Quand son stock est vide et que la loge, un entrepôt et la cabane du paysagiste sont bâtis, il ferme son
+  stock et son poste, et n'est plus que son logis (avant, plus personne ne retirerait les arbres et les rochers).
+- **Règle.** Le joueur touche le campement : sa fiche s'ouvre sur le côté, avec « Y mettre la Chimère » ou « Retirer
+  la Chimère », et « Aller dormir » ou « Réveiller ». Tant que la carte n'a ni arbres ni champs sauvages à traiter, le
+  poste ne fait que porter et bâtir.
+- **Défaut.** Le campement tient 100 marchandises : 30 Bois et 20 Pierre au départ, et la place de ce que rendent les
+  premiers arbres et rochers. La Place, la cabane et les premiers bâtiments ne demandent que du
   Bois et de la Pierre ; le stock de départ suffit à la Place et à deux cabanes. Une cabane coûte 10 Bois et 5 Pierre
-  et demande 2 h de travail à un débutant ; à pied, on porte 5 marchandises par voyage. Si sa place est prise, le tas
-  se pose à la place libre la plus proche, à 16 m au plus ; au-delà, il ne se pose pas.
+  et demande 2 h de travail à un débutant ; à pied, on porte 5 marchandises par voyage.
 - **Règle.** Les premiers habitants arrivent vite, un par un, à mesure que les lits le permettent. Chacun est fort dans
   une discipline, apporte l'idée de son lieu de travail et le bâtit avec la Chimère, avant même la loge. Ils restent en
   ville comme habitants ordinaires ; ce ne sont pas des maîtres.
@@ -327,7 +325,7 @@
   attend ; quand sa production est pleine, il s'arrête.
 - **Règle.** Les charretiers vident ces stocks dans les entrepôts, où la ville conserve en gros, et y prennent ce dont
   les ateliers et les chantiers ont besoin. Tout passe par un entrepôt ; ils vont au plus près.
-- **Règle.** Le stock de la ville est ce que tiennent ses entrepôts (le tas de départ au début) : un chiffre par
+- **Règle.** Le stock de la ville est ce que tiennent ses entrepôts (le campement au début) : un chiffre par
   marchandise.
 - **Règle.** Une liaison prioritaire, tirée par le joueur entre deux bâtiments, livre directement de l'un à l'autre sans
   passer par l'entrepôt : c'est l'outil pour optimiser.
@@ -555,7 +553,7 @@
   main invisible : se déplacer (clavier, bords de l'écran, clic droit glissé qui tire le sol), tourner (A et E en
   AZERTY, ou le bouton du milieu glissé de gauche à droite), zoomer à la molette, vers l'endroit que vise la souris.
   En zoomant, elle s'abaisse doucement, d'autant à chaque cran : de loin, la ville en maquette ; de près, les
-  habitants presque de face. On part tout près de la Chimère et du tas de départ, la vue assez basse.
+  habitants presque de face. On part tout près de la Chimère, la vue assez basse.
 - **Défaut.** Champ de vision : 35°. Au départ, 25 m, la vue inclinée d'environ 32° ; de près (8 m), 22,5°, le plus
   bas que permet l'horizon ; de loin (220 m), 50°.
 - **Règle.** Le bouton du milieu glissé de haut en bas incline la vue, en plus de ce que donne le zoom, et le zoom
@@ -627,23 +625,22 @@
   le milieu reste libre. Le plus petit écran visé est 1280 × 720 ; ce qui ne tient pas défile.
 - **Défaut.** « Taille de l'interface » : 100 %, de 80 à 150 %. Les blocs à 24 px du bord de l'écran, 20 px en haut.
 - **Règle.** Sans rien en main, un clic gauche touche la construction qu'on voit sous le pointeur : on vise son modèle,
-  pas le sol derrière lui. Pour l'instant, toucher le logis de la Chimère la couche ou la réveille (voir 6), et ferme
-  la fiche ouverte, comme tout autre toucher.
+  pas le sol derrière lui.
 - **Règle.** Tant que le modèle d'une construction n'est pas choisi, elle se voit en boîte à sa taille, sa porte
   marquée.
 - **Règle.** La cabane a le modèle `Bld_Preset_Shed_02` du pack ; `House_03` est pressentie pour la maison.
 - **Règle.** Une construction se pose la porte au niveau du sol : ses fondations s'enfoncent, et cachent le vide sous
   elle sur une pente. Son empreinte est la boîte de son modèle, accessoires compris : rien ne se chevauche à l'écran.
 - **Règle.** Le campement est fait avec les moyens du bord, d'objets du pack tels quels : un foyer au milieu (le cercle de
-  pierres du pack, réduit au quart), une couche à gauche (un tapis et un coussin), un coffre, un
-  sac et une marmite ; deux pierres plates font son entrée. Il mesure 4,6 × 3,5 m, son entrée 1,4 m : la boîte de sa
-  composition. À côté, le tas de départ est un petit tas de matériaux : une pile de bûches et un tas de pierres du pack
-  (réduit au cinquième), ce qu'il contient. Les deux compositions sont au développeur.
+  pierres du pack, réduit au quart), une couche à gauche (un tapis et un coussin, où la Chimère dort), un coffre, un
+  sac, une marmite, et son stock : une pile de bûches et un tas de pierres du pack (réduit au cinquième) ; deux pierres
+  plates font son entrée. Sa taille et son entrée sont la boîte de sa composition, qui est au développeur.
 - **À toi.** Le reste du plan de l'interface ; le son et la musique. Ma reco : chaque panneau naît avec son système
   (la liste des habitants avec eux, l'étal avec le troc), sur le côté, la ville visible derrière, comme dans
   Timberborn ; le son et la musique après le premier jouable, avec un pack acheté, comme l'art.
-- **Règle.** Toucher un lieu de travail ouvre sa fiche, à droite (en haut tant que le menu n'existe pas) : son nom, ce
-  qu'il tient pour la ville (une marchandise par creux de lin), son poste et qui le tient, son bouton. Une seule fiche
+- **Règle.** Toucher un lieu qui a un poste ou un stock, ou le logis de la Chimère, ouvre sa fiche, à droite (en haut
+  tant que le menu n'existe pas) : son nom, ce qu'il tient pour la ville (une marchandise par creux de lin), son poste
+  et qui le tient, son bouton ; au logis de la Chimère, « Aller dormir » ou « Réveiller ». Une seule fiche
   à la fois : la nouvelle remplace l'ancienne ; toucher autre chose, ou le sol, la ferme, comme sa croix. Échap ferme
   d'abord la fiche, puis la roue des outils, puis le panneau Construire, puis lâche l'outil en main ; plus tard, il
   ouvrira le menu. L'interface ne prend pas le focus du clavier.
@@ -653,12 +650,12 @@
   caméra. Un seul outil en main : prendre une carte lâche « Retirer », et l'inverse.
 - **À toi.** Le fanion des arbres marqués, pour l'instant un mât et une flamme, remplaçants simples. Le pack a cinq
   drapeaux, `SM_Prop_Flag_01` à `SM_Prop_Flag_05`.
-- **Règle.** Le stock paraît avec le premier entrepôt (le tas de départ) : un fanion par marchandise de l'étape en
+- **Règle.** Le stock paraît avec le premier entrepôt (le campement) : un fanion par marchandise de l'étape en
   cours, son icône et son nombre ; un fanion à zéro reste, en douce. Au survol, une infobulle : un fanion dit sa
   marchandise ; la jauge dit ce qui suit, sans compter les heures. Une seule bulle pour tout le HUD.
 - **Règle.** L'astuce, en bas à gauche : le portrait de la Chimère (sa tête de face, photographiée à l'atelier quand
-  on valide) et une phrase du jeu, qui dit quoi faire ensuite au début d'une partie : installer le campement, puis mettre
-  la Chimère au tas, puis poser une première construction à bâtir ; ensuite, elle se tait. C'est le jeu qui parle.
+  on valide) et une phrase du jeu, qui dit quoi faire ensuite au début d'une partie : installer le campement, puis y
+  mettre la Chimère, puis poser une première construction à bâtir ; ensuite, elle se tait. C'est le jeu qui parle.
 - **À toi.** La voix de la Chimère (ses répliques), avec son histoire.
 - **À toi.** Les questions ouvertes du HUD. Mes recos : les touches 1 à 9 prennent les cartes de la famille ouverte ;
   chaque famille reçoit un pastel libre, dans l'ordre ; le bandeau de brique montre les animaux du pack.

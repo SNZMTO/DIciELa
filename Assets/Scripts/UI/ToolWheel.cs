@@ -11,17 +11,16 @@ namespace Diciela.UI
     /// autour du pointeur, quand on tient sa touche ou qu'on clique l'icône (son anneau, WheelRing). Chaque outil y a sa
     /// place fixe (Construire en haut, Retirer en bas) et sa touche ; la bulle du milieu nomme celui qu'on vise. Touche
     /// tenue, on choisit en relâchant ; au clic, on clique l'outil, et un appui à côté referme. Échap la ferme. C'est la
-    /// vue (l'icône « outils » et la « roue » de Hud.uxml, ToolWheelElements) ; son présentateur décide.
+    /// vue (l'icône « outils » et la « roue » de Hud.uxml, ToolWheelElements) ; son présentateur décide. Elle se branche
+    /// quand la ville s'ouvre et se débranche quand elle se ferme, infobulle comprise.
     /// </summary>
     [RequireComponent(typeof(UIDocument))]
     public sealed class ToolWheel : MonoBehaviour, IToolWheelView, IToolWheel, IEscapable
     {
-        private const string HiddenClass = "bloc-cache";
-        private const string OpenClass = "ouvert";
-
         private UIDocument _document;
         private ToolWheelElements _elements;
         private WheelRing _ring;
+        private IDisposable _iconTooltip;
         private ToolWheelPresenter _presenter;
 
         public event Action<ToolChoice> Chosen;
@@ -41,17 +40,18 @@ namespace Diciela.UI
                 throw new InvalidOperationException("La roue des outils ne trouve pas ses éléments (UXML).");
 
             _elements = elements;
-            // Ces éléments vivent dans le document : branchés une seule fois, ils s'adressent au présentateur du moment.
-            if (_ring == null)
-            {
-                _ring = new WheelRing(elements.Wheel, elements.Center, elements.Plate, elements.Tools);
-                Wire(tooltips);
-            }
+            _ring = new WheelRing(elements.Wheel, elements.Center, elements.Plate, elements.Tools);
+            _ring.Dismissed += Close;
+            _ring.Picked += OnPicked;
+            _ring.AimChanged += OnAimChanged;
+            _elements.Icon.Clicked += OnIconClicked;
+            _iconTooltip = tooltips.Attach(_elements.Icon,
+                () => _presenter != null ? _presenter.IconTooltip() : ("", ""), true);
             _presenter = new ToolWheelPresenter(this, texts, keys, clearing, build);
-            _elements.Icon.RemoveFromClassList(HiddenClass);
+            _elements.Icon.RemoveFromClassList(StyleClasses.Hidden);
         }
 
-        /// <summary>Ferme la roue, cache l'icône et oublie le monde.</summary>
+        /// <summary>Ferme la roue, cache l'icône, la débranche et oublie le monde.</summary>
         public void Hide()
         {
             _presenter?.Dispose();
@@ -59,7 +59,12 @@ namespace Diciela.UI
             if (_ring == null)
                 return;
             Close();
-            _elements.Icon.AddToClassList(HiddenClass);
+            _elements.Icon.Clicked -= OnIconClicked;
+            _iconTooltip.Dispose();
+            _iconTooltip = null;
+            _ring.Dispose();
+            _ring = null;
+            _elements.Icon.AddToClassList(StyleClasses.Hidden);
         }
 
         private void OnDestroy()
@@ -105,58 +110,59 @@ namespace Diciela.UI
             return true;
         }
 
-        public void ShowKeys(string wheel, string build, string clear)
+        public void ShowWheelKey(string key)
         {
-            _elements.IconKey.text = wheel;
-            _elements.ToolKeys[(int)ToolChoice.Build].text = build;
-            _elements.ToolKeys[(int)ToolChoice.Clear].text = clear;
+            _elements.IconKey.text = key;
+        }
+
+        public void ShowToolKey(ToolChoice tool, string key)
+        {
+            _elements.ToolKeys[(int)tool].text = key;
         }
 
         public void ShowLabel(string name, string detail)
         {
             _elements.Label.text = name;
             _elements.Detail.text = detail;
-            _elements.Detail.EnableInClassList(HiddenClass, string.IsNullOrEmpty(detail));
-            _elements.Bubble.EnableInClassList(HiddenClass, string.IsNullOrEmpty(name));
+            _elements.Detail.EnableInClassList(StyleClasses.Hidden, string.IsNullOrEmpty(detail));
+            _elements.Bubble.EnableInClassList(StyleClasses.Hidden, string.IsNullOrEmpty(name));
         }
 
-        public void ShowActive(bool building, bool clearing)
+        public void ShowActive(ToolChoice tool, bool active)
         {
-            _elements.Tools[(int)ToolChoice.Build].EnableInClassList(OpenClass, building);
-            _elements.Tools[(int)ToolChoice.Clear].EnableInClassList(OpenClass, clearing);
+            _elements.Tools[(int)tool].EnableInClassList(StyleClasses.Open, active);
         }
 
-        private void Wire(Tooltips tooltips)
+        private void OnIconClicked()
         {
-            _elements.Icon.Clicked += () =>
-            {
-                if (_ring.IsOpen)
-                    Close();
-                else if (_presenter != null)
-                    Open(_elements.Icon.worldBound.center, false);
-            };
-            _ring.Dismissed += Close;
-            _ring.AimChanged += tool => Pointed?.Invoke(tool >= 0 ? (ToolChoice)tool : (ToolChoice?)null);
-            for (int i = 0; i < _elements.Tools.Length; i++)
-            {
-                var choice = (ToolChoice)i;
-                _elements.Tools[i].Clicked += () => Choose(choice);
-            }
-            tooltips.Attach(_elements.Icon, () => _presenter != null ? _presenter.IconTooltip() : ("", ""), true);
+            if (_ring.IsOpen)
+                Close();
+            else if (_presenter != null)
+                Open(_elements.Icon.worldBound.center, false);
+        }
+
+        private void OnPicked(int tool)
+        {
+            Choose((ToolChoice)tool);
+        }
+
+        private void OnAimChanged(int tool)
+        {
+            Pointed?.Invoke(tool >= 0 ? (ToolChoice)tool : (ToolChoice?)null);
         }
 
         private void Open(Vector2 at, bool held)
         {
             _ring.Open(at, held);
-            _elements.Icon.AddToClassList(OpenClass);
+            _elements.Icon.AddToClassList(StyleClasses.Open);
         }
 
         private void Close()
         {
-            if (!_ring.IsOpen)
+            if (_ring == null || !_ring.IsOpen)
                 return;
             _ring.Close();
-            _elements.Icon.RemoveFromClassList(OpenClass);
+            _elements.Icon.RemoveFromClassList(StyleClasses.Open);
         }
 
         private Vector2 ToPanel(Vector2 screenPoint)

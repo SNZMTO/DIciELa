@@ -23,8 +23,6 @@ namespace Diciela.UI
         private const string StructuresName = "structures";
         private const string ReasonName = "reason";
         private const string ReasonTextName = "reason-text";
-        private const string HiddenClass = "bloc-cache";
-        private const string OpenClass = "ouvert";
 
         private UIDocument _document;
         private VisualElement _bar;
@@ -103,7 +101,7 @@ namespace Diciela.UI
 
         public void ShowOpen(bool open)
         {
-            _bar.EnableInClassList(HiddenClass, !open);
+            _bar.EnableInClassList(StyleClasses.Hidden, !open);
             OpenChanged?.Invoke();
         }
 
@@ -114,7 +112,7 @@ namespace Diciela.UI
             {
                 int index = i;
                 FeltButton tab = BuildBarElements.Tab(families[i], () => FamilyChosen?.Invoke(index));
-                tab.EnableInClassList(OpenClass, i == open);
+                tab.EnableInClassList(StyleClasses.Open, i == open);
                 _families.Add(tab);
             }
         }
@@ -132,13 +130,13 @@ namespace Diciela.UI
         public void SelectStructure(int index)
         {
             for (int i = 0; i < _structures.childCount; i++)
-                _structures[i].EnableInClassList(OpenClass, i == index);
+                _structures[i].EnableInClassList(StyleClasses.Open, i == index);
         }
 
         public void ShowReason(string text)
         {
             _reasonText.text = text;
-            _reason.EnableInClassList(HiddenClass, string.IsNullOrEmpty(text));
+            _reason.EnableInClassList(StyleClasses.Hidden, string.IsNullOrEmpty(text));
         }
     }
 }

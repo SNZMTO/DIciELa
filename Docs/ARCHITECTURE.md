@@ -103,7 +103,7 @@ la société, qui voit tout ce qui est en dessous.
   tenue) ;
   le déroulé du départ ; les opérations qui touchent plusieurs couches, faites par des appels vers le bas dans un ordre
   écrit (poser : le terrain, puis l'économie ouvre un stock ou un chantier, la société des postes, puis le déroulé du
-  départ la regarde ; plus tard, la maison de la Chimère qui remplace la tente) ; la capture et la restauration. Le
+  départ la regarde ; plus tard, la maison de la Chimère qui remplace le campement) ; la capture et la restauration. Le
   monde reçoit les réglages, la carte et le catalogue, d'où il tire le déroulé du départ et les statistiques.
 
 ## 4. Qui possède quoi
@@ -345,10 +345,14 @@ code.
   déplacement à la position (SAVOIR 3). Un geste appartient à la ville ou à l'interface dès l'enfoncement ; clic ou
   glisser se décide au relâchement (SAVOIR 2.8). Sans outil en main, un clic gauche touche la construction dont le
   modèle est sous le pointeur : la vue dit laquelle (SAVOIR 2.7), l'outil « choisir » en fait un ordre. Un outil en
-  main (`IHeldTool` : poser, retirer ; un seul à la fois, et `Game` lâche l'un quand on prend l'autre) prend le clic
-  gauche. La roue des outils les prend : Retirer en main, ou Construire, qui ouvre le panneau Construire, dont une
-  carte met la construction en main ; ses gestes (`ToolControls` : la touche de la roue tenue, celle de chaque outil)
-  ne la connaissent que par `IToolWheel`, et elle lit leurs touches par `IToolKeys`. L'outil « Retirer »
+  main (`IHeldTool` : poser, retirer) prend le clic gauche ; un seul à la fois : la main (`Hand`) lâche les autres
+  quand on en prend un, par n'importe quel chemin, et le geste « toucher » y lit si un outil est en main. La roue des
+  outils les prend : Retirer en main, ou Construire, qui ouvre le panneau Construire, dont une carte met la
+  construction en main ; ses gestes (`ToolControls` : la touche de la roue tenue, celle de chaque outil) ne la
+  connaissent que par `IToolWheel`, et elle lit leurs touches par `IToolKeys`. Ses outils sont décrits par deux
+  tables, au rang de leur choix (`ToolChoice`) : `ToolAction` pour les gestes (l'action, sa touche d'origine, que lit
+  aussi le monteur des actions), `WheelTool` pour l'interface (l'élément, le nom, l'usage) ; ce que fait chaque outil
+  n'est écrit que dans le présentateur de la roue. L'outil « Retirer »
   vise un arbre par la boîte de son modèle et marque ce que contient le cadre qu'on tire, que l'interface dessine
   (`ISelectionFrame`). Un panneau ouvert rend la ville muette ; les conteneurs plein écran de l'interface ne captent pas le pointeur. Les gestes ne
   connaissent pas l'interface : elle leur dit seulement où elle est (`IInterfaceArea`), et `Game` les relie.
@@ -367,7 +371,8 @@ code.
   contenu deux images générées, son ombre et sa face tirée de l'atlas du pack, découpées en neuf (`Cadre.uss`,
   générée avec elles) ; les faces plates (`Facet` : applique, feutre, creux, bulle ; `FeltButton` pour celles qui se
   cliquent) se dessinent en vectoriel d'après leurs propriétés `--…`, que les états (`:hover`, `:active`, `.ouvert`)
-  changent ; les icônes sont des images vectorielles générées. Aucun filtre USS. Le panneau garde ses pixels :
+  changent, les classes que les vues posent étant écrites une fois (`StyleClasses`) ; les icônes sont des images
+  vectorielles générées. Aucun filtre USS. Le panneau garde ses pixels :
   `InterfaceScale` lui donne son échelle d'après l'écran (ou l'image où il se rend) et le réglage. Les images,
   l'ombre et les icônes se refont par `DICIELA/Interface/Générer les images de l'interface`, les vignettes des
   constructions par `DICIELA/Interface/Photographier les constructions`.
@@ -377,7 +382,8 @@ code.
   outils, `ToolWheel`, ses éléments `ToolWheelElements`, son anneau `WheelRing` et ses mesures `WheelGeometry` ;
   la journée, `DayBoard` ; la fiche du lieu touché, `PlaceSheet` ; le stock en fanions, `StockPennants` ; l'astuce,
   `TipBoard`, dont le portrait est pris à l'atelier par la vue, `Portrait`) ; une seule bulle sert d'infobulle à tous
-  (`Tooltips`), chaque vue dit ce qu'elle montre au survol. Le démarrage donne à la journée, à chaque image, la
+  (`Tooltips`), chaque vue dit ce qu'elle montre au survol. Une vue se branche quand la ville s'ouvre (`Show`) et se
+  débranche quand elle se ferme (`Hide`) : ses boutons, ses rappels, ses infobulles (une infobulle donnée se retire). Le démarrage donne à la journée, à chaque image, la
   fraction du pas en cours. Tout le HUD dit aux gestes où il est (`HudArea`) ; l'outil « choisir » dit ce qu'on a
   touché, et le démarrage le relie à la fiche. Échap est une pile (`EscapeControls`) : la fiche, la roue, le panneau Construire, puis l'outil
   en main.

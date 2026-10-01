@@ -11,7 +11,8 @@ namespace Diciela.Tests.PlayMode
     /// <summary>
     /// Les gestes des outils, joués par un clavier et une souris simulés sur les vraies actions du jeu (décision 168) :
     /// tenir Tab ouvre la roue sous le pointeur et la fait suivre où il vise ; relâcher choisit là où il vise ; B et X
-    /// choisissent tout droit ; sans roue, rien ne part. Les noms des touches se lisent sur les liaisons.
+    /// choisissent tout droit ; sans roue, rien ne part. Les noms des touches se lisent sur les liaisons ; la table des
+    /// outils suit l'ordre des choix et l'asset du jeu.
     /// </summary>
     public sealed class ToolControlsTests : GestureFixture
     {
@@ -118,6 +119,20 @@ namespace Diciela.Tests.PlayMode
             Assert.AreEqual("Tab", _controls.WheelKey);
             Assert.AreEqual("B", _controls.KeyOf(ToolChoice.Build));
             Assert.AreEqual("X", _controls.KeyOf(ToolChoice.Clear));
+        }
+
+        [Test]
+        public void TheToolsTableFollowsTheChoicesAndTheGameActions()
+        {
+            Assert.AreEqual(System.Enum.GetValues(typeof(ToolChoice)).Length, ToolAction.All.Count, "Un outil par choix.");
+            for (int i = 0; i < ToolAction.All.Count; i++)
+            {
+                ToolAction tool = ToolAction.All[i];
+                Assert.AreEqual((ToolChoice)i, tool.Choice, "La table suit l'ordre des choix.");
+                InputAction action = _actions.FindAction(ToolControls.MapName + "/" + tool.Name);
+                Assert.IsNotNull(action, tool.Name);
+                Assert.AreEqual(tool.DefaultBinding, action.bindings[0].path, "L'asset du jeu a sa touche d'origine.");
+            }
         }
     }
 }

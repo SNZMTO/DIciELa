@@ -11,7 +11,7 @@ namespace Diciela.UI
     /// d'origine. On part de l'apparence de départ du catalogue. Les pièces qu'une tête porte d'office (ses oreilles, ses
     /// touffes) la suivent : sur chaque ligne qui montrait une pièce de l'ancienne tête (ou rien, faute d'en avoir), celle
     /// de la nouvelle ; une pièce choisie par le joueur reste. Une ligne que la tête ne porte pas (les oreilles de la
-    /// grenouille) reste vide avec elle.
+    /// grenouille) reste vide avec elle. Ce que le catalogue propose se lit dans son offre (CreationOffer).
     /// </summary>
     public sealed class CreationChoices
     {
@@ -24,7 +24,7 @@ namespace Diciela.UI
         private const string BodyRowId = "corps";
 
         private readonly Catalog _catalog;
-        private readonly List<List<AttachmentDefinition>> _offered = new List<List<AttachmentDefinition>>();
+        private readonly CreationOffer _offer;
         private readonly int[] _pieces;
         private readonly int[] _palettes;
         private readonly List<WornAttachment> _worn = new List<WornAttachment>();
@@ -33,32 +33,22 @@ namespace Diciela.UI
         {
             Appearance starting = Appearance.StartingIn(catalog);
             _catalog = catalog;
-            foreach (AttachmentSlotDefinition slot in catalog.AttachmentSlots)
-            {
-                var pieces = new List<AttachmentDefinition>();
-                foreach (AttachmentDefinition piece in catalog.Attachments)
-                {
-                    if (piece != null && ReferenceEquals(piece.Slot, slot))
-                        pieces.Add(piece);
-                }
-                _offered.Add(pieces);
-            }
-
-            _pieces = new int[FirstSlotRow + _offered.Count];
+            _offer = new CreationOffer(catalog);
+            _pieces = new int[FirstSlotRow + _offer.SlotCount];
             _palettes = new int[_pieces.Length];
             for (int row = FirstSlotRow; row < _pieces.Length; row++)
                 _pieces[row] = _palettes[row] = None;
-            _palettes[HeadRow] = PaletteIndex(starting.HeadPalette);
-            _palettes[BodyRow] = PaletteIndex(starting.BodyPalette);
+            _palettes[HeadRow] = _offer.PaletteIndex(starting.HeadPalette);
+            _palettes[BodyRow] = _offer.PaletteIndex(starting.BodyPalette);
             foreach (WornAttachment worn in starting.Attachments)
             {
-                for (int slot = 0; slot < _offered.Count; slot++)
+                for (int slot = 0; slot < _offer.SlotCount; slot++)
                 {
-                    int piece = _offered[slot].IndexOf(worn.Attachment);
+                    int piece = _offer.PiecesAt(slot).IndexOf(worn.Attachment);
                     if (piece < 0)
                         continue;
                     _pieces[FirstSlotRow + slot] = piece;
-                    _palettes[FirstSlotRow + slot] = PaletteIndex(worn.Palette);
+                    _palettes[FirstSlotRow + slot] = _offer.PaletteIndex(worn.Palette);
                 }
             }
         }
@@ -90,7 +80,7 @@ namespace Diciela.UI
                 return _catalog.Heads[_pieces[row]].NameKey;
             if (row == BodyRow)
                 return _catalog.Bodies[_pieces[row]].NameKey;
-            return _pieces[row] == None ? "" : _offered[row - FirstSlotRow][_pieces[row]].NameKey;
+            return _pieces[row] == None ? "" : _offer.PiecesAt(row - FirstSlotRow)[_pieces[row]].NameKey;
         }
 
         /// <summary>La clé du nom de la couleur de cette ligne ; vide sans pièce.</summary>
@@ -108,23 +98,23 @@ namespace Diciela.UI
             {
                 HeadDefinition before = _catalog.Heads[_pieces[row]];
                 _pieces[row] = Wrap(_pieces[row] + direction, _catalog.Heads.Count);
-                _palettes[row] = PaletteIndex(_catalog.Heads[_pieces[row]].Palette);
+                _palettes[row] = _offer.PaletteIndex(_catalog.Heads[_pieces[row]].Palette);
                 Follow(before, _catalog.Heads[_pieces[row]]);
             }
             else if (row == BodyRow)
             {
                 _pieces[row] = Wrap(_pieces[row] + direction, _catalog.Bodies.Count);
-                _palettes[row] = PaletteIndex(_catalog.Bodies[_pieces[row]].Palette);
+                _palettes[row] = _offer.PaletteIndex(_catalog.Bodies[_pieces[row]].Palette);
             }
             else if (row > BodyRow && row < _pieces.Length && !Refused(row))
             {
-                List<AttachmentDefinition> offered = _offered[row - FirstSlotRow];
+                List<AttachmentDefinition> offered = _offer.PiecesAt(row - FirstSlotRow);
                 // « Aucune » est un choix de la ligne, avant ses pièces, si l'on peut se passer de son emplacement.
                 if (_catalog.AttachmentSlots[row - FirstSlotRow].Required && offered.Count > 0)
                     _pieces[row] = Wrap(_pieces[row] + direction, offered.Count);
                 else
                     _pieces[row] = Wrap(_pieces[row] + 1 + direction, offered.Count + 1) - 1;
-                _palettes[row] = _pieces[row] == None ? None : PaletteIndex(offered[_pieces[row]].Palette);
+                _palettes[row] = _pieces[row] == None ? None : _offer.PaletteIndex(offered[_pieces[row]].Palette);
             }
         }
 
@@ -142,7 +132,7 @@ namespace Diciela.UI
             for (int row = FirstSlotRow; row < _pieces.Length; row++)
             {
                 if (_pieces[row] != None && !Refused(row))
-                    _worn.Add(new WornAttachment(_offered[row - FirstSlotRow][_pieces[row]], Palette(row)));
+                    _worn.Add(new WornAttachment(_offer.PiecesAt(row - FirstSlotRow)[_pieces[row]], Palette(row)));
             }
             return new Appearance(_catalog.Heads[_pieces[HeadRow]], Palette(HeadRow), _catalog.Bodies[_pieces[BodyRow]],
                 Palette(BodyRow), _worn);
@@ -156,22 +146,22 @@ namespace Diciela.UI
         {
             for (int row = FirstSlotRow; row < _pieces.Length; row++)
             {
-                List<AttachmentDefinition> offered = _offered[row - FirstSlotRow];
+                List<AttachmentDefinition> offered = _offer.PiecesAt(row - FirstSlotRow);
                 AttachmentSlotDefinition slot = _catalog.AttachmentSlots[row - FirstSlotRow];
                 AttachmentDefinition shown = _pieces[row] == None ? null : offered[_pieces[row]];
-                if (!ReferenceEquals(shown, WornIn(before, slot)))
+                if (!ReferenceEquals(shown, CreationOffer.WornIn(before, slot)))
                     continue;
-                AttachmentDefinition own = WornIn(after, slot);
+                AttachmentDefinition own = CreationOffer.WornIn(after, slot);
                 // Une ligne dont on ne peut pas se passer garde sa pièce si la nouvelle tête n'en porte pas, ou prend la
                 // première qu'elle propose si elle n'en avait pas (en revenant d'une tête qui ne la porte pas).
                 if (own == null && slot.Required)
                 {
                     if (shown == null && offered.Count > 0)
-                        (_pieces[row], _palettes[row]) = (0, PaletteIndex(offered[0].Palette));
+                        (_pieces[row], _palettes[row]) = (0, _offer.PaletteIndex(offered[0].Palette));
                     continue;
                 }
                 _pieces[row] = own == null ? None : offered.IndexOf(own);
-                _palettes[row] = _pieces[row] == None ? None : PaletteIndex(own.Palette);
+                _palettes[row] = _pieces[row] == None ? None : _offer.PaletteIndex(own.Palette);
             }
         }
 
@@ -182,28 +172,7 @@ namespace Diciela.UI
                    _catalog.Heads[_pieces[HeadRow]].Refuses(_catalog.AttachmentSlots[row - FirstSlotRow]);
         }
 
-        private static AttachmentDefinition WornIn(HeadDefinition head, AttachmentSlotDefinition slot)
-        {
-            foreach (AttachmentDefinition piece in head.Worn)
-            {
-                if (piece != null && ReferenceEquals(piece.Slot, slot))
-                    return piece;
-            }
-            return null;
-        }
-
         private PaletteDefinition Palette(int row) => _catalog.Palettes[_palettes[row]];
-
-        /// <summary>Le rang d'une couleur dans le catalogue ; la première, si le catalogue ne l'a pas.</summary>
-        private int PaletteIndex(PaletteDefinition palette)
-        {
-            for (int i = 0; i < _catalog.Palettes.Count; i++)
-            {
-                if (ReferenceEquals(_catalog.Palettes[i], palette))
-                    return i;
-            }
-            return 0;
-        }
 
         private static int Wrap(int index, int count) => (index % count + count) % count;
     }
