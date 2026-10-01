@@ -12,9 +12,8 @@ décisions 147 à 166), puis 20 : le bouton « Retirer » (167).
   des onglets. Il paraît la tente plantée ; un clic le prend, un second le lâche ; enfoncé tant qu'il est en main.
 **EditMode 174/174, PlayMode 143/143**, Play sans erreur.
 
-**À vérifier par toi** : Play, plante la tente : la hache paraît à gauche de l'onglet Logement. Survole-la (son
-infobulle), clique-la (elle reste enfoncée), clique un arbre (son fanion), puis reclique-la ou prends une carte (elle
-se relève).
+**À vérifier par toi** : plante la tente : la hache paraît à gauche de l'onglet Logement. Survole-la (l'infobulle),
+clique-la (enfoncée), clique un arbre (son fanion), puis reclique-la ou prends une carte (elle se relève).
 
 **À toi** : peindre la carte et ranger tes modèles dans `Assets/Data/Nature` (la carte n'a encore aucun arbre) ; le
 fanion des arbres marqués (le pack a `SM_Prop_Flag_01` à `05`) ; le clic droit sur « Retirer », les pastels et le
