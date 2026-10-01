@@ -11,7 +11,8 @@ namespace Diciela.EditorTools
     /// Prépare les modèles des constructions (SAVOIR, 2.9) : le modèle du pack, tel quel, devient une copie qui se pose
     /// sans calcul. Sa porte dit de combien le tourner pour qu'elle regarde le nord ; la boîte de ses maillages, une fois
     /// tourné, donne l'empreinte et le centre ; l'origine du pack reste le sol (chez Synty, le niveau de la porte : les
-    /// fondations s'enfoncent). Les pièces, dans leur version la plus détaillée, sont fusionnées (ModelMerger). La fiche
+    /// fondations s'enfoncent). Les pièces, dans leur version la plus détaillée, sont fusionnées (ModelMerger) ; ses
+    /// effets (la fumée d'une cheminée, la flamme d'un feu) sont gardés à leur place. La fiche
     /// reçoit le modèle préparé, son empreinte et sa porte. Une fiche sans modèle du pack reçoit sa boîte, à sa taille
     /// (PlaceholderBuilder). Tout se fait dans une scène d'aperçu, hors de la scène ouverte.
     /// </summary>
@@ -62,7 +63,8 @@ namespace Diciela.EditorTools
                 Bounds box = SourceModelParts.Box(pieces);
                 Bounds doorBox = structure.HasDoor ? SourceModelParts.Box(door) : default;
 
-                GameObject prepared = ModelMerger.Save(structure.name, pieces, out string merge);
+                GameObject prepared = ModelMerger.Save(structure.name, pieces, SourceModelParts.Effects(pivot),
+                    out string merge);
                 if (prepared == null)
                     return false;
                 Fill(structure, prepared, box, doorBox);

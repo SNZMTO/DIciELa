@@ -9,7 +9,8 @@ namespace Diciela.EditorTools
 {
     /// <summary>
     /// La fusion d'un modèle préparé (SAVOIR, 2.9) : toutes ses pièces deviennent un seul maillage, avec un sous-maillage
-    /// par matériau, enregistré avec son prefab dans Assets/Art/Modeles. Mêmes formes, mêmes matériaux du pack : l'art
+    /// par matériau, enregistré avec son prefab dans Assets/Art/Modeles ; ses effets (des particules) y sont copiés à
+    /// leur place, à côté du maillage. Mêmes formes, mêmes matériaux du pack : l'art
     /// ne change pas, mais une maison se dessine en un appel par matériau au lieu d'un par pièce, et se crée d'un seul
     /// objet. Un maillage fait par script reste lisible : la visée pourra lire ses triangles (SAVOIR, 2.7).
     /// </summary>
@@ -19,9 +20,10 @@ namespace Diciela.EditorTools
 
         /// <summary>
         /// Fusionne ces pièces, placées dans leur scène comme le modèle préparé doit l'être, et enregistre le modèle
-        /// sous ce nom ; null si une pièce ne peut pas l'être (la raison est dans la console).
+        /// sous ce nom, avec une copie de ces effets, placés de même ; null si une pièce ne peut pas l'être (la raison est
+        /// dans la console).
         /// </summary>
-        public static GameObject Save(string name, List<MeshFilter> pieces, out string report)
+        public static GameObject Save(string name, List<MeshFilter> pieces, List<GameObject> effects, out string report)
         {
             report = "";
             var materials = new List<Material>();
@@ -53,9 +55,11 @@ namespace Diciela.EditorTools
             }
 
             Mesh merged = Merge(name, parts);
-            GameObject prefab = SavePrefab(name, merged, materials);
+            GameObject prefab = SavePrefab(name, merged, materials, effects);
             report = pieces.Count + " pièces fusionnées en un maillage de " + merged.vertexCount + " sommets, " +
-                     Triangles(merged) + " triangles, " + materials.Count + " matériau" + (materials.Count > 1 ? "x" : "");
+                     Triangles(merged) + " triangles, " + materials.Count + " matériau" + (materials.Count > 1 ? "x" : "") +
+                     (effects.Count > 0 ? ", " + effects.Count + " effet" + (effects.Count > 1 ? "s" : "") + " gardé" +
+                                          (effects.Count > 1 ? "s" : "") : "");
             return prefab;
         }
 
@@ -92,8 +96,11 @@ namespace Diciela.EditorTools
             return merged;
         }
 
-        /// <summary>Enregistre le maillage, puis le prefab qui le montre ; un modèle déjà préparé est remplacé au même chemin.</summary>
-        private static GameObject SavePrefab(string name, Mesh merged, List<Material> materials)
+        /// <summary>
+        /// Enregistre le maillage, puis le prefab qui le montre, avec ses effets ; un modèle déjà préparé est remplacé au
+        /// même chemin. Le modèle est à l'origine : la place d'un effet dans la scène de la préparation est sa place sous lui.
+        /// </summary>
+        private static GameObject SavePrefab(string name, Mesh merged, List<Material> materials, List<GameObject> effects)
         {
             EditorAssets.EnsureFolder(Folder);
             string meshPath = Folder + "/" + name + "_Maillage.asset";
@@ -107,6 +114,13 @@ namespace Diciela.EditorTools
                 SceneManager.MoveGameObjectToScene(model, scene);
                 model.AddComponent<MeshFilter>().sharedMesh = AssetDatabase.LoadAssetAtPath<Mesh>(meshPath);
                 model.AddComponent<MeshRenderer>().sharedMaterials = materials.ToArray();
+                foreach (GameObject effect in effects)
+                {
+                    GameObject copy = Object.Instantiate(effect, model.transform);
+                    copy.name = effect.name;
+                    copy.transform.SetPositionAndRotation(effect.transform.position, effect.transform.rotation);
+                    copy.transform.localScale = effect.transform.lossyScale;
+                }
                 return PrefabUtility.SaveAsPrefabAsset(model, prefabPath);
             }
             finally
