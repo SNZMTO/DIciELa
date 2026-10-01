@@ -16,6 +16,7 @@ namespace Diciela.Tests.PlayMode
 
         public string Title { get; private set; } = "";
         public List<string> Labels { get; } = new List<string>();
+        public List<string> RowIds { get; } = new List<string>();
         public List<string> Choices { get; } = new List<string>();
         public List<string> Colors { get; } = new List<string>();
 
@@ -34,11 +35,13 @@ namespace Diciela.Tests.PlayMode
             Confirmed?.Invoke();
         }
 
-        public void ShowRows(string title, string confirm, IReadOnlyList<string> labels)
+        public void ShowRows(string title, string confirm, IReadOnlyList<string> labels, IReadOnlyList<string> rowIds)
         {
             Title = title;
             Labels.Clear();
             Labels.AddRange(labels);
+            RowIds.Clear();
+            RowIds.AddRange(rowIds);
             Choices.Clear();
             Colors.Clear();
             for (int i = 0; i < labels.Count; i++)

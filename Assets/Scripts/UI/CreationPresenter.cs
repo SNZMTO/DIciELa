@@ -40,12 +40,16 @@ namespace Diciela.UI
             _choices = new CreationChoices(catalog);
 
             var labels = new List<string>();
+            var rowIds = new List<string>();
             for (int row = 0; row < _choices.Rows; row++)
+            {
                 labels.Add(texts.Get(_choices.LabelKey(row)));
+                rowIds.Add(_choices.RowId(row));
+            }
             _view.Stepped += OnStepped;
             _view.Recolored += OnRecolored;
             _view.Confirmed += OnConfirmed;
-            _view.ShowRows(texts.Get(TextKeys.CreationTitle), texts.Get(TextKeys.CreationConfirm), labels);
+            _view.ShowRows(texts.Get(TextKeys.CreationTitle), texts.Get(TextKeys.CreationConfirm), labels, rowIds);
             Show();
         }
 
