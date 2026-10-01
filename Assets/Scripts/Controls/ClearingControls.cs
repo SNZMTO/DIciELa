@@ -7,7 +7,8 @@ namespace Diciela.Controls
     /// <summary>
     /// Les gestes de l'outil « Retirer » (ARCHITECTURE, section 11) : l'outil en main, un clic gauche sur la ville touche
     /// l'arbre ou le rocher sous le pointeur ; un glisser tire un cadre, que l'interface dessine, et le relâcher marque
-    /// ce qu'il contient. Un appui qui commence sur l'interface lui appartient (SAVOIR, 2.8). Il lit les actions et
+    /// ce qu'il contient. Un clic droit bref pose l'outil de côté, comme une carte ; glissé, il reste à la caméra
+    /// (décision 169). Un appui qui commence sur l'interface lui appartient (SAVOIR, 2.8). Il lit les actions et
     /// appelle l'outil, rien d'autre ; il passe après la caméra (ordre 100), comme le geste « toucher ».
     /// </summary>
     [DefaultExecutionOrder(100)]
@@ -16,6 +17,7 @@ namespace Diciela.Controls
         public const string MapName = "Clearing";
         public const string MarkAction = "Mark";
         public const string PointerAction = "Pointer";
+        public const string SecondaryAction = "Secondary";
 
         [Tooltip("L'asset d'actions du jeu (Assets/Input).")]
         [SerializeField] private InputActionAsset _actions;
@@ -28,7 +30,9 @@ namespace Diciela.Controls
         private InputActionMap _map;
         private InputAction _mark;
         private InputAction _pointer;
+        private InputAction _secondary;
         private DragGesture _gesture;
+        private DragGesture _secondaryGesture;
         private bool _framing;
         private Vector2 _frameStart;
         private Vector2 _frameEnd;
@@ -47,6 +51,7 @@ namespace Diciela.Controls
             _frame = frame;
             _interfaceArea = interfaceArea;
             _gesture = default;
+            _secondaryGesture = default;
         }
 
         private void OnEnable()
@@ -61,6 +66,7 @@ namespace Diciela.Controls
             _map = _actions.FindActionMap(MapName, true);
             _mark = _map.FindAction(MarkAction, true);
             _pointer = _map.FindAction(PointerAction, true);
+            _secondary = _map.FindAction(SecondaryAction, true);
             _map.Enable();
         }
 
@@ -71,6 +77,7 @@ namespace Diciela.Controls
             _map = null;
             StopFraming();
             _gesture = default;
+            _secondaryGesture = default;
         }
 
         private void LateUpdate()
@@ -79,6 +86,7 @@ namespace Diciela.Controls
             {
                 StopFraming();
                 _gesture = default;
+                _secondaryGesture = default;
                 return;
             }
 
@@ -99,6 +107,9 @@ namespace Diciela.Controls
             }
             if (_gesture.Clicked)
                 Tool.TouchAt(pointer);
+            _secondaryGesture.Update(_secondary.IsPressed(), pointer, _gestures.DragThresholdPixels, onInterface);
+            if (_secondaryGesture.Clicked)
+                Tool.Escape();
         }
 
         private void StopFraming()

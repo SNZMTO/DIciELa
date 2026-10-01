@@ -626,6 +626,16 @@
                     "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
+                },
+                {
+                    "name": "Secondary",
+                    "type": "Button",
+                    "id": "63df0b05-db95-44da-b679-fef305e5c4f6",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -648,6 +658,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Pointer",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b8039890-29a9-4be3-b52f-d583bc0a3c46",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Secondary",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

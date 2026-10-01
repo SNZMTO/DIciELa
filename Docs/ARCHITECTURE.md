@@ -374,7 +374,7 @@ code.
 - **Le HUD** est un seul document (`Hud.uxml`, sa mise en page dans `Hud.uss`), sur l'objet « Interface » : chaque
   bloc a sa vue, qui cherche son sous-arbre par son nom, et son présentateur (le panneau Construire, `BuildBar`,
   ouvert à la demande par `IBuildMenu`, dont les onglets et les cartes se font dans `BuildBarElements` ; la roue des
-  outils, `ToolWheel`, son anneau `WheelRing` et ses mesures `WheelGeometry` ;
+  outils, `ToolWheel`, ses éléments `ToolWheelElements`, son anneau `WheelRing` et ses mesures `WheelGeometry` ;
   la journée, `DayBoard` ; la fiche du lieu touché, `PlaceSheet` ; le stock en fanions, `StockPennants` ; l'astuce,
   `TipBoard`, dont le portrait est pris à l'atelier par la vue, `Portrait`) ; une seule bulle sert d'infobulle à tous
   (`Tooltips`), chaque vue dit ce qu'elle montre au survol. Le démarrage donne à la journée, à chaque image, la

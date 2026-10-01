@@ -61,10 +61,12 @@ namespace Diciela.EditorTools
             added += AddButtonIfMissing(choose, ChooseControls.TouchAction, "<Mouse>/leftButton") +
                      AddPointerIfMissing(choose, ChooseControls.PointerAction);
 
-            // Marquer des arbres, l'outil « Retirer » en main : le clic gauche, le glisser et le pointeur.
+            // Marquer des arbres, l'outil « Retirer » en main : le clic gauche, le glisser et le pointeur ; le clic droit
+            // bref le pose de côté.
             InputActionMap clearing = asset.FindActionMap(ClearingControls.MapName) ??
                                       asset.AddActionMap(ClearingControls.MapName);
             added += AddButtonIfMissing(clearing, ClearingControls.MarkAction, "<Mouse>/leftButton") +
+                     AddButtonIfMissing(clearing, ClearingControls.SecondaryAction, "<Mouse>/rightButton") +
                      AddPointerIfMissing(clearing, ClearingControls.PointerAction);
 
             // Les outils (décision 168) : la roue, touche tenue (Tab, comme les roues d'armes sur PC) ; un raccourci

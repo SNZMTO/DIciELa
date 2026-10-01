@@ -14,7 +14,8 @@ namespace Diciela.Tests.PlayMode
     /// Les gestes de l'outil « Retirer », joués par une souris simulée sur les vraies actions du jeu, au-dessus des arbres
     /// d'essai (TestPaintedNature) vus d'une caméra droit au-dessus d'eux. L'outil en main, un clic sur un arbre le
     /// marque ; un glisser tire un cadre, dessiné tant qu'on glisse, et le relâcher marque les deux arbres qu'il prend.
-    /// Sans l'outil en main, un clic ne marque rien. Un faux panneau d'interface occupe le bas de l'écran.
+    /// Un clic droit bref pose l'outil de côté ; un glisser du clic droit, laissé à la caméra, ne le pose pas. Sans
+    /// l'outil en main, un clic ne marque rien. Un faux panneau d'interface occupe le bas de l'écran.
     /// </summary>
     public sealed class ClearingControlsTests : GestureFixture
     {
@@ -127,6 +128,22 @@ namespace Diciela.Tests.PlayMode
             Assert.AreEqual(1, _frame.Hidden, "Relâché, le cadre s'efface.");
             Assert.IsTrue(First.IsMarked && Second.IsMarked, "Le cadre a pris les deux arbres.");
             Assert.AreSame(Second, _town.World.Nature.Marked[0], "Le plus proche du premier coin d'abord.");
+        }
+
+        [UnityTest]
+        public IEnumerator ABriefRightClickPutsTheToolAsideButARightDragDoesNot()
+        {
+            _controls.Tool.Take();
+            yield return PointAt(OnScreen(20f, 0f, 30f));
+            Press(Mouse.rightButton);
+            yield return Played();
+            yield return PointAt(OnScreen(20f, 0f, 30f) + new Vector2(Moved, 0f));
+            Release(Mouse.rightButton);
+            yield return Played();
+            Assert.IsTrue(_controls.Tool.IsActive, "Un glisser du clic droit reste à la caméra : l'outil reste en main.");
+
+            yield return Click(Mouse.rightButton);
+            Assert.IsFalse(_controls.Tool.IsActive, "Un clic droit bref pose l'outil de côté, comme une carte.");
         }
 
         [UnityTest]

@@ -87,6 +87,9 @@ En cas de doute, `unity list` (les outils du paquet `com.unity.pipeline`) ou la 
   reste derrière, le Play se fige et la capture `screen` prend ce qui est affiché (la « fenêtre noire » d'une vidéo).
   Avant un Play d'album, lire la fenêtre au premier plan (`GetForegroundWindow` par PowerShell) ; si ce n'est pas
   Unity, demander au développeur de l'y mettre, ne jamais la lui prendre.
+- **Le clavier n'atteint le jeu que si la vue Game a le focus** dans l'éditeur : Unity devant mais un autre panneau
+  choisi (Scène, Console…), `simulate_key` répond « Success » et aucune action ne part. `menu --path
+  "Window/General/Game"` juste avant les touches.
 - **Captures** : `capture_game_view --source screen --width 1600 --height 900 --save_path Assets/Temp/x.png` (en Play ;
   2400 × 1350 marche encore, 3840 × 2160 rend une image noire ou périmée ; l'image est la vue Game rééchantillonnée à
   la taille demandée : si la vue n'a pas ce rapport, l'image est étirée (juger les proportions avec prudence) ;

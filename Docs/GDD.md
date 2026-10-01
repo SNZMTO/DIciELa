@@ -606,7 +606,8 @@
   touche l'ouvre autour du pointeur, on vise un outil par la direction du pointeur et on le choisit en relâchant ;
   cliquer l'icône des outils l'ouvre aussi, et l'on clique l'outil. Elle reste dans l'écran. Chaque outil y a sa
   place fixe, toujours la même (Construire en haut, Retirer en bas), et sa touche, écrite sur lui ; la bulle du
-  milieu dit le nom et l'usage de l'outil visé. Un outil actif y reste enfoncé. Choisir Retirer prend l'outil en main,
+  milieu dit le nom et l'usage de l'outil visé, qui grossit. Un outil actif y reste enfoncé. La roue est un plateau de
+  bois à huit côtés, une place d'outil par côté ; elle garde 24 px du bord de l'écran, comme les blocs du HUD. Choisir Retirer prend l'outil en main,
   ou le lâche s'il l'était ; choisir Construire ouvre le panneau Construire, ou le ferme. Les outils à venir (déplacer,
   chemins, décorer, planter) y prendront leur place.
 - **Défaut.** La roue : Tab, tenu ; Construire : B ; Retirer : X. Les touches se changeront dans les réglages, quand le
@@ -644,11 +645,10 @@
   ouvrira le menu. L'interface ne prend pas le focus du clavier.
 - **Règle.** L'outil « Retirer » en main, un clic sur un arbre ou un rocher le marque, ou le démarque ; glisser tire un
   cadre, et le relâcher marque tout ce dont le pied est dedans, du plus proche de son premier coin au plus loin. Un
-  arbre marqué porte un fanion à son pied. Un seul outil en main : prendre une carte lâche « Retirer », et l'inverse.
+  arbre marqué porte un fanion à son pied. Un clic droit bref le pose de côté, comme une carte ; glissé, il reste à la
+  caméra. Un seul outil en main : prendre une carte lâche « Retirer », et l'inverse.
 - **À toi.** Le fanion des arbres marqués, pour l'instant un mât et une flamme, remplaçants simples. Le pack a cinq
   drapeaux, `SM_Prop_Flag_01` à `SM_Prop_Flag_05`.
-- **À toi.** Un clic droit bref lâche-t-il aussi l'outil « Retirer », comme il pose une carte de côté (voir 9) ? Ma
-  reco : oui, le même geste pour tout outil en main.
 - **Règle.** Le stock paraît avec le premier entrepôt (le tas de départ) : un fanion par marchandise de l'étape en
   cours, son icône et son nombre ; un fanion à zéro reste, en douce. Au survol, une infobulle : un fanion dit sa
   marchandise ; la jauge dit ce qui suit, sans compter les heures. Une seule bulle pour tout le HUD.

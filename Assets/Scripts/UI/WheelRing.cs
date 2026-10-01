@@ -6,29 +6,31 @@ using UnityEngine.UIElements;
 namespace Diciela.UI
 {
     /// <summary>
-    /// L'anneau de la roue des outils (décision 168) : les outils autour d'un centre, à la place que leur donne la feuille
-    /// de style, et le fond plein écran qui prend le pointeur tant que l'anneau est ouvert. Il s'ouvre en un point du
-    /// panneau, ramené pour tenir dans l'écran ; touche tenue, on y vise par la direction du pointeur, au clic par le
-    /// survol ; un appui sur le fond le congédie. Fermé, il reste en page, invisible et sans prise : il se mesure avant de
-    /// s'ouvrir.
+    /// L'anneau de la roue des outils (décision 168) : son plateau et les outils autour d'un centre, à la place que leur
+    /// donne la feuille de style, et le fond plein écran qui prend le pointeur tant que l'anneau est ouvert. Il s'ouvre en
+    /// un point du panneau, ramené pour tenir dans l'écran, à la marge des blocs du HUD ; touche tenue, on y vise par la
+    /// direction du pointeur, au clic par le survol ; un appui sur le fond le congédie. Fermé, il reste en page, invisible
+    /// et sans prise : il se mesure avant de s'ouvrir.
     /// </summary>
     internal sealed class WheelRing
     {
         private const string ClosedClass = "roue-fermee";
         private const string AimedClass = "vise";
+        // L'écart que la roue garde avec le bord de l'écran, comme les blocs du HUD (Hud.uss).
+        private static readonly CustomStyleProperty<float> EdgeMargin = new CustomStyleProperty<float>("--marge");
 
         private readonly VisualElement _wheel;
         private readonly VisualElement _center;
-        private readonly VisualElement _bubble;
+        private readonly VisualElement _plate;
         private readonly FeltButton[] _tools;
         private readonly List<Vector2> _toolCenters = new List<Vector2>();
         private Vector2 _centerPoint;
 
-        public WheelRing(VisualElement wheel, VisualElement center, VisualElement bubble, FeltButton[] tools)
+        public WheelRing(VisualElement wheel, VisualElement center, VisualElement plate, FeltButton[] tools)
         {
             _wheel = wheel;
             _center = center;
-            _bubble = bubble;
+            _plate = plate;
             _tools = tools;
             _wheel.RegisterCallback<PointerDownEvent>(e =>
             {
@@ -58,7 +60,9 @@ namespace Diciela.UI
         public void Open(Vector2 at, bool held)
         {
             Rect room = _wheel.worldBound;
-            _centerPoint = WheelGeometry.Clamped(at, Extent(), room);
+            float margin = _wheel.customStyle.TryGetValue(EdgeMargin, out float value) ? value : 0f;
+            var inside = Rect.MinMaxRect(room.xMin + margin, room.yMin + margin, room.xMax - margin, room.yMax - margin);
+            _centerPoint = WheelGeometry.Clamped(at, Extent(), inside);
             _center.style.left = _centerPoint.x - room.xMin;
             _center.style.top = _centerPoint.y - room.yMin;
             IsOpen = true;
@@ -105,18 +109,14 @@ namespace Diciela.UI
                 Aim(tool);
         }
 
-        // La boîte de l'anneau autour de son centre : ses outils, et la bulle à sa plus grande largeur. Une mesure qui
-        // manque encore (avant la première mise en page) ne ramène rien.
+        // La boîte de l'anneau autour de son centre : son plateau et ses outils, qui l'agrandissent quand on les vise. Une
+        // mesure qui manque encore (avant la première mise en page) ne ramène rien.
         private Rect Extent()
         {
-            Rect extent = _tools[0].layout;
+            Rect extent = _plate.layout;
             foreach (FeltButton tool in _tools)
                 extent = Rect.MinMaxRect(Mathf.Min(extent.xMin, tool.layout.xMin), Mathf.Min(extent.yMin, tool.layout.yMin),
                     Mathf.Max(extent.xMax, tool.layout.xMax), Mathf.Max(extent.yMax, tool.layout.yMax));
-            float bubble = _bubble.resolvedStyle.maxWidth.value;
-            if (!float.IsNaN(bubble))
-                extent = Rect.MinMaxRect(Mathf.Min(extent.xMin, -bubble / 2f), extent.yMin,
-                    Mathf.Max(extent.xMax, bubble / 2f), extent.yMax);
             return float.IsNaN(extent.width) || float.IsNaN(extent.height) ? Rect.zero : extent;
         }
 
