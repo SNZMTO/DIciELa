@@ -555,7 +555,7 @@
   main invisible : se déplacer (clavier, bords de l'écran, clic droit glissé qui tire le sol), tourner (A et E en
   AZERTY, ou le bouton du milieu glissé de gauche à droite), zoomer à la molette, vers l'endroit que vise la souris.
   En zoomant, elle s'abaisse doucement, d'autant à chaque cran : de loin, la ville en maquette ; de près, les
-  habitants presque de face. On part tout près de la Chimère et de son campement, la vue assez basse.
+  habitants presque de face. On part tout près de la Chimère et du tas de départ, la vue assez basse.
 - **Défaut.** Champ de vision : 35°. Au départ, 25 m, la vue inclinée d'environ 32° ; de près (8 m), 22,5°, le plus
   bas que permet l'horizon ; de loin (220 m), 50°.
 - **Règle.** Le bouton du milieu glissé de haut en bas incline la vue, en plus de ce que donne le zoom, et le zoom
