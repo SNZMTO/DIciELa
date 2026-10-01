@@ -639,6 +639,8 @@
   arbre marqué porte un fanion à son pied. Un seul outil en main : prendre une carte lâche « Retirer », et l'inverse.
 - **À toi.** Le fanion des arbres marqués, pour l'instant un mât et une flamme, remplaçants simples. Le pack a cinq
   drapeaux, `SM_Prop_Flag_01` à `SM_Prop_Flag_05`.
+- **À toi.** Un clic droit bref lâche-t-il aussi l'outil « Retirer », comme il pose une carte de côté (voir 9) ? Ma
+  reco : oui, le même geste pour tout outil en main.
 - **Règle.** Le stock paraît avec le premier entrepôt (le tas de départ) : un fanion par marchandise de l'étape en
   cours, son icône et son nombre ; un fanion à zéro reste, en douce. Au survol, une infobulle : un fanion dit sa
   marchandise ; la jauge dit ce qui suit, sans compter les heures. Une seule bulle pour tout le HUD.
