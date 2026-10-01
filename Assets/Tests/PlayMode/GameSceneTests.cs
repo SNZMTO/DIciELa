@@ -18,6 +18,12 @@ namespace Diciela.Tests.PlayMode
     {
         private const int MaxFrames = 1200;
 
+        [UnityTearDown]
+        public IEnumerator LeaveTheTestScene()
+        {
+            yield return TestOpening.Leave(MaxFrames);
+        }
+
         [UnityTest]
         public IEnumerator TheWorldReceivesTheTestMapAndSteps()
         {
@@ -45,9 +51,7 @@ namespace Diciela.Tests.PlayMode
             Assert.IsFalse(SceneManager.GetSceneByPath(ScenePaths.Map).isLoaded, "La vraie carte ne doit jamais l'être.");
 
             LogAssert.Expect(LogType.Log, new Regex(@"^DICIELA : monde arrêté après [1-9]\d* pas, jour 1, "));
-            yield return SceneManager.UnloadSceneAsync(ScenePaths.GameTest);
-            for (int frame = 0; frame < MaxFrames && SceneManager.GetSceneByPath(ScenePaths.MapTest).isLoaded; frame++)
-                yield return null;
+            yield return TestOpening.Leave(MaxFrames);
 
             Assert.IsFalse(SceneManager.GetSceneByPath(ScenePaths.MapTest).isLoaded,
                 "La carte de test doit partir avec sa scène de jeu.");

@@ -229,8 +229,8 @@ sauvegardé.
 - La fiche d'un bâtiment garde son modèle du pack (la source) et le modèle préparé depuis lui par le menu
   `DICIELA/Contenu/Préparer les modèles` : fusionné, porte au nord, centré sur l'empreinte, son origine au sol. Le menu
   y range aussi l'empreinte et la porte, mesurées sur le modèle (SAVOIR 2.9). Le modèle préparé se refait depuis la
-  source ; sans source, le même menu fait une boîte à la taille de la fiche, sa porte marquée ; un test vérifie que
-  le modèle suit sa fiche. La fiche dit aussi si le bâtiment est unique, s'il est le logis de la Chimère et s'il se
+  source ; sans source, le même menu fait une boîte à la taille de la fiche, sa porte marquée, et une source qui ne se
+  charge plus (le pack absent) est refusée ; un test vérifie que le modèle suit sa fiche. La fiche dit aussi si le bâtiment est unique, s'il est le logis de la Chimère et s'il se
   dresse dès la pose (le campement) : la simulation lit ces propriétés, jamais un nom. La fiche d'une sorte d'habitant
   dit sa marche et sa flânerie ; son allure est l'apparence de chaque habitant : une tête et un corps (chacun séparé
   d'un personnage du pack par le menu des fiches, sur le squelette commun), chacun de sa couleur (une couleur : les

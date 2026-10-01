@@ -143,15 +143,17 @@ namespace Diciela.Simulation.Society
         }
 
         /// <summary>
-        /// Le réveille, ou l'arrête s'il allait dormir : il se remet à flâner autour d'où il est, ou reprend son poste.
-        /// Seuls les habitants l'appellent.
+        /// Le réveille, ou l'arrête s'il allait dormir : il se remet à flâner devant sa porte, même s'il n'y était pas
+        /// encore arrivé (GDD, section 6), ou reprend son poste. Seuls les habitants l'appellent, qui ont vérifié qu'il
+        /// dort ou y va.
         /// </summary>
         internal void WakeUp()
         {
+            Vector2 door = _services.Grid.CellCenter(_bedtime.Bed);
             _bedtime.Stop();
             _job.Interrupt();
             HashRandom random = RandomOfTheStep();
-            _wander.Begin(Position, ref random);
+            _wander.Begin(door, ref random);
         }
 
         /// <summary>Il prend ce poste. Seule la table des postes l'appelle.</summary>
