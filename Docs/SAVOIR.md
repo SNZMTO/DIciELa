@@ -280,6 +280,14 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   Dans l'éditeur, `Mesh.CombineMeshes` et `GetVertices` lisent des maillages importés sans « Read/Write ».
 - **Le maillage préparé pèse des mégaoctets en texte** (Shed_02 : 5,7 Mo) et se refait à chaque préparation : il va
   en LFS, comme le Terrain.
+- **Les effets suivent le modèle.** Ce qui porte des particules (une flamme, une fumée) n'est pas fusionné : la
+  préparation le copie à sa place sous le modèle préparé. Il ne compte ni dans la boîte ni dans la porte ; le fantôme et
+  le chantier ne le dessinent pas.
+- **Composer un modèle avec des objets du pack** (le campement) : un prefab dans `Assets/Art/Compositions`, en
+  instances des prefabs du pack (chacune garde son nom, le développeur la retouche), son entrée sous un objet nommé
+  « Door ». Mesurer avant de placer : les objets du pack n'ont pas la taille qu'on croit (le cercle de pierres fait
+  6,2 m, les tas de rochers 4,8 à 9,9 m, les rochers 2,3 m et plus, la pile de bois 2,2 m, la hache tient debout) :
+  les rochers sont à l'échelle du paysage, une réduction en fait un foyer ou un tas de pierres.
 - **Sans modèle du pack, une boîte fusionnée de même** (`PlaceholderBuilder`) : le corps laisse devant lui l'épaisseur
   de la porte, qui affleure la façade, pour que la boîte remplisse l'empreinte sans la dépasser (le test de contenu
   la mesure comme un modèle préparé). Une porte posée devant une boîte pleine dépasserait de son épaisseur ; une porte
