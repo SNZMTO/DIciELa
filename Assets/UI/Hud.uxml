@@ -31,22 +31,14 @@
         <Diciela.UI.WoodFrame name="fiche" class="fiche bloc-cache">
             <ui:VisualElement class="fiche-contenu">
                 <ui:VisualElement class="fiche-tete">
-                    <ui:VisualElement class="fiche-enseigne" picking-mode="Ignore">
-                        <ui:VisualElement class="fiche-ruban" picking-mode="Ignore" />
-                        <Diciela.UI.Facet class="tuile-lin pan-4 fiche-tuile" picking-mode="Ignore">
-                            <ui:Label name="fiche-titre" class="t3 fiche-titre" picking-mode="Ignore" />
-                        </Diciela.UI.Facet>
-                    </ui:VisualElement>
+                    <ui:Label name="fiche-titre" class="t2 fiche-titre" />
                     <Diciela.UI.FeltButton name="fiche-fermer" class="feutre sable pan-6 fiche-fermer">
                         <ui:VisualElement class="fiche-croix" picking-mode="Ignore" />
                     </Diciela.UI.FeltButton>
                 </ui:VisualElement>
                 <ui:VisualElement name="fiche-stock" class="fiche-stock" />
                 <ui:VisualElement name="fiche-poste" class="fiche-poste">
-                    <ui:VisualElement class="fiche-poste-ligne">
-                        <ui:Label name="fiche-poste-nom" class="nom" />
-                        <ui:VisualElement name="fiche-poste-taches" class="fiche-poste-taches" />
-                    </ui:VisualElement>
+                    <ui:Label name="fiche-poste-nom" class="nom" />
                     <ui:Label name="fiche-poste-qui" class="sous-titre" />
                 </ui:VisualElement>
                 <Diciela.UI.FeltButton name="fiche-bouton" class="feutre menthe pan-10 couture fiche-bouton">

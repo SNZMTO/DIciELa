@@ -46,7 +46,6 @@ namespace Diciela.Game
         private ChooseTool _chooseTool;
         private ClearingTool _clearingTool;
         private SelectionFrame _selectionFrame;
-        private HudLife _hudLife;
         private Texture2D _portrait;
         private Tooltips _tooltips;
 
@@ -103,8 +102,6 @@ namespace Diciela.Game
             _clearingTool = null;
             _selectionFrame?.Dispose();
             _selectionFrame = null;
-            _hudLife?.Dispose();
-            _hudLife = null;
             if (_chooseTool != null)
                 _chooseTool.Touched -= _placeSheet.Touch;
             _chooseTool = null;
@@ -155,10 +152,9 @@ namespace Diciela.Game
             _tooltips = new Tooltips(document);
             _dayBoard.Show(world.Clock, texts, _tooltips);
             _stockPennants.Show(world, catalog, texts, _tooltips);
-            _placeSheet.Show(world, texts, _tooltips);
+            _placeSheet.Show(world, texts);
             _tipBoard.Show(world, texts, _portrait);
             var hud = new HudArea(document);
-            _hudLife = new HudLife(document);
             _cameraControls.Bind(hud);
             _placementControls.Bind(_placementTool, hud);
             _chooseTool = new ChooseTool(world, _cameraRig.Camera, _structureViews);

@@ -54,7 +54,6 @@ namespace Diciela.UI
             Chamfer.Trace(painter, box, cut);
             painter.PushClip();
             DrawInside(painter, box);
-            FacetMatter.Draw(painter, box, _look);
             if (_look.IsHollow)
                 DrawHollow(painter, box);
             if (_look.HasRelief)
