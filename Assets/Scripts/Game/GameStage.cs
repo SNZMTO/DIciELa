@@ -11,10 +11,10 @@ namespace Diciela.Game
     /// <summary>
     /// Ce que le démarrage montre d'un monde et relie aux gestes (ARCHITECTURE, section 11), dans l'ordre d'une partie
     /// neuve (GDD, section 6) : l'écran de création dans l'atelier, la Chimère à venir sur son socle, qu'on fait
-    /// tourner ; puis, l'ordre de la créer parti, la ville (caméra, barre, gestes), la caméra tout près de la Chimère
-    /// qui naît au point d'arrivée, puis reculée à sa distance de départ. Les constructions et les habitants sont vus dès
-    /// l'ouverture. Toucher un lieu ouvre sa fiche ; Échap la ferme d'abord, puis lâche l'outil en main. Il délie et
-    /// cache tout à la sortie.
+    /// tourner ; puis, l'ordre de la créer parti, la ville (caméra, HUD, outils, gestes), la caméra tout près de la
+    /// Chimère qui naît au point d'arrivée, puis reculée à sa distance de départ. Les constructions et les habitants sont
+    /// vus dès l'ouverture. Toucher un lieu ouvre sa fiche ; Échap ferme la fiche, puis la roue des outils, puis le
+    /// panneau Construire, puis lâche l'outil en main. Il délie et cache tout à la sortie.
     /// </summary>
     public sealed class GameStage : MonoBehaviour
     {
@@ -38,6 +38,8 @@ namespace Diciela.Game
         [SerializeField] private ConfirmControls _confirmControls;
         [SerializeField] private Atelier _atelier;
         [SerializeField] private PreviewControls _previewControls;
+        [SerializeField] private ToolWheel _toolWheel;
+        [SerializeField] private ToolControls _toolControls;
 
         // Le portrait de l'astuce : 48 px de l'interface, en triple résolution.
         private const int PortraitPixels = 144;
@@ -58,7 +60,7 @@ namespace Diciela.Game
                                   _escapeControls != null &&
                                   _creationScreen != null &&
                                   _appearancePreview != null && _confirmControls != null && _atelier != null &&
-                                  _previewControls != null;
+                                  _previewControls != null && _toolWheel != null && _toolControls != null;
 
         /// <summary>
         /// Montre ce monde, dont les arbres sont peints sur le Terrain de cette carte, et ouvre l'écran de création ; à la
@@ -96,6 +98,7 @@ namespace Diciela.Game
             _placementControls.Bind(null, null);
             _chooseControls.Bind(null, null, null);
             _clearingControls.Bind(null, null, null);
+            _toolControls.Bind(null);
             _escapeControls.Bind();
             if (_clearingTool != null)
                 _clearingTool.ActiveChanged -= OnClearingToolChanged;
@@ -109,6 +112,7 @@ namespace Diciela.Game
             _creationScreen.Hide();
             _appearancePreview.Hide();
             _atelier.Hide();
+            _toolWheel.Hide();
             _buildBar.Hide();
             _dayBoard.Hide();
             _placeSheet.Hide();
@@ -152,7 +156,8 @@ namespace Diciela.Game
             _placementTool.CurrentChanged += OnPlacementChanged;
             var document = _buildBar.GetComponent<UnityEngine.UIElements.UIDocument>();
             _tooltips = new Tooltips(document);
-            _buildBar.Show(catalog, texts, _placementTool, _clearingTool, world, _tooltips);
+            _buildBar.Show(catalog, texts, _placementTool, world);
+            _toolWheel.Show(texts, _toolControls, _clearingTool, _buildBar, _tooltips);
             _dayBoard.Show(world.Clock, texts, _tooltips);
             _stockPennants.Show(world, catalog, texts, _tooltips);
             _placeSheet.Show(world, texts);
@@ -165,7 +170,8 @@ namespace Diciela.Game
             _selectionFrame = new SelectionFrame(document);
             _clearingControls.Bind(_clearingTool, _selectionFrame, hud);
             _chooseControls.Bind(_chooseTool, new IHeldTool[] { _placementTool, _clearingTool }, hud);
-            _escapeControls.Bind(_placeSheet, _placementTool, _clearingTool);
+            _toolControls.Bind(_toolWheel);
+            _escapeControls.Bind(_placeSheet, _toolWheel, _buildBar, _placementTool, _clearingTool);
         }
 
         // Un seul outil en main : prendre l'outil « Retirer » lâche la carte, prendre une carte lâche l'outil.

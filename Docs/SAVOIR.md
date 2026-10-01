@@ -496,6 +496,12 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   `RuntimePanelUtils.ScreenToPanel`, mettre la racine du document en `PickingMode.Ignore`, et vérifier que l'élément
   trouvé par `panel.Pick` est bien dans la barre. Le test inverse la conversion d'UI Toolkit pour viser le milieu de
   la barre.
+- **Mesurer un élément d'UI Toolkit** (étape 20b, la roue des outils) : caché (`display: none`), il mesure 0, pas
+  NaN, et ne se mesure qu'à la mise en page suivante une fois montré : un test attend une largeur positive. Ce qui doit
+  se mesurer avant de paraître (la roue, ramenée dans l'écran) reste en page, `visibility: hidden` et sans prise
+  (`pickingMode` à `Ignore` sur lui et ses enfants). `worldBound` compte `translate`, que le feutre anime en
+  s'enfonçant : une place se vérifie sur `layout`. Et un élément qui s'anime par `translate` se centre par ses marges,
+  jamais par `translate: -50% -50%`, que son survol écraserait.
 - **UI Toolkit en Unity 6.6** (essai de l'étape 14) : une police `.ttf` se donne telle quelle
   (`-unity-font-definition: url("….ttf")`) et reste nette à toute taille ; chaque graisse est un fichier, et le style
   reste `normal`, sinon Unity épaissit par-dessus. `-unity-slice-scale` règle aussi le pas de la répétition

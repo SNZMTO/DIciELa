@@ -12,9 +12,9 @@ namespace Diciela.Tests.PlayMode
     /// <summary>
     /// Le HUD à toutes les tailles d'écran (GDD, section 16 ; décision 144), rendu hors écran de 1280 × 720 à la 4K,
     /// écrans larges compris : la journée tient au coin haut-gauche, à 24 px du bord et 20 du haut ; la fiche du tas,
-    /// ouverte, au coin haut-droit ; le stock en fanions au milieu du haut, à 24 px ; la barre au milieu du bas, à 24 px,
-    /// la tente plantée, avec le bouton de l'outil « Retirer » à gauche des onglets ; tout reste dans l'écran, sans que
-    /// deux blocs se chevauchent. C'est le vrai HUD (sa mise en page, la feuille du jeu,
+    /// ouverte, au coin haut-droit ; le stock en fanions au milieu du haut, à 24 px ; le panneau Construire, ouvert, au
+    /// milieu du bas, à 24 px ; l'icône des outils au coin bas-droit, à 24 px ; tout reste dans l'écran, sans que deux
+    /// blocs se chevauchent. La roue des outils, ouverte sur leur icône, est ramenée dans l'écran. C'est le vrai HUD (sa mise en page, la feuille du jeu,
     /// ses vues, ses présentateurs, sa taille), avec le catalogue et les textes du projet pour la barre et la journée, et
     /// le petit monde du tas pour la fiche et les fanions. Les marges attendues sont celles du GDD.
     /// </summary>
@@ -59,6 +59,7 @@ namespace Diciela.Tests.PlayMode
                 var sheet = host.AddComponent<PlaceSheet>();
                 var stock = host.AddComponent<StockPennants>();
                 var tip = host.AddComponent<TipBoard>();
+                var wheel = host.AddComponent<ToolWheel>();
                 var scale = host.AddComponent<InterfaceScale>();
                 TestWorld.Fill(scale, "_panel", panel);
                 TestWorld.Fill(scale, "_settings", settings);
@@ -81,8 +82,9 @@ namespace Diciela.Tests.PlayMode
                             yield return null;
                             TextTable texts = TextTable.Parse(settings.Texts.text, settings.Language);
                             var tooltips = new Tooltips(document);
-                            bar.Show(catalog, texts, world.Tool, world.Clearing, world.World, tooltips);
-                            PlantTheHome(world, catalog);
+                            bar.Show(catalog, texts, world.Tool, world.World);
+                            bar.Open();
+                            wheel.Show(texts, new FixedToolKeys(), world.Clearing, bar, tooltips);
                             day.Show(world.World.Clock, texts, tooltips);
                             town.PlantTheTent();
                             stock.Show(town.World, town.Catalog, texts, tooltips);
@@ -93,6 +95,12 @@ namespace Diciela.Tests.PlayMode
                         for (int frame = 0; frame < SettleFrames; frame++)
                             yield return null;
                         Check(document.rootVisualElement, screen, faults);
+                        wheel.OpenAt(OnScreen(document.rootVisualElement,
+                            document.rootVisualElement.Q("outils").worldBound.center));
+                        for (int frame = 0; frame < SettleFrames; frame++)
+                            yield return null;
+                        CheckWheel(document.rootVisualElement, screen, faults);
+                        wheel.Escape();
                     }
                 }
                 finally
@@ -103,6 +111,7 @@ namespace Diciela.Tests.PlayMode
                         target.Release();
                         Object.Destroy(target);
                     }
+                    wheel.Hide();
                     bar.Hide();
                     day.Hide();
                     sheet.Hide();
@@ -116,35 +125,14 @@ namespace Diciela.Tests.PlayMode
 #endif
         }
 
-        /// <summary>
-        /// Plante le logis du catalogue, par l'outil de pose, comme le joueur : la barre propose alors le reste de sa
-        /// famille et le bouton de l'outil « Retirer ».
-        /// </summary>
-        private static void PlantTheHome(TestWorld world, Catalog catalog)
-        {
-            StructureDefinition home = null;
-            foreach (StructureFamilyDefinition family in catalog.Families)
-            {
-                foreach (StructureDefinition structure in family.Structures)
-                {
-                    if (home == null && structure != null && structure.IsChimeraHome)
-                        home = structure;
-                }
-            }
-            Assert.IsNotNull(home, "Le catalogue du jeu a un logis pour la Chimère.");
-            world.Tool.Begin(home);
-            world.Tool.AimAt(world.OnScreen(TestWorld.Center));
-            Assert.IsTrue(world.Tool.Confirm(), "Le centre du petit monde est libre.");
-            world.World.Step();
-        }
-
         private static void Check(VisualElement root, Vector2Int screen, List<string> faults)
         {
             Rect room = root.panel.visualTree.layout;
             Rect day = root.Q("journee").worldBound;
             Rect bar = root.Q("bar").worldBound;
-            VisualElement clearing = root.Q("outil-retirer");
-            Rect tabs = root.Q("families").worldBound;
+            // L'icône des outils par sa place, sans l'enfoncement de son feutre (translate), qui s'anime quand la roue
+            // se ferme.
+            Rect tools = root.Q("outils").layout;
             Rect sheet = root.Q("fiche").worldBound;
             Rect stock = root.Q(className: "stock-corps").worldBound;
             Rect tip = root.Q("astuce").worldBound;
@@ -155,17 +143,17 @@ namespace Diciela.Tests.PlayMode
                 faults.Add(at + "la barre n'est pas à 24 px du bas (" + bar + " dans " + room + ").");
             if (Mathf.Abs(bar.center.x - room.width * 0.5f) > Tolerance)
                 faults.Add(at + "la barre n'est pas au milieu (" + bar + " dans " + room + ").");
-            if (clearing.resolvedStyle.display == DisplayStyle.None || !bar.Contains(clearing.worldBound.center) ||
-                clearing.worldBound.xMax > tabs.xMin)
-                faults.Add(at + "l'outil « Retirer » n'est pas dans la barre, à gauche des onglets (" +
-                           clearing.worldBound + ", " + tabs + ").");
+            if (Mathf.Abs(room.width - tools.xMax - Side) > Tolerance ||
+                Mathf.Abs(room.height - tools.yMax - Bottom) > Tolerance)
+                faults.Add(at + "l'icône des outils n'est pas à 24 px du bord et du bas (" + tools + " dans " + room +
+                           ").");
             if (Mathf.Abs(room.width - sheet.xMax - Side) > Tolerance || Mathf.Abs(sheet.yMin - Top) > Tolerance)
                 faults.Add(at + "la fiche n'est pas à 24 px du bord et 20 du haut (" + sheet + " dans " + room + ").");
             if (Mathf.Abs(stock.center.x - room.width * 0.5f) > Tolerance || Mathf.Abs(stock.yMin - StockTop) > Tolerance)
                 faults.Add(at + "les fanions ne sont pas au milieu, à 24 px du haut (" + stock + ").");
             if (Mathf.Abs(tip.xMin - Side) > Tolerance || Mathf.Abs(room.height - tip.yMax - Bottom) > Tolerance)
                 faults.Add(at + "l'astuce n'est pas à 24 px du bord et du bas (" + tip + " dans " + room + ").");
-            Rect[] blocks = { day, stock, sheet, bar, tip };
+            Rect[] blocks = { day, stock, sheet, bar, tip, tools };
             foreach (Rect block in blocks)
             {
                 if (block.xMin < 0f || block.yMin < 0f || block.xMax > room.width || block.yMax > room.height)
@@ -179,6 +167,30 @@ namespace Diciela.Tests.PlayMode
                         faults.Add(at + "deux blocs se chevauchent (" + blocks[i] + ", " + blocks[j] + ").");
                 }
             }
+        }
+
+        private static void CheckWheel(VisualElement root, Vector2Int screen, List<string> faults)
+        {
+            Rect room = root.panel.visualTree.layout;
+            foreach (string name in new[] { "roue-construire", "roue-retirer" })
+            {
+                Rect tool = root.Q(name).worldBound;
+                if (tool.xMin < 0f || tool.yMin < 0f || tool.xMax > room.width || tool.yMax > room.height)
+                    faults.Add(screen.x + " × " + screen.y + " : la roue ouverte sur l'icône sort de l'écran (" + name +
+                               " " + tool + " dans " + room + ").");
+            }
+        }
+
+        /// <summary>
+        /// Le point de l'écran (origine en bas) où le panneau voit ce point : la conversion d'HudArea, inversée par deux
+        /// points connus.
+        /// </summary>
+        private static Vector2 OnScreen(VisualElement root, Vector2 panelPoint)
+        {
+            Vector2 origin = HudArea.ToPanel(root.panel, new Vector2(0f, Screen.height));
+            Vector2 unit = HudArea.ToPanel(root.panel, new Vector2(1f, Screen.height - 1f)) - origin;
+            var fromTop = new Vector2((panelPoint.x - origin.x) / unit.x, (panelPoint.y - origin.y) / unit.y);
+            return new Vector2(fromTop.x, Screen.height - fromTop.y);
         }
     }
 }

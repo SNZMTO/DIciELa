@@ -9,19 +9,18 @@ using UnityEngine.UIElements;
 namespace Diciela.UI
 {
     /// <summary>
-    /// La barre de construction, en bas au centre de l'écran (GDD, section 16) : un cadre de bois, les familles en
-    /// onglets de feutre, au-dessus les constructions de la famille ouverte en cartes, au bout gauche des onglets le
-    /// bouton de l'outil « Retirer », et au-dessus du cadre la raison d'un refus de pose, dans une bulle. L'onglet ouvert,
-    /// la carte en main et l'outil en main restent enfoncés. C'est la vue (le bloc « bar » de Hud.uxml) ; son
+    /// Le panneau Construire, en bas au centre de l'écran (GDD, section 16) : un cadre de bois, les familles en onglets de
+    /// feutre, au-dessus les constructions de la famille ouverte en cartes ; au-dessus du cadre, la raison d'un refus de
+    /// pose, dans une bulle, qui reste quand le panneau est fermé. L'onglet ouvert et la carte en main restent enfoncés.
+    /// La roue des outils l'ouvre et le ferme ; Échap le ferme. C'est la vue (le bloc « bar » de Hud.uxml) ; son
     /// présentateur décide.
     /// </summary>
     [RequireComponent(typeof(UIDocument))]
-    public sealed class BuildBar : MonoBehaviour, IBuildBarView
+    public sealed class BuildBar : MonoBehaviour, IBuildBarView, IBuildMenu, IEscapable
     {
         private const string BarName = "bar";
         private const string FamiliesName = "families";
         private const string StructuresName = "structures";
-        private const string ClearingName = "outil-retirer";
         private const string ReasonName = "reason";
         private const string ReasonTextName = "reason-text";
         private const string HiddenClass = "bloc-cache";
@@ -31,75 +30,81 @@ namespace Diciela.UI
         private VisualElement _bar;
         private VisualElement _families;
         private VisualElement _structures;
-        private FeltButton _clearing;
         private VisualElement _reason;
         private Label _reasonText;
         private BuildBarPresenter _presenter;
-        private bool _clearingWired;
 
         public event Action<int> FamilyChosen;
         public event Action<int> StructureChosen;
-        public event Action ClearingChosen;
+        public event Action OpenChanged;
+
+        /// <summary>Vrai tant que le panneau est ouvert.</summary>
+        public bool IsOpen => _presenter != null && _presenter.IsOpen;
 
         private void Awake()
         {
             _document = GetComponent<UIDocument>();
         }
 
-        /// <summary>
-        /// Montre la barre, remplie par son présentateur, avec les deux outils qu'elle met en main (poser, retirer) ;
-        /// appelé par le démarrage quand la ville s'ouvre.
-        /// </summary>
-        public void Show(Catalog catalog, TextTable texts, PlacementTool placement, ClearingTool clearing, World world,
-            Tooltips tooltips)
+        /// <summary>Remplit le panneau, fermé, par son présentateur ; appelé par le démarrage quand la ville s'ouvre.</summary>
+        public void Show(Catalog catalog, TextTable texts, PlacementTool placement, World world)
         {
             Hide();
             VisualElement root = _document.rootVisualElement;
-            // Tous les éléments d'abord, rangés seulement s'ils sont là : une barre à moitié trouvée ne se cache plus.
+            // Tous les éléments d'abord, rangés seulement s'ils sont là : un panneau à moitié trouvé ne se cache plus.
             VisualElement bar = root.Q(BarName);
             VisualElement families = root.Q(FamiliesName);
             VisualElement structures = root.Q(StructuresName);
-            var clearingButton = root.Q<FeltButton>(ClearingName);
             VisualElement reason = root.Q(ReasonName);
             var reasonText = root.Q<Label>(ReasonTextName);
-            if (bar == null || families == null || structures == null || clearingButton == null || reason == null ||
-                reasonText == null || tooltips == null)
-                throw new InvalidOperationException("La barre de construction ne trouve pas ses éléments (UXML).");
+            if (bar == null || families == null || structures == null || reason == null || reasonText == null)
+                throw new InvalidOperationException("Le panneau Construire ne trouve pas ses éléments (UXML).");
 
             _bar = bar;
             _families = families;
             _structures = structures;
-            _clearing = clearingButton;
             _reason = reason;
             _reasonText = reasonText;
-            // Le bouton de l'outil vit dans le document : branché une seule fois, il s'adresse au présentateur du moment.
-            if (!_clearingWired)
-            {
-                _clearing.Clicked += () => ClearingChosen?.Invoke();
-                tooltips.Attach(_clearing, () => _presenter != null ? _presenter.ClearingTooltip() : ("", ""), true);
-                _clearingWired = true;
-            }
-            _presenter = new BuildBarPresenter(this, catalog, texts, placement, clearing, world);
-            _bar.RemoveFromClassList(HiddenClass);
+            _presenter = new BuildBarPresenter(this, catalog, texts, placement, world);
         }
 
-        /// <summary>Cache la barre et oublie le monde.</summary>
+        /// <summary>Cache le panneau et oublie le monde.</summary>
         public void Hide()
         {
             _presenter?.Dispose();
             _presenter = null;
             if (_bar == null)
                 return;
-            _bar.AddToClassList(HiddenClass);
+            ShowOpen(false);
             _families.Clear();
             _structures.Clear();
-            ShowClearing(false, false);
             ShowReason("");
         }
 
         private void OnDestroy()
         {
             Hide();
+        }
+
+        public void Open()
+        {
+            _presenter?.Open();
+        }
+
+        public void Close()
+        {
+            _presenter?.Close();
+        }
+
+        public bool Escape()
+        {
+            return _presenter != null && _presenter.Escape();
+        }
+
+        public void ShowOpen(bool open)
+        {
+            _bar.EnableInClassList(HiddenClass, !open);
+            OpenChanged?.Invoke();
         }
 
         public void ShowFamilies(IReadOnlyList<BuildBarFamily> families, int open)
@@ -128,12 +133,6 @@ namespace Diciela.UI
         {
             for (int i = 0; i < _structures.childCount; i++)
                 _structures[i].EnableInClassList(OpenClass, i == index);
-        }
-
-        public void ShowClearing(bool shown, bool held)
-        {
-            _clearing.EnableInClassList(HiddenClass, !shown);
-            _clearing.EnableInClassList(OpenClass, held);
         }
 
         public void ShowReason(string text)

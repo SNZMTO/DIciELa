@@ -87,10 +87,20 @@ namespace Diciela.EditorTools
                 F("encre", 13f, 9f, 11f, 7f, 2f, 16f, 4f, 18f), F("encre", 11f, 2f, 18f, 9f, 15f, 12f, 8f, 5f),
                 Faded("#FBF3E4", 0.45f, 11f, 3f, 16f, 8f, 15f, 9f, 10f, 4f)
             });
-            // Une hache à l'encre, au manche aussi épais que celui du marteau, pour la tâche « défricher » et le bouton de
-            // l'outil « Retirer » : remplaçant simple, la maquette n'en a pas.
+            // Une hache à l'encre, au manche aussi épais que celui du marteau, pour la tâche « défricher » et l'outil
+            // « Retirer » de la roue : remplaçant simple, la maquette n'en a pas.
             yield return new Icon("defricher", 20f, new[]
             {
+                F("encre", 2.5f, 16.5f, 11.6f, 7.4f, 13.6f, 9.4f, 4.5f, 18.5f),
+                F("encre", 9.4f, 3.6f, 12.9f, 1.3f, 18.6f, 6.5f, 17.5f, 11.7f, 14f, 10f, 12.3f, 7.1f),
+                Faded("#FBF3E4", 0.45f, 14f, 3.1f, 17.5f, 6.5f, 16.6f, 9.4f, 15.2f, 5.4f)
+            });
+            // Les outils : le marteau de « bâtir », retourné, croisé avec la hache ; remplaçant simple, la maquette n'en a
+            // pas.
+            yield return new Icon("outils", 20f, new[]
+            {
+                F("encre", 7f, 9f, 9f, 7f, 18f, 16f, 16f, 18f), F("encre", 9f, 2f, 2f, 9f, 5f, 12f, 12f, 5f),
+                Faded("#FBF3E4", 0.45f, 9f, 3f, 4f, 8f, 5f, 9f, 10f, 4f),
                 F("encre", 2.5f, 16.5f, 11.6f, 7.4f, 13.6f, 9.4f, 4.5f, 18.5f),
                 F("encre", 9.4f, 3.6f, 12.9f, 1.3f, 18.6f, 6.5f, 17.5f, 11.7f, 14f, 10f, 12.3f, 7.1f),
                 Faded("#FBF3E4", 0.45f, 14f, 3.1f, 17.5f, 6.5f, 16.6f, 9.4f, 15.2f, 5.4f)

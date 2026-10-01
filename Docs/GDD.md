@@ -220,8 +220,8 @@
 - **À toi.** Son histoire, que tu écriras.
 - **Règle.** La tente vient en premier, la Place en deuxième. La tente est son logis de départ, et seulement cela :
   elle n'a ni stock ni poste. Elle se plante d'un coup, sans chantier.
-- **Règle.** Tant que la Chimère n'a pas de logis, la barre de construction ne propose que la tente ; plantée, la tente
-  quitte la barre (elle est unique) et le reste s'ouvre. C'est une consigne de la barre : un ordre qui poserait autre
+- **Règle.** Tant que la Chimère n'a pas de logis, le panneau Construire ne propose que la tente ; plantée, la tente
+  quitte le panneau (elle est unique) et le reste s'ouvre. C'est une consigne du panneau : un ordre qui poserait autre
   chose d'abord n'est pas refusé.
 - **Règle.** La Chimère dort quand le joueur le veut : il touche son logis (la tente, puis sa maison), et elle va s'y
   coucher : elle marche jusqu'à sa porte, entre, et on ne la voit plus. Le joueur la réveille en touchant de nouveau
@@ -384,10 +384,10 @@
 - **Règle.** On ne démolit pas, on range. La réserve n'a pas de limite. Ranger un bâtiment rend au stock ce que
   gardaient ses petits stocks ; un entrepôt rangé garde ses marchandises jusqu'à ce qu'on le repose.
 - **Règle.** Les bâtiments uniques sont la tente puis la maison de la Chimère, la Place et les grands projets : un seul
-  de chacun dans la ville. Posé, un bâtiment unique quitte la barre, et une seconde pose est refusée (« Déjà posée »).
-  Ils se rangent aussi, et le jeu dit ce qui s'arrête tant qu'ils ne sont pas reposés : une pastille sur le bouton de la
-  réserve et une ligne dans la réserve (la Place : plus de visiteurs). Pour la maison de la Chimère, une bulle avec son
-  portrait : « Je vais quand même pas dormir dehors… ».
+  de chacun dans la ville. Posé, un bâtiment unique quitte le panneau Construire, et une seconde pose est refusée
+  (« Déjà posée »). Ils se rangent aussi, et le jeu dit ce qui s'arrête tant qu'ils ne sont pas reposés : une
+  pastille sur le bouton de la réserve et une ligne dans la réserve (la Place : plus de visiteurs). Pour la maison de
+  la Chimère, une bulle avec son portrait : « Je vais quand même pas dormir dehors… ».
 - **Règle.** Un chemin de terre ne coûte aucun matériau (c'est un chantier quand même) ; une route pavée demande des
   Pavés, faits par l'atelier de pierre. Un pont est un bout de route posé sur l'eau. Routes et ponts ne se rangent pas :
   ils s'effacent, par un petit chantier qui rend leurs matériaux.
@@ -598,13 +598,24 @@
   pour la nuit.
 - **Règle.** Deux polices : Lilita One pour les titres, Nunito pour le reste. Aucun texte sous 18 px à la taille de
   référence.
-- **Règle.** La journée en haut à gauche ; le stock en fanions sous une tringle, en haut au centre ; la fiche du lieu
-  touché à droite ; la barre de construction en bas au centre ; l'astuce en bas à gauche. Un bouton n'apparaît
-  qu'avec ce qu'il fait : le bouton du menu arrive avec le menu (la pause, les réglages).
-- **Règle.** On choisit quoi construire dans la barre du bas : les familles en onglets, chacune de son pastel avec son
-  icône, et au-dessus de l'onglet ouvert, ses constructions en cartes : la vignette de la construction (une photo de
-  son modèle), son nom et ce qu'elle coûte (chaque marchandise, son icône et combien) ; ce qu'elle offre (des lits)
-  s'y ajoutera avec eux. L'onglet ouvert et la carte en main restent enfoncés.
+- **Règle.** Le HUD reste aéré : de petites icônes, qui ouvrent des panneaux plus grands, seulement quand on les
+  demande. La journée en haut à gauche ; le stock en fanions sous une tringle, en haut au centre ; la fiche du lieu
+  touché à droite ; l'icône des outils en bas à droite ; l'astuce en bas à gauche. Un bouton n'apparaît qu'avec ce
+  qu'il fait : le bouton du menu arrive avec le menu (la pause, les réglages).
+- **Règle.** Les outils se prennent à la roue des outils, comme les roues d'armes des jeux d'action sur PC : tenir sa
+  touche l'ouvre autour du pointeur, on vise un outil par la direction du pointeur et on le choisit en relâchant ;
+  cliquer l'icône des outils l'ouvre aussi, et l'on clique l'outil. Elle reste dans l'écran. Chaque outil y a sa
+  place fixe, toujours la même (Construire en haut, Retirer en bas), et sa touche, écrite sur lui ; la bulle du
+  milieu dit le nom et l'usage de l'outil visé. Un outil actif y reste enfoncé. Choisir Retirer prend l'outil en main,
+  ou le lâche s'il l'était ; choisir Construire ouvre le panneau Construire, ou le ferme. Les outils à venir (déplacer,
+  chemins, décorer, planter) y prendront leur place.
+- **Défaut.** La roue : Tab, tenu ; Construire : B ; Retirer : X. Les touches se changeront dans les réglages, quand le
+  menu viendra.
+- **Règle.** On choisit quoi construire dans le panneau Construire, en bas au centre : les familles en onglets,
+  chacune de son pastel avec son icône, et au-dessus de l'onglet ouvert, ses constructions en cartes : la vignette de
+  la construction (une photo de son modèle), son nom et ce qu'elle coûte (chaque marchandise, son icône et combien) ;
+  ce qu'elle offre (des lits) s'y ajoutera avec eux. L'onglet ouvert et la carte en main restent enfoncés. Prendre une
+  carte ferme le panneau, pour dégager la vue pendant la pose.
 - **Règle.** La journée montre le jour, sa phase et une jauge : le travail, la soirée et la nuit hachurée, chacun à
   sa part de la journée ; ce qui est passé est plus sombre ; un repère marque l'heure.
 - **Règle.** L'interface se lit à toutes les tailles d'écran. Elle grossit avec la hauteur de l'écran, à partir d'une
@@ -629,11 +640,8 @@
 - **Règle.** Toucher un lieu de travail ouvre sa fiche, à droite (en haut tant que le menu n'existe pas) : son nom, ce
   qu'il tient pour la ville (une marchandise par creux de lin), son poste et qui le tient, son bouton. Une seule fiche
   à la fois : la nouvelle remplace l'ancienne ; toucher autre chose, ou le sol, la ferme, comme sa croix. Échap ferme
-  d'abord la fiche, puis lâche l'outil en main, puis ouvrira le menu ; l'interface ne prend pas le focus du clavier.
-- **Règle.** On prend l'outil « Retirer » au bout gauche de la barre de construction, hors des onglets, comme les
-  outils de Timberborn : un bouton de feutre sable (l'action neutre) marqué d'une hache à l'encre, à la hauteur des
-  onglets. Il paraît avec le reste de la barre, la tente plantée. Un clic prend l'outil en main, un second le lâche ;
-  en main, le bouton reste enfoncé. Au survol, son infobulle dit son nom et comment s'en servir.
+  d'abord la fiche, puis la roue des outils, puis le panneau Construire, puis lâche l'outil en main ; plus tard, il
+  ouvrira le menu. L'interface ne prend pas le focus du clavier.
 - **Règle.** L'outil « Retirer » en main, un clic sur un arbre ou un rocher le marque, ou le démarque ; glisser tire un
   cadre, et le relâcher marque tout ce dont le pied est dedans, du plus proche de son premier coin au plus loin. Un
   arbre marqué porte un fanion à son pied. Un seul outil en main : prendre une carte lâche « Retirer », et l'inverse.

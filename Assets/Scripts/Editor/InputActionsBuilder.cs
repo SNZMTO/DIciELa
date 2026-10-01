@@ -67,6 +67,15 @@ namespace Diciela.EditorTools
             added += AddButtonIfMissing(clearing, ClearingControls.MarkAction, "<Mouse>/leftButton") +
                      AddPointerIfMissing(clearing, ClearingControls.PointerAction);
 
+            // Les outils (décision 168) : la roue, touche tenue (Tab, comme les roues d'armes sur PC) ; un raccourci
+            // mnémonique par outil, lié au caractère (SAVOIR, section 3).
+            InputActionMap tools = asset.FindActionMap(ToolControls.MapName) ??
+                                   asset.AddActionMap(ToolControls.MapName);
+            added += AddButtonIfMissing(tools, ToolControls.WheelAction, "<Keyboard>/tab") +
+                     AddButtonIfMissing(tools, ToolControls.BuildAction, "<Keyboard>/#(b)") +
+                     AddButtonIfMissing(tools, ToolControls.ClearAction, "<Keyboard>/#(x)") +
+                     AddPointerIfMissing(tools, ToolControls.PointerAction);
+
             // Valider ce que l'interface propose : Entrée, celle du pavé numérique comprise.
             InputActionMap confirm = asset.FindActionMap(ConfirmControls.MapName) ??
                                      asset.AddActionMap(ConfirmControls.MapName);

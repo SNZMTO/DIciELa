@@ -652,6 +652,98 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Tools",
+            "id": "f1f78b9d-3615-40d6-9b53-cedf4757f597",
+            "actions": [
+                {
+                    "name": "Wheel",
+                    "type": "Button",
+                    "id": "b97f32d3-ea9d-480c-a678-19dfb993744f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "Build",
+                    "type": "Button",
+                    "id": "566c9e4e-1033-459e-a5c8-552d0d8b7be4",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "Clear",
+                    "type": "Button",
+                    "id": "b1a52db2-90b1-4b06-8658-c9fb24fd5534",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "Pointer",
+                    "type": "PassThrough",
+                    "id": "1ca84094-15d4-4835-bac5-8cf83254cfd7",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "c044b902-65e8-4080-b481-bfcfc4e282d7",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Wheel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cf6b4eaa-cdea-4fb1-8f9c-1090c92450be",
+                    "path": "<Keyboard>/#(b)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Build",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "97922a6c-deca-4c9d-850e-868577266f3b",
+                    "path": "<Keyboard>/#(x)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Clear",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7acf1383-41b7-4bd5-81bc-2d66d63f8740",
+                    "path": "<Pointer>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pointer",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []

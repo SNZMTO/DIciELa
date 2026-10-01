@@ -10,8 +10,9 @@ namespace Diciela.EditorTools
 {
     /// <summary>
     /// Installe l'interface dans une scène racine : le panneau UI Toolkit (ses réglages et son thème) et sa taille à
-    /// l'écran ; le HUD (« Interface » : la barre de construction, la journée et la fiche du lieu, sur un même document) et l'écran de
-    /// création (« Création »), chacun avec son document, reliés à la scène du démarrage. Réexécutable : ce qui est déjà
+    /// l'écran ; le HUD (« Interface » : le panneau Construire, la roue des outils, la journée, la fiche du lieu, le stock
+    /// et l'astuce, sur un même document) et l'écran de création (« Création »), chacun avec son document, reliés à la
+    /// scène du démarrage. Réexécutable : ce qui est déjà
     /// réglé n'est pas touché.
     /// </summary>
     internal static class InterfaceBuilder
@@ -38,6 +39,8 @@ namespace Diciela.EditorTools
             EditorAssets.AssignIfMissing(stage, "_stockPennants", stock);
             TipBoard tip = EditorAssets.GetOrAdd<TipBoard>(bar.gameObject);
             EditorAssets.AssignIfMissing(stage, "_tipBoard", tip);
+            ToolWheel wheel = EditorAssets.GetOrAdd<ToolWheel>(bar.gameObject);
+            EditorAssets.AssignIfMissing(stage, "_toolWheel", wheel);
 
             InterfaceScale scale = EditorAssets.GetOrAdd<InterfaceScale>(bar.gameObject);
             EditorAssets.AssignIfMissing(scale, "_panel", panel);

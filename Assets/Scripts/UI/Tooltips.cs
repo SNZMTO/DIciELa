@@ -6,8 +6,9 @@ namespace Diciela.UI
 {
     /// <summary>
     /// Les infobulles du HUD (GDD, section 16 ; décision 153) : une seule bulle de lin au liseré de paille, qui se montre
-    /// sous ou au-dessus de l'élément survolé, centrée sur lui, et dit ce que son présentateur lui fait dire au moment du
-    /// survol (un titre, et une suite en plus doux). Elle ne capte pas le pointeur.
+    /// sous ou au-dessus de l'élément survolé, centrée sur lui sauf près d'un bord, où elle reste dans l'écran, et dit ce
+    /// que son présentateur lui fait dire au moment du survol (un titre, et une suite en plus doux). Elle ne capte pas le
+    /// pointeur.
     /// </summary>
     public sealed class Tooltips
     {
@@ -62,6 +63,10 @@ namespace Diciela.UI
             Rect bound = target.worldBound;
             VisualElement parent = _bubble.parent;
             Vector2 anchor = parent.WorldToLocal(new Vector2(bound.center.x, above ? bound.yMin - Gap : bound.yMax + Gap));
+            // Près d'un bord (l'icône des outils, au coin), la bulle à sa plus grande largeur reste dans l'écran.
+            float half = _bubble.resolvedStyle.maxWidth.value / 2f;
+            if (!float.IsNaN(half) && parent.layout.width > 2f * half)
+                anchor.x = Mathf.Clamp(anchor.x, half, parent.layout.width - half);
             _bubble.style.left = anchor.x;
             _bubble.style.top = anchor.y;
             _bubble.style.translate = new Translate(Length.Percent(-50f), Length.Percent(above ? -100f : 0f));
