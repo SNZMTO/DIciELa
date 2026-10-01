@@ -14,7 +14,9 @@ namespace Diciela.EditorTools
     /// fondations s'enfoncent). Les pièces, dans leur version la plus détaillée, sont fusionnées (ModelMerger). La fiche
     /// reçoit le modèle préparé, son empreinte, sa porte, et sa couche si le modèle en a le repère (un objet « Couche » :
     /// les pieds de qui dort, son avant vers la tête). Une fiche sans modèle du pack reçoit sa boîte, à sa taille
-    /// (PlaceholderBuilder). Tout se fait dans une scène d'aperçu, hors de la scène ouverte.
+    /// (PlaceholderBuilder) ; une fiche dont le modèle du pack est introuvable (le pack absent, ou ses GUID changés) est
+    /// refusée, pour que sa boîte n'écrase pas le vrai modèle préparé. Tout se fait dans une scène d'aperçu, hors de la
+    /// scène ouverte.
     /// </summary>
     internal static class ModelPreparer
     {
@@ -37,7 +39,11 @@ namespace Diciela.EditorTools
         public static bool Prepare(StructureDefinition structure)
         {
             if (structure.SourceModel == null)
-                return PrepareBox(structure);
+            {
+                return SourceIsLost(structure)
+                    ? Refuse(structure, "son modèle du pack est introuvable (le pack est-il importé ?).")
+                    : PrepareBox(structure);
+            }
 
             Scene scene = EditorSceneManager.NewPreviewScene();
             try
@@ -79,6 +85,16 @@ namespace Diciela.EditorTools
             {
                 EditorSceneManager.ClosePreviewScene(scene);
             }
+        }
+
+        /// <summary>
+        /// Vrai si la fiche désigne un modèle du pack qui ne se charge pas : la référence garde son identifiant, sans objet
+        /// derrière, et l'opérateur == d'Unity la dit nulle comme une fiche sans modèle.
+        /// </summary>
+        private static bool SourceIsLost(StructureDefinition structure)
+        {
+            SerializedProperty source = EditorAssets.Property(new SerializedObject(structure), "_sourceModel");
+            return source.objectReferenceValue == null && source.objectReferenceEntityIdValue.IsValid();
         }
 
         /// <summary>

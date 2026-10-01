@@ -46,7 +46,10 @@ namespace Diciela.Simulation.Society
         /// <summary>Levé quand un habitant arrive à son lit et s'endort.</summary>
         public event Action<Villager> VillagerFellAsleep;
 
-        /// <summary>Levé quand un habitant se réveille, ou cesse d'aller dormir : il se remet à flâner.</summary>
+        /// <summary>
+        /// Levé quand un habitant se réveille, ou cesse d'aller dormir (réveillé en chemin, ou parce que son lit n'est plus
+        /// joignable) : il se remet à flâner.
+        /// </summary>
         public event Action<Villager> VillagerWokeUp;
 
         /// <summary>Levé quand un ordre « dormir » ou « réveiller » est refusé, avec la raison.</summary>
@@ -128,16 +131,22 @@ namespace Diciela.Simulation.Society
             }
         }
 
-        /// <summary>Joue un pas pour chaque habitant, dans l'ordre de leur arrivée. Seul le monde l'appelle.</summary>
+        /// <summary>
+        /// Joue un pas pour chaque habitant, dans l'ordre de leur arrivée ; celui qui s'endort, ou qui renonce en chemin à
+        /// son lit, le dit. Seul le monde l'appelle.
+        /// </summary>
         internal void Step()
         {
             for (int i = 0; i < _all.Count; i++)
             {
                 Villager villager = _all[i];
                 bool wasAsleep = villager.IsAsleep;
+                bool wasGoingToBed = villager.IsGoingToBed;
                 villager.Step();
                 if (!wasAsleep && villager.IsAsleep)
                     _happened.Add(VillagerHappening.Of(VillagerHappening.Kinds.FellAsleep, villager));
+                else if (wasGoingToBed && !villager.IsGoingToBed)
+                    _happened.Add(VillagerHappening.Of(VillagerHappening.Kinds.WokeUp, villager));
             }
         }
 

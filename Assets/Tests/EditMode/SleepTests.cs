@@ -8,8 +8,8 @@ namespace Diciela.Tests.EditMode
 {
     /// <summary>
     /// Le sommeil de la Chimère, par les ordres « dormir » et « réveiller » (GDD, section 6), sur le banc de TestBedroom :
-    /// elle marche jusqu'à la porte de son campement et s'y couche, sans plus bouger ; réveillée, elle flâne devant sa porte ;
-    /// touchée de nouveau en chemin, elle reste debout. Les refus ont leurs tests à part (SleepRefusalTests).
+    /// elle marche jusqu'à la porte de son campement et s'y couche, sans plus bouger ; réveillée, elle flâne devant sa porte,
+    /// même réveillée en chemin, loin d'elle. Les refus ont leurs tests à part (SleepRefusalTests).
     /// </summary>
     public sealed class SleepTests
     {
@@ -92,7 +92,7 @@ namespace Diciela.Tests.EditMode
         }
 
         [Test]
-        public void TouchedAgainOnHerWaySheStaysUp()
+        public void WokenOnHerWaySheWandersBeforeHerDoor()
         {
             World world = TestBedroom.WorldWithCamp(_test);
             Villager chimera = world.Villagers.Chimera;
@@ -100,17 +100,22 @@ namespace Diciela.Tests.EditMode
             world.Villagers.VillagerWokeUp += wokeUp.Add;
 
             world.Submit(new SendChimeraToBedCommand());
-            for (int step = 0; step < 5; step++)
-                world.Step();
+            world.Step();
             world.Submit(new WakeChimeraCommand());
             world.Step();
 
             Assert.AreEqual(new[] { chimera }, wokeUp);
             Assert.IsFalse(chimera.IsGoingToBed);
-            for (int step = 0; step < 1000; step++)
+            Assert.Greater(Vector2.Distance(chimera.Position, TestBedroom.Bed), 7f, "Réveillée à 8 m de sa porte.");
+            // Flâner autour de l'endroit du réveil l'écarterait de sa porte jusqu'à 14 m ; autour de sa porte, à 6 m au plus,
+            // et le tour du campement peut l'en écarter un peu plus.
+            TestGrids.StepUntil(world, () => Vector2.Distance(chimera.Position, TestBedroom.Bed) < 6.5f, 3000,
+                "son retour devant sa porte");
+            for (int step = 0; step < 3000; step++)
             {
                 world.Step();
-                Assert.IsFalse(chimera.IsAsleep, "Elle a renoncé à se coucher.");
+                Assert.IsFalse(chimera.IsAsleep, "Réveillée, elle ne se couche pas.");
+                Assert.Less(Vector2.Distance(chimera.Position, TestBedroom.Bed), 9f, "Elle flâne devant sa porte.");
             }
         }
     }

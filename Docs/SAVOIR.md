@@ -582,6 +582,16 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   déborde d'un millimètre au-dessus et au-dessous (`Relief.TryRaycast`).
 - **Le trajet s'appelle `Path`** (le lexique) : dans un fichier qui a `using System.IO;` et `using
   Diciela.Simulation.Land;`, `Path` est ambigu ; y écrire `System.IO.Path`.
+- **Un mot-clé de shader allumé par script se déclare en `multi_compile`**, jamais en `shader_feature` : un jeu
+  compilé ne garde d'un `shader_feature` que les variantes des matériaux du build. Le chantier allume `_ALPHATEST_ON`,
+  `_NORMALMAP` et `_EMISSION` sur des copies faites à l'exécution, alors que `Chantier.mat` n'en a aucun : en
+  `shader_feature`, les feuilles redeviendraient des carrés dans le jeu compilé, sans erreur (Unity prend la variante
+  la plus proche), alors que l'éditeur, qui compile à la demande, les montre justes.
+- **Une référence perdue n'est pas une référence vide** : un modèle du pack introuvable (le pack absent, ses GUID
+  changés) vaut `null` pour l'opérateur `==` d'Unity, comme un champ jamais rempli. Dans l'éditeur, la propriété
+  sérialisée les distingue : `objectReferenceValue == null` mais `objectReferenceEntityIdValue.IsValid()` (Unity 6.6 :
+  l'identifiant d'objet s'appelle `EntityId`). « Préparer les modèles » refuse ainsi une source perdue au lieu d'en
+  faire une boîte.
 - **Une capture ne dit pas dans quel sens marche un personnage** : entre deux images, il a pu faire plusieurs sauts et
   tourner. Pour savoir où regarde un modèle, mesurer ses os dans leur pose d'origine : `PrefabUtility.LoadPrefabContents`
   charge un prefab à part, sans toucher la scène ouverte (puis `UnloadPrefabContents`).
@@ -601,5 +611,8 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 - **Un fichier d'or** pour tout générateur déterministe.
 - **Un aller-retour de sauvegarde** comparé champ à champ, et un fichier hostile (identifiants inconnus, positions hors du
   monde, chevauchements, quantités énormes) qui ne doit lever aucune exception.
-- **Un test de scène court** (PlayMode) qui pose, tourne, déplace et retire par les mêmes appels que les gestes.
+- **Un test de scène court** (PlayMode) qui pose, tourne, déplace et retire par les mêmes appels que les gestes. Un
+  test qui charge la scène de test la quitte par `TestOpening.Leave`, à sa fin et dans son `[UnityTearDown]` : s'il
+  échoue en chemin, sa scène et sa carte ne restent pas aux suivants, qui écriraient « carte déjà ouverte » et
+  cacheraient la vraie panne.
 - **Une campagne ne doit jamais toucher la vraie partie** ni les assets du projet.
