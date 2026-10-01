@@ -25,6 +25,8 @@ namespace Diciela.UI
         private const string SlotName = "fiche-poste";
         private const string SlotNameName = "fiche-poste-nom";
         private const string SlotHolderName = "fiche-poste-qui";
+        private const string SlotTasksName = "fiche-poste-taches";
+        private const string TaskClass = "fiche-tache";
         private const string ButtonName = "fiche-bouton";
         private const string ButtonTextName = "fiche-bouton-texte";
         private const string HiddenClass = "bloc-cache";
@@ -40,6 +42,8 @@ namespace Diciela.UI
         private VisualElement _slot;
         private Label _slotName;
         private Label _slotHolder;
+        private VisualElement _slotTasks;
+        private Tooltips _tooltips;
         private FeltButton _button;
         private Label _buttonText;
         private FeltButton _close;
@@ -53,8 +57,11 @@ namespace Diciela.UI
             _document = GetComponent<UIDocument>();
         }
 
-        /// <summary>Relie la fiche à ce monde, fermée ; appelé par le démarrage quand la ville s'ouvre.</summary>
-        public void Show(World world, TextTable texts)
+        /// <summary>
+        /// Relie la fiche à ce monde, fermée, et aux infobulles du HUD (le nom d'une tâche du poste) ; appelé par le
+        /// démarrage quand la ville s'ouvre.
+        /// </summary>
+        public void Show(World world, TextTable texts, Tooltips tooltips)
         {
             Hide();
             VisualElement root = _document.rootVisualElement;
@@ -65,10 +72,11 @@ namespace Diciela.UI
             VisualElement slot = root.Q(SlotName);
             var slotName = root.Q<Label>(SlotNameName);
             var slotHolder = root.Q<Label>(SlotHolderName);
+            VisualElement slotTasks = root.Q(SlotTasksName);
             var button = root.Q<FeltButton>(ButtonName);
             var buttonText = root.Q<Label>(ButtonTextName);
             if (sheet == null || title == null || close == null || stock == null || slot == null || slotName == null ||
-                slotHolder == null || button == null || buttonText == null)
+                slotHolder == null || slotTasks == null || button == null || buttonText == null || tooltips == null)
                 throw new InvalidOperationException("La fiche d'un lieu ne trouve pas ses éléments (UXML).");
 
             _sheet = sheet;
@@ -78,6 +86,8 @@ namespace Diciela.UI
             _slot = slot;
             _slotName = slotName;
             _slotHolder = slotHolder;
+            _slotTasks = slotTasks;
+            _tooltips = tooltips;
             _button = button;
             _buttonText = buttonText;
             _close.Clicked += OnClose;
@@ -144,10 +154,21 @@ namespace Diciela.UI
             _stock.EnableInClassList(HiddenClass, lines.Count == 0);
         }
 
-        public void ShowSlot(string name, string holder)
+        public void ShowSlot(string name, string holder, IReadOnlyList<PlaceSheetTask> tasks)
         {
             _slotName.text = name;
             _slotHolder.text = holder;
+            _slotTasks.Clear();
+            for (int i = 0; i < tasks.Count; i++)
+            {
+                var icon = new VisualElement();
+                icon.AddToClassList(TaskClass);
+                if (tasks[i].Icon != null)
+                    icon.style.backgroundImage = Background.FromVectorImage(tasks[i].Icon);
+                string taskName = tasks[i].Name;
+                _tooltips.Attach(icon, () => (taskName, ""));
+                _slotTasks.Add(icon);
+            }
             _slot.EnableInClassList(HiddenClass, string.IsNullOrEmpty(name));
         }
 

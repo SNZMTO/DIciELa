@@ -129,6 +129,17 @@
     --creux-lumiere: rgba(255, 251, 242, 0.7);
 }
 
+/* Une tuile de lin posée sur ce qu'elle porte (l'enseigne d'une fiche) : liseré de paille, ombre dure, trame. */
+.tuile-lin {
+    --face: #FBF3E4;
+    --lisere: #D9C29C;
+    --lisere-largeur: 2;
+    --ombre: rgba(58, 30, 14, 0.25);
+    --ombre-y: 2;
+    --tissage-trame: rgba(120, 80, 60, 0.07);
+    --tissage-chaine: rgba(120, 80, 60, 0.05);
+}
+
 /* La bulle d'une infobulle : du lin dans un liseré de paille. */
 .bulle {
     --face: #FBF3E4;

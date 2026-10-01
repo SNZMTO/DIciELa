@@ -84,9 +84,11 @@ namespace Diciela.Tests.PlayMode
                             day.Show(world.World.Clock, texts, tooltips);
                             town.PlantTheTent();
                             stock.Show(town.World, town.Catalog, texts, tooltips);
-                            sheet.Show(town.World, texts);
+                            sheet.Show(town.World, texts, tooltips);
                             sheet.Touch(town.PlacedPile);
                             tip.Show(town.World, texts, null);
+                            // L'astuce arrive en glissant (0,35 s) : on la mesure une fois arrivée.
+                            yield return new WaitForSecondsRealtime(0.6f);
                         }
                         for (int frame = 0; frame < SettleFrames; frame++)
                             yield return null;

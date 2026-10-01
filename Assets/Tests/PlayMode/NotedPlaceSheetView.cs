@@ -15,6 +15,7 @@ namespace Diciela.Tests.PlayMode
         public List<PlaceSheetLine> Lines { get; } = new List<PlaceSheetLine>();
         public string SlotName { get; private set; } = "";
         public string SlotHolder { get; private set; } = "";
+        public List<string> Tasks { get; } = new List<string>();
         public string Button { get; private set; } = "";
 
         public void ClickButton()
@@ -43,10 +44,13 @@ namespace Diciela.Tests.PlayMode
             Lines.AddRange(lines);
         }
 
-        public void ShowSlot(string name, string holder)
+        public void ShowSlot(string name, string holder, IReadOnlyList<PlaceSheetTask> tasks)
         {
             SlotName = name;
             SlotHolder = holder;
+            Tasks.Clear();
+            foreach (PlaceSheetTask task in tasks)
+                Tasks.Add(task.Name);
         }
 
         public void ShowButton(string text)
