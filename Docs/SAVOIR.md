@@ -280,9 +280,10 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   Dans l'éditeur, `Mesh.CombineMeshes` et `GetVertices` lisent des maillages importés sans « Read/Write ».
 - **Le maillage préparé pèse des mégaoctets en texte** (Shed_02 : 5,7 Mo) et se refait à chaque préparation : il va
   en LFS, comme le Terrain.
-- **Les effets suivent le modèle.** Ce qui porte des particules (une flamme, une fumée) n'est pas fusionné : la
-  préparation le copie à sa place sous le modèle préparé. Il ne compte ni dans la boîte ni dans la porte ; le fantôme et
-  le chantier ne le dessinent pas.
+- **Pas d'effet de particules dans un modèle préparé ni dans une composition** (pour l'instant) : avec la flamme du
+  pack dans le campement, Unity plantait à chaque fin de campagne PlayMode, en rechargeant la scène du jeu (« Dereferencing
+  NULL ImmediatePtr », dans le ramasse-miettes des assets), trois fois sur trois le 01/10/2026, même sur un Unity
+  relancé ; les tests eux-mêmes passaient. Un effet reviendra par une autre voie, après une enquête à part.
 - **Composer un modèle avec des objets du pack** (le campement) : un prefab dans `Assets/Art/Compositions`, en
   instances des prefabs du pack (chacune garde son nom, le développeur la retouche), son entrée sous un objet nommé
   « Door ». Mesurer avant de placer : les objets du pack n'ont pas la taille qu'on croit (le cercle de pierres fait

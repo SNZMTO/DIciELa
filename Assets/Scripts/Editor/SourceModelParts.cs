@@ -5,7 +5,7 @@ namespace Diciela.EditorTools
 {
     /// <summary>
     /// Ce qu'on lit dans un modèle du pack pour le préparer (SAVOIR, 2.9) : ses pièces vues de près, celles de sa
-    /// porte, ses effets, la boîte exacte d'un groupe de pièces, et le côté où s'ouvre la porte.
+    /// porte, la boîte exacte d'un groupe de pièces, et le côté où s'ouvre la porte.
     /// </summary>
     internal static class SourceModelParts
     {
@@ -41,22 +41,6 @@ namespace Diciela.EditorTools
                     pieces.Add(filter);
             }
             return pieces;
-        }
-
-        /// <summary>
-        /// Les effets du modèle (la fumée d'une cheminée, la flamme d'un feu) : chaque objet allumé qui porte des
-        /// particules sans qu'un de ses parents en porte ; la préparation les garde à leur place, à côté du maillage.
-        /// </summary>
-        public static List<GameObject> Effects(GameObject root)
-        {
-            var effects = new List<GameObject>();
-            foreach (ParticleSystem system in root.GetComponentsInChildren<ParticleSystem>(false))
-            {
-                Transform parent = system.transform.parent;
-                if (parent == null || parent.GetComponentInParent<ParticleSystem>() == null)
-                    effects.Add(system.gameObject);
-            }
-            return effects;
         }
 
         /// <summary>Les pièces de la porte : celles dont le nom, ou celui d'un parent, contient « Door ».</summary>
