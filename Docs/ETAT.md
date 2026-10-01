@@ -24,7 +24,9 @@ mailles, qui s'arme quand tu rangeras tes modèles ; retour de charge, ton « À
 **À toi** : peindre la carte et ranger tes modèles (`Assets/Data/Nature`) ; le fanion des arbres marqués ; l'icône des
 outils et le plateau de la roue ; les pastels et le bandeau de brique (GDD 16) ; la voix de la Chimère ; les noms.
 **Dette** : `Fusion.uss` répète `:root` ; à trois cartes, le panneau chevauchera l'astuce en 720 p.
-**Prochaine étape** : 27, puis 28 et 29 ; puis les touches 1 à 9 du panneau ouvert ; puis GDD 17.
+**Prochaine étape** : 27 commitée (`etape-27-gestes`). 28 en cours sur `etape-28-matieres`, **non commitée, ni compilée
+ni testée** : shaders (tiges, sommet commun), copies (chaume, shader inconnu), aperçu au fantôme ; reste PlacementToolTests
+(l'aperçu n'a plus Translucide.mat), les tests neufs, la décision 177, SAVOIR, la vérification. Puis 29, puis 1 à 9.
 
 **Prompt de la session suivante**
 > Lis CLAUDE.md et Docs/ETAT.md. Mes réponses : … Continue avec tes recos.
