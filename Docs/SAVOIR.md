@@ -310,6 +310,12 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   position dans le monde, le shader a donc les siennes. Sans MSAA, un bord adouci se fait par une trame (Bayer 4 × 4)
   sur la vraie matière, et le flou par le calque transparent du fantôme. Une erreur de variante d'un shader n'apparaît
   qu'au rendu : chercher « Shader error in » dans `Logs/Editor.log` après un Play.
+- **Les feuillages de Synty ont leur propre shader** (étape 25) : leur texture est `_Leaf_Texture` (et `_Trunk_Texture`
+  pour les tiges), ils sont détourés (`_AlphaClip`, au seuil `_Alpha_Clip_Threshold`, 0,5) et dessinent leurs deux faces
+  (`_Cull` à 0). Une copie qui l'ignore les montre en carrés blancs et pleins (le lierre de la cabane, sur son chantier).
+  Toute copie d'un matériau du pack reprend donc la texture sous son nom, le seuil et les faces (`OriginalMaterials`) ;
+  un seuil nul ne détoure rien même si le détourage est coché (l'atlas du pack l'est) : on ne détoure qu'au-dessus de 0,
+  le détourage coûtant au rendu.
 
 ### 2.10 L'ambiance
 

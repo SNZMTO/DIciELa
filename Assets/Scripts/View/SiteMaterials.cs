@@ -6,8 +6,9 @@ namespace Diciela.View
     /// <summary>
     /// Les copies des matériaux d'un modèle au shader du chantier qui monte (décision 166) : une par matériau d'origine,
     /// faite à la première demande et partagée par tous les chantiers. Ses textures et réglages viennent de l'original :
-    /// ceux du pack (le shader de Synty : _Albedo_Map, _Normal_Map…) ou ceux d'un Lit d'URP (les boîtes de remplacement),
-    /// recopiés un à un sous les noms du Lit. Toutes sont détruites ensemble quand la vue se cache.
+    /// ceux du pack (le shader de Synty : _Albedo_Map, _Normal_Map… ; ses feuillages : _Leaf_Texture…) ou ceux d'un Lit
+    /// d'URP (les boîtes de remplacement), recopiés un à un sous les noms du Lit ; elle détoure comme lui et dessine les
+    /// mêmes faces (OriginalMaterials). Toutes sont détruites ensemble quand la vue se cache.
     /// </summary>
     internal sealed class SiteMaterials
     {
@@ -45,48 +46,55 @@ namespace Diciela.View
         private Material Copy(Material original)
         {
             var copy = new Material(_template) { name = original.name + " (chantier)" };
+            OriginalMaterials.CopyNumber(original, "_Smoothness", copy, "_Smoothness");
+            OriginalMaterials.CopyNumber(original, "_Metallic", copy, "_Metallic");
             if (original.HasProperty("_Albedo_Map"))
             {
-                Texture(original, "_Albedo_Map", copy, "_BaseMap");
-                Texture(original, "_Normal_Map", copy, "_BumpMap");
-                Number(original, "_Normal_Amount", copy, "_BumpScale");
+                OriginalMaterials.CopyTexture(original, "_Albedo_Map", copy, "_BaseMap");
+                OriginalMaterials.CopyTexture(original, "_Normal_Map", copy, "_BumpMap");
+                OriginalMaterials.CopyNumber(original, "_Normal_Amount", copy, "_BumpScale");
                 copy.SetColor("_BaseColor", Color.white);
-                if (original.HasProperty("_Enable_Emission") && original.GetFloat("_Enable_Emission") > 0.5f)
+                if (Enabled(original, "_Enable_Emission"))
                 {
-                    Texture(original, "_Emission_Map", copy, "_EmissionMap");
+                    OriginalMaterials.CopyTexture(original, "_Emission_Map", copy, "_EmissionMap");
                     if (original.HasProperty("_Emission_Color"))
                         copy.SetColor("_EmissionColor", original.GetColor("_Emission_Color"));
                     copy.EnableKeyword("_EMISSION");
                 }
             }
+            else if (original.HasProperty("_Leaf_Texture"))
+            {
+                // Les feuillages du pack : la texture des feuilles fait la matière, et leur détourage.
+                OriginalMaterials.CopyTexture(original, "_Leaf_Texture", copy, "_BaseMap");
+                if (Enabled(original, "_Enable_Leaf_Normal"))
+                    OriginalMaterials.CopyTexture(original, "_Leaf_Normal", copy, "_BumpMap");
+                OriginalMaterials.CopyNumber(original, "_Leaf_Normal_Strength", copy, "_BumpScale");
+                OriginalMaterials.CopyNumber(original, "_Leaf_Smoothness", copy, "_Smoothness");
+                OriginalMaterials.CopyNumber(original, "_Leaf_Metallic", copy, "_Metallic");
+                copy.SetColor("_BaseColor", Color.white);
+            }
             else
             {
-                Texture(original, "_BaseMap", copy, "_BaseMap");
-                Texture(original, "_BumpMap", copy, "_BumpMap");
-                Number(original, "_BumpScale", copy, "_BumpScale");
+                OriginalMaterials.CopyTexture(original, "_BaseMap", copy, "_BaseMap");
+                OriginalMaterials.CopyTexture(original, "_BumpMap", copy, "_BumpMap");
+                OriginalMaterials.CopyNumber(original, "_BumpScale", copy, "_BumpScale");
                 if (original.HasProperty("_BaseColor"))
                     copy.SetColor("_BaseColor", original.GetColor("_BaseColor"));
             }
-            Number(original, "_Smoothness", copy, "_Smoothness");
-            Number(original, "_Metallic", copy, "_Metallic");
             if (copy.GetTexture("_BumpMap") != null)
                 copy.EnableKeyword("_NORMALMAP");
+            if (OriginalMaterials.Clips(original, out float threshold))
+            {
+                copy.SetFloat("_Cutoff", threshold);
+                copy.EnableKeyword("_ALPHATEST_ON");
+            }
+            copy.SetFloat("_Cull", OriginalMaterials.CullOf(original));
             return copy;
         }
 
-        private static void Texture(Material from, string fromName, Material to, string toName)
+        private static bool Enabled(Material material, string toggle)
         {
-            if (!from.HasProperty(fromName))
-                return;
-            to.SetTexture(toName, from.GetTexture(fromName));
-            to.SetTextureScale(toName, from.GetTextureScale(fromName));
-            to.SetTextureOffset(toName, from.GetTextureOffset(fromName));
-        }
-
-        private static void Number(Material from, string fromName, Material to, string toName)
-        {
-            if (from.HasProperty(fromName))
-                to.SetFloat(toName, from.GetFloat(fromName));
+            return material.HasProperty(toggle) && material.GetFloat(toggle) > 0.5f;
         }
     }
 }

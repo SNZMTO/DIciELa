@@ -8,7 +8,8 @@ namespace Diciela.View
     /// <summary>
     /// Un chantier vu (décision 166) : son modèle deux fois, au même endroit. La vraie matière (le shader
     /// Diciela/Chantier) ne garde que ce qui est sous la ligne ; le fantôme (Diciela/ChantierFantome, de la couleur du
-    /// fantôme) ne garde que ce qui est au-dessus, et porte la lueur et les étincelles. La ligne monte avec l'avancement,
+    /// fantôme) ne garde que ce qui est au-dessus, et porte la lueur et les étincelles. L'un et l'autre détourent ce que
+    /// l'original détoure (des feuilles), et dessinent les mêmes faces. La ligne monte avec l'avancement,
     /// de la base de la boîte du modèle (ses fondations comprises) à son sommet, et ondule. Chaque couche a son bloc de
     /// propriétés : aucun matériau n'est créé par chantier. Ce qui n'est pas un maillage (une fumée du pack) attend la
     /// fin du chantier.
@@ -33,7 +34,8 @@ namespace Diciela.View
         private double _progress = -1d;
 
         /// <summary>Fait de ce modèle posé un chantier : sa vraie matière, et son fantôme, copie rangée sous lui.</summary>
-        public SiteFill(GameObject view, GameObject model, SiteMaterials materials, PlacementSettings settings)
+        public SiteFill(GameObject view, GameObject model, SiteMaterials materials, SiteGhosts ghosts,
+            PlacementSettings settings)
         {
             _settings = settings;
             var box = new Bounds();
@@ -64,9 +66,9 @@ namespace Diciela.View
             {
                 if (!IsMesh(renderer))
                     continue;
-                var shared = new Material[renderer.sharedMaterials.Length];
+                var shared = renderer.sharedMaterials;
                 for (int i = 0; i < shared.Length; i++)
-                    shared[i] = settings.SiteGhostMaterial;
+                    shared[i] = ghosts.For(shared[i]);
                 renderer.sharedMaterials = shared;
                 renderer.shadowCastingMode = ShadowCastingMode.Off;
                 _ghost.Add(renderer);

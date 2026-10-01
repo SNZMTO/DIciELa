@@ -1,6 +1,7 @@
 // La vraie matière d'un chantier qui monte (décision 166) : le Lit d'URP (sa passe avant reprise telle quelle, avec la
 // même entrée LitInput), coupé au-dessus de la ligne du chantier et effrité dans la bande sous elle. Les ombres, la
-// profondeur et les normales coupent au même endroit : la moitié qui n'est pas bâtie ne fait ni ombre ni occlusion.
+// profondeur et les normales coupent au même endroit : la moitié qui n'est pas bâtie ne fait ni ombre ni occlusion. Un
+// matériau qui détoure (des feuilles) détoure partout, au seuil de l'original (_ALPHATEST_ON, ChantierDetourage).
 // Les matériaux du pack y sont recopiés à l'exécution (SiteMaterials) ; la ligne se règle par chantier (SiteFill).
 Shader "Diciela/Chantier"
 {
@@ -58,6 +59,7 @@ Shader "Diciela/Chantier"
             #pragma shader_feature_local _NORMALMAP
             #pragma shader_feature_local _RECEIVE_SHADOWS_OFF
             #pragma shader_feature_local_fragment _EMISSION
+            #pragma shader_feature_local_fragment _ALPHATEST_ON
 
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
             #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
@@ -122,6 +124,7 @@ Shader "Diciela/Chantier"
             #pragma target 2.0
             #pragma vertex ChantierShadowVertex
             #pragma fragment ChantierShadowFragment
+            #pragma shader_feature_local_fragment _ALPHATEST_ON
             #pragma multi_compile_instancing
             #pragma multi_compile_vertex _ _CASTING_PUNCTUAL_LIGHT_SHADOW
 
@@ -142,6 +145,7 @@ Shader "Diciela/Chantier"
             #pragma target 2.0
             #pragma vertex ChantierDepthVertex
             #pragma fragment ChantierDepthFragment
+            #pragma shader_feature_local_fragment _ALPHATEST_ON
             #pragma multi_compile_instancing
 
             #include "Assets/Art/Shaders/ChantierProfondeur.hlsl"
@@ -160,6 +164,7 @@ Shader "Diciela/Chantier"
             #pragma target 2.0
             #pragma vertex ChantierNormalsVertex
             #pragma fragment ChantierNormalsFragment
+            #pragma shader_feature_local_fragment _ALPHATEST_ON
             #pragma multi_compile_fragment _ _GBUFFER_NORMALS_OCT
             #pragma multi_compile_instancing
             #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/RenderingLayers.hlsl"
