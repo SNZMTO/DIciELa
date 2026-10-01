@@ -82,7 +82,11 @@ En cas de doute, `unity list` (les outils du paquet `com.unity.pipeline`) ou la 
 - **Ne jamais conclure d'un Play muet** : vérifier que la simulation a vraiment travaillé (des lignes de journal).
 - **Le Play ne tourne que si Unity a le focus** (`runInBackground: 0` dans les réglages du projet) : ailleurs, il se fige
   et une capture montre une image figée. `editor_focus` avant `editor_play`, et lire le nombre de pas dans la ligne
-  « monde arrêté après N pas » à l'`editor_stop` : un seul pas veut dire que rien n'a tourné.
+  « monde arrêté après N pas » à l'`editor_stop` : un seul pas veut dire que rien n'a tourné. `editor_focus` ne fait
+  que choisir un panneau d'Unity : si le développeur a une autre application devant (un navigateur, un jeu), Unity
+  reste derrière, le Play se fige et la capture `screen` prend ce qui est affiché (la « fenêtre noire » d'une vidéo).
+  Avant un Play d'album, lire la fenêtre au premier plan (`GetForegroundWindow` par PowerShell) ; si ce n'est pas
+  Unity, demander au développeur de l'y mettre, ne jamais la lui prendre.
 - **Captures** : `capture_game_view --source screen --width 1600 --height 900 --save_path Assets/Temp/x.png` (en Play ;
   2400 × 1350 marche encore, 3840 × 2160 rend une image noire ou périmée ; l'image est la vue Game rééchantillonnée à
   la taille demandée : si la vue n'a pas ce rapport, l'image est étirée (juger les proportions avec prudence) ;

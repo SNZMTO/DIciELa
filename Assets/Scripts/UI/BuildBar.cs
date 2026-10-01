@@ -10,9 +10,10 @@ namespace Diciela.UI
 {
     /// <summary>
     /// La barre de construction, en bas au centre de l'écran (GDD, section 16) : un cadre de bois, les familles en
-    /// onglets de feutre (leur pastel, leur icône), au-dessus les constructions de la famille ouverte en cartes (leur
-    /// vignette, leur nom), et au-dessus du cadre la raison d'un refus de pose, dans une bulle. L'onglet ouvert et la
-    /// carte en main restent enfoncés. C'est la vue (le bloc « bar » de Hud.uxml) ; son présentateur décide.
+    /// onglets de feutre, au-dessus les constructions de la famille ouverte en cartes, au bout gauche des onglets le
+    /// bouton de l'outil « Retirer », et au-dessus du cadre la raison d'un refus de pose, dans une bulle. L'onglet ouvert,
+    /// la carte en main et l'outil en main restent enfoncés. C'est la vue (le bloc « bar » de Hud.uxml) ; son
+    /// présentateur décide.
     /// </summary>
     [RequireComponent(typeof(UIDocument))]
     public sealed class BuildBar : MonoBehaviour, IBuildBarView
@@ -20,39 +21,37 @@ namespace Diciela.UI
         private const string BarName = "bar";
         private const string FamiliesName = "families";
         private const string StructuresName = "structures";
+        private const string ClearingName = "outil-retirer";
         private const string ReasonName = "reason";
         private const string ReasonTextName = "reason-text";
         private const string HiddenClass = "bloc-cache";
         private const string OpenClass = "ouvert";
-        private const string PaleSuffix = "-pale";
-        private static readonly string[] TabClasses = { "feutre", "pan-10", "couture", "onglet" };
-        private static readonly string[] CardClasses = { "feutre", "pan-10", "carte" };
-        private const string TabIconClass = "onglet-icone";
-        private const string TabNameClass = "action";
-        private const string CardPictureClass = "carte-vignette";
-        private static readonly string[] CardNameClasses = { "t2", "carte-nom" };
-        private static readonly string[] CostClasses = { "cout", "carte-cout" };
-        private const string CostLineClass = "carte-cout-ligne";
-        private const string CostIconClass = "carte-cout-icone";
 
         private UIDocument _document;
         private VisualElement _bar;
         private VisualElement _families;
         private VisualElement _structures;
+        private FeltButton _clearing;
         private VisualElement _reason;
         private Label _reasonText;
         private BuildBarPresenter _presenter;
+        private bool _clearingWired;
 
         public event Action<int> FamilyChosen;
         public event Action<int> StructureChosen;
+        public event Action ClearingChosen;
 
         private void Awake()
         {
             _document = GetComponent<UIDocument>();
         }
 
-        /// <summary>Montre la barre, remplie par son présentateur ; appelé par le démarrage quand le monde naît.</summary>
-        public void Show(Catalog catalog, TextTable texts, PlacementTool tool, World world)
+        /// <summary>
+        /// Montre la barre, remplie par son présentateur, avec les deux outils qu'elle met en main (poser, retirer) ;
+        /// appelé par le démarrage quand la ville s'ouvre.
+        /// </summary>
+        public void Show(Catalog catalog, TextTable texts, PlacementTool placement, ClearingTool clearing, World world,
+            Tooltips tooltips)
         {
             Hide();
             VisualElement root = _document.rootVisualElement;
@@ -60,17 +59,27 @@ namespace Diciela.UI
             VisualElement bar = root.Q(BarName);
             VisualElement families = root.Q(FamiliesName);
             VisualElement structures = root.Q(StructuresName);
+            var clearingButton = root.Q<FeltButton>(ClearingName);
             VisualElement reason = root.Q(ReasonName);
             var reasonText = root.Q<Label>(ReasonTextName);
-            if (bar == null || families == null || structures == null || reason == null || reasonText == null)
+            if (bar == null || families == null || structures == null || clearingButton == null || reason == null ||
+                reasonText == null || tooltips == null)
                 throw new InvalidOperationException("La barre de construction ne trouve pas ses éléments (UXML).");
 
             _bar = bar;
             _families = families;
             _structures = structures;
+            _clearing = clearingButton;
             _reason = reason;
             _reasonText = reasonText;
-            _presenter = new BuildBarPresenter(this, catalog, texts, tool, world);
+            // Le bouton de l'outil vit dans le document : branché une seule fois, il s'adresse au présentateur du moment.
+            if (!_clearingWired)
+            {
+                _clearing.Clicked += () => ClearingChosen?.Invoke();
+                tooltips.Attach(_clearing, () => _presenter != null ? _presenter.ClearingTooltip() : ("", ""), true);
+                _clearingWired = true;
+            }
+            _presenter = new BuildBarPresenter(this, catalog, texts, placement, clearing, world);
             _bar.RemoveFromClassList(HiddenClass);
         }
 
@@ -84,6 +93,7 @@ namespace Diciela.UI
             _bar.AddToClassList(HiddenClass);
             _families.Clear();
             _structures.Clear();
+            ShowClearing(false, false);
             ShowReason("");
         }
 
@@ -98,14 +108,7 @@ namespace Diciela.UI
             for (int i = 0; i < families.Count; i++)
             {
                 int index = i;
-                FeltButton tab = Button(TabClasses, Pastels.ClassOf(families[i].Pastel),
-                    () => FamilyChosen?.Invoke(index));
-                var icon = new VisualElement { pickingMode = PickingMode.Ignore };
-                icon.AddToClassList(TabIconClass);
-                if (families[i].Icon != null)
-                    icon.style.backgroundImage = Background.FromVectorImage(families[i].Icon);
-                tab.Add(icon);
-                tab.Add(Text(families[i].Name, TabNameClass));
+                FeltButton tab = BuildBarElements.Tab(families[i], () => FamilyChosen?.Invoke(index));
                 tab.EnableInClassList(OpenClass, i == open);
                 _families.Add(tab);
             }
@@ -117,19 +120,7 @@ namespace Diciela.UI
             for (int i = 0; i < cards.Count; i++)
             {
                 int index = i;
-                FeltButton card = Button(CardClasses, Pastels.ClassOf(cards[i].Pastel) + PaleSuffix,
-                    () => StructureChosen?.Invoke(index));
-                if (cards[i].Picture != null)
-                {
-                    var picture = new VisualElement { pickingMode = PickingMode.Ignore };
-                    picture.AddToClassList(CardPictureClass);
-                    picture.style.backgroundImage = new StyleBackground(cards[i].Picture);
-                    card.Add(picture);
-                }
-                card.Add(Text(cards[i].Name, CardNameClasses));
-                if (cards[i].Cost != null && cards[i].Cost.Count > 0)
-                    card.Add(Cost(cards[i].Cost));
-                _structures.Add(card);
+                _structures.Add(BuildBarElements.Card(cards[i], () => StructureChosen?.Invoke(index)));
             }
         }
 
@@ -139,49 +130,16 @@ namespace Diciela.UI
                 _structures[i].EnableInClassList(OpenClass, i == index);
         }
 
+        public void ShowClearing(bool shown, bool held)
+        {
+            _clearing.EnableInClassList(HiddenClass, !shown);
+            _clearing.EnableInClassList(OpenClass, held);
+        }
+
         public void ShowReason(string text)
         {
             _reasonText.text = text;
             _reason.EnableInClassList(HiddenClass, string.IsNullOrEmpty(text));
-        }
-
-        /// <summary>Le coût d'une carte : chaque marchandise, son icône et combien.</summary>
-        private static VisualElement Cost(IReadOnlyList<GoodAmount> cost)
-        {
-            var row = new VisualElement { pickingMode = PickingMode.Ignore };
-            foreach (string style in CostClasses)
-                row.AddToClassList(style);
-            foreach (GoodAmount goods in cost)
-            {
-                var line = new VisualElement { pickingMode = PickingMode.Ignore };
-                line.AddToClassList(CostLineClass);
-                var icon = new VisualElement { pickingMode = PickingMode.Ignore };
-                icon.AddToClassList(CostIconClass);
-                if (goods.Good != null && goods.Good.Icon != null)
-                    icon.style.backgroundImage = Background.FromVectorImage(goods.Good.Icon);
-                line.Add(icon);
-                line.Add(Text(goods.Amount.ToString(System.Globalization.CultureInfo.InvariantCulture)));
-                row.Add(line);
-            }
-            return row;
-        }
-
-        private static FeltButton Button(string[] classes, string pastel, Action clicked)
-        {
-            var button = new FeltButton();
-            foreach (string style in classes)
-                button.AddToClassList(style);
-            button.AddToClassList(pastel);
-            button.Clicked += clicked;
-            return button;
-        }
-
-        private static Label Text(string text, params string[] classes)
-        {
-            var label = new Label(text) { pickingMode = PickingMode.Ignore };
-            foreach (string style in classes)
-                label.AddToClassList(style);
-            return label;
         }
     }
 }

@@ -11,12 +11,15 @@ namespace Diciela.Tests.PlayMode
     {
         public event Action<int> FamilyChosen;
         public event Action<int> StructureChosen;
+        public event Action ClearingChosen;
 
         public List<string> Families { get; } = new List<string>();
         public List<string> Structures { get; } = new List<string>();
         public int OpenFamily { get; private set; } = -1;
         public int Selected { get; private set; } = -1;
         public string Reason { get; private set; } = "";
+        public bool ClearingShown { get; private set; }
+        public bool ClearingHeld { get; private set; }
 
         public void Choose(int structure)
         {
@@ -26,6 +29,11 @@ namespace Diciela.Tests.PlayMode
         public void Open(int family)
         {
             FamilyChosen?.Invoke(family);
+        }
+
+        public void ClickClearing()
+        {
+            ClearingChosen?.Invoke();
         }
 
         public void ShowFamilies(IReadOnlyList<BuildBarFamily> families, int open)
@@ -46,6 +54,12 @@ namespace Diciela.Tests.PlayMode
         public void SelectStructure(int index)
         {
             Selected = index;
+        }
+
+        public void ShowClearing(bool shown, bool held)
+        {
+            ClearingShown = shown;
+            ClearingHeld = held;
         }
 
         public void ShowReason(string text)
