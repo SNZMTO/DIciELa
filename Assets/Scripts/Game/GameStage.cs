@@ -147,9 +147,12 @@ namespace Diciela.Game
             _cameraRig.Rotate(180f);
             _cameraRig.PullBack();
             _placementTool = new PlacementTool(world, _cameraRig.Camera, _placementPreview, placement);
-            _buildBar.Show(catalog, texts, _placementTool, world);
+            _clearingTool = new ClearingTool(world, _cameraRig.Camera, _natureViews);
+            _clearingTool.ActiveChanged += OnClearingToolChanged;
+            _placementTool.CurrentChanged += OnPlacementChanged;
             var document = _buildBar.GetComponent<UnityEngine.UIElements.UIDocument>();
             _tooltips = new Tooltips(document);
+            _buildBar.Show(catalog, texts, _placementTool, _clearingTool, world, _tooltips);
             _dayBoard.Show(world.Clock, texts, _tooltips);
             _stockPennants.Show(world, catalog, texts, _tooltips);
             _placeSheet.Show(world, texts);
@@ -159,9 +162,6 @@ namespace Diciela.Game
             _placementControls.Bind(_placementTool, hud);
             _chooseTool = new ChooseTool(world, _cameraRig.Camera, _structureViews);
             _chooseTool.Touched += _placeSheet.Touch;
-            _clearingTool = new ClearingTool(world, _cameraRig.Camera, _natureViews);
-            _clearingTool.ActiveChanged += OnClearingToolChanged;
-            _placementTool.CurrentChanged += OnPlacementChanged;
             _selectionFrame = new SelectionFrame(document);
             _clearingControls.Bind(_clearingTool, _selectionFrame, hud);
             _chooseControls.Bind(_chooseTool, new IHeldTool[] { _placementTool, _clearingTool }, hud);
