@@ -47,6 +47,7 @@ namespace Diciela.Game
         private PlacementTool _placementTool;
         private ChooseTool _chooseTool;
         private ClearingTool _clearingTool;
+        private Hand _hand;
         private SelectionFrame _selectionFrame;
         private Texture2D _portrait;
         private Tooltips _tooltips;
@@ -100,8 +101,8 @@ namespace Diciela.Game
             _clearingControls.Bind(null, null, null);
             _toolControls.Bind(null);
             _escapeControls.Bind();
-            if (_clearingTool != null)
-                _clearingTool.ActiveChanged -= OnClearingToolChanged;
+            _hand?.Dispose();
+            _hand = null;
             _clearingTool = null;
             _selectionFrame?.Dispose();
             _selectionFrame = null;
@@ -125,7 +126,6 @@ namespace Diciela.Game
             _portrait = null;
             if (_placementTool != null)
             {
-                _placementTool.CurrentChanged -= OnPlacementChanged;
                 _placementTool.Cancel();
                 _placementTool.Dispose();
             }
@@ -152,8 +152,7 @@ namespace Diciela.Game
             _cameraRig.PullBack();
             _placementTool = new PlacementTool(world, _cameraRig.Camera, _placementPreview, placement);
             _clearingTool = new ClearingTool(world, _cameraRig.Camera, _natureViews);
-            _clearingTool.ActiveChanged += OnClearingToolChanged;
-            _placementTool.CurrentChanged += OnPlacementChanged;
+            _hand = new Hand(_placementTool, _clearingTool);
             var document = _buildBar.GetComponent<UnityEngine.UIElements.UIDocument>();
             _tooltips = new Tooltips(document);
             _buildBar.Show(catalog, texts, _placementTool, world);
@@ -169,22 +168,9 @@ namespace Diciela.Game
             _chooseTool.Touched += _placeSheet.Touch;
             _selectionFrame = new SelectionFrame(document);
             _clearingControls.Bind(_clearingTool, _selectionFrame, hud);
-            _chooseControls.Bind(_chooseTool, new IHeldTool[] { _placementTool, _clearingTool }, hud);
+            _chooseControls.Bind(_chooseTool, _hand, hud);
             _toolControls.Bind(_toolWheel);
             _escapeControls.Bind(_placeSheet, _toolWheel, _buildBar, _placementTool, _clearingTool);
-        }
-
-        // Un seul outil en main : prendre l'outil « Retirer » lâche la carte, prendre une carte lâche l'outil.
-        private void OnClearingToolChanged()
-        {
-            if (_clearingTool.IsActive)
-                _placementTool.Cancel();
-        }
-
-        private void OnPlacementChanged()
-        {
-            if (_placementTool.IsActive)
-                _clearingTool.Escape();
         }
     }
 }

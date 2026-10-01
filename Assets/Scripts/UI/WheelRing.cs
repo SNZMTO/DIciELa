@@ -9,10 +9,11 @@ namespace Diciela.UI
     /// L'anneau de la roue des outils (décision 168) : son plateau et les outils autour d'un centre, à la place que leur
     /// donne la feuille de style, et le fond plein écran qui prend le pointeur tant que l'anneau est ouvert. Il s'ouvre en
     /// un point du panneau, ramené pour tenir dans l'écran, à la marge des blocs du HUD ; touche tenue, on y vise par la
-    /// direction du pointeur, au clic par le survol ; un appui sur le fond le congédie. Fermé, il reste en page, invisible
-    /// et sans prise : il se mesure avant de s'ouvrir.
+    /// direction du pointeur, au clic par le survol, et on clique un outil ; un appui sur le fond le congédie. Fermé, il
+    /// reste en page, invisible et sans prise : il se mesure avant de s'ouvrir. Il se branche sur ses éléments à sa
+    /// naissance et s'en débranche quand on le libère (Dispose).
     /// </summary>
-    internal sealed class WheelRing
+    internal sealed class WheelRing : IDisposable
     {
         private const string ClosedClass = "roue-fermee";
         private const string AimedClass = "vise";
@@ -24,6 +25,10 @@ namespace Diciela.UI
         private readonly VisualElement _plate;
         private readonly FeltButton[] _tools;
         private readonly List<Vector2> _toolCenters = new List<Vector2>();
+        private readonly EventCallback<PointerDownEvent> _onBackground;
+        private readonly EventCallback<PointerEnterEvent>[] _onEnter;
+        private readonly EventCallback<PointerLeaveEvent>[] _onLeave;
+        private readonly Action[] _onClicked;
         private Vector2 _centerPoint;
 
         public WheelRing(VisualElement wheel, VisualElement center, VisualElement plate, FeltButton[] tools)
@@ -32,16 +37,24 @@ namespace Diciela.UI
             _center = center;
             _plate = plate;
             _tools = tools;
-            _wheel.RegisterCallback<PointerDownEvent>(e =>
+            _onBackground = e =>
             {
                 if (e.target == _wheel)
                     Dismissed?.Invoke();
-            });
+            };
+            _wheel.RegisterCallback(_onBackground);
+            _onEnter = new EventCallback<PointerEnterEvent>[_tools.Length];
+            _onLeave = new EventCallback<PointerLeaveEvent>[_tools.Length];
+            _onClicked = new Action[_tools.Length];
             for (int i = 0; i < _tools.Length; i++)
             {
                 int tool = i;
-                _tools[i].RegisterCallback<PointerEnterEvent>(_ => AimByHover(tool));
-                _tools[i].RegisterCallback<PointerLeaveEvent>(_ => AimByHover(-1));
+                _onEnter[i] = _ => AimByHover(tool);
+                _onLeave[i] = _ => AimByHover(-1);
+                _onClicked[i] = () => Picked?.Invoke(tool);
+                _tools[i].RegisterCallback(_onEnter[i]);
+                _tools[i].RegisterCallback(_onLeave[i]);
+                _tools[i].Clicked += _onClicked[i];
             }
         }
 
@@ -50,6 +63,9 @@ namespace Diciela.UI
 
         /// <summary>Levé quand on appuie sur le fond, à côté des outils.</summary>
         public event Action Dismissed;
+
+        /// <summary>Levé quand on clique un outil : son rang.</summary>
+        public event Action<int> Picked;
 
         public bool IsOpen { get; private set; }
 
@@ -79,6 +95,19 @@ namespace Diciela.UI
             _wheel.AddToClassList(ClosedClass);
             SetPickable(false);
             Aim(-1);
+        }
+
+        /// <summary>Ferme l'anneau et le débranche de ses éléments.</summary>
+        public void Dispose()
+        {
+            Close();
+            _wheel.UnregisterCallback(_onBackground);
+            for (int i = 0; i < _tools.Length; i++)
+            {
+                _tools[i].UnregisterCallback(_onEnter[i]);
+                _tools[i].UnregisterCallback(_onLeave[i]);
+                _tools[i].Clicked -= _onClicked[i];
+            }
         }
 
         /// <summary>Le rang de l'outil qu'on vise depuis le centre vers ce point du panneau ; -1 près du centre.</summary>

@@ -1,0 +1,78 @@
+using System.Collections.Generic;
+
+namespace Diciela.EditorTools
+{
+    /// <summary>
+    /// Les icônes du travail, à l'encre sur 20 unités : les tâches d'un poste (porter, bâtir, défricher) et l'icône des
+    /// outils, qui croise le marteau de « bâtir », retourné, avec la hache de « défricher ». Chaque outil n'est dessiné
+    /// qu'une fois. La hache et les outils sont des remplaçants simples : la maquette n'en a pas. Le menu des images de
+    /// l'interface les génère avec les autres (InterfaceIcons).
+    /// </summary>
+    internal static class WorkIcons
+    {
+        private const float Size = 20f;
+        private const string Ink = "encre";
+        private const string Light = "#FBF3E4";
+
+        public static IEnumerable<InterfaceIcons.Icon> All()
+        {
+            yield return new InterfaceIcons.Icon("porter", Size, new[]
+            {
+                F(Ink, 2f, 6f, 6f, 2f, 18f, 2f, 18f, 14f, 14f, 18f, 2f, 18f),
+                Faded(0.55f, 3f, 7f, 13f, 7f, 13f, 8f, 3f, 8f),
+                Faded(0.4f, 13f, 7f, 17f, 3f, 17f, 4f, 14f, 7f, 14f, 17f, 13f, 17f)
+            });
+            yield return new InterfaceIcons.Icon("batir", Size, Hammer());
+            yield return new InterfaceIcons.Icon("defricher", Size, Axe());
+            var tools = new List<InterfaceIcons.Face>(Mirrored(Hammer()));
+            tools.AddRange(Axe());
+            yield return new InterfaceIcons.Icon("outils", Size, tools.ToArray());
+        }
+
+        // Le marteau, la tête en haut à droite.
+        private static InterfaceIcons.Face[] Hammer()
+        {
+            return new[]
+            {
+                F(Ink, 13f, 9f, 11f, 7f, 2f, 16f, 4f, 18f), F(Ink, 11f, 2f, 18f, 9f, 15f, 12f, 8f, 5f),
+                Faded(0.45f, 11f, 3f, 16f, 8f, 15f, 9f, 10f, 4f)
+            };
+        }
+
+        // La hache, au manche aussi épais que celui du marteau.
+        private static InterfaceIcons.Face[] Axe()
+        {
+            return new[]
+            {
+                F(Ink, 2.5f, 16.5f, 11.6f, 7.4f, 13.6f, 9.4f, 4.5f, 18.5f),
+                F(Ink, 9.4f, 3.6f, 12.9f, 1.3f, 18.6f, 6.5f, 17.5f, 11.7f, 14f, 10f, 12.3f, 7.1f),
+                Faded(0.45f, 14f, 3.1f, 17.5f, 6.5f, 16.6f, 9.4f, 15.2f, 5.4f)
+            };
+        }
+
+        // Ces faces retournées de gauche à droite.
+        private static InterfaceIcons.Face[] Mirrored(InterfaceIcons.Face[] faces)
+        {
+            var mirrored = new InterfaceIcons.Face[faces.Length];
+            for (int i = 0; i < faces.Length; i++)
+            {
+                var points = (float[])faces[i].Points.Clone();
+                for (int p = 0; p < points.Length; p += 2)
+                    points[p] = Size - points[p];
+                mirrored[i] = new InterfaceIcons.Face(faces[i].Color, faces[i].Opacity, points);
+            }
+            return mirrored;
+        }
+
+        private static InterfaceIcons.Face F(string color, params float[] points)
+        {
+            return new InterfaceIcons.Face(color, 1f, points);
+        }
+
+        // Un reflet clair, à demi transparent.
+        private static InterfaceIcons.Face Faded(float opacity, params float[] points)
+        {
+            return new InterfaceIcons.Face(Light, opacity, points);
+        }
+    }
+}

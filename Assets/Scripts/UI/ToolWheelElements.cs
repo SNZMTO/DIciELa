@@ -6,12 +6,11 @@ namespace Diciela.UI
     /// <summary>
     /// Les éléments de la roue des outils dans Hud.uxml, trouvés par leur nom : l'icône des outils et sa touche, le fond
     /// plein écran, le centre, le plateau, la bulle et ses deux lignes, et les outils au rang de leur choix
-    /// (ToolChoice), chacun avec sa touche.
+    /// (ToolChoice), chacun avec sa touche, nommés par la table des outils (WheelTool).
     /// </summary>
     internal sealed class ToolWheelElements
     {
         private const string KeySuffix = "-touche";
-        private static readonly string[] ToolNames = { "roue-construire", "roue-retirer" };
 
         private ToolWheelElements(VisualElement root)
         {
@@ -23,12 +22,12 @@ namespace Diciela.UI
             Bubble = root.Q("roue-bulle");
             Label = root.Q<Label>("roue-nom");
             Detail = root.Q<Label>("roue-suite");
-            Tools = new FeltButton[ToolNames.Length];
-            ToolKeys = new Label[ToolNames.Length];
-            for (int i = 0; i < ToolNames.Length; i++)
+            Tools = new FeltButton[WheelTool.All.Count];
+            ToolKeys = new Label[Tools.Length];
+            for (int i = 0; i < Tools.Length; i++)
             {
-                Tools[i] = root.Q<FeltButton>(ToolNames[i]);
-                ToolKeys[i] = root.Q<Label>(ToolNames[i] + KeySuffix);
+                Tools[i] = root.Q<FeltButton>(WheelTool.All[i].ElementName);
+                ToolKeys[i] = root.Q<Label>(WheelTool.All[i].ElementName + KeySuffix);
             }
         }
 

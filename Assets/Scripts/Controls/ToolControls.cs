@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -5,17 +6,16 @@ namespace Diciela.Controls
 {
     /// <summary>
     /// Les gestes des outils (GDD, section 16 ; décision 168) : tenir la touche de la roue l'ouvre autour du pointeur et
-    /// la fait suivre où il vise, image après image ; la relâcher choisit. La touche d'un outil le choisit tout droit. Les
-    /// touches se lisent sur l'asset d'actions, d'où la roue tire aussi leurs noms. Il lit les actions et parle à la roue,
-    /// rien d'autre ; il passe après la caméra (ordre 100), comme les autres gestes.
+    /// la fait suivre où il vise, image après image ; la relâcher choisit. La touche d'un outil le choisit tout droit :
+    /// chacun a la sienne, dans la table des outils (ToolAction). Les touches se lisent sur l'asset d'actions, d'où la
+    /// roue tire aussi leurs noms. Il lit les actions et parle à la roue, rien d'autre ; il passe après la caméra
+    /// (ordre 100), comme les autres gestes.
     /// </summary>
     [DefaultExecutionOrder(100)]
     public sealed class ToolControls : MonoBehaviour, IToolKeys
     {
         public const string MapName = "Tools";
         public const string WheelAction = "Wheel";
-        public const string BuildAction = "Build";
-        public const string ClearAction = "Clear";
         public const string PointerAction = "Pointer";
 
         [Tooltip("L'asset d'actions du jeu (Assets/Input).")]
@@ -24,9 +24,9 @@ namespace Diciela.Controls
         private IToolWheel _wheel;
         private InputActionMap _map;
         private InputAction _wheelKey;
-        private InputAction _build;
-        private InputAction _clear;
         private InputAction _pointer;
+        private InputAction[] _tools;
+        private Action<InputAction.CallbackContext>[] _chosen;
         private bool _held;
 
         /// <summary>Relie les gestes à la roue de la ville qui vient de s'ouvrir ; null les rend muets.</summary>
@@ -40,7 +40,7 @@ namespace Diciela.Controls
 
         public string KeyOf(ToolChoice choice)
         {
-            return Key(choice == ToolChoice.Build ? BuildAction : ClearAction);
+            return Key(ToolAction.Of(choice).Name);
         }
 
         private void OnEnable()
@@ -54,14 +54,19 @@ namespace Diciela.Controls
 
             _map = _actions.FindActionMap(MapName, true);
             _wheelKey = _map.FindAction(WheelAction, true);
-            _build = _map.FindAction(BuildAction, true);
-            _clear = _map.FindAction(ClearAction, true);
             _pointer = _map.FindAction(PointerAction, true);
             // Un bouton lève « performed » à l'appui et « canceled » au relâchement.
             _wheelKey.performed += OnWheelPressed;
             _wheelKey.canceled += OnWheelReleased;
-            _build.performed += OnBuild;
-            _clear.performed += OnClear;
+            _tools = new InputAction[ToolAction.All.Count];
+            _chosen = new Action<InputAction.CallbackContext>[_tools.Length];
+            for (int i = 0; i < _tools.Length; i++)
+            {
+                ToolChoice choice = ToolAction.All[i].Choice;
+                _tools[i] = _map.FindAction(ToolAction.All[i].Name, true);
+                _chosen[i] = _ => _wheel?.Choose(choice);
+                _tools[i].performed += _chosen[i];
+            }
             _map.Enable();
         }
 
@@ -71,8 +76,8 @@ namespace Diciela.Controls
                 return;
             _wheelKey.performed -= OnWheelPressed;
             _wheelKey.canceled -= OnWheelReleased;
-            _build.performed -= OnBuild;
-            _clear.performed -= OnClear;
+            for (int i = 0; i < _tools.Length; i++)
+                _tools[i].performed -= _chosen[i];
             _map.Disable();
             _map = null;
             _held = false;
@@ -98,16 +103,6 @@ namespace Diciela.Controls
                 return;
             _held = false;
             _wheel?.ReleaseAt(_pointer.ReadValue<Vector2>());
-        }
-
-        private void OnBuild(InputAction.CallbackContext context)
-        {
-            _wheel?.Choose(ToolChoice.Build);
-        }
-
-        private void OnClear(InputAction.CallbackContext context)
-        {
-            _wheel?.Choose(ToolChoice.Clear);
         }
 
         // Le nom d'une touche telle que le joueur la lit (« Tab », « B ») ; vide si l'action manque.

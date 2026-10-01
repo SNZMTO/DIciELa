@@ -8,13 +8,12 @@ namespace Diciela.UI
     /// Les infobulles du HUD (GDD, section 16 ; décision 153) : une seule bulle de lin au liseré de paille, qui se montre
     /// sous ou au-dessus de l'élément survolé, centrée sur lui sauf près d'un bord, où elle reste dans l'écran, et dit ce
     /// que son présentateur lui fait dire au moment du survol (un titre, et une suite en plus doux). Elle ne capte pas le
-    /// pointeur.
+    /// pointeur. Une vue qui se débranche retire les infobulles qu'elle a données.
     /// </summary>
     public sealed class Tooltips
     {
         // L'écart entre l'élément survolé et la bulle, en pixels du panneau.
         private const float Gap = 10f;
-        private const string HiddenClass = "bloc-cache";
         private const string BubbleName = "infobulle";
         private const string TitleName = "infobulle-titre";
         private const string DetailName = "infobulle-suite";
@@ -40,26 +39,30 @@ namespace Diciela.UI
 
         /// <summary>
         /// Donne une infobulle à cet élément : au survol, la bulle dit ce que rend <paramref name="text"/> (un titre, et
-        /// une suite, vide si rien), sous lui, ou au-dessus s'il est en bas de l'écran.
+        /// une suite, vide si rien), sous lui, ou au-dessus s'il est en bas de l'écran. Rend de quoi la lui retirer
+        /// (Dispose) ; un élément qu'on jette emporte la sienne.
         /// </summary>
-        public void Attach(VisualElement target, Func<(string Title, string Detail)> text, bool above = false)
+        public IDisposable Attach(VisualElement target, Func<(string Title, string Detail)> text, bool above = false)
         {
             if (target == null)
                 throw new ArgumentNullException(nameof(target));
-            target.RegisterCallback<PointerEnterEvent>(_ => Show(target, text(), above));
-            target.RegisterCallback<PointerLeaveEvent>(_ => Hide());
+            EventCallback<PointerEnterEvent> enter = _ => Show(target, text(), above);
+            EventCallback<PointerLeaveEvent> leave = _ => Hide();
+            target.RegisterCallback(enter);
+            target.RegisterCallback(leave);
+            return new Attachment(target, enter, leave);
         }
 
         public void Hide()
         {
-            _bubble.AddToClassList(HiddenClass);
+            _bubble.AddToClassList(StyleClasses.Hidden);
         }
 
         private void Show(VisualElement target, (string Title, string Detail) text, bool above)
         {
             _title.text = text.Title;
             _detail.text = text.Detail;
-            _detail.EnableInClassList(HiddenClass, string.IsNullOrEmpty(text.Detail));
+            _detail.EnableInClassList(StyleClasses.Hidden, string.IsNullOrEmpty(text.Detail));
             Rect bound = target.worldBound;
             VisualElement parent = _bubble.parent;
             Vector2 anchor = parent.WorldToLocal(new Vector2(bound.center.x, above ? bound.yMin - Gap : bound.yMax + Gap));
@@ -70,7 +73,32 @@ namespace Diciela.UI
             _bubble.style.left = anchor.x;
             _bubble.style.top = anchor.y;
             _bubble.style.translate = new Translate(Length.Percent(-50f), Length.Percent(above ? -100f : 0f));
-            _bubble.RemoveFromClassList(HiddenClass);
+            _bubble.RemoveFromClassList(StyleClasses.Hidden);
+        }
+
+        /// <summary>Une infobulle donnée à un élément : la défaire lui retire ses deux rappels.</summary>
+        private sealed class Attachment : IDisposable
+        {
+            private readonly EventCallback<PointerEnterEvent> _enter;
+            private readonly EventCallback<PointerLeaveEvent> _leave;
+            private VisualElement _target;
+
+            public Attachment(VisualElement target, EventCallback<PointerEnterEvent> enter,
+                EventCallback<PointerLeaveEvent> leave)
+            {
+                _target = target;
+                _enter = enter;
+                _leave = leave;
+            }
+
+            public void Dispose()
+            {
+                if (_target == null)
+                    return;
+                _target.UnregisterCallback(_enter);
+                _target.UnregisterCallback(_leave);
+                _target = null;
+            }
         }
     }
 }

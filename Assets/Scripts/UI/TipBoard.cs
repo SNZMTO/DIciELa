@@ -17,7 +17,6 @@ namespace Diciela.UI
         private const string TipName = "astuce";
         private const string PortraitName = "astuce-portrait";
         private const string TextName = "astuce-texte";
-        private const string HiddenClass = "bloc-cache";
 
         private UIDocument _document;
         private VisualElement _tip;
@@ -70,7 +69,7 @@ namespace Diciela.UI
         public void ShowTip(string text)
         {
             _text.text = text;
-            _tip.EnableInClassList(HiddenClass, string.IsNullOrEmpty(text));
+            _tip.EnableInClassList(StyleClasses.Hidden, string.IsNullOrEmpty(text));
         }
     }
 }

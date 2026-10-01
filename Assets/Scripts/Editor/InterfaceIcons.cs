@@ -45,7 +45,6 @@ namespace Diciela.EditorTools
         }
 
         private static Face F(string color, params float[] points) => new Face(color, 1f, points);
-        private static Face Faded(string color, float opacity, params float[] points) => new Face(color, opacity, points);
 
         public static IEnumerable<Icon> All()
         {
@@ -76,35 +75,8 @@ namespace Diciela.EditorTools
                 F("#E59AB0", 11f, 14f, 20f, 14f, 20f, 17f, 11f, 17f), F("#EAD6B7", 7f, 15f, 11f, 15f, 11f, 17f, 7f, 17f)
             });
             yield return Sun();
-            yield return new Icon("porter", 20f, new[]
-            {
-                F("encre", 2f, 6f, 6f, 2f, 18f, 2f, 18f, 14f, 14f, 18f, 2f, 18f),
-                Faded("#FBF3E4", 0.55f, 3f, 7f, 13f, 7f, 13f, 8f, 3f, 8f),
-                Faded("#FBF3E4", 0.4f, 13f, 7f, 17f, 3f, 17f, 4f, 14f, 7f, 14f, 17f, 13f, 17f)
-            });
-            yield return new Icon("batir", 20f, new[]
-            {
-                F("encre", 13f, 9f, 11f, 7f, 2f, 16f, 4f, 18f), F("encre", 11f, 2f, 18f, 9f, 15f, 12f, 8f, 5f),
-                Faded("#FBF3E4", 0.45f, 11f, 3f, 16f, 8f, 15f, 9f, 10f, 4f)
-            });
-            // Une hache à l'encre, au manche aussi épais que celui du marteau, pour la tâche « défricher » et l'outil
-            // « Retirer » de la roue : remplaçant simple, la maquette n'en a pas.
-            yield return new Icon("defricher", 20f, new[]
-            {
-                F("encre", 2.5f, 16.5f, 11.6f, 7.4f, 13.6f, 9.4f, 4.5f, 18.5f),
-                F("encre", 9.4f, 3.6f, 12.9f, 1.3f, 18.6f, 6.5f, 17.5f, 11.7f, 14f, 10f, 12.3f, 7.1f),
-                Faded("#FBF3E4", 0.45f, 14f, 3.1f, 17.5f, 6.5f, 16.6f, 9.4f, 15.2f, 5.4f)
-            });
-            // Les outils : le marteau de « bâtir », retourné, croisé avec la hache ; remplaçant simple, la maquette n'en a
-            // pas.
-            yield return new Icon("outils", 20f, new[]
-            {
-                F("encre", 7f, 9f, 9f, 7f, 18f, 16f, 16f, 18f), F("encre", 9f, 2f, 2f, 9f, 5f, 12f, 12f, 5f),
-                Faded("#FBF3E4", 0.45f, 9f, 3f, 4f, 8f, 5f, 9f, 10f, 4f),
-                F("encre", 2.5f, 16.5f, 11.6f, 7.4f, 13.6f, 9.4f, 4.5f, 18.5f),
-                F("encre", 9.4f, 3.6f, 12.9f, 1.3f, 18.6f, 6.5f, 17.5f, 11.7f, 14f, 10f, 12.3f, 7.1f),
-                Faded("#FBF3E4", 0.45f, 14f, 3.1f, 17.5f, 6.5f, 16.6f, 9.4f, 15.2f, 5.4f)
-            });
+            foreach (Icon work in WorkIcons.All())
+                yield return work;
             foreach (Icon row in CreationRowIcons.All())
                 yield return row;
             // Les flèches d'un choix : deux chevrons à l'encre.
