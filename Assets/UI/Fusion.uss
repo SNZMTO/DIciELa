@@ -127,6 +127,16 @@
     --creux-lumiere: rgba(255, 251, 242, 0.7);
 }
 
+/* Le plateau de la roue des outils : un octogone de bois bordé de bois sombre, qui porte les outils et la bulle. */
+.plateau {
+    --face: #A96F3F;
+    --lisere: #6F4320;
+    --lisere-largeur: 3;
+    --pan: 107;
+    --ombre: rgba(58, 30, 14, 0.35);
+    --ombre-y: 5;
+}
+
 /* La bulle d'une infobulle : du lin dans un liseré de paille. */
 .bulle {
     --face: #FBF3E4;

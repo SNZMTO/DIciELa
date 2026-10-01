@@ -15,6 +15,20 @@
 
 ## Les captures
 
+### 01/10/2026 — étape 20b : la roue des outils
+
+Le HUD s'aère : au repos, en bas, il ne reste que l'icône des outils, au coin droit, la touche de la roue (Tab) sur une
+étiquette. Tab tenu ouvre la roue autour du pointeur, un plateau de bois à huit côtés : Construire en haut (B), Retirer
+en bas (X) ; la bulle du milieu nomme l'outil visé, qui grossit, et un outil actif reste enfoncé. Construire ouvre le
+panneau des cartes, fermé au repos, la carte centrée sur son onglet. Ce qu'une capture ne montre pas : on choisit en
+relâchant Tab, dans la direction du pointeur.
+
+![Le HUD au repos](Album/2026-10-01_etape-20b_hud-au-repos.jpg)
+
+![La roue des outils](Album/2026-10-01_etape-20b_roue-des-outils.jpg)
+
+![Le panneau Construire](Album/2026-10-01_etape-20b_panneau-construire.jpg)
+
 ### 01/10/2026 — étape 19 : le chantier qui monte
 
 Pendant qu'on la bâtit, la cabane monte : sa vraie matière, le bois et la pierre du pack, sous une ligne qui suit le

@@ -502,6 +502,9 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   (`pickingMode` à `Ignore` sur lui et ses enfants). `worldBound` compte `translate`, que le feutre anime en
   s'enfonçant : une place se vérifie sur `layout`. Et un élément qui s'anime par `translate` se centre par ses marges,
   jamais par `translate: -50% -50%`, que son survol écraserait.
+- **Une feuille de style qui nomme une icône pas encore générée** garde une référence vide (« Invalid asset path » dans le
+  journal) et affiche le triangle jaune d'Unity, même une fois l'icône créée : générer l'icône d'abord, ou réimporter la
+  feuille (`set_selection --paths '["…uss"]'`, puis le menu `Assets/Reimport`).
 - **UI Toolkit en Unity 6.6** (essai de l'étape 14) : une police `.ttf` se donne telle quelle
   (`-unity-font-definition: url("….ttf")`) et reste nette à toute taille ; chaque graisse est un fichier, et le style
   reste `normal`, sinon Unity épaissit par-dessus. `-unity-slice-scale` règle aussi le pas de la répétition

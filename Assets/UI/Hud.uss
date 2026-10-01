@@ -352,7 +352,8 @@
 }
 
 /* La roue des outils : un fond plein écran qui prend le pointeur tant qu'elle est ouverte ; autour du point où elle
-   s'ouvre, chaque outil à sa place fixe (Construire en haut, Retirer en bas), la bulle de l'outil visé au milieu.
+   s'ouvre, un plateau octogonal (huit côtés, huit places d'outils), chaque outil à sa place fixe (Construire en haut,
+   Retirer en bas), la bulle de l'outil visé au milieu ; l'outil visé grossit.
    Fermée, elle reste en page, invisible : elle se mesure avant de s'ouvrir, pour tenir dans l'écran. Les outils se
    placent par leurs marges, pas par translate, que le feutre garde pour se soulever. */
 .roue {
@@ -361,6 +362,7 @@
     top: 0;
     right: 0;
     bottom: 0;
+    --marge: 24;
 }
 
 .roue-fermee {
@@ -373,6 +375,14 @@
     height: 0;
 }
 
+.roue-plateau {
+    position: absolute;
+    width: 364px;
+    height: 364px;
+    margin-left: -182px;
+    margin-top: -182px;
+}
+
 .roue-outil {
     position: absolute;
     width: 76px;
@@ -382,6 +392,10 @@
     padding-bottom: 3px;
     align-items: center;
     justify-content: center;
+}
+
+.roue-outil.vise {
+    scale: 1.15 1.15;
 }
 
 .roue-haut {
@@ -399,8 +413,10 @@
     height: 46px;
 }
 
+/* Le marteau penche à gauche, la hache à droite : deux silhouettes qu'on ne confond pas. */
 .marteau {
     background-image: url("Icones/batir.asset");
+    scale: -1 1;
 }
 
 .hache {

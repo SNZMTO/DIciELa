@@ -172,7 +172,7 @@ namespace Diciela.Tests.PlayMode
         private static void CheckWheel(VisualElement root, Vector2Int screen, List<string> faults)
         {
             Rect room = root.panel.visualTree.layout;
-            foreach (string name in new[] { "roue-construire", "roue-retirer" })
+            foreach (string name in new[] { "roue-plateau", "roue-construire", "roue-retirer" })
             {
                 Rect tool = root.Q(name).worldBound;
                 if (tool.xMin < 0f || tool.yMin < 0f || tool.xMax > room.width || tool.yMax > room.height)
