@@ -5,11 +5,25 @@ namespace Diciela.EditorTools
 {
     /// <summary>
     /// Ce qu'on lit dans un modèle du pack pour le préparer (SAVOIR, 2.9) : ses pièces vues de près, celles de sa
-    /// porte, la boîte exacte d'un groupe de pièces, et le côté où s'ouvre la porte.
+    /// porte, la boîte exacte d'un groupe de pièces, le côté où s'ouvre la porte, et le repère de sa couche.
     /// </summary>
     internal static class SourceModelParts
     {
         private const string DoorMark = "door";
+
+        /// <summary>Le nom du repère de la couche : un objet vide posé aux pieds de qui dort, son avant vers la tête.</summary>
+        public const string BedName = "Couche";
+
+        /// <summary>Le repère de la couche de ce modèle ; null s'il n'en a pas.</summary>
+        public static Transform Bed(GameObject root)
+        {
+            foreach (Transform part in root.GetComponentsInChildren<Transform>(true))
+            {
+                if (part.name == BedName)
+                    return part;
+            }
+            return null;
+        }
 
         /// <summary>
         /// Les pièces dessinées du modèle, vues de près : chaque maillage d'un objet actif au rendu allumé, sauf ceux des

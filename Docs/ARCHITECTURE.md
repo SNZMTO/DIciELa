@@ -336,7 +336,10 @@ code.
 - **La vue** écoute les événements et ne photographie jamais : elle se construit à partir de l'état au chargement,
   puis suit les événements, par la même routine de pose (SAVOIR 2.9). Chaque abonnement est défait dans `OnDestroy`.
   Ce qui bouge se lit à chaque image : le démarrage donne aux habitants vus la fraction du pas en cours, et chacun se
-  montre entre sa position du pas d'avant et celle du dernier (SAVOIR 2.2).
+  montre entre sa position du pas d'avant et celle du dernier (SAVOIR 2.2). Endormie, la Chimère reste pour la
+  simulation devant la porte de son logis ; la vue la montre couchée sur sa couche, si la fiche du logis en a une (le
+  campement), sinon elle la cache (elle est entrée). Un point du modèle posé se calcule par la même routine de pose
+  (`ModelPose`).
 - **La caméra de gestion** : la vue la tient (`CameraRig` : un point visé sur la carte, qui suit le relief de la
   simulation, et une distance qui règle l'inclinaison ; `CameraAtmosphere` : les ombres et le brouillard qui suivent
   le zoom, sur une copie en mémoire des réglages du rendu, rendue à la sortie) ; les gestes la commandent

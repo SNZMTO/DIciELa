@@ -71,7 +71,7 @@ namespace Diciela.Game
             Action started)
         {
             _structureViews.Show(world.Structures, world.ConstructionSites, world.Map.Relief);
-            _villagerViews.Show(world.Villagers, world.Map.Relief);
+            _villagerViews.Show(world.Villagers, world.Structures, world.Map.Relief);
             _natureViews.Show(world.Nature, map.Terrain, map.NatureInstances, world.Map.Relief);
             _atelier.Show();
             _appearancePreview.Stand(_atelier.Spot);

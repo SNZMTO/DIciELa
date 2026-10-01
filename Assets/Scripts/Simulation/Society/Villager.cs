@@ -91,7 +91,7 @@ namespace Diciela.Simulation.Society
         /// <summary>Vrai pendant qu'il marche vers son lit.</summary>
         public bool IsGoingToBed => _bedtime.IsGoing;
 
-        /// <summary>Vrai quand il dort, couché dans son logis : on ne le voit plus.</summary>
+        /// <summary>Vrai quand il dort, couché dans son logis, devant sa porte pour la simulation.</summary>
         public bool IsAsleep => _bedtime.IsAsleep;
 
         /// <summary>
