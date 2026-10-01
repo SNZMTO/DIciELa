@@ -48,7 +48,7 @@ Shader "Diciela/ChantierFantome"
             #pragma target 2.0
             #pragma vertex ChantierGhostVertex
             #pragma fragment ChantierGhostFragment
-            #pragma shader_feature_local_fragment _ALPHATEST_ON
+            #pragma multi_compile_local_fragment _ _ALPHATEST_ON
             #pragma multi_compile_instancing
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"

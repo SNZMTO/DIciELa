@@ -24,6 +24,12 @@ namespace Diciela.Tests.PlayMode
         private int _created;
         private int _placed;
 
+        [UnityTearDown]
+        public IEnumerator LeaveTheTestScene()
+        {
+            yield return TestOpening.Leave(MaxFrames);
+        }
+
         private void Count(string message, string stackTrace, LogType type)
         {
             if (message.StartsWith("DICIELA : monde créé"))
@@ -74,9 +80,7 @@ namespace Diciela.Tests.PlayMode
                     Assert.AreEqual(1, FindIn<StructureViews>(ScenePaths.GameTest).transform.childCount);
                     Assert.AreEqual(heightsBefore, Heights(terrain), "Le Terrain de la carte n'est jamais modifié.");
 
-                    yield return SceneManager.UnloadSceneAsync(ScenePaths.GameTest);
-                    for (int frame = 0; frame < MaxFrames && SceneManager.GetSceneByPath(ScenePaths.MapTest).isLoaded; frame++)
-                        yield return null;
+                    yield return TestOpening.Leave(MaxFrames);
                 }
             }
             finally

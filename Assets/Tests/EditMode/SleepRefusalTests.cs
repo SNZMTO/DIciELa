@@ -9,7 +9,7 @@ namespace Diciela.Tests.EditMode
     /// Les ordres « dormir » et « réveiller » refusés (GDD, section 6 ; décision 96), sur le banc de TestBedroom : sans
     /// logis bâti, déjà couchée ou en chemin, debout, sans Chimère, ou sa porte hors d'atteinte (fermée par des blocs, ou
     /// elle encore sur un fantôme posé sur elle). Refusés, ils le disent et ne changent rien. En chemin, si sa porte est
-    /// fermée, elle renonce.
+    /// fermée, elle renonce, et le dit comme un réveil : la fiche de son logis repropose de la coucher.
     /// </summary>
     public sealed class SleepRefusalTests
     {
@@ -129,6 +129,8 @@ namespace Diciela.Tests.EditMode
         {
             World world = WorldWithCamp();
             Villager chimera = world.Villagers.Chimera;
+            var wokeUp = new List<Villager>();
+            world.Villagers.VillagerWokeUp += wokeUp.Add;
 
             world.Submit(new SendChimeraToBedCommand());
             for (int step = 0; step < 3; step++)
@@ -137,13 +139,18 @@ namespace Diciela.Tests.EditMode
             world.Step();
             Assert.AreEqual(4, world.Structures.All.Count, "Les trois blocs sont posés.");
 
-            TestGrids.StepUntil(world, () => !chimera.IsGoingToBed, 600, "son renoncement");
+            TestGrids.StepUntil(world, () =>
+            {
+                Assert.AreEqual(chimera.IsGoingToBed ? 0 : 1, wokeUp.Count, "Son renoncement est dit à la fin du pas même.");
+                return !chimera.IsGoingToBed;
+            }, 600, "son renoncement");
             for (int step = 0; step < 2000; step++)
             {
                 world.Step();
                 Assert.IsFalse(chimera.IsAsleep, "Sa porte est fermée : elle ne dort pas.");
                 Assert.IsTrue(world.Grid.IsWalkable(world.Grid.CellOf(chimera.Position)));
             }
+            Assert.AreEqual(new[] { chimera }, wokeUp, "Dit une seule fois.");
         }
     }
 }

@@ -189,6 +189,10 @@
 .feutre.rose:hover { --face: #F6C7D5; }
 .feutre.rose:active, .feutre.rose.ouvert { --face: #E3ABBD; }
 
+.feutre.lavande { --face: #DBC1EA; --levre: #BC96D2; --fil: #9266AC; }
+.feutre.lavande:hover { --face: #E4D0EF; }
+.feutre.lavande:active, .feutre.lavande.ouvert { --face: #D0B2E2; }
+
 .feutre.rose-pale { --face: #F9DCE3; --levre: #E3B3C0; }
 .feutre.rose-pale:hover { --face: #FBE6EB; }
 .feutre.rose-pale:active, .feutre.rose-pale.ouvert { --face: #EFC7D1; }

@@ -45,6 +45,46 @@ namespace Diciela.Tests.EditMode.Architecture
         }
 
         [Test]
+        public void ScannerFindsMutableStaticPropertiesAndCollections()
+        {
+            // Un singleton par propriété, ou un tampon partagé : de l'état qui survit d'un Play à l'autre. Une table qu'on ne
+            // fait que lire, en tableau readonly, et une propriété sans écriture restent permises.
+            const string source = "public static World Current { get; private set; }\n" +
+                                  "public static int Count { get; set; }\n" +
+                                  "private static readonly List<Vector2Int> Scratch = new List<Vector2Int>();\n" +
+                                  "private static readonly System.Collections.Generic.Dictionary<int, int> Seen = new();\n" +
+                                  "private static readonly Vector2Int[] Steps = { Vector2Int.up };\n" +
+                                  "public static int Offset { get { return 3; } }\n" +
+                                  "private static readonly IReadOnlyList<int> Fixed = Array.Empty<int>();";
+
+            List<string> violations = SourceScanner.FindViolations(source);
+
+            Assert.AreEqual(new[]
+            {
+                "ligne 1 : propriété statique modifiable",
+                "ligne 2 : propriété statique modifiable",
+                "ligne 3 : collection statique modifiable",
+                "ligne 4 : collection statique modifiable"
+            }, violations);
+        }
+
+        [Test]
+        public void ScannerReadsTheHolesOfInterpolatedStrings()
+        {
+            const string source = "string a = $\"Fiche {fiche.name} inconnue\";\n" +
+                                  "string b = $\"à {Time.time:0.0} s\";\n" +
+                                  "string c = $\"{{Random}} et {Id}, {(ok ? \"Debug.\" : \"\")}\";";
+
+            List<string> violations = SourceScanner.FindViolations(source);
+
+            Assert.AreEqual(new[]
+            {
+                "ligne 1 : .name (l'identifiant d'une fiche est Id)",
+                "ligne 2 : Time (temps image par image)"
+            }, violations);
+        }
+
+        [Test]
         public void ScannerFindsWhatASheetMustNotGive()
         {
             // ARCHITECTURE, section 9 : une fiche ne donne que des nombres, et son identifiant est Id, jamais .name.

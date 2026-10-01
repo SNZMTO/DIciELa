@@ -56,10 +56,12 @@ Shader "Diciela/Chantier"
             #pragma vertex LitPassVertex
             #pragma fragment ChantierForwardFragment
 
-            #pragma shader_feature_local _NORMALMAP
+            // Ces trois mots-clés ne sont posés qu'à l'exécution, sur les copies des matériaux d'origine (SiteMaterials) :
+            // en shader_feature, un jeu compilé n'aurait que les variantes de Chantier.mat, qui n'en a aucun.
+            #pragma multi_compile_local _ _NORMALMAP
             #pragma shader_feature_local _RECEIVE_SHADOWS_OFF
-            #pragma shader_feature_local_fragment _EMISSION
-            #pragma shader_feature_local_fragment _ALPHATEST_ON
+            #pragma multi_compile_local_fragment _ _EMISSION
+            #pragma multi_compile_local_fragment _ _ALPHATEST_ON
 
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
             #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
@@ -124,7 +126,7 @@ Shader "Diciela/Chantier"
             #pragma target 2.0
             #pragma vertex ChantierShadowVertex
             #pragma fragment ChantierShadowFragment
-            #pragma shader_feature_local_fragment _ALPHATEST_ON
+            #pragma multi_compile_local_fragment _ _ALPHATEST_ON
             #pragma multi_compile_instancing
             #pragma multi_compile_vertex _ _CASTING_PUNCTUAL_LIGHT_SHADOW
 
@@ -145,7 +147,7 @@ Shader "Diciela/Chantier"
             #pragma target 2.0
             #pragma vertex ChantierDepthVertex
             #pragma fragment ChantierDepthFragment
-            #pragma shader_feature_local_fragment _ALPHATEST_ON
+            #pragma multi_compile_local_fragment _ _ALPHATEST_ON
             #pragma multi_compile_instancing
 
             #include "Assets/Art/Shaders/ChantierProfondeur.hlsl"
@@ -164,7 +166,7 @@ Shader "Diciela/Chantier"
             #pragma target 2.0
             #pragma vertex ChantierNormalsVertex
             #pragma fragment ChantierNormalsFragment
-            #pragma shader_feature_local_fragment _ALPHATEST_ON
+            #pragma multi_compile_local_fragment _ _ALPHATEST_ON
             #pragma multi_compile_fragment _ _GBUFFER_NORMALS_OCT
             #pragma multi_compile_instancing
             #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/RenderingLayers.hlsl"

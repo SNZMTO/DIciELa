@@ -21,6 +21,12 @@ namespace Diciela.Tests.PlayMode
     {
         private const int MaxFrames = 3600;
 
+        [UnityTearDown]
+        public IEnumerator LeaveTheTestScene()
+        {
+            yield return TestOpening.Leave(MaxFrames);
+        }
+
         [UnityTest]
         public IEnumerator TheBarShowsTheCatalogAndCatchesThePointer()
         {
@@ -66,9 +72,7 @@ namespace Diciela.Tests.PlayMode
                 "Le milieu de l'écran est la ville.");
 
             LogAssert.Expect(LogType.Log, new Regex("^DICIELA : monde arrêté"));
-            yield return SceneManager.UnloadSceneAsync(ScenePaths.GameTest);
-            for (int frame = 0; frame < MaxFrames && SceneManager.GetSceneByPath(ScenePaths.MapTest).isLoaded; frame++)
-                yield return null;
+            yield return TestOpening.Leave(MaxFrames);
         }
 
 #if UNITY_EDITOR
