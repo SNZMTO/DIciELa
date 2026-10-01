@@ -80,6 +80,15 @@ namespace Diciela.Data
         [Tooltip("Bande au bord de l'écran qui fait défiler la vue, en pixels (0 : jamais).")]
         [SerializeField, Min(0f)] private float _edgeScrollPixels = 12f;
 
+        [Tooltip("L'atelier : sans geste depuis tant de secondes, la Chimère se balance doucement sur son socle.")]
+        [SerializeField, Min(0f)] private float _atelierIdleSeconds = 3f;
+
+        [Tooltip("L'atelier : l'amplitude du balancement, en degrés de part et d'autre.")]
+        [SerializeField, Range(0f, 45f)] private float _atelierSwayDegrees = 12f;
+
+        [Tooltip("L'atelier : la durée d'un aller-retour du balancement, en secondes.")]
+        [SerializeField, Min(0.5f)] private float _atelierSwaySeconds = 6f;
+
         public float FieldOfView => _fieldOfView;
         public float NearDistance => _nearDistance;
         public float FarDistance => _farDistance;
@@ -95,6 +104,9 @@ namespace Diciela.Data
         public float FogStartPerDistance => _fogStartPerDistance;
         public float PanSpeedPerDistance => _panSpeedPerDistance;
         public float RotateDegreesPerSecond => _rotateDegreesPerSecond;
+        public float AtelierIdleSeconds => _atelierIdleSeconds;
+        public float AtelierSwayDegrees => _atelierSwayDegrees;
+        public float AtelierSwaySeconds => _atelierSwaySeconds;
         public float OrbitDegreesPerPixel => _orbitDegreesPerPixel;
         public float TiltDegreesPerPixel => _tiltDegreesPerPixel;
         public float ZoomStepPerNotch => _zoomStepPerNotch;

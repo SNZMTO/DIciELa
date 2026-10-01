@@ -1,45 +1,109 @@
-/* L'écran de création de la Chimère (GDD, section 6), dans la langue du HUD (section 16) : un cadre de bois à droite,
-   la Chimère visible dans l'atelier ; une ligne par partie : son nom, sa pièce dans un creux entre deux flèches de
-   feutre, puis sa couleur de même ; le grand bouton qui valide en bas. Ici, seulement la place des choses : matières,
-   couleurs et textes viennent de Fusion.uss. */
+/* L'écran de création de la Chimère (GDD, section 6 ; décision 162) : un panneau de bois brun à facettes à droite,
+   l'atelier visible derrière ; le titre sur un ruban ; une ligne par partie, son icône et son nom, sa pièce puis sa
+   couleur, chacune dans sa fente entre deux boutons dorés ; le bouton doré qui valide en bas. Les images, en facettes
+   comme le pack, sont générées (DICIELA/Interface/Générer les images de l'interface) et se découpent en neuf : les
+   bords gardent leur taille, le milieu s'étire. Les polices sont celles du jeu (Fusion.uss), le reste vient d'ici. */
 
-.creation-ecran {
+.screen {
     flex-grow: 1;
     justify-content: center;
     align-items: flex-end;
-    padding-right: 24px;
+    padding-right: 32px;
 }
 
-.creation-contenu {
-    padding: 14px 18px 18px 18px;
+.panel {
+    width: 760px;
+    padding: 30px 40px 36px 40px;
+    background-image: url("Images/Panneau.png");
+    -unity-slice-left: 64;
+    -unity-slice-right: 64;
+    -unity-slice-top: 64;
+    -unity-slice-bottom: 64;
+    background-color: rgba(0, 0, 0, 0);
 }
 
-.creation-titre {
+/* Le titre sur son ruban de brique, au milieu du haut du panneau. */
+.ruban {
+    align-self: center;
+    width: 400px;
+    height: 64px;
+    margin-bottom: 14px;
+    justify-content: center;
+    background-image: url("Images/Ruban.png");
+    -unity-slice-left: 64;
+    -unity-slice-right: 64;
+}
+
+.titre {
     -unity-text-align: middle-center;
-    margin-bottom: 10px;
+    color: rgb(252, 238, 214);
+    text-shadow: 2px 2px 0 rgba(28, 16, 8, 0.85);
 }
 
 .row {
     flex-direction: row;
     align-items: center;
-    height: 44px;
+    height: 46px;
 }
 
+.row-icon {
+    width: 22px;
+    height: 22px;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+.ligne-tete { background-image: url("Icones/ligne-tete.asset"); }
+.ligne-corps { background-image: url("Icones/ligne-corps.asset"); }
+.ligne-queue { background-image: url("Icones/ligne-queue.asset"); }
+.ligne-oreilles { background-image: url("Icones/ligne-oreilles.asset"); }
+.ligne-cheveux { background-image: url("Icones/ligne-cheveux.asset"); }
+.ligne-chapeau { background-image: url("Icones/ligne-chapeau.asset"); }
+.ligne-visage { background-image: url("Icones/ligne-visage.asset"); }
+.ligne-barbe { background-image: url("Icones/ligne-barbe.asset"); }
+.ligne-ceinture { background-image: url("Icones/ligne-ceinture.asset"); }
+
 .row-label {
-    width: 112px;
+    width: 140px;
+    font-size: 20px;
+    color: rgb(244, 226, 198);
+    text-shadow: 1px 1px 0 rgba(28, 16, 8, 0.8);
 }
 
 .arrow {
-    width: 36px;
+    width: 38px;
     height: 36px;
+    margin: 0;
+    padding: 0;
     flex-shrink: 0;
     align-items: center;
     justify-content: center;
+    background-image: url("Images/Bouton.png");
+    -unity-slice-left: 12;
+    -unity-slice-right: 12;
+    -unity-slice-top: 12;
+    -unity-slice-bottom: 12;
+    background-color: rgba(0, 0, 0, 0);
+    -unity-background-image-tint-color: rgb(228, 228, 228);
+    border-width: 0;
+    border-radius: 0;
+    transition-property: scale, -unity-background-image-tint-color;
+    transition-duration: 0.08s;
+}
+
+.arrow:hover {
+    -unity-background-image-tint-color: rgb(255, 255, 255);
+}
+
+/* Une petite vie : un bouton doré se tasse sous le doigt. */
+.arrow:active {
+    -unity-background-image-tint-color: rgb(186, 186, 186);
+    scale: 0.9 0.9;
 }
 
 .fleche-precedent, .fleche-suivant {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
 }
 
 .fleche-precedent {
@@ -51,38 +115,65 @@
 }
 
 .choice, .color {
-    height: 36px;
+    height: 34px;
     margin: 0 6px;
-    align-items: center;
-    justify-content: center;
+    font-size: 20px;
+    -unity-text-align: middle-center;
+    color: rgb(252, 238, 214);
+    background-image: url("Images/Fente.png");
+    -unity-slice-left: 12;
+    -unity-slice-right: 12;
+    -unity-slice-top: 12;
+    -unity-slice-bottom: 12;
 }
 
 .choice {
-    width: 190px;
+    flex-grow: 1;
 }
 
 .color {
-    width: 120px;
+    width: 124px;
+    font-size: 18px;
+    color: rgb(232, 214, 186);
 }
 
 .palette {
     flex-direction: row;
     align-items: center;
-    margin-left: 12px;
+    margin-left: 8px;
 }
 
-.valeur {
-    -unity-text-align: middle-center;
-}
-
-/* Une ligne sans pièce n'a pas de couleur : ses flèches et son creux se cachent, sans décaler les autres. */
+/* Une ligne sans pièce n'a pas de couleur : ses flèches se cachent, sans décaler les autres. */
 .hidden {
     visibility: hidden;
 }
 
-.creation-valider {
-    height: 56px;
-    margin-top: 16px;
-    align-items: center;
-    justify-content: center;
+.confirm {
+    height: 60px;
+    margin: 18px 0 0 0;
+    -unity-font-definition: url("Polices/LilitaOne-Regular.ttf");
+    font-size: 26px;
+    letter-spacing: 0.4px;
+    color: rgb(255, 244, 222);
+    text-shadow: 2px 2px 0 rgba(60, 34, 14, 0.9);
+    background-image: url("Images/Valider.png");
+    -unity-slice-left: 30;
+    -unity-slice-right: 30;
+    -unity-slice-top: 24;
+    -unity-slice-bottom: 24;
+    background-color: rgba(0, 0, 0, 0);
+    -unity-background-image-tint-color: rgb(232, 232, 232);
+    border-width: 0;
+    border-radius: 0;
+    transition-property: scale, -unity-background-image-tint-color;
+    transition-duration: 0.08s;
+}
+
+.confirm:hover {
+    -unity-background-image-tint-color: rgb(255, 255, 255);
+}
+
+.confirm:active {
+    -unity-background-image-tint-color: rgb(190, 190, 190);
+    scale: 0.96 0.96;
 }

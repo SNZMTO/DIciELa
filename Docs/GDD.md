@@ -172,9 +172,13 @@
 - **Règle.** On la crée au lancement d'une partie, sur l'écran de création : une tête d'animal et un corps d'animal,
   pas forcément le même, puis des morceaux d'autres animaux (oreilles, touffe, queue) et des accessoires, au plus un
   par emplacement ; chaque partie a sa couleur. Elle apparaît au point d'arrivée de la carte (voir 2).
-- **Règle.** L'écran de création est un panneau sur le côté, dans le langage du HUD (voir 16), dans un atelier hors de la carte, en low poly (un
-  fond en alcôve, un sol, un socle) ; la Chimère à venir s'y tient de face sur le socle. On la fait tourner, avec A et
-  E ou en la glissant au clic gauche ; elle garde son angle quand on change une pièce. Une ligne par partie, sa pièce
+- **Règle.** L'écran de création est un panneau de bois brun à facettes sur le côté, sa langue à lui (voir 16) : ses
+  coins garnis d'or, son titre sur un ruban de brique, une ligne par partie avec son icône, chaque choix dans une fente
+  sombre entre deux boutons dorés qui se tassent sous le doigt, et le bouton doré qui valide. Il est dans un atelier
+  hors de la carte, en low poly (un fond en alcôve, un sol, un socle), jamais sur l'herbe de la ville ; la Chimère à
+  venir s'y tient de face sur le socle. On la fait tourner, avec A et E ou en la glissant au clic gauche ; elle garde
+  son angle quand on change une pièce ; laissée tranquille, elle se balance doucement.
+- **Défaut.** Elle se balance après 3 s sans geste, de 12° de part et d'autre, un aller-retour en 6 s. Une ligne par partie, sa pièce
   et sa couleur, chacune entre ses flèches : la tête (seize), le corps et ses habits (seize), puis la queue, les
   oreilles, les cheveux, le chapeau, le visage, la barbe et la ceinture (pas encore d'accessoires de cou ni de dos). La tête, le corps, la queue et
   les oreilles ont toujours une pièce ; les autres lignes ont « aucun » en tête. Les douze couleurs du pack vont sur
@@ -579,7 +583,8 @@
 - **À toi.** Des saisons, plus tard ? Le pack n'en a que des bouts, et aucun bâtiment ni arbre d'hiver (détail dans la
   procédure `pack-synty`). Ma reco : non ; si le rythme en demande un jour, un événement du temps plutôt que quatre
   décors, comme les sécheresses de Timberborn.
-- **Règle.** L'interface parle une seule langue, la « fusion » : le bois porte (les cadres), le lin porte le texte, le
+- **Règle.** Le HUD parle une seule langue, la « fusion » (l'écran de création a la sienne, voir 6) : le bois porte
+  (les cadres), le lin porte le texte, le
   rouge brique décore sans jamais informer, le laiton fixe (les clous du grand panneau). Tout ce qui se clique est un
   feutre pastel en relief : un reflet en haut, une lèvre en bas, une ombre dessous. Un pastel posé à plat ne se clique
   pas ; un creux de lin contient une valeur qu'on lit. Les coins sont coupés, jamais arrondis ; ni noir ni blanc pur.

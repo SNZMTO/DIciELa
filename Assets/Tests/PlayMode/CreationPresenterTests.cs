@@ -109,6 +109,7 @@ namespace Diciela.Tests.PlayMode
         {
             Assert.AreEqual("La Chimère", _view.Title);
             Assert.AreEqual(new[] { "Tête", "Corps", "Chapeau" }, _view.Labels);
+            Assert.AreEqual(new[] { "tete", "corps", "chapeau" }, _view.RowIds, "L'identifiant de chaque ligne choisit son icône.");
             Assert.AreEqual(new[] { "Chat", "Chat", "Aucun" }, _view.Choices);
             Assert.AreEqual(new[] { "Roux", "Roux", "" }, _view.Colors, "Sans pièce, pas de couleur.");
             Assert.AreEqual(1, _preview.transform.childCount, "L'aperçu montre la Chimère à venir.");

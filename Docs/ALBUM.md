@@ -15,6 +15,14 @@
 
 ## Les captures
 
+### 01/10/2026 — étape 18a : l'écran de création retrouve son bois brun
+
+Le panneau de bois brun à facettes revient, dans l'atelier : ses coins garnis d'or, le titre sur un ruban de brique,
+une icône devant chaque ligne, chaque choix dans sa fente entre deux boutons dorés qui se tassent sous le doigt, et le
+bouton doré « C'est parti », dans les polices du jeu. Laissée tranquille, la Chimère se balance doucement.
+
+![L'écran de création, le bois brun dans l'atelier](Album/2026-10-01_etape-18a_creation-bois-brun.jpg)
+
 ### 30/09/2026 — étape 15d : l'astuce et le portrait de la Chimère
 
 En bas à gauche, l'astuce : le portrait de la Chimère (sa tête de face, prise à l'atelier quand on valide) dans une
