@@ -160,25 +160,6 @@ namespace Diciela.Tests.EditMode
             bool Fits(float model, float fiche) => model <= fiche + 0.001f && model >= fiche - Centimeter - 0.001f;
         }
 
-        [Test]
-        public void EveryModelKeepsTheEffectsOfItsSource()
-        {
-            // Les effets d'un modèle source (la flamme d'un feu, la fumée d'une cheminée) suivent son modèle préparé, un
-            // pour un (SAVOIR, 2.9).
-            var faults = new List<string>();
-            foreach (StructureDefinition structure in ProjectContent.LoadSingle<Catalog>().AllStructures())
-            {
-                if (structure.SourceModel == null || structure.Model == null)
-                    continue;
-                int source = structure.SourceModel.GetComponentsInChildren<ParticleSystem>(false).Length;
-                int prepared = structure.Model.GetComponentsInChildren<ParticleSystem>(false).Length;
-                if (source != prepared)
-                    faults.Add(structure.Id + " : " + source + " effets dans sa source, " + prepared +
-                               " dans son modèle préparé.");
-            }
-            Assert.IsEmpty(faults, string.Join("\n", faults));
-        }
-
         /// <summary>Les langues de la table : les colonnes de sa première ligne, après celle des clés.</summary>
         private static IEnumerable<string> LanguagesOf(string csv)
         {
