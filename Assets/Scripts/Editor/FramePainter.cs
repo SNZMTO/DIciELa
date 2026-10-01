@@ -7,6 +7,8 @@ namespace Diciela.EditorTools
     /// l'extérieur vers l'intérieur, le liseré, le biseau (clair en haut et à gauche, sombre à droite, nuit en bas, les
     /// pans entre les deux), le bois du pack dont le fil suit chaque traverse (coupe d'onglet aux coins), puis le lin,
     /// son ombre sous la traverse du haut et sa trame. Chaque point se juge à sa profondeur sous le bord aux coins coupés.
+    /// À chaque coin, une ferrure de laiton en travers de l'onglet, clouée en son milieu (décision 163), toute entière dans
+    /// la case du coin : elle ne se répète pas le long des bords.
     /// </summary>
     internal sealed class FramePainter
     {
@@ -14,10 +16,10 @@ namespace Diciela.EditorTools
         public const int Resolution = 3;
         public const int Rim = 2;
         public const int Bevel = 3;
-        public const int WoodWidth = 7;
+        public const int WoodWidth = 10;
         public const int Border = Rim + Bevel + WoodWidth;
         public const float OuterCut = 19f;
-        // Un coin de la découpe contient le pan du lin (12 px sous le bord, 12 px de pan) ; le pas des bords et du milieu
+        // Un coin de la découpe contient le pan du lin (15 px sous le bord, 12 px de pan) ; le pas des bords et du milieu
         // est un multiple des pas de la trame, pour qu'elle se raccorde en se répétant.
         public const int Corner = 28;
         public const int Tile = 150;
@@ -39,6 +41,7 @@ namespace Diciela.EditorTools
         private readonly Color _linenShadow;
         private readonly Color _weft;
         private readonly Color _warp;
+        private readonly BrassFitting _fitting;
 
         public FramePainter(UssPalette palette, PackWood wood)
         {
@@ -58,6 +61,7 @@ namespace Diciela.EditorTools
             _linenShadow = palette.Get("lin-ombre");
             _weft = palette.Get("trame-trait");
             _warp = palette.Get("trame-chaine");
+            _fitting = new BrassFitting(palette);
         }
 
         /// <summary>L'image entière, lissée (plusieurs points par pixel, moyennés en couleurs prémultipliées).</summary>
@@ -114,6 +118,8 @@ namespace Diciela.EditorTools
             float depth = edges[nearest];
             if (depth < 0f)
                 return Color.clear;
+            if (_fitting.TryPaint(x, y, out Color brass))
+                return brass;
             if (depth < Rim)
                 return _rim;
             if (depth < Rim + Bevel)
