@@ -3,7 +3,7 @@
    et milieu répétés ; son contenu à l'intérieur de la bordure. */
 
 .cadre {
-    padding: 12px;
+    padding: 15px;
 }
 
 .cadre-ombre {

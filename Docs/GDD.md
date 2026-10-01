@@ -584,10 +584,11 @@
   procédure `pack-synty`). Ma reco : non ; si le rythme en demande un jour, un événement du temps plutôt que quatre
   décors, comme les sécheresses de Timberborn.
 - **Règle.** Le HUD parle une seule langue, la « fusion » (l'écran de création a la sienne, voir 6) : le bois porte
-  (les cadres), le lin porte le texte, le
-  rouge brique décore sans jamais informer, le laiton fixe (les clous du grand panneau). Tout ce qui se clique est un
-  feutre pastel en relief : un reflet en haut, une lèvre en bas, une ombre dessous. Un pastel posé à plat ne se clique
-  pas ; un creux de lin contient une valeur qu'on lit. Les coins sont coupés, jamais arrondis ; ni noir ni blanc pur.
+  (les cadres), le lin porte le texte, le rouge brique décore sans jamais informer, le laiton fixe (les clous du grand
+  panneau, une ferrure à chaque coin des cadres). Chaque matière se voit, discrètement, sous le texte : le grain du
+  bois, la trame du lin, le grain du feutre. Tout ce qui se clique est un feutre pastel en relief : un reflet en haut,
+  une lèvre en bas, une ombre dessous. Un pastel posé à plat ne se clique pas ; un creux de lin contient une valeur
+  qu'on lit. Les coins sont coupés, jamais arrondis ; ni noir ni blanc pur.
 - **Règle.** Chaque pastel a son rôle : menthe pour l'action principale, sable pour l'action neutre, rose pour la
   famille Logement (rose pâle pour ses cartes), beurre pour les marchandises, ciel pour la journée, lavande pour la
   Chimère. Seule exception, la jauge de la journée : menthe pour le travail, pêche pour la soirée, lavande hachurée

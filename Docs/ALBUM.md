@@ -15,6 +15,16 @@
 
 ## Les captures
 
+### 01/10/2026 — étape 18b : la matière du HUD
+
+Le HUD prend de la matière : le bois des cadres s'élargit et montre son grain, une ferrure de laiton clouée tient
+chaque coin, le lin se tisse d'une trame qu'on devine, jusque dans les creux, et les feutres ont un grain doux. Tout
+reste discret, sous le texte.
+
+![Le HUD, le bois, le laiton et le lin](Album/2026-10-01_etape-18b_hud-matiere.jpg)
+
+![La fiche du tas ouverte](Album/2026-10-01_etape-18b_fiche-matiere.jpg)
+
 ### 01/10/2026 — étape 18a : l'écran de création retrouve son bois brun
 
 Le panneau de bois brun à facettes revient, dans l'atelier : ses coins garnis d'or, le titre sur un ruban de brique,
