@@ -10,9 +10,8 @@ la roue des outils ; décisions 147 à 169). `main` est à l'étape 20b, poussé
   1,06 m). `DICIELA/Contenu/Composer le campement et le tas` (Assets/Art/Compositions, à toi) ; la préparation garde
   les effets ; « Campement » à l'écran (décision 170). **EditMode 175/175, PlayMode 156/156.**
 
-**À faire en premier** : relancer Unity ; une campagne PlayMode : si Unity replante, préparer le campement sans sa
-flamme et relancer ; si le crash disparaît, attacher la flamme autrement (une instance du prefab du pack plutôt
-qu'une copie), puis fusionner.
+**À faire en premier** : relancer Unity, recomposer (la flamme devient une instance du prefab du pack, plus une
+copie), une campagne PlayMode ; si Unity replante encore, préparer sans la flamme pour isoler la cause.
 
 **À vérifier par toi** : le campement allégé et le tas te plaisent-ils ? La flamme fait-elle feu ou bougie géante ?
 
