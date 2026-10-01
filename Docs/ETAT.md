@@ -1,8 +1,7 @@
 # DICIELA — état actuel
 
-**Branches** : `etape-23-couche`, `-24-campement`, `-25-feuilles`, `-26-revue`, l'une sur l'autre, commitées et poussées,
-**pas fusionnées** (pas encore vues rendues) ; `main` : l'étape 22. Une fois vues : `git fetch . etape-26-revue:main`,
-puis `git push origin main`.
+**Branches** : de `etape-23-couche` à `etape-26-revue`, l'une sur l'autre, poussées, **pas fusionnées** (pas encore vues
+rendues) ; `main` : l'étape 22. Une fois vues : `git fetch . etape-26-revue:main`, puis `git push origin main`.
 
 **Fait** : 23, la Chimère couchée sur la couche du campement ; 24, le campement fait tout (stock de départ, poste « à
 tout faire », sa fiche et ses boutons, décision 174) ; 25, les feuilles du pack sur un chantier (175) ; 26, les
