@@ -254,7 +254,15 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   demi-champ de vision plus une marge) : sinon le sol visé près du bord haut est à des centaines de mètres, et tirer
   ou zoomer y fait sauter la vue.
 - **Un seul suivi du clic ou glisser** (`DragGesture`) pour tous les boutons : un appui vu pour la première fois part
-  de là où on le voit, sinon un bouton enfoncé pendant un chargement fait sauter la vue.
+  de là où on le voit, sinon un bouton enfoncé pendant un chargement fait sauter la vue. Mais un outil pris pendant un
+  appui (une touche, le bouton tenu) ne l'adopte pas : tant que l'outil n'est pas en main, son geste garde l'appui en
+  cours comme étranger (`DragGesture.HeldElsewhere`), sinon le relâcher ferait cliquer le nouvel outil.
+- **UI Toolkit distribue l'appui avant les `LateUpdate`** (`UIElementsUpdatePanels`, dans PreLateUpdate, avant
+  `ScriptRunBehaviourLateUpdate`) : un élément qui disparaît à l'appui (la roue qu'on congédie d'un appui à côté) n'est
+  déjà plus sous le pointeur quand les gestes demandent si l'appui est à l'interface, et la ville le prenait (la carte
+  en main se posait). L'interface retient donc l'image où un de ses éléments a pris un appui (`HudArea`, à l'écoute de
+  sa racine en descendant) et dit cet appui à elle, même l'élément disparu. Les gestes lus en `Update` (la caméra)
+  passent avant la distribution, et voient encore l'élément.
 - **Au lancement, le pointeur vaut (0 ; 0) tant qu'il n'est pas entré dans la vue** : un coin, et le défilement au
   bord ferait filer la vue toute seule. Il ne s'arme qu'une fois le pointeur passé loin des bords ; perdre le focus
   le désarme (`EdgeScroll`).

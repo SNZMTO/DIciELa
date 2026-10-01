@@ -85,7 +85,11 @@ namespace Diciela.Controls
         {
             if (Tool == null || !Tool.IsActive)
             {
-                ResetGestures();
+                // Un appui commencé avant de prendre une carte ne la pose pas, même relâché la carte en main.
+                _rotateGrip.Release();
+                _placeGesture = DragGesture.HeldElsewhere(_place.IsPressed());
+                _rotateGesture = DragGesture.HeldElsewhere(_rotate.IsPressed());
+                _secondaryGesture = DragGesture.HeldElsewhere(_secondary.IsPressed());
                 return;
             }
 

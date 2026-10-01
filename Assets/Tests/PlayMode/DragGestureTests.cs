@@ -81,6 +81,23 @@ namespace Diciela.Tests.PlayMode
         }
 
         [Test]
+        public void APressHeldElsewhereNeitherDragsNorClicksTillReleased()
+        {
+            // L'outil est pris pendant que le bouton est tenu : cet appui appartient à ce qui était en main.
+            DragGesture gesture = DragGesture.HeldElsewhere(true);
+
+            Assert.IsFalse(gesture.Update(true, new Vector2(100f, 100f), Threshold, false));
+            Assert.IsFalse(gesture.Update(true, new Vector2(140f, 100f), Threshold, false));
+            Assert.IsFalse(gesture.IsDragging, "Ni glisser…");
+            gesture.Update(false, new Vector2(140f, 100f), Threshold, false);
+            Assert.IsFalse(gesture.Clicked, "…ni clic au relâchement.");
+
+            gesture.Update(true, new Vector2(200f, 200f), Threshold, false);
+            gesture.Update(false, new Vector2(200f, 200f), Threshold, false);
+            Assert.IsTrue(gesture.Clicked, "L'appui suivant est à l'outil.");
+        }
+
+        [Test]
         public void APressFirstSeenLateStartsWhereItIsSeen()
         {
             var gesture = new DragGesture();

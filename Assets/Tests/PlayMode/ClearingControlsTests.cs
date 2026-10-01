@@ -15,7 +15,8 @@ namespace Diciela.Tests.PlayMode
     /// d'essai (TestPaintedNature) vus d'une caméra droit au-dessus d'eux. L'outil en main, un clic sur un arbre le
     /// marque ; un glisser tire un cadre, dessiné tant qu'on glisse, et le relâcher marque les deux arbres qu'il prend.
     /// Un clic droit bref pose l'outil de côté ; un glisser du clic droit, laissé à la caméra, ne le pose pas. Sans
-    /// l'outil en main, un clic ne marque rien. Un faux panneau d'interface occupe le bas de l'écran.
+    /// l'outil en main, un clic ne marque rien, ni un appui commencé avant de le prendre. Un faux panneau d'interface
+    /// occupe le bas de l'écran.
     /// </summary>
     public sealed class ClearingControlsTests : GestureFixture
     {
@@ -144,6 +145,25 @@ namespace Diciela.Tests.PlayMode
 
             yield return Click(Mouse.rightButton);
             Assert.IsFalse(_controls.Tool.IsActive, "Un clic droit bref pose l'outil de côté, comme une carte.");
+        }
+
+        [UnityTest]
+        public IEnumerator APressHeldWhenTheToolIsTakenMarksNothing()
+        {
+            // Le bouton tenu, on prend l'outil (la touche X, la roue) : cet appui n'était pas à lui.
+            yield return PointAt(OnScreen(28f, 1.5f, 22f));
+            Press(Mouse.leftButton);
+            yield return Played();
+            _controls.Tool.Take();
+            yield return Played();
+            Release(Mouse.leftButton);
+            yield return Played();
+            _town.World.Step();
+            Assert.IsFalse(First.IsMarked, "Relâché l'outil en main, l'appui d'avant ne marque rien.");
+
+            yield return Click(Mouse.leftButton);
+            _town.World.Step();
+            Assert.IsTrue(First.IsMarked, "Un nouveau clic, l'outil en main, marque l'arbre.");
         }
 
         [UnityTest]

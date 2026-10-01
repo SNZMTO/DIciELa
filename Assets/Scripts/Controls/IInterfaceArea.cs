@@ -8,7 +8,10 @@ namespace Diciela.Controls
     /// </summary>
     public interface IInterfaceArea
     {
-        /// <summary>Vrai si ce point de l'écran (en pixels, depuis le bas à gauche, comme le pointeur) est sur elle.</summary>
+        /// <summary>
+        /// Vrai si ce point de l'écran (en pixels, depuis le bas à gauche, comme le pointeur) est sur elle, ou si elle a
+        /// pris l'appui de cette image : ce qui l'a reçu peut avoir disparu depuis, l'appui lui appartient quand même.
+        /// </summary>
         bool Contains(Vector2 screenPoint);
     }
 }
