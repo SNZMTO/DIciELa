@@ -1,29 +1,29 @@
 # DICIELA — état actuel
 
-**Branche** : `etape-21b-camera` (avec l'étape 21), commitée, **pas fusionnée** : la caméra n'a pas encore été vue en
-Play (il faut Unity au premier plan) ; puis les captures de l'album, ton avis, la fusion. `main` : 20b, poussée.
+**Branche** : `main`, à jour et poussée (étapes 21 et 21b fusionnées). La suite attend ton accord sur le plan.
 
 **Fait** : les étapes 15 à 20b (le tas, le HUD, le ménage, le défrichage, l'écran de création, le chantier qui monte,
-la roue des outils ; décisions 147 à 169), puis :
-- 21 : la tente devient un campement allégé d'objets du pack (un foyer en pierres, une couche, un coffre, un sac, une
-  marmite, deux pierres d'entrée ; 4,61 × 3,50 m) ; à côté, le tas de départ est une pile de bûches et un tas de pierres
-  (2,70 × 1,06 m). `DICIELA/Contenu/Composer le campement et le tas` (Assets/Art/Compositions, à toi). « Campement » à
-  l'écran (décision 170). La flamme est retirée : ses particules faisaient planter Unity après chaque campagne.
-- 21b : la caméra plus proche et plus basse : champ de vision 35°, départ à 25 m (vue à 32°), de 22,5° à 50° (171).
-**EditMode 174/174, PlayMode 156/156**, Unity ne plante plus.
+la roue des outils ; décisions 147 à 169) ; 21, le campement d'objets du pack et, à côté, le tas de bûches et de
+pierres, sans flamme (ses particules faisaient planter Unity ; décision 170) ; 21b, la caméra plus proche et plus basse
+(171). **EditMode 174/174, PlayMode 156/156.**
 
-**À vérifier par toi** : en partie, la caméra te va-t-elle mieux (`Assets/Data/Settings/CameraSettings.asset`) ? Le
-campement et le tas te plaisent-ils ? Le foyer éteint te suffit-il, ou faut-il chercher comment rallumer la flamme ?
+**Tes réponses du 01/10** (décision 172 et GDD à écrire) : plus de tas, le campement fait tout : logis, stock de départ
+(100 places, 30 Bois, 20 Pierre), poste « à tout faire ». Un clic ouvre sa fiche (stock, poste, « Y mettre la Chimère »,
+« Aller dormir » / « Réveiller ») ; endormie, elle est couchée sur sa couche ; bûches et pierres entrent dans le
+campement ; la loge, un entrepôt et la cabane du paysagiste bâtis et le stock vide, stock et poste ferment.
 
-**À toi** : peindre la carte et ranger tes modèles dans `Assets/Data/Nature` (la carte n'a encore aucun arbre) ; le
-fanion des arbres marqués (le pack a `SM_Prop_Flag_01` à `05`) ; l'icône des outils et le plateau de la roue
-(remplaçants) ; les pastels et le bandeau de brique (recos au GDD 16) ; la voix de la Chimère ; les noms de
-`strings.csv`.
+**Revue du code (20 à 21b)** : pas de spaghetti grave ; à corriger : les deux outils de la roue écrits à la main à huit
+endroits ; « un seul outil en main » tenu par GameStage (190 lignes) ; la roue et le panneau branchés de deux façons ;
+des recopies (la hache des icônes, « bloc-cache » ×8) ; une allocation par image ; deux fichiers de plus de 200 lignes.
+
+**Plan proposé** : 22, le ménage de cette revue (rien ne change à l'écran) ; 23, le campement fait tout (la tente
+renommée campement, le tas supprimé, la fiche avec le sommeil, l'astuce, la composition refaite, l'album de 21 à 23) ;
+23b, la Chimère couchée sur sa couche (un repère « Couche » dans la composition, lu comme la porte).
+
+**À toi** : peindre la carte et ranger tes modèles (`Assets/Data/Nature`) ; le fanion des arbres marqués ; l'icône des
+outils et le plateau de la roue ; les pastels et le bandeau de brique (GDD 16) ; la voix de la Chimère ; les noms.
 
 **Dette** : `Fusion.uss` répète les couleurs de `:root` ; à trois cartes, le panneau chevauchera l'astuce en 720 p.
-
-**Prochaine étape** : voir la caméra et le campement en Play, l'album, fusionner 21 et 21b ; puis les touches 1 à 9 du
-panneau ouvert ; puis GDD 17. Après, une session de ménage.
 
 **Prompt de la session suivante**
 
