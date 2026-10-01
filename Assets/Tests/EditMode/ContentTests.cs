@@ -125,7 +125,8 @@ namespace Diciela.Tests.EditMode
         {
             // Le modèle préparé (SAVOIR, 2.9), depuis le pack ou en boîte faute de modèle choisi : un seul maillage, un
             // matériau par sous-maillage, centré sur l'empreinte de la fiche et à sa taille (arrondie au centimètre
-            // supérieur), la porte sur la façade.
+            // supérieur), la porte sur la façade, la couche dans l'empreinte. Le campement, sans murs, a sa couche :
+            // sans elle, la Chimère y disparaîtrait en dormant (décision 172).
             const float Centimeter = 0.01f;
             var faults = new List<string>();
             foreach (StructureDefinition structure in ProjectContent.LoadSingle<Catalog>().AllStructures())
@@ -153,6 +154,11 @@ namespace Diciela.Tests.EditMode
                 if (structure.HasDoor && Mathf.Abs(structure.DoorOffsetMeters) + structure.DoorWidthMeters * 0.5f >
                     structure.WidthMeters * 0.5f + Centimeter)
                     faults.Add(structure.Id + " : sa porte déborde de sa façade.");
+                if (structure.HasBed && (Mathf.Abs(structure.BedFeet.x) > structure.WidthMeters * 0.5f ||
+                                         Mathf.Abs(structure.BedFeet.z) > structure.DepthMeters * 0.5f))
+                    faults.Add(structure.Id + " : sa couche est hors de son empreinte.");
+                if (structure.IsChimeraHome && structure.BuiltWhenPlaced && !structure.HasBed)
+                    faults.Add(structure.Id + " : le campement n'a pas de couche (un objet « Couche » dans sa composition).");
             }
 
             Assert.IsEmpty(faults, string.Join("\n", faults));

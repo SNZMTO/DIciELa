@@ -273,6 +273,9 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 - **La porte** : les pièces dont le nom contient « Door » (le mur à porte, le seuil de pierre…). Le côté où elles
   s'écartent le plus du centre donne le quart de tour ; leur boîte donne la place et la largeur de la porte sur la
   façade. Le bas de cette boîte n'est pas le niveau de la porte : le seuil de Shed_02 descend à 28 cm sous l'origine.
+- **La couche** : un objet vide nommé « Couche », posé aux pieds de qui dort, son avant (la flèche bleue) vers la tête.
+  La préparation le lit dans le repère du modèle préparé, centré : la fiche garde ses pieds (au centimètre) et l'angle
+  de sa tête (au degré). Sans ce repère, pas de couche : la Chimère entre dans son logis, et on ne la voit plus.
 - **Fusionner.** Un preset du pack est fait de dizaines de pièces (Shed_02 : 62), chacune un objet à créer et au moins
   un dessin par image, plus les ombres. Fusionné en un maillage, avec un sous-maillage par matériau (Shed_02 : 15), il
   se crée d'un objet et se dessine en un appel par matériau. On ne prend que la version la plus détaillée de chaque
@@ -286,7 +289,7 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   relancé ; les tests eux-mêmes passaient. Un effet reviendra par une autre voie, après une enquête à part.
 - **Composer un modèle avec des objets du pack** (le campement) : un prefab dans `Assets/Art/Compositions`, en
   instances des prefabs du pack (chacune garde son nom, le développeur la retouche), son entrée sous un objet nommé
-  « Door ». Mesurer avant de placer : les objets du pack n'ont pas la taille qu'on croit (le cercle de pierres fait
+  « Door », sa couche en repère (« Couche », ajouté s'il manque). Mesurer avant de placer : les objets du pack n'ont pas la taille qu'on croit (le cercle de pierres fait
   6,2 m, les tas de rochers 4,8 à 9,9 m, les rochers 2,3 m et plus, la pile de bois 2,2 m, la hache tient debout) :
   les rochers sont à l'échelle du paysage, une réduction en fait un foyer ou un tas de pierres.
 - **Sans modèle du pack, une boîte fusionnée de même** (`PlaceholderBuilder`) : le corps laisse devant lui l'épaisseur

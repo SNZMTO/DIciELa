@@ -12,7 +12,8 @@ namespace Diciela.EditorTools
     /// sans calcul. Sa porte dit de combien le tourner pour qu'elle regarde le nord ; la boîte de ses maillages, une fois
     /// tourné, donne l'empreinte et le centre ; l'origine du pack reste le sol (chez Synty, le niveau de la porte : les
     /// fondations s'enfoncent). Les pièces, dans leur version la plus détaillée, sont fusionnées (ModelMerger). La fiche
-    /// reçoit le modèle préparé, son empreinte et sa porte. Une fiche sans modèle du pack reçoit sa boîte, à sa taille
+    /// reçoit le modèle préparé, son empreinte, sa porte, et sa couche si le modèle en a le repère (un objet « Couche » :
+    /// les pieds de qui dort, son avant vers la tête). Une fiche sans modèle du pack reçoit sa boîte, à sa taille
     /// (PlaceholderBuilder). Tout se fait dans une scène d'aperçu, hors de la scène ouverte.
     /// </summary>
     internal static class ModelPreparer
@@ -61,16 +62,17 @@ namespace Diciela.EditorTools
                 pivot.transform.position = new Vector3(-turned.center.x, 0f, -turned.center.z);
                 Bounds box = SourceModelParts.Box(pieces);
                 Bounds doorBox = structure.HasDoor ? SourceModelParts.Box(door) : default;
+                Transform bed = SourceModelParts.Bed(pivot);
 
                 GameObject prepared = ModelMerger.Save(structure.name, pieces, out string merge);
                 if (prepared == null)
                     return false;
-                Fill(structure, prepared, box, doorBox);
+                Fill(structure, prepared, box, doorBox, bed);
                 Debug.Log("DICIELA : " + structure.Id + " préparée depuis " + structure.SourceModel.name + " : " + merge +
                           " (la version la plus détaillée de chaque pièce ; " + distant + " maillages de loin laissés) ; " +
                           "tournée de " + yaw.ToString("0") + "°, empreinte " + Meters(box.size.x) + " × " +
                           Meters(box.size.z) + " m" + (structure.HasDoor ? DoorReport(box, doorBox, door.Count) : "") +
-                          ".");
+                          (bed != null ? BedReport(bed) : "") + ".");
                 return true;
             }
             finally
@@ -90,6 +92,7 @@ namespace Diciela.EditorTools
                 return false;
             var fiche = new SerializedObject(structure);
             EditorAssets.Property(fiche, "_model").objectReferenceValue = box;
+            EditorAssets.Property(fiche, "_hasBed").boolValue = false;
             fiche.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(structure);
             Debug.Log("DICIELA : " + structure.Id + " se voit en boîte de " + Meters(structure.WidthMeters) + " × " +
@@ -98,8 +101,12 @@ namespace Diciela.EditorTools
             return true;
         }
 
-        /// <summary>La fiche reçoit le modèle préparé, l'empreinte (au centimètre supérieur) et la porte.</summary>
-        private static void Fill(StructureDefinition structure, GameObject prepared, Bounds box, Bounds door)
+        /// <summary>
+        /// La fiche reçoit le modèle préparé, l'empreinte (au centimètre supérieur), la porte, et la couche (au centimètre et
+        /// au degré) ; sans repère, pas de couche.
+        /// </summary>
+        private static void Fill(StructureDefinition structure, GameObject prepared, Bounds box, Bounds door,
+            Transform bed)
         {
             var fiche = new SerializedObject(structure);
             EditorAssets.Property(fiche, "_model").objectReferenceValue = prepared;
@@ -109,6 +116,14 @@ namespace Diciela.EditorTools
             {
                 EditorAssets.Property(fiche, "_doorOffsetMeters").floatValue = Mathf.Round(door.center.x * 100f) / 100f;
                 EditorAssets.Property(fiche, "_doorWidthMeters").floatValue = Mathf.Round(door.size.x * 100f) / 100f;
+            }
+            EditorAssets.Property(fiche, "_hasBed").boolValue = bed != null;
+            if (bed != null)
+            {
+                Vector3 feet = bed.position;
+                EditorAssets.Property(fiche, "_bedFeet").vector3Value = new Vector3(Mathf.Round(feet.x * 100f) / 100f,
+                    Mathf.Round(feet.y * 100f) / 100f, Mathf.Round(feet.z * 100f) / 100f);
+                EditorAssets.Property(fiche, "_bedHeadingDegrees").floatValue = Mathf.Round(Heading(bed.forward));
             }
             fiche.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(structure);
@@ -122,6 +137,18 @@ namespace Diciela.EditorTools
                                  "modèles (DICIELA/Album).");
             return " ; porte (" + pieces + " pièces) décalée de " + Meters(door.center.x) + " m, large de " +
                    Meters(door.size.x) + " m, en retrait de " + Meters(box.max.z - door.max.z) + " m de la façade";
+        }
+
+        private static string BedReport(Transform bed)
+        {
+            return " ; couche aux pieds en (" + Meters(bed.position.x) + " ; " + Meters(bed.position.z) + ") m, à " +
+                   Meters(bed.position.y) + " m du sol, la tête vers " + Heading(bed.forward).ToString("0") + "°";
+        }
+
+        // L'angle d'une direction sur le sol, depuis le nord vers l'est, entre 0 et 360°.
+        private static float Heading(Vector3 direction)
+        {
+            return Mathf.Repeat(Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg, 360f);
         }
 
         private static string Meters(float value)

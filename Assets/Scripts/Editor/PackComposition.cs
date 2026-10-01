@@ -4,25 +4,41 @@ namespace Diciela.EditorTools
 {
     /// <summary>
     /// Un modèle fait d'objets du pack tels quels (SAVOIR, 2.9 ; décision 170) : son nom, la fiche de la construction dont
-    /// il devient le modèle source, et ses objets, chacun à sa place. Les deux du jeu : le campement, logis de départ de la
-    /// Chimère (un foyer, une couche, un coffre, un sac, une marmite ; deux pierres plates sous un objet « Door » font son
-    /// entrée), et le tas de départ (une pile de bûches et un tas de pierres : ce qu'il contient). Les rochers du pack sont
-    /// à l'échelle du paysage : le foyer et le tas de pierres en sont des réductions.
+    /// il devient le modèle source, ses objets, chacun à sa place, et, s'il en a une, sa couche (un repère « Couche » : les
+    /// pieds de qui dort, son avant vers la tête). Les deux du jeu : le campement, logis de départ de la Chimère (un
+    /// foyer, une couche où elle dort, un coffre, un sac, une marmite ; deux pierres plates sous un objet « Door » font
+    /// son entrée), et le tas de départ (une pile de bûches et un tas de pierres : ce qu'il contient). Les rochers du pack
+    /// sont à l'échelle du paysage : le foyer et le tas de pierres en sont des réductions.
     /// </summary>
     internal sealed class PackComposition
     {
         private const string Pack = "Assets/Synty/PolygonFantasyVillage/Prefabs/";
 
-        private PackComposition(string name, string structurePath, params Piece[] pieces)
+        private PackComposition(string name, string structurePath, Spot? bed, params Piece[] pieces)
         {
             Name = name;
             StructurePath = structurePath;
+            Bed = bed;
             Pieces = pieces;
         }
 
         public string Name { get; }
         public string StructurePath { get; }
+        public Spot? Bed { get; }
         public Piece[] Pieces { get; }
+
+        /// <summary>Un repère : sa place (en mètres, l'entrée vers +z) et le quart de tour de son avant.</summary>
+        public readonly struct Spot
+        {
+            public readonly Vector3 Place;
+            public readonly float Yaw;
+
+            public Spot(float x, float y, float z, float yaw)
+            {
+                Place = new Vector3(x, y, z);
+                Yaw = yaw;
+            }
+        }
 
         /// <summary>
         /// Un objet de la composition : son prefab du pack, sa place (en mètres, l'entrée vers +z), son quart de tour, son
@@ -52,8 +68,9 @@ namespace Diciela.EditorTools
         public static readonly PackComposition[] All =
         {
             // Le cercle de pierres du pack (6,2 m, un cercle de place) réduit au quart fait le foyer. Pas de flamme : un
-            // effet de particules dans ces modèles fait planter Unity après une campagne PlayMode (SAVOIR, 2.9).
-            new PackComposition("Campement", ContentBuilder.TentPath,
+            // effet de particules dans ces modèles fait planter Unity après une campagne PlayMode (SAVOIR, 2.9). Sur le
+            // tapis (2,59 m de long), la Chimère dort les pieds vers l'entrée, la tête sur le coussin, au sud.
+            new PackComposition("Campement", ContentBuilder.TentPath, new Spot(-1.75f, 0.2f, 0.65f, 180f),
                 new Piece("Environment/SM_Env_Stone_Ring_01", 0f, 0.1f, scale: 0.25f),
                 new Piece("Props/SM_Prop_Picnic_Rug_01", -1.75f, -0.1f),
                 new Piece("Props/SM_Prop_Pillow_01", -1.75f, -0.95f, y: 0.05f),
@@ -62,7 +79,7 @@ namespace Diciela.EditorTools
                 new Piece("Props/SM_Prop_Sack_01", 1.45f, -0.35f),
                 new Piece("Environment/SM_Env_Stepping_Stone_01", -0.35f, 1.75f, atTheDoor: true),
                 new Piece("Environment/SM_Env_Stepping_Stone_02", 0.35f, 1.8f, 15f, atTheDoor: true)),
-            new PackComposition("TasDeDepart", TownContentBuilder.PilePath,
+            new PackComposition("TasDeDepart", TownContentBuilder.PilePath, null,
                 new Piece("Props/SM_Prop_Wood_Pile_02", -0.55f, 0f),
                 new Piece("Environment/SM_Env_Rock_Pile_05", 0.8f, -0.2f, 25f, scale: 0.22f))
         };

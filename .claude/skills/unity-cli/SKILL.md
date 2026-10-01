@@ -70,6 +70,8 @@ En cas de doute, `unity list` (les outils du paquet `com.unity.pipeline`) ou la 
   Une campagne partie sur une erreur reste « running », puis rend l'ancien assemblage des tests une fois l'erreur
   corrigée : ses chiffres ne comptent pas.
 - Pas de `run_tests --filter`. Enchaîner des campagnes, chacune ayant rendu, ne fige rien.
+- **Pendant une campagne, ne toucher à aucun fichier du code** (les documents, oui) : Unity recompilerait au milieu,
+  le piège des campagnes à 0 test.
 - Une campagne peut rouvrir les scènes et réenregistrer un prefab que le développeur avait ouvert : `git status` avant,
   et prévenir.
 

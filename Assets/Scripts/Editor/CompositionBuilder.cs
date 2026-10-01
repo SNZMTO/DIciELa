@@ -8,9 +8,10 @@ using UnityEngine.SceneManagement;
 namespace Diciela.EditorTools
 {
     /// <summary>
-    /// Compose les modèles faits d'objets du pack (PackComposition ; décision 170) : chacun devient un prefab de
-    /// Assets/Art/Compositions, en instances des prefabs du pack (chacune garde son nom), créé s'il manque ; il devient le
-    /// modèle source de sa construction si elle n'en a pas, et la construction est préparée. Ensuite chaque composition
+    /// Compose les modèles faits d'objets du pack (PackComposition ; décisions 170 et 172) : chacun devient un prefab de
+    /// Assets/Art/Compositions, en instances des prefabs du pack (chacune garde son nom), créé s'il manque ; un repère de
+    /// couche qui lui manque y est ajouté ; il devient le modèle source de sa construction si elle n'en a pas, et la
+    /// construction est préparée. Ensuite chaque composition
     /// est au développeur : il la retouche dans Unity, puis relance ce menu ou « Préparer les modèles ». Il dit la taille
     /// de chaque objet, mesurée, pour aider à retoucher.
     /// </summary>
@@ -27,6 +28,7 @@ namespace Diciela.EditorTools
                 string path = Folder + "/" + composition.Name + ".prefab";
                 if (!EditorAssets.Exists(path) && !Build(composition, path))
                     continue;
+                AddBedIfMissing(composition, path);
                 var structure = EditorAssets.Load<StructureDefinition>(composition.StructurePath);
                 EditorAssets.AssignIfMissing(structure, "_sourceModel", AssetDatabase.LoadAssetAtPath<GameObject>(path));
                 ModelPreparer.Prepare(structure);
@@ -69,6 +71,8 @@ namespace Diciela.EditorTools
                             .Append(" × ").Append(size.z.ToString("0.00")).Append(" × ").Append(size.y.ToString("0.00"));
                     }
                 }
+                if (composition.Bed.HasValue)
+                    AddBed(root.transform, composition.Bed.Value);
                 PrefabUtility.SaveAsPrefabAsset(root, path);
                 Debug.Log("DICIELA : " + composition.Name + " composé (" + path + "), largeur × profondeur × hauteur en " +
                           "mètres" + sizes + ".");
@@ -78,6 +82,35 @@ namespace Diciela.EditorTools
             {
                 EditorSceneManager.ClosePreviewScene(scene);
             }
+        }
+
+        // Une composition déjà faite (retouchée, peut-être, par le développeur) reçoit le repère de sa couche s'il lui manque.
+        private static void AddBedIfMissing(PackComposition composition, string path)
+        {
+            if (!composition.Bed.HasValue)
+                return;
+            GameObject root = PrefabUtility.LoadPrefabContents(path);
+            try
+            {
+                if (SourceModelParts.Bed(root) != null)
+                    return;
+                AddBed(root.transform, composition.Bed.Value);
+                PrefabUtility.SaveAsPrefabAsset(root, path);
+                Debug.Log("DICIELA : " + composition.Name + " reçoit le repère de sa couche (« " + SourceModelParts.BedName +
+                          " »), à déplacer à la main si la Chimère y dort mal.");
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(root);
+            }
+        }
+
+        private static void AddBed(Transform root, PackComposition.Spot bed)
+        {
+            var mark = new GameObject(SourceModelParts.BedName).transform;
+            mark.SetParent(root, false);
+            mark.localPosition = bed.Place;
+            mark.localRotation = Quaternion.Euler(0f, bed.Yaw, 0f);
         }
     }
 }

@@ -43,7 +43,7 @@ namespace Diciela.Simulation.Society
         /// <summary>Levé quand un habitant part dormir : il marche vers son lit.</summary>
         public event Action<Villager> VillagerWentToBed;
 
-        /// <summary>Levé quand un habitant arrive à son lit et s'endort : on ne le voit plus.</summary>
+        /// <summary>Levé quand un habitant arrive à son lit et s'endort.</summary>
         public event Action<Villager> VillagerFellAsleep;
 
         /// <summary>Levé quand un habitant se réveille, ou cesse d'aller dormir : il se remet à flâner.</summary>
