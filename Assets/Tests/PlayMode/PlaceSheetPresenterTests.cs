@@ -20,8 +20,6 @@ namespace Diciela.Tests.PlayMode
                                      "marchandise.bois,Bois\n" +
                                      "marchandise.pierre,Pierre\n" +
                                      "poste.a_tout_faire,À tout faire\n" +
-                                     "tache.porter,Porter\n" +
-                                     "tache.defricher,Défricher\n" +
                                      "fiche.mettre_chimere,Y mettre la Chimère\n" +
                                      "fiche.retirer_chimere,Retirer la Chimère\n" +
                                      "fiche.la_chimere,La Chimère\n" +
@@ -63,7 +61,6 @@ namespace Diciela.Tests.PlayMode
             Assert.AreEqual("Pierre", _view.Lines[1].Name);
             Assert.AreEqual(20, _view.Lines[1].Count);
             Assert.AreEqual("À tout faire", _view.SlotName);
-            Assert.AreEqual(new[] { "Porter", "Défricher" }, _view.Tasks, "Les tâches du poste, dans son ordre.");
             Assert.AreEqual("Libre", _view.SlotHolder);
             Assert.AreEqual("Y mettre la Chimère", _view.Button);
         }

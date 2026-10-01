@@ -28,12 +28,10 @@
     justify-content: center;
 }
 
-/* Une petite vie (HudLife) : le soleil tourne lentement, un tour par minute. */
 .journee-icone {
     width: 42px;
     height: 42px;
     background-image: url("Icones/soleil.asset");
-    --tour: 6;
 }
 
 .journee-textes {
@@ -143,7 +141,7 @@
     position: absolute;
     right: 24px;
     top: 20px;
-    width: 320px;
+    width: 300px;
 }
 
 .fiche-contenu {
@@ -157,38 +155,8 @@
     margin-bottom: 12px;
 }
 
-/* L'enseigne : le nom du lieu sur une tuile de lin, posée sur un ruban de brique dont les queues dépassent de chaque
-   côté. Le lin porte le texte, la brique décore. */
-.fiche-enseigne {
-    flex-grow: 1;
-    flex-shrink: 1;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    min-height: 44px;
-}
-
-.fiche-ruban {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 10px;
-    bottom: 10px;
-    background-image: url("Images/Ruban.png");
-    -unity-slice-left: 64;
-    -unity-slice-right: 64;
-    -unity-slice-scale: 0.25px;
-}
-
-.fiche-tuile {
-    flex-shrink: 1;
-    margin: 0 20px;
-    padding: 4px 12px 5px 12px;
-}
-
 .fiche-titre {
     flex-shrink: 1;
-    -unity-text-align: middle-center;
 }
 
 .fiche-fermer {
@@ -229,23 +197,6 @@
 
 .fiche-poste {
     margin: 4px 0 14px 2px;
-}
-
-/* Le poste, puis les icônes de ses tâches, dans son ordre ; leur nom en infobulle. */
-.fiche-poste-ligne {
-    flex-direction: row;
-    align-items: center;
-}
-
-.fiche-poste-taches {
-    flex-direction: row;
-    margin-left: 6px;
-}
-
-.fiche-tache {
-    width: 20px;
-    height: 20px;
-    margin-left: 6px;
 }
 
 .fiche-bouton {
@@ -298,7 +249,6 @@
     padding-top: 12px;
 }
 
-/* Une petite vie (HudLife) : chaque fanion se balance sous sa tringle, de ±1,5° en 3,6 s, décalé du précédent. */
 .fanion {
     min-width: 112px;
     margin: 0 9px;
@@ -306,10 +256,6 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    transform-origin: 50% 0;
-    --balancement: 1.5;
-    --balancement-duree: 3.6;
-    --balancement-decalage: 0.9;
 }
 
 .fanion-icone {
@@ -338,15 +284,6 @@
     left: 24px;
     bottom: 24px;
     width: 416px;
-    transition-property: translate, opacity;
-    transition-duration: 0.35s;
-    transition-timing-function: ease-out-cubic;
-}
-
-/* Une petite vie : une astuce nouvelle arrive en glissant de la gauche. */
-.astuce-arrivee {
-    translate: -24px 0;
-    opacity: 0;
 }
 
 .astuce-contenu {
