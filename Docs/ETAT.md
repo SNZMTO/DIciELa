@@ -1,24 +1,24 @@
 # DICIELA — état actuel
 
-**Branche** : `main`, à jour et poussée (étapes 21 et 21b fusionnées). La suite attend ton accord sur le plan.
+**Branche** : `etape-23-couche`, codée et testée, **pas commitée** : la Chimère couchée n'a pas encore été vue rendue
+(Unity n'était pas au premier plan). `main` : l'étape 22, poussée.
 
-**Fait** : les étapes 15 à 20b (le tas, le HUD, le ménage, le défrichage, l'écran de création, le chantier qui monte,
-la roue des outils ; décisions 147 à 169) ; 21, le campement d'objets du pack et, à côté, le tas de bûches et de
-pierres, sans flamme (ses particules faisaient planter Unity ; décision 170) ; 21b, la caméra plus proche et plus basse
-(171). **EditMode 174/174, PlayMode 156/156.**
+**Fait** :
+- 21 : le campement d'objets du pack et, à côté, le tas de bûches et de pierres, sans flamme (décision 170) ; 21b : la
+  caméra plus proche et plus basse (171).
+- 22 : le ménage de la revue du code : la roue des outils en deux tables, la règle « un seul outil en main » à la main
+  (`Hand`), la roue et la journée qui se branchent et se débranchent, les recopies supprimées, deux fichiers découpés
+  (173). La décision 172 note tes réponses : le campement fait tout ; le GDD est réécrit.
+- 23 (sur sa branche) : la couche du campement, un repère « Couche » dans sa composition, lu par la préparation comme
+  la porte ; endormie, la Chimère y est couchée sur le dos au lieu de disparaître.
+**EditMode 174/174, PlayMode 165/165.**
 
-**Tes réponses du 01/10** (décision 172 et GDD à écrire) : plus de tas, le campement fait tout : logis, stock de départ
-(100 places, 30 Bois, 20 Pierre), poste « à tout faire ». Un clic ouvre sa fiche (stock, poste, « Y mettre la Chimère »,
-« Aller dormir » / « Réveiller ») ; endormie, elle est couchée sur sa couche ; bûches et pierres entrent dans le
-campement ; la loge, un entrepôt et la cabane du paysagiste bâtis et le stock vide, stock et poste ferment.
+**À vérifier par toi** : envoie la Chimère dormir (touche le campement) : est-elle couchée sur le tapis, la tête sur le
+coussin ? Le repère se déplace dans `Assets/Art/Compositions/Campement.prefab`, puis « Composer le campement et le tas ».
 
-**Revue du code (20 à 21b)** : pas de spaghetti grave ; à corriger : les deux outils de la roue écrits à la main à huit
-endroits ; « un seul outil en main » tenu par GameStage (190 lignes) ; la roue et le panneau branchés de deux façons ;
-des recopies (la hache des icônes, « bloc-cache » ×8) ; une allocation par image ; deux fichiers de plus de 200 lignes.
-
-**Plan proposé** : 22, le ménage de cette revue (rien ne change à l'écran) ; 23, le campement fait tout (la tente
-renommée campement, le tas supprimé, la fiche avec le sommeil, l'astuce, la composition refaite, l'album de 21 à 23) ;
-23b, la Chimère couchée sur sa couche (un repère « Couche » dans la composition, lu comme la porte).
+**Prochaine étape** : voir 23 en Play (captures), la committer, la fusionner ; puis 24, le campement fait tout (la
+tente renommée campement, le tas supprimé, la fiche avec le sommeil, l'astuce, les bûches et les pierres dans le
+campement, l'album de 21 à 24) ; puis les touches 1 à 9 du panneau ouvert ; puis GDD 17.
 
 **À toi** : peindre la carte et ranger tes modèles (`Assets/Data/Nature`) ; le fanion des arbres marqués ; l'icône des
 outils et le plateau de la roue ; les pastels et le bandeau de brique (GDD 16) ; la voix de la Chimère ; les noms.
