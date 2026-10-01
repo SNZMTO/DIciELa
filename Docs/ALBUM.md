@@ -15,6 +15,14 @@
 
 ## Les captures
 
+### 01/10/2026 — étape 18c : les détails du HUD
+
+La fiche du tas porte son nom sur une enseigne, une tuile de lin posée sur un ruban de brique, et son poste montre
+les icônes de ses tâches : porter, bâtir, défricher. Ce qu'une capture ne montre pas : le soleil de la journée tourne
+lentement, les fanions se balancent sous leur tringle, une astuce nouvelle arrive en glissant.
+
+![La fiche, son enseigne et les tâches du poste](Album/2026-10-01_etape-18c_hud-details.jpg)
+
 ### 01/10/2026 — étape 18b : la matière du HUD
 
 Le HUD prend de la matière : le bois des cadres s'élargit et montre son grain, une ferrure de laiton clouée tient
