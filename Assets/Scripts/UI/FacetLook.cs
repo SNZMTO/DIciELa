@@ -5,8 +5,7 @@ namespace Diciela.UI
 {
     /// <summary>
     /// Ce qu'une face (Facet) lit dans la feuille de style (Fusion.uss) : ses propriétés à elle, toutes en pixels ou en
-    /// couleurs. Une propriété absente vaut rien : pas d'ombre, pas de liseré, pas de relief, pas de creux, pas de couture,
-    /// pas de grain, pas de trame.
+    /// couleurs. Une propriété absente vaut rien : pas d'ombre, pas de liseré, pas de relief, pas de creux, pas de couture.
     /// </summary>
     public struct FacetLook
     {
@@ -44,16 +43,6 @@ namespace Diciela.UI
             new CustomStyleProperty<float>("--fil-epaisseur");
         private static readonly CustomStyleProperty<float> DashProperty = new CustomStyleProperty<float>("--fil-trait");
         private static readonly CustomStyleProperty<float> GapProperty = new CustomStyleProperty<float>("--fil-espace");
-        private static readonly CustomStyleProperty<float> GrainProperty = new CustomStyleProperty<float>("--grain");
-        private static readonly CustomStyleProperty<float> GrainSpacingProperty =
-            new CustomStyleProperty<float>("--grain-pas");
-        private static readonly CustomStyleProperty<Color> WeftProperty = new CustomStyleProperty<Color>("--tissage-trame");
-        private static readonly CustomStyleProperty<Color> WarpProperty =
-            new CustomStyleProperty<Color>("--tissage-chaine");
-        private static readonly CustomStyleProperty<float> WeftStepProperty =
-            new CustomStyleProperty<float>("--tissage-trame-pas");
-        private static readonly CustomStyleProperty<float> WarpStepProperty =
-            new CustomStyleProperty<float>("--tissage-chaine-pas");
 
         public float Cut;
         public Color Shadow;
@@ -75,20 +64,12 @@ namespace Diciela.UI
         public float StitchWidth;
         public float Dash;
         public float Gap;
-        public float Grain;
-        public float GrainSpacing;
-        public Color Weft;
-        public Color Warp;
-        public float WeftStep;
-        public float WarpStep;
 
         public bool HasShadow => Shadow.a > 0f && ShadowOffset > 0f;
         public bool HasRim => RimWidth > 0f && Rim.a > 0f;
         public bool HasRelief => Lip.a > 0f && LipHeight > 0f;
         public bool IsHollow => HollowShadow.a > 0f;
         public bool IsStitched => Stitch.a > 0f && StitchWidth > 0f && Dash > 0f;
-        public bool HasGrain => Grain > 0f && GrainSpacing > 0f;
-        public bool IsWoven => (Weft.a > 0f && WeftStep >= 1f) || (Warp.a > 0f && WarpStep >= 1f);
 
         /// <summary>Lit les propriétés résolues pour une face.</summary>
         public static FacetLook Read(ICustomStyle style)
@@ -112,13 +93,7 @@ namespace Diciela.UI
                 StitchInset = Number(style, StitchInsetProperty),
                 StitchWidth = Number(style, StitchWidthProperty),
                 Dash = Number(style, DashProperty),
-                Gap = Number(style, GapProperty),
-                Grain = Number(style, GrainProperty),
-                GrainSpacing = Number(style, GrainSpacingProperty),
-                Weft = Colour(style, WeftProperty),
-                Warp = Colour(style, WarpProperty),
-                WeftStep = Number(style, WeftStepProperty),
-                WarpStep = Number(style, WarpStepProperty)
+                Gap = Number(style, GapProperty)
             };
             // Le reflet se déduit de la face : il la suit quand le survol ou l'appui la change.
             look.Shine = Color.Lerp(look.Face, Colour(style, ShineTintProperty), Number(style, ShineShareProperty));

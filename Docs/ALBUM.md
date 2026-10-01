@@ -15,6 +15,13 @@
 
 ## Les captures
 
+### 01/10/2026 — étape 18d : le HUD en jeu revient comme avant
+
+La matière et les détails des étapes 18b et 18c sont retirés : le HUD en jeu retrouve la fusion d'avant. L'écran de
+création garde son bois brun ; l'astuce du tas dit que la Chimère porte, bâtit et défriche.
+
+![Le HUD en jeu, comme avant](Album/2026-10-01_etape-18d_hud-comme-avant.jpg)
+
 ### 01/10/2026 — étape 18c : les détails du HUD
 
 La fiche du tas porte son nom sur une enseigne, une tuile de lin posée sur un ruban de brique, et son poste montre

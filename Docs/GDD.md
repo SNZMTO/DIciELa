@@ -584,11 +584,10 @@
   procédure `pack-synty`). Ma reco : non ; si le rythme en demande un jour, un événement du temps plutôt que quatre
   décors, comme les sécheresses de Timberborn.
 - **Règle.** Le HUD parle une seule langue, la « fusion » (l'écran de création a la sienne, voir 6) : le bois porte
-  (les cadres), le lin porte le texte, le rouge brique décore sans jamais informer, le laiton fixe (les clous du grand
-  panneau, une ferrure à chaque coin des cadres). Chaque matière se voit, discrètement, sous le texte : le grain du
-  bois, la trame du lin, le grain du feutre. Tout ce qui se clique est un feutre pastel en relief : un reflet en haut,
-  une lèvre en bas, une ombre dessous. Un pastel posé à plat ne se clique pas ; un creux de lin contient une valeur
-  qu'on lit. Les coins sont coupés, jamais arrondis ; ni noir ni blanc pur.
+  (les cadres), le lin porte le texte, le
+  rouge brique décore sans jamais informer, le laiton fixe (les clous du grand panneau). Tout ce qui se clique est un
+  feutre pastel en relief : un reflet en haut, une lèvre en bas, une ombre dessous. Un pastel posé à plat ne se clique
+  pas ; un creux de lin contient une valeur qu'on lit. Les coins sont coupés, jamais arrondis ; ni noir ni blanc pur.
 - **Règle.** Chaque pastel a son rôle : menthe pour l'action principale, sable pour l'action neutre, rose pour la
   famille Logement (rose pâle pour ses cartes), beurre pour les marchandises, ciel pour la journée, lavande pour la
   Chimère. Seule exception, la jauge de la journée : menthe pour le travail, pêche pour la soirée, lavande hachurée
@@ -623,15 +622,10 @@
 - **À toi.** Le reste du plan de l'interface ; le son et la musique. Ma reco : chaque panneau naît avec son système
   (la liste des habitants avec eux, l'étal avec le troc), sur le côté, la ville visible derrière, comme dans
   Timberborn ; le son et la musique après le premier jouable, avec un pack acheté, comme l'art.
-- **Règle.** Toucher un lieu de travail ouvre sa fiche, à droite (en haut tant que le menu n'existe pas) : son nom sur
-  une enseigne (une tuile de lin posée sur un ruban de brique), ce qu'il tient pour la ville (une marchandise par creux
-  de lin), son poste avec les icônes de ses tâches (leur nom en infobulle) et qui le tient, son bouton. Une seule fiche
+- **Règle.** Toucher un lieu de travail ouvre sa fiche, à droite (en haut tant que le menu n'existe pas) : son nom, ce
+  qu'il tient pour la ville (une marchandise par creux de lin), son poste et qui le tient, son bouton. Une seule fiche
   à la fois : la nouvelle remplace l'ancienne ; toucher autre chose, ou le sol, la ferme, comme sa croix. Échap ferme
   d'abord la fiche, puis lâche l'outil en main, puis ouvrira le menu ; l'interface ne prend pas le focus du clavier.
-- **Règle.** Le HUD a de petites vies, qui ne disent rien de plus : le soleil de la journée tourne lentement, les
-  fanions se balancent sous leur tringle, une astuce nouvelle arrive en glissant, un feutre se soulève au survol et
-  s'enfonce sous le doigt.
-- **Défaut.** Le soleil fait un tour par minute ; un fanion se balance de 1,5° en 3,6 s ; l'astuce glisse en 0,35 s.
 - **Règle.** L'outil « Retirer » en main, un clic sur un arbre ou un rocher le marque, ou le démarque ; glisser tire un
   cadre, et le relâcher marque tout ce dont le pied est dedans, du plus proche de son premier coin au plus loin. Un
   arbre marqué porte un fanion à son pied. Un seul outil en main : prendre une carte lâche « Retirer », et l'inverse.

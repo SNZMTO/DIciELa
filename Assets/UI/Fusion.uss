@@ -10,11 +10,8 @@
     --lin-ombre: rgba(58, 30, 14, 0.16);
     --cadre-ombre-dure: rgba(58, 30, 14, 0.42);
     --cadre-ombre-douce: rgba(58, 30, 14, 0.2);
-    --trame-trait: rgba(120, 80, 60, 0.07);
-    --trame-chaine: rgba(120, 80, 60, 0.05);
-    --laiton: #D6A54A;
-    --laiton-clair: #F3D58A;
-    --laiton-ombre: #8A5A22;
+    --trame-trait: rgba(120, 80, 60, 0.03);
+    --trame-chaine: rgba(120, 80, 60, 0.02);
     --brique: #B34747;
     --glyphe: #EFCB9F;
     --filigrane: #E0C7A2;
@@ -103,9 +100,6 @@
     --fil-epaisseur: 2;
     --fil-trait: 6;
     --fil-espace: 4;
-    --grain-pas: 12;
-    --tissage-trame-pas: 3;
-    --tissage-chaine-pas: 5;
 }
 
 .pan-3 { --pan: 3; }
@@ -120,24 +114,11 @@
 .applique.lavande { --face: #DBC1EA; }
 .applique.beurre { --face: #F8DE95; }
 
-/* Un creux de lin : il contient une valeur qu'on lit ; sa trame est celle du lin des cadres (Cadre.png). */
+/* Un creux de lin : il contient une valeur qu'on lit. */
 .creux {
     --face: #ECE0CB;
-    --tissage-trame: rgba(120, 80, 60, 0.07);
-    --tissage-chaine: rgba(120, 80, 60, 0.05);
     --creux-ombre: rgba(58, 30, 14, 0.16);
     --creux-lumiere: rgba(255, 251, 242, 0.7);
-}
-
-/* Une tuile de lin posée sur ce qu'elle porte (l'enseigne d'une fiche) : liseré de paille, ombre dure, trame. */
-.tuile-lin {
-    --face: #FBF3E4;
-    --lisere: #D9C29C;
-    --lisere-largeur: 2;
-    --ombre: rgba(58, 30, 14, 0.25);
-    --ombre-y: 2;
-    --tissage-trame: rgba(120, 80, 60, 0.07);
-    --tissage-chaine: rgba(120, 80, 60, 0.05);
 }
 
 /* La bulle d'une infobulle : du lin dans un liseré de paille. */
@@ -151,15 +132,14 @@
     padding: 8px 14px;
 }
 
-/* Le feutre : il se clique ; son relief (lèvre, reflet, ombre) le dit, son grain dit sa matière. Il se soulève au
-   survol, s'enfonce à l'appui, et reste enfoncé quand il est ouvert (un onglet), la lèvre en haut et ce qu'il porte
-   descendu. Son ombre, dure, est dessinée par la face (--ombre). */
+/* Le feutre : il se clique ; son relief (lèvre, reflet, ombre) le dit. Il se soulève au survol, s'enfonce à l'appui,
+   et reste enfoncé quand il est ouvert (un onglet), la lèvre en haut et ce qu'il porte descendu. Son ombre, dure, est
+   dessinée par la face (--ombre). */
 .feutre {
     --face: #EFD3A4;
     --levre: #CFAE78;
     --ombre: rgba(58, 30, 14, 0.3);
     --ombre-y: 3;
-    --grain: 0.35;
     transition-property: translate;
     transition-duration: 0.12s;
     transition-timing-function: ease-out-cubic;

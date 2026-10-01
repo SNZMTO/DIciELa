@@ -21,7 +21,6 @@ namespace Diciela.UI
         private readonly World _world;
         private readonly TextTable _texts;
         private readonly List<PlaceSheetLine> _lines = new List<PlaceSheetLine>();
-        private readonly List<PlaceSheetTask> _tasks = new List<PlaceSheetTask>();
 
         public PlaceSheetPresenter(IPlaceSheetView view, World world, TextTable texts)
         {
@@ -91,17 +90,10 @@ namespace Diciela.UI
 
             Villager chimera = _world.Villagers.Chimera;
             WorkSlot slot = ShownSlot(chimera);
-            _tasks.Clear();
             if (slot == null)
-            {
-                _view.ShowSlot("", "", _tasks);
-            }
+                _view.ShowSlot("", "");
             else
-            {
-                foreach (TaskKindDefinition task in slot.Definition.Tasks)
-                    _tasks.Add(new PlaceSheetTask(task.Icon, _texts.Get(task.NameKey)));
-                _view.ShowSlot(_texts.Get(slot.Definition.NameKey), HolderOf(slot, chimera), _tasks);
-            }
+                _view.ShowSlot(_texts.Get(slot.Definition.NameKey), HolderOf(slot, chimera));
             if (slot == null || chimera == null)
                 _view.ShowButton("");
             else

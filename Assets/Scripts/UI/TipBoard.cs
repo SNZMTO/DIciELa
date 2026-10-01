@@ -18,16 +18,12 @@ namespace Diciela.UI
         private const string PortraitName = "astuce-portrait";
         private const string TextName = "astuce-texte";
         private const string HiddenClass = "bloc-cache";
-        // Une astuce nouvelle part de là (décalée, transparente) puis glisse à sa place : la transition est dans Hud.uss.
-        private const string ArrivingClass = "astuce-arrivee";
-        private const long ArrivingMilliseconds = 30;
 
         private UIDocument _document;
         private VisualElement _tip;
         private VisualElement _portrait;
         private Label _text;
         private TipPresenter _presenter;
-        private Action _arrived;
 
         private void Awake()
         {
@@ -73,14 +69,8 @@ namespace Diciela.UI
 
         public void ShowTip(string text)
         {
-            bool arrives = !string.IsNullOrEmpty(text) && text != _text.text;
             _text.text = text;
             _tip.EnableInClassList(HiddenClass, string.IsNullOrEmpty(text));
-            if (!arrives)
-                return;
-            _arrived ??= () => _tip.RemoveFromClassList(ArrivingClass);
-            _tip.AddToClassList(ArrivingClass);
-            _tip.schedule.Execute(_arrived).StartingIn(ArrivingMilliseconds);
         }
     }
 }

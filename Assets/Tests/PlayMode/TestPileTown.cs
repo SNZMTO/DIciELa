@@ -31,14 +31,12 @@ namespace Diciela.Tests.PlayMode
             TestWorld.FillList(trade, "_subStatistics", transport);
             var carry = Keep(ScriptableObject.CreateInstance<TaskKindDefinition>());
             TestWorld.Fill(carry, "_subStatistic", transport);
-            TestWorld.Fill(carry, "_nameKey", "tache.porter");
             var landscape = Keep(ScriptableObject.CreateInstance<SubStatisticDefinition>());
             var land = Keep(ScriptableObject.CreateInstance<StatisticDefinition>());
             TestWorld.FillList(land, "_subStatistics", landscape);
             var clear = Keep(ScriptableObject.CreateInstance<TaskKindDefinition>());
             TestWorld.Fill(clear, "_work", (int)TaskWork.Clear);
             TestWorld.Fill(clear, "_subStatistic", landscape);
-            TestWorld.Fill(clear, "_nameKey", "tache.defricher");
             var slot = Keep(ScriptableObject.CreateInstance<WorkSlotDefinition>());
             TestWorld.Fill(slot, "_nameKey", "poste.a_tout_faire");
             TestWorld.FillList(slot, "_tasks", carry, clear);
