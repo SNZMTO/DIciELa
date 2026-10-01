@@ -14,7 +14,8 @@ namespace Diciela.EditorTools
     /// L'installer : on se rapproche de la Chimère, puis on tient l'outil de pose à la place de la souris ; le campement
     /// s'installe devant elle, entrée tournée vers la caméra, et les gestes de la caméra et de la pose restent coupés
     /// jusqu'à la fin du Play. Le toucher : comme un clic sur son modèle, qui ouvre sa fiche. Y mettre la Chimère, et
-    /// l'envoyer dormir : les ordres mêmes que les boutons de la fiche.
+    /// l'envoyer dormir : les ordres mêmes que les boutons de la fiche. Se rapprocher de la couche : des crans de molette
+    /// vers là où la Chimère dort, comme le ferait la souris posée sur elle.
     /// </summary>
     public static class AlbumCampMenu
     {
@@ -27,6 +28,9 @@ namespace Diciela.EditorTools
         // Où l'on cherche le modèle du campement pour le toucher : au-dessus de son centre, à ces hauteurs, en mètres
         // (il est bas, et son milieu est un foyer creux).
         private static readonly float[] TouchHeights = { 0.05f, 0.3f, 1f };
+
+        // Les crans de molette vers la couche.
+        private const float CouchZoomNotches = 4f;
 
         [MenuItem("DICIELA/Album/Installer le campement près de la Chimère")]
         public static void InstallTheCamp()
@@ -117,6 +121,23 @@ namespace Diciela.EditorTools
             }
             world.Submit(new SendChimeraToBedCommand());
             Debug.Log("DICIELA : mise en scène de l'album : la Chimère est envoyée dormir.");
+        }
+
+        [MenuItem("DICIELA/Album/Se rapprocher de la couche")]
+        public static void ZoomOnTheCouch()
+        {
+            World world = AlbumWorld.Running();
+            Structure home = world != null ? world.Structures.ChimeraHome : null;
+            var rig = Object.FindAnyObjectByType<CameraRig>();
+            if (home == null || !home.Definition.HasBed || rig == null)
+            {
+                Debug.LogError("DICIELA : on se rapproche de la couche en Play, une fois le campement installé.");
+                return;
+            }
+
+            Vector3 couch = ModelPose.PointOf(home.Placement, world.Map.Relief, home.Definition.BedFeet);
+            rig.Zoom(CouchZoomNotches, rig.Camera.WorldToScreenPoint(couch));
+            Debug.Log("DICIELA : mise en scène de l'album : la vue se rapproche de la couche, en " + couch + ".");
         }
 
         private static Vector3 Ground(World world, Vector2 at)
