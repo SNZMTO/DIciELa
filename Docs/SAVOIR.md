@@ -511,6 +511,15 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   (`pickingMode` à `Ignore` sur lui et ses enfants). `worldBound` compte `translate`, que le feutre anime en
   s'enfonçant : une place se vérifie sur `layout`. Et un élément qui s'anime par `translate` se centre par ses marges,
   jamais par `translate: -50% -50%`, que son survol écraserait.
+- **Une vue du HUD se branche à chaque ouverture et se débranche à sa fermeture** (étape 22) : les éléments d'un
+  document vivent plus longtemps qu'une partie. Un rappel posé une seule fois garde ce qu'on lui a donné à la première
+  partie (la roue gardait sa première bulle d'aide) ; un rappel posé à chaque ouverture sans être retiré se double. Donc
+  `Show` branche, `Hide` débranche, et une infobulle donnée se retire (`Tooltips.Attach` rend de quoi la retirer) ;
+  un élément qu'on jette emporte ses rappels.
+- **Un clic simulé dans un test** (étape 22) : envoyer à l'élément `PointerDownEvent.GetPooled(Event)` puis
+  `PointerUpEvent.GetPooled(Event)`, la cible donnée, un `Event` de souris dont `mousePosition` est le milieu de
+  l'élément dans le repère du panneau (origine en haut, sans conversion). Un toucher (`GetPooled(Touch)`) n'a pas
+  déclenché le `Clickable` d'un bouton. Un survol : `PointerEnterEvent.GetPooled(Event)`.
 - **Une feuille de style qui nomme une icône pas encore générée** garde une référence vide (« Invalid asset path » dans le
   journal) et affiche le triangle jaune d'Unity, même une fois l'icône créée : générer l'icône d'abord, ou réimporter la
   feuille (`set_selection --paths '["…uss"]'`, puis le menu `Assets/Reimport`).

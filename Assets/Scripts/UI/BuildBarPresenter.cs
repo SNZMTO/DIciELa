@@ -45,7 +45,7 @@ namespace Diciela.UI
             _catalogHasAHome = HasAHome(catalog);
             _view.FamilyChosen += OnFamilyChosen;
             _view.StructureChosen += OnStructureChosen;
-            _placement.CurrentChanged += OnCurrentChanged;
+            _placement.HeldChanged += OnHeldChanged;
             _placement.ResultChanged += OnResultChanged;
             _world.Structures.StructurePlaced += OnStructurePlaced;
             OnFamilyChosen(0);
@@ -60,7 +60,7 @@ namespace Diciela.UI
         {
             _view.FamilyChosen -= OnFamilyChosen;
             _view.StructureChosen -= OnStructureChosen;
-            _placement.CurrentChanged -= OnCurrentChanged;
+            _placement.HeldChanged -= OnHeldChanged;
             _placement.ResultChanged -= OnResultChanged;
             _world.Structures.StructurePlaced -= OnStructurePlaced;
         }
@@ -127,7 +127,7 @@ namespace Diciela.UI
                 }
             }
             _view.ShowStructures(_cards);
-            OnCurrentChanged();
+            OnHeldChanged();
         }
 
         private bool IsOffered(StructureDefinition structure)
@@ -146,7 +146,7 @@ namespace Diciela.UI
             Close();
         }
 
-        private void OnCurrentChanged()
+        private void OnHeldChanged()
         {
             _view.SelectStructure(_offered.IndexOf(_placement.Current));
         }

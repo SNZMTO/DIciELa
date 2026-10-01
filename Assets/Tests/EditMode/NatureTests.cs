@@ -59,11 +59,11 @@ namespace Diciela.Tests.EditMode
             world.Nature.ItemMarked += item => heard.Add("+" + item.Id);
             world.Nature.ItemUnmarked += item => heard.Add("-" + item.Id);
 
-            Send(world, new MarkForClearingCommand(new[] { 3, 1 }));
-            Send(world, new MarkForClearingCommand(new[] { 2, 3, 99 }));
+            TestTown.Send(world, new MarkForClearingCommand(new[] { 3, 1 }));
+            TestTown.Send(world, new MarkForClearingCommand(new[] { 2, 3, 99 }));
             Assert.AreEqual(new[] { 3, 1, 2 }, IdsOf(world.Nature.Marked), "Dans l'ordre des gestes, sans doublon.");
 
-            Send(world, new UnmarkForClearingCommand(new[] { 1, 1 }));
+            TestTown.Send(world, new UnmarkForClearingCommand(new[] { 1, 1 }));
             Assert.AreEqual(new[] { 3, 2 }, IdsOf(world.Nature.Marked));
             Assert.IsFalse(world.Nature.Find(1).IsMarked);
             Assert.AreEqual(new[] { "+3", "+1", "+2", "-1" }, heard.ToArray(), "Un événement par changement.");
@@ -79,7 +79,7 @@ namespace Diciela.Tests.EditMode
             Vector2Int shared = world.Grid.CellOf(new Vector2(28.3f, 22f));
             Assert.AreEqual(second.Occupant, world.Grid.OccupantAt(shared), "Le dernier de la carte garde la maille.");
 
-            Send(world, new MarkForClearingCommand(new[] { first.Id }));
+            TestTown.Send(world, new MarkForClearingCommand(new[] { first.Id }));
             TestGrids.StepUntil(world, () => first.IsRemoved, 3000, "le premier arbre retiré");
 
             Assert.AreEqual(second.Occupant, world.Grid.OccupantAt(shared), "La maille du second reste à lui.");
@@ -98,12 +98,6 @@ namespace Diciela.Tests.EditMode
         internal static NatureSpot Spot(NatureDefinition definition, float x, float z)
         {
             return new NatureSpot(definition, new Placement(new Vector2(x, z), 0f));
-        }
-
-        private static void Send(World world, Command command)
-        {
-            world.Submit(command);
-            world.Step();
         }
 
         private static int[] IdsOf(IReadOnlyList<NatureItem> items)

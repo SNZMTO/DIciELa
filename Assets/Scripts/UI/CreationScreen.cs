@@ -22,7 +22,6 @@ namespace Diciela.UI
         private const string TitleName = "title";
         private const string RowsName = "rows";
         private const string ConfirmName = "confirm";
-        private const string HiddenPanelClass = "bloc-cache";
         private const string RowClass = "row";
         private const string PaletteClass = "palette";
         private const string IconClass = "row-icon";
@@ -77,7 +76,7 @@ namespace Diciela.UI
             _confirm = confirm;
             _confirm.clicked += Confirm;
             _presenter = new CreationPresenter(this, catalog, texts, preview, world, created);
-            _panel.RemoveFromClassList(HiddenPanelClass);
+            _panel.RemoveFromClassList(StyleClasses.Hidden);
         }
 
         /// <summary>Cache l'écran et oublie le monde.</summary>
@@ -88,7 +87,7 @@ namespace Diciela.UI
             if (_panel == null)
                 return;
             _confirm.clicked -= Confirm;
-            _panel.AddToClassList(HiddenPanelClass);
+            _panel.AddToClassList(StyleClasses.Hidden);
             _rows.Clear();
             _choices.Clear();
             _colors.Clear();
@@ -140,7 +139,7 @@ namespace Diciela.UI
         public bool Contains(Vector2 screenPoint)
         {
             IPanel panel = _document != null ? _document.rootVisualElement?.panel : null;
-            if (panel == null || _panel == null || _panel.ClassListContains(HiddenPanelClass))
+            if (panel == null || _panel == null || _panel.ClassListContains(StyleClasses.Hidden))
                 return false;
             var fromTop = new Vector2(screenPoint.x, Screen.height - screenPoint.y);
             VisualElement picked = panel.Pick(RuntimePanelUtils.ScreenToPanel(panel, fromTop));

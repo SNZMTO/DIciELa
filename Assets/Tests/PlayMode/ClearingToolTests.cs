@@ -89,7 +89,7 @@ namespace Diciela.Tests.PlayMode
         public void EscapeDropsTheTool()
         {
             int changes = 0;
-            _tool.ActiveChanged += () => changes++;
+            _tool.HeldChanged += () => changes++;
             _tool.Take();
             Assert.IsTrue(_tool.IsActive);
 

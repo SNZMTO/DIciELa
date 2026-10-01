@@ -27,7 +27,6 @@ namespace Diciela.UI
         private const string SlotHolderName = "fiche-poste-qui";
         private const string ButtonName = "fiche-bouton";
         private const string ButtonTextName = "fiche-bouton-texte";
-        private const string HiddenClass = "bloc-cache";
         private static readonly string[] LineClasses = { "creux", "pan-4", "fiche-ligne" };
         private const string IconClass = "fiche-icone";
         private static readonly string[] LineNameClasses = { "libelle", "fiche-ligne-nom" };
@@ -116,7 +115,7 @@ namespace Diciela.UI
 
         public void ShowSheet(bool shown)
         {
-            _sheet.EnableInClassList(HiddenClass, !shown);
+            _sheet.EnableInClassList(StyleClasses.Hidden, !shown);
         }
 
         public void ShowTitle(string title)
@@ -141,20 +140,20 @@ namespace Diciela.UI
                 row.Add(Text(line.Count.ToString(System.Globalization.CultureInfo.InvariantCulture), CountClass));
                 _stock.Add(row);
             }
-            _stock.EnableInClassList(HiddenClass, lines.Count == 0);
+            _stock.EnableInClassList(StyleClasses.Hidden, lines.Count == 0);
         }
 
         public void ShowSlot(string name, string holder)
         {
             _slotName.text = name;
             _slotHolder.text = holder;
-            _slot.EnableInClassList(HiddenClass, string.IsNullOrEmpty(name));
+            _slot.EnableInClassList(StyleClasses.Hidden, string.IsNullOrEmpty(name));
         }
 
         public void ShowButton(string text)
         {
             _buttonText.text = text;
-            _button.EnableInClassList(HiddenClass, string.IsNullOrEmpty(text));
+            _button.EnableInClassList(StyleClasses.Hidden, string.IsNullOrEmpty(text));
         }
 
         private void OnClose()

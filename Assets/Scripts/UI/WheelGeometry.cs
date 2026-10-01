@@ -6,7 +6,8 @@ namespace Diciela.UI
     /// <summary>
     /// Les mesures de la roue des outils (décision 168), dans le repère du panneau : l'outil qu'on vise, par la direction
     /// du pointeur depuis le centre, comme une roue d'armes ; et la place du centre, ramenée pour que la roue tienne dans
-    /// l'écran. Rien n'y est réglé : tout se déduit de la place des outils, que donne la feuille de style.
+    /// l'écran. Rien n'y est réglé : tout se déduit de la place des outils, que donne la feuille de style. On vise à
+    /// chaque image tant que la touche est tenue : les boucles vont par rang, sans rien allouer.
     /// </summary>
     public static class WheelGeometry
     {
@@ -23,8 +24,8 @@ namespace Diciela.UI
                 return -1;
 
             float nearest = float.MaxValue;
-            foreach (Vector2 tool in tools)
-                nearest = Mathf.Min(nearest, Vector2.Distance(tool, center));
+            for (int i = 0; i < tools.Count; i++)
+                nearest = Mathf.Min(nearest, Vector2.Distance(tools[i], center));
             Vector2 toPointer = pointer - center;
             if (toPointer.magnitude < nearest * DeadZoneShare)
                 return -1;

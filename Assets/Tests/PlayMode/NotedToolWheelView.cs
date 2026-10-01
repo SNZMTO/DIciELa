@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Diciela.Controls;
 using Diciela.UI;
 
@@ -12,10 +13,10 @@ namespace Diciela.Tests.PlayMode
         public event Action<ToolChoice> Chosen;
         public event Action<ToolChoice?> Pointed;
 
-        public (string Wheel, string Build, string Clear) Keys { get; private set; }
+        public string WheelKey { get; private set; }
+        public Dictionary<ToolChoice, string> ToolKeys { get; } = new Dictionary<ToolChoice, string>();
         public (string Name, string Detail) Label { get; private set; }
-        public bool Building { get; private set; }
-        public bool Clearing { get; private set; }
+        public HashSet<ToolChoice> Active { get; } = new HashSet<ToolChoice>();
 
         public void Choose(ToolChoice choice)
         {
@@ -27,9 +28,14 @@ namespace Diciela.Tests.PlayMode
             Pointed?.Invoke(choice);
         }
 
-        public void ShowKeys(string wheel, string build, string clear)
+        public void ShowWheelKey(string key)
         {
-            Keys = (wheel, build, clear);
+            WheelKey = key;
+        }
+
+        public void ShowToolKey(ToolChoice tool, string key)
+        {
+            ToolKeys[tool] = key;
         }
 
         public void ShowLabel(string name, string detail)
@@ -37,10 +43,12 @@ namespace Diciela.Tests.PlayMode
             Label = (name, detail);
         }
 
-        public void ShowActive(bool building, bool clearing)
+        public void ShowActive(ToolChoice tool, bool active)
         {
-            Building = building;
-            Clearing = clearing;
+            if (active)
+                Active.Add(tool);
+            else
+                Active.Remove(tool);
         }
     }
 }

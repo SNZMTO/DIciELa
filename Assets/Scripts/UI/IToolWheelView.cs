@@ -15,13 +15,16 @@ namespace Diciela.UI
         /// <summary>Levé quand le joueur vise un outil, ou plus rien (null).</summary>
         event Action<ToolChoice?> Pointed;
 
-        /// <summary>Écrit les touches : celle de la roue, sur l'icône des outils ; celle de chaque outil, sur lui.</summary>
-        void ShowKeys(string wheel, string build, string clear);
+        /// <summary>Écrit la touche de la roue, sur l'icône des outils.</summary>
+        void ShowWheelKey(string key);
+
+        /// <summary>Écrit la touche de cet outil, sur lui.</summary>
+        void ShowToolKey(ToolChoice tool, string key);
 
         /// <summary>Écrit le nom et l'usage de l'outil visé dans la bulle du milieu ; un nom vide la cache.</summary>
         void ShowLabel(string name, string detail);
 
-        /// <summary>Enfonce les outils actifs : le panneau Construire ouvert, l'outil « Retirer » en main.</summary>
-        void ShowActive(bool building, bool clearing);
+        /// <summary>Enfonce cet outil s'il est actif (le panneau Construire ouvert, l'outil « Retirer » en main).</summary>
+        void ShowActive(ToolChoice tool, bool active);
     }
 }

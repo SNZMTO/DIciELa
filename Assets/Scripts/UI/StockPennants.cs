@@ -19,7 +19,6 @@ namespace Diciela.UI
     {
         private const string StockName = "stock";
         private const string PennantsName = "fanions";
-        private const string HiddenClass = "bloc-cache";
         private const string PennantClass = "fanion";
         private const string EmptyClass = "fanion-vide";
         private const string IconClass = "fanion-icone";
@@ -70,7 +69,7 @@ namespace Diciela.UI
 
         public void ShowStock(bool shown)
         {
-            _stock.EnableInClassList(HiddenClass, !shown);
+            _stock.EnableInClassList(StyleClasses.Hidden, !shown);
         }
 
         public void ShowPennants(IReadOnlyList<StockPennant> pennants)
@@ -103,6 +102,7 @@ namespace Diciela.UI
             var count = new Label { pickingMode = PickingMode.Ignore };
             count.AddToClassList(CountClass);
             pennant.Add(count);
+            // Un fanion qu'on jette emporte son infobulle : rien à lui retirer.
             _tooltips.Attach(pennant, () => ((string)pennant.userData, ""));
             return pennant;
         }

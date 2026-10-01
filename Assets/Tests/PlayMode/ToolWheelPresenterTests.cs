@@ -45,7 +45,9 @@ namespace Diciela.Tests.PlayMode
         [Test]
         public void TheWheelShowsTheKeysAndTheIconNamesTheWheelKey()
         {
-            Assert.AreEqual(("Tab", "B", "X"), _view.Keys);
+            Assert.AreEqual("Tab", _view.WheelKey);
+            Assert.AreEqual("B", _view.ToolKeys[ToolChoice.Build]);
+            Assert.AreEqual("X", _view.ToolKeys[ToolChoice.Clear]);
             Assert.AreEqual(("Outils", "Ou tiens Tab"), _presenter.IconTooltip());
         }
 
@@ -54,11 +56,11 @@ namespace Diciela.Tests.PlayMode
         {
             _view.Choose(ToolChoice.Build);
             Assert.IsTrue(_build.IsOpen);
-            Assert.IsTrue(_view.Building, "Le panneau ouvert, Construire reste enfoncé.");
+            Assert.IsTrue(_view.Active.Contains(ToolChoice.Build), "Le panneau ouvert, Construire reste enfoncé.");
 
             _view.Choose(ToolChoice.Build);
             Assert.IsFalse(_build.IsOpen);
-            Assert.IsFalse(_view.Building);
+            Assert.IsFalse(_view.Active.Contains(ToolChoice.Build));
         }
 
         [Test]
@@ -69,11 +71,11 @@ namespace Diciela.Tests.PlayMode
             _view.Choose(ToolChoice.Clear);
             Assert.IsTrue(_test.Clearing.IsActive, "Retirer prend l'outil en main.");
             Assert.IsFalse(_build.IsOpen, "Et ferme le panneau.");
-            Assert.IsTrue(_view.Clearing, "En main, Retirer reste enfoncé.");
+            Assert.IsTrue(_view.Active.Contains(ToolChoice.Clear), "En main, Retirer reste enfoncé.");
 
             _view.Choose(ToolChoice.Clear);
             Assert.IsFalse(_test.Clearing.IsActive, "Un second choix le lâche.");
-            Assert.IsFalse(_view.Clearing);
+            Assert.IsFalse(_view.Active.Contains(ToolChoice.Clear));
         }
 
         [Test]

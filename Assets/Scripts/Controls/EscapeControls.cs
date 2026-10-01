@@ -5,8 +5,8 @@ using UnityEngine.InputSystem;
 namespace Diciela.Controls
 {
     /// <summary>
-    /// Le geste « Échap », une pile (GDD, section 16 ; décision 152) : il ferme d'abord la fiche ouverte, puis lâche
-    /// l'outil en main ; plus tard, il ouvrira le menu. Le démarrage lui donne, dans cet ordre, ce qu'il peut refermer ;
+    /// Le geste « Échap », une pile (GDD, section 16 ; décision 152) : il ferme d'abord la fiche ouverte, puis la roue
+    /// des outils, puis le panneau Construire, puis lâche l'outil en main ; plus tard, il ouvrira le menu. Le démarrage lui donne, dans cet ordre, ce qu'il peut refermer ;
     /// le premier qui s'en sert l'arrête. Il lit l'action, rien d'autre : les gestes ne connaissent pas l'interface.
     /// </summary>
     public sealed class EscapeControls : MonoBehaviour

@@ -5,10 +5,11 @@ using Diciela.Data;
 namespace Diciela.UI
 {
     /// <summary>
-    /// Le présentateur de la roue des outils (GDD, section 16 ; décision 168). Construire ouvre le panneau Construire, en
-    /// posant l'outil « Retirer » s'il était en main, ou le ferme s'il est ouvert. Retirer ferme le panneau et prend
-    /// l'outil en main, ou le lâche s'il l'était. La bulle du milieu dit le nom et l'usage de l'outil visé ; un outil
-    /// actif reste enfoncé. Les touches se lisent sur les liaisons, l'icône dit celle de la roue dans son infobulle.
+    /// Le présentateur de la roue des outils (GDD, section 16 ; décision 168). Choisir un outil l'allume, en éteignant
+    /// les autres, ou l'éteint s'il l'était : Construire ouvre ou ferme le panneau Construire, Retirer prend ou lâche
+    /// l'outil. Ce que fait chaque outil n'est écrit qu'ici, dans sa table ; le reste se lit dans la table des outils
+    /// (WheelTool). La bulle du milieu dit le nom et l'usage de l'outil visé ; un outil actif reste enfoncé. Les touches
+    /// se lisent sur les liaisons, l'icône dit celle de la roue dans son infobulle.
     /// </summary>
     public sealed class ToolWheelPresenter : IDisposable
     {
@@ -17,6 +18,22 @@ namespace Diciela.UI
         private readonly IToolKeys _keys;
         private readonly ClearingTool _clearing;
         private readonly IBuildMenu _build;
+        private readonly Switch[] _switches;
+
+        /// <summary>Ce qu'un outil allume et éteint, et s'il est allumé.</summary>
+        private readonly struct Switch
+        {
+            public readonly Func<bool> IsOn;
+            public readonly Action On;
+            public readonly Action Off;
+
+            public Switch(Func<bool> isOn, Action on, Action off)
+            {
+                IsOn = isOn;
+                On = on;
+                Off = off;
+            }
+        }
 
         public ToolWheelPresenter(IToolWheelView view, TextTable texts, IToolKeys keys, ClearingTool clearing,
             IBuildMenu build)
@@ -31,11 +48,19 @@ namespace Diciela.UI
             _keys = keys;
             _clearing = clearing;
             _build = build;
+            // Au rang du choix de chaque outil (ToolChoice).
+            _switches = new[]
+            {
+                new Switch(() => _build.IsOpen, _build.Open, _build.Close),
+                new Switch(() => _clearing.IsActive, _clearing.Take, () => _clearing.Escape())
+            };
             _view.Chosen += OnChosen;
             _view.Pointed += OnPointed;
-            _clearing.ActiveChanged += ShowActive;
+            _clearing.HeldChanged += ShowActive;
             _build.OpenChanged += ShowActive;
-            _view.ShowKeys(keys.WheelKey, keys.KeyOf(ToolChoice.Build), keys.KeyOf(ToolChoice.Clear));
+            _view.ShowWheelKey(keys.WheelKey);
+            for (int i = 0; i < _switches.Length; i++)
+                _view.ShowToolKey((ToolChoice)i, keys.KeyOf((ToolChoice)i));
             _view.ShowLabel("", "");
             ShowActive();
         }
@@ -44,7 +69,7 @@ namespace Diciela.UI
         {
             _view.Chosen -= OnChosen;
             _view.Pointed -= OnPointed;
-            _clearing.ActiveChanged -= ShowActive;
+            _clearing.HeldChanged -= ShowActive;
             _build.OpenChanged -= ShowActive;
         }
 
@@ -57,21 +82,18 @@ namespace Diciela.UI
 
         private void OnChosen(ToolChoice choice)
         {
-            if (choice == ToolChoice.Build)
+            Switch chosen = _switches[(int)choice];
+            if (chosen.IsOn())
             {
-                if (_build.IsOpen)
-                {
-                    _build.Close();
-                    return;
-                }
-                _clearing.Escape();
-                _build.Open();
+                chosen.Off();
                 return;
             }
-
-            _build.Close();
-            if (!_clearing.Escape())
-                _clearing.Take();
+            for (int i = 0; i < _switches.Length; i++)
+            {
+                if (i != (int)choice && _switches[i].IsOn())
+                    _switches[i].Off();
+            }
+            chosen.On();
         }
 
         private void OnPointed(ToolChoice? choice)
@@ -81,14 +103,14 @@ namespace Diciela.UI
                 _view.ShowLabel("", "");
                 return;
             }
-            bool build = choice.Value == ToolChoice.Build;
-            _view.ShowLabel(_texts.Get(build ? TextKeys.BuildTool : TextKeys.ClearingTool),
-                _texts.Get(build ? TextKeys.BuildToolDetail : TextKeys.ClearingToolDetail));
+            WheelTool tool = WheelTool.Of(choice.Value);
+            _view.ShowLabel(_texts.Get(tool.NameKey), _texts.Get(tool.DetailKey));
         }
 
         private void ShowActive()
         {
-            _view.ShowActive(_build.IsOpen, _clearing.IsActive);
+            for (int i = 0; i < _switches.Length; i++)
+                _view.ShowActive((ToolChoice)i, _switches[i].IsOn());
         }
     }
 }

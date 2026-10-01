@@ -108,6 +108,13 @@ namespace Diciela.Tests.EditMode
             return placed;
         }
 
+        /// <summary>Envoie cet ordre et joue un pas, où il se joue.</summary>
+        public static void Send(World world, Command command)
+        {
+            world.Submit(command);
+            world.Step();
+        }
+
         /// <summary>Le tas de départ de ce monde ; null s'il n'est pas posé.</summary>
         public Structure PileOf(World world)
         {
