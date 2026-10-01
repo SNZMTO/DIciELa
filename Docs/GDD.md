@@ -603,8 +603,10 @@
   touché à droite ; l'icône des outils en bas à droite ; l'astuce en bas à gauche. Un bouton n'apparaît qu'avec ce
   qu'il fait : le bouton du menu arrive avec le menu (la pause, les réglages).
 - **Règle.** Les outils se prennent à la roue des outils, comme les roues d'armes des jeux d'action sur PC : tenir sa
-  touche l'ouvre autour du pointeur, on vise un outil par la direction du pointeur et on le choisit en relâchant ;
-  cliquer l'icône des outils l'ouvre aussi, et l'on clique l'outil. Elle reste dans l'écran. Chaque outil y a sa
+  touche l'ouvre autour du pointeur, on vise un outil par la direction où l'on bouge le pointeur et on le choisit en
+  relâchant ; relâcher sans avoir bougé ne choisit rien, même près d'un bord, où la roue s'écarte du pointeur pour
+  rester dans l'écran. Cliquer l'icône des outils l'ouvre aussi, et l'on clique l'outil ; un appui à côté la referme,
+  sans rien faire dans la ville. Chaque outil y a sa
   place fixe, toujours la même (Construire en haut, Retirer en bas), et sa touche, écrite sur lui ; la bulle du
   milieu dit le nom et l'usage de l'outil visé, qui grossit. Un outil actif y reste enfoncé. La roue est un plateau de
   bois à huit côtés, une place d'outil par côté ; elle garde 24 px du bord de l'écran, comme les blocs du HUD. Choisir Retirer prend l'outil en main,

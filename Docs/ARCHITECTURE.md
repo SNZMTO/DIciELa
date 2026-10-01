@@ -347,8 +347,9 @@ code.
   le zoom, sur une copie en mémoire des réglages du rendu, rendue à la sortie) ; les gestes la commandent
   (`CameraControls`) ; ses chiffres sont dans une fiche. La visée de la pose passe après elle (SAVOIR 2.8).
 - **Les gestes** : un seul asset d'actions, monté par un script d'éditeur. Les raccourcis se lient au caractère, le
-  déplacement à la position (SAVOIR 3). Un geste appartient à la ville ou à l'interface dès l'enfoncement ; clic ou
-  glisser se décide au relâchement (SAVOIR 2.8). Sans outil en main, un clic gauche touche la construction dont le
+  déplacement à la position (SAVOIR 3). Un geste appartient à la ville ou à l'interface dès l'enfoncement, même si
+  ce qui l'a reçu disparaît aussitôt (la roue qu'on congédie), et à l'outil qui était en main à l'enfoncement : l'outil
+  pris pendant l'appui n'en fait rien ; clic ou glisser se décide au relâchement (SAVOIR 2.8). Sans outil en main, un clic gauche touche la construction dont le
   modèle est sous le pointeur : la vue dit laquelle (SAVOIR 2.7), l'outil « choisir » en fait un ordre. Un outil en
   main (`IHeldTool` : poser, retirer) prend le clic gauche ; un seul à la fois : la main (`Hand`) lâche les autres
   quand on en prend un, par n'importe quel chemin, et le geste « toucher » y lit si un outil est en main. La roue des
