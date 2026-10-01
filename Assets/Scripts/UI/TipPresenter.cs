@@ -8,7 +8,7 @@ namespace Diciela.UI
 {
     /// <summary>
     /// Le présentateur de l'astuce (GDD, section 16 ; décision 154) : c'est le jeu qui parle, et il dit quoi faire
-    /// ensuite, au début d'une partie : planter la tente ; puis mettre la Chimère au tas ; puis poser une première
+    /// ensuite, au début d'une partie : installer le campement ; puis y mettre la Chimère ; puis poser une première
     /// construction à bâtir. Quand il n'a plus rien à dire, l'astuce se cache. Il se déduit de la ville, sans rien
     /// retenir, et l'écoute : l'arrivée de la Chimère, les poses, les chantiers finis, les postes.
     /// </summary>
@@ -70,9 +70,9 @@ namespace Diciela.UI
             if (chimera == null)
                 return null;
             if (_world.Structures.ChimeraHome == null)
-                return TextKeys.TipTent;
+                return TextKeys.TipCamp;
             if (chimera.Slot == null)
-                return _world.WorkSlots.All.Count > 0 ? TextKeys.TipPile : null;
+                return _world.WorkSlots.All.Count > 0 ? TextKeys.TipPost : null;
             return HasBuiltAnything() ? null : TextKeys.TipCabin;
         }
 

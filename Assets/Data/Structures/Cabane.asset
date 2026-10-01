@@ -19,6 +19,9 @@ MonoBehaviour:
   _hasDoor: 1
   _doorOffsetMeters: 0.05
   _doorWidthMeters: 2.69
+  _hasBed: 0
+  _bedFeet: {x: 0, y: 0, z: 0}
+  _bedHeadingDegrees: 0
   _unique: 0
   _chimeraHome: 0
   _builtWhenPlaced: 0

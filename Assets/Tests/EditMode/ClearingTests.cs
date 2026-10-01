@@ -13,8 +13,8 @@ namespace Diciela.Tests.EditMode
     /// <summary>
     /// Défricher au poste « à tout faire » (GDD, sections 2 et 7 ; décisions 157 à 160), par les ordres du joueur : un
     /// arbre marqué, la Chimère y va quand il n'y a rien à porter ni à bâtir, l'abat (30 min d'un débutant, à ×1,2 : 25
-    /// min, 125 pas) et porte ses 3 Bois au tas, nés du défrichage. On retire dans l'ordre où l'on a marqué. Sans place
-    /// au tas pour ce qu'il rend, rien ne se retire. Un bosquet entier se défriche en traversant les soirs, et le bilan
+    /// min, 125 pas) et porte ses 3 Bois au campement, nés du défrichage. On retire dans l'ordre où l'on a marqué. Sans place
+    /// au campement pour ce qu'il rend, rien ne se retire. Un bosquet entier se défriche en traversant les soirs, et le bilan
     /// des marchandises tombe juste. Ce qui l'interrompt est dans ClearingInterruptionTests.
     /// </summary>
     public sealed class ClearingTests
@@ -34,18 +34,18 @@ namespace Diciela.Tests.EditMode
         }
 
         [Test]
-        public void SheFellsAMarkedTreeAndCarriesItsWoodToThePile()
+        public void SheFellsAMarkedTreeAndCarriesItsWoodToTheCamp()
         {
             World world = _town.WorkingWorld(new[] { NatureTests.Spot(_town.Tree, 28f, 22f) });
             NatureItem tree = world.Nature.Find(1);
             Villager chimera = world.Villagers.Chimera;
-            Inventory pile = world.Warehouses.StockOf(_town.PileOf(world));
+            Inventory stock = world.Warehouses.StockOf(TestTown.CampOf(world));
             for (int i = 0; i < 200; i++)
                 world.Step();
             Assert.IsFalse(tree.IsRemoved, "Rien n'est retiré sans être marqué.");
 
             TestTown.Send(world, new MarkForClearingCommand(new[] { tree.Id }));
-            Assert.AreEqual(3, pile.SpaceReserved, "La place de ses 3 Bois est retenue au tas.");
+            Assert.AreEqual(3, stock.SpaceReserved, "La place de ses 3 Bois est retenue au campement.");
             long firstWork = -1;
             TestGrids.StepUntil(world, () =>
             {
@@ -58,9 +58,9 @@ namespace Diciela.Tests.EditMode
             Assert.AreEqual(3, chimera.Load.CountOf(_town.Wood), "Elle porte ce qu'il rend.");
             Assert.AreEqual(PlacementResult.Ok,
                 world.PlacementRules.Check(_town.Cabin, new Placement(new Vector2(28f, 22f), 0f)), "La place est libre.");
-            TestGrids.StepUntil(world, () => pile.CountOf(_town.Wood) == 33, 2000, "le Bois rangé au tas");
+            TestGrids.StepUntil(world, () => stock.CountOf(_town.Wood) == 33, 2000, "le Bois rangé au campement");
             Assert.AreEqual(0, chimera.Load.Total);
-            Assert.AreEqual(0, pile.SpaceReserved);
+            Assert.AreEqual(0, stock.SpaceReserved);
             Assert.AreEqual(33, world.Ledger.CreatedOf(_town.Wood), "30 nés du départ, 3 du défrichage.");
             Assert.AreEqual(world.Ledger.CreatedOf(_town.Wood), TestTown.EverywhereOf(world, _town.Wood));
         }
@@ -83,18 +83,18 @@ namespace Diciela.Tests.EditMode
         }
 
         [Test]
-        public void WithoutRoomAtThePileNothingIsCleared()
+        public void WithoutRoomAtTheCampNothingIsCleared()
         {
-            // Un tas qui tient juste ses 50 marchandises de départ : pas de place pour le Bois d'un arbre.
-            StructureDefinition fullPile = _town.Keep(TestData.Pile("tas_plein", 2f, 50, _town.OddJobs));
-            OpeningDefinition opening = _town.Keep(TestData.Opening(fullPile, 16f, new GoodAmount(_town.Wood, 30),
+            // Un campement qui tient juste ses 50 marchandises de départ : pas de place pour le Bois d'un arbre.
+            StructureDefinition fullCamp = _town.Keep(TestData.Home("campement_plein", 3f, true, 50, _town.OddJobs));
+            OpeningDefinition opening = _town.Keep(TestData.Opening(new GoodAmount(_town.Wood, 30),
                 new GoodAmount(_town.Stone, 20)));
             Catalog catalog = _town.Keep(TestData.TownCatalog(opening, new[] { _town.Wood, _town.Stone },
                 new StatisticDefinition[0]));
             World world = _town.World(catalog, new[] { NatureTests.Spot(_town.Tree, 28f, 22f) });
-            TestTown.Place(world, _town.Tent, 20f, 14f);
-            Structure pile = world.Structures.All[1];
-            TestTown.Send(world, new AssignVillagerCommand(world.Villagers.Chimera.Id, pile.Id));
+            TestTown.Place(world, fullCamp, 20f, 14f);
+            Structure camp = TestTown.CampOf(world);
+            TestTown.Send(world, new AssignVillagerCommand(world.Villagers.Chimera.Id, camp.Id));
             NatureItem tree = world.Nature.Find(1);
 
             TestTown.Send(world, new MarkForClearingCommand(new[] { tree.Id }));
@@ -109,7 +109,7 @@ namespace Diciela.Tests.EditMode
         public void SheClearsAWholeGroveAcrossTheEveningsAndTheBooksBalance()
         {
             // Une journée de 1 000 pas, 667 de travail : le bosquet prend plusieurs jours. Douze arbres et quatre rochers
-            // autour du tas : 36 Bois et 8 Pierre de plus, 94 marchandises au tas (100).
+            // autour du campement : 36 Bois et 8 Pierre de plus, 94 marchandises au campement (100).
             _town.Dispose();
             _town = new TestTown(dayLengthSeconds: 100f);
             var spots = new List<NatureSpot>();
@@ -119,7 +119,7 @@ namespace Diciela.Tests.EditMode
                 spots.Add(NatureTests.Spot(_town.Rock, 30f + 3f * (i % 2), 8f + 3f * (i / 2)));
             World world = _town.WorkingWorld(spots);
             Villager chimera = world.Villagers.Chimera;
-            Inventory pile = world.Warehouses.StockOf(_town.PileOf(world));
+            Inventory stock = world.Warehouses.StockOf(TestTown.CampOf(world));
             var ids = new List<int>();
             foreach (NatureItem item in world.Nature.All)
                 ids.Add(item.Id);
@@ -129,14 +129,14 @@ namespace Diciela.Tests.EditMode
             TestGrids.StepUntil(world, () =>
             {
                 sawTheEvening |= world.Clock.Phase != DayPhase.Work;
-                return world.Nature.Marked.Count == 0 && chimera.Load.Total == 0 && pile.SpaceReserved == 0;
+                return world.Nature.Marked.Count == 0 && chimera.Load.Total == 0 && stock.SpaceReserved == 0;
             }, 40000, "le bosquet défriché et rangé");
 
             Assert.IsTrue(sawTheEvening, "Le travail a traversé au moins un soir.");
             foreach (NatureItem item in world.Nature.All)
                 Assert.IsTrue(item.IsRemoved, "Chacun est retiré : n° " + item.Id);
-            Assert.AreEqual(66, pile.CountOf(_town.Wood));
-            Assert.AreEqual(28, pile.CountOf(_town.Stone));
+            Assert.AreEqual(66, stock.CountOf(_town.Wood));
+            Assert.AreEqual(28, stock.CountOf(_town.Stone));
             Assert.AreEqual(world.Ledger.CreatedOf(_town.Wood), TestTown.EverywhereOf(world, _town.Wood));
             Assert.AreEqual(world.Ledger.CreatedOf(_town.Stone), TestTown.EverywhereOf(world, _town.Stone));
             for (int x = 0; x < world.Grid.Width; x++)

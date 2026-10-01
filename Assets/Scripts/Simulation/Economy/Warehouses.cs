@@ -6,7 +6,7 @@ using Diciela.Simulation.Land;
 namespace Diciela.Simulation.Economy
 {
     /// <summary>
-    /// Ce qui tient les marchandises de la ville (GDD, section 8) : le tas de départ, puis les entrepôts ; toute
+    /// Ce qui tient les marchandises de la ville (GDD, section 8) : le campement, puis les entrepôts ; toute
     /// construction bâtie dont la fiche dit qu'elle en tient. Le stock de la ville est ce qu'ils tiennent, un chiffre par
     /// marchandise. Seule fonction qui fait naître des marchandises (<c>Create</c>, dans un entrepôt ou dans la charge
     /// d'un habitant), et seule qui rend à la ville ce qu'un porteur n'a pas livré (<see cref="ReturnToTown"/>). Les

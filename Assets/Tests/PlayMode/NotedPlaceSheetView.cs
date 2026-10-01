@@ -7,7 +7,7 @@ namespace Diciela.Tests.PlayMode
     /// <summary>Une vue de la fiche d'un lieu qui note ce que le présentateur lui montre, et qu'on clique comme le joueur.</summary>
     internal sealed class NotedPlaceSheetView : IPlaceSheetView
     {
-        public event Action ButtonClicked;
+        public event Action<int> ActionClicked;
         public event Action CloseClicked;
 
         public bool Shown { get; private set; }
@@ -15,11 +15,29 @@ namespace Diciela.Tests.PlayMode
         public List<PlaceSheetLine> Lines { get; } = new List<PlaceSheetLine>();
         public string SlotName { get; private set; } = "";
         public string SlotHolder { get; private set; } = "";
-        public string Button { get; private set; } = "";
+        public List<PlaceSheetAction> Actions { get; } = new List<PlaceSheetAction>();
 
-        public void ClickButton()
+        /// <summary>Clique le bouton qui dit ce texte ; faux s'il n'y en a pas.</summary>
+        public bool Click(string text)
         {
-            ButtonClicked?.Invoke();
+            for (int i = 0; i < Actions.Count; i++)
+            {
+                if (Actions[i].Text == text)
+                {
+                    ActionClicked?.Invoke(i);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>Les textes des boutons, dans l'ordre.</summary>
+        public string[] ActionTexts()
+        {
+            var texts = new string[Actions.Count];
+            for (int i = 0; i < Actions.Count; i++)
+                texts[i] = Actions[i].Text;
+            return texts;
         }
 
         public void ClickClose()
@@ -49,9 +67,10 @@ namespace Diciela.Tests.PlayMode
             SlotHolder = holder;
         }
 
-        public void ShowButton(string text)
+        public void ShowActions(IReadOnlyList<PlaceSheetAction> actions)
         {
-            Button = text;
+            Actions.Clear();
+            Actions.AddRange(actions);
         }
     }
 }

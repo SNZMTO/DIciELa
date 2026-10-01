@@ -16,7 +16,7 @@ namespace Diciela.EditorTools
     /// Les mises en scène de l'album (Docs/ALBUM.md), en Play. Poser trois cabanes : on se rapproche du centre de la vue,
     /// puis on tient l'outil de pose à la place de la souris, par les mêmes appels que les gestes, le temps d'une
     /// capture ; les cabanes vont autour du logis de la Chimère (ou d'elle), à gauche, derrière et à droite vu de la
-    /// caméra, loin de la tente et du tas ; les gestes de la caméra et de la pose restent coupés jusqu'à la fin du Play. Se rapprocher de la
+    /// caméra, loin du campement ; les gestes de la caméra et de la pose restent coupés jusqu'à la fin du Play. Se rapprocher de la
     /// Chimère : des crans de molette vers là où on la voit, comme le ferait la souris posée sur elle. Tourner la Chimère
     /// de l'atelier : de trois quarts, par le même appel que le glisser.
     /// </summary>

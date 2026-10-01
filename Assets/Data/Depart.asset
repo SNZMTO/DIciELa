@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0287efbab0b213344b0921bedc20f31c, type: 3}
   m_Name: Depart
   m_EditorClassIdentifier: Diciela.Data::Diciela.Data.OpeningDefinition
-  _startingPile: {fileID: 11400000, guid: 30e9c7d273753b0488314bef2ac77365, type: 2}
   _startingGoods:
   - _good: {fileID: 11400000, guid: 66ef54aedacec184faa974adebaddff0, type: 2}
     _amount: 30

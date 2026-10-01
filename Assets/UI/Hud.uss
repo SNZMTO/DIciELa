@@ -199,9 +199,16 @@
     margin: 4px 0 14px 2px;
 }
 
+/* Les boutons de la fiche, l'un sous l'autre : 8 px sous chacun, que le bloc reprend au dernier. */
+
+.fiche-actions {
+    margin-bottom: -8px;
+}
+
 .fiche-bouton {
     height: 52px;
     padding: 0 16px 3px 16px;
+    margin-bottom: 8px;
     align-items: center;
     justify-content: center;
 }

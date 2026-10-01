@@ -11,9 +11,10 @@ namespace Diciela.UI
 {
     /// <summary>
     /// La fiche du lieu touché, en haut à droite de l'écran (GDD, section 16) : un cadre de bois, le nom du lieu, ce qu'il
-    /// tient pour la ville (chaque marchandise dans un creux de lin), son poste et qui le tient, un bouton de feutre menthe
-    /// et une croix de feutre sable. C'est la vue (le bloc « fiche » de Hud.uxml) ; son présentateur décide. Échap la ferme
-    /// avant tout le reste.
+    /// tient pour la ville (chaque marchandise dans un creux de lin), son poste et qui le tient, ses boutons de feutre
+    /// (chacun dans son pastel) et une croix de feutre sable. C'est la vue (le bloc « fiche » de Hud.uxml) ; son
+    /// présentateur décide. Échap la ferme avant tout le reste. Ses boutons se refont seulement quand leur nombre change :
+    /// un clic pendant que le stock bouge tombe sur un bouton vivant.
     /// </summary>
     [RequireComponent(typeof(UIDocument))]
     public sealed class PlaceSheet : MonoBehaviour, IPlaceSheetView, IEscapable
@@ -25,13 +26,10 @@ namespace Diciela.UI
         private const string SlotName = "fiche-poste";
         private const string SlotNameName = "fiche-poste-nom";
         private const string SlotHolderName = "fiche-poste-qui";
-        private const string ButtonName = "fiche-bouton";
-        private const string ButtonTextName = "fiche-bouton-texte";
-        private static readonly string[] LineClasses = { "creux", "pan-4", "fiche-ligne" };
-        private const string IconClass = "fiche-icone";
-        private static readonly string[] LineNameClasses = { "libelle", "fiche-ligne-nom" };
-        private const string CountClass = "nombre";
+        private const string ActionsName = "fiche-actions";
 
+        private readonly List<Label> _actionTexts = new List<Label>();
+        private readonly List<string> _actionPastels = new List<string>();
         private UIDocument _document;
         private VisualElement _sheet;
         private Label _title;
@@ -39,12 +37,11 @@ namespace Diciela.UI
         private VisualElement _slot;
         private Label _slotName;
         private Label _slotHolder;
-        private FeltButton _button;
-        private Label _buttonText;
+        private VisualElement _actions;
         private FeltButton _close;
         private PlaceSheetPresenter _presenter;
 
-        public event Action ButtonClicked;
+        public event Action<int> ActionClicked;
         public event Action CloseClicked;
 
         private void Awake()
@@ -64,10 +61,9 @@ namespace Diciela.UI
             VisualElement slot = root.Q(SlotName);
             var slotName = root.Q<Label>(SlotNameName);
             var slotHolder = root.Q<Label>(SlotHolderName);
-            var button = root.Q<FeltButton>(ButtonName);
-            var buttonText = root.Q<Label>(ButtonTextName);
+            VisualElement actions = root.Q(ActionsName);
             if (sheet == null || title == null || close == null || stock == null || slot == null || slotName == null ||
-                slotHolder == null || button == null || buttonText == null)
+                slotHolder == null || actions == null)
                 throw new InvalidOperationException("La fiche d'un lieu ne trouve pas ses éléments (UXML).");
 
             _sheet = sheet;
@@ -77,10 +73,8 @@ namespace Diciela.UI
             _slot = slot;
             _slotName = slotName;
             _slotHolder = slotHolder;
-            _button = button;
-            _buttonText = buttonText;
+            _actions = actions;
             _close.Clicked += OnClose;
-            _button.Clicked += OnButton;
             _presenter = new PlaceSheetPresenter(this, world, texts);
         }
 
@@ -96,7 +90,7 @@ namespace Diciela.UI
             return _presenter != null && _presenter.Close();
         }
 
-        /// <summary>Cache la fiche et oublie le monde.</summary>
+        /// <summary>Cache la fiche, jette ses boutons (et leurs rappels) et oublie le monde.</summary>
         public void Hide()
         {
             _presenter?.Dispose();
@@ -104,7 +98,9 @@ namespace Diciela.UI
             if (_sheet == null)
                 return;
             _close.Clicked -= OnClose;
-            _button.Clicked -= OnButton;
+            _actions.Clear();
+            _actionTexts.Clear();
+            _actionPastels.Clear();
             ShowSheet(false);
         }
 
@@ -127,19 +123,7 @@ namespace Diciela.UI
         {
             _stock.Clear();
             foreach (PlaceSheetLine line in lines)
-            {
-                var row = new Facet { pickingMode = PickingMode.Ignore };
-                foreach (string style in LineClasses)
-                    row.AddToClassList(style);
-                var icon = new VisualElement { pickingMode = PickingMode.Ignore };
-                icon.AddToClassList(IconClass);
-                if (line.Icon != null)
-                    icon.style.backgroundImage = Background.FromVectorImage(line.Icon);
-                row.Add(icon);
-                row.Add(Text(line.Name, LineNameClasses));
-                row.Add(Text(line.Count.ToString(System.Globalization.CultureInfo.InvariantCulture), CountClass));
-                _stock.Add(row);
-            }
+                _stock.Add(PlaceSheetElements.Line(line));
             _stock.EnableInClassList(StyleClasses.Hidden, lines.Count == 0);
         }
 
@@ -150,28 +134,39 @@ namespace Diciela.UI
             _slot.EnableInClassList(StyleClasses.Hidden, string.IsNullOrEmpty(name));
         }
 
-        public void ShowButton(string text)
+        public void ShowActions(IReadOnlyList<PlaceSheetAction> actions)
         {
-            _buttonText.text = text;
-            _button.EnableInClassList(StyleClasses.Hidden, string.IsNullOrEmpty(text));
+            if (_actionTexts.Count != actions.Count)
+            {
+                _actions.Clear();
+                _actionTexts.Clear();
+                _actionPastels.Clear();
+                for (int i = 0; i < actions.Count; i++)
+                {
+                    int index = i;
+                    // Un bouton qu'on jette emporte son rappel.
+                    _actions.Add(PlaceSheetElements.Button(() => ActionClicked?.Invoke(index), out Label text));
+                    _actionTexts.Add(text);
+                    _actionPastels.Add("");
+                }
+            }
+            for (int i = 0; i < actions.Count; i++)
+            {
+                string pastel = Pastels.ClassOf(actions[i].Pastel);
+                if (pastel != _actionPastels[i])
+                {
+                    _actions[i].RemoveFromClassList(_actionPastels[i]);
+                    _actions[i].AddToClassList(pastel);
+                    _actionPastels[i] = pastel;
+                }
+                _actionTexts[i].text = actions[i].Text;
+            }
+            _actions.EnableInClassList(StyleClasses.Hidden, actions.Count == 0);
         }
 
         private void OnClose()
         {
             CloseClicked?.Invoke();
-        }
-
-        private void OnButton()
-        {
-            ButtonClicked?.Invoke();
-        }
-
-        private static Label Text(string text, params string[] classes)
-        {
-            var label = new Label(text) { pickingMode = PickingMode.Ignore };
-            foreach (string style in classes)
-                label.AddToClassList(style);
-            return label;
         }
     }
 }

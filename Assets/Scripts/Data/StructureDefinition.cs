@@ -44,15 +44,15 @@ namespace Diciela.Data
         [Tooltip("Vers où va sa tête, depuis ses pieds, en degrés depuis le nord vers l'est, à l'angle 0.")]
         [SerializeField] private float _bedHeadingDegrees;
 
-        [Tooltip("Une seule dans la ville : la tente puis la maison de la Chimère, la Place, les grands projets (GDD, " +
+        [Tooltip("Une seule dans la ville : le campement puis la maison de la Chimère, la Place, les grands projets (GDD, " +
                  "section 9).")]
         [SerializeField] private bool _unique;
 
-        [Tooltip("Le logis de la Chimère : elle y dort quand le joueur le touche (GDD, section 6). La tente, puis sa " +
-                 "maison ; il lui faut une porte.")]
+        [Tooltip("Le logis de la Chimère : elle y dort quand le joueur l'y envoie, depuis sa fiche (GDD, section 6). Le " +
+                 "campement, puis sa maison ; il lui faut une porte.")]
         [SerializeField] private bool _chimeraHome;
 
-        [Tooltip("Dressée dès qu'on la pose, sans chantier : la tente, que la Chimère plante d'un coup (GDD, section 9).")]
+        [Tooltip("Dressée dès qu'on la pose, sans chantier : le campement, que la Chimère installe d'un coup (GDD, section 9).")]
         [SerializeField] private bool _builtWhenPlaced;
 
         [Tooltip("Ce que son chantier demande en matériaux (GDD, section 9) ; vide pour ce qui se dresse dès la pose.")]
@@ -65,7 +65,7 @@ namespace Diciela.Data
         [Tooltip("Les postes qu'elle ouvre, une fois bâtie (GDD, section 7).")]
         [SerializeField] private List<WorkSlotDefinition> _workSlots = new List<WorkSlotDefinition>();
 
-        [Tooltip("Les marchandises qu'elle tient pour la ville, comme un entrepôt (le tas de départ, puis l'entrepôt) ; " +
+        [Tooltip("Les marchandises qu'elle tient pour la ville, comme un entrepôt (le campement, puis l'entrepôt) ; " +
                  "0 : elle n'en tient pas (GDD, section 8).")]
         [SerializeField, Min(0)] private int _storageCapacity;
 

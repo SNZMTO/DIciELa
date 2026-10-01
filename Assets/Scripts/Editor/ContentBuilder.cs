@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Diciela.EditorTools
 {
     /// <summary>
-    /// Crée le contenu qui manque : les fiches de la tente et de la cabane et leurs modèles, leur famille, la sorte de la
+    /// Crée le contenu qui manque : les fiches du campement et de la cabane et leurs modèles, leur famille, la sorte de la
     /// Chimère, le catalogue et ce que l'écran de création propose (AppearanceBuilder ; GDD, sections 6, 9 et 16), puis
     /// la ville au travail (TownContentBuilder).
     /// Réexécutable : une fiche qui existe n'est jamais touchée, sauf pour ce qui lui manque.
@@ -14,7 +14,7 @@ namespace Diciela.EditorTools
     {
         internal const string CatalogPath = "Assets/Data/Catalogue.asset";
         private const string StructuresFolder = "Assets/Data/Structures";
-        internal const string TentPath = StructuresFolder + "/Tente.asset";
+        internal const string CampPath = StructuresFolder + "/Campement.asset";
         internal const string CabinPath = StructuresFolder + "/Cabane.asset";
         private const string HousingPath = StructuresFolder + "/Famille_Logement.asset";
         private const string ChimeraPath = "Assets/Data/Habitants/Chimere.asset";
@@ -25,12 +25,13 @@ namespace Diciela.EditorTools
 
         public static void CreateMissing()
         {
-            // Le pack n'a pas de tente : elle se voit en boîte à sa taille tant que son modèle n'est pas choisi (Défaut :
-            // 3 × 3 m, porte de 1,2 m ; GDD, section 16).
-            StructureDefinition tent = EditorAssets.CreateIfMissing<StructureDefinition>(TentPath, fiche =>
+            // Le campement se voit en boîte à sa taille (Défaut : 3 × 3 m, porte de 1,2 m ; GDD, section 16) tant que sa
+            // composition n'est pas faite (DICIELA/Contenu/Composer le campement). Son stock et son poste viennent avec la
+            // ville au travail (TownContentBuilder).
+            StructureDefinition camp = EditorAssets.CreateIfMissing<StructureDefinition>(CampPath, fiche =>
             {
-                EditorAssets.Property(fiche, "_id").stringValue = "tente";
-                EditorAssets.Property(fiche, "_nameKey").stringValue = "construction.tente";
+                EditorAssets.Property(fiche, "_id").stringValue = "campement";
+                EditorAssets.Property(fiche, "_nameKey").stringValue = "construction.campement";
                 EditorAssets.Property(fiche, "_widthMeters").floatValue = 3f;
                 EditorAssets.Property(fiche, "_depthMeters").floatValue = 3f;
                 EditorAssets.Property(fiche, "_doorWidthMeters").floatValue = 1.2f;
@@ -45,8 +46,8 @@ namespace Diciela.EditorTools
             });
             // Les modèles se font ici une fois ; ensuite, par le menu DICIELA/Contenu/Préparer les modèles.
             EditorAssets.AssignIfMissing(cabin, "_sourceModel", EditorAssets.Load<GameObject>(CabinSourcePath));
-            if (tent.Model == null)
-                ModelPreparer.Prepare(tent);
+            if (camp.Model == null)
+                ModelPreparer.Prepare(camp);
             if (cabin.Model == null)
                 ModelPreparer.Prepare(cabin);
 
@@ -55,10 +56,10 @@ namespace Diciela.EditorTools
                 {
                     EditorAssets.Property(fiche, "_id").stringValue = "logement";
                     EditorAssets.Property(fiche, "_nameKey").stringValue = "famille.logement";
-                    SetList(EditorAssets.Property(fiche, "_structures"), tent, cabin);
+                    SetList(EditorAssets.Property(fiche, "_structures"), camp, cabin);
                 });
-            // La tente vient en premier (GDD, section 6) : en tête de sa famille, si elle n'y est pas encore.
-            InsertFirstIfMissing(housing, "_structures", tent);
+            // Le campement vient en premier (GDD, section 6) : en tête de sa famille, s'il n'y est pas encore.
+            InsertFirstIfMissing(housing, "_structures", camp);
             // L'icône de son onglet ; son pastel, le rose, est celui par défaut de la fiche (décision 142).
             EditorAssets.AssignIfMissing(housing, "_icon",
                 EditorAssets.Load<UnityEngine.UIElements.VectorImage>(InterfaceIconBuilder.Folder + "/maison.asset"));
@@ -69,7 +70,7 @@ namespace Diciela.EditorTools
                 fiche => SetList(EditorAssets.Property(fiche, "_families"), housing));
             EditorAssets.AssignIfMissing(catalog, "_chimeraKind", chimera);
             AppearanceBuilder.CreateMissing(catalog);
-            TownContentBuilder.CreateMissing(catalog, cabin);
+            TownContentBuilder.CreateMissing(catalog, camp, cabin);
         }
 
         private static void SetList(SerializedProperty list, params Object[] items)

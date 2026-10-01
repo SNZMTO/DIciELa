@@ -44,7 +44,7 @@ namespace Diciela.Tests.PlayMode
             var catalog = BuildBarTests.LoadSingle<Catalog>();
             var faults = new List<string>();
             using (var world = new TestWorld())
-            using (var town = new TestPileTown())
+            using (var town = new TestCampTown())
             {
                 var panel = world.Keep(ScriptableObject.CreateInstance<PanelSettings>());
                 panel.themeStyleSheet = theme;
@@ -86,10 +86,10 @@ namespace Diciela.Tests.PlayMode
                             bar.Open();
                             wheel.Show(texts, new FixedToolKeys(), world.Clearing, bar, tooltips);
                             day.Show(world.World.Clock, texts, tooltips);
-                            town.PlantTheTent();
+                            town.InstallTheCamp();
                             stock.Show(town.World, town.Catalog, texts, tooltips);
                             sheet.Show(town.World, texts);
-                            sheet.Touch(town.PlacedPile);
+                            sheet.Touch(town.PlacedCamp);
                             tip.Show(town.World, texts, null);
                         }
                         for (int frame = 0; frame < SettleFrames; frame++)

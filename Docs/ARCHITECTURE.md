@@ -182,7 +182,7 @@ sauvegardé.
 
 ## 7. Les postes et les tâches
 
-- Un seul système pour tous les métiers : un lieu de travail (bâtiment, champ, étal, tas de départ) ouvre des postes ;
+- Un seul système pour tous les métiers : un lieu de travail (bâtiment, campement, champ, étal) ouvre des postes ;
   la fiche du poste liste les sortes de tâches permises, avec leur priorité ; la fiche d'une sorte de tâche dit la
   sous-statistique qu'elle lit.
 - L'économie publie les tâches à prendre (transporter, bâtir, semer, récolter, retirer un arbre…) ; l'étal publie le
@@ -231,7 +231,7 @@ sauvegardé.
   y range aussi l'empreinte et la porte, mesurées sur le modèle (SAVOIR 2.9). Le modèle préparé se refait depuis la
   source ; sans source, le même menu fait une boîte à la taille de la fiche, sa porte marquée ; un test vérifie que
   le modèle suit sa fiche. La fiche dit aussi si le bâtiment est unique, s'il est le logis de la Chimère et s'il se
-  dresse dès la pose (la tente) : la simulation lit ces propriétés, jamais un nom. La fiche d'une sorte d'habitant
+  dresse dès la pose (le campement) : la simulation lit ces propriétés, jamais un nom. La fiche d'une sorte d'habitant
   dit sa marche et sa flânerie ; son allure est l'apparence de chaque habitant : une tête et un corps (chacun séparé
   d'un personnage du pack par le menu des fiches, sur le squelette commun), chacun de sa couleur (une couleur : les
   deux matériaux du pack de même teinte, pour les personnages et pour les objets), au plus une pièce par emplacement, de
@@ -294,6 +294,8 @@ code.
 | arbres vus ; leurs boîtes | `NatureViews` ; `NatureBoxes` | fanion (d'un arbre marqué) | `Mark`, `MarkMesh` | copie du sol | `MapScene` |
 | onglet, carte (du panneau Construire) | `Tab`, `Card` (`BuildBarElements`) | roue des outils ; son anneau | `ToolWheel` ; `WheelRing` | infobulle | `Tooltips` |
 | gestes des outils ; outil choisi | `ToolControls` ; `ToolChoice` | touches des outils | `IToolKeys` | ouvrir, fermer (un panneau) | `Open`, `Close` (`IBuildMenu`) |
+| la main (un seul outil) | `Hand` | outil de la roue (ses gestes ; son allure) | `ToolAction` ; `WheelTool` | boutons de la fiche | `PlaceSheetActions`, `PlaceSheetAction` |
+| couche (où la Chimère dort) | `HasBed`, `BedFeet` | stock de départ | `StartingGoods` ; `GoodsCause.StartingStock` | classes de style posées par le code | `StyleClasses` |
 
 ## 10. La carte, les scènes et la sauvegarde
 

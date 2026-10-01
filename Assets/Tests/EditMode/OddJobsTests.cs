@@ -14,7 +14,7 @@ namespace Diciela.Tests.EditMode
     /// joueur : elle porte d'abord tous les matériaux de la cabane, 5 par voyage, puis la bâtit ; à 10 partout, elle y
     /// apporte ×1,2, et les 2 h d'un débutant lui prennent 1 h 40 (500 pas) ; l'avancement du chantier (que suit sa
     /// ligne qui monte) va de 0 à 1 au fil de ces pas. Le Bois consommé disparaît du bilan. Le soir, elle cesse de bâtir
-    /// tout de suite, ne prend plus rien, et flâne près du tas ; le matin, elle reprend.
+    /// tout de suite, ne prend plus rien, et flâne près du campement ; le matin, elle reprend.
     /// </summary>
     public sealed class OddJobsTests
     {
@@ -105,9 +105,9 @@ namespace Diciela.Tests.EditMode
             World world = _town.WorkingWorld();
             Structure cabin = TestTown.Place(world, longCabin, 30f, 28f);
             Villager chimera = world.Villagers.Chimera;
-            Structure pile = _town.PileOf(world);
-            Inventory pileStock = world.Warehouses.StockOf(pile);
-            int lastTotal = pileStock.Total;
+            Structure camp = TestTown.CampOf(world);
+            Inventory campStock = world.Warehouses.StockOf(camp);
+            int lastTotal = campStock.Total;
             bool tookOffHours = false;
             bool builtInTheEvening = false;
             float lastNightDistance = -1f;
@@ -115,21 +115,21 @@ namespace Diciela.Tests.EditMode
             TestGrids.StepUntil(world, () =>
             {
                 DayPhase phase = world.Clock.Phase;
-                if (phase != DayPhase.Work && pileStock.Total < lastTotal)
+                if (phase != DayPhase.Work && campStock.Total < lastTotal)
                     tookOffHours = true;
-                lastTotal = pileStock.Total;
+                lastTotal = campStock.Total;
                 if (phase != DayPhase.Work && chimera.IsBuilding)
                     builtInTheEvening = true;
                 if (world.Clock.StepCount % world.Clock.StepsPerDay == world.Clock.StepsPerDay - 1)
-                    lastNightDistance = Vector2.Distance(chimera.Position, pile.Placement.Center);
+                    lastNightDistance = Vector2.Distance(chimera.Position, camp.Placement.Center);
                 return cabin.State == StructureState.Built;
             }, 5000, "la grande cabane bâtie");
 
-            Assert.IsFalse(tookOffHours, "Hors des heures de travail, elle ne prend rien au tas.");
+            Assert.IsFalse(tookOffHours, "Hors des heures de travail, elle ne prend rien au campement.");
             Assert.IsFalse(builtInTheEvening, "Le soir, elle cesse de bâtir tout de suite.");
             Assert.AreEqual(2, world.Clock.Day, "Elle a fini le lendemain.");
             Assert.GreaterOrEqual(lastNightDistance, 0f);
-            Assert.Less(lastNightDistance, 9f, "La nuit, elle flâne près du tas (6 m autour de ses abords).");
+            Assert.Less(lastNightDistance, 9f, "La nuit, elle flâne près du campement (6 m autour de ses abords).");
         }
 
         [Test]
