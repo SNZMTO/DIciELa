@@ -35,6 +35,7 @@ namespace Diciela.View
         private ConstructionSites _sites;
         private Relief _relief;
         private SiteMaterials _siteMaterials;
+        private SiteGhosts _siteGhosts;
 
         /// <summary>Montre les constructions de ce monde, puis suit celles qu'on pose.</summary>
         public void Show(Structures structures, ConstructionSites sites, Relief relief)
@@ -55,6 +56,7 @@ namespace Diciela.View
             _sites = sites;
             _relief = relief;
             _siteMaterials = new SiteMaterials(_settings.SiteMaterial);
+            _siteGhosts = new SiteGhosts(_settings.SiteGhostMaterial);
             foreach (Structure structure in structures.All)
                 OnStructurePlaced(structure);
             structures.StructurePlaced += OnStructurePlaced;
@@ -77,6 +79,8 @@ namespace Diciela.View
             _shown.Clear();
             _siteMaterials?.Clear();
             _siteMaterials = null;
+            _siteGhosts?.Clear();
+            _siteGhosts = null;
         }
 
         /// <summary>
@@ -127,7 +131,7 @@ namespace Diciela.View
             GameObject view = ModelPose.Instantiate(definition.Model, transform, definition.Id + " n° " + structure.Id);
             ModelPose.Place(view.transform, structure.Placement, _relief);
             SiteFill fill = structure.State == StructureState.Planned
-                ? new SiteFill(view, definition.Model, _siteMaterials, _settings)
+                ? new SiteFill(view, definition.Model, _siteMaterials, _siteGhosts, _settings)
                 : null;
             _shown.Add(new Shown
             {
