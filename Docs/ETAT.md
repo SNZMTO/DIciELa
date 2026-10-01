@@ -17,8 +17,9 @@ infobulle), clique-la (elle reste enfoncée), clique un arbre (son fanion), puis
 se relève).
 
 **À toi** : peindre la carte et ranger tes modèles dans `Assets/Data/Nature` (la carte n'a encore aucun arbre) ; le
-fanion des arbres marqués (le pack a `SM_Prop_Flag_01` à `05`) ; le modèle du tas ; la voix de la Chimère ; les
-pastels et le bandeau de brique (recos au GDD 16) ; les noms de `strings.csv` ; les accessoires de cou et de dos.
+fanion des arbres marqués (le pack a `SM_Prop_Flag_01` à `05`) ; le clic droit sur « Retirer », les pastels et le
+bandeau de brique (recos au GDD 16) ; le modèle du tas ; la voix de la Chimère ; les noms de `strings.csv` ; les
+accessoires de cou et de dos.
 
 **Dette** : `Fusion.uss` répète les couleurs de `:root` (variable dans une variable pas essayée).
 
