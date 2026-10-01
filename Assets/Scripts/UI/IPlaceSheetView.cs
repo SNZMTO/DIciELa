@@ -24,7 +24,7 @@ namespace Diciela.UI
         void ShowStock(IReadOnlyList<PlaceSheetLine> lines);
 
         /// <summary>Le poste du lieu et qui le tient ; un nom vide cache le poste.</summary>
-        void ShowSlot(string name, string holder);
+        void ShowSlot(string name, string holder, IReadOnlyList<PlaceSheetTask> tasks);
 
         /// <summary>Ce que dit le bouton ; un texte vide le cache.</summary>
         void ShowButton(string text);
