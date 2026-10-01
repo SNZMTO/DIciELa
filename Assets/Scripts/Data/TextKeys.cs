@@ -30,9 +30,15 @@ namespace Diciela.Data
         public const string TipPile = "astuce.tas";
         public const string TipCabin = "astuce.cabane";
 
-        // Le bouton de l'outil « Retirer », au bout de la barre (GDD, section 16) : son infobulle, son nom et son usage.
+        // La roue des outils (GDD, section 16 ; décision 168) : le nom et l'usage de chaque outil, dans la bulle du
+        // milieu ; l'infobulle de l'icône des outils, où {touche} est remplacé par la touche de la roue.
+        public const string BuildTool = "outil.construire";
+        public const string BuildToolDetail = "outil.construire.suite";
         public const string ClearingTool = "outil.retirer";
         public const string ClearingToolDetail = "outil.retirer.suite";
+        public const string ToolsTooltip = "outils.infobulle";
+        public const string ToolsTooltipDetail = "outils.infobulle.suite";
+        public const string KeyParameter = "{touche}";
 
         // Les fanions du stock (GDD, section 16) : l'infobulle d'un fanion ({marchandise} y est remplacé).
         public const string StockTooltip = "fanion.infobulle";

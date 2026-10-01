@@ -24,6 +24,7 @@ namespace Diciela.EditorTools
         private const string ConfirmObjectName = "Valider";
         private const string EscapeObjectName = "Échap";
         private const string TurnObjectName = "Tourner la Chimère";
+        private const string ToolsObjectName = "Outils";
 
         [MenuItem("DICIELA/Scènes/Monter les scènes")]
         public static void BuildScenes()
@@ -101,6 +102,10 @@ namespace Diciela.EditorTools
             EditorAssets.AssignIfMissing(escape, "_actions",
                 EditorAssets.Load<UnityEngine.InputSystem.InputActionAsset>(InputActionsBuilder.ActionsPath));
             EditorAssets.AssignIfMissing(stage, "_escapeControls", escape);
+            ToolControls tools = EditorAssets.FindOrCreate<ToolControls>(scene, ToolsObjectName);
+            EditorAssets.AssignIfMissing(tools, "_actions",
+                EditorAssets.Load<UnityEngine.InputSystem.InputActionAsset>(InputActionsBuilder.ActionsPath));
+            EditorAssets.AssignIfMissing(stage, "_toolControls", tools);
             EditorAssets.AssignIfMissing(stage, "_atelier", AtelierBuilder.EnsureIn(scene));
             PreviewControls turn = EditorAssets.FindOrCreate<PreviewControls>(scene, TurnObjectName);
             EditorAssets.AssignIfMissing(turn, "_actions",

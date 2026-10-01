@@ -87,6 +87,12 @@
     font-size: 20px;
 }
 
+/* Une touche du clavier, sur son étiquette. */
+.touche-texte {
+    -unity-font-definition: url("Polices/Nunito-Black.ttf");
+    font-size: 18px;
+}
+
 /* Les faces (Facet) : les mesures communes, puis la matière, le pastel et les pans. */
 
 .facette {
@@ -132,9 +138,9 @@
     padding: 8px 14px;
 }
 
-/* Le feutre : il se clique ; son relief (lèvre, reflet, ombre) le dit. Il se soulève au survol, s'enfonce à l'appui,
-   et reste enfoncé quand il est ouvert (un onglet), la lèvre en haut et ce qu'il porte descendu. Son ombre, dure, est
-   dessinée par la face (--ombre). */
+/* Le feutre : il se clique ; son relief (lèvre, reflet, ombre) le dit. Il se soulève au survol, ou quand on le vise
+   (un outil de la roue, touche tenue), s'enfonce à l'appui, et reste enfoncé quand il est ouvert (un onglet), la lèvre
+   en haut et ce qu'il porte descendu. Son ombre, dure, est dessinée par la face (--ombre). */
 .feutre {
     --face: #EFD3A4;
     --levre: #CFAE78;
@@ -145,7 +151,7 @@
     transition-timing-function: ease-out-cubic;
 }
 
-.feutre:hover {
+.feutre:hover, .feutre.vise {
     translate: 0 -2px;
     --ombre: rgba(58, 30, 14, 0.28);
     --ombre-y: 5;
@@ -166,7 +172,7 @@
 .feutre.menthe:active, .feutre.menthe.ouvert { --face: #B3D1B8; }
 
 .feutre.sable { --face: #EFD3A4; --levre: #CFAE78; --fil: #9C7A45; }
-.feutre.sable:hover { --face: #F2DCB6; }
+.feutre.sable:hover, .feutre.sable.vise { --face: #F2DCB6; }
 .feutre.sable:active, .feutre.sable.ouvert { --face: #DCC297; }
 
 .feutre.rose { --face: #F4B9CB; --levre: #DB8FA6; --fil: #B8667F; }

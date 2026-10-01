@@ -29,8 +29,14 @@ namespace Diciela.UI
             IPanel panel = _document != null ? _document.rootVisualElement?.panel : null;
             if (panel == null)
                 return false;
+            return panel.Pick(ToPanel(panel, screenPoint)) != null;
+        }
+
+        /// <summary>Un point de l'écran (en pixels, origine en bas) dans le repère de ce panneau (origine en haut).</summary>
+        public static Vector2 ToPanel(IPanel panel, Vector2 screenPoint)
+        {
             var fromTop = new Vector2(screenPoint.x, Screen.height - screenPoint.y);
-            return panel.Pick(RuntimePanelUtils.ScreenToPanel(panel, fromTop)) != null;
+            return RuntimePanelUtils.ScreenToPanel(panel, fromTop);
         }
     }
 }
