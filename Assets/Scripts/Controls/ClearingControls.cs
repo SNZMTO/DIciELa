@@ -84,9 +84,10 @@ namespace Diciela.Controls
         {
             if (Tool == null || !Tool.IsActive)
             {
+                // Un appui commencé avant de prendre l'outil ne marque rien, même relâché l'outil en main.
                 StopFraming();
-                _gesture = default;
-                _secondaryGesture = default;
+                _gesture = DragGesture.HeldElsewhere(_mark.IsPressed());
+                _secondaryGesture = DragGesture.HeldElsewhere(_secondary.IsPressed());
                 return;
             }
 

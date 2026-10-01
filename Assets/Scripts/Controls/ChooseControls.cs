@@ -72,7 +72,8 @@ namespace Diciela.Controls
         {
             if (Tool == null || (_hand != null && _hand.IsHolding))
             {
-                _touchGesture = default;
+                // Un appui commencé un outil en main lui appartient : lâcher l'outil pendant l'appui ne touche rien.
+                _touchGesture = DragGesture.HeldElsewhere(_touch.IsPressed());
                 return;
             }
 

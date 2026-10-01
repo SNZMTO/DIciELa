@@ -32,7 +32,7 @@ namespace Diciela.Tests.PlayMode
         {
             using (var test = new TestWorld())
             {
-                UIDocument document = Hud(test);
+                UIDocument document = TestHud.WithWheel(test);
                 yield return null;
                 var wheel = document.GetComponent<ToolWheel>();
                 TextTable texts = TextTable.Parse(Texts, "fr");
@@ -46,7 +46,7 @@ namespace Diciela.Tests.PlayMode
                 try
                 {
                     VisualElement icon = root.Q("outils");
-                    Click(icon);
+                    TestHud.Click(icon);
                     Assert.IsFalse(root.Q("roue").ClassListContains(ClosedClass),
                         "Un seul clic ouvre la roue (icône en " + icon.worldBound + ").");
                     Assert.IsTrue(wheel.Escape(), "Échap la referme.");
@@ -64,7 +64,7 @@ namespace Diciela.Tests.PlayMode
         {
             using (var test = new TestWorld())
             {
-                UIDocument document = Hud(test);
+                UIDocument document = TestHud.WithWheel(test);
                 yield return null;
                 var wheel = document.GetComponent<ToolWheel>();
                 var tooltips = new Tooltips(document);
@@ -76,58 +76,16 @@ namespace Diciela.Tests.PlayMode
                 VisualElement icon = root.Q("outils");
                 VisualElement bubble = root.Q("infobulle");
 
-                Send(icon, PointerEnterEvent.GetPooled(MouseAt(icon, EventType.MouseMove)));
+                TestHud.Send(icon,
+                    PointerEnterEvent.GetPooled(TestHud.MouseAt(icon.worldBound.center, EventType.MouseMove)));
                 Assert.IsFalse(bubble.ClassListContains(HiddenClass), "Montrée, l'icône a son infobulle.");
                 Assert.AreEqual("Outils", root.Q<Label>("infobulle-titre").text);
                 tooltips.Hide();
 
                 wheel.Hide();
-                Send(icon, PointerEnterEvent.GetPooled(MouseAt(icon, EventType.MouseMove)));
+                TestHud.Send(icon,
+                    PointerEnterEvent.GetPooled(TestHud.MouseAt(icon.worldBound.center, EventType.MouseMove)));
                 Assert.IsTrue(bubble.ClassListContains(HiddenClass), "Cachée, elle n'en a plus.");
-            }
-        }
-
-        // Un HUD de test : le document du jeu, sa feuille de thème, la roue des outils.
-        private static UIDocument Hud(TestWorld test)
-        {
-#if UNITY_EDITOR
-            var panel = test.Keep(ScriptableObject.CreateInstance<PanelSettings>());
-            panel.themeStyleSheet =
-                UnityEditor.AssetDatabase.LoadAssetAtPath<ThemeStyleSheet>("Assets/UI/Theme.tss");
-            panel.scaleMode = PanelScaleMode.ConstantPixelSize;
-            GameObject host = test.Keep(new GameObject("HUD de test"));
-            host.SetActive(false);
-            var document = host.AddComponent<UIDocument>();
-            document.panelSettings = panel;
-            document.visualTreeAsset =
-                UnityEditor.AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UI/Hud.uxml");
-            host.AddComponent<ToolWheel>();
-            host.SetActive(true);
-            return document;
-#else
-            throw new System.NotSupportedException("Le HUD de test se monte dans l'éditeur.");
-#endif
-        }
-
-        // Un événement de la souris au milieu de cet élément, dans le repère du panneau (celui d'IMGUI : origine en haut).
-        private static Event MouseAt(VisualElement element, EventType type)
-        {
-            return new Event { type = type, mousePosition = element.worldBound.center, button = 0, clickCount = 1 };
-        }
-
-        // Un clic : appuyer puis relâcher au même endroit.
-        private static void Click(VisualElement element)
-        {
-            Send(element, PointerDownEvent.GetPooled(MouseAt(element, EventType.MouseDown)));
-            Send(element, PointerUpEvent.GetPooled(MouseAt(element, EventType.MouseUp)));
-        }
-
-        private static void Send(VisualElement target, EventBase pointerEvent)
-        {
-            using (pointerEvent)
-            {
-                pointerEvent.target = target;
-                target.SendEvent(pointerEvent);
             }
         }
     }

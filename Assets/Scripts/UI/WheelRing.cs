@@ -6,12 +6,12 @@ using UnityEngine.UIElements;
 namespace Diciela.UI
 {
     /// <summary>
-    /// L'anneau de la roue des outils (décision 168) : son plateau et les outils autour d'un centre, à la place que leur
-    /// donne la feuille de style, et le fond plein écran qui prend le pointeur tant que l'anneau est ouvert. Il s'ouvre en
-    /// un point du panneau, ramené pour tenir dans l'écran, à la marge des blocs du HUD ; touche tenue, on y vise par la
-    /// direction du pointeur, au clic par le survol, et on clique un outil ; un appui sur le fond le congédie. Fermé, il
-    /// reste en page, invisible et sans prise : il se mesure avant de s'ouvrir. Il se branche sur ses éléments à sa
-    /// naissance et s'en débranche quand on le libère (Dispose).
+    /// L'anneau de la roue des outils (décisions 168 et 176) : son plateau et les outils autour d'un centre, à la place que
+    /// leur donne la feuille de style, et le fond plein écran qui prend le pointeur tant que l'anneau est ouvert. Il
+    /// s'ouvre en un point du panneau, ramené pour tenir dans l'écran, à la marge des blocs du HUD ; touche tenue, on y
+    /// vise par la direction où l'on bouge le pointeur depuis ce point, au clic par le survol, et on clique un outil ; un
+    /// appui sur le fond le congédie. Fermé, il reste en page, invisible et sans prise : il se mesure avant de s'ouvrir.
+    /// Il se branche sur ses éléments à sa naissance et s'en débranche quand on le libère (Dispose).
     /// </summary>
     internal sealed class WheelRing : IDisposable
     {
@@ -29,6 +29,7 @@ namespace Diciela.UI
         private readonly EventCallback<PointerEnterEvent>[] _onEnter;
         private readonly EventCallback<PointerLeaveEvent>[] _onLeave;
         private readonly Action[] _onClicked;
+        private Vector2 _openedAt;
         private Vector2 _centerPoint;
 
         public WheelRing(VisualElement wheel, VisualElement center, VisualElement plate, FeltButton[] tools)
@@ -78,6 +79,7 @@ namespace Diciela.UI
             Rect room = _wheel.worldBound;
             float margin = _wheel.customStyle.TryGetValue(EdgeMargin, out float value) ? value : 0f;
             var inside = Rect.MinMaxRect(room.xMin + margin, room.yMin + margin, room.xMax - margin, room.yMax - margin);
+            _openedAt = at;
             _centerPoint = WheelGeometry.Clamped(at, Extent(), inside);
             _center.style.left = _centerPoint.x - room.xMin;
             _center.style.top = _centerPoint.y - room.yMin;
@@ -110,13 +112,16 @@ namespace Diciela.UI
             }
         }
 
-        /// <summary>Le rang de l'outil qu'on vise depuis le centre vers ce point du panneau ; -1 près du centre.</summary>
+        /// <summary>
+        /// Le rang de l'outil qu'on vise en amenant le pointeur en ce point du panneau ; -1 tant qu'il reste près de là
+        /// où l'anneau s'est ouvert.
+        /// </summary>
         public int ToolAt(Vector2 pointer)
         {
             _toolCenters.Clear();
             foreach (FeltButton tool in _tools)
                 _toolCenters.Add(_centerPoint + tool.layout.center);
-            return WheelGeometry.Aimed(_centerPoint, _toolCenters, pointer);
+            return WheelGeometry.Aimed(_openedAt, _centerPoint, _toolCenters, pointer);
         }
 
         /// <summary>Marque l'outil visé (-1 : aucun) et le dit s'il change.</summary>

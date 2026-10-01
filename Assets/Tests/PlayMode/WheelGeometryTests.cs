@@ -5,9 +5,10 @@ using UnityEngine;
 namespace Diciela.Tests.PlayMode
 {
     /// <summary>
-    /// Les mesures de la roue des outils (décision 168), dans le repère du panneau (y vers le bas) : deux outils à 132 px
-    /// du centre, l'un en haut, l'autre en bas ; on vise par la direction, rien près du centre ; ouverte au coin d'un
-    /// écran de 1280 × 720, la roue est ramenée dedans. Des mesures écrites ici, pas celles de la feuille de style.
+    /// Les mesures de la roue des outils (décisions 168 et 176), dans le repère du panneau (y vers le bas) : deux outils
+    /// à 132 px du centre, l'un en haut, l'autre en bas ; on vise par la direction, rien près du point d'ouverture ;
+    /// ouverte au coin d'un écran de 1280 × 720, la roue est ramenée dedans, et relâcher là où elle s'est ouverte ne
+    /// choisit toujours rien. Des mesures écrites ici, pas celles de la feuille de style.
     /// </summary>
     public sealed class WheelGeometryTests
     {
@@ -17,18 +18,36 @@ namespace Diciela.Tests.PlayMode
         [Test]
         public void TheAimedToolIsTheOneInThePointersDirection()
         {
-            Assert.AreEqual(0, WheelGeometry.Aimed(Center, Tools, new Vector2(430f, 220f)), "Vers le haut : le premier.");
-            Assert.AreEqual(1, WheelGeometry.Aimed(Center, Tools, new Vector2(350f, 380f)), "Vers le bas : le second.");
-            Assert.AreEqual(0, WheelGeometry.Aimed(Center, Tools, new Vector2(400f, 20f)),
+            Assert.AreEqual(0, WheelGeometry.Aimed(Center, Center, Tools, new Vector2(430f, 220f)),
+                "Vers le haut : le premier.");
+            Assert.AreEqual(1, WheelGeometry.Aimed(Center, Center, Tools, new Vector2(350f, 380f)),
+                "Vers le bas : le second.");
+            Assert.AreEqual(0, WheelGeometry.Aimed(Center, Center, Tools, new Vector2(400f, 20f)),
                 "Au-delà de l'outil, la direction compte encore.");
         }
 
         [Test]
         public void NearTheCenterNothingIsAimed()
         {
-            Assert.AreEqual(-1, WheelGeometry.Aimed(Center, Tools, new Vector2(400f, 250f)),
+            Assert.AreEqual(-1, WheelGeometry.Aimed(Center, Center, Tools, new Vector2(400f, 250f)),
                 "À 50 px, en deçà de la moitié des 132 px : rien.");
-            Assert.AreEqual(-1, WheelGeometry.Aimed(Center, new Vector2[0], new Vector2(400f, 100f)));
+            Assert.AreEqual(-1, WheelGeometry.Aimed(Center, Center, new Vector2[0], new Vector2(400f, 100f)));
+        }
+
+        [Test]
+        public void PulledFromTheEdgeItAimsByTheMoveFromWhereItOpened()
+        {
+            // Ouverte à 80 px sous son centre (le pointeur près du bas de l'écran), la roue a été remontée.
+            var openedAt = new Vector2(400f, 380f);
+
+            Assert.AreEqual(-1, WheelGeometry.Aimed(openedAt, Center, Tools, openedAt),
+                "Sans bouger, rien : relâcher la referme sans choisir.");
+            Assert.AreEqual(-1, WheelGeometry.Aimed(openedAt, Center, Tools, new Vector2(420f, 330f)),
+                "À 54 px du point d'ouverture, encore rien.");
+            Assert.AreEqual(0, WheelGeometry.Aimed(openedAt, Center, Tools, new Vector2(400f, 310f)),
+                "Monté de 70 px, le premier, bien que le pointeur reste sous le centre.");
+            Assert.AreEqual(1, WheelGeometry.Aimed(openedAt, Center, Tools, new Vector2(400f, 450f)),
+                "Descendu de 70 px, le second.");
         }
 
         [Test]
