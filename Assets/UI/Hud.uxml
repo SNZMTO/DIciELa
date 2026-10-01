@@ -73,6 +73,7 @@
         </Diciela.UI.FeltButton>
         <ui:VisualElement name="roue" class="roue roue-fermee" picking-mode="Ignore">
             <ui:VisualElement name="roue-centre" class="roue-centre" picking-mode="Ignore">
+                <Diciela.UI.Facet name="roue-plateau" class="plateau roue-plateau" picking-mode="Ignore" />
                 <Diciela.UI.Facet name="roue-bulle" class="bulle roue-bulle bloc-cache" picking-mode="Ignore">
                     <ui:Label name="roue-nom" class="libelle roue-texte" picking-mode="Ignore" />
                     <ui:Label name="roue-suite" class="sous-titre roue-texte" picking-mode="Ignore" />
