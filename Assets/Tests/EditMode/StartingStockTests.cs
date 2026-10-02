@@ -11,7 +11,8 @@ namespace Diciela.Tests.EditMode
     /// Le stock de départ (GDD, section 6 ; décision 172), par l'ordre « poser » le campement : il le reçoit en
     /// s'installant, 30 Bois et 20 Pierre nés du départ, qui sont le stock de la ville, et ouvre le poste « à tout
     /// faire », libre ; rien d'autre ne se pose. Le stock de départ ne se donne qu'une fois ; un logis qui ne tient rien
-    /// ne reçoit rien ; sans déroulé du départ, le campement reste vide.
+    /// ne reçoit rien ; sans déroulé du départ, le campement reste vide. Un logis qui sort de son chantier est mis en
+    /// service de la même façon, dès qu'on l'entend bâti : son stock, son poste, le stock de départ (décision 179).
     /// </summary>
     public sealed class StartingStockTests
     {
@@ -59,6 +60,36 @@ namespace Diciela.Tests.EditMode
             Assert.IsNotNull(second);
             Assert.AreEqual(0, world.Warehouses.StockOf(second).Total, "Le stock de départ est déjà donné.");
             Assert.AreEqual(50, world.Ledger.CreatedBy(GoodsCause.StartingStock));
+        }
+
+        [Test]
+        public void AHomeThatComesOutOfItsSiteIsCommissionedLikeTheCamp()
+        {
+            // Une tente qui ne tient rien ouvre le poste ; la maison, qui tient des marchandises, attend ses bâtisseurs.
+            World world = _town.World();
+            Structure tent = TestTown.Place(world, _town.Keep(TestData.Home("tente", 3f, true, 0, _town.OddJobs)),
+                20f, 14f);
+            TestTown.Send(world, new AssignVillagerCommand(world.Villagers.Chimera.Id, tent.Id));
+            StructureDefinition plan = _town.Keep(TestData.Home("maison", 3f, false, 100, _town.OddJobs));
+            TestData.Cost(plan, 0.5f);
+            Structure house = TestTown.Place(world, plan, 28f, 14f);
+            Assert.AreEqual(StructureState.Planned, house.State);
+            int stockWhenHeard = -1;
+            world.Structures.StructureBuilt += built =>
+            {
+                Inventory stock = world.Warehouses.StockOf(built);
+                stockWhenHeard = stock == null ? -2 : stock.Total;
+            };
+
+            TestGrids.StepUntil(world, () => house.State == StructureState.Built, 3000, "la maison bâtie");
+
+            Assert.AreEqual(30, world.Warehouses.StockOf(house).CountOf(_town.Wood),
+                "Le premier logis qui tient des marchandises reçoit le stock de départ, même sorti d'un chantier.");
+            Assert.AreEqual(20, world.Warehouses.StockOf(house).CountOf(_town.Stone));
+            Assert.AreEqual(50, world.Ledger.CreatedBy(GoodsCause.StartingStock));
+            Assert.AreEqual(50, stockWhenHeard, "Quand on l'entend bâtie, elle est déjà en service.");
+            Assert.AreEqual(2, world.WorkSlots.All.Count);
+            Assert.AreSame(house, world.WorkSlots.All[1].Workplace, "Son poste s'ouvre avec elle.");
         }
 
         [Test]

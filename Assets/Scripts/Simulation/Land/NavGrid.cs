@@ -137,6 +137,25 @@ namespace Diciela.Simulation.Land
             Version++;
         }
 
+        /// <summary>
+        /// Donne à cet occupant les mailles libres du rectangle, et elles seules : un arbre debout reprend celles que son
+        /// voisin retiré tenait sous lui, sans rien prendre à personne.
+        /// </summary>
+        internal void Reclaim(RotatedRect rect, int occupant)
+        {
+            bool changed = false;
+            foreach (Vector2Int cell in CellsCoveredBy(rect))
+            {
+                int index = IndexOf(cell);
+                if (_occupant[index] != 0)
+                    continue;
+                _occupant[index] = occupant;
+                changed = true;
+            }
+            if (changed)
+                Version++;
+        }
+
         /// <summary>Compte une porte de plus devant chaque maille du rectangle.</summary>
         internal void AddDoorway(RotatedRect rect)
         {

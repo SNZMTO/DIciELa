@@ -9,10 +9,10 @@ using UnityEngine;
 namespace Diciela.Tests.EditMode
 {
     /// <summary>
-    /// Le travail interrompu (GDD, sections 6 et 9 ; décisions 46, 150 et 156), par les ordres du joueur : envoyée dormir,
-    /// retirée, ou couverte par une construction pendant qu'elle porte, la Chimère rend sa charge au campement ; endormie, elle
-    /// garde son poste, et réveillée, elle reprend le travail ; retirée, elle n'a plus de poste ; couverte, elle sort,
-    /// puis reprend le travail.
+    /// Le travail interrompu (GDD, sections 6 et 9 ; décisions 46, 150, 156 et 178), par les ordres du joueur : ce qu'elle
+    /// porte garde sa place au campement jusqu'à sa livraison ; envoyée dormir, retirée, ou couverte par une construction
+    /// pendant qu'elle porte, la Chimère rend sa charge au campement, à cette place ; endormie, elle garde son poste, et
+    /// réveillée, elle reprend le travail ; retirée, elle n'a plus de poste ; couverte, elle sort, puis reprend le travail.
     /// </summary>
     public sealed class InterruptedWorkTests
     {
@@ -45,6 +45,17 @@ namespace Diciela.Tests.EditMode
         }
 
         [Test]
+        public void HerLoadKeepsItsPlaceAtTheCampUntilDelivered()
+        {
+            Assert.AreEqual(45, _campStock.Total, "Elle a pris 5 marchandises au campement.");
+            Assert.AreEqual(50, _campStock.FreeSpace, "Ce qu'elle porte garde sa place : rien d'autre ne la prend.");
+
+            TestGrids.StepUntil(_world, () => _chimera.Load.Total == 0, 2000, "sa charge livrée au chantier");
+
+            Assert.AreEqual(55, _campStock.FreeSpace, "Livrée, sa charge rend la place qu'elle gardait.");
+        }
+
+        [Test]
         public void SentToBedSheGivesHerLoadBackAndKeepsHerPost()
         {
             Assert.AreEqual(45, _campStock.Total, "Elle a pris 5 marchandises au campement.");
@@ -54,6 +65,7 @@ namespace Diciela.Tests.EditMode
             Assert.IsTrue(_chimera.IsGoingToBed);
             Assert.AreEqual(0, _chimera.Load.Total, "Sa charge est rendue.");
             Assert.AreEqual(50, _campStock.Total, "Le campement a tout repris.");
+            Assert.AreEqual(50, _campStock.FreeSpace, "À la place qu'elle gardait : plus rien n'est retenu.");
             Assert.IsNotNull(_chimera.Slot, "Endormie, elle garde son poste.");
             Assert.AreEqual(_world.Ledger.CreatedOf(_town.Wood), TestTown.EverywhereOf(_world, _town.Wood));
 

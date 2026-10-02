@@ -14,7 +14,7 @@ namespace Diciela.UI
     /// vue pendant la pose, ou par Échap (décision 168). Il ne propose que ce qui se pose encore : une construction unique
     /// posée s'en va. Le campement d'abord (GDD, section 6) : tant que la Chimère n'a pas de logis, il ne propose que son
     /// logis, si le catalogue en a un ; c'est une consigne du panneau, pas une règle des ordres (décision 95). Il écoute
-    /// l'outil et les poses : le panneau ne photographie jamais.
+    /// l'outil, les poses et les chantiers finis : le panneau ne photographie jamais.
     /// </summary>
     public sealed class BuildBarPresenter : IDisposable
     {
@@ -47,7 +47,8 @@ namespace Diciela.UI
             _view.StructureChosen += OnStructureChosen;
             _placement.HeldChanged += OnHeldChanged;
             _placement.ResultChanged += OnResultChanged;
-            _world.Structures.StructurePlaced += OnStructurePlaced;
+            _world.Structures.StructurePlaced += OnStructuresChanged;
+            _world.Structures.StructureBuilt += OnStructuresChanged;
             OnFamilyChosen(0);
             OnResultChanged();
             _view.ShowOpen(false);
@@ -62,7 +63,8 @@ namespace Diciela.UI
             _view.StructureChosen -= OnStructureChosen;
             _placement.HeldChanged -= OnHeldChanged;
             _placement.ResultChanged -= OnResultChanged;
-            _world.Structures.StructurePlaced -= OnStructurePlaced;
+            _world.Structures.StructurePlaced -= OnStructuresChanged;
+            _world.Structures.StructureBuilt -= OnStructuresChanged;
         }
 
         public void Open()
@@ -103,8 +105,11 @@ namespace Diciela.UI
             ShowOpenFamily();
         }
 
-        /// <summary>Une pose change ce qui se propose : une construction unique s'en va, et le logis ouvre le reste.</summary>
-        private void OnStructurePlaced(Structure structure)
+        /// <summary>
+        /// Une pose ou un chantier fini change ce qui se propose : une construction unique posée s'en va, et le logis
+        /// bâti ouvre le reste, qu'il se dresse dès la pose ou sorte de son chantier.
+        /// </summary>
+        private void OnStructuresChanged(Structure structure)
         {
             ShowOpenFamily();
         }

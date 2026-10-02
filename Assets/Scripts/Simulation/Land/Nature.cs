@@ -1,13 +1,17 @@
 using System;
 using System.Collections.Generic;
+using Diciela.Simulation.Core;
+using UnityEngine;
 
 namespace Diciela.Simulation.Land
 {
     /// <summary>
     /// Les arbres et les rochers de la carte (GDD, section 2 ; ARCHITECTURE, section 4) : ceux que la carte décrit au
     /// lancement, ceux que le joueur a marqués pour être retirés, dans l'ordre où il les a marqués, et ceux qui sont
-    /// retirés. Debout, chacun prend ses mailles ; retiré, il ne libère que celles qu'il tient encore (deux pieds peints
-    /// l'un contre l'autre peuvent se partager une maille : le dernier de la carte la garde). Les événements d'un pas
+    /// retirés. Debout, chacun prend ses mailles ; deux pieds peints l'un contre l'autre se partagent une maille, que le
+    /// dernier de la carte tient. Retiré, un pied libère les siennes, et ses voisins debout reprennent celles qu'il tenait
+    /// sous eux : une maille reste prise tant qu'un pied debout la couvre. Un pied entièrement recouvert par un autre ne
+    /// se rejoint pas : il attend que celui qui le couvre soit retiré, puis reprend ses mailles. Les événements d'un pas
     /// attendent la fin de leur couche (ARCHITECTURE, section 5).
     /// </summary>
     public sealed class Nature
@@ -82,7 +86,10 @@ namespace Diciela.Simulation.Land
             _happened.Add(new KeyValuePair<HappeningKind, NatureItem>(HappeningKind.Unmarked, item));
         }
 
-        /// <summary>Le retire de la carte : ses mailles se libèrent. Seule l'économie l'appelle, le travail fini.</summary>
+        /// <summary>
+        /// Le retire de la carte : ses mailles se libèrent, sauf celles qu'un voisin debout couvre aussi. Seule l'économie
+        /// l'appelle, le travail fini.
+        /// </summary>
         internal void Remove(NatureItem item)
         {
             if (item.IsRemoved)
@@ -91,7 +98,27 @@ namespace Diciela.Simulation.Land
                 _marked.Remove(item);
             item.BecomeRemoved();
             _grid.ReleaseOccupant(item.Footprint, item.Occupant);
+            GiveBackShared(item.Footprint);
             _happened.Add(new KeyValuePair<HappeningKind, NatureItem>(HappeningKind.Removed, item));
+        }
+
+        // Les pieds debout qui peuvent partager une maille avec celui qui part (leurs cercles circonscrits, élargis d'une
+        // diagonale de maille, se touchent) reprennent les mailles libérées qu'ils couvrent, du dernier de la carte au
+        // premier : une maille partagée revient au dernier, comme au lancement. Un passage sur tous les pieds, à chaque
+        // retrait seulement ; un pied qui ne partageait rien n'a aucune maille libre à reprendre.
+        private void GiveBackShared(RotatedRect gone)
+        {
+            float cellDiagonal = _grid.Metrics.CellSize * Mathf.Sqrt(2f);
+            for (int i = _all.Count - 1; i >= 0; i--)
+            {
+                NatureItem other = _all[i];
+                if (other.IsRemoved)
+                    continue;
+                RotatedRect footprint = other.Footprint;
+                float reach = (gone.Size.magnitude + footprint.Size.magnitude) * 0.5f + cellDiagonal;
+                if ((footprint.Center - gone.Center).sqrMagnitude <= reach * reach)
+                    _grid.Reclaim(footprint, other.Occupant);
+            }
         }
 
         /// <summary>Livre les événements du pas, dans leur ordre, puis vide la file. Seul le monde l'appelle.</summary>

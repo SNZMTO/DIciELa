@@ -6,24 +6,24 @@ namespace Diciela.Simulation
 {
     /// <summary>
     /// Poser une construction, une opération qui touche plusieurs couches (ARCHITECTURE, section 3), par des appels
-    /// vers le bas, dans cet ordre : le terrain la pose (ou la refuse) ; l'économie ouvre son stock si elle tient les
-    /// marchandises de la ville, ou son chantier si elle attend d'être bâtie ; la société ouvre ses postes si elle est
-    /// bâtie. Puis le déroulé du départ la regarde : si c'est le premier logis de la Chimère, il reçoit le stock de départ.
+    /// vers le bas, dans cet ordre : le terrain la pose (ou la refuse) ; l'économie ouvre son chantier si elle attend
+    /// d'être bâtie ; si elle se dresse dès la pose, elle est mise en service tout de suite (Commissioning : son stock,
+    /// ses postes, le stock de départ).
     /// </summary>
     internal sealed class Placing
     {
         private readonly World _world;
-        private readonly Opening _opening;
+        private readonly Commissioning _commissioning;
 
-        public Placing(World world, Opening opening)
+        public Placing(World world, Commissioning commissioning)
         {
             if (ReferenceEquals(world, null))
                 throw new ArgumentNullException(nameof(world));
-            if (ReferenceEquals(opening, null))
-                throw new ArgumentNullException(nameof(opening));
+            if (ReferenceEquals(commissioning, null))
+                throw new ArgumentNullException(nameof(commissioning));
 
             _world = world;
-            _opening = opening;
+            _commissioning = commissioning;
         }
 
         /// <summary>
@@ -34,10 +34,9 @@ namespace Diciela.Simulation
             Structure placed = _world.Structures.Place(definition, placement);
             if (placed == null)
                 return null;
-            _world.Warehouses.Track(placed);
             _world.ConstructionSites.Track(placed);
-            _world.WorkSlots.Track(placed);
-            _opening.Welcome(placed, _world.Warehouses, _world.Ledger);
+            if (placed.State == StructureState.Built)
+                _commissioning.Commission(placed);
             return placed;
         }
     }

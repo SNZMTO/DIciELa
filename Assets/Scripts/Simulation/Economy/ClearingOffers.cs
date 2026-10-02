@@ -107,20 +107,23 @@ namespace Diciela.Simulation.Economy
         }
 
         /// <summary>
-        /// La tâche s'arrête là : l'arbre, pas encore abattu, redevient libre pour un autre, avec le travail déjà fait ;
-        /// abattu, ce que porte le défricheur retourne à la ville. La place retenue est rendue.
+        /// La tâche s'arrête là : l'arbre, pas encore abattu, redevient libre pour un autre, avec le travail déjà fait, et
+        /// la place retenue est rendue ; abattu, ce que porte le défricheur va à la place qu'on lui avait retenue.
         /// </summary>
         internal void Cancel(Clearing clearing, Inventory load)
         {
             if (clearing.IsOver)
                 return;
+            clearing.MarkOver();
+            if (clearing.IsFelled)
+            {
+                if (clearing.Amount > 0)
+                    _warehouses.Store(clearing.Warehouse, load, clearing.Good, clearing.Amount);
+                return;
+            }
             if (clearing.Amount > 0)
                 _warehouses.ReleaseSpace(clearing.Warehouse, clearing.Amount);
-            if (!clearing.IsFelled)
-                _taken.Remove(clearing.Item);
-            else if (load.Total > 0)
-                _warehouses.ReturnToTown(load);
-            clearing.MarkOver();
+            _taken.Remove(clearing.Item);
         }
 
         /// <summary>L'entrepôt le plus proche de ce point, à vol d'oiseau, qui a la place de tant de marchandises.</summary>

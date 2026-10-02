@@ -11,7 +11,8 @@ namespace Diciela.Tests.EditMode
     /// Les arbres et les rochers de la carte (GDD, section 2 ; décision 157), par les ordres du joueur : debout, ils
     /// prennent leurs mailles (on ne les traverse pas, rien ne se pose dessus, et la pose dit pourquoi) ; marqués, ils le
     /// sont dans l'ordre des gestes, et chaque geste se dit ; deux pieds peints l'un contre l'autre se partagent une maille,
-    /// et retirer l'un laisse l'autre en place.
+    /// et retirer l'un, lequel que ce soit, laisse l'autre entier ; un pied entièrement recouvert attend que celui qui le
+    /// couvre soit retiré.
     /// </summary>
     public sealed class NatureTests
     {
@@ -87,6 +88,43 @@ namespace Diciela.Tests.EditMode
                 "Celles du premier se libèrent.");
             Assert.AreEqual(PlacementResult.NatureInTheWay,
                 world.PlacementRules.Check(_town.Cabin, new Placement(new Vector2(30f, 22f), 0f)));
+        }
+
+        [Test]
+        public void ClearingTheLaterOfTwoTouchingTreesLeavesTheFirstWhole()
+        {
+            World world = _town.WorkingWorld(new[] { Spot(_town.Tree, 28f, 22f), Spot(_town.Tree, 28.6f, 22f) });
+            NatureItem first = world.Nature.Find(1);
+            NatureItem second = world.Nature.Find(2);
+            Vector2Int shared = world.Grid.CellOf(new Vector2(28.3f, 22f));
+
+            TestTown.Send(world, new MarkForClearingCommand(new[] { second.Id }));
+            TestGrids.StepUntil(world, () => second.IsRemoved, 3000, "le second arbre retiré");
+
+            Assert.AreEqual(first.Occupant, world.Grid.OccupantAt(shared), "La maille partagée revient au premier.");
+            foreach (Vector2Int cell in world.Grid.CellsCoveredBy(first.Footprint))
+                Assert.IsFalse(world.Grid.IsWalkable(cell), "On ne traverse toujours pas le premier, en " + cell + ".");
+            Assert.IsTrue(world.Grid.IsWalkable(world.Grid.CellOf(new Vector2(29f, 22f))),
+                "Les mailles du second seul se libèrent.");
+        }
+
+        [Test]
+        public void ATreeUnderARockWaitsForTheRock()
+        {
+            // Un rocher peint sur un arbre : le dernier de la carte prend toutes les mailles du premier.
+            World world = _town.WorkingWorld(new[] { Spot(_town.Tree, 28f, 22f), Spot(_town.Rock, 28f, 22f) });
+            NatureItem tree = world.Nature.Find(1);
+            NatureItem rock = world.Nature.Find(2);
+
+            TestTown.Send(world, new MarkForClearingCommand(new[] { tree.Id }));
+            for (int i = 0; i < 600; i++)
+                world.Step();
+            Assert.IsFalse(tree.IsRemoved, "Recouvert, l'arbre ne se rejoint pas.");
+            Assert.AreEqual(0d, world.Clearings.ProgressOf(tree), "Personne n'y a travaillé.");
+
+            TestTown.Send(world, new MarkForClearingCommand(new[] { rock.Id }));
+            TestGrids.StepUntil(world, () => rock.IsRemoved && tree.IsRemoved, 3500,
+                "le rocher retiré, puis l'arbre qu'il couvrait");
         }
 
         [Test]

@@ -8,29 +8,26 @@ namespace Diciela.Simulation.Economy
     /// <summary>
     /// Les chantiers et leur file (GDD, section 9) : chaque construction posée en fantôme en a un, dans l'ordre où elle
     /// a été posée, et les chantiers se servent dans cet ordre. Quand le dernier travail est fait, ses matériaux entrent
-    /// dans la construction (ils disparaissent du bilan), elle devient bâtie, et si elle tient des marchandises, elle
-    /// sert d'entrepôt. Les événements d'un pas attendent la fin de leur couche (ARCHITECTURE, section 5).
+    /// dans la construction (ils disparaissent du bilan) et elle devient bâtie ; le monde la met en service à la fin du
+    /// pas (décision 179). Les événements d'un pas attendent la fin de leur couche (ARCHITECTURE, section 5).
     /// </summary>
     public sealed class ConstructionSites
     {
         private readonly List<ConstructionSite> _queue = new List<ConstructionSite>();
         private readonly List<ConstructionSite> _opened = new List<ConstructionSite>();
         private readonly List<ConstructionSite> _supplied = new List<ConstructionSite>();
+        private readonly List<Structure> _finished = new List<Structure>();
         private readonly Structures _structures;
-        private readonly Warehouses _warehouses;
         private readonly GoodsLedger _ledger;
 
-        public ConstructionSites(Structures structures, Warehouses warehouses, GoodsLedger ledger)
+        public ConstructionSites(Structures structures, GoodsLedger ledger)
         {
             if (ReferenceEquals(structures, null))
                 throw new ArgumentNullException(nameof(structures));
-            if (ReferenceEquals(warehouses, null))
-                throw new ArgumentNullException(nameof(warehouses));
             if (ReferenceEquals(ledger, null))
                 throw new ArgumentNullException(nameof(ledger));
 
             _structures = structures;
-            _warehouses = warehouses;
             _ledger = ledger;
         }
 
@@ -42,6 +39,12 @@ namespace Diciela.Simulation.Economy
 
         /// <summary>La file des chantiers, dans l'ordre où ils se servent.</summary>
         public IReadOnlyList<ConstructionSite> Queue => _queue;
+
+        /// <summary>
+        /// Les constructions dont le chantier a fini depuis la dernière mise en service, dans l'ordre où elles ont fini :
+        /// le monde les met en service à la fin du pas, puis les oublie.
+        /// </summary>
+        internal IReadOnlyList<Structure> Finished => _finished;
 
         /// <summary>Le chantier de cette construction ; null si elle n'en a pas (bâtie, ou dressée dès la pose).</summary>
         public ConstructionSite SiteOf(Structure structure)
@@ -96,7 +99,13 @@ namespace Diciela.Simulation.Economy
                     _ledger.Destroyed(site.GoodAt(line), site.DeliveredAt(line), GoodsCause.Construction);
             }
             _structures.Finish(site.Structure);
-            _warehouses.Track(site.Structure);
+            _finished.Add(site.Structure);
+        }
+
+        /// <summary>Le monde a mis en service les constructions finies : il les oublie. Seul le monde l'appelle.</summary>
+        internal void ForgetFinished()
+        {
+            _finished.Clear();
         }
 
         /// <summary>Livre les événements du pas, dans leur ordre, puis vide les files. Seul le monde l'appelle.</summary>

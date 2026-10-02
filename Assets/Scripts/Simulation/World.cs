@@ -15,6 +15,7 @@ namespace Diciela.Simulation
     public sealed class World
     {
         private readonly Queue<Command> _pendingCommands = new Queue<Command>();
+        private readonly Commissioning _commissioning;
 
         public World(SimulationSettings settings, MapDescription map, Catalog catalog)
         {
@@ -35,13 +36,14 @@ namespace Diciela.Simulation
             var surroundings = new Surroundings(Grid);
             Ledger = new GoodsLedger();
             Warehouses = new Warehouses(Ledger);
-            ConstructionSites = new ConstructionSites(Structures, Warehouses, Ledger);
+            ConstructionSites = new ConstructionSites(Structures, Ledger);
             var offers = new TaskOffers(Warehouses, ConstructionSites, Islands, surroundings, settings);
             Clearings = new ClearingOffers(Nature, Warehouses, Islands, surroundings);
             WorkSlots = new WorkSlots();
             Villagers = new Villagers(Grid, Islands, PathFinder, Clock, surroundings, offers, Clearings, WorkSlots,
                 new StatisticTable(catalog.Statistics, settings));
-            Placing = new Placing(this, new Opening(catalog.Opening));
+            _commissioning = new Commissioning(this, new Opening(catalog.Opening));
+            Placing = new Placing(this, _commissioning);
         }
 
         public Clock Clock { get; }
@@ -98,14 +100,25 @@ namespace Diciela.Simulation
         /// <summary>
         /// Joue un pas. L'ordre du pas, écrit ici et nulle part ailleurs : les ordres en attente, puis le temps, le
         /// terrain, l'économie, la société, le monde. Pour l'instant, les ordres, le temps et les habitants, qui font le
-        /// travail de l'économie et du terrain ; les événements partent à la fin de chaque couche.
+        /// travail de l'économie et du terrain, puis le monde met en service ce qu'ils ont fini de bâtir ; les événements
+        /// partent à la fin de chaque couche.
         /// </summary>
         public void Step()
         {
             ApplyPendingCommands();
             Clock.Advance();
             Villagers.Step();
+            CommissionWhatWasBuilt();
             DeliverEvents();
+        }
+
+        // Le monde, à la fin du pas : les constructions dont le chantier a fini pendant le pas sont mises en service.
+        private void CommissionWhatWasBuilt()
+        {
+            IReadOnlyList<Structure> finished = ConstructionSites.Finished;
+            for (int i = 0; i < finished.Count; i++)
+                _commissioning.Commission(finished[i]);
+            ConstructionSites.ForgetFinished();
         }
 
         /// <summary>

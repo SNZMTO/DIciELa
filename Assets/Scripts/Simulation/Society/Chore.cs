@@ -69,18 +69,15 @@ namespace Diciela.Simulation.Society
             return false;
         }
 
-        /// <summary>
-        /// Un pas de la tâche. <paramref name="built"/> est la construction qu'il vient de finir, s'il en finit une.
-        /// </summary>
-        public ChoreOutcome Step(ref Vector2 position, bool workTime, out Structure built)
+        /// <summary>Un pas de la tâche.</summary>
+        public ChoreOutcome Step(ref Vector2 position, bool workTime)
         {
-            built = null;
             if (_working)
             {
                 if (!workTime)
                     return End(ChoreOutcome.Done);
                 double hours = _statistics.WorkRateFor(_task) * _services.Clock.HoursPerStep;
-                return Follow(_gesture.Work(hours, out built), position);
+                return Follow(_gesture.Work(hours), position);
             }
 
             WalkOutcome outcome = _walk.IsWalking ? _walk.Advance(ref position, _metersPerStep) : WalkOutcome.Lost;
