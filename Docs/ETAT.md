@@ -1,21 +1,17 @@
 # DICIELA — état actuel
 
-**Branches** : de `etape-23-couche` à `etape-33-touches-cartes`, l'une sur l'autre, poussées, **pas fusionnées** (pas
-encore vues rendues) ; `main` : l'étape 22. Une fois vues : `git fetch . etape-33-touches-cartes:main`, puis push.
+**Branches** : tout est fusionné ; `main` : l'étape 33. La prochaine étape s'ouvre sur sa branche, depuis `main`.
 
 **Fait** : 23 à 25, la couche, le campement qui fait tout, les feuilles du chantier ; 26 à 29, la revue « max »
 corrigée (15 sur 15) ; 30, l'efficacité : îlots relus par rangées (0,5 ms au lieu de 3,9), « joignable » gardé avec le
 maillage, chantier au SRP Batcher, fanions et fiche mis à jour sur place (181) ; 31, le reste de la revue (182) ; 32,
-le ménage (183) ; 33, les touches 1 à 9 du panneau Construire, écrites sur les cartes (184). **EditMode 181/181,
-PlayMode 185/185.**
+le ménage (183) ; 33, les touches 1 à 9 du panneau Construire, écrites sur les cartes (184). Vu en Play le 02/10 (trois
+Plays sans erreur neuve, l'album des étapes 23 à 33) : l'étiquette écrivait « & » en AZERTY, corrigé et revu.
+**EditMode 181/181, PlayMode 185/185.**
 
-**À faire en premier** : Unity au premier plan quelques minutes pour le Play court et les captures de 23 à 33 (une
-autre application était devant à chaque fois) ; juger, l'album (21 à 33), puis fusionner.
-
-**À vérifier par toi, en Play** : « Aller dormir » lavande ; réveillée en chemin, la Chimère flâne devant sa porte ;
-elle dort sur le tapis, tête au coussin ; le tas de pierres se voit ; la ligne d'un chantier de cabane monte comme
-avant, le lierre a ses tiges, la frange du chaume est découpée ; l'aperçu a la forme des feuilles ; un Tab bref en bas
-ne choisit rien ; panneau ouvert, 1 prend la cabane, et chaque carte porte sa touche au coin (sa place est à juger).
+**À vérifier par toi, à la souris** (ce qu'une capture ne montre pas) : réveillée en chemin, la Chimère flâne devant
+sa porte ; un Tab bref près du bas de l'écran ne choisit rien ; un clic à côté de la roue la ferme sans rien poser ;
+panneau ouvert, 1 met la cabane en main ; l'étiquette au coin des cartes te va (sinon, dis-le : elle part).
 
 **Prochaine étape, à toi** : le premier jouable (GDD 17). Ma reco : la loge des bâtisseurs et l'entrepôt d'abord
 (les postes et le stock de la ville sans la Chimère), puis les premiers habitants ; il me faut leurs modèles du pack.
@@ -24,7 +20,9 @@ ne choisit rien ; panneau ouvert, 1 prend la cabane, et chaque carte porte sa to
 outils et le plateau de la roue ; les pastels des familles et le bandeau de brique (GDD 16) ; la voix de la Chimère ;
 les noms ; GDD 8 (les marchandises rendues, entrepôts pleins) ; la maison bâtie, devient-elle son logis ?
 **Dette** : `Fusion.uss` répète `:root` ; à trois cartes, le panneau chevauchera l'astuce en 720 p ; des réglages
-restent dans le code de l'interface (zone morte de la roue, écart des infobulles, portrait : reco, leur fiche).
+restent dans le code de l'interface (zone morte de la roue, écart des infobulles, portrait : reco, leur fiche) ; les
+monteurs de contenu réécrits (étape 31) n'ont pas encore tourné : au prochain « Monter les scènes », `git status` ne
+doit montrer aucun asset changé.
 
 **Prompt de la session suivante**
 > Lis CLAUDE.md et Docs/ETAT.md. Mes réponses : …
