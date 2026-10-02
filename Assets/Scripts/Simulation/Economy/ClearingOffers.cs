@@ -21,16 +21,18 @@ namespace Diciela.Simulation.Economy
         private readonly HashSet<NatureItem> _taken = new HashSet<NatureItem>();
         private readonly Dictionary<NatureItem, double> _progress = new Dictionary<NatureItem, double>();
 
-        public ClearingOffers(Nature nature, Warehouses warehouses, Islands islands, Surroundings surroundings)
+        internal ClearingOffers(Nature nature, Warehouses warehouses, Reach reach)
         {
             if (ReferenceEquals(nature, null))
                 throw new ArgumentNullException(nameof(nature));
             if (ReferenceEquals(warehouses, null))
                 throw new ArgumentNullException(nameof(warehouses));
+            if (ReferenceEquals(reach, null))
+                throw new ArgumentNullException(nameof(reach));
 
             _nature = nature;
             _warehouses = warehouses;
-            _reach = new Reach(islands, surroundings);
+            _reach = reach;
         }
 
         /// <summary>Les heures d'un débutant déjà faites sur cet arbre ou ce rocher ; 0 s'il n'est pas entamé.</summary>

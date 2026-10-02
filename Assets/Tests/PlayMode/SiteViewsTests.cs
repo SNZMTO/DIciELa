@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Diciela.Simulation;
 using Diciela.Simulation.Land;
@@ -13,12 +14,12 @@ namespace Diciela.Tests.PlayMode
     /// cabane posée, dont le modèle est un cube d'un mètre centré sur son origine, est sa vraie matière (le shader du
     /// chantier) avec son fantôme rangé dessous ; tant que rien n'est fait, la ligne est au pied du cube, à 9,5 m. Un
     /// matériau qui détoure (des feuilles) détoure aussi sur le chantier et sur son fantôme, au même seuil, et dessine les
-    /// mêmes faces. Les copies des matériaux, vraie matière et fantôme, partent avec la vue. Les matériaux du pack ont
-    /// leurs tests à part (SitePackMaterialsTests).
+    /// mêmes faces. La ligne est la valeur propre de chaque rendu, sans bloc de propriétés (le SRP Batcher les regroupe),
+    /// et le fantôme porte sa teinte dans son matériau. Les copies des matériaux, vraie matière et fantôme, partent avec
+    /// la vue. Les matériaux du pack ont leurs tests à part (SitePackMaterialsTests).
     /// </summary>
     public sealed class SiteViewsTests
     {
-        private static readonly int FillHeightId = Shader.PropertyToID("_FillHeight");
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
 
         private TestWorld _test;
@@ -47,7 +48,7 @@ namespace Diciela.Tests.PlayMode
             var ghostRenderer = ghost.GetComponent<MeshRenderer>();
 
             Assert.AreSame(_test.Settings.SiteMaterial.shader, built.sharedMaterial.shader, "La vraie matière.");
-            Assert.AreSame(_test.Settings.SiteGhostMaterial, ghostRenderer.sharedMaterial, "Le fantôme.");
+            Assert.AreSame(_test.Settings.SiteGhostMaterial.shader, ghostRenderer.sharedMaterial.shader, "Le fantôme.");
             Assert.AreEqual(ShadowCastingMode.Off, ghostRenderer.shadowCastingMode, "Le fantôme ne fait pas d'ombre.");
             Color original = _test.Cabin.Model.GetComponent<MeshRenderer>().sharedMaterial.GetColor(BaseColorId);
             Assert.AreEqual(original, built.sharedMaterial.GetColor(BaseColorId), "La copie garde la couleur de l'original.");
@@ -57,13 +58,14 @@ namespace Diciela.Tests.PlayMode
         public void NothingDoneLeavesTheLineAtTheFootOfTheModel()
         {
             Transform view = _test.Views.transform.GetChild(0);
-            var block = new MaterialPropertyBlock();
+            var built = view.GetComponent<MeshRenderer>();
+            var ghost = view.Find("Fantôme").GetComponent<MeshRenderer>();
 
-            view.GetComponent<MeshRenderer>().GetPropertyBlock(block);
-            Assert.AreEqual(9.5f, block.GetFloat(FillHeightId), 1e-4f, "La vraie matière.");
-            view.Find("Fantôme").GetComponent<MeshRenderer>().GetPropertyBlock(block);
-            Assert.AreEqual(9.5f, block.GetFloat(FillHeightId), 1e-4f, "Le fantôme.");
-            Assert.AreEqual(_test.Settings.PlannedColor, block.GetColor(BaseColorId), "La couleur du fantôme.");
+            Assert.AreEqual(9.5f, LineOf(built), 1e-4f, "La vraie matière.");
+            Assert.AreEqual(9.5f, LineOf(ghost), 1e-4f, "Le fantôme.");
+            Assert.AreEqual(_test.Settings.PlannedColor, ghost.sharedMaterial.GetColor(BaseColorId), "Sa teinte.");
+            Assert.IsFalse(built.HasPropertyBlock(), "Aucun bloc de propriétés sur la vraie matière…");
+            Assert.IsFalse(ghost.HasPropertyBlock(), "…ni sur le fantôme : le SRP Batcher les regroupe.");
         }
 
         [Test]
@@ -92,8 +94,11 @@ namespace Diciela.Tests.PlayMode
         [UnityTest]
         public IEnumerator HidingTheViewsDestroysTheCopiedMaterials()
         {
-            Material copy = _test.Views.transform.GetChild(0).GetComponent<MeshRenderer>().sharedMaterial;
+            Transform cabin = _test.Views.transform.GetChild(0);
+            Material copy = cabin.GetComponent<MeshRenderer>().sharedMaterial;
             Assert.AreNotSame(_test.Settings.SiteMaterial, copy, "Une copie, pas la fiche.");
+            Material tinted = cabin.Find("Fantôme").GetComponent<MeshRenderer>().sharedMaterial;
+            Assert.AreNotSame(_test.Settings.SiteGhostMaterial, tinted, "Le fantôme teinté, une copie lui aussi.");
             Transform hedge = _test.PlaceASiteDressedIn(Leaves(_test.Keep(new Texture2D(2, 2))));
             Material ghostCopy = hedge.Find("Fantôme").GetComponent<MeshRenderer>().sharedMaterial;
             Assert.AreNotSame(_test.Settings.SiteGhostMaterial, ghostCopy, "Une copie du fantôme.");
@@ -103,6 +108,13 @@ namespace Diciela.Tests.PlayMode
 
             Assert.IsTrue(copy == null, "La copie de la vraie matière est détruite.");
             Assert.IsTrue(ghostCopy == null, "La copie du fantôme aussi.");
+            Assert.IsTrue(tinted == null, "Et le fantôme teinté.");
+        }
+
+        // La hauteur de la ligne de ce rendu : la valeur propre que lisent les shaders du chantier, en bits de flottant.
+        private static float LineOf(MeshRenderer renderer)
+        {
+            return BitConverter.Int32BitsToSingle(unchecked((int)renderer.GetShaderUserValue()));
         }
 
         // Un Lit d'URP qui détoure au seuil de 0,4 et dessine ses deux faces, comme des feuilles.

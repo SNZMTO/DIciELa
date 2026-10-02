@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Diciela.Data;
+using Diciela.Simulation;
 using Diciela.Simulation.Land;
 using NUnit.Framework;
 using UnityEngine;
@@ -9,7 +10,8 @@ namespace Diciela.Tests.EditMode
     /// <summary>
     /// Les îlots contre l'oracle (SAVOIR, 4) : les 400 terrains tirés au hasard des trajets, avec la même graine. Sur
     /// chacun, les îlots du monde découpent le terrain comme l'oracle, qui les remplit pas à pas en huit directions sans
-    /// couper de coin : c'est aussi la preuve que les tronçons en quatre directions suffisent.
+    /// couper de coin : c'est aussi la preuve que les tronçons en quatre directions suffisent. Sur des terrains bloqués en
+    /// trois vagues et lus après chacune, les îlots, qui ne relèvent que les rangées changées, découpent encore comme lui.
     /// </summary>
     public sealed class IslandsOracleTests
     {
@@ -50,6 +52,39 @@ namespace Diciela.Tests.EditMode
 
             // Le tirage donne largement des terrains coupés en plusieurs îlots.
             Assert.GreaterOrEqual(split, 20, "Trop peu de terrains à plusieurs îlots.");
+        }
+
+        [Test]
+        public void TheIslandsFollowTheGroundPlacementAfterPlacement()
+        {
+            // Des terrains qui se bloquent en trois vagues, lus après chacune : les îlots ne relèvent que les rangées
+            // qui ont changé, et découpent pourtant le terrain comme l'oracle relu en entier.
+            var random = new System.Random(Seed + 1);
+            for (int n = 0; n < 100; n++)
+            {
+                int size = random.Next(4, 25);
+                var world = new World(_settings, TestData.FlatMap((float)size / _settings.CellsPerMeter),
+                    TestData.EmptyCatalog);
+                var blocked = new bool[size, size];
+                for (int wave = 0; wave < 3; wave++)
+                {
+                    for (int x = 0; x < size; x++)
+                    {
+                        for (int y = 0; y < size; y++)
+                        {
+                            if (blocked[x, y] || random.NextDouble() >= 0.15)
+                                continue;
+                            blocked[x, y] = true;
+                            var cell = new Vector2Int(x, y);
+                            world.Submit(new PlaceStructureCommand(_block,
+                                new Placement(world.Grid.CellCenter(cell), 0f)));
+                        }
+                    }
+                    world.Step();
+                    string fault = SamePartition(SlowPaths.Islands(blocked), world.Islands, out int _);
+                    Assert.IsNull(fault, "Terrain " + n + ", vague " + wave + " : " + fault);
+                }
+            }
         }
 
         /// <summary>

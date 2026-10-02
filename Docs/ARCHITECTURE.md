@@ -160,8 +160,9 @@ sauvegardé.
 - **Les événements** : des `event Action<…>` nommés au passé (`StructurePlaced`, `DayEnded`). Ceux levés pendant un pas
   sont mis en file et livrés à la fin de la couche, jamais au milieu d'une boucle. Dans la simulation, un système
   n'écoute que pour tenir à jour ce qu'il possède ou ce qu'il déduit.
-- **La topologie** : le maillage porte un numéro de version, changé à chaque pose, retrait ou tracé. Ce qui s'en
-  déduit se garde avec la version d'où il vient et se refait quand on le lit et qu'elle a changé : les îlots, les
+- **La topologie** : le maillage porte un numéro de version, changé à chaque pose, retrait ou tracé, et chaque rangée
+  la version de son dernier changement. Ce qui s'en déduit se garde avec la version d'où il vient et se refait quand on
+  le lit et qu'elle a changé : les îlots (seules les rangées changées se relisent), ce qu'un habitant rejoint, les
   distances gardées, le trajet d'un marcheur (qui le lit à chaque pas : il revérifie le reste de sa ligne, et n'en
   cherche un autre que si elle est coupée). Ce qui doit agir quand elle change sans la lire à chaque pas écoute
   « topologie modifiée », levé avec ce numéro : la logistique, les logements, la pastille « injoignable ». Toute
@@ -190,7 +191,8 @@ sauvegardé.
   sous-statistique qu'elle lit.
 - L'économie publie les tâches à prendre (transporter, bâtir, semer, récolter, retirer un arbre…) ; l'étal publie le
   service des visiteurs. Un habitant ne prend qu'une tâche permise par son poste, au plus près ou dans l'ordre de la
-  file des chantiers.
+  file des chantiers, et qu'il peut rejoindre à pied (`Reach`, un seul par monde : les îlots que touchent les abords de
+  chaque lieu se gardent avec la version du maillage, un habitant sans tâche cherche à chaque pas sans les refaire).
 - **Prendre est un appel unique vers le bas qui réserve** ce que la tâche promet (les marchandises, la place à
   l'arrivée) : deux habitants ne prennent jamais la même. La réservation appartient à l'économie ; elle n'est pas
   sauvegardée et repart vide au chargement.
@@ -300,6 +302,7 @@ code.
 | la main (un seul outil) | `Hand` | outil de la roue (ses gestes ; son allure) | `ToolAction` ; `WheelTool` | boutons de la fiche | `PlaceSheetActions`, `PlaceSheetAction` |
 | couche (où la Chimère dort) | `HasBed`, `BedFeet` | stock de départ | `StartingGoods` ; `GoodsCause.StartingStock` | classes de style posées par le code | `StyleClasses` |
 | mettre en service (l'opération du monde) | `Commissioning` | chantiers finis (à mettre en service) | `ConstructionSites.Finished` | reprendre ses mailles (un pied debout) | `NavGrid.Reclaim` |
+| tronçons (d'une rangée du maillage) | `FreeRuns` | ligne du chantier (côté rendu) | `SiteLine` | stock de la ville changé | `CityStockChanged` |
 
 ## 10. La carte, les scènes et la sauvegarde
 
@@ -421,7 +424,8 @@ code.
   section 5 (ce qui change l'état reste `internal`, aucune ouverture hors de la simulation) ; un test vérifie que les
   identifiants de fiches sont uniques et que les clés de textes existent.
 - **Le journal** : `Game` écrit dans la console les événements clés (jour fini, arrivée, chantier fini), pour que le
-  Play court de la procédure `verifier` prouve que la simulation travaille.
+  Play court de la procédure `verifier` prouve que la simulation travaille ; dans l'éditeur et un build de
+  développement seulement (`Debug.isDebugBuild`), jamais dans le jeu du joueur.
 
 ## 13. La ville témoin, le rapport d'équilibrage et la vue témoin
 

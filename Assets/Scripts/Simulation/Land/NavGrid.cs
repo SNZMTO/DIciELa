@@ -14,6 +14,8 @@ namespace Diciela.Simulation.Land
     {
         private readonly int[] _occupant;
         private readonly byte[] _doorCount;
+        // Par rangée, la version du maillage où l'une de ses mailles a changé pour la dernière fois.
+        private readonly int[] _rowVersion;
 
         public NavGrid(Relief relief, GridMetrics metrics)
         {
@@ -25,6 +27,7 @@ namespace Diciela.Simulation.Land
             Depth = metrics.CellCount(relief.SizeZ);
             _occupant = new int[Width * Depth];
             _doorCount = new byte[Width * Depth];
+            _rowVersion = new int[Depth];
         }
 
         public GridMetrics Metrics { get; }
@@ -36,6 +39,9 @@ namespace Diciela.Simulation.Land
         /// déduit du maillage (les îlots) se garde avec la version d'où il vient.
         /// </summary>
         public int Version { get; private set; }
+
+        /// <summary>La version où cette rangée a changé pour la dernière fois : FreeRuns ne relit que celles-là.</summary>
+        internal int RowVersion(int row) => _rowVersion[row];
 
         /// <summary>Vrai si cette maille est dans le maillage.</summary>
         public bool Contains(Vector2Int cell)
@@ -117,9 +123,12 @@ namespace Diciela.Simulation.Land
         /// <summary>Donne à chaque maille du rectangle cet occupant (0 pour la libérer).</summary>
         internal void SetOccupant(RotatedRect rect, int occupant)
         {
-            foreach (Vector2Int cell in CellsCoveredBy(rect))
-                _occupant[IndexOf(cell)] = occupant;
             Version++;
+            foreach (Vector2Int cell in CellsCoveredBy(rect))
+            {
+                _occupant[IndexOf(cell)] = occupant;
+                _rowVersion[cell.y] = Version;
+            }
         }
 
         /// <summary>
@@ -128,13 +137,15 @@ namespace Diciela.Simulation.Land
         /// </summary>
         internal void ReleaseOccupant(RotatedRect rect, int occupant)
         {
+            Version++;
             foreach (Vector2Int cell in CellsCoveredBy(rect))
             {
                 int index = IndexOf(cell);
-                if (_occupant[index] == occupant)
-                    _occupant[index] = 0;
+                if (_occupant[index] != occupant)
+                    continue;
+                _occupant[index] = 0;
+                _rowVersion[cell.y] = Version;
             }
-            Version++;
         }
 
         /// <summary>
@@ -143,17 +154,16 @@ namespace Diciela.Simulation.Land
         /// </summary>
         internal void Reclaim(RotatedRect rect, int occupant)
         {
-            bool changed = false;
+            int next = Version + 1;
             foreach (Vector2Int cell in CellsCoveredBy(rect))
             {
                 int index = IndexOf(cell);
                 if (_occupant[index] != 0)
                     continue;
                 _occupant[index] = occupant;
-                changed = true;
+                _rowVersion[cell.y] = next;
+                Version = next;
             }
-            if (changed)
-                Version++;
         }
 
         /// <summary>Compte une porte de plus devant chaque maille du rectangle.</summary>

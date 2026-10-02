@@ -31,6 +31,12 @@ namespace Diciela.Simulation.Economy
         /// <summary>Levé quand un entrepôt s'ouvre, ou que ce qu'il tient change ; une fois par pas au plus.</summary>
         public event Action<Structure> StockChanged;
 
+        /// <summary>
+        /// Levé une fois à la fin d'un pas où le stock de la ville a changé, après les StockChanged de ses entrepôts :
+        /// pour qui montre la ville entière, une seule fois, quel que soit le nombre d'entrepôts qui ont bougé.
+        /// </summary>
+        public event Action CityStockChanged;
+
         /// <summary>Le nombre d'entrepôts, dans l'ordre où ils ont servi.</summary>
         public int Count => _structures.Count;
 
@@ -140,10 +146,13 @@ namespace Diciela.Simulation.Economy
         /// <summary>Livre les événements du pas, dans leur ordre, puis vide la file. Seul le monde l'appelle.</summary>
         internal void DeliverEvents()
         {
+            if (_changed.Count == 0)
+                return;
             try
             {
                 for (int i = 0; i < _changed.Count; i++)
                     StockChanged?.Invoke(_changed[i]);
+                CityStockChanged?.Invoke();
             }
             finally
             {

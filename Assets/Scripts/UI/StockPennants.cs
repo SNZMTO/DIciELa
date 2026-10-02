@@ -12,7 +12,7 @@ namespace Diciela.UI
     /// Le stock de la ville en fanions, en haut au centre de l'écran (GDD, section 16) : une tringle de bois et ses
     /// pommeaux, un fanion de lin par marchandise (son icône, son nombre), chacun avec son infobulle. C'est la vue (le bloc
     /// « stock » de Hud.uxml) ; son présentateur décide. Quand les nombres changent, les fanions se mettent à jour sur
-    /// place : une infobulle ouverte le reste.
+    /// place, et seul un nombre qui a changé se réécrit : une infobulle ouverte le reste.
     /// </summary>
     [RequireComponent(typeof(UIDocument))]
     public sealed class StockPennants : MonoBehaviour, IStockPennantsView
@@ -24,6 +24,8 @@ namespace Diciela.UI
         private const string IconClass = "fanion-icone";
         private const string CountClass = "nombre";
 
+        // Le nombre que montre chaque fanion.
+        private readonly List<int> _counts = new List<int>();
         private UIDocument _document;
         private VisualElement _stock;
         private VisualElement _row;
@@ -59,6 +61,7 @@ namespace Diciela.UI
             if (_stock == null)
                 return;
             _row.Clear();
+            _counts.Clear();
             ShowStock(false);
         }
 
@@ -77,27 +80,34 @@ namespace Diciela.UI
             if (_row.childCount != pennants.Count)
             {
                 _row.Clear();
+                _counts.Clear();
                 for (int i = 0; i < pennants.Count; i++)
-                    _row.Add(NewPennant());
+                {
+                    _row.Add(NewPennant(pennants[i].Icon));
+                    _counts.Add(-1);
+                }
             }
             for (int i = 0; i < pennants.Count; i++)
             {
                 VisualElement pennant = _row[i];
                 pennant.userData = pennants[i].Tooltip;
-                pennant.EnableInClassList(EmptyClass, pennants[i].Count == 0);
-                VisualElement icon = pennant[0];
-                if (pennants[i].Icon != null)
-                    icon.style.backgroundImage = Background.FromVectorImage(pennants[i].Icon);
-                ((Label)pennant[1]).text = pennants[i].Count.ToString(CultureInfo.InvariantCulture);
+                int count = pennants[i].Count;
+                if (count == _counts[i])
+                    continue;
+                _counts[i] = count;
+                pennant.EnableInClassList(EmptyClass, count == 0);
+                ((Label)pennant[1]).text = count.ToString(CultureInfo.InvariantCulture);
             }
         }
 
-        private VisualElement NewPennant()
+        private VisualElement NewPennant(VectorImage image)
         {
             var pennant = new Pennant();
             pennant.AddToClassList(PennantClass);
             var icon = new VisualElement { pickingMode = PickingMode.Ignore };
             icon.AddToClassList(IconClass);
+            if (image != null)
+                icon.style.backgroundImage = Background.FromVectorImage(image);
             pennant.Add(icon);
             var count = new Label { pickingMode = PickingMode.Ignore };
             count.AddToClassList(CountClass);

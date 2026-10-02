@@ -2,8 +2,8 @@
 // elle, où la vraie matière s'effrite (Diciela/Chantier) : on voit l'une à travers l'autre. Sur la ligne qui ondule,
 // une lueur douce (le flou), un trait net juste au-dessus (le côté cartoon) et des étincelles qui clignotent. Sans ombre.
 // Le fantôme d'un matériau qui détoure (des feuilles, le bord d'un chaume) a sa copie (SiteGhosts) : sa texture ne sert
-// qu'à sa forme, tiges comprises (ChantierDetourage). Sans ligne (_FillHeight tout en bas), c'est un simple fantôme
-// teinté : l'aperçu de pose s'en sert (décision 177).
+// qu'à sa forme, tiges comprises (ChantierDetourage). Sans ligne (sa hauteur tout en bas, SiteLine.Nowhere), c'est un
+// simple fantôme teinté : l'aperçu de pose s'en sert (décision 177). Le SRP Batcher le regroupe (ChantierLigne).
 Shader "Diciela/ChantierFantome"
 {
     Properties
@@ -21,11 +21,6 @@ Shader "Diciela/ChantierFantome"
         _SparkleSize("Pas des étincelles (m)", Float) = 0.22
         _SparkleShare("Part des étincelles", Range(0, 1)) = 0.12
         _SparkleReach("Hauteur des étincelles (m)", Float) = 0.45
-        [HideInInspector] _FillHeight("Fill Height", Float) = -10000
-        [HideInInspector] _WaveAmplitude("Wave Amplitude", Float) = 0.08
-        [HideInInspector] _WaveLength("Wave Length", Float) = 1.6
-        [HideInInspector] _WaveSeconds("Wave Seconds", Float) = 3.0
-        [HideInInspector] _Softness("Softness", Float) = 0.25
     }
 
     SubShader
