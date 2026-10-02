@@ -65,7 +65,7 @@ namespace Diciela.Simulation
         /// <summary>La recherche des trajets sur le maillage : une seule, dont les tableaux servent à chaque recherche.</summary>
         public PathFinder PathFinder { get; }
 
-        /// <summary>Le savoir de la ville : ce qu'elle sait bâtir.</summary>
+        /// <summary>Le savoir de la ville : ce qu'elle sait bâtir, et les idées qu'elle apprend.</summary>
         public Knowledge Knowledge { get; }
 
         /// <summary>Les règles de pose : la seule réponse à « peut-on poser ici ? », pour l'aperçu et l'ordre.</summary>
@@ -148,6 +148,7 @@ namespace Diciela.Simulation
         /// <summary>Les événements des couches, du bas vers le haut.</summary>
         private void DeliverEvents()
         {
+            Knowledge.DeliverEvents();
             Structures.DeliverEvents();
             Nature.DeliverEvents();
             Warehouses.DeliverEvents();

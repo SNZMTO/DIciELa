@@ -293,6 +293,9 @@
 - **Règle.** Le joueur peut fermer un poste : personne ne le prend, et celui qui l'occupait redevient libre.
 - **Règle.** Des bâtiments de service ouvrent les postes des métiers qui ne produisent rien : la loge des bâtisseurs
   (les ouvriers : chantiers, canaux, décos), l'entrepôt (les charretiers), la cabane du paysagiste (les paysagistes).
+- **Défaut.** La loge des bâtisseurs : 5 × 4 m, 15 Bois et 10 Pierre, 3 h de travail, deux postes d'ouvrier (bâtir).
+  L'entrepôt : 6 × 5 m, 20 Bois et 10 Pierre, 3 h, 200 marchandises (voir 8), deux postes de charretier (porter). Le
+  stock de départ n'y suffit pas : il faut d'abord défricher.
 - **À toi.** Un habitant en pleine tâche est-il interrompu par une tâche plus urgente ? Ma reco : non, il va au bout,
   comme dans Oxygen Not Included.
 - **Règle.** Le poste « à tout faire » choisit ses tâches dans cet ordre : porter, bâtir, récolter, défricher.
@@ -510,7 +513,8 @@
 - **Règle.** Une idée a un déclencheur : une chose faite (« après 50 Planches, le menuisier imagine la table ») ou un
   métier exercé (la Chimère a travaillé à la scierie : elle imagine le moulin à eau). Pour l'histoire, elle revient à
   l'habitant qui y a le plus contribué, ou à la Chimère.
-- **Règle.** Une idée sert tout de suite, sans coût, comme un plan d'Animal Crossing.
+- **Règle.** Une idée sert tout de suite, sans coût, comme un plan d'Animal Crossing. Celle d'un premier habitant
+  arrive avec lui (voir 6).
 - **Règle.** Le carnet d'idées montre des pistes floues (« le menuisier rêve de quelque chose avec du tissu… ») : le
   joueur sait vers quoi pousser, sans liste de courses.
 - **Règle.** Les grands projets, rares, donnent un but lointain ; une idée les débloque.
@@ -635,7 +639,8 @@
 - **Défaut.** La roue : Tab, tenu ; Construire : B ; Retirer : X. Les touches se changeront dans les réglages, quand le
   menu viendra.
 - **Règle.** On choisit quoi construire dans le panneau Construire, en bas au centre : les familles en onglets,
-  chacune de son pastel avec son icône, et au-dessus de l'onglet ouvert, ses constructions en cartes : la vignette de
+  chacune de son pastel avec son icône (une famille qui ne propose rien ne paraît pas : les Métiers, tant que
+  personne n'en a apporté l'idée), et au-dessus de l'onglet ouvert, ses constructions en cartes : la vignette de
   la construction (une photo de son modèle), son nom et à côté ce qu'elle offre (ses lits, l'icône du lit devant : « 2
   lits »), puis ce qu'elle coûte (chaque marchandise, son icône et combien). L'onglet ouvert et la carte en main restent enfoncés. Prendre une
   carte ferme le panneau, pour dégager la vue pendant la pose. Panneau ouvert, une touche prend sa carte dans la
@@ -682,8 +687,9 @@
   on valide) et une phrase du jeu, qui dit quoi faire ensuite au début d'une partie : installer le campement, puis y
   mettre la Chimère, puis poser une première construction à bâtir ; ensuite, elle se tait. C'est le jeu qui parle.
 - **À toi.** La voix de la Chimère (ses répliques), avec son histoire.
-- **À toi.** Les questions ouvertes du HUD. Mes recos : chaque famille reçoit un pastel libre, dans l'ordre ; le
-  bandeau de brique montre les animaux du pack.
+- **Règle.** Chaque famille reçoit un pastel libre, dans l'ordre : le Logement le rose, les Métiers la pêche.
+- **À toi.** L'icône des Métiers : en attendant, celle de « bâtir ». Les autres questions ouvertes du HUD. Ma reco :
+  le bandeau de brique montre les animaux du pack.
 
 ## 17. Le premier jouable
 

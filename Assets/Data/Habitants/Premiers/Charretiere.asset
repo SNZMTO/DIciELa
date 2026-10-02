@@ -16,3 +16,4 @@ MonoBehaviour:
   _nameKey: habitant.charretiere
   _strength: {fileID: 11400000, guid: b2de8ed64bede3a4ea6d3f21251d9668, type: 2}
   _character: {fileID: 11400000, guid: 6318b299173f41c42838fc86def9d5b9, type: 2}
+  _workplace: {fileID: 11400000, guid: 667ec4009034fee4fa4046ebb9e0f940, type: 2}

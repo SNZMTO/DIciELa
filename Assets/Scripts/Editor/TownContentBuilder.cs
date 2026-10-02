@@ -20,13 +20,15 @@ namespace Diciela.EditorTools
             public GoodDefinition Wood;
             public GoodDefinition Stone;
             public WorkSlotDefinition OddJobs;
+            public TaskKindDefinition Carry;
+            public TaskKindDefinition Build;
             public NatureDefinition[] Nature;
             public List<StatisticDefinition> Statistics;
         }
 
         private const string GoodsFolder = "Assets/Data/Marchandises";
         private const string StatisticsFolder = "Assets/Data/Statistiques";
-        private const string WorkFolder = "Assets/Data/Travail";
+        internal const string WorkFolder = "Assets/Data/Travail";
         private const string NatureFolder = "Assets/Data/Nature";
 
         // Les statistiques et leurs sous-statistiques (GDD, section 5) : l'identifiant de la statistique, puis ceux de
@@ -64,7 +66,7 @@ namespace Diciela.EditorTools
             NatureDefinition rock = Nature("Rocher", "rocher", 1.5f, stone, 2, 0.75f);
             return new Made
             {
-                Wood = wood, Stone = stone, OddJobs = oddJobs, Nature = new[] { tree, rock },
+                Wood = wood, Stone = stone, OddJobs = oddJobs, Carry = carry, Build = build, Nature = new[] { tree, rock },
                 Statistics = statistics
             };
         }

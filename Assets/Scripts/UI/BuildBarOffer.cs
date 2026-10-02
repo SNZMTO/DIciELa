@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Diciela.Data;
 using Diciela.Simulation;
 
@@ -25,6 +26,18 @@ namespace Diciela.UI
             if (!_world.PlacementRules.IsAvailable(structure))
                 return false;
             return structure.IsChimeraHome || !_catalogHasAHome || _world.Structures.ChimeraHome != null;
+        }
+
+        /// <summary>Vrai si le panneau propose une construction de cette famille ; sinon, son onglet ne paraît pas.</summary>
+        public bool Offers(StructureFamilyDefinition family)
+        {
+            IReadOnlyList<StructureDefinition> structures = family.Structures;
+            for (int i = 0; i < structures.Count; i++)
+            {
+                if (structures[i] != null && Offers(structures[i]))
+                    return true;
+            }
+            return false;
         }
 
         private static bool HasAHome(Catalog catalog)
