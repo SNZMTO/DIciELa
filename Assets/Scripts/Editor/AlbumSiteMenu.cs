@@ -15,8 +15,9 @@ namespace Diciela.EditorTools
     /// </summary>
     public static class AlbumSiteMenu
     {
-        // La part de sa distance que garde la caméra : assez près pour voir la ligne, assez loin pour la cabane entière.
-        private const float DistanceShare = 0.5f;
+        // La distance de la caméra au chantier, en mètres : assez près pour voir la ligne, assez loin pour la cabane
+        // entière, son toit compris.
+        private const float FramingMeters = 16f;
 
         [MenuItem("DICIELA/Album/Regarder le premier chantier")]
         public static void LookAtTheFirstSite()
@@ -38,7 +39,7 @@ namespace Diciela.EditorTools
             var middle = new Vector2(rig.Camera.pixelWidth / 2f, rig.Camera.pixelHeight / 2f);
             if (rig.BeginDrag(rig.Camera.WorldToScreenPoint(ground)))
                 rig.DragTo(middle);
-            rig.ZoomTo(rig.Distance * DistanceShare);
+            rig.ZoomTo(FramingMeters);
             Debug.Log("DICIELA : la vue se rapproche du chantier de la construction n° " + site.Structure.Id + ".");
         }
     }

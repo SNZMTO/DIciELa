@@ -311,7 +311,9 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 - **Plus tard, si le Profiler le demande** : le GPU Resident Drawer d'Unity 6 (URP en Forward+, déjà le cas du projet,
   plus deux réglages) dessine d'un coup les copies d'un même maillage ; fusionner aussi les niveaux de loin.
 - **Vérifier à l'œil** : la planche des modèles (`DICIELA/Album/…`) pose côte à côte le modèle du pack et le modèle
-  préparé, vus du côté de la porte. Un fantôme translucide ne montre ni la porte ni le sol.
+  préparé, vus du côté de la porte. Un fantôme translucide ne montre ni la porte ni le sol. Une mise en scène d'album
+  cadre à une distance fixe (`CameraRig.ZoomTo`), jamais par des crans de molette : les crans de deux mises en scène
+  s'additionnent, et l'aperçu finit collé à l'objectif (un écran tout vert).
 - **Couper un modèle du pack à une hauteur** (le chantier qui monte, décision 166) : ses matériaux sont des Shader
   Graph de Synty (`_Albedo_Map`, `_Normal_Map`, `_Normal_Amount`…), qu'on ne retouche pas. On en fait à l'exécution
   une copie sur un shader du projet (`Diciela/Chantier`, le Lit d'URP repris), propriétés recopiées une à une sous les
@@ -518,7 +520,10 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   `enumValueIndex`. Mieux : ne jamais retirer une valeur du milieu d'une énumération sérialisée.
 - **Le Input System lie par position physique, en disposition US** : un raccourci mnémonique (M, I, G…) se lie au
   caractère (`<Keyboard>/#(m)`), un raccourci de position (déplacement) à la position, pour que ZQSD tombe juste sur un
-  clavier AZERTY.
+  clavier AZERTY. **Le nom d'une touche liée à sa position** se lit sur le clavier branché : `GetBindingDisplayString`
+  rend le caractère qu'elle tape, « & » pour la touche 1 en AZERTY. Pour écrire « 1 » (les cartes du panneau), lire le
+  nom de la place : `InputControlPath.ToHumanReadableString(chemin, OmitDevice)`. Les tests ne le voient pas : leur
+  clavier virtuel est en disposition US ; seul un Play sur le vrai clavier le montre.
 - **La molette de l'Input System vaut 1 par cran**, pas 120 : son réglage par défaut (« Scroll Delta Behavior :
   Uniform Across All Platforms ») la ramène à la même échelle partout. Un zoom divisé par 120 ne bougerait presque pas.
 - **Ne jamais réécrire un fichier `.inputactions` à la main pendant qu'Unity tourne** : il en garde une copie vivante
