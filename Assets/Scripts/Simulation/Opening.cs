@@ -19,12 +19,14 @@ namespace Diciela.Simulation
     /// section 7), et le lit libre le plus proche de ce poste (GDD, section 4) ; sans logis de la Chimère, pas de poste,
     /// et le lit le plus proche de là où il arrive. Il apporte l'idée de son lieu de travail : la ville sait aussitôt le
     /// bâtir (GDD, section 13). Où en est le déroulé appartient au monde (ARCHITECTURE, section 4).
-    /// Un catalogue sans déroulé du départ, ou sans sorte d'habitant, n'en fait rien.
+    /// Quand son lieu de travail est bâti, son poste « à tout faire » se ferme et il prend un poste de son lieu (GDD,
+    /// section 7 ; décision 191). Un catalogue sans déroulé du départ, ou sans sorte d'habitant, n'en fait rien.
     /// </summary>
     internal sealed class Opening
     {
         private readonly OpeningDefinition _definition;
         private readonly VillagerKindDefinition _villagerKind;
+        private readonly List<Settler> _settlers = new List<Settler>();
         private int _nextFirstVillager;
         private long _nextArrivalStep;
 
@@ -73,7 +75,42 @@ namespace Diciela.Simulation
                 world.WorkSlots.OpenFor(villager, post, _definition.FirstVillagersSlot);
             if (!ReferenceEquals(first.Workplace, null))
                 world.Knowledge.Learn(first.Workplace);
+            _settlers.Add(new Settler { Workplace = first.Workplace, Villager = villager, Opened = villager.Slot });
             _nextArrivalStep = world.Clock.StepCount + world.Clock.StepsIn(_definition.FirstArrivalHours);
+        }
+
+        /// <summary>
+        /// Cette construction vient d'être mise en service, ses postes ouverts : si c'est le lieu de travail d'un premier
+        /// habitant dont le poste « à tout faire » est encore ouvert, ce poste se ferme ; s'il le tenait, il prend un poste
+        /// libre de son lieu (sans poste libre, il redevient libre) ; si le joueur l'a mis ailleurs, il y reste ; si un
+        /// autre tient ce poste, il reste ouvert. Seule la mise en service l'appelle (Commissioning).
+        /// </summary>
+        public void Settle(Structure built, World world)
+        {
+            for (int i = 0; i < _settlers.Count; i++)
+            {
+                Settler settler = _settlers[i];
+                if (settler.Opened == null || !ReferenceEquals(settler.Workplace, built.Definition))
+                    continue;
+                if (ReferenceEquals(settler.Villager.Slot, settler.Opened))
+                {
+                    if (world.WorkSlots.HasFreeSlotAt(built))
+                        world.WorkSlots.Assign(settler.Villager, built);
+                    else
+                        world.WorkSlots.Unassign(settler.Villager);
+                }
+                if (settler.Opened.Holder == null)
+                    world.WorkSlots.Close(settler.Opened);
+                settler.Opened = null;
+            }
+        }
+
+        /// <summary>Un premier habitant arrivé, son lieu de travail et le poste ouvert pour lui (null : aucun).</summary>
+        private sealed class Settler
+        {
+            public StructureDefinition Workplace;
+            public Villager Villager;
+            public WorkSlot Opened;
         }
     }
 }

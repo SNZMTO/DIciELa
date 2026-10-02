@@ -111,7 +111,8 @@ la société, qui voit tout ce qui est en dessous.
   pas) ; les opérations qui touchent plusieurs couches, faites par des appels vers le bas dans un ordre
   écrit (poser : le terrain, puis l'économie ouvre un chantier, ou la construction, dressée dès la pose, est mise en
   service ; mettre en service, une seule opération, à la pose ou à la fin du pas où un chantier finit : l'économie
-  ouvre un stock, la société des postes, puis le déroulé du départ la regarde, décision 179 ; plus tard, la maison de
+  ouvre un stock, la société des postes, puis le déroulé du départ la regarde, décisions 179 et 191 : le stock de
+  départ pour le premier logis de la Chimère, et le premier habitant dont c'est le lieu de travail y prend un poste ; plus tard, la maison de
   la Chimère qui remplace le campement) ; la capture et la restauration. Le monde reçoit les réglages, la carte et le
   catalogue, d'où il tire le déroulé du départ et les statistiques.
 
@@ -139,7 +140,7 @@ sauvegardé.
 | les curseurs, les souhaits, les visiteurs, la réputation | la société | les taux de l'étal ; le charme |
 | ce que la ville sait faire (ses constructions ; plus tard ses recettes, ses décos) | le socle (`Knowledge`) : au départ, le déroulé du départ ; puis les idées (celles des premiers habitants, apprises par le déroulé du départ ; plus tard, les déclencheurs) | le carnet ; ce que le panneau Construire propose, et ses onglets |
 | l'avancement des déclencheurs, la part de chaque habitant | le monde | — |
-| l'étape du départ : le prochain premier habitant, l'heure d'où il peut arriver | le monde | le stock de départ donné (le bilan des marchandises le dit) |
+| l'étape du départ : le prochain premier habitant, l'heure d'où il peut arriver ; chaque premier habitant arrivé, son lieu de travail et le poste ouvert pour lui | le monde | le stock de départ donné (le bilan des marchandises le dit) |
 | les effets actifs | ce qui les porte (une lanterne, un maître, une plantation irriguée…) | le registre des effets |
 | une tâche en cours, une marche, une flânerie | personne : elles ne sont pas sauvegardées | — |
 | le dossier des sauvegardes | la fiche de session | — |
@@ -316,6 +317,7 @@ code.
 | premier habitant | `FirstVillagerDefinition` | personnage du pack (tel quel) | `CharacterDefinition` | sorte des habitants ordinaires | `Catalog.VillagerKind` |
 | le nom d'un habitant (sa clé) | `NameKey` | ouvrir un poste pour lui | `WorkSlots.OpenFor` | un poste sur la fiche d'un lieu | `PlaceSheetSlot` |
 | apprendre (une idée) ; appris | `Knowledge.Learn` ; `Learned` | lieu de travail (d'un premier habitant) | `Workplace` | les onglets du panneau | `BuildBarTabs` |
+| fermer un poste | `WorkSlots.Close` | s'installer à son lieu de travail | `Opening.Settle` | | |
 
 ## 10. La carte, les scènes et la sauvegarde
 

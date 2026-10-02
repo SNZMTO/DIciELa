@@ -39,6 +39,12 @@ namespace Diciela.Simulation.Society
             return null;
         }
 
+        /// <summary>Vrai si ce lieu a un poste que personne ne tient.</summary>
+        public bool HasFreeSlotAt(Structure workplace)
+        {
+            return FreeSlotAt(workplace) != null;
+        }
+
         /// <summary>Vrai si ce lieu ouvre au moins un poste.</summary>
         public bool IsWorkplace(Structure structure)
         {
@@ -69,29 +75,19 @@ namespace Diciela.Simulation.Society
         /// </summary>
         internal void Assign(Villager villager, Structure workplace)
         {
-            if (villager == null)
+            WorkSlot held = villager == null ? null : SlotOf(villager);
+            WorkSlot free = workplace == null ? null : FreeSlotAt(workplace);
+            // Les raisons d'un refus, dans l'ordre où elles se vérifient.
+            AssignmentRefusal? refusal = villager == null ? AssignmentRefusal.NoVillager
+                : workplace == null || !IsWorkplace(workplace) ? AssignmentRefusal.NotAWorkplace
+                : held != null && ReferenceEquals(held.Workplace, workplace) ? AssignmentRefusal.AlreadyThere
+                : free == null ? AssignmentRefusal.NoFreeSlot
+                : (AssignmentRefusal?)null;
+            if (refusal.HasValue)
             {
-                Refuse(AssignmentRefusal.NoVillager);
+                Refuse(refusal.Value);
                 return;
             }
-            if (workplace == null || !IsWorkplace(workplace))
-            {
-                Refuse(AssignmentRefusal.NotAWorkplace);
-                return;
-            }
-            WorkSlot held = SlotOf(villager);
-            if (held != null && ReferenceEquals(held.Workplace, workplace))
-            {
-                Refuse(AssignmentRefusal.AlreadyThere);
-                return;
-            }
-            WorkSlot free = FreeSlotAt(workplace);
-            if (free == null)
-            {
-                Refuse(AssignmentRefusal.NoFreeSlot);
-                return;
-            }
-
             if (held != null)
                 Release(villager, held);
             Hold(villager, free);
@@ -111,6 +107,17 @@ namespace Diciela.Simulation.Society
             var slot = new WorkSlot(workplace, definition);
             _all.Add(slot);
             Hold(villager, slot);
+        }
+
+        /// <summary>
+        /// Ferme ce poste, que plus personne ne tient (GDD, section 7 : le poste « à tout faire » d'un premier habitant,
+        /// quand son lieu de travail est bâti). Seul le monde l'appelle (le déroulé du départ).
+        /// </summary>
+        internal void Close(WorkSlot slot)
+        {
+            if (slot.Holder != null)
+                throw new InvalidOperationException("Un poste tenu ne se ferme pas : son habitant le quitte d'abord.");
+            _all.Remove(slot);
         }
 
         /// <summary>

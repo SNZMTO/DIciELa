@@ -309,7 +309,8 @@
 - **À toi.** Une pastille ou plusieurs quand un lieu cumule les pannes ? Ma reco : une seule, la plus urgente :
   injoignable, pas de force, personne au poste, pas de graines ou d'ingrédients, stock plein.
 - **Règle.** Tant que son lieu de travail n'est pas bâti (voir 6), un premier habitant tient un poste « à tout faire »
-  ouvert pour lui à son arrivée, au logis de la Chimère (le campement), qui se ferme quand son lieu est bâti.
+  ouvert pour lui à son arrivée, au logis de la Chimère (le campement), qui se ferme quand son lieu est bâti : il y
+  prend alors un poste libre (sans poste libre, il redevient libre) ; si le joueur l'a mis ailleurs, il y reste.
 
 ## 8. La production et la logistique
 

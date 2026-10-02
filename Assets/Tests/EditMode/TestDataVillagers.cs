@@ -95,6 +95,14 @@ namespace Diciela.Tests.EditMode
             return house;
         }
 
+        /// <summary>Donne à cette construction ces postes, une fois bâtie (aucun : elle n'en ouvre pas).</summary>
+        public static void Posts(StructureDefinition structure, params WorkSlotDefinition[] posts)
+        {
+            var serialized = new SerializedObject(structure);
+            Fill(Property(serialized, "_workSlots"), posts);
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+        }
+
         /// <summary>Donne à cette construction ces lits, une fois bâtie.</summary>
         public static void Beds(StructureDefinition structure, int beds)
         {
