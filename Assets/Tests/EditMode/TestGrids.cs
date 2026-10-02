@@ -9,16 +9,19 @@ namespace Diciela.Tests.EditMode
     /// <summary>Les petits gestes communs des tests des trajets et de la marche.</summary>
     internal static class TestGrids
     {
-        /// <summary>Les mailles prises du maillage, pour juger un trajet autour d'autre chose que des blocs dessinés.</summary>
-        public static bool[,] Occupied(NavGrid grid)
+        /// <summary>
+        /// Les mailles du maillage où l'on ne marche pas (un sol qu'on traverse n'en est pas), pour juger un trajet autour
+        /// d'autre chose que des blocs dessinés.
+        /// </summary>
+        public static bool[,] Blocked(NavGrid grid)
         {
-            var occupied = new bool[grid.Width, grid.Depth];
+            var blocked = new bool[grid.Width, grid.Depth];
             for (int x = 0; x < grid.Width; x++)
             {
                 for (int y = 0; y < grid.Depth; y++)
-                    occupied[x, y] = grid.OccupantAt(new Vector2Int(x, y)) != 0;
+                    blocked[x, y] = !grid.IsWalkable(new Vector2Int(x, y));
             }
-            return occupied;
+            return blocked;
         }
 
         /// <summary>Joue des pas jusqu'à ce que done réponde vrai, au plus maxSteps ; rend le nombre de pas joués.</summary>

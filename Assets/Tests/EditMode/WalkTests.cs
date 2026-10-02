@@ -50,13 +50,13 @@ namespace Diciela.Tests.EditMode
             Assert.AreEqual(1, world.Structures.All.Count, "Le mur doit se poser.");
 
             // Le mur coupe bien la ligne d'avant : l'oracle essaie chaque maille qu'elle touche.
-            bool[,] occupied = TestGrids.Occupied(world.Grid);
-            Assert.IsTrue(Cuts(occupied, world.Grid.CellOf(from), world.Grid.CellOf(to)), "Le mur ne coupe rien.");
+            bool[,] blocked = TestGrids.Blocked(world.Grid);
+            Assert.IsTrue(Cuts(blocked, world.Grid.CellOf(from), world.Grid.CellOf(to)), "Le mur ne coupe rien.");
 
             // Elle cherche un autre trajet vers le même but, juste d'après l'oracle, et le suit sans entrer dans le mur.
             Assert.IsTrue(chimera.IsWalking);
             Assert.AreEqual(to, Last(chimera.Path.Corners));
-            string fault = SlowLines.Judge(occupied, TestChimera.CellsPerMeter, chimera.Path);
+            string fault = SlowLines.Judge(blocked, TestChimera.CellsPerMeter, chimera.Path);
             Assert.IsNull(fault, fault);
             TestGrids.StepUntil(world, () =>
             {

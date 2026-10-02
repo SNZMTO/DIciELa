@@ -11,11 +11,11 @@ une porte s'ouvre dessus, elle s'étend devant une porte, on la bâtit depuis so
 189/189.**
 
 **À vérifier par toi, à la souris** : la Chimère réveillée en chemin flâne devant sa porte ; un Tab bref ne choisit
-rien ; un clic à côté de la roue la ferme ; 1 met la cabane en main ; l'étiquette des cartes et « 2 lits » te vont ;
-la Place posée devant la porte d'une cabane, les habitants qui la traversent.
+rien ; un clic à côté de la roue la ferme ; 1 met la cabane en main ; les cartes ; la Place devant une porte.
 
 **Prochaine étape, 41 : l'étal** (GDD 11), à cadrer avec toi ; puis les visiteurs, le troc et la réputation (42-43).
-Les abords de la Place sont autour d'elle : prévoir où le marchand se tient pour travailler à l'étal, sur elle.
+À trancher : l'étal fait-il partie de la Place (ses niveaux), ou se pose-t-il dessus (rien ne chevauche un sol, pour
+l'instant) ? Et où le marchand se tient pour y travailler : les abords de la Place sont autour d'elle.
 
 **À toi** : peindre la carte, ranger tes modèles (`Assets/Data/Nature`) ; composer la Place (ma reco : la peindre dans
 le sol, comme les routes, pour suivre la pente ; GDD 11) et sa famille (ma reco appliquée : les Métiers ; GDD 16) ; les

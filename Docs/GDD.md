@@ -699,10 +699,9 @@
 - **À toi.** La voix de la Chimère (ses répliques), avec son histoire.
 - **Règle.** Chaque famille reçoit un pastel libre, dans l'ordre : le Logement le rose, les Métiers la pêche. Aucun
   pastel ne reste libre.
-- **Règle.** La Place est la première carte des Métiers : l'onglet des Métiers paraît dès le campement installé, et
-  les idées des premiers habitants y ajoutent leurs cartes.
-- **À toi.** La famille de la Place. Ma reco, appliquée : les Métiers, où travailleront ses marchands ; une famille à
-  elle demanderait un pastel de plus, et l'onglet des Métiers ne paraîtrait qu'avec l'idée du bâtisseur.
+- **À toi.** La famille de la Place. Ma reco, appliquée : la première carte des Métiers, où travailleront ses
+  marchands ; l'onglet des Métiers paraît donc dès le campement installé, et les idées des premiers habitants y
+  ajoutent leurs cartes. Une famille à elle demanderait un pastel de plus.
 - **À toi.** L'icône des Métiers : en attendant, celle de « bâtir ». Les autres questions ouvertes du HUD. Ma reco :
   le bandeau de brique montre les animaux du pack.
 
