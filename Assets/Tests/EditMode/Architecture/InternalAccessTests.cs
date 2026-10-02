@@ -43,6 +43,8 @@ namespace Diciela.Tests.EditMode.Architecture
             (typeof(Villagers), "Arrive"),
             (typeof(Housing), "Lodge"),
             (typeof(WorkSlots), "OpenFor"),
+            (typeof(Knowledge), "Learn"),
+            (typeof(Knowledge), "DeliverEvents"),
             (typeof(Villagers), "Step"),
             (typeof(Villagers), "DeliverEvents"),
             (typeof(Villager), "Step"),

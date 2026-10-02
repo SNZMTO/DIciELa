@@ -16,3 +16,4 @@ MonoBehaviour:
   _nameKey: habitant.batisseur
   _strength: {fileID: 11400000, guid: 4e6b8d4594f732a4aa0049bb0fae0f9d, type: 2}
   _character: {fileID: 11400000, guid: 8679214217dbfdb4bbee372d3fd0f690, type: 2}
+  _workplace: {fileID: 11400000, guid: 06ee19833c49080419ee2e321ae5f77e, type: 2}
