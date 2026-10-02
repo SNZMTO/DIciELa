@@ -115,9 +115,30 @@ namespace Diciela.Tests.PlayMode
             _test.Tool.AimAt(_test.OnScreen(TestWorld.Center));
 
             var mesh = _test.Preview.GetComponentInChildren<MeshRenderer>();
-            Assert.AreSame(_test.Settings.TranslucentMaterial, mesh.sharedMaterial);
+            Assert.AreSame(_test.Settings.SiteGhostMaterial, mesh.sharedMaterial, "L'aperçu a le fantôme du chantier.");
             Assert.IsFalse(_test.Preview.GetComponentInChildren<LineRenderer>(true).enabled,
                 "Ce qui n'est pas un maillage (la fumée d'une cheminée) n'est pas dessiné.");
+        }
+
+        [Test]
+        public void ThePreviewKeepsTheShapeOfLeaves()
+        {
+            // Des feuilles : un Lit d'URP qui détoure au seuil de 0,4. L'aperçu en garde la forme, pas un carré plein.
+            var leaves = _test.Keep(new Material(Shader.Find("Universal Render Pipeline/Lit")));
+            leaves.SetFloat("_AlphaClip", 1f);
+            leaves.SetFloat("_Cutoff", 0.4f);
+            GameObject model = _test.Keep(GameObject.CreatePrimitive(PrimitiveType.Quad));
+            model.GetComponent<MeshRenderer>().sharedMaterial = leaves;
+#if UNITY_EDITOR
+            TestWorld.Fill(_test.Cabin, "_model", model);
+#endif
+            _test.Tool.Begin(_test.Cabin);
+            _test.Tool.AimAt(_test.OnScreen(TestWorld.Center));
+
+            Material shown = _test.Preview.GetComponentInChildren<MeshRenderer>().sharedMaterial;
+            Assert.AreSame(_test.Settings.SiteGhostMaterial.shader, shown.shader, "Le fantôme du chantier…");
+            Assert.IsTrue(shown.IsKeywordEnabled("_ALPHATEST_ON"), "…qui détoure : les feuilles ont leur forme.");
+            Assert.AreEqual(0.4f, shown.GetFloat("_Cutoff"), 1e-5f);
         }
 
         [UnityTest]

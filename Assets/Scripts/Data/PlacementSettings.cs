@@ -18,7 +18,7 @@ namespace Diciela.Data
         [SerializeField, Range(0.01f, 2f)] private float _rotationDegreesPerPixel = 0.5f;
 
         [Header("Couleurs")]
-        [Tooltip("Le matériau translucide de l'aperçu et du fantôme ; sa couleur vient des réglages ci-dessous.")]
+        [Tooltip("Le matériau translucide des fanions des arbres marqués ; l'aperçu de pose a le fantôme du chantier.")]
         [SerializeField] private Material _translucentMaterial;
 
         [Tooltip("L'aperçu, quand la pose est permise.")]
@@ -33,8 +33,13 @@ namespace Diciela.Data
         [Tooltip("La vraie matière d'un chantier, coupée à la ligne qui monte (shader Diciela/Chantier).")]
         [SerializeField] private Material _siteMaterial;
 
-        [Tooltip("Le fantôme d'un chantier, au-dessus de la ligne, sa lueur et ses étincelles (Diciela/ChantierFantome).")]
+        [Tooltip("Le fantôme d'un chantier, au-dessus de la ligne, sa lueur et ses étincelles (Diciela/ChantierFantome) ; " +
+                 "l'aperçu de pose aussi, de ses couleurs.")]
         [SerializeField] private Material _siteGhostMaterial;
+
+        [Tooltip("Sur un chantier et dans l'aperçu, le seuil où se détoure un matériau du pack transparent par mélange " +
+                 "(le bord d'un chaume) : sa texture y est pleine ou vide.")]
+        [SerializeField, Range(0.05f, 0.95f)] private float _blendedCutoff = 0.5f;
 
         [Tooltip("La ligne qui monte : la hauteur de son ondulation, en mètres.")]
         [SerializeField, Range(0f, 0.5f)] private float _waveAmplitude = 0.08f;
@@ -62,6 +67,7 @@ namespace Diciela.Data
         public Color PlannedColor => _plannedColor;
         public Material SiteMaterial => _siteMaterial;
         public Material SiteGhostMaterial => _siteGhostMaterial;
+        public float BlendedCutoff => _blendedCutoff;
         public float WaveAmplitude => _waveAmplitude;
         public float WaveLength => _waveLength;
         public float WaveSeconds => _waveSeconds;

@@ -1,13 +1,15 @@
-// La vraie matière d'un chantier qui monte (décision 166) : le Lit d'URP (sa passe avant reprise telle quelle, avec la
-// même entrée LitInput), coupé au-dessus de la ligne du chantier et effrité dans la bande sous elle. Les ombres, la
-// profondeur et les normales coupent au même endroit : la moitié qui n'est pas bâtie ne fait ni ombre ni occlusion. Un
-// matériau qui détoure (des feuilles) détoure partout, au seuil de l'original (_ALPHATEST_ON, ChantierDetourage).
-// Les matériaux du pack y sont recopiés à l'exécution (SiteMaterials) ; la ligne se règle par chantier (SiteFill).
+// La vraie matière d'un chantier qui monte (décisions 166 et 177) : le Lit d'URP (sa passe avant reprise, avec la même
+// entrée LitInput, ChantierAvant), coupé au-dessus de la ligne du chantier et effrité dans la bande sous elle. Les
+// ombres, la profondeur et les normales coupent au même endroit : la moitié qui n'est pas bâtie ne fait ni ombre ni
+// occlusion. Un matériau qui détoure (des feuilles, le bord d'un chaume) détoure partout, au seuil de l'original
+// (_ALPHATEST_ON, ChantierDetourage) ; un feuillage du pack y garde ses tiges (_TrunkMap, _TRUNKMAP). Les matériaux du
+// pack y sont recopiés à l'exécution (SiteMaterials) ; la ligne se règle par chantier (SiteFill).
 Shader "Diciela/Chantier"
 {
     Properties
     {
         [MainTexture] _BaseMap("Albedo", 2D) = "white" {}
+        [NoScaleOffset] _TrunkMap("Tiges (feuillage du pack)", 2D) = "white" {}
         [MainColor] _BaseColor("Color", Color) = (1,1,1,1)
         _Cutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
         _Smoothness("Smoothness", Range(0.0, 1.0)) = 0.2
@@ -53,7 +55,7 @@ Shader "Diciela/Chantier"
 
             HLSLPROGRAM
             #pragma target 2.0
-            #pragma vertex LitPassVertex
+            #pragma vertex ChantierForwardVertex
             #pragma fragment ChantierForwardFragment
 
             // Ces trois mots-clés ne sont posés qu'à l'exécution, sur les copies des matériaux d'origine (SiteMaterials) :
@@ -87,28 +89,17 @@ Shader "Diciela/Chantier"
 
             #pragma multi_compile_instancing
             #pragma instancing_options renderinglayer
+            #pragma dynamic_branch_local _TRUNKMAP
 
-            // La passe avant d'URP garde la position dans le monde : la ligne en a besoin.
+            // La passe avant d'URP garde la position dans le monde : la ligne en a besoin. Son interpolateur viewDirTS,
+            // libre sans parallaxe, porte le bleu du sommet (ChantierAvant).
             #define REQUIRES_WORLD_SPACE_POS_INTERPOLATOR
+            #define REQUIRES_TANGENT_SPACE_VIEW_DIR_INTERPOLATOR
             #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/LitForwardPass.hlsl"
             #include "Assets/Art/Shaders/ChantierLigne.hlsl"
-
-            void ChantierForwardFragment(
-                Varyings input
-                , out half4 outColor : SV_Target0
-            #ifdef _WRITE_RENDERING_LAYERS
-                , out uint outRenderingLayers : SV_Target1
-            #endif
-            )
-            {
-                ChantierClipBuilt(input.positionWS, input.positionCS);
-                LitPassFragment(input, outColor
-            #ifdef _WRITE_RENDERING_LAYERS
-                    , outRenderingLayers
-            #endif
-                );
-            }
+            #include "Assets/Art/Shaders/ChantierDetourage.hlsl"
+            #include "Assets/Art/Shaders/ChantierAvant.hlsl"
             ENDHLSL
         }
 
@@ -127,6 +118,7 @@ Shader "Diciela/Chantier"
             #pragma vertex ChantierShadowVertex
             #pragma fragment ChantierShadowFragment
             #pragma multi_compile_local_fragment _ _ALPHATEST_ON
+            #pragma dynamic_branch_local _TRUNKMAP
             #pragma multi_compile_instancing
             #pragma multi_compile_vertex _ _CASTING_PUNCTUAL_LIGHT_SHADOW
 
@@ -145,9 +137,10 @@ Shader "Diciela/Chantier"
 
             HLSLPROGRAM
             #pragma target 2.0
-            #pragma vertex ChantierDepthVertex
+            #pragma vertex ChantierVertex
             #pragma fragment ChantierDepthFragment
             #pragma multi_compile_local_fragment _ _ALPHATEST_ON
+            #pragma dynamic_branch_local _TRUNKMAP
             #pragma multi_compile_instancing
 
             #include "Assets/Art/Shaders/ChantierProfondeur.hlsl"
@@ -164,9 +157,10 @@ Shader "Diciela/Chantier"
 
             HLSLPROGRAM
             #pragma target 2.0
-            #pragma vertex ChantierNormalsVertex
+            #pragma vertex ChantierVertex
             #pragma fragment ChantierNormalsFragment
             #pragma multi_compile_local_fragment _ _ALPHATEST_ON
+            #pragma dynamic_branch_local _TRUNKMAP
             #pragma multi_compile_fragment _ _GBUFFER_NORMALS_OCT
             #pragma multi_compile_instancing
             #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/RenderingLayers.hlsl"

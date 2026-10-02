@@ -55,8 +55,8 @@ namespace Diciela.View
             _structures = structures;
             _sites = sites;
             _relief = relief;
-            _siteMaterials = new SiteMaterials(_settings.SiteMaterial);
-            _siteGhosts = new SiteGhosts(_settings.SiteGhostMaterial);
+            _siteMaterials = new SiteMaterials(_settings.SiteMaterial, _settings.BlendedCutoff);
+            _siteGhosts = new SiteGhosts(_settings.SiteGhostMaterial, _settings.BlendedCutoff);
             foreach (Structure structure in structures.All)
                 OnStructurePlaced(structure);
             structures.StructurePlaced += OnStructurePlaced;

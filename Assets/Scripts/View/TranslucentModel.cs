@@ -5,31 +5,27 @@ using UnityEngine.Rendering;
 namespace Diciela.View
 {
     /// <summary>
-    /// Un modèle vu en translucide, pour l'aperçu et le fantôme : les matériaux de ses maillages sont remplacés par un
-    /// seul, sans ombre, et sa couleur se règle par un bloc de propriétés, sans créer de matériau à chaque changement.
-    /// Ce qui n'est pas un maillage (la fumée des cheminées du pack, un effet) n'est pas dessiné : la construction n'est
-    /// pas encore bâtie.
+    /// Un modèle vu en fantôme (décisions 166 et 177), pour l'aperçu de la pose comme pour le fantôme d'un chantier :
+    /// chaque matériau de ses maillages devient son fantôme (SiteGhosts : la forme des feuilles et de leurs tiges, du bord
+    /// d'un chaume), sans ombre, et ses couleurs (sur un chantier, sa ligne) se règlent par un bloc de propriétés, sans
+    /// créer de matériau à chaque changement. Sans ligne, le fantôme du chantier est un simple fantôme teinté. Ce qui
+    /// n'est pas un maillage (la fumée des cheminées du pack, un effet) n'est pas dessiné : la construction n'est pas
+    /// encore bâtie.
     /// </summary>
-    public sealed class TranslucentModel
+    internal sealed class TranslucentModel
     {
-        private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
-
         private readonly Renderer[] _renderers;
-        private readonly MaterialPropertyBlock _block = new MaterialPropertyBlock();
 
-        public TranslucentModel(GameObject root, Material translucent)
+        public TranslucentModel(GameObject root, SiteGhosts ghosts)
         {
             var meshes = new List<Renderer>();
             foreach (Renderer renderer in root.GetComponentsInChildren<Renderer>(true))
             {
-                if (!(renderer is MeshRenderer) && !(renderer is SkinnedMeshRenderer))
-                {
-                    renderer.enabled = false;
+                if (!KeepMesh(renderer))
                     continue;
-                }
-                var materials = new Material[renderer.sharedMaterials.Length];
+                Material[] materials = renderer.sharedMaterials;
                 for (int i = 0; i < materials.Length; i++)
-                    materials[i] = translucent;
+                    materials[i] = ghosts.For(materials[i]);
                 renderer.sharedMaterials = materials;
                 renderer.shadowCastingMode = ShadowCastingMode.Off;
                 meshes.Add(renderer);
@@ -37,11 +33,23 @@ namespace Diciela.View
             _renderers = meshes.ToArray();
         }
 
-        public void SetColor(Color color)
+        /// <summary>Règle ses couleurs, et sur un chantier sa ligne, par ce bloc, sur tous ses maillages.</summary>
+        public void Apply(MaterialPropertyBlock block)
         {
-            _block.SetColor(BaseColorId, color);
             foreach (Renderer renderer in _renderers)
-                renderer.SetPropertyBlock(_block);
+                renderer.SetPropertyBlock(block);
+        }
+
+        /// <summary>
+        /// Vrai si ce rendu dessine un maillage ; sinon (une fumée, un effet du pack), il est éteint : une construction
+        /// pas encore bâtie ne fume pas.
+        /// </summary>
+        public static bool KeepMesh(Renderer renderer)
+        {
+            if (renderer is MeshRenderer || renderer is SkinnedMeshRenderer)
+                return true;
+            renderer.enabled = false;
+            return false;
         }
     }
 }
