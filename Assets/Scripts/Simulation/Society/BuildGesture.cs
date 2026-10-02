@@ -1,5 +1,4 @@
 using Diciela.Simulation.Economy;
-using Diciela.Simulation.Land;
 using UnityEngine;
 
 namespace Diciela.Simulation.Society
@@ -28,12 +27,10 @@ namespace Diciela.Simulation.Society
             return workTime ? GestureStep.Work : GestureStep.Done;
         }
 
-        public override GestureStep Work(double hours, out Structure built)
+        public override GestureStep Work(double hours)
         {
-            built = null;
             if (!_offers.Work(_shift, hours))
                 return GestureStep.Work;
-            built = _shift.Site.Structure;
             return GestureStep.Done;
         }
 

@@ -1,5 +1,4 @@
 using System;
-using Diciela.Simulation.Land;
 using UnityEngine;
 
 namespace Diciela.Simulation.Society
@@ -23,10 +22,10 @@ namespace Diciela.Simulation.Society
         public abstract GestureStep Arrive(bool workTime);
 
         /// <summary>
-        /// Un pas de travail sur place, de tant d'heures d'un débutant ; <paramref name="built"/> est la construction
-        /// qu'il vient de finir, s'il en finit une.
+        /// Un pas de travail sur place, de tant d'heures d'un débutant. Ce qu'il finit de bâtir, le monde le met en
+        /// service à la fin du pas.
         /// </summary>
-        public virtual GestureStep Work(double hours, out Structure built)
+        public virtual GestureStep Work(double hours)
         {
             throw new InvalidOperationException("Ce geste ne se travaille pas sur place.");
         }

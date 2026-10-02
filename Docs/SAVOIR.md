@@ -40,7 +40,7 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 | Une fonction remplacée mais gardée « pour y revenir », qui continue d'être appelée par des coins oubliés. | **Remplacer = supprimer le jour même**, code, données et tests compris. |
 | Un effet codé à la main là où il sert (le charme dans l'étal, une lanterne dans la marche, un bonus dans l'atelier). | **Un seul système de modificateurs** : chaque effet est une donnée, chaque système demande son bonus à un seul endroit. |
 | Un calcul refait à chaque image ou à chaque tick alors que ses entrées n'ont pas changé. | **On recalcule sur événement**, ou on garde le résultat avec la version de ses entrées. |
-| Une charge qui ne trouve plus où rentrer : l'entrepôt s'est rempli pendant la marche du porteur. | **La place se retient en prenant la tâche** (`SpaceReserved`, compté hors de la place libre), et se rend juste avant tout retour à la ville. |
+| Une charge qui ne trouve plus où rentrer : l'entrepôt s'est rempli pendant la marche du porteur, ou pendant qu'il portait ce qu'il y avait pris. | **La place se retient en prenant la tâche** (`SpaceReserved`, comptée hors de la place libre), celle d'où la charge part comprise, et le reste tant que la charge est en route : elle se rend à la livraison, ou reçoit la charge rendue. |
 
 ## 2. Solutions qui ont fait leurs preuves
 
@@ -112,9 +112,10 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   qui suivrait le maillage l'éviterait.
 - **Les arbres et les rochers sur le maillage** : chacun y porte l'opposé de son numéro (négatif : jamais une
   construction). Peints serrés, deux pieds se partagent des mailles (le dernier de la carte les garde) : retirer l'un
-  ne libère que les mailles qu'il tient encore (`ReleaseOccupant`), jamais tout son rectangle, sinon le tronc voisin
-  deviendrait traversable. Une forêt de 5 000 arbres à l'échelle du jeu naît, refait ses îlots et se traverse en
-  quelques dizaines de millisecondes (`NatureScaleTests`).
+  ne libère que les mailles qu'il tient encore (`ReleaseOccupant`), jamais tout son rectangle, puis ses voisins debout
+  reprennent les mailles libres qu'ils couvrent (`Reclaim`, du dernier de la carte au premier) ; sans l'un ou l'autre,
+  le tronc voisin deviendrait traversable. Une forêt de 5 000 arbres à l'échelle du jeu naît, refait ses îlots et se
+  traverse en quelques dizaines de millisecondes (`NatureScaleTests`).
 - **Chercher la place la plus proche par anneaux carrés** (`SquareRing`, le seul parcours par anneaux) : un anneau ne
   range pas ses places par distance, ses coins sont à √2 fois son rang, plus loin que le milieu de l'anneau suivant.
   Pour la plus proche, on continue tant que le rang de l'anneau reste sous la meilleure distance trouvée, et on écarte

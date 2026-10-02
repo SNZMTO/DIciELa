@@ -80,9 +80,7 @@ namespace Diciela.Simulation.Society
             bool workTime = _services.Clock.Phase == DayPhase.Work;
             if (_chore.IsActive)
             {
-                Follow(_chore.Step(ref position, workTime, out Structure built));
-                if (built != null)
-                    _services.Slots.Track(built);
+                Follow(_chore.Step(ref position, workTime));
                 return true;
             }
             if (workTime && _services.Clock.StepCount >= _nextTryStep && TryTakeTask(position))
