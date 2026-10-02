@@ -21,6 +21,13 @@ namespace Diciela.EditorTools
         private const string TemplateActionsPath = "Assets/InputSystem_Actions.inputactions";
         private const string ProjectWideActionsKey = "com.unity.input.settings.actions";
 
+        /// <summary>Complète l'asset d'actions sans toucher aux scènes ; « Monter les scènes » le fait aussi.</summary>
+        [MenuItem("DICIELA/Données/Compléter les actions du clavier")]
+        public static void CompleteActions()
+        {
+            EnsureActions();
+        }
+
         public static void EnsureActions()
         {
             RemoveTemplateActions();
@@ -76,6 +83,10 @@ namespace Diciela.EditorTools
             added += AddButtonIfMissing(tools, ToolControls.WheelAction, "<Keyboard>/tab");
             foreach (ToolAction tool in ToolAction.All)
                 added += AddButtonIfMissing(tools, tool.Name, tool.DefaultBinding);
+            // Les cartes du panneau Construire ouvert (décision 184) : les touches 1 à 9, liées à leur place sur la rangée
+            // des chiffres, qu'on atteint sans Maj en AZERTY aussi.
+            for (int i = 0; i < ToolControls.CardKeys; i++)
+                added += AddButtonIfMissing(tools, ToolControls.CardAction(i), "<Keyboard>/" + (i + 1));
             added += AddPointerIfMissing(tools, ToolControls.PointerAction);
 
             // Valider ce que l'interface propose : Entrée, celle du pavé numérique comprise.

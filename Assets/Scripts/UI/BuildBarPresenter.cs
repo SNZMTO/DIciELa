@@ -13,8 +13,9 @@ namespace Diciela.UI
     /// panneau s'ouvre à la demande (la roue des outils, sa touche) et se ferme quand on prend une carte, pour dégager la
     /// vue pendant la pose, ou par Échap (décision 168). Il ne propose que ce qui se pose encore : une construction unique
     /// posée s'en va. Le campement d'abord (GDD, section 6) : tant que la Chimère n'a pas de logis, il ne propose que son
-    /// logis, si le catalogue en a un ; c'est une consigne du panneau, pas une règle des ordres (décision 95). Il écoute
-    /// l'outil, les poses et les chantiers finis : le panneau ne photographie jamais.
+    /// logis, si le catalogue en a un ; c'est une consigne du panneau, pas une règle des ordres (décision 95). Panneau
+    /// ouvert, les touches 1 à 9 prennent les cartes de la famille ouverte, comme un clic, et chaque carte porte sa touche
+    /// (décision 184). Il écoute l'outil, les poses et les chantiers finis : le panneau ne photographie jamais.
     /// </summary>
     public sealed class BuildBarPresenter : IDisposable
     {
@@ -23,6 +24,7 @@ namespace Diciela.UI
         private readonly TextTable _texts;
         private readonly PlacementTool _placement;
         private readonly World _world;
+        private readonly IToolKeys _keys;
         private readonly bool _catalogHasAHome;
         private readonly List<BuildBarFamily> _families = new List<BuildBarFamily>();
         private readonly List<BuildBarCard> _cards = new List<BuildBarCard>();
@@ -30,18 +32,19 @@ namespace Diciela.UI
         private int _openFamily;
 
         public BuildBarPresenter(IBuildBarView view, Catalog catalog, TextTable texts, PlacementTool placement,
-            World world)
+            World world, IToolKeys keys)
         {
             if (view == null || catalog == null || ReferenceEquals(texts, null) || ReferenceEquals(placement, null) ||
-                ReferenceEquals(world, null))
+                ReferenceEquals(world, null) || keys == null)
                 throw new ArgumentException("Le panneau Construire a besoin de sa vue, du catalogue, des textes, " +
-                                            "de l'outil de pose et du monde.");
+                                            "de l'outil de pose, du monde et des touches.");
 
             _view = view;
             _catalog = catalog;
             _texts = texts;
             _placement = placement;
             _world = world;
+            _keys = keys;
             _catalogHasAHome = HasAHome(catalog);
             _view.FamilyChosen += OnFamilyChosen;
             _view.StructureChosen += OnStructureChosen;
@@ -81,6 +84,16 @@ namespace Diciela.UI
                 return;
             IsOpen = false;
             _view.ShowOpen(false);
+        }
+
+        /// <summary>
+        /// La touche d'une carte prend la carte de ce rang dans la famille ouverte, comme un clic ; panneau fermé, elle
+        /// ne fait rien.
+        /// </summary>
+        public void TakeCard(int index)
+        {
+            if (IsOpen)
+                OnStructureChosen(index);
         }
 
         /// <summary>Échap ferme le panneau ouvert ; faux s'il était fermé.</summary>
@@ -128,7 +141,7 @@ namespace Diciela.UI
                         continue;
                     _offered.Add(structure);
                     _cards.Add(new BuildBarCard(_texts.Get(structure.NameKey), structure.Picture, family.Pastel,
-                        structure.Cost));
+                        structure.Cost, _keys.KeyOfCard(_cards.Count)));
                 }
             }
             _view.ShowStructures(_cards);

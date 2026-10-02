@@ -11,5 +11,10 @@ namespace Diciela.Tests.PlayMode
         {
             return choice == ToolChoice.Build ? "B" : "X";
         }
+
+        public string KeyOfCard(int index)
+        {
+            return index >= 0 && index < 9 ? (index + 1).ToString() : "";
+        }
     }
 }

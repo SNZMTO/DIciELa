@@ -11,8 +11,8 @@ namespace Diciela.Tests.PlayMode
     /// <summary>
     /// Les gestes des outils, joués par un clavier et une souris simulés sur les vraies actions du jeu (décision 168) :
     /// tenir Tab ouvre la roue sous le pointeur et la fait suivre où il vise ; relâcher choisit là où il vise ; B et X
-    /// choisissent tout droit ; sans roue, rien ne part. Les noms des touches se lisent sur les liaisons ; la table des
-    /// outils suit l'ordre des choix et l'asset du jeu.
+    /// choisissent tout droit ; les touches 1 à 9 prennent les cartes (décision 184) ; sans roue, rien ne part. Les noms
+    /// des touches se lisent sur les liaisons ; la table des outils suit l'ordre des choix et l'asset du jeu.
     /// </summary>
     public sealed class ToolControlsTests : GestureFixture
     {
@@ -20,6 +20,18 @@ namespace Diciela.Tests.PlayMode
         private InputActionAsset _actions;
         private ToolControls _controls;
         private NotedWheel _wheel;
+        private NotedCards _cards;
+
+        /// <summary>Des cartes qui notent celles qu'on prend.</summary>
+        private sealed class NotedCards : ICardPicker
+        {
+            public readonly List<int> Taken = new List<int>();
+
+            public void TakeCard(int index)
+            {
+                Taken.Add(index);
+            }
+        }
 
         /// <summary>Une roue qui note ce que les gestes lui disent.</summary>
         private sealed class NotedWheel : IToolWheel
@@ -62,7 +74,8 @@ namespace Diciela.Tests.PlayMode
 #endif
             _holder.SetActive(true);
             _wheel = new NotedWheel();
-            _controls.Bind(_wheel);
+            _cards = new NotedCards();
+            _controls.Bind(_wheel, _cards);
         }
 
         public override void TearDown()
@@ -101,16 +114,28 @@ namespace Diciela.Tests.PlayMode
         }
 
         [UnityTest]
+        public IEnumerator TheDigitKeysTakeTheCards()
+        {
+            yield return Click(Keyboard.digit1Key);
+            yield return Click(Keyboard.digit9Key);
+
+            Assert.AreEqual(new[] { 0, 8 }, _cards.Taken, "1 prend la première carte, 9 la neuvième.");
+            Assert.IsEmpty(_wheel.Chosen, "Une touche de carte ne choisit pas d'outil.");
+        }
+
+        [UnityTest]
         public IEnumerator WithoutAWheelNothingHappens()
         {
-            _controls.Bind(null);
+            _controls.Bind(null, null);
 
             yield return Click(Keyboard.tabKey);
             yield return Click(Keyboard.bKey);
+            yield return Click(Keyboard.digit1Key);
 
             Assert.IsNull(_wheel.Opened);
             Assert.IsNull(_wheel.Released);
             Assert.IsEmpty(_wheel.Chosen);
+            Assert.IsEmpty(_cards.Taken);
         }
 
         [Test]
@@ -119,6 +144,9 @@ namespace Diciela.Tests.PlayMode
             Assert.AreEqual("Tab", _controls.WheelKey);
             Assert.AreEqual("B", _controls.KeyOf(ToolChoice.Build));
             Assert.AreEqual("X", _controls.KeyOf(ToolChoice.Clear));
+            Assert.AreEqual("1", _controls.KeyOfCard(0));
+            Assert.AreEqual("9", _controls.KeyOfCard(8));
+            Assert.AreEqual("", _controls.KeyOfCard(9), "Dix cartes : la dixième n'a pas de touche.");
         }
 
         [Test]

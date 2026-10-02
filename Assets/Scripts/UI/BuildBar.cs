@@ -12,11 +12,11 @@ namespace Diciela.UI
     /// Le panneau Construire, en bas au centre de l'écran (GDD, section 16) : un cadre de bois, les familles en onglets de
     /// feutre, au-dessus les constructions de la famille ouverte en cartes ; au-dessus du cadre, la raison d'un refus de
     /// pose, dans une bulle, qui reste quand le panneau est fermé. L'onglet ouvert et la carte en main restent enfoncés.
-    /// La roue des outils l'ouvre et le ferme ; Échap le ferme. C'est la vue (le bloc « bar » de Hud.uxml) ; son
-    /// présentateur décide.
+    /// La roue des outils l'ouvre et le ferme ; Échap le ferme ; ouvert, les touches 1 à 9 prennent ses cartes. C'est la
+    /// vue (le bloc « bar » de Hud.uxml) ; son présentateur décide.
     /// </summary>
     [RequireComponent(typeof(UIDocument))]
-    public sealed class BuildBar : MonoBehaviour, IBuildBarView, IBuildMenu, IEscapable
+    public sealed class BuildBar : MonoBehaviour, IBuildBarView, IBuildMenu, IEscapable, ICardPicker
     {
         private const string BarName = "bar";
         private const string FamiliesName = "families";
@@ -45,7 +45,7 @@ namespace Diciela.UI
         }
 
         /// <summary>Remplit le panneau, fermé, par son présentateur ; appelé par le démarrage quand la ville s'ouvre.</summary>
-        public void Show(Catalog catalog, TextTable texts, PlacementTool placement, World world)
+        public void Show(Catalog catalog, TextTable texts, PlacementTool placement, World world, IToolKeys keys)
         {
             Hide();
             VisualElement root = _document.rootVisualElement;
@@ -63,7 +63,7 @@ namespace Diciela.UI
             _structures = structures;
             _reason = reason;
             _reasonText = reasonText;
-            _presenter = new BuildBarPresenter(this, catalog, texts, placement, world);
+            _presenter = new BuildBarPresenter(this, catalog, texts, placement, world, keys);
         }
 
         /// <summary>Cache le panneau et oublie le monde.</summary>
@@ -97,6 +97,11 @@ namespace Diciela.UI
         public bool Escape()
         {
             return _presenter != null && _presenter.Escape();
+        }
+
+        public void TakeCard(int index)
+        {
+            _presenter?.TakeCard(index);
         }
 
         public void ShowOpen(bool open)
