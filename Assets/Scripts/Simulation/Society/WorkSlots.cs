@@ -6,15 +6,15 @@ using Diciela.Simulation.Land;
 namespace Diciela.Simulation.Society
 {
     /// <summary>
-    /// La table des postes (ARCHITECTURE, section 4) : les postes ouverts par les lieux de travail bâtis, et qui tient
-    /// chacun. La seule à changer qui tient quel poste. Le joueur y met un habitant ou l'en retire par ses ordres ; la
-    /// Chimère ne prend jamais de poste d'elle-même (GDD, section 6). Les événements d'un pas attendent la fin de leur
-    /// couche (ARCHITECTURE, section 5).
+    /// La table des postes (ARCHITECTURE, section 4) : les postes ouverts par les lieux de travail bâtis, et ceux ouverts
+    /// pour un premier habitant (GDD, section 7), et qui tient chacun. La seule à changer qui tient quel poste. Le joueur
+    /// y met un habitant ou l'en retire par ses ordres ; la Chimère ne prend jamais de poste d'elle-même (GDD, section 6).
+    /// Les événements d'un pas attendent la fin de leur couche (ARCHITECTURE, section 5).
     /// </summary>
     public sealed class WorkSlots
     {
         private readonly List<WorkSlot> _all = new List<WorkSlot>();
-        private readonly List<Happening> _happened = new List<Happening>();
+        private readonly List<SlotHappening> _happened = new List<SlotHappening>();
 
         /// <summary>Levé quand un habitant prend un poste, par l'ordre « affecter ».</summary>
         public event Action<Villager, WorkSlot> VillagerAssigned;
@@ -94,9 +94,23 @@ namespace Diciela.Simulation.Society
 
             if (held != null)
                 Release(villager, held);
-            free.SetHolder(villager);
-            villager.TakeSlot(free);
-            _happened.Add(new Happening(villager, free, true, default));
+            Hold(villager, free);
+        }
+
+        /// <summary>
+        /// Ouvre à ce lieu un poste de cette sorte pour cet habitant, qui le prend aussitôt (GDD, section 7 : le poste « à
+        /// tout faire » d'un premier habitant, tant que son lieu de travail n'est pas bâti). Il n'en tenait aucun. Seul le
+        /// monde l'appelle (le déroulé du départ).
+        /// </summary>
+        internal void OpenFor(Villager villager, Structure workplace, WorkSlotDefinition definition)
+        {
+            if (villager == null)
+                throw new ArgumentNullException(nameof(villager));
+            if (SlotOf(villager) != null)
+                throw new InvalidOperationException("L'habitant n° " + villager.Id + " tient déjà un poste.");
+            var slot = new WorkSlot(workplace, definition);
+            _all.Add(slot);
+            Hold(villager, slot);
         }
 
         /// <summary>
@@ -127,7 +141,7 @@ namespace Diciela.Simulation.Society
             {
                 for (int i = 0; i < _happened.Count; i++)
                 {
-                    Happening happening = _happened[i];
+                    SlotHappening happening = _happened[i];
                     if (happening.Villager == null)
                         AssignmentRefused?.Invoke(happening.Refusal);
                     else if (happening.Assigned)
@@ -152,31 +166,22 @@ namespace Diciela.Simulation.Society
             return null;
         }
 
+        private void Hold(Villager villager, WorkSlot slot)
+        {
+            slot.SetHolder(villager);
+            villager.TakeSlot(slot);
+            _happened.Add(new SlotHappening(villager, slot, true, default));
+        }
+
         private void Release(Villager villager, WorkSlot slot)
         {
             slot.SetHolder(null);
-            _happened.Add(new Happening(villager, slot, false, default));
+            _happened.Add(new SlotHappening(villager, slot, false, default));
         }
 
         private void Refuse(AssignmentRefusal reason)
         {
-            _happened.Add(new Happening(null, null, false, reason));
-        }
-
-        private readonly struct Happening
-        {
-            public Happening(Villager villager, WorkSlot slot, bool assigned, AssignmentRefusal refusal)
-            {
-                Villager = villager;
-                Slot = slot;
-                Assigned = assigned;
-                Refusal = refusal;
-            }
-
-            public Villager Villager { get; }
-            public WorkSlot Slot { get; }
-            public bool Assigned { get; }
-            public AssignmentRefusal Refusal { get; }
+            _happened.Add(new SlotHappening(null, null, false, reason));
         }
     }
 }

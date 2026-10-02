@@ -134,7 +134,7 @@ sauvegardé.
 | la culture de chaque plantation : semis, pousse, graines gardées | l'économie | la nourriture (dans la société) |
 | la recette et l'avancement d'un atelier ; la production par marchandise | l'économie | la valeur des marchandises |
 | un habitant : sorte, statistiques, plafonds, apparence, tenue portée, position, effet d'étal en cours | la société | la statistique globale, la valeur pour une tâche, le bonheur |
-| qui tient quel poste ; les postes fermés | la société (une seule table) | qui est présent sur un lieu |
+| qui tient quel poste ; les postes ouverts pour un premier habitant ; les postes fermés | la société (une seule table) | qui est présent sur un lieu |
 | qui a son lit où ; qui dort (couché ou en chemin) | la société | les lits libres (des maisons bâties) ; où dort chacun (la Chimère : son logis) |
 | les curseurs, les souhaits, les visiteurs, la réputation | la société | les taux de l'étal ; le charme |
 | ce que la ville sait faire (ses constructions ; plus tard ses recettes, ses décos) | le socle (`Knowledge`) : au départ, le déroulé du départ ; puis les déclencheurs | le carnet ; ce que le panneau Construire propose |
@@ -314,6 +314,7 @@ code.
 | lits (qu'offre une maison) | `Beds` | ce que le panneau propose | `BuildBarOffer` | logements | `Housing` |
 | arriver (la seule arrivée) | `Arrive` | point fort (d'un arrivant) | `Strength` | coucher et lever | `Bedtimes` |
 | premier habitant | `FirstVillagerDefinition` | personnage du pack (tel quel) | `CharacterDefinition` | sorte des habitants ordinaires | `Catalog.VillagerKind` |
+| le nom d'un habitant (sa clé) | `NameKey` | ouvrir un poste pour lui | `WorkSlots.OpenFor` | un poste sur la fiche d'un lieu | `PlaceSheetSlot` |
 
 ## 10. La carte, les scènes et la sauvegarde
 

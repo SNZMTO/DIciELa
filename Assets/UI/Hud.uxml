@@ -37,10 +37,7 @@
                     </Diciela.UI.FeltButton>
                 </ui:VisualElement>
                 <ui:VisualElement name="fiche-stock" class="fiche-stock" />
-                <ui:VisualElement name="fiche-poste" class="fiche-poste">
-                    <ui:Label name="fiche-poste-nom" class="nom" />
-                    <ui:Label name="fiche-poste-qui" class="sous-titre" />
-                </ui:VisualElement>
+                <ui:VisualElement name="fiche-poste" class="fiche-poste" />
                 <ui:VisualElement name="fiche-actions" class="fiche-actions" />
             </ui:VisualElement>
         </Diciela.UI.WoodFrame>

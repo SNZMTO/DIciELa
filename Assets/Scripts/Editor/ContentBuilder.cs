@@ -73,8 +73,11 @@ namespace Diciela.EditorTools
             // L'icône de son onglet ; son pastel, le rose, est celui par défaut de la fiche (décision 142).
             EditorAssets.AssignIfMissing(housing, "_icon",
                 EditorAssets.Load<UnityEngine.UIElements.VectorImage>(InterfaceIconBuilder.Folder + "/maison.asset"));
-            VillagerKindDefinition chimera = EditorAssets.CreateIfMissing<VillagerKindDefinition>(ChimeraPath,
-                fiche => EditorAssets.Property(fiche, "_id").stringValue = "chimere");
+            VillagerKindDefinition chimera = EditorAssets.CreateIfMissing<VillagerKindDefinition>(ChimeraPath, fiche =>
+            {
+                EditorAssets.Property(fiche, "_id").stringValue = "chimere";
+                EditorAssets.Property(fiche, "_nameKey").stringValue = "habitant.chimere";
+            });
 
             // Le déroulé du départ (décisions 172, 185 et 187) : la Chimère sait déjà bâtir le campement et la cabane ; son
             // campement reçoit 30 Bois et 20 Pierre quand on l'installe ; puis les premiers habitants arrivent.
@@ -84,6 +87,7 @@ namespace Diciela.EditorTools
                 TownContentBuilder.SetAmounts(EditorAssets.Property(fiche, "_startingGoods"), town.Wood, 30, town.Stone,
                     20);
                 EditorAssets.SetList(EditorAssets.Property(fiche, "_firstVillagers"), villagers.FirstVillagers);
+                EditorAssets.Property(fiche, "_firstVillagersSlot").objectReferenceValue = town.OddJobs;
             });
             Catalog catalog = EditorAssets.CreateIfMissing<Catalog>(CatalogPath, fiche =>
             {

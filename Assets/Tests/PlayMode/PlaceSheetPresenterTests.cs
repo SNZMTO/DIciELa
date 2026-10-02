@@ -10,7 +10,8 @@ namespace Diciela.Tests.PlayMode
     /// <summary>
     /// La fiche d'un lieu et son présentateur (GDD, section 16 ; décisions 141, 152 et 172), sur une vue qui note : toucher
     /// le campement ouvre sa fiche (son nom, son Bois et sa Pierre, son poste libre, « Y mettre la Chimère » en menthe et
-    /// « Aller dormir » en lavande) ; le premier bouton met la Chimère au poste, puis l'en retire ; le second l'envoie
+    /// « Aller dormir » en lavande) ; ses postes et qui les tient, chacun par son nom, quand un premier habitant y a le
+    /// sien ; le premier bouton met la Chimère au poste, puis l'en retire ; le second l'envoie
     /// dormir, puis la réveille, même en chemin ; par les ordres. Un logis sans poste ni stock a sa fiche, pour dormir ;
     /// toucher autre chose, ou rien, la ferme, comme la croix ; la fiche suit le stock quand la Chimère y prend du Bois.
     /// </summary>
@@ -23,7 +24,8 @@ namespace Diciela.Tests.PlayMode
                                      "poste.a_tout_faire,À tout faire\n" +
                                      "fiche.mettre_chimere,Y mettre la Chimère\n" +
                                      "fiche.retirer_chimere,Retirer la Chimère\n" +
-                                     "fiche.la_chimere,La Chimère\n" +
+                                     "habitant.chimere,La Chimère\n" +
+                                     "habitant.batisseur,Le bâtisseur\n" +
                                      "fiche.poste_libre,Libre\n" +
                                      "fiche.dormir,Aller dormir\n" +
                                      "fiche.reveiller,Réveiller\n";
@@ -63,8 +65,9 @@ namespace Diciela.Tests.PlayMode
             Assert.AreEqual(30, _view.Lines[0].Count);
             Assert.AreEqual("Pierre", _view.Lines[1].Name);
             Assert.AreEqual(20, _view.Lines[1].Count);
-            Assert.AreEqual("À tout faire", _view.SlotName);
-            Assert.AreEqual("Libre", _view.SlotHolder);
+            Assert.AreEqual(1, _view.Slots.Count);
+            Assert.AreEqual("À tout faire", _view.Slots[0].Name);
+            Assert.AreEqual("Libre", _view.Slots[0].Holder);
             Assert.AreEqual(new[] { "Y mettre la Chimère", "Aller dormir" }, _view.ActionTexts());
             Assert.AreEqual(Pastel.Menthe, _view.Actions[0].Pastel);
             Assert.AreEqual(Pastel.Lavande, _view.Actions[1].Pastel);
@@ -76,14 +79,29 @@ namespace Diciela.Tests.PlayMode
             _presenter.Touch(_town.PlacedCamp);
             Assert.IsTrue(_view.Click("Y mettre la Chimère"));
             World.Step();
-            Assert.AreEqual("La Chimère", _view.SlotHolder);
+            Assert.AreEqual(new[] { "La Chimère" }, _view.Holders());
             Assert.AreEqual("Retirer la Chimère", _view.ActionTexts()[0]);
 
             Assert.IsTrue(_view.Click("Retirer la Chimère"));
             World.Step();
-            Assert.AreEqual("Libre", _view.SlotHolder);
+            Assert.AreEqual(new[] { "Libre" }, _view.Holders());
             Assert.AreEqual("Y mettre la Chimère", _view.ActionTexts()[0]);
             Assert.IsNull(World.Villagers.Chimera.Slot);
+        }
+
+        [Test]
+        public void TheSheetListsEveryPostAndWhoHoldsItByName()
+        {
+            // Le bâtisseur arrive avec sa maison : un poste « à tout faire » s'ouvre pour lui au campement (décision 189).
+            World.Submit(new PlaceStructureCommand(_town.HouseWithABed(), new Placement(new Vector2(30f, 30f), 0f)));
+            World.Step();
+            _presenter.Touch(_town.PlacedCamp);
+            Assert.IsTrue(_view.Click("Y mettre la Chimère"));
+            World.Step();
+
+            Assert.AreEqual(2, _view.Slots.Count, "Le poste du campement, et celui ouvert pour lui.");
+            Assert.AreEqual("À tout faire", _view.Slots[1].Name);
+            Assert.AreEqual(new[] { "La Chimère", "Le bâtisseur" }, _view.Holders(), "Chacun par son nom.");
         }
 
         [Test]

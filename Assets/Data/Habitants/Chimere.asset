@@ -13,9 +13,14 @@ MonoBehaviour:
   m_Name: Chimere
   m_EditorClassIdentifier: Diciela.Data::Diciela.Data.VillagerKindDefinition
   _id: chimere
+  _nameKey: habitant.chimere
   _walkMetersPerSecond: 1.5
   _wanderRadiusMeters: 6
   _wanderMinHopMeters: 2
   _wanderPauseMinHours: 0.1
   _wanderPauseMaxHours: 0.3
   _turnDegreesPerSecond: 540
+  _startingStatisticMin: 10
+  _startingStatisticMax: 10
+  _sleepsAtNight: 0
+  _carryCapacity: 5

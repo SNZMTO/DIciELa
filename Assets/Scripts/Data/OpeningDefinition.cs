@@ -26,10 +26,15 @@ namespace Diciela.Data
         [Tooltip("Les heures de jeu au moins entre deux premières arrivées (GDD, section 6).")]
         [SerializeField, Min(0f)] private float _firstArrivalHours = 1f;
 
+        [Tooltip("Le poste ouvert pour chaque premier habitant au logis de la Chimère, tant que son lieu de travail n'est " +
+                 "pas bâti (GDD, section 7) : le poste « à tout faire ».")]
+        [SerializeField] private WorkSlotDefinition _firstVillagersSlot;
+
         public IReadOnlyList<StructureDefinition> KnownStructures => _knownStructures;
         public IReadOnlyList<GoodAmount> StartingGoods => _startingGoods;
         public IReadOnlyList<FirstVillagerDefinition> FirstVillagers => _firstVillagers;
         public float FirstVillagerStrength => _firstVillagerStrength;
         public float FirstArrivalHours => _firstArrivalHours;
+        public WorkSlotDefinition FirstVillagersSlot => _firstVillagersSlot;
     }
 }

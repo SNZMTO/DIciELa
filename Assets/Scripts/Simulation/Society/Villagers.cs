@@ -92,18 +92,19 @@ namespace Diciela.Simulation.Society
         }
 
         /// <summary>
-        /// Un habitant arrive en ville, de cette sorte, avec cette apparence et ce point fort, sur le milieu de la maille
-        /// de ce point (ramené dans la carte) : la seule arrivée. Il se met à flâner là. Seuls le monde (le déroulé du
-        /// départ) et l'ordre « créer la Chimère » l'appellent.
+        /// Un habitant arrive en ville, de cette sorte, avec cette apparence, ce nom et ce point fort, sur le milieu de la
+        /// maille de ce point (ramené dans la carte) : la seule arrivée. Il se met à flâner là. Seuls le monde (le déroulé
+        /// du départ) et l'ordre « créer la Chimère » l'appellent.
         /// </summary>
-        internal Villager Arrive(VillagerKindDefinition kind, Appearance appearance, Vector2 at, Strength strength)
+        internal Villager Arrive(VillagerKindDefinition kind, Appearance appearance, string nameKey, Vector2 at,
+            Strength strength)
         {
             if (ReferenceEquals(kind, null))
                 throw new ArgumentNullException(nameof(kind));
 
             Vector2Int cell = _grid.CellOf(at);
             cell = new Vector2Int(Math.Clamp(cell.x, 0, _grid.Width - 1), Math.Clamp(cell.y, 0, _grid.Depth - 1));
-            var villager = new Villager(_nextId++, kind, appearance, _grid.CellCenter(cell), strength, _services);
+            var villager = new Villager(_nextId++, kind, appearance, nameKey, _grid.CellCenter(cell), strength, _services);
             _all.Add(villager);
             _happened.Add(VillagerHappening.Of(VillagerHappening.Kinds.Arrived, villager));
             return villager;
@@ -122,7 +123,7 @@ namespace Diciela.Simulation.Society
                 _happened.Add(VillagerHappening.ChimeraRefusedWith(kind));
                 return false;
             }
-            Chimera = Arrive(kind, appearance, arrivalPoint, Strength.None);
+            Chimera = Arrive(kind, appearance, kind.NameKey, arrivalPoint, Strength.None);
             return true;
         }
 

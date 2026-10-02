@@ -237,8 +237,10 @@
   chemin, elle y renonce et flâne.
 - **Règle.** Le campement tient le stock de départ, qu'il reçoit quand on l'installe, et sert d'entrepôt jusqu'au
   premier entrepôt. Il porte un poste « à tout faire » (porter, bâtir, récolter, défricher, dans cet ordre), que tient
-  la Chimère. Quand son stock est vide et que la loge, un entrepôt et la cabane du paysagiste sont bâtis, il ferme son
-  stock et son poste, et n'est plus que son logis (avant, plus personne ne retirerait les arbres et les rochers).
+  la Chimère ; chaque premier habitant y a le sien, ouvert pour lui (voir 7). Quand son stock est vide et que la loge,
+  un entrepôt et la cabane du paysagiste sont bâtis, il ferme son stock et son poste, et n'est plus que son logis (avant,
+  plus personne ne retirerait les arbres et les rochers) ; ceux des premiers habitants se sont fermés avant, chacun
+  quand son lieu de travail s'est bâti.
 - **Règle.** Le joueur touche le campement : sa fiche s'ouvre sur le côté, avec « Y mettre la Chimère » ou « Retirer
   la Chimère », et « Aller dormir » ou « Réveiller ». Tant que la carte n'a ni arbres ni champs sauvages à traiter, le
   poste ne fait que porter et bâtir.
@@ -304,7 +306,7 @@
 - **À toi.** Une pastille ou plusieurs quand un lieu cumule les pannes ? Ma reco : une seule, la plus urgente :
   injoignable, pas de force, personne au poste, pas de graines ou d'ingrédients, stock plein.
 - **Règle.** Tant que son lieu de travail n'est pas bâti (voir 6), un premier habitant tient un poste « à tout faire »
-  ouvert pour lui, qui se ferme quand son lieu est bâti.
+  ouvert pour lui à son arrivée, au logis de la Chimère (le campement), qui se ferme quand son lieu est bâti.
 
 ## 8. La production et la logistique
 
@@ -661,8 +663,9 @@
   (la liste des habitants avec eux, l'étal avec le troc), sur le côté, la ville visible derrière, comme dans
   Timberborn ; le son et la musique après le premier jouable, avec un pack acheté, comme l'art.
 - **Règle.** Toucher un lieu qui a un poste ou un stock, ou le logis de la Chimère, ouvre sa fiche, à droite (en haut
-  tant que le menu n'existe pas) : son nom, ce qu'il tient pour la ville (une marchandise par creux de lin), son poste
-  et qui le tient, son bouton ; au logis de la Chimère, « Aller dormir » ou « Réveiller ». Une seule fiche
+  tant que le menu n'existe pas) : son nom, ce qu'il tient pour la ville (une marchandise par creux de lin), ses postes
+  et qui les tient (le nom d'un poste écrit une fois pour des postes pareils, puis chacun par son nom, ou « Libre »),
+  son bouton ; au logis de la Chimère, « Aller dormir » ou « Réveiller ». Une seule fiche
   à la fois : la nouvelle remplace l'ancienne ; toucher autre chose, ou le sol, la ferme, comme sa croix. Échap ferme
   d'abord la fiche, puis la roue des outils, puis le panneau Construire, puis lâche l'outil en main ; plus tard, il
   ouvrira le menu. L'interface ne prend pas le focus du clavier.

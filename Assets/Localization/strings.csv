@@ -140,7 +140,12 @@ tache.defricher,Défricher,Clear
 poste.a_tout_faire,À tout faire,Odd jobs
 fiche.mettre_chimere,Y mettre la Chimère,Put the Chimera here
 fiche.retirer_chimere,Retirer la Chimère,Take the Chimera away
-fiche.la_chimere,La Chimère,The Chimera
+habitant.chimere,La Chimère,The Chimera
+habitant.ordinaire,Un habitant,A villager
+habitant.batisseur,Le bâtisseur,The builder
+habitant.fermiere,La fermière,The farmer
+habitant.charretiere,La charretière,The carter
+habitant.menuisier,Le menuisier,The carpenter
 fiche.poste_libre,Libre,Free
 fiche.dormir,Aller dormir,Go to sleep
 fiche.reveiller,Réveiller,Wake up

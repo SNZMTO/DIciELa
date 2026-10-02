@@ -13,6 +13,10 @@ namespace Diciela.Data
         [Tooltip("Identifiant stable, cité par les sauvegardes ; jamais le nom du fichier.")]
         [SerializeField] private string _id = "";
 
+        [Tooltip("La clé de son nom, dans la table des textes ; en attendant les noms du développeur, son métier (GDD, " +
+                 "section 6).")]
+        [SerializeField] private string _nameKey = "";
+
         [Tooltip("La sous-statistique de son métier, où il est fort en arrivant (GDD, section 6).")]
         [SerializeField] private SubStatisticDefinition _strength;
 
@@ -20,6 +24,7 @@ namespace Diciela.Data
         [SerializeField] private CharacterDefinition _character;
 
         public string Id => _id;
+        public string NameKey => _nameKey;
         public SubStatisticDefinition Strength => _strength;
         public CharacterDefinition Character => _character;
     }

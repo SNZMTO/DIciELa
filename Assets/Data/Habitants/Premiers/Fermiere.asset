@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Fermiere
   m_EditorClassIdentifier: Diciela.Data::Diciela.Data.FirstVillagerDefinition
   _id: fermiere
+  _nameKey: habitant.fermiere
   _strength: {fileID: 11400000, guid: e3b470be87051014aaebfe7dfc37139d, type: 2}
   _character: {fileID: 11400000, guid: cf1d66c452562d948bba008eac5798f8, type: 2}

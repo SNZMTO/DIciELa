@@ -13,8 +13,7 @@ namespace Diciela.Tests.PlayMode
         public bool Shown { get; private set; }
         public string Title { get; private set; } = "";
         public List<PlaceSheetLine> Lines { get; } = new List<PlaceSheetLine>();
-        public string SlotName { get; private set; } = "";
-        public string SlotHolder { get; private set; } = "";
+        public List<PlaceSheetSlot> Slots { get; } = new List<PlaceSheetSlot>();
         public List<PlaceSheetAction> Actions { get; } = new List<PlaceSheetAction>();
 
         /// <summary>Clique le bouton qui dit ce texte ; faux s'il n'y en a pas.</summary>
@@ -61,10 +60,19 @@ namespace Diciela.Tests.PlayMode
             Lines.AddRange(lines);
         }
 
-        public void ShowSlot(string name, string holder)
+        public void ShowSlots(IReadOnlyList<PlaceSheetSlot> slots)
         {
-            SlotName = name;
-            SlotHolder = holder;
+            Slots.Clear();
+            Slots.AddRange(slots);
+        }
+
+        /// <summary>Qui tient chaque poste montré, dans l'ordre.</summary>
+        public string[] Holders()
+        {
+            var holders = new string[Slots.Count];
+            for (int i = 0; i < Slots.Count; i++)
+                holders[i] = Slots[i].Holder;
+            return holders;
         }
 
         public void ShowActions(IReadOnlyList<PlaceSheetAction> actions)

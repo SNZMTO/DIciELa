@@ -20,17 +20,26 @@ namespace Diciela.Tests.EditMode
             return character;
         }
 
-        /// <summary>Un premier habitant, fort dans cette sous-statistique, avec ce personnage.</summary>
+        /// <summary>Un premier habitant, fort dans cette sous-statistique, avec ce personnage ; nom : habitant.{id}.</summary>
         public static FirstVillagerDefinition FirstVillager(string id, SubStatisticDefinition strength,
             CharacterDefinition character)
         {
             FirstVillagerDefinition first = ScriptableObject.CreateInstance<FirstVillagerDefinition>();
             var serialized = new SerializedObject(first);
             Property(serialized, "_id").stringValue = id;
+            Property(serialized, "_nameKey").stringValue = "habitant." + id;
             Property(serialized, "_strength").objectReferenceValue = strength;
             Property(serialized, "_character").objectReferenceValue = character;
             serialized.ApplyModifiedPropertiesWithoutUndo();
             return first;
+        }
+
+        /// <summary>Dit, dans ce déroulé du départ, le poste ouvert pour chaque premier habitant au campement.</summary>
+        public static void FirstVillagersSlot(OpeningDefinition opening, WorkSlotDefinition slot)
+        {
+            var serialized = new SerializedObject(opening);
+            Property(serialized, "_firstVillagersSlot").objectReferenceValue = slot;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
         }
 
         /// <summary>Dit, dans ce déroulé du départ, les premiers habitants, dans l'ordre de leur arrivée.</summary>

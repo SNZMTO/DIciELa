@@ -14,6 +14,9 @@ namespace Diciela.Data
         [Tooltip("Identifiant stable, cité par les sauvegardes ; jamais le nom du fichier.")]
         [SerializeField] private string _id = "";
 
+        [Tooltip("La clé du nom de ses habitants quand ils n'ont pas le leur (« La Chimère »), dans la table des textes.")]
+        [SerializeField] private string _nameKey = "";
+
         [Tooltip("Vitesse de marche, en mètres par seconde de temps réel : le pas naturel à l'écran (GDD, section 3).")]
         [SerializeField, Min(0.1f)] private float _walkMetersPerSecond = 1.5f;
 
@@ -48,6 +51,7 @@ namespace Diciela.Data
         [SerializeField, Min(1)] private int _carryCapacity = 5;
 
         public string Id => _id;
+        public string NameKey => _nameKey;
         public float WalkMetersPerSecond => _walkMetersPerSecond;
         public float WanderRadiusMeters => _wanderRadiusMeters;
         public float WanderMinHopMeters => _wanderMinHopMeters;
