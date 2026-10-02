@@ -49,6 +49,10 @@ namespace Diciela.Tests.EditMode
                 foreach (SubStatisticDefinition subStatistic in statistic.SubStatistics)
                     keys.Add(subStatistic.NameKey);
             }
+            keys.Add(catalog.ChimeraKind.NameKey);
+            keys.Add(catalog.VillagerKind.NameKey);
+            foreach (FirstVillagerDefinition first in catalog.Opening.FirstVillagers)
+                keys.Add(first.NameKey);
             foreach (StructureDefinition structure in catalog.AllStructures())
             {
                 foreach (WorkSlotDefinition slot in structure.WorkSlots)

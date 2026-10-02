@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Habitant
   m_EditorClassIdentifier: Diciela.Data::Diciela.Data.VillagerKindDefinition
   _id: habitant
+  _nameKey: habitant.ordinaire
   _walkMetersPerSecond: 1.5
   _wanderRadiusMeters: 6
   _wanderMinHopMeters: 2

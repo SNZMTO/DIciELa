@@ -27,3 +27,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 16c64913798399d4a8352788748253f5, type: 2}
   _firstVillagerStrength: 40
   _firstArrivalHours: 1
+  _firstVillagersSlot: {fileID: 11400000, guid: efdeee55abb7a0c408de680db580711a, type: 2}
