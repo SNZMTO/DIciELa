@@ -46,6 +46,10 @@ namespace Diciela.Data
         public const string StockTooltip = "fanion.infobulle";
         public const string GoodParameter = "{marchandise}";
 
+        // Une carte du panneau Construire (GDD, section 16) : ce qu'elle offre, ses lits ({lits} y est remplacé).
+        public const string CardBeds = "carte.lits";
+        public const string BedsParameter = "{lits}";
+
         // La journée, en haut à gauche (GDD, section 16) : son numéro ({jour} y est remplacé).
         public const string DayNumber = "journee.jour";
         public const string DayNumberParameter = "{jour}";

@@ -67,6 +67,13 @@ namespace Diciela.EditorTools
                 F("#8E5A30", 15f, 22f, 21f, 22f, 21f, 31f, 15f, 31f), F("#E98B7B", 4f, 18f, 18f, 5f, 18f, 18f),
                 F("#C9695E", 18f, 5f, 32f, 18f, 18f, 18f)
             });
+            yield return new Icon("lit", 22f, new[]
+            {
+                F("#8E5A30", 1f, 3f, 7f, 3f, 7f, 8f, 21f, 8f, 21f, 20f, 18f, 20f, 18f, 18f, 7f, 18f, 7f, 20f, 1f, 20f),
+                F("#B97B43", 2f, 4f, 6f, 4f, 6f, 19f, 2f, 19f), F("#FFF3DF", 7f, 9f, 11f, 9f, 11f, 13f, 7f, 13f),
+                F("#EAD6B7", 7f, 13f, 11f, 13f, 11f, 15f, 7f, 15f), F("#F4B9CB", 11f, 9f, 20f, 9f, 20f, 14f, 11f, 14f),
+                F("#E59AB0", 11f, 14f, 20f, 14f, 20f, 17f, 11f, 17f), F("#EAD6B7", 7f, 15f, 11f, 15f, 11f, 17f, 7f, 17f)
+            });
             yield return Sun();
             foreach (Icon work in WorkIcons.All())
                 yield return work;

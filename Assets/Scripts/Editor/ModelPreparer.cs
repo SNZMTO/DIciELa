@@ -68,17 +68,17 @@ namespace Diciela.EditorTools
                 pivot.transform.position = new Vector3(-turned.center.x, 0f, -turned.center.z);
                 Bounds box = SourceModelParts.Box(pieces);
                 Bounds doorBox = structure.HasDoor ? SourceModelParts.Box(door) : default;
-                Transform bed = SourceModelParts.Bed(pivot);
+                Transform couch = SourceModelParts.Couch(pivot);
 
                 GameObject prepared = ModelMerger.Save(structure.name, pieces, out string merge);
                 if (prepared == null)
                     return false;
-                Fill(structure, prepared, box, doorBox, bed);
+                Fill(structure, prepared, box, doorBox, couch);
                 Debug.Log("DICIELA : " + structure.Id + " préparée depuis " + structure.SourceModel.name + " : " + merge +
                           " (la version la plus détaillée de chaque pièce ; " + distant + " maillages de loin laissés) ; " +
                           "tournée de " + yaw.ToString("0") + "°, empreinte " + Meters(box.size.x) + " × " +
                           Meters(box.size.z) + " m" + (structure.HasDoor ? DoorReport(box, doorBox, door.Count) : "") +
-                          (bed != null ? BedReport(bed) : "") + ".");
+                          (couch != null ? CouchReport(couch) : "") + ".");
                 return true;
             }
             finally
@@ -108,7 +108,7 @@ namespace Diciela.EditorTools
                 return false;
             var fiche = new SerializedObject(structure);
             EditorAssets.Property(fiche, "_model").objectReferenceValue = box;
-            EditorAssets.Property(fiche, "_hasBed").boolValue = false;
+            EditorAssets.Property(fiche, "_hasCouch").boolValue = false;
             fiche.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(structure);
             Debug.Log("DICIELA : " + structure.Id + " se voit en boîte de " + Meters(structure.WidthMeters) + " × " +
@@ -122,7 +122,7 @@ namespace Diciela.EditorTools
         /// au degré) ; sans repère, pas de couche.
         /// </summary>
         private static void Fill(StructureDefinition structure, GameObject prepared, Bounds box, Bounds door,
-            Transform bed)
+            Transform couch)
         {
             var fiche = new SerializedObject(structure);
             EditorAssets.Property(fiche, "_model").objectReferenceValue = prepared;
@@ -133,13 +133,13 @@ namespace Diciela.EditorTools
                 EditorAssets.Property(fiche, "_doorOffsetMeters").floatValue = Mathf.Round(door.center.x * 100f) / 100f;
                 EditorAssets.Property(fiche, "_doorWidthMeters").floatValue = Mathf.Round(door.size.x * 100f) / 100f;
             }
-            EditorAssets.Property(fiche, "_hasBed").boolValue = bed != null;
-            if (bed != null)
+            EditorAssets.Property(fiche, "_hasCouch").boolValue = couch != null;
+            if (couch != null)
             {
-                Vector3 feet = bed.position;
-                EditorAssets.Property(fiche, "_bedFeet").vector3Value = new Vector3(Mathf.Round(feet.x * 100f) / 100f,
+                Vector3 feet = couch.position;
+                EditorAssets.Property(fiche, "_couchFeet").vector3Value = new Vector3(Mathf.Round(feet.x * 100f) / 100f,
                     Mathf.Round(feet.y * 100f) / 100f, Mathf.Round(feet.z * 100f) / 100f);
-                EditorAssets.Property(fiche, "_bedHeadingDegrees").floatValue = Mathf.Round(Heading(bed.forward));
+                EditorAssets.Property(fiche, "_couchHeadingDegrees").floatValue = Mathf.Round(Heading(couch.forward));
             }
             fiche.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(structure);
@@ -155,10 +155,10 @@ namespace Diciela.EditorTools
                    Meters(door.size.x) + " m, en retrait de " + Meters(box.max.z - door.max.z) + " m de la façade";
         }
 
-        private static string BedReport(Transform bed)
+        private static string CouchReport(Transform couch)
         {
-            return " ; couche aux pieds en (" + Meters(bed.position.x) + " ; " + Meters(bed.position.z) + ") m, à " +
-                   Meters(bed.position.y) + " m du sol, la tête vers " + Heading(bed.forward).ToString("0") + "°";
+            return " ; couche aux pieds en (" + Meters(couch.position.x) + " ; " + Meters(couch.position.z) + ") m, à " +
+                   Meters(couch.position.y) + " m du sol, la tête vers " + Heading(couch.forward).ToString("0") + "°";
         }
 
         // L'angle d'une direction sur le sol, depuis le nord vers l'est, entre 0 et 360°.
