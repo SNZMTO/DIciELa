@@ -25,19 +25,16 @@ namespace Diciela.Simulation.Society
         private readonly GroundExit _exit;
         private readonly Job _job;
 
-        internal Villager(int id, VillagerKindDefinition kind, Appearance appearance, Vector2 position, Strength strength,
-            VillagerServices services)
+        internal Villager(int id, VillagerKindDefinition kind, Appearance appearance, string nameKey, Vector2 position,
+            Strength strength, VillagerServices services)
         {
-            if (ReferenceEquals(kind, null))
-                throw new ArgumentNullException(nameof(kind));
-            if (ReferenceEquals(appearance, null))
-                throw new ArgumentNullException(nameof(appearance));
+            Id = id;
+            Kind = ReferenceEquals(kind, null) ? throw new ArgumentNullException(nameof(kind)) : kind;
+            Appearance = appearance ?? throw new ArgumentNullException(nameof(appearance));
+            NameKey = nameKey ?? "";
             if (ReferenceEquals(services, null))
                 throw new ArgumentNullException(nameof(services));
 
-            Id = id;
-            Kind = kind;
-            Appearance = appearance;
             Position = position;
             PreviousPosition = position;
             _services = services;
@@ -58,6 +55,9 @@ namespace Diciela.Simulation.Society
         public int Id { get; }
 
         public VillagerKindDefinition Kind { get; }
+
+        /// <summary>La clé de son nom dans la table des textes : le sien, ou celui de sa sorte (la Chimère).</summary>
+        public string NameKey { get; }
 
         /// <summary>Son corps, sa couleur et ses pièces : la vue l'habille ainsi.</summary>
         public Appearance Appearance { get; }

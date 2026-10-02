@@ -11,7 +11,7 @@ namespace Diciela.UI
 {
     /// <summary>
     /// La fiche du lieu touché, en haut à droite de l'écran (GDD, section 16) : un cadre de bois, le nom du lieu, ce qu'il
-    /// tient pour la ville (chaque marchandise dans un creux de lin), son poste et qui le tient, ses boutons de feutre
+    /// tient pour la ville (chaque marchandise dans un creux de lin), ses postes et qui les tient, ses boutons de feutre
     /// (chacun dans son pastel) et une croix de feutre sable. C'est la vue (le bloc « fiche » de Hud.uxml) ; son
     /// présentateur décide. Échap la ferme avant tout le reste. Ses lignes et ses boutons se refont seulement quand leur
     /// nombre change, sinon ils se remplissent sur place (le stock bouge à chaque charge prise) : un clic pendant que le
@@ -24,9 +24,7 @@ namespace Diciela.UI
         private const string TitleName = "fiche-titre";
         private const string CloseName = "fiche-fermer";
         private const string StockName = "fiche-stock";
-        private const string SlotName = "fiche-poste";
-        private const string SlotNameName = "fiche-poste-nom";
-        private const string SlotHolderName = "fiche-poste-qui";
+        private const string SlotsName = "fiche-poste";
         private const string ActionsName = "fiche-actions";
 
         private readonly List<Label> _actionTexts = new List<Label>();
@@ -35,9 +33,7 @@ namespace Diciela.UI
         private VisualElement _sheet;
         private Label _title;
         private VisualElement _stock;
-        private VisualElement _slot;
-        private Label _slotName;
-        private Label _slotHolder;
+        private VisualElement _slots;
         private VisualElement _actions;
         private FeltButton _close;
         private PlaceSheetPresenter _presenter;
@@ -59,21 +55,16 @@ namespace Diciela.UI
             var title = root.Q<Label>(TitleName);
             var close = root.Q<FeltButton>(CloseName);
             VisualElement stock = root.Q(StockName);
-            VisualElement slot = root.Q(SlotName);
-            var slotName = root.Q<Label>(SlotNameName);
-            var slotHolder = root.Q<Label>(SlotHolderName);
+            VisualElement slots = root.Q(SlotsName);
             VisualElement actions = root.Q(ActionsName);
-            if (sheet == null || title == null || close == null || stock == null || slot == null || slotName == null ||
-                slotHolder == null || actions == null)
+            if (sheet == null || title == null || close == null || stock == null || slots == null || actions == null)
                 throw new InvalidOperationException("La fiche d'un lieu ne trouve pas ses éléments (UXML).");
 
             _sheet = sheet;
             _title = title;
             _close = close;
             _stock = stock;
-            _slot = slot;
-            _slotName = slotName;
-            _slotHolder = slotHolder;
+            _slots = slots;
             _actions = actions;
             _close.Clicked += OnClose;
             _presenter = new PlaceSheetPresenter(this, world, texts);
@@ -136,11 +127,10 @@ namespace Diciela.UI
             _stock.EnableInClassList(StyleClasses.Hidden, lines.Count == 0);
         }
 
-        public void ShowSlot(string name, string holder)
+        public void ShowSlots(IReadOnlyList<PlaceSheetSlot> slots)
         {
-            _slotName.text = name;
-            _slotHolder.text = holder;
-            _slot.EnableInClassList(StyleClasses.Hidden, string.IsNullOrEmpty(name));
+            PlaceSheetElements.ShowSlots(_slots, slots);
+            _slots.EnableInClassList(StyleClasses.Hidden, slots.Count == 0);
         }
 
         public void ShowActions(IReadOnlyList<PlaceSheetAction> actions)

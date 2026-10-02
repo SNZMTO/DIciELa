@@ -42,6 +42,7 @@ namespace Diciela.Tests.EditMode.Architecture
             (typeof(Villagers), "CreateChimera"),
             (typeof(Villagers), "Arrive"),
             (typeof(Housing), "Lodge"),
+            (typeof(WorkSlots), "OpenFor"),
             (typeof(Villagers), "Step"),
             (typeof(Villagers), "DeliverEvents"),
             (typeof(Villager), "Step"),

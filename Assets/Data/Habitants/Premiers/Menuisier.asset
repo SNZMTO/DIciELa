@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Menuisier
   m_EditorClassIdentifier: Diciela.Data::Diciela.Data.FirstVillagerDefinition
   _id: menuisier
+  _nameKey: habitant.menuisier
   _strength: {fileID: 11400000, guid: 164c8621fc9df3d45932c49f7014f2ef, type: 2}
   _character: {fileID: 11400000, guid: 6ef22ddc066a18e478407878613148e7, type: 2}

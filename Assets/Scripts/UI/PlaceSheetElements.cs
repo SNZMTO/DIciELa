@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine.UIElements;
 
@@ -6,8 +7,8 @@ namespace Diciela.UI
 {
     /// <summary>
     /// Les éléments que la fiche d'un lieu range (GDD, section 16) : une ligne de son contenu (un creux de lin, l'icône de
-    /// la marchandise, son nom, combien) et un bouton (un feutre cousu, sa phrase), avec les classes de Fusion.uss et de
-    /// Hud.uss. La fiche les place et les remplit.
+    /// la marchandise, son nom, combien), ses postes (le nom d'un poste, puis qui le tient) et un bouton (un feutre cousu,
+    /// sa phrase), avec les classes de Fusion.uss et de Hud.uss. La fiche les place et les remplit.
     /// </summary>
     internal static class PlaceSheetElements
     {
@@ -17,6 +18,8 @@ namespace Diciela.UI
         private const string CountClass = "nombre";
         private static readonly string[] ActionClasses = { "feutre", "pan-10", "couture", "fiche-bouton" };
         private const string ActionTextClass = "action";
+        private const string SlotNameClass = "nom";
+        private const string SlotHolderClass = "sous-titre";
 
         /// <summary>Une ligne du contenu : l'icône de la marchandise, son nom, combien.</summary>
         public static VisualElement Line(PlaceSheetLine line)
@@ -47,6 +50,51 @@ namespace Diciela.UI
             row[0].style.backgroundImage = image != null
                 ? new StyleBackground(Background.FromVectorImage(image))
                 : new StyleBackground(StyleKeyword.Null);
+        }
+
+        /// <summary>
+        /// Écrit les postes du lieu dans ce bloc : le nom d'un poste une fois pour des postes pareils qui se suivent, puis
+        /// qui tient chacun. Le bloc ne se refait que si ses postes changent ; sinon, qui les tient s'écrit sur place.
+        /// </summary>
+        public static void ShowSlots(VisualElement block, IReadOnlyList<PlaceSheetSlot> slots)
+        {
+            if (!HasTheShapeOf(block, slots))
+                block.Clear();
+            int child = 0;
+            for (int i = 0; i < slots.Count; i++)
+            {
+                if (i == 0 || slots[i].Name != slots[i - 1].Name)
+                {
+                    if (child == block.childCount)
+                        block.Add(Styled.Text(slots[i].Name, SlotNameClass));
+                    child++;
+                }
+                if (child == block.childCount)
+                    block.Add(Styled.Text(slots[i].Holder, SlotHolderClass));
+                else if (((Label)block[child]).text != slots[i].Holder)
+                    ((Label)block[child]).text = slots[i].Holder;
+                child++;
+            }
+        }
+
+        // Vrai si le bloc montre déjà ces postes : les mêmes noms aux mêmes places, autant de lignes.
+        private static bool HasTheShapeOf(VisualElement block, IReadOnlyList<PlaceSheetSlot> slots)
+        {
+            int child = 0;
+            for (int i = 0; i < slots.Count; i++)
+            {
+                if (i == 0 || slots[i].Name != slots[i - 1].Name)
+                {
+                    if (child >= block.childCount || !block[child].ClassListContains(SlotNameClass) ||
+                        ((Label)block[child]).text != slots[i].Name)
+                        return false;
+                    child++;
+                }
+                if (child >= block.childCount || !block[child].ClassListContains(SlotHolderClass))
+                    return false;
+                child++;
+            }
+            return child == block.childCount;
         }
 
         /// <summary>Un bouton, sans pastel ni phrase encore ; clicked est appelé quand on le clique.</summary>

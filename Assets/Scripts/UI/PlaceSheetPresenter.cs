@@ -11,9 +11,9 @@ namespace Diciela.UI
     /// <summary>
     /// Le présentateur de la fiche d'un lieu (GDD, section 16 ; décisions 141, 152 et 172) : toucher un lieu qui a un
     /// poste ou un stock, ou le logis de la Chimère, ouvre sa fiche, qui remplace celle qui était ouverte ; toucher autre
-    /// chose, ou rien, la ferme, comme la croix et Échap. La fiche dit le nom du lieu, ce qu'il tient pour la ville, son
-    /// poste et qui le tient, et ses boutons (PlaceSheetActions) : la Chimère au poste, et au lit dans son logis. Il écoute
-    /// les stocks, la table des postes et le sommeil de la Chimère : la fiche ne photographie jamais.
+    /// chose, ou rien, la ferme, comme la croix et Échap. La fiche dit le nom du lieu, ce qu'il tient pour la ville, ses
+    /// postes et qui les tient, chacun par son nom (décision 189), et ses boutons (PlaceSheetActions) : la Chimère au poste,
+    /// et au lit dans son logis. Il écoute les stocks, la table des postes et le sommeil : la fiche ne photographie jamais.
     /// </summary>
     public sealed class PlaceSheetPresenter : IDisposable
     {
@@ -21,6 +21,7 @@ namespace Diciela.UI
         private readonly World _world;
         private readonly TextTable _texts;
         private readonly List<PlaceSheetLine> _lines = new List<PlaceSheetLine>();
+        private readonly List<PlaceSheetSlot> _slots = new List<PlaceSheetSlot>();
         private readonly PlaceSheetActions _actions;
 
         public PlaceSheetPresenter(IPlaceSheetView view, World world, TextTable texts)
@@ -107,33 +108,21 @@ namespace Diciela.UI
             }
             _view.ShowStock(_lines);
 
-            Villager chimera = _world.Villagers.Chimera;
-            WorkSlot slot = ShownSlot(chimera);
-            if (slot == null)
-                _view.ShowSlot("", "");
-            else
-                _view.ShowSlot(_texts.Get(slot.Definition.NameKey), HolderOf(slot, chimera));
-            _view.ShowActions(_actions.For(Place, slot));
-        }
-
-        private string HolderOf(WorkSlot slot, Villager chimera)
-        {
-            if (slot.Holder == null)
-                return _texts.Get(TextKeys.SheetFreeSlot);
-            return ReferenceEquals(slot.Holder, chimera) ? _texts.Get(TextKeys.SheetChimera) : "";
-        }
-
-        /// <summary>Le poste que la fiche montre : celui que la Chimère tient ici, sinon le premier du lieu.</summary>
-        private WorkSlot ShownSlot(Villager chimera)
-        {
-            if (chimera != null && PlaceSheetActions.IsHere(chimera, Place))
-                return chimera.Slot;
-            foreach (WorkSlot slot in _world.WorkSlots.All)
+            // Les postes du lieu, dans l'ordre où ils se sont ouverts : le sien d'abord, puis ceux ouverts pour qui arrive.
+            _slots.Clear();
+            WorkSlot first = null;
+            IReadOnlyList<WorkSlot> all = _world.WorkSlots.All;
+            for (int i = 0; i < all.Count; i++)
             {
-                if (ReferenceEquals(slot.Workplace, Place))
-                    return slot;
+                WorkSlot slot = all[i];
+                if (!ReferenceEquals(slot.Workplace, Place))
+                    continue;
+                first ??= slot;
+                _slots.Add(new PlaceSheetSlot(_texts.Get(slot.Definition.NameKey),
+                    _texts.Get(slot.Holder == null ? TextKeys.SheetFreeSlot : slot.Holder.NameKey)));
             }
-            return null;
+            _view.ShowSlots(_slots);
+            _view.ShowActions(_actions.For(Place, first));
         }
 
         private void OnActionClicked(int index)

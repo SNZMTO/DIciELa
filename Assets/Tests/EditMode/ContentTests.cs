@@ -84,7 +84,7 @@ namespace Diciela.Tests.EditMode
             {
                 TextKeys.CreationTitle, TextKeys.CreationHead, TextKeys.CreationBody, TextKeys.CreationNone,
                 TextKeys.CreationConfirm, TextKeys.DayNumber, TextKeys.SheetPutChimera, TextKeys.SheetRemoveChimera,
-                TextKeys.SheetChimera, TextKeys.SheetFreeSlot, TextKeys.SheetSleep, TextKeys.SheetWake,
+                TextKeys.SheetFreeSlot, TextKeys.SheetSleep, TextKeys.SheetWake,
                 TextKeys.StockTooltip, TextKeys.TipCamp, TextKeys.TipPost, TextKeys.TipCabin, TextKeys.BuildTool,
                 TextKeys.BuildToolDetail, TextKeys.ClearingTool, TextKeys.ClearingToolDetail, TextKeys.ToolsTooltip,
                 TextKeys.ToolsTooltipDetail, TextKeys.CardBeds

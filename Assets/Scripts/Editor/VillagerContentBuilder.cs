@@ -8,9 +8,9 @@ namespace Diciela.EditorTools
     /// <summary>
     /// Crée ce qui manque des habitants ordinaires (GDD, sections 5, 6 et 16 ; décision 187) : les dix humains du pack,
     /// chacun tel quel (Assets/Data/Apparence/Humains) ; la sorte des habitants (de 5 à 20 en arrivant, ils rentrent
-    /// dormir la nuit) ; les quatre premiers habitants, dans l'ordre de leur arrivée, chacun fort dans son métier et avec
-    /// son humain : le bâtisseur, la fermière, la charretière, le menuisier. Leurs humains sont une reco, à choisir sur la
-    /// planche des humains. Réexécutable : une fiche qui existe n'est jamais touchée.
+    /// dormir la nuit) ; les quatre premiers habitants, dans l'ordre de leur arrivée, chacun fort dans son métier, avec
+    /// son humain (décision 188) et, pour nom, son métier : le bâtisseur, la fermière, la charretière, le menuisier.
+    /// Réexécutable : une fiche qui existe n'est jamais touchée.
     /// </summary>
     internal static class VillagerContentBuilder
     {
@@ -65,6 +65,7 @@ namespace Diciela.EditorTools
             VillagerKindDefinition kind = EditorAssets.CreateIfMissing<VillagerKindDefinition>(KindPath, fiche =>
             {
                 EditorAssets.Property(fiche, "_id").stringValue = "habitant";
+                EditorAssets.Property(fiche, "_nameKey").stringValue = "habitant.ordinaire";
                 EditorAssets.Property(fiche, "_startingStatisticMin").floatValue = 5f;
                 EditorAssets.Property(fiche, "_startingStatisticMax").floatValue = 20f;
                 EditorAssets.Property(fiche, "_sleepsAtNight").boolValue = true;
@@ -76,6 +77,7 @@ namespace Diciela.EditorTools
                     fiche =>
                     {
                         EditorAssets.Property(fiche, "_id").stringValue = file.ToLowerInvariant();
+                        EditorAssets.Property(fiche, "_nameKey").stringValue = "habitant." + file.ToLowerInvariant();
                         EditorAssets.Property(fiche, "_strength").objectReferenceValue = SubStatistic(statistics, strength);
                         EditorAssets.Property(fiche, "_character").objectReferenceValue = humans[human];
                     }));

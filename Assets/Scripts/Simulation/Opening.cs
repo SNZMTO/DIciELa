@@ -9,13 +9,15 @@ using UnityEngine;
 namespace Diciela.Simulation
 {
     /// <summary>
-    /// Le déroulé du départ (GDD, section 6 ; décisions 172 et 187) : ce qui se passe de soi-même au début d'une partie.
+    /// Le déroulé du départ (GDD, section 6 ; décisions 172, 187 et 189) : ce qui se passe de soi-même au début d'une partie.
     /// Le premier logis de la Chimère qui tient les marchandises de la ville, le campement, reçoit le stock de départ à
     /// sa mise en service, une seule fois par partie : le bilan des marchandises le dit, rien d'autre ne le retient. Puis
     /// les premiers habitants arrivent, dans l'ordre du déroulé, un par un : chacun quand une maison bâtie a un lit
     /// libre, jamais la nuit (GDD, section 3), au moins tant d'heures après le précédent ; il arrive au point d'arrivée de
-    /// la carte, fort dans son métier, et reçoit le lit libre le plus proche de là. Où en est le déroulé appartient au
-    /// monde (ARCHITECTURE, section 4). Un catalogue sans déroulé du départ, ou sans sorte d'habitant, n'en fait rien.
+    /// la carte, fort dans son métier, et prend le poste « à tout faire » ouvert pour lui au logis de la Chimère (GDD,
+    /// section 7), et le lit libre le plus proche de ce poste (GDD, section 4) ; sans logis de la Chimère, pas de poste,
+    /// et le lit le plus proche de là où il arrive. Où en est le déroulé appartient au monde (ARCHITECTURE, section 4).
+    /// Un catalogue sans déroulé du départ, ou sans sorte d'habitant, n'en fait rien.
     /// </summary>
     internal sealed class Opening
     {
@@ -56,14 +58,17 @@ namespace Diciela.Simulation
                 world.Clock.StepCount < _nextArrivalStep)
                 return;
             Vector2 at = world.Map.ArrivalPoint;
-            Structure house = world.Housing.NearestWithAFreeBed(at);
+            Structure post = ReferenceEquals(_definition.FirstVillagersSlot, null) ? null : world.Structures.ChimeraHome;
+            Structure house = world.Housing.NearestWithAFreeBed(post == null ? at : post.Placement.Center);
             if (house == null)
                 return;
 
             FirstVillagerDefinition first = firsts[_nextFirstVillager++];
-            Villager villager = world.Villagers.Arrive(_villagerKind, new Appearance(first.Character), at,
+            Villager villager = world.Villagers.Arrive(_villagerKind, new Appearance(first.Character), first.NameKey, at,
                 new Strength(first.Strength, _definition.FirstVillagerStrength));
             world.Housing.Lodge(villager, house);
+            if (post != null)
+                world.WorkSlots.OpenFor(villager, post, _definition.FirstVillagersSlot);
             _nextArrivalStep = world.Clock.StepCount + world.Clock.StepsIn(_definition.FirstArrivalHours);
         }
     }

@@ -31,7 +31,7 @@ namespace Diciela.UI
             _sleepClick = OnSleepClicked;
         }
 
-        /// <summary>Les boutons de ce lieu, dont la fiche montre ce poste (null : aucun).</summary>
+        /// <summary>Les boutons de ce lieu, dont voici un poste (null : il n'en a aucun).</summary>
         public IReadOnlyList<PlaceSheetAction> For(Structure place, WorkSlot slot)
         {
             _place = place;

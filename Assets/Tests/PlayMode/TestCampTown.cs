@@ -12,8 +12,9 @@ namespace Diciela.Tests.PlayMode
     /// Le petit monde des tests de l'interface du campement : plat, 40 × 40 m (ou la carte donnée), la Chimère née au
     /// centre (sauf si le test la crée lui-même) ; le Bois et la Pierre ; un campement de 3 × 3 m qui tient 100
     /// marchandises et ouvre le poste « à tout faire » (porter, puis défricher) ; le déroulé du départ, qui lui donne
-    /// 30 Bois et 20 Pierre quand on l'installe, et qui sait bâtir le campement et ce que le test y ajoute. Les fiches
-    /// sont remplies par SerializedObject, le chemin de l'Inspector, et détruites avec lui.
+    /// 30 Bois et 20 Pierre quand on l'installe, qui sait bâtir le campement et ce que le test y ajoute, et fait arriver
+    /// un premier habitant, le bâtisseur, dès qu'une maison a un lit (aucune n'en a, sauf celle que le test demande).
+    /// Les fiches sont remplies par SerializedObject, le chemin de l'Inspector, et détruites avec lui.
     /// </summary>
     internal sealed class TestCampTown : IDisposable
     {
@@ -49,6 +50,16 @@ namespace Diciela.Tests.PlayMode
             TestWorld.FillList(Catalog, "_statistics", trade, land);
             _kind = Keep(ScriptableObject.CreateInstance<VillagerKindDefinition>());
             TestWorld.Fill(_kind, "_id", "chimere");
+            TestWorld.Fill(_kind, "_nameKey", "habitant.chimere");
+            var ordinary = Keep(ScriptableObject.CreateInstance<VillagerKindDefinition>());
+            TestWorld.Fill(ordinary, "_nameKey", "habitant.ordinaire");
+            TestWorld.Fill(Catalog, "_villagerKind", ordinary);
+            var builder = Keep(ScriptableObject.CreateInstance<FirstVillagerDefinition>());
+            TestWorld.Fill(builder, "_nameKey", "habitant.batisseur");
+            TestWorld.Fill(builder, "_strength", transport);
+            TestWorld.Fill(builder, "_character", Keep(ScriptableObject.CreateInstance<CharacterDefinition>()));
+            TestWorld.FillList(_opening, "_firstVillagers", builder);
+            TestWorld.Fill(_opening, "_firstVillagersSlot", slot);
             Camp = KeepKnown(ScriptableObject.CreateInstance<StructureDefinition>());
             TestWorld.Fill(Camp, "_id", "campement");
             TestWorld.Fill(Camp, "_nameKey", "construction.campement");
@@ -64,6 +75,17 @@ namespace Diciela.Tests.PlayMode
 #endif
             if (withChimera)
                 CreateTheChimera();
+        }
+
+        /// <summary>Une maison d'un lit, dressée dès la pose, que la ville sait bâtir : posée, le bâtisseur arrive.</summary>
+        public StructureDefinition HouseWithABed()
+        {
+            StructureDefinition house = KeepKnown(ScriptableObject.CreateInstance<StructureDefinition>());
+#if UNITY_EDITOR
+            TestWorld.Fill(house, "_builtWhenPlaced", true);
+            TestWorld.Fill(house, "_beds", 1);
+#endif
+            return house;
         }
 
         /// <summary>Crée la Chimère par son ordre, au centre de la carte.</summary>
