@@ -82,7 +82,7 @@ namespace Diciela.Tests.PlayMode
                             yield return null;
                             TextTable texts = TextTable.Parse(settings.Texts.text, settings.Language);
                             var tooltips = new Tooltips(document);
-                            bar.Show(catalog, texts, world.Tool, world.World);
+                            bar.Show(catalog, texts, world.Tool, world.World, new FixedToolKeys());
                             bar.Open();
                             wheel.Show(texts, new FixedToolKeys(), world.Clearing, bar, tooltips);
                             day.Show(world.World.Clock, texts, tooltips);
