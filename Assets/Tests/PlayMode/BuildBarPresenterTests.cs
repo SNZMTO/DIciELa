@@ -42,7 +42,8 @@ namespace Diciela.Tests.PlayMode
             TestWorld.FillList(catalog, "_families", housing, decor);
 #endif
             _view = new NotedBuildBarView();
-            _presenter = new BuildBarPresenter(_view, catalog, TextTable.Parse(Texts, "fr"), _test.Tool, _test.World);
+            _presenter = new BuildBarPresenter(_view, catalog, TextTable.Parse(Texts, "fr"), _test.Tool, _test.World,
+                new FixedToolKeys());
         }
 
         [TearDown]
@@ -151,6 +152,30 @@ namespace Diciela.Tests.PlayMode
 
             Assert.IsTrue(_presenter.Escape());
             Assert.IsFalse(_view.IsShownOpen);
+        }
+
+        [Test]
+        public void EachCardCarriesItsKey()
+        {
+            Assert.AreEqual(new[] { "1" }, _view.Keys, "La cabane, première carte du Logement : la touche 1.");
+
+            _view.Open(1);
+            Assert.AreEqual(new[] { "1" }, _view.Keys, "Le banc, première carte du Décor.");
+        }
+
+        [Test]
+        public void AKeyTakesItsCardOnlyWhenThePanelIsOpen()
+        {
+            _presenter.TakeCard(0);
+            Assert.IsNull(_test.Tool.Current, "Panneau fermé, la touche ne prend rien.");
+
+            _presenter.Open();
+            _presenter.TakeCard(1);
+            Assert.IsNull(_test.Tool.Current, "Pas de deuxième carte au Logement.");
+
+            _presenter.TakeCard(0);
+            Assert.AreSame(_test.Cabin, _test.Tool.Current, "La touche 1 prend la cabane, comme un clic.");
+            Assert.IsFalse(_view.IsShownOpen, "Et le panneau se ferme.");
         }
 
         [Test]

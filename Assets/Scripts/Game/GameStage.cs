@@ -102,7 +102,7 @@ namespace Diciela.Game
             _placementControls.Bind(null, null);
             _chooseControls.Bind(null, null, null);
             _clearingControls.Bind(null, null, null);
-            _toolControls.Bind(null);
+            _toolControls.Bind(null, null);
             _escapeControls.Bind();
             _hand?.Dispose();
             _hand = null;
@@ -172,7 +172,7 @@ namespace Diciela.Game
             _hand = new Hand(_placementTool, _clearingTool);
             var document = _buildBar.GetComponent<UnityEngine.UIElements.UIDocument>();
             _tooltips = new Tooltips(document);
-            _buildBar.Show(catalog, texts, _placementTool, world);
+            _buildBar.Show(catalog, texts, _placementTool, world, _toolControls);
             _toolWheel.Show(texts, _toolControls, _clearingTool, _buildBar, _tooltips);
             _dayBoard.Show(world.Clock, texts, _tooltips);
             _stockPennants.Show(world, catalog, texts, _tooltips);
@@ -186,7 +186,7 @@ namespace Diciela.Game
             _selectionFrame = new SelectionFrame(document);
             _clearingControls.Bind(_clearingTool, _selectionFrame, hud);
             _chooseControls.Bind(_chooseTool, _hand, hud);
-            _toolControls.Bind(_toolWheel);
+            _toolControls.Bind(_toolWheel, _buildBar);
             _escapeControls.Bind(_placeSheet, _toolWheel, _buildBar, _placementTool, _clearingTool);
         }
     }

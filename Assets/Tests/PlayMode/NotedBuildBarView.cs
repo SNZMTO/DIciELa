@@ -14,6 +14,7 @@ namespace Diciela.Tests.PlayMode
 
         public List<string> Families { get; } = new List<string>();
         public List<string> Structures { get; } = new List<string>();
+        public List<string> Keys { get; } = new List<string>();
         public bool IsShownOpen { get; private set; }
         public int OpenFamily { get; private set; } = -1;
         public int Selected { get; private set; } = -1;
@@ -45,8 +46,12 @@ namespace Diciela.Tests.PlayMode
         public void ShowStructures(IReadOnlyList<BuildBarCard> cards)
         {
             Structures.Clear();
+            Keys.Clear();
             foreach (BuildBarCard card in cards)
+            {
                 Structures.Add(card.Name);
+                Keys.Add(card.Key);
+            }
         }
 
         public void SelectStructure(int index)

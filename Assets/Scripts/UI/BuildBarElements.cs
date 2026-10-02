@@ -8,8 +8,9 @@ namespace Diciela.UI
 {
     /// <summary>
     /// Les éléments que la barre de construction range (GDD, section 16) : l'onglet d'une famille (son pastel, son icône,
-    /// son nom) et la carte d'une construction (sa vignette, son nom, ce qu'elle coûte), en feutre, avec les classes de
-    /// Fusion.uss et de Hud.uss. La barre les place et dit lesquels sont enfoncés.
+    /// son nom) et la carte d'une construction (sa vignette, son nom, ce qu'elle coûte, sa touche sur une étiquette de lin,
+    /// comme les outils de la roue), en feutre, avec les classes de Fusion.uss et de Hud.uss. La barre les place et dit
+    /// lesquels sont enfoncés.
     /// </summary>
     internal static class BuildBarElements
     {
@@ -23,6 +24,8 @@ namespace Diciela.UI
         private static readonly string[] CostClasses = { "cout", "carte-cout" };
         private const string CostLineClass = "carte-cout-ligne";
         private const string CostIconClass = "carte-cout-icone";
+        private static readonly string[] KeyClasses = { "creux", "pan-4", "touche" };
+        private const string KeyTextClass = "touche-texte";
 
         /// <summary>L'onglet d'une famille, dans son pastel ; clicked est appelé quand on le clique.</summary>
         public static FeltButton Tab(BuildBarFamily family, Action clicked)
@@ -51,6 +54,12 @@ namespace Diciela.UI
             button.Add(Styled.Text(card.Name, CardNameClasses));
             if (card.Cost != null && card.Cost.Count > 0)
                 button.Add(Cost(card.Cost));
+            if (!string.IsNullOrEmpty(card.Key))
+            {
+                Facet key = Styled.With(new Facet { pickingMode = PickingMode.Ignore }, KeyClasses);
+                key.Add(Styled.Text(card.Key, KeyTextClass));
+                button.Add(key);
+            }
             return button;
         }
 

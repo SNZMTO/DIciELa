@@ -625,7 +625,9 @@
   chacune de son pastel avec son icône, et au-dessus de l'onglet ouvert, ses constructions en cartes : la vignette de
   la construction (une photo de son modèle), son nom et ce qu'elle coûte (chaque marchandise, son icône et combien) ;
   ce qu'elle offre (des lits) s'y ajoutera avec eux. L'onglet ouvert et la carte en main restent enfoncés. Prendre une
-  carte ferme le panneau, pour dégager la vue pendant la pose.
+  carte ferme le panneau, pour dégager la vue pendant la pose. Panneau ouvert, une touche prend sa carte dans la
+  famille ouverte, comme un clic ; chaque carte porte sa touche, écrite sur elle comme celle d'un outil de la roue.
+- **Défaut.** Les cartes : les touches 1 à 9, de gauche à droite.
 - **Règle.** La journée montre le jour, sa phase et une jauge : le travail, la soirée et la nuit hachurée, chacun à
   sa part de la journée ; ce qui est passé est plus sombre ; un repère marque l'heure.
 - **Règle.** L'interface se lit à toutes les tailles d'écran. Elle grossit avec la hauteur de l'écran, à partir d'une
@@ -666,8 +668,8 @@
   on valide) et une phrase du jeu, qui dit quoi faire ensuite au début d'une partie : installer le campement, puis y
   mettre la Chimère, puis poser une première construction à bâtir ; ensuite, elle se tait. C'est le jeu qui parle.
 - **À toi.** La voix de la Chimère (ses répliques), avec son histoire.
-- **À toi.** Les questions ouvertes du HUD. Mes recos : les touches 1 à 9 prennent les cartes de la famille ouverte ;
-  chaque famille reçoit un pastel libre, dans l'ordre ; le bandeau de brique montre les animaux du pack.
+- **À toi.** Les questions ouvertes du HUD. Mes recos : chaque famille reçoit un pastel libre, dans l'ordre ; le
+  bandeau de brique montre les animaux du pack.
 
 ## 17. Le premier jouable
 

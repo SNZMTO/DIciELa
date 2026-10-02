@@ -5,11 +5,12 @@ using UnityEngine.InputSystem;
 namespace Diciela.Controls
 {
     /// <summary>
-    /// Les gestes des outils (GDD, section 16 ; décision 168) : tenir la touche de la roue l'ouvre autour du pointeur et
-    /// la fait suivre où il vise, image après image ; la relâcher choisit. La touche d'un outil le choisit tout droit :
-    /// chacun a la sienne, dans la table des outils (ToolAction). Les touches se lisent sur l'asset d'actions, d'où la
-    /// roue tire aussi leurs noms. Il lit les actions et parle à la roue, rien d'autre ; il passe après la caméra
-    /// (ordre 100), comme les autres gestes.
+    /// Les gestes des outils (GDD, section 16 ; décisions 168 et 184) : tenir la touche de la roue l'ouvre autour du
+    /// pointeur et la fait suivre où il vise, image après image ; la relâcher choisit. La touche d'un outil le choisit
+    /// tout droit : chacun a la sienne, dans la table des outils (ToolAction). Les touches 1 à 9 prennent les cartes du
+    /// panneau Construire ouvert. Les touches se lisent sur l'asset d'actions, d'où la roue et les cartes tirent aussi
+    /// leurs noms. Il lit les actions et parle à la roue et aux cartes, rien d'autre ; il passe après la caméra (ordre
+    /// 100), comme les autres gestes.
     /// </summary>
     [DefaultExecutionOrder(100)]
     public sealed class ToolControls : MonoBehaviour, IToolKeys
@@ -18,22 +19,35 @@ namespace Diciela.Controls
         public const string WheelAction = "Wheel";
         public const string PointerAction = "Pointer";
 
+        /// <summary>Le nombre de cartes qu'une touche prend : de 1 à 9.</summary>
+        public const int CardKeys = 9;
+
         [Tooltip("L'asset d'actions du jeu (Assets/Input).")]
         [SerializeField] private InputActionAsset _actions;
 
         private IToolWheel _wheel;
+        private ICardPicker _cards;
         private InputActionMap _map;
         private InputAction _wheelKey;
         private InputAction _pointer;
         private InputAction[] _tools;
         private Action<InputAction.CallbackContext>[] _chosen;
+        private InputAction[] _cardKeys;
+        private Action<InputAction.CallbackContext>[] _taken;
         private bool _held;
 
-        /// <summary>Relie les gestes à la roue de la ville qui vient de s'ouvrir ; null les rend muets.</summary>
-        public void Bind(IToolWheel wheel)
+        /// <summary>Relie les gestes à la roue et aux cartes de la ville qui vient de s'ouvrir ; null les rend muets.</summary>
+        public void Bind(IToolWheel wheel, ICardPicker cards)
         {
             _wheel = wheel;
+            _cards = cards;
             _held = false;
+        }
+
+        /// <summary>Le nom, dans la carte « Tools », de l'action qui prend la carte de ce rang (0 : « Card1 »).</summary>
+        public static string CardAction(int index)
+        {
+            return "Card" + (index + 1);
         }
 
         public string WheelKey => Key(WheelAction);
@@ -41,6 +55,11 @@ namespace Diciela.Controls
         public string KeyOf(ToolChoice choice)
         {
             return Key(ToolAction.Of(choice).Name);
+        }
+
+        public string KeyOfCard(int index)
+        {
+            return index >= 0 && index < CardKeys ? Key(CardAction(index)) : "";
         }
 
         private void OnEnable()
@@ -67,6 +86,15 @@ namespace Diciela.Controls
                 _chosen[i] = _ => _wheel?.Choose(choice);
                 _tools[i].performed += _chosen[i];
             }
+            _cardKeys = new InputAction[CardKeys];
+            _taken = new Action<InputAction.CallbackContext>[CardKeys];
+            for (int i = 0; i < CardKeys; i++)
+            {
+                int index = i;
+                _cardKeys[i] = _map.FindAction(CardAction(i), true);
+                _taken[i] = _ => _cards?.TakeCard(index);
+                _cardKeys[i].performed += _taken[i];
+            }
             _map.Enable();
         }
 
@@ -78,6 +106,8 @@ namespace Diciela.Controls
             _wheelKey.canceled -= OnWheelReleased;
             for (int i = 0; i < _tools.Length; i++)
                 _tools[i].performed -= _chosen[i];
+            for (int i = 0; i < _cardKeys.Length; i++)
+                _cardKeys[i].performed -= _taken[i];
             _map.Disable();
             _map = null;
             _held = false;
