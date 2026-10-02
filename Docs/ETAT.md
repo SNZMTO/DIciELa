@@ -6,16 +6,16 @@ l'album (Unity doit avoir le focus pour que le Play avance : je ne le prends jam
 
 **Fait** : 23 à 36, vus en Play le 02/10 ; 37, le travail des premiers habitants (189) ; 38, leurs idées, la loge et
 l'entrepôt en boîtes (190) ; 39, leur lieu bâti (191) ; 40, la Place (192) : 12 × 12 m, 5 Bois et 10 Pierre, sue au
-départ, première carte des Métiers (l'onglet paraît dès le campement), en sol plat beige ; on y marche dès sa pose,
-une porte s'ouvre dessus, elle s'étend devant une porte, on la bâtit depuis son bord. **EditMode 214/214, PlayMode
-189/189.**
+départ, première carte des Métiers, en sol plat beige ; on y marche dès sa pose, une porte s'ouvre dessus, elle
+s'étend devant une porte, on la bâtit depuis son bord. **EditMode 214/214, PlayMode 189/189.**
 
 **À vérifier par toi, à la souris** : la Chimère réveillée en chemin flâne devant sa porte ; un Tab bref ne choisit
 rien ; un clic à côté de la roue la ferme ; 1 met la cabane en main ; les cartes ; la Place devant une porte.
 
-**Prochaine étape, 41 : l'étal** (GDD 11), à cadrer avec toi ; puis les visiteurs, le troc et la réputation (42-43).
-À trancher : l'étal fait-il partie de la Place (ses niveaux), ou se pose-t-il dessus (rien ne chevauche un sol, pour
-l'instant) ? Et où le marchand se tient pour y travailler : les abords de la Place sont autour d'elle.
+**Prochaine étape : un ménage** (le dernier date de l'étape 32) : la société, que 36 à 39 ont fait grandir (le déroulé
+du départ, les postes, les logements, les habitants), relue en entier, sans agent. **Puis 41, l'étal** (GDD 11), et les
+visiteurs, le troc et la réputation (42-43). À trancher pour 41 : l'étal fait-il partie de la Place (ma reco) ou se
+pose-t-il dessus ? Et où le marchand se tient pour y travailler : les abords de la Place sont autour d'elle.
 
 **À toi** : peindre la carte, ranger tes modèles (`Assets/Data/Nature`) ; composer la Place (ma reco : la peindre dans
 le sol, comme les routes, pour suivre la pente ; GDD 11) et sa famille (ma reco appliquée : les Métiers ; GDD 16) ; les
