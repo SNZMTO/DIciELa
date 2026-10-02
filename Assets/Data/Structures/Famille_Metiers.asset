@@ -17,5 +17,6 @@ MonoBehaviour:
   _pastel: 6
   _icon: {fileID: 11400000, guid: 14476056870a2da4da7294b34514e74f, type: 2}
   _structures:
+  - {fileID: 11400000, guid: 6d7e922ae6a948a4aa7323b41fb35ac4, type: 2}
   - {fileID: 11400000, guid: 06ee19833c49080419ee2e321ae5f77e, type: 2}
   - {fileID: 11400000, guid: 667ec4009034fee4fa4046ebb9e0f940, type: 2}

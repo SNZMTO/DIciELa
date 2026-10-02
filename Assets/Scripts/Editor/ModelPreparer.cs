@@ -98,8 +98,8 @@ namespace Diciela.EditorTools
         }
 
         /// <summary>
-        /// Sans modèle du pack, la construction se voit en boîte à la taille de sa fiche (GDD, section 16) : la fiche fait
-        /// foi, et la boîte la suit.
+        /// Sans modèle du pack, la construction se voit en boîte à la taille de sa fiche, ou en sol plat si on la traverse
+        /// (GDD, section 16) : la fiche fait foi, et le remplaçant la suit.
         /// </summary>
         private static bool PrepareBox(StructureDefinition structure)
         {
@@ -111,7 +111,8 @@ namespace Diciela.EditorTools
             EditorAssets.Property(fiche, "_hasCouch").boolValue = false;
             fiche.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(structure);
-            Debug.Log("DICIELA : " + structure.Id + " se voit en boîte de " + Meters(structure.WidthMeters) + " × " +
+            string shape = structure.IsWalkable ? " se voit en sol plat de " : " se voit en boîte de ";
+            Debug.Log("DICIELA : " + structure.Id + shape + Meters(structure.WidthMeters) + " × " +
                       Meters(structure.DepthMeters) + " m, à la taille de sa fiche, en attendant son modèle : " + merge +
                       ".");
             return true;

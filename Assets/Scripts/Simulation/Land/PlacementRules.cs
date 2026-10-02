@@ -8,9 +8,11 @@ namespace Diciela.Simulation.Land
     /// <summary>
     /// Les règles de pose (GDD, sections 2, 9 et 13) : une construction que la ville sait bâtir, et unique, pas encore
     /// posée ; dans la carte, sur un sol assez plat, sans rien recouvrir, sans se poser devant une porte, et la sienne
-    /// dégagée. Une seule fonction répond, pour l'aperçu comme pour l'ordre. Les règles disent aussi quel sol une
-    /// construction occupe (son empreinte) et lequel elle garde libre (le devant de sa porte). Elles lisent le maillage,
-    /// le relief, les constructions posées et le savoir de la ville, sans rien changer ; les constructions les créent.
+    /// dégagée. Un sol qu'on traverse (la Place ; décision 192) s'étend devant une porte sans la boucher, et une
+    /// porte s'ouvre sur lui. Une seule fonction répond, pour l'aperçu comme pour l'ordre. Les règles disent aussi quel
+    /// sol une construction occupe (son empreinte) et lequel elle garde libre (le devant de sa porte). Elles lisent le
+    /// maillage, le relief, les constructions posées et le savoir de la ville, sans rien changer ; les constructions les
+    /// créent.
     /// </summary>
     public sealed class PlacementRules
     {
@@ -67,10 +69,10 @@ namespace Diciela.Simulation.Land
             if (IsTooSteep(footprint))
                 return PlacementResult.TooSteep;
 
-            PlacementResult onTheGround = CheckFootprintCells(footprint);
+            PlacementResult onTheGround = CheckFootprintCells(definition, footprint);
             if (onTheGround != PlacementResult.Ok)
                 return onTheGround;
-            if (definition.HasDoor && IsOccupied(Doorway(definition, placement)))
+            if (definition.HasDoor && !IsWalkable(Doorway(definition, placement)))
                 return PlacementResult.DoorBlocked;
             return PlacementResult.Ok;
         }
@@ -127,10 +129,11 @@ namespace Diciela.Simulation.Land
         }
 
         /// <summary>
-        /// Une empreinte ne recouvre ni une autre construction, ni un arbre ou un rocher, ni le devant d'une porte. Une
-        /// construction dessous l'emporte : retirer l'arbre n'y changerait rien.
+        /// L'empreinte de cette construction ne recouvre ni une autre construction (un sol compris), ni un arbre ou un
+        /// rocher, ni le devant d'une porte, sauf si elle est un sol qu'on traverse. Une construction dessous l'emporte :
+        /// retirer l'arbre n'y changerait rien.
         /// </summary>
-        private PlacementResult CheckFootprintCells(RotatedRect footprint)
+        private PlacementResult CheckFootprintCells(StructureDefinition definition, RotatedRect footprint)
         {
             bool natureInTheWay = false;
             bool blocksADoor = false;
@@ -141,7 +144,7 @@ namespace Diciela.Simulation.Land
                     return PlacementResult.Overlaps;
                 if (occupant < 0)
                     natureInTheWay = true;
-                if (_grid.IsDoorway(cell))
+                if (!definition.IsWalkable && _structures.Doorways.Covers(cell))
                     blocksADoor = true;
             }
             if (natureInTheWay)
@@ -149,14 +152,15 @@ namespace Diciela.Simulation.Land
             return blocksADoor ? PlacementResult.BlocksADoor : PlacementResult.Ok;
         }
 
-        private bool IsOccupied(RotatedRect rect)
+        /// <summary>Vrai si l'on traverse tout ce rectangle : le devant d'une porte, sur le sol libre ou sur un sol.</summary>
+        private bool IsWalkable(RotatedRect rect)
         {
             foreach (Vector2Int cell in _grid.CellsCoveredBy(rect))
             {
-                if (_grid.OccupantAt(cell) != 0)
-                    return true;
+                if (!_grid.IsWalkable(cell))
+                    return false;
             }
-            return false;
+            return true;
         }
     }
 }

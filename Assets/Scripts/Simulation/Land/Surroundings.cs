@@ -6,11 +6,11 @@ using UnityEngine;
 namespace Diciela.Simulation.Land
 {
     /// <summary>
-    /// Les abords d'une construction, ou d'un arbre ou d'un rocher : les mailles libres qui le bordent (l'une de leurs
-    /// quatre voisines est à lui). C'est là qu'on se tient pour le servir : prendre dans un stock, livrer un chantier, y
-    /// travailler, abattre un arbre. On les cherche
-    /// dans son empreinte élargie de deux mailles de chaque côté : une maille couverte déborde d'au plus une maille, et
-    /// sa voisine d'une de plus. Rien n'est alloué : la liste est celle de l'appelant.
+    /// Les abords d'une construction, ou d'un arbre ou d'un rocher : les mailles où l'on marche qui le bordent, hors des
+    /// siennes (l'une de leurs quatre voisines est à lui) ; un sol qu'on traverse, comme la Place, a donc ses abords
+    /// autour de lui. C'est là qu'on se tient pour le servir : prendre dans un stock, livrer un chantier, y travailler,
+    /// abattre un arbre. On les cherche dans son empreinte élargie de deux mailles de chaque côté : une maille couverte
+    /// déborde d'au plus une maille, et sa voisine d'une de plus. Rien n'est alloué : la liste est celle de l'appelant.
     /// </summary>
     public sealed class Surroundings
     {
@@ -50,7 +50,7 @@ namespace Diciela.Simulation.Land
                 footprint.RotationDegrees);
             foreach (Vector2Int cell in _grid.CellsCoveredBy(around))
             {
-                if (_grid.IsWalkable(cell) && _grid.Borders(cell, occupant))
+                if (_grid.IsWalkable(cell) && _grid.OccupantAt(cell) != occupant && _grid.Borders(cell, occupant))
                     cells.Add(cell);
             }
         }

@@ -98,6 +98,16 @@ namespace Diciela.Tests.EditMode
             return slot;
         }
 
+        /// <summary>Un sol qu'on traverse, comme la Place, de width × depth mètres, sans porte (décision 192).</summary>
+        public static StructureDefinition Floor(string id, float width, float depth)
+        {
+            StructureDefinition floor = Structure(id, width, depth, hasDoor: false);
+            var serialized = new SerializedObject(floor);
+            Property(serialized, "_walkable").boolValue = true;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            return floor;
+        }
+
         /// <summary>Donne à cette construction son coût et les heures de travail que son chantier demande à un débutant.</summary>
         public static void Cost(StructureDefinition definition, float workHours, params GoodAmount[] cost)
         {
