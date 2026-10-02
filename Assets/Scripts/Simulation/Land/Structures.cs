@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Diciela.Data;
+using Diciela.Simulation.Core;
 
 namespace Diciela.Simulation.Land
 {
@@ -19,13 +20,13 @@ namespace Diciela.Simulation.Land
         private readonly PlacementRules _rules;
         private int _nextId = 1;
 
-        public Structures(NavGrid grid, Relief relief, SimulationSettings settings)
+        public Structures(NavGrid grid, Relief relief, SimulationSettings settings, Knowledge knowledge)
         {
             if (ReferenceEquals(grid, null))
                 throw new ArgumentNullException(nameof(grid));
 
             _grid = grid;
-            _rules = new PlacementRules(grid, relief, settings, this);
+            _rules = new PlacementRules(grid, relief, settings, this, knowledge);
         }
 
         /// <summary>Levé quand une construction est posée.</summary>

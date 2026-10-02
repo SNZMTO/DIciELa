@@ -6,7 +6,8 @@ namespace Diciela.Tests.EditMode
 {
     /// <summary>
     /// Le contenu du départ et de la ville au travail, lu dans le projet sans rien écrire : le logis de la Chimère, le
-    /// campement (un entrepôt qui reçoit le stock de départ et ouvre un poste), les statistiques
+    /// campement (un entrepôt qui reçoit le stock de départ et ouvre un poste), ce que la Chimère sait bâtir en arrivant
+    /// (son campement, et rien hors du catalogue), les statistiques
     /// (chaque sous-statistique dans une seule), les tâches (chacune lit une sous-statistique du catalogue), les coûts
     /// (des marchandises du catalogue).
     /// </summary>
@@ -52,6 +53,23 @@ namespace Diciela.Tests.EditMode
                 total += goods.Amount;
             }
             Assert.LessOrEqual(total, camp.StorageCapacity, "Le campement ne tient pas le stock de départ.");
+        }
+
+        [Test]
+        public void TheChimeraKnowsHerCampAndOnlyStructuresOfTheCatalog()
+        {
+            // Elle sait installer son campement en arrivant (GDD, section 6), sinon la partie ne commence pas ; et rien
+            // qu'elle sache n'est hors du catalogue, où le panneau Construire le prend.
+            Catalog catalog = ProjectContent.LoadSingle<Catalog>();
+            IReadOnlyList<StructureDefinition> known = catalog.Opening.KnownStructures;
+            CollectionAssert.Contains(known, ProjectContent.CampOf(catalog), "La Chimère ne sait pas son campement.");
+            CollectionAssert.AllItemsAreUnique(known, "Le déroulé du départ sait deux fois la même construction.");
+            List<StructureDefinition> structures = catalog.AllStructures();
+            foreach (StructureDefinition structure in known)
+            {
+                Assert.IsNotNull(structure, "Le déroulé du départ a une ligne vide.");
+                Assert.IsTrue(structures.Contains(structure), structure.Id + " est su, mais hors du catalogue.");
+            }
         }
 
         [Test]

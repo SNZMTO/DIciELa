@@ -89,6 +89,7 @@ namespace Diciela.Tests.EditMode
             StructureDefinition fullCamp = _town.Keep(TestData.Home("campement_plein", 3f, true, 50, _town.OddJobs));
             OpeningDefinition opening = _town.Keep(TestData.Opening(new GoodAmount(_town.Wood, 30),
                 new GoodAmount(_town.Stone, 20)));
+            TestData.Knows(opening, fullCamp);
             Catalog catalog = _town.Keep(TestData.TownCatalog(opening, new[] { _town.Wood, _town.Stone },
                 new StatisticDefinition[0]));
             World world = _town.World(catalog, new[] { NatureTests.Spot(_town.Tree, 28f, 22f) });
