@@ -33,11 +33,11 @@ namespace Diciela.Tests.PlayMode
             var site = Keep(new Material(Shader.Find("Diciela/Chantier")));
             var siteGhost = Keep(new Material(Shader.Find("Diciela/ChantierFantome")));
             GameObject model = Keep(GameObject.CreatePrimitive(PrimitiveType.Cube));
-            GameObject tentModel = Keep(new GameObject("Tente de test"));
-            GameObject tentBox = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            tentBox.transform.SetParent(tentModel.transform, false);
-            tentBox.transform.localPosition = new Vector3(0f, 1.25f, 0f);
-            tentBox.transform.localScale = new Vector3(3f, 2.5f, 3f);
+            GameObject campModel = Keep(new GameObject("Campement de test"));
+            GameObject campBox = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            campBox.transform.SetParent(campModel.transform, false);
+            campBox.transform.localPosition = new Vector3(0f, 1.25f, 0f);
+            campBox.transform.localScale = new Vector3(3f, 2.5f, 3f);
             Cabin = Keep(ScriptableObject.CreateInstance<StructureDefinition>());
             Camp = Keep(ScriptableObject.CreateInstance<StructureDefinition>());
             var map = new MapDescription(new Relief(100f, 100f, 2, 2, new[] { 10f, 10f, 10f, 10f }));
@@ -61,7 +61,7 @@ namespace Diciela.Tests.PlayMode
             Fill(Camp, "_unique", true);
             Fill(Camp, "_chimeraHome", true);
             Fill(Camp, "_builtWhenPlaced", true);
-            Fill(Camp, "_model", tentModel);
+            Fill(Camp, "_model", campModel);
             Fill(rig, "_settings", cameraSettings);
             Fill(Preview, "_settings", Settings);
             Fill(Views, "_settings", Settings);
@@ -87,6 +87,26 @@ namespace Diciela.Tests.PlayMode
         public Vector2 OnScreen(Vector3 ground)
         {
             return Camera.WorldToScreenPoint(ground);
+        }
+
+        /// <summary>
+        /// Pose, par l'ordre du joueur, une haie de 2 × 2 m en (70 ; 70), dont le modèle est un quad vêtu de ce matériau :
+        /// un chantier ; rend sa vue, la dernière des constructions vues.
+        /// </summary>
+        public Transform PlaceASiteDressedIn(Material material)
+        {
+            GameObject model = Keep(GameObject.CreatePrimitive(PrimitiveType.Quad));
+            model.GetComponent<MeshRenderer>().sharedMaterial = material;
+            var hedge = Keep(ScriptableObject.CreateInstance<StructureDefinition>());
+#if UNITY_EDITOR
+            Fill(hedge, "_id", "haie");
+            Fill(hedge, "_widthMeters", 2f);
+            Fill(hedge, "_depthMeters", 2f);
+            Fill(hedge, "_model", model);
+#endif
+            World.Submit(new PlaceStructureCommand(hedge, new Placement(new Vector2(70f, 70f), 0f)));
+            World.Step();
+            return Views.transform.GetChild(Views.transform.childCount - 1);
         }
 
         /// <summary>Garde une chose créée pour le test, détruite avec le monde.</summary>
