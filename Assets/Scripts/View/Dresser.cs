@@ -6,12 +6,13 @@ using UnityEngine;
 namespace Diciela.View
 {
     /// <summary>
-    /// Habille un personnage d'une apparence (GDD, section 6 ; SAVOIR, 2.11), la seule façon de le faire, pour les
-    /// habitants vus comme pour l'aperçu de l'écran de création. Le personnage du pack d'où vient le corps sert de
-    /// squelette : tous les animaux ont le même. On lui retire ce qu'il porte (ses seize corps, ses pièces d'office, ses
-    /// capes cachées), puis il reçoit le corps et le crâne choisis, chacun de sa couleur, sur ses os. Une petite cape
-    /// qu'il porte dans le pack reste, comme un habit, de la couleur du corps. Chaque pièce se pose (PiecePlacement), puis s'accroche à l'os de son emplacement sans bouger ; une pièce
-    /// qu'une autre cache (des oreilles sous un chapeau) ne se pose pas.
+    /// Habille un personnage d'une apparence (GDD, sections 6 et 16 ; SAVOIR, 2.11), la seule façon de le faire, pour les
+    /// habitants vus comme pour l'aperçu de l'écran de création. Un humain du pack se montre tel que le pack le fait.
+    /// Pour la Chimère, le personnage du pack d'où vient le corps sert de squelette : tous les animaux ont le même. On
+    /// lui retire ce qu'il porte (ses seize corps, ses pièces d'office, ses capes cachées), puis il reçoit le corps et le
+    /// crâne choisis, chacun de sa couleur, sur ses os. Une petite cape qu'il porte dans le pack reste, comme un habit, de
+    /// la couleur du corps. Chaque pièce se pose (PiecePlacement), puis s'accroche à l'os de son emplacement sans bouger ;
+    /// une pièce qu'une autre cache (des oreilles sous un chapeau) ne se pose pas.
     /// </summary>
     public static class Dresser
     {
@@ -21,6 +22,9 @@ namespace Diciela.View
         /// </summary>
         public static GameObject Dress(Appearance appearance, Transform parent)
         {
+            if (appearance.Character != null)
+                return AsIs(appearance.Character, parent);
+
             BodyDefinition body = appearance.Body;
             HeadDefinition head = appearance.Head;
             if (body.Model == null || body.Mesh == null || head.Mesh == null)
@@ -53,6 +57,19 @@ namespace Diciela.View
                     Attach(character.transform, appearance, worn);
             }
             return character;
+        }
+
+        /// <summary>Un personnage du pack, tel que le pack le fait : son modèle, sans rien retirer ni teindre.</summary>
+        private static GameObject AsIs(CharacterDefinition character, Transform parent)
+        {
+            if (character.Model == null)
+            {
+                Debug.LogError("DICIELA : le personnage « " + character.Id + " » n'a pas son modèle.");
+                return null;
+            }
+            GameObject view = Object.Instantiate(character.Model, parent, false);
+            view.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+            return view;
         }
 
         /// <summary>Les os du corps allumé, relevés avant qu'on le retire : la tête et le corps choisis s'y posent.</summary>

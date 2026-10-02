@@ -16,6 +16,7 @@ namespace Diciela.Simulation
     {
         private readonly Queue<Command> _pendingCommands = new Queue<Command>();
         private readonly Commissioning _commissioning;
+        private readonly Opening _opening;
 
         public World(SimulationSettings settings, MapDescription map, Catalog catalog)
         {
@@ -42,9 +43,11 @@ namespace Diciela.Simulation
             var offers = new TaskOffers(Warehouses, ConstructionSites, reach, settings);
             Clearings = new ClearingOffers(Nature, Warehouses, reach);
             WorkSlots = new WorkSlots();
+            Housing = new Housing(Structures, Structures.Rules);
             Villagers = new Villagers(Grid, Islands, PathFinder, Clock, surroundings, offers, Clearings, WorkSlots,
-                new StatisticTable(catalog.Statistics, settings), settings);
-            _commissioning = new Commissioning(this, new Opening(catalog.Opening));
+                new StatisticTable(catalog.Statistics, settings), settings, Structures, Housing);
+            _opening = new Opening(catalog.Opening, catalog.VillagerKind);
+            _commissioning = new Commissioning(this, _opening);
             Placing = new Placing(this, _commissioning);
         }
 
@@ -88,7 +91,10 @@ namespace Diciela.Simulation
         /// <summary>La table des postes : les postes ouverts et qui les tient.</summary>
         public WorkSlots WorkSlots { get; }
 
-        /// <summary>Les habitants : la Chimère, une fois créée par son ordre.</summary>
+        /// <summary>Les logements : qui a son lit dans quelle maison.</summary>
+        public Housing Housing { get; }
+
+        /// <summary>Les habitants : la Chimère, une fois créée par son ordre, puis ceux qui arrivent.</summary>
         public Villagers Villagers { get; }
 
         /// <summary>La pose d'une construction, qui touche plusieurs couches ; seuls les ordres s'en servent.</summary>
@@ -105,8 +111,8 @@ namespace Diciela.Simulation
         /// <summary>
         /// Joue un pas. L'ordre du pas, écrit ici et nulle part ailleurs : les ordres en attente, puis le temps, le
         /// terrain, l'économie, la société, le monde. Pour l'instant, les ordres, le temps et les habitants, qui font le
-        /// travail de l'économie et du terrain, puis le monde met en service ce qu'ils ont fini de bâtir ; les événements
-        /// partent à la fin de chaque couche.
+        /// travail de l'économie et du terrain, puis le monde met en service ce qu'ils ont fini de bâtir, et le déroulé du
+        /// départ fait arriver qui peut l'être ; les événements partent à la fin de chaque couche.
         /// </summary>
         public void Step()
         {
@@ -114,6 +120,7 @@ namespace Diciela.Simulation
             Clock.Advance();
             Villagers.Step();
             CommissionWhatWasBuilt();
+            _opening.Step(this);
             DeliverEvents();
         }
 

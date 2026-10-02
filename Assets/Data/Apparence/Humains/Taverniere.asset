@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41acceac3fadf72499dbcbf845997012, type: 3}
+  m_Name: Taverniere
+  m_EditorClassIdentifier: Diciela.Data::Diciela.Data.CharacterDefinition
+  _id: taverniere
+  _model: {fileID: 1308111886164977163, guid: 6d18e1f3102bdb24e8457682ae7b89d9, type: 3}

@@ -97,14 +97,18 @@ la société, qui voit tout ce qui est en dessous.
   cas particulier par nom) et leur journée (travail, soirée, nuit). Leur marche, le long de la ligne tendue d'un
   trajet, et la sortie d'une construction posée sur eux ; la flânerie de qui n'a pas de poste ; le sommeil de la
   Chimère, devant la porte de son logis, sur ordre. La table des postes.
-  Les arrivées (une seule
-  fonction ; les conditions sont dans la fiche de la sorte). Les logements et le déménagement de nuit. La nourriture.
+  Les arrivées : une seule fonction (`Villagers.Arrive`), la Chimère comprise ; c'est leur source qui en dit les
+  conditions (le déroulé du départ : un lit libre ; plus tard, les arrivées ordinaires : un lit, un poste, de quoi
+  manger ; les maîtres : un lit, de quoi manger). Les logements (`Housing` : qui a son lit où ; les lits libres, déduits
+  des maisons bâties) et le déménagement de nuit. Le coucher et le lever (`Bedtimes`) : la Chimère sur ordre, les
+  habitants d'eux-mêmes, au début de la nuit, et debout au matin. La nourriture.
   Le tirage des maîtres. L'étal (curseurs, souhaits, visiteurs, réputation). Le charme. La raison d'arrêt d'un lieu,
   une seule fonction lue par la vue et l'interface.
 - **Le monde.** `World` assemble les systèmes et les appelle dans l'ordre du pas, rien d'autre. À côté, chacune dans
   sa classe : le traitement des ordres ; les déclencheurs (une condition mène à une récompense : idée, réplique,
   tenue) ;
-  le déroulé du départ ; les opérations qui touchent plusieurs couches, faites par des appels vers le bas dans un ordre
+  le déroulé du départ (le stock de départ à la mise en service du campement ; les premières arrivées, à la fin du
+  pas) ; les opérations qui touchent plusieurs couches, faites par des appels vers le bas dans un ordre
   écrit (poser : le terrain, puis l'économie ouvre un chantier, ou la construction, dressée dès la pose, est mise en
   service ; mettre en service, une seule opération, à la pose ou à la fin du pas où un chantier finit : l'économie
   ouvre un stock, la société des postes, puis le déroulé du départ la regarde, décision 179 ; plus tard, la maison de
@@ -131,11 +135,11 @@ sauvegardé.
 | la recette et l'avancement d'un atelier ; la production par marchandise | l'économie | la valeur des marchandises |
 | un habitant : sorte, statistiques, plafonds, apparence, tenue portée, position, effet d'étal en cours | la société | la statistique globale, la valeur pour une tâche, le bonheur |
 | qui tient quel poste ; les postes fermés | la société (une seule table) | qui est présent sur un lieu |
-| qui dort où (la Chimère : couchée ou non) ; la minuterie des arrivées | la société | les lits libres |
+| qui a son lit où ; qui dort (couché ou en chemin) | la société | les lits libres (des maisons bâties) ; où dort chacun (la Chimère : son logis) |
 | les curseurs, les souhaits, les visiteurs, la réputation | la société | les taux de l'étal ; le charme |
 | ce que la ville sait faire (ses constructions ; plus tard ses recettes, ses décos) | le socle (`Knowledge`) : au départ, le déroulé du départ ; puis les déclencheurs | le carnet ; ce que le panneau Construire propose |
 | l'avancement des déclencheurs, la part de chaque habitant | le monde | — |
-| l'étape du départ | le monde | — |
+| l'étape du départ : le prochain premier habitant, l'heure d'où il peut arriver | le monde | le stock de départ donné (le bilan des marchandises le dit) |
 | les effets actifs | ce qui les porte (une lanterne, un maître, une plantation irriguée…) | le registre des effets |
 | une tâche en cours, une marche, une flânerie | personne : elles ne sont pas sauvegardées | — |
 | le dossier des sauvegardes | la fiche de session | — |
@@ -237,9 +241,11 @@ sauvegardé.
   `DICIELA/Contenu/Préparer les modèles` : fusionné, porte au nord, centré sur l'empreinte, son origine au sol. Le menu
   y range aussi l'empreinte et la porte, mesurées sur le modèle (SAVOIR 2.9). Le modèle préparé se refait depuis la
   source ; sans source, le même menu fait une boîte à la taille de la fiche, sa porte marquée, et une source qui ne se
-  charge plus (le pack absent) est refusée ; un test vérifie que le modèle suit sa fiche. La fiche dit aussi si le bâtiment est unique, s'il est le logis de la Chimère et s'il se
-  dresse dès la pose (le campement) : la simulation lit ces propriétés, jamais un nom. La fiche d'une sorte d'habitant
-  dit sa marche et sa flânerie ; son allure est l'apparence de chaque habitant : une tête et un corps (chacun séparé
+  charge plus (le pack absent) est refusée ; un test vérifie que le modèle suit sa fiche. La fiche dit aussi si le bâtiment est unique, s'il est le logis de la Chimère, s'il se
+  dresse dès la pose (le campement) et les lits qu'il offre : la simulation lit ces propriétés, jamais un nom. La fiche d'une sorte d'habitant
+  dit sa marche, sa flânerie, les bornes où se tirent ses statistiques de départ et s'il rentre dormir la nuit ; son
+  allure est l'apparence de chaque habitant : un humain du pack, tel que le pack le fait (sa fiche de personnage,
+  `CharacterDefinition`), ou, pour la Chimère, une tête et un corps (chacun séparé
   d'un personnage du pack par le menu des fiches, sur le squelette commun), chacun de sa couleur (une couleur : les
   deux matériaux du pack de même teinte, pour les personnages et pour les objets), au plus une pièce par emplacement, de
   sa couleur. La tête porte ses points et ses surfaces mesurés, les pièces qui se sont détachées d'elle (et ce que le
@@ -305,7 +311,9 @@ code.
 | couche (où la Chimère dort) | `HasCouch`, `CouchFeet` | stock de départ | `StartingGoods` ; `GoodsCause.StartingStock` | classes de style posées par le code | `StyleClasses` |
 | mettre en service (l'opération du monde) | `Commissioning` | chantiers finis (à mettre en service) | `ConstructionSites.Finished` | reprendre ses mailles (un pied debout) | `NavGrid.Reclaim` |
 | tronçons (d'une rangée du maillage) | `FreeRuns` | ligne du chantier (côté rendu) | `SiteLine` | stock de la ville changé | `CityStockChanged` |
-| lits (qu'offre une maison) | `Beds` | ce que le panneau propose | `BuildBarOffer` | | |
+| lits (qu'offre une maison) | `Beds` | ce que le panneau propose | `BuildBarOffer` | logements | `Housing` |
+| arriver (la seule arrivée) | `Arrive` | point fort (d'un arrivant) | `Strength` | coucher et lever | `Bedtimes` |
+| premier habitant | `FirstVillagerDefinition` | personnage du pack (tel quel) | `CharacterDefinition` | sorte des habitants ordinaires | `Catalog.VillagerKind` |
 
 ## 10. La carte, les scènes et la sauvegarde
 

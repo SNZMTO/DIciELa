@@ -15,7 +15,6 @@ namespace Diciela.EditorTools
     internal static class AnimalBuilder
     {
         private const string Folder = "Assets/Data/Apparence";
-        private const string Characters = "Assets/Synty/PolygonFantasyVillage/Prefabs/Characters";
         // Les surfaces : le dessus de la tête (x, z), l'avant de la face (x, y), le dos du corps (x, y), en cases de 5 cm.
         private static readonly Rect TopArea = Rect.MinMaxRect(-0.7f, -0.6f, 0.7f, 0.6f);
         private static readonly Rect FrontArea = Rect.MinMaxRect(-0.7f, 0.9f, 0.7f, 2.1f);
@@ -55,7 +54,8 @@ namespace Diciela.EditorTools
             var cuts = new List<AnimalCut>();
             foreach ((string build, string letter) in Builds)
             {
-                var model = EditorAssets.Load<GameObject>(Characters + "/SM_Chr_" + pack + "_" + build + "_01.prefab");
+                var model = EditorAssets.Load<GameObject>(
+                    PackPaths.Characters + "/SM_Chr_" + pack + "_" + build + "_01.prefab");
                 cuts.Add(AnimalCut.Of(model, name + "_" + letter, BackArea, Cell));
             }
 
