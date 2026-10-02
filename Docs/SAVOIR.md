@@ -170,6 +170,9 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   d'un intervalle par une multiplication, pas par un modulo, qui favoriserait les petites valeurs. Vérifié contre ses
   premières valeurs publiées, recalculées à part (en JavaScript, sur des entiers de 64 bits), jamais sorties de
   mémoire.
+- **Deux tirages d'un même habitant ne partagent jamais leur départ** : la suite d'un pas part de (son numéro ; le
+  numéro du pas), positif ; ses statistiques de départ, de (son numéro ; la place de la sous-statistique, en négatif,
+  `~i`). Sinon, la flânerie du pas 3 et la sous-statistique 3 tireraient les mêmes nombres.
 - **Ce qu'on tire pour un monde** (les plantes de ses champs sauvages, la pose de chaque élément semé : style,
   rotation, taille, décalage) se tire du hachage, puis **se sauvegarde** : une retouche du tirage ne change pas une
   partie en cours.

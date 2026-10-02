@@ -12,9 +12,9 @@ namespace Diciela.View
     /// qui sont déjà là ; ensuite, chaque arrivée, par l'événement de la simulation. À chaque image, le
     /// démarrage donne la fraction du pas en cours : chaque personnage se montre à cette fraction du chemin entre sa
     /// place au pas d'avant et celle du dernier pas (SAVOIR, 2.2), posé sur le sol, et se tourne vers où il va, sans
-    /// à-coup. Le pack n'a pas d'animations : il glisse. Endormie, la Chimère est couchée sur la couche de son logis, sur
-    /// le dos, la tête vers où le dit sa fiche ; un logis sans couche, elle y est entrée : on ne la voit plus. Réveillée,
-    /// elle se relève devant sa porte, où la simulation l'a toujours tenue.
+    /// à-coup. Le pack n'a pas d'animations : il glisse. Endormi, un habitant est chez lui : couché sur sa couche, s'il en
+    /// a une (la Chimère au campement), sur le dos, la tête vers où le dit sa fiche ; sans couche, il y est entré : on ne
+    /// le voit plus. Réveillé, il se relève devant sa porte, où la simulation l'a toujours tenu.
     /// </summary>
     public sealed class VillagerViews : MonoBehaviour
     {
@@ -35,22 +35,18 @@ namespace Diciela.View
 
         private readonly List<Shown> _shown = new List<Shown>();
         private Villagers _villagers;
-        private Structures _structures;
         private Relief _relief;
 
         /// <summary>Montre les habitants de ce monde, couchés dans leur logis s'ils dorment, puis suit leurs arrivées.</summary>
-        public void Show(Villagers villagers, Structures structures, Relief relief)
+        public void Show(Villagers villagers, Relief relief)
         {
             if (ReferenceEquals(villagers, null))
                 throw new ArgumentNullException(nameof(villagers));
-            if (ReferenceEquals(structures, null))
-                throw new ArgumentNullException(nameof(structures));
             if (ReferenceEquals(relief, null))
                 throw new ArgumentNullException(nameof(relief));
 
             Hide();
             _villagers = villagers;
-            _structures = structures;
             _relief = relief;
             foreach (Villager villager in villagers.All)
                 OnVillagerArrived(villager);
@@ -69,7 +65,6 @@ namespace Diciela.View
                 _villagers.VillagerWokeUp -= OnVillagerSleepChanged;
             }
             _villagers = null;
-            _structures = null;
             _relief = null;
             foreach (Shown shown in _shown)
                 Destroy(shown.Transform.gameObject);
@@ -133,10 +128,10 @@ namespace Diciela.View
             shown.Transform.gameObject.SetActive(!shown.Villager.IsAsleep || shown.Lying);
         }
 
-        // Seule la Chimère dort sur ordre, dans son logis (GDD, section 6) ; ce logis, s'il a une couche.
+        // Celui qui dort est chez lui, que la simulation dit ; chez lui, s'il a une couche.
         private Structure HomeWithACouchOf(Villager villager)
         {
-            Structure home = ReferenceEquals(villager, _villagers.Chimera) ? _structures.ChimeraHome : null;
+            Structure home = _villagers.HomeOf(villager);
             return home != null && home.Definition.HasCouch ? home : null;
         }
 

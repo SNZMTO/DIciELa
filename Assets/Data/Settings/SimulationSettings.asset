@@ -24,3 +24,4 @@ MonoBehaviour:
   _subStatisticShare: 0.8
   _expertWorkRate: 3
   _maxBuildersPerSite: 3
+  _wanderDraws: 8

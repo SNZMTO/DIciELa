@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41acceac3fadf72499dbcbf845997012, type: 3}
+  m_Name: Femme_04
+  m_EditorClassIdentifier: Diciela.Data::Diciela.Data.CharacterDefinition
+  _id: femme_04
+  _model: {fileID: 6304655066678062992, guid: e9d68d563baa8a547ad726325a23ece8, type: 3}

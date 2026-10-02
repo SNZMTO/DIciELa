@@ -75,7 +75,8 @@
 - **Règle.** Tout se compte en heures et en jours de jeu ; la durée d'une journée règle le rythme de tout le jeu.
 - **Défaut.** Une journée dure environ douze minutes : deux tiers de travail, une courte soirée, un quart de nuit.
 - **Règle.** Les habitants travaillent le jour, passent la soirée en ville (c'est là qu'ils se servent à l'étal) et
-  rentrent dormir chez eux. Les lanternes prolongent le travail du soir (voir 12).
+  rentrent dormir chez eux au début de la nuit ; au matin, ils se lèvent devant leur porte. La Chimère, elle, dort
+  quand le joueur le veut (voir 6). Les lanternes prolongent le travail du soir (voir 12).
 - **Règle.** La nuit, la ville dort et rien ne se produit ; le joueur prépare la journée (poser, réaffecter, décorer).
 - **Défaut.** À l'écran, les habitants marchent à leur pas naturel, environ 1,5 m/s : traverser 250 m prend un tiers
   d'une journée de travail. Les distances comptent ; une ville ramassée va plus vite.
@@ -113,8 +114,8 @@
   ville le montre (« les arrivées attendent de quoi manger ») ; pour les relancer, on met quelqu'un de plus aux champs.
 - **Règle.** Personne ne part, ne vieillit ni ne meurt ; la ville ne grandit que par les arrivées.
 - **Règle.** La Chimère compte dans la nourriture comme une habitante ; elle dort chez elle (son campement, puis sa maison).
-- **Règle.** Le jeu loge chaque habitant au plus près de son poste ; les maîtres passent d'abord, dans les meilleures
-  maisons. Un habitant qui change de poste déménage la nuit, si un lit se libère plus près.
+- **Règle.** Le jeu loge chaque habitant au plus près de son poste (un arrivant sans poste, au plus près de là où il
+  arrive) ; les maîtres passent d'abord, dans les meilleures maisons. Un habitant qui change de poste déménage la nuit, si un lit se libère plus près.
 - **Règle.** Les maisons ont trois niveaux : cabane, maison, belle maison. Une meilleure maison loge plus de monde, rend
   plus heureux et attire les maîtres ; elle s'améliore sur place, par un petit chantier.
 - **Défaut.** Cabane : 2 lits ; maison : 4 ; belle maison : 6.
@@ -250,7 +251,14 @@
   ville comme habitants ordinaires ; ce ne sont pas des maîtres.
 - **Règle.** Ils n'attendent ni poste libre (ils apportent l'idée de ce qui l'ouvrira) ni de quoi manger (au début,
   aucun champ ne tourne) : il leur faut seulement un lit. La règle de la nourriture vaut pour les arrivées suivantes.
-- **Défaut.** Ils commencent à 40 dans la sous-statistique de leur métier. Le déroulé :
+- **Défaut.** Ils arrivent au point d'arrivée de la carte, une heure de jeu au moins après le précédent, jamais la
+  nuit (voir 3). Ils commencent à 40 dans la sous-statistique de leur métier, ailleurs comme tout arrivant (voir 5).
+- **Règle.** Chacun a son humain du pack (voir 16).
+- **À toi.** Lesquels. Ma reco, sur la planche des humains : le bâtisseur, l'homme 2 (chapeau, chemise ouverte) ; la
+  fermière, la femme 4 (fichu, tablier) ; la charretière, la femme 3 (pantalon, écharpe) ; le menuisier, le boucher.
+- **À toi.** Leurs noms. En attendant, leur métier : « le bâtisseur », « la fermière », « la charretière », « le
+  menuisier ».
+- **Défaut.** Le déroulé :
   1. La Chimère installe son campement, d'un coup ; le joueur choisit l'endroit. Elle connaît déjà le campement, la
      Place, la cabane, le chemin de terre, le pont, le bûcheron et la carrière.
   2. Elle bâtit la Place et deux cabanes, et récolte un champ sauvage de lin.
@@ -296,8 +304,8 @@
   tâche de même.
 - **À toi.** Une pastille ou plusieurs quand un lieu cumule les pannes ? Ma reco : une seule, la plus urgente :
   injoignable, pas de force, personne au poste, pas de graines ou d'ingrédients, stock plein.
-- **À toi.** Quel poste tient un premier habitant avant que son lieu de travail existe (voir 6) ? Ma reco : un poste
-  « à tout faire » ouvert pour lui, qui se ferme quand son lieu est bâti.
+- **Règle.** Tant que son lieu de travail n'est pas bâti (voir 6), un premier habitant tient un poste « à tout faire »
+  ouvert pour lui, qui se ferme quand son lieu est bâti.
 
 ## 8. La production et la logistique
 
@@ -577,8 +585,8 @@
   glisser au clic droit, le clic droit bref restant « reculer d'un cran ».
 - **Règle.** Quand on pose ou qu'on peint, le jeu montre ce qui ne se voit pas : l'eau qui irrigue, la portée des
   lanternes, le réseau de force.
-- **Règle.** Les habitants ordinaires sont les humains du pack ; les maîtres, ses animaux humanoïdes, distingués par
-  leurs accessoires, leurs couleurs et leurs noms. À terme, un artiste payé fera de plus jolis personnages.
+- **Règle.** Les habitants ordinaires sont les humains du pack, tels que le pack les fait ; les maîtres, ses animaux
+  humanoïdes, distingués par leurs accessoires, leurs couleurs et leurs noms. À terme, un artiste payé fera de plus jolis personnages.
 - **Règle.** La tête de chaque animal du pack est une pièce à part de son modèle : elle se pose sur le corps de
   n'importe quel autre, tous les animaux ayant le même squelette. Le corps reste d'un seul tenant, bras, jambes et
   habits ensemble. Ses oreilles et ses touffes sont des pièces à part, qu'on change (voir 6) ; son museau reste à elle.

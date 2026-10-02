@@ -1,28 +1,41 @@
 using System;
 using System.Collections.Generic;
 using Diciela.Data;
+using Diciela.Simulation.Core;
 
 namespace Diciela.Simulation.Society
 {
     /// <summary>
-    /// Les statistiques d'un habitant (GDD, section 5) : une valeur par sous-statistique, de 0 à la plus haute. La
-    /// statistique globale est la moyenne de ses sous-statistiques ; la valeur pour une tâche mêle les deux. Elles ne
-    /// progressent pas encore (décision 138).
+    /// Les statistiques d'un habitant (GDD, section 5) : une valeur par sous-statistique, de 0 à la plus haute. À son
+    /// arrivée, chacune se tire entre les bornes de sa sorte, et son point fort commence à sa valeur. La statistique
+    /// globale est la moyenne de ses sous-statistiques ; la valeur pour une tâche mêle les deux. Elles ne progressent pas
+    /// encore (décision 138).
     /// </summary>
     public sealed class VillagerStatistics
     {
         private readonly StatisticTable _table;
         private readonly float[] _values;
 
-        internal VillagerStatistics(StatisticTable table, float startingValue)
+        internal VillagerStatistics(StatisticTable table, VillagerKindDefinition kind, int villagerId, Strength strength)
         {
             if (ReferenceEquals(table, null))
                 throw new ArgumentNullException(nameof(table));
+            if (ReferenceEquals(kind, null))
+                throw new ArgumentNullException(nameof(kind));
 
             _table = table;
             _values = new float[table.Count];
+            float lowest = kind.StartingStatisticMin;
+            float spread = Math.Max(0f, kind.StartingStatisticMax - lowest);
             for (int i = 0; i < _values.Length; i++)
-                _values[i] = startingValue;
+            {
+                // Un tirage par sous-statistique, du numéro de l'habitant et de sa place, comptée en négatif : jamais la
+                // suite d'un pas, qui part de son numéro et d'un numéro de pas positif.
+                var random = new HashRandom(villagerId, ~i);
+                _values[i] = lowest + (float)random.Unit() * spread;
+            }
+            if (!ReferenceEquals(strength.SubStatistic, null))
+                _values[table.IndexOf(strength.SubStatistic)] = strength.Value;
         }
 
         /// <summary>Sa valeur dans cette sous-statistique.</summary>

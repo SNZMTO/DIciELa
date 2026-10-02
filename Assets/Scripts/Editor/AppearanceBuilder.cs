@@ -14,8 +14,7 @@ namespace Diciela.EditorTools
     /// </summary>
     internal static class AppearanceBuilder
     {
-        private const string Characters = "Assets/Synty/PolygonFantasyVillage/Prefabs/Characters";
-        private const string HumanReference = Characters + "/SM_Chr_Male_01.prefab";
+        private const string HumanReference = PackPaths.Characters + "/SM_Chr_Male_01.prefab";
 
         // Les animaux du pack, dans l'ordre de l'écran : le chat d'abord, la Chimère de départ, et la tête de référence des
         // réglages ; et les emplacements que leur tête ne porte pas (la grenouille, sans oreilles ; la barbe ne va qu'au

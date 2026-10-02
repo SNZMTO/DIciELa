@@ -13,11 +13,11 @@ namespace Diciela.Simulation
     {
         internal override void Execute(World world)
         {
-            Structure home = world.Structures.ChimeraHome;
+            Structure home = world.Villagers.HomeOf(world.Villagers.Chimera);
             Vector2? bed = null;
             if (home != null)
-                bed = world.PlacementRules.Doorway(home.Definition, home.Placement).Center;
-            world.Villagers.SendChimeraToBed(bed);
+                bed = world.Housing.DoorOf(home);
+            world.Villagers.Bedtimes.SendChimeraToBed(world.Villagers.Chimera, bed);
         }
     }
 }
