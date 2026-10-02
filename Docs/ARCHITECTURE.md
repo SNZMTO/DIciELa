@@ -24,10 +24,10 @@ Du bas vers le haut. Le nom de l'assemblage est aussi son namespace.
 | Couche | Assemblage | Dossier | Ce qu'elle contient |
 |---|---|---|---|
 | les fiches | `Diciela.Data` | `Assets/Scripts/Data` | les classes de fiches, sans logique ; la table des textes |
-| le socle | `Diciela.Simulation.Core` | `Assets/Scripts/Simulation/Core` | le temps ; le hasard par hachage ; la formule et le registre des effets ; la géométrie en mètres et la seule conversion mètre ↔ maille ; les contrats du travail (lieu de travail, tâche à prendre) |
+| le socle | `Diciela.Simulation.Core` | `Assets/Scripts/Simulation/Core` | le temps ; le hasard par hachage ; la formule et le registre des effets ; la géométrie en mètres et la seule conversion mètre ↔ maille ; les contrats du travail (lieu de travail, tâche à prendre) ; le savoir de la ville |
 | le terrain | `Diciela.Simulation.Land` | `Assets/Scripts/Simulation/Land` | la carte et son état ; les emprises peintes (tracés et plantations) ; les constructions et la réserve ; le maillage, ses chemins et ses distances ; l'eau et la force |
 | l'économie | `Diciela.Simulation.Economy` | `Assets/Scripts/Simulation/Economy` | les stocks et leurs consignes ; les réservations ; les ateliers ; la culture ; les chantiers ; la valeur des marchandises ; les tâches à prendre |
-| la société | `Diciela.Simulation.Society` | `Assets/Scripts/Simulation/Society` | les habitants et leur journée ; les postes ; les arrivées et les logements ; la nourriture ; l'étal et les visiteurs ; le charme ; le savoir de la ville ; la raison d'arrêt d'un lieu |
+| la société | `Diciela.Simulation.Society` | `Assets/Scripts/Simulation/Society` | les habitants et leur journée ; les postes ; les arrivées et les logements ; la nourriture ; l'étal et les visiteurs ; le charme ; la raison d'arrêt d'un lieu |
 | le monde | `Diciela.Simulation` | `Assets/Scripts/Simulation` | le monde (il assemble les systèmes et les fait tourner) ; les ordres ; les déclencheurs ; le déroulé du départ ; la capture et la restauration |
 | la sauvegarde | `Diciela.Persistence` | `Assets/Scripts/Persistence` | instantanés ↔ JSON, versions, liste des mondes, fichiers mis de côté |
 | la vue | `Diciela.View` | `Assets/Scripts/View` | modèles, copie de travail du Terrain, sol, personnages et leur habillage, caméra, ambiance, calques, pastilles |
@@ -78,7 +78,9 @@ la société, qui voit tout ce qui est en dessous.
   réel en nombre de pas à jouer. Le hasard par hachage (SAVOIR 2.4). Les
   effets : leur type et leur formule ; le registre est un objet créé par le monde et passé à chaque système. La
   géométrie (mètres, plan XZ, rectangles tournés, polylignes). Les contrats du travail : un lieu de travail ouvre des
-  postes ; une tâche à prendre dit où, quoi et quelle sous-statistique elle lit.
+  postes ; une tâche à prendre dit où, quoi et quelle sous-statistique elle lit. Le savoir de la ville (ce qu'elle
+  sait bâtir : au départ, ce que dit le déroulé du départ ; puis les idées), au socle parce que les règles de pose le
+  lisent comme le panneau Construire, et plus tard les recettes et les décos (décision 185).
 - **Le terrain.** La carte reçue au lancement (section 10) et son état : arbres et rochers retirés, champs sauvages
   (désigné, récolté, minuterie de repousse). Les emprises peintes (section 8). Les constructions : bâtiments, décos,
   la Place, la réserve. Le maillage (SAVOIR 2.1), avec ses îlots, son A*, la ligne tendue qu'on tire d'un trajet,
@@ -97,8 +99,8 @@ la société, qui voit tout ce qui est en dessous.
   Chimère, devant la porte de son logis, sur ordre. La table des postes.
   Les arrivées (une seule
   fonction ; les conditions sont dans la fiche de la sorte). Les logements et le déménagement de nuit. La nourriture.
-  Le tirage des maîtres. L'étal (curseurs, souhaits, visiteurs, réputation). Le charme. Le savoir de la ville (ce qui
-  est débloqué). La raison d'arrêt d'un lieu, une seule fonction lue par la vue et l'interface.
+  Le tirage des maîtres. L'étal (curseurs, souhaits, visiteurs, réputation). Le charme. La raison d'arrêt d'un lieu,
+  une seule fonction lue par la vue et l'interface.
 - **Le monde.** `World` assemble les systèmes et les appelle dans l'ordre du pas, rien d'autre. À côté, chacune dans
   sa classe : le traitement des ordres ; les déclencheurs (une condition mène à une récompense : idée, réplique,
   tenue) ;

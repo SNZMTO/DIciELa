@@ -501,6 +501,9 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 - **Un `ScriptableObject` modifié dans l'Inspector n'est pas écrit par Ctrl+S** (qui sauve la scène) : `File/Save
   Project`.
 - **Changer une valeur par défaut dans le C# ne change pas un asset déjà écrit** : l'asset garde l'ancienne valeur.
+  De même, un monteur réexécutable ne complète jamais une fiche qui existe (la main du développeur y prime) : une
+  construction neuve que la Chimère doit savoir en arrivant ne s'ajoute pas seule au déroulé du départ déjà écrit
+  (`Depart.asset`) ; l'y ajouter en créant sa fiche, sinon elle reste inconnue et le panneau ne la propose pas.
 - **`ApplyModifiedPropertiesWithoutUndo` ne marque rien si la valeur ne change pas** : faire suivre d'un
   `EditorUtility.SetDirty`, sinon un champ neuf n'atteint jamais le disque.
 - **Ouvrir une scène en mode Single décharge les assets que rien ne tient** : un ScriptableObject chargé avant et gardé

@@ -20,6 +20,7 @@ namespace Diciela.EditorTools
         internal const string CabinPath = StructuresFolder + "/Cabane.asset";
         private const string HousingPath = StructuresFolder + "/Famille_Logement.asset";
         private const string ChimeraPath = "Assets/Data/Habitants/Chimere.asset";
+        private const string OpeningPath = "Assets/Data/Depart.asset";
 
         // Le modèle du pack de la cabane (décision 75).
         private const string CabinSourcePath =
@@ -72,10 +73,18 @@ namespace Diciela.EditorTools
             VillagerKindDefinition chimera = EditorAssets.CreateIfMissing<VillagerKindDefinition>(ChimeraPath,
                 fiche => EditorAssets.Property(fiche, "_id").stringValue = "chimere");
 
+            // Le déroulé du départ (décisions 172 et 185) : la Chimère sait déjà bâtir le campement et la cabane ; son
+            // campement reçoit 30 Bois et 20 Pierre quand on l'installe.
+            OpeningDefinition opening = EditorAssets.CreateIfMissing<OpeningDefinition>(OpeningPath, fiche =>
+            {
+                SetList(EditorAssets.Property(fiche, "_knownStructures"), camp, cabin);
+                TownContentBuilder.SetAmounts(EditorAssets.Property(fiche, "_startingGoods"), town.Wood, 30, town.Stone,
+                    20);
+            });
             Catalog catalog = EditorAssets.CreateIfMissing<Catalog>(CatalogPath, fiche =>
             {
                 SetList(EditorAssets.Property(fiche, "_families"), housing);
-                EditorAssets.Property(fiche, "_opening").objectReferenceValue = town.Opening;
+                EditorAssets.Property(fiche, "_opening").objectReferenceValue = opening;
                 SetList(EditorAssets.Property(fiche, "_nature"), town.Nature);
                 SetList(EditorAssets.Property(fiche, "_goods"), town.Wood, town.Stone);
                 EditorAssets.SetList(EditorAssets.Property(fiche, "_statistics"), town.Statistics);

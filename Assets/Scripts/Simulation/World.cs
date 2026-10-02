@@ -32,7 +32,8 @@ namespace Diciela.Simulation
             Nature = new Nature(Grid, map.Nature);
             Islands = new Islands(Grid);
             PathFinder = new PathFinder(Grid, Islands);
-            Structures = new Structures(Grid, map.Relief, settings);
+            Knowledge = new Knowledge(catalog.Opening);
+            Structures = new Structures(Grid, map.Relief, settings, Knowledge);
             var surroundings = new Surroundings(Grid);
             Ledger = new GoodsLedger();
             Warehouses = new Warehouses(Ledger);
@@ -60,6 +61,9 @@ namespace Diciela.Simulation
 
         /// <summary>La recherche des trajets sur le maillage : une seule, dont les tableaux servent à chaque recherche.</summary>
         public PathFinder PathFinder { get; }
+
+        /// <summary>Le savoir de la ville : ce qu'elle sait bâtir.</summary>
+        public Knowledge Knowledge { get; }
 
         /// <summary>Les règles de pose : la seule réponse à « peut-on poser ici ? », pour l'aperçu et l'ordre.</summary>
         public PlacementRules PlacementRules => Structures.Rules;

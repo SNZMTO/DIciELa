@@ -2,6 +2,7 @@ using System.Collections;
 using Diciela.Controls;
 using Diciela.Data;
 using Diciela.Game;
+using Diciela.UI;
 using Diciela.View;
 using NUnit.Framework;
 using UnityEngine;
@@ -12,8 +13,9 @@ namespace Diciela.Tests.PlayMode
 {
     /// <summary>
     /// Deux parties de suite sur la scène de test, comme deux entrées en Play d'un projet qui ne recharge ni le code ni
-    /// la scène : chacune crée un seul monde, sa Chimère validée à l'écran de création, et une pose y donne un seul
-    /// ordre, une seule ligne de journal et une seule construction vue. Chaque partie joue sur une copie du sol : l'asset
+    /// la scène : chacune crée un seul monde, sa Chimère validée à l'écran de création, et une pose, comme le joueur la
+    /// fait (le panneau Construire, sa première carte, le campement, puis un clic), y donne un seul ordre, une seule
+    /// ligne de journal et une seule construction vue. Chaque partie joue sur une copie du sol : l'asset
     /// du Terrain de la carte de test, lu sur le disque, sort des deux parties inchangé (la copie, elle, pourra changer
     /// quand on terrassera).
     /// </summary>
@@ -42,13 +44,6 @@ namespace Diciela.Tests.PlayMode
         [UnityTest]
         public IEnumerator TwoSessionsInARowEachPlaceOnce()
         {
-            GameObject model = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            var cabin = ScriptableObject.CreateInstance<StructureDefinition>();
-#if UNITY_EDITOR
-            TestWorld.Fill(cabin, "_id", "cabane");
-            TestWorld.Fill(cabin, "_nameKey", "construction.cabane");
-            TestWorld.Fill(cabin, "_model", model);
-#endif
 #if UNITY_EDITOR
             TerrainData asset = TestMapGround();
             float[,] heightsBefore = Heights(asset);
@@ -72,7 +67,11 @@ namespace Diciela.Tests.PlayMode
                     Assert.IsFalse(UnityEditor.AssetDatabase.Contains(terrain), "La partie joue sur une copie du sol.");
 #endif
 
-                    controls.Tool.Begin(cabin);
+                    var bar = FindIn<BuildBar>(ScenePaths.GameTest);
+                    bar.Open();
+                    bar.TakeCard(0);
+                    StructureDefinition held = controls.Tool.Current;
+                    Assert.IsTrue(held != null && held.IsChimeraHome, "La première carte est le campement.");
                     controls.Tool.AimAt(FindIn<CameraRig>(ScenePaths.GameTest).Camera.pixelRect.center);
                     Assert.IsTrue(controls.Tool.Confirm(), "Le centre de la carte de test est libre.");
                     for (int frame = 0; frame < MaxFrames && _placed < session; frame++)
@@ -91,8 +90,6 @@ namespace Diciela.Tests.PlayMode
             finally
             {
                 Application.logMessageReceived -= Count;
-                Object.Destroy(cabin);
-                Object.Destroy(model);
             }
         }
 

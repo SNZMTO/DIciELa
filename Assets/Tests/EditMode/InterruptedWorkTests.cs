@@ -86,7 +86,7 @@ namespace Diciela.Tests.EditMode
                 _world.Step();
             Assert.Greater(_chimera.Load.Total, 0, "Elle porte encore, en chemin.");
             Vector2 cell = _world.Grid.CellCenter(_world.Grid.CellOf(_chimera.Position));
-            StructureDefinition crate = _town.Keep(TestData.Structure("caisse", 1f, 1f, hasDoor: false));
+            StructureDefinition crate = _town.KeepKnown(TestData.Structure("caisse", 1f, 1f, hasDoor: false));
 
             Assert.IsNotNull(TestTown.Place(_world, crate, cell.x, cell.y), "La caisse se pose sur elle.");
 
