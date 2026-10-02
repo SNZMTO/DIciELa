@@ -33,17 +33,27 @@ namespace Diciela.EditorTools
             HumanWrap
         }
 
-        /// <summary>Une pièce du pack, pour qui elle est dessinée, et si elle couvre le haut du crâne.</summary>
+        /// <summary>
+        /// Une pièce du pack, le modèle sous lequel le pack la pose sur ses personnages, pour qui elle est dessinée, et si
+        /// elle couvre le haut du crâne.
+        /// </summary>
         public readonly struct PackPiece
         {
-            public PackPiece(AttachmentDefinition fiche, Design design, bool coversHead)
+            public PackPiece(AttachmentDefinition fiche, GameObject posed, Design design, bool coversHead)
             {
                 Fiche = fiche;
+                Posed = posed;
                 Designed = design;
                 CoversHead = coversHead;
             }
 
             public AttachmentDefinition Fiche { get; }
+
+            /// <summary>
+            /// Le modèle à chercher dans les poses du pack : celui du pack, même quand la fiche porte sa copie teinte (la
+            /// barbe, que le pack pose sur son boucher) ; une moitié d'oreille, que le pack ne pose pas, garde la sienne.
+            /// </summary>
+            public GameObject Posed { get; }
             public Design Designed { get; }
             public bool CoversHead { get; }
         }
@@ -157,10 +167,15 @@ namespace Diciela.EditorTools
                             EditorAssets.Property(fiche, "_nameKey").stringValue = "piece." + id;
                         });
                     EditorAssets.AssignIfMissing(piece, "_slot", slots[slot]);
-                    // Une paire d'oreilles du pack se copie en deux moitiés : la fiche porte la copie.
+                    // Une paire d'oreilles du pack se copie en deux moitiés : la fiche porte la copie, qui se règle par la
+                    // règle de son emplacement (le pack ne pose que la paire entière).
+                    GameObject posed = model;
                     if (slots[slot].Pairs)
+                    {
+                        posed = EarHalves.Copy(model, name + "_" + number);
                         EditorAssets.Set(piece, fiche => EditorAssets.Property(fiche, "_model").objectReferenceValue =
-                            EarHalves.Copy(model, name + "_" + number));
+                            posed);
+                    }
                     else if (fur)
                         EditorAssets.Set(piece, fiche => EditorAssets.Property(fiche, "_model").objectReferenceValue =
                             FurCopy.Copy(model, name + "_" + number, palettes));
@@ -168,7 +183,7 @@ namespace Diciela.EditorTools
                         EditorAssets.AssignIfMissing(piece, "_model", model);
                     EditorAssets.AssignIfMissing(piece, "_palette",
                         PaletteBuilder.PaletteOf(model.GetComponentInChildren<Renderer>(true), palettes));
-                    pieces.Add(new PackPiece(piece, n <= humanUpTo ? human : Design.Animal, coversHead));
+                    pieces.Add(new PackPiece(piece, posed, n <= humanUpTo ? human : Design.Animal, coversHead));
                 }
             }
             return pieces;

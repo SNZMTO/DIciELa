@@ -69,8 +69,8 @@ namespace Diciela.EditorTools
         {
             // Le cercle de pierres du pack (6,2 m, un cercle de place) réduit au quart fait le foyer. Pas de flamme : un
             // effet de particules dans ces modèles fait planter Unity après une campagne PlayMode (SAVOIR, 2.9). Sur le
-            // tapis (2,59 m de long), la Chimère dort les pieds vers l'entrée, la tête sur le coussin, au sud. Le stock
-            // garde la disposition de l'ancien tas de départ, au fond, du côté du coffre.
+            // tapis (2,59 m de long), la Chimère dort les pieds vers l'entrée, la tête sur le coussin, au sud. Le stock,
+            // une pile de bûches et un tas de pierres, est au fond, du côté du coffre.
             new PackComposition("Campement", ContentBuilder.CampPath, new Spot(-1.75f, 0.2f, 0.65f, 180f),
                 new Piece("Environment/SM_Env_Stone_Ring_01", 0f, 0.1f, scale: 0.25f),
                 new Piece("Props/SM_Prop_Picnic_Rug_01", -1.75f, -0.1f),

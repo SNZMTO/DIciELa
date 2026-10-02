@@ -65,10 +65,11 @@ namespace Diciela.Game
 
         /// <summary>
         /// Montre ce monde, dont les arbres sont peints sur le Terrain de cette carte, et ouvre l'écran de création ; à la
-        /// validation, ouvre la ville, puis appelle started.
+        /// validation, ouvre la ville, puis appelle started. Si la ville ne s'ouvre pas (une interface qui ne trouve pas
+        /// ses éléments), l'erreur s'écrit dans la console et failed est appelé : rien ne tourne à moitié ouvert.
         /// </summary>
         internal void Open(World world, Catalog catalog, TextTable texts, PlacementSettings placement, MapScene map,
-            Action started)
+            Action started, Action failed)
         {
             _structureViews.Show(world.Structures, world.ConstructionSites, world.Map.Relief);
             _villagerViews.Show(world.Villagers, world.Structures, world.Map.Relief);
@@ -77,8 +78,10 @@ namespace Diciela.Game
             _appearancePreview.Stand(_atelier.Spot);
             _creationScreen.Show(catalog, texts, _appearancePreview, world, () =>
             {
-                OpenTown(world, catalog, texts, placement);
-                started();
+                if (TryOpenTown(world, catalog, texts, placement))
+                    started();
+                else
+                    failed();
             });
             _previewControls.Bind(_appearancePreview, _creationScreen);
             _confirmControls.Bind(_creationScreen.Confirm);
@@ -138,6 +141,20 @@ namespace Diciela.Game
 
         // La Chimère naît au point d'arrivée, tournée vers le nord : la caméra se tourne pour la voir de face, part tout
         // près d'elle et recule jusqu'à la distance de départ.
+        private bool TryOpenTown(World world, Catalog catalog, TextTable texts, PlacementSettings placement)
+        {
+            try
+            {
+                OpenTown(world, catalog, texts, placement);
+                return true;
+            }
+            catch (Exception exception)
+            {
+                Debug.LogException(exception, this);
+                return false;
+            }
+        }
+
         private void OpenTown(World world, Catalog catalog, TextTable texts, PlacementSettings placement)
         {
             _confirmControls.Bind(null);

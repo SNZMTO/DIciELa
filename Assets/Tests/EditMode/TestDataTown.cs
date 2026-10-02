@@ -6,14 +6,14 @@ namespace Diciela.Tests.EditMode
 {
     /// <summary>
     /// La fabrique de fiches des tests, suite : les fiches de la ville au travail (marchandises, statistiques, tâches,
-    /// postes, tas de départ, déroulé du départ). Même règle : en mémoire, remplies par SerializedObject.
+    /// postes, déroulé du départ). Même règle : en mémoire, remplies par SerializedObject.
     /// </summary>
     internal static partial class TestData
     {
         private static Catalog _emptyCatalog;
 
         /// <summary>
-        /// Un catalogue vide : un monde sans tas de départ ni statistiques, pour les tests qui n'en ont pas besoin. Il ne
+        /// Un catalogue vide : un monde sans déroulé du départ ni statistiques, pour les tests qui n'en ont pas besoin. Il ne
         /// contient rien et n'est jamais modifié : un seul pour tous les tests, jamais enregistré.
         /// </summary>
         public static Catalog EmptyCatalog

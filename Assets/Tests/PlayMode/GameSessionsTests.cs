@@ -13,8 +13,9 @@ namespace Diciela.Tests.PlayMode
     /// <summary>
     /// Deux parties de suite sur la scène de test, comme deux entrées en Play d'un projet qui ne recharge ni le code ni
     /// la scène : chacune crée un seul monde, sa Chimère validée à l'écran de création, et une pose y donne un seul
-    /// ordre, une seule ligne de journal et une seule construction vue. Chaque partie joue sur une copie du sol : le
-    /// Terrain de la carte de test (son asset) sort des deux parties inchangé.
+    /// ordre, une seule ligne de journal et une seule construction vue. Chaque partie joue sur une copie du sol : l'asset
+    /// du Terrain de la carte de test, lu sur le disque, sort des deux parties inchangé (la copie, elle, pourra changer
+    /// quand on terrassera).
     /// </summary>
     public sealed class GameSessionsTests
     {
@@ -48,7 +49,10 @@ namespace Diciela.Tests.PlayMode
             TestWorld.Fill(cabin, "_nameKey", "construction.cabane");
             TestWorld.Fill(cabin, "_model", model);
 #endif
-            float[,] heightsBefore = null;
+#if UNITY_EDITOR
+            TerrainData asset = TestMapGround();
+            float[,] heightsBefore = Heights(asset);
+#endif
             Application.logMessageReceived += Count;
             try
             {
@@ -67,7 +71,6 @@ namespace Diciela.Tests.PlayMode
 #if UNITY_EDITOR
                     Assert.IsFalse(UnityEditor.AssetDatabase.Contains(terrain), "La partie joue sur une copie du sol.");
 #endif
-                    heightsBefore = heightsBefore ?? Heights(terrain);
 
                     controls.Tool.Begin(cabin);
                     controls.Tool.AimAt(FindIn<CameraRig>(ScenePaths.GameTest).Camera.pixelRect.center);
@@ -78,7 +81,9 @@ namespace Diciela.Tests.PlayMode
                     Assert.AreEqual(session, _created, "Un seul monde par partie.");
                     Assert.AreEqual(session, _placed, "Une seule pose par partie, numérotée depuis 1.");
                     Assert.AreEqual(1, FindIn<StructureViews>(ScenePaths.GameTest).transform.childCount);
-                    Assert.AreEqual(heightsBefore, Heights(terrain), "Le Terrain de la carte n'est jamais modifié.");
+#if UNITY_EDITOR
+                    Assert.AreEqual(heightsBefore, Heights(asset), "L'asset du Terrain de la carte n'est jamais modifié.");
+#endif
 
                     yield return TestOpening.Leave(MaxFrames);
                 }
@@ -90,6 +95,21 @@ namespace Diciela.Tests.PlayMode
                 Object.Destroy(model);
             }
         }
+
+#if UNITY_EDITOR
+        /// <summary>Le sol de la carte de test tel qu'il est sur le disque : l'asset de Terrain dont dépend sa scène.</summary>
+        private static TerrainData TestMapGround()
+        {
+            foreach (string path in UnityEditor.AssetDatabase.GetDependencies(ScenePaths.MapTest, false))
+            {
+                var ground = UnityEditor.AssetDatabase.LoadAssetAtPath<TerrainData>(path);
+                if (ground != null)
+                    return ground;
+            }
+            Assert.Fail("La carte de test n'a pas de Terrain.");
+            return null;
+        }
+#endif
 
         private static float[,] Heights(TerrainData terrain)
         {

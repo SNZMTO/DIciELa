@@ -5,10 +5,12 @@ using UnityEngine;
 namespace Diciela.EditorTools
 {
     /// <summary>
-    /// Crée le contenu qui manque : les fiches du campement et de la cabane et leurs modèles, leur famille, la sorte de la
-    /// Chimère, le catalogue et ce que l'écran de création propose (AppearanceBuilder ; GDD, sections 6, 9 et 16), puis
-    /// la ville au travail (TownContentBuilder).
-    /// Réexécutable : une fiche qui existe n'est jamais touchée, sauf pour ce qui lui manque.
+    /// Crée le contenu qui manque : la ville au travail d'abord (TownContentBuilder), puis les fiches du campement et de la
+    /// cabane et leurs modèles, leur famille, la sorte de la Chimère, le catalogue et ce que l'écran de création propose
+    /// (AppearanceBuilder ; GDD, sections 6, 9 et 16). Une fiche naît complète : le campement avec son stock et son poste,
+    /// la cabane avec son coût, le catalogue avec ses marchandises, ses statistiques et sa nature. Réexécutable : une fiche
+    /// qui existe n'est jamais touchée, sauf pour une référence qui lui manque (un modèle, une icône) ; un réglage fait à
+    /// la main n'est jamais remis (une liste vidée, un nombre à 0, le campement rangé ailleurs).
     /// </summary>
     internal static class ContentBuilder
     {
@@ -25,9 +27,10 @@ namespace Diciela.EditorTools
 
         public static void CreateMissing()
         {
+            TownContentBuilder.Made town = TownContentBuilder.CreateMissing();
             // Le campement se voit en boîte à sa taille (Défaut : 3 × 3 m, porte de 1,2 m ; GDD, section 16) tant que sa
-            // composition n'est pas faite (DICIELA/Contenu/Composer le campement). Son stock et son poste viennent avec la
-            // ville au travail (TownContentBuilder).
+            // composition n'est pas faite (DICIELA/Contenu/Composer le campement). Il fait tout au départ (décision 172) :
+            // il tient 100 marchandises pour la ville et ouvre le poste « à tout faire ».
             StructureDefinition camp = EditorAssets.CreateIfMissing<StructureDefinition>(CampPath, fiche =>
             {
                 EditorAssets.Property(fiche, "_id").stringValue = "campement";
@@ -38,11 +41,16 @@ namespace Diciela.EditorTools
                 EditorAssets.Property(fiche, "_unique").boolValue = true;
                 EditorAssets.Property(fiche, "_chimeraHome").boolValue = true;
                 EditorAssets.Property(fiche, "_builtWhenPlaced").boolValue = true;
+                EditorAssets.Property(fiche, "_storageCapacity").intValue = 100;
+                EditorAssets.SetList(EditorAssets.Property(fiche, "_workSlots"), new[] { town.OddJobs });
             });
+            // Une cabane coûte 10 Bois et 5 Pierre, et demande 2 h de travail à un débutant (décision 137).
             StructureDefinition cabin = EditorAssets.CreateIfMissing<StructureDefinition>(CabinPath, fiche =>
             {
                 EditorAssets.Property(fiche, "_id").stringValue = "cabane";
                 EditorAssets.Property(fiche, "_nameKey").stringValue = "construction.cabane";
+                TownContentBuilder.SetAmounts(EditorAssets.Property(fiche, "_cost"), town.Wood, 10, town.Stone, 5);
+                EditorAssets.Property(fiche, "_workHours").floatValue = 2f;
             });
             // Les modèles se font ici une fois ; ensuite, par le menu DICIELA/Contenu/Préparer les modèles.
             EditorAssets.AssignIfMissing(cabin, "_sourceModel", EditorAssets.Load<GameObject>(CabinSourcePath));
@@ -58,19 +66,25 @@ namespace Diciela.EditorTools
                     EditorAssets.Property(fiche, "_nameKey").stringValue = "famille.logement";
                     SetList(EditorAssets.Property(fiche, "_structures"), camp, cabin);
                 });
-            // Le campement vient en premier (GDD, section 6) : en tête de sa famille, s'il n'y est pas encore.
-            InsertFirstIfMissing(housing, "_structures", camp);
             // L'icône de son onglet ; son pastel, le rose, est celui par défaut de la fiche (décision 142).
             EditorAssets.AssignIfMissing(housing, "_icon",
                 EditorAssets.Load<UnityEngine.UIElements.VectorImage>(InterfaceIconBuilder.Folder + "/maison.asset"));
             VillagerKindDefinition chimera = EditorAssets.CreateIfMissing<VillagerKindDefinition>(ChimeraPath,
                 fiche => EditorAssets.Property(fiche, "_id").stringValue = "chimere");
 
-            Catalog catalog = EditorAssets.CreateIfMissing<Catalog>(CatalogPath,
-                fiche => SetList(EditorAssets.Property(fiche, "_families"), housing));
+            Catalog catalog = EditorAssets.CreateIfMissing<Catalog>(CatalogPath, fiche =>
+            {
+                SetList(EditorAssets.Property(fiche, "_families"), housing);
+                EditorAssets.Property(fiche, "_opening").objectReferenceValue = town.Opening;
+                SetList(EditorAssets.Property(fiche, "_nature"), town.Nature);
+                SetList(EditorAssets.Property(fiche, "_goods"), town.Wood, town.Stone);
+                EditorAssets.SetList(EditorAssets.Property(fiche, "_statistics"), town.Statistics);
+            });
+            // Le campement vient en premier (GDD, section 6) : en tête du logement, s'il n'est encore dans aucune famille.
+            if (!catalog.AllStructures().Contains(camp))
+                InsertFirst(housing, "_structures", camp);
             EditorAssets.AssignIfMissing(catalog, "_chimeraKind", chimera);
             AppearanceBuilder.CreateMissing(catalog);
-            TownContentBuilder.CreateMissing(catalog, camp, cabin);
         }
 
         private static void SetList(SerializedProperty list, params Object[] items)
@@ -80,16 +94,11 @@ namespace Diciela.EditorTools
                 list.GetArrayElementAtIndex(i).objectReferenceValue = items[i];
         }
 
-        /// <summary>Met cet élément en tête de la liste d'une fiche, s'il n'y est pas ; le reste de la liste ne bouge pas.</summary>
-        private static void InsertFirstIfMissing(Object target, string listName, Object item)
+        /// <summary>Met cet élément en tête de la liste d'une fiche ; le reste de la liste ne bouge pas.</summary>
+        private static void InsertFirst(Object target, string listName, Object item)
         {
             var serialized = new SerializedObject(target);
             SerializedProperty list = EditorAssets.Property(serialized, listName);
-            for (int i = 0; i < list.arraySize; i++)
-            {
-                if (list.GetArrayElementAtIndex(i).objectReferenceValue == item)
-                    return;
-            }
             list.InsertArrayElementAtIndex(0);
             list.GetArrayElementAtIndex(0).objectReferenceValue = item;
             serialized.ApplyModifiedPropertiesWithoutUndo();
