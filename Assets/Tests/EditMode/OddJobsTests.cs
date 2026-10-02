@@ -148,6 +148,7 @@ namespace Diciela.Tests.EditMode
                 hasDoor: false));
             Structure placed = TestTown.Place(world, wall, west ? 25.75f : 28f, west ? 20f : 17.75f);
             Assert.IsNotNull(placed, "Le mur se pose sur elle, contre le chantier.");
+            Assert.IsFalse(world.Grid.IsWalkable(world.Grid.CellOf(at)), "Le mur couvre bien la place où elle bâtissait.");
 
             bool farAndBuilding = false;
             TestGrids.StepUntil(world, () =>

@@ -8,9 +8,9 @@ namespace Diciela.Tests.EditMode
 {
     /// <summary>
     /// Les arbres et les rochers du contenu, lus dans le projet sans rien écrire (GDD, section 2 ; décisions 157 à 160) :
-    /// chaque sorte rend une marchandise du catalogue, que la Chimère porte en un voyage, et demande du travail ; le tas a,
-    /// en plus de son contenu de départ, la place de ce que rend chacune ; le poste « à tout faire » défriche, en dernier ;
-    /// un modèle rangé ne l'est que dans une sorte, et chaque modèle peint sur le Terrain d'une carte est rangé dans une
+    /// chaque sorte rend une marchandise du catalogue, que la Chimère porte en un voyage, et demande du travail ; le
+    /// campement a, en plus de son stock de départ, la place de ce que rend chacune ; le poste « à tout faire » défriche,
+    /// en dernier ; un modèle rangé ne l'est que dans une sorte, et chaque modèle peint sur le Terrain d'une carte est rangé dans une
     /// sorte : sinon, le jeu ne saurait pas ce qu'il est.
     /// </summary>
     public sealed class NatureContentTests

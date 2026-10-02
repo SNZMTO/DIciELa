@@ -420,8 +420,10 @@ code.
   seule, régénérés par un menu seulement.
 - **Les garde-fous** : un test lit le code de la simulation et refuse `MonoBehaviour`, `GameObject`, `Time`,
   `UnityEngine.Random`, `System.Random`, `Mathf.PerlinNoise`, `Debug`, `Resources`, `UnityEditor`, les statiques
-  modifiables et Newtonsoft ; un test compare les `.asmdef` au tableau de la section 2 ; deux tests gardent la
-  section 5 (ce qui change l'état reste `internal`, aucune ouverture hors de la simulation) ; un test vérifie que les
+  modifiables et Newtonsoft ; un test compare les `.asmdef` au tableau de la section 2 (dossier, références,
+  plateformes, symboles ; aucun `.asmref`) ; deux tests gardent la section 5 (ce qui change l'état reste `internal`,
+  aucune ouverture hors de la simulation, lue sur les assemblages compilés) ; un test lit dans l'Inspector caché
+  d'Unity que les shaders du chantier restent regroupés par le SRP Batcher ; un test vérifie que les
   identifiants de fiches sont uniques et que les clés de textes existent.
 - **Le journal** : `Game` écrit dans la console les événements clés (jour fini, arrivée, chantier fini), pour que le
   Play court de la procédure `verifier` prouve que la simulation travaille ; dans l'éditeur et un build de

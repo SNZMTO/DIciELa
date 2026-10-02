@@ -462,9 +462,10 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   de profil, en planches de 4 × 4 dans `Temp/Planches`, avec `Mesures.csv` (la boîte de chaque pièce rapportée au crâne
   ou au corps : `PieceMeasures`) ; le profil montre ce qui flotte ou s'enfonce, que le trois quarts cache ; une structure en C# se lit par copie : une boîte se construit dans une variable, pas dans une
   propriété (`Bounds` restait réduit à un point). La planche en Play des têtes et des corps reste pour le cou. La
-  planche d'essais (`TrialSheet`) photographie des Chimères composées à la main dans `Temp/Planches/Essais.txt` (tête,
-  corps, pièces), de face, de trois quarts et de dos : pour choisir entre deux réglages, on en donne un à chaque variante
-  d'un animal, côte à côte. La planche des repères (`LandmarkSheet`) marque sur chaque tête le haut du crâne, les
+  planche d'essais (`TrialSheet`) photographie des Chimères composées à la main dans
+  `UserSettings/Planches/Essais.txt` (tête, corps, pièces ; pas dans `Temp`, qu'Unity vide à sa fermeture), de face,
+  de trois quarts et de dos : pour choisir entre deux réglages, on en donne un à chaque variante d'un animal, côte à
+  côte. La planche des repères (`LandmarkSheet`) marque sur chaque tête le haut du crâne, les
   oreilles, la face et le cou.
 
 ## 3. Pièges de Unity et de C#

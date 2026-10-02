@@ -8,7 +8,8 @@ namespace Diciela.Tests.EditMode.Architecture
 {
     /// <summary>
     /// Les assemblages du projet suivent le tableau de ARCHITECTURE.md (section 2) : un assemblage inconnu, une
-    /// référence de trop ou un dossier déplacé font échouer ce test. Il lit les fichiers .asmdef sans rien écrire.
+    /// référence de trop, un dossier déplacé, une plateforme ou un symbole de trop ou de moins font échouer ce test, comme
+    /// un .asmref, qui ferait entrer un dossier dans l'assemblage d'un autre. Il lit les fichiers sans rien écrire.
     /// </summary>
     public sealed class AssemblyReferenceTests
     {
@@ -22,6 +23,9 @@ namespace Diciela.Tests.EditMode.Architecture
             public string[] precompiledReferences = new string[0];
             public bool overrideReferences = false;
             public bool autoReferenced = true;
+            public string[] includePlatforms = new string[0];
+            public string[] excludePlatforms = new string[0];
+            public string[] defineConstraints = new string[0];
         }
 
         [Test]
@@ -36,6 +40,13 @@ namespace Diciela.Tests.EditMode.Architecture
             var faults = new List<string>();
             foreach (string file in files)
                 CheckAssembly(file, projectFolder, faults);
+            foreach (string folder in new[] { "Scripts", "Tests" })
+            {
+                foreach (string file in Directory.GetFiles(Path.Combine(Application.dataPath, folder), "*.asmref",
+                             SearchOption.AllDirectories))
+                    faults.Add(file.Substring(projectFolder.Length + 1) + " : un .asmref range un dossier dans un autre " +
+                               "assemblage ; chaque assemblage a son seul dossier.");
+            }
 
             Assert.IsEmpty(faults, string.Join("\n", faults));
         }
@@ -72,6 +83,25 @@ namespace Diciela.Tests.EditMode.Architecture
                 if (System.Array.IndexOf(rule.Precompiled, dll) < 0)
                     faults.Add(asmdef.name + " : DLL interdite " + dll + ".");
             }
+
+            if (!SameSet(asmdef.includePlatforms, rule.Platforms) || asmdef.excludePlatforms.Length > 0)
+                faults.Add(asmdef.name + " : plateformes [" + string.Join(", ", asmdef.includePlatforms) + "] au lieu de [" +
+                           string.Join(", ", rule.Platforms) + "], aucune exclue.");
+            if (!SameSet(asmdef.defineConstraints, rule.Defines))
+                faults.Add(asmdef.name + " : symboles [" + string.Join(", ", asmdef.defineConstraints) + "] au lieu de [" +
+                           string.Join(", ", rule.Defines) + "].");
+        }
+
+        private static bool SameSet(string[] actual, string[] expected)
+        {
+            if (actual.Length != expected.Length)
+                return false;
+            foreach (string item in actual)
+            {
+                if (System.Array.IndexOf(expected, item) < 0)
+                    return false;
+            }
+            return true;
         }
 
         /// <summary>Une référence s'écrit par nom ou par GUID ; on ramène tout au nom.</summary>

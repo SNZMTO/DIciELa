@@ -11,12 +11,12 @@ namespace Diciela.Tests.PlayMode
 {
     /// <summary>
     /// Le HUD à toutes les tailles d'écran (GDD, section 16 ; décision 144), rendu hors écran de 1280 × 720 à la 4K,
-    /// écrans larges compris : la journée tient au coin haut-gauche, à 24 px du bord et 20 du haut ; la fiche du tas,
-    /// ouverte, au coin haut-droit ; le stock en fanions au milieu du haut, à 24 px ; le panneau Construire, ouvert, au
-    /// milieu du bas, à 24 px ; l'icône des outils au coin bas-droit, à 24 px ; tout reste dans l'écran, sans que deux
+    /// écrans larges compris : la journée tient au coin haut-gauche, à 24 px du bord et 20 du haut ; la fiche du
+    /// campement, ouverte, au coin haut-droit ; le stock en fanions au milieu du haut, à 24 px ; le panneau Construire,
+    /// ouvert, au milieu du bas, à 24 px ; l'icône des outils au coin bas-droit, à 24 px ; tout reste dans l'écran, sans que deux
     /// blocs se chevauchent. La roue des outils, ouverte sur leur icône, est ramenée dans l'écran. C'est le vrai HUD (sa mise en page, la feuille du jeu,
     /// ses vues, ses présentateurs, sa taille), avec le catalogue et les textes du projet pour la barre et la journée, et
-    /// le petit monde du tas pour la fiche et les fanions. Les marges attendues sont celles du GDD.
+    /// le petit monde du campement pour la fiche et les fanions. Les marges attendues sont celles du GDD.
     /// </summary>
     public sealed class HudLayoutTests
     {

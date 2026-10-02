@@ -1,29 +1,25 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
-using System.Text.RegularExpressions;
+using System.Runtime.CompilerServices;
 using Diciela.Simulation;
 using Diciela.Simulation.Core;
 using Diciela.Simulation.Economy;
 using Diciela.Simulation.Land;
 using Diciela.Simulation.Society;
 using NUnit.Framework;
-using UnityEngine;
 
 namespace Diciela.Tests.EditMode.Architecture
 {
     /// <summary>
     /// Seule la simulation change la simulation (ARCHITECTURE, section 5) : ce qui modifie un système est internal, et
     /// seules les couches de la simulation ouvrent leurs internals, aux seules couches de la simulation. Ni la vue, ni
-    /// les gestes, ni les tests ne reçoivent de porte dérobée. Ces tests lisent le code, sans rien écrire.
+    /// les gestes, ni les tests ne reçoivent de porte dérobée. Ces tests lisent le code compilé, sans rien écrire : les
+    /// ouvertures (InternalsVisibleTo) se lisent sur les assemblages eux-mêmes, quelle que soit leur écriture.
     /// </summary>
     public sealed class InternalAccessTests
     {
         private const string SimulationPrefix = "Diciela.Simulation";
-
-        private static readonly Regex Declaration = new Regex(
-            @"\[\s*assembly\s*:\s*(?:System\.Runtime\.CompilerServices\.)?InternalsVisibleTo\s*\(\s*""([^""]+)""");
 
         /// <summary>Ce qui change l'état de la simulation ; une méthode de ce genre qui naît s'ajoute ici.</summary>
         private static readonly (Type Owner, string Method)[] Mutators =
@@ -133,20 +129,20 @@ namespace Diciela.Tests.EditMode.Architecture
         [Test]
         public void OnlyTheSimulationOpensItsInternalsAndOnlyToItself()
         {
-            string scriptsFolder = Normalized(System.IO.Path.Combine(Application.dataPath, "Scripts"));
-            string simulationFolder = scriptsFolder + "/Simulation/";
             var declarations = new List<string>();
             var faults = new List<string>();
-
-            foreach (string file in Directory.GetFiles(scriptsFolder, "*.cs", SearchOption.AllDirectories))
+            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                string path = Normalized(file);
-                foreach (Match match in Declaration.Matches(File.ReadAllText(file)))
+                string name = assembly.GetName().Name;
+                if (!name.StartsWith("Diciela."))
+                    continue;
+                foreach (var opening in assembly.GetCustomAttributes<InternalsVisibleToAttribute>())
                 {
-                    string target = match.Groups[1].Value;
+                    // Le nom de l'assemblage ouvert, sans sa clé publique s'il en a une.
+                    string target = opening.AssemblyName.Split(',')[0].Trim();
                     declarations.Add(target);
-                    if (!path.StartsWith(simulationFolder) || !target.StartsWith(SimulationPrefix))
-                        faults.Add(path.Substring(scriptsFolder.Length + 1) + " ouvre ses internals à " + target + ".");
+                    if (!IsSimulation(name) || !IsSimulation(target))
+                        faults.Add(name + " ouvre ses internals à " + target + ".");
                 }
             }
 
@@ -155,9 +151,9 @@ namespace Diciela.Tests.EditMode.Architecture
             Assert.IsEmpty(faults, string.Join("\n", faults));
         }
 
-        private static string Normalized(string path)
+        private static bool IsSimulation(string assembly)
         {
-            return System.IO.Path.GetFullPath(path).Replace('\\', '/');
+            return assembly == SimulationPrefix || assembly.StartsWith(SimulationPrefix + ".");
         }
     }
 }

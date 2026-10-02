@@ -10,23 +10,24 @@ namespace Diciela.EditorTools
 {
     /// <summary>
     /// La planche d'essais (SAVOIR, 2.11) : des Chimères composées à la main, photographiées de face (comme dans
-    /// l'atelier), de trois quarts d'en haut (comme en ville), de profil et de dos, une par ligne. La liste est un fichier texte,
-    /// Temp/Planches/Essais.txt, une Chimère par ligne : l'identifiant de la tête, celui du corps, puis les noms des
+    /// l'atelier), de trois quarts d'en haut (comme en ville), de profil et de dos, une par ligne. La liste est un fichier
+    /// texte, UserSettings/Planches/Essais.txt (gardé d'une session à l'autre, hors de Git ; Unity vide Temp à sa
+    /// fermeture), une Chimère par ligne : l'identifiant de la tête, celui du corps, puis les noms des
     /// fiches de ses pièces, séparés par des points-virgules (« grenouille_a;grenouille_a;Oreilles_Cochon »), chacune
     /// suivie, au besoin, de @ et du nom de fichier de sa couleur (« Barbe_01@Couleur_05 »). Pour juger
     /// une combinaison sans passer par l'écran de création.
     /// </summary>
     internal static class TrialSheet
     {
-        private const string List = "Temp/Planches/Essais.txt";
+        private const string List = "UserSettings/Planches/Essais.txt";
         private const string Sheet = "Temp/Planches/Essais.jpg";
 
-        [MenuItem("DICIELA/Album/Planche d'essais, d'après Temp/Planches/Essais.txt")]
+        [MenuItem("DICIELA/Album/Planche d'essais, d'après la liste des essais")]
         private static void Write()
         {
             if (!File.Exists(List))
             {
-                Debug.LogError("DICIELA : pas de liste d'essais dans " + List + ".");
+                Debug.LogError("DICIELA : pas de liste d'essais dans " + List + " (une Chimère par ligne : tête;corps;pièces).");
                 return;
             }
             var catalog = EditorAssets.Load<Catalog>(ContentBuilder.CatalogPath);

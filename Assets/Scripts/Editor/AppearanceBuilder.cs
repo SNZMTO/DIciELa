@@ -97,7 +97,7 @@ namespace Diciela.EditorTools
                 AttachmentDefinition piece = packPiece.Fiche;
                 SlotRule rule = rules[piece.Slot];
                 AttachmentSlotDefinition[] hides = packPiece.CoversHead ? underHats : null;
-                if (context.Poses.TryFind(piece.Model, false, out PackPoses.Pose onAnimal))
+                if (context.Poses.TryFind(packPiece.Posed, false, out PackPoses.Pose onAnimal))
                 {
                     AnimalBuilder.Animal wearer = animals.Find(animal => animal.Model == onAnimal.Character);
                     AttachmentFitter.FitToPose(piece, onAnimal.Pivot, wearer.Head, wearer.Body);
@@ -107,7 +107,7 @@ namespace Diciela.EditorTools
                 {
                     // Le porteur humain que le pack lui donne, sinon l'humain de référence : elle se tient autour de son
                     // os Head.
-                    GameObject character = context.Poses.TryFind(piece.Model, true, out PackPoses.Pose onHuman)
+                    GameObject character = context.Poses.TryFind(packPiece.Posed, true, out PackPoses.Pose onHuman)
                         ? onHuman.Character
                         : humanModel;
                     if (!wearers.TryGetValue(character, out HumanHead wearer))

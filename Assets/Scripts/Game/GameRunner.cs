@@ -93,7 +93,7 @@ namespace Diciela.Game
             {
                 // Le journal sert au développeur : dans l'éditeur et un build de développement, jamais chez le joueur.
                 _journal = Debug.isDebugBuild ? new SimulationJournal(_world) : null;
-                _stage.Open(_world, _catalog, _texts, _placementSettings, _map, StartTime);
+                _stage.Open(_world, _catalog, _texts, _placementSettings, _map, StartTime, Abandon);
                 return true;
             }
             catch (Exception exception)
@@ -101,6 +101,12 @@ namespace Diciela.Game
                 Debug.LogException(exception, this);
                 return false;
             }
+        }
+
+        /// <summary>La ville n'a pas pu s'ouvrir : le démarrage s'arrête, et OnDisable libère ce qui a été montré.</summary>
+        private void Abandon()
+        {
+            enabled = false;
         }
 
         /// <summary>L'ordre « créer la Chimère » est parti : le temps part, et son premier pas la fait naître.</summary>

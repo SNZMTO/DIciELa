@@ -1,5 +1,6 @@
 using Diciela.View;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -10,8 +11,9 @@ namespace Diciela.EditorTools
     /// <summary>
     /// Monte l'atelier de l'écran de création (GDD, section 6 ; Atelier) : ses maillages à facettes (AtelierShapes),
     /// réécrits à chaque passage ; ses matériaux, créés s'ils manquent (leurs couleurs se règlent dans l'Inspector) ; son
-    /// prefab (le décor, une lumière chaude, une caméra qui cadre la Chimère à gauche du panneau), créé s'il manque. Dans
-    /// une scène racine, il le pose loin de toute carte s'il n'y est pas. Réexécutable.
+    /// prefab (le décor, une lumière chaude, une caméra qui cadre la Chimère à gauche du panneau), créé s'il manque, monté
+    /// dans une scène d'aperçu : la scène ouverte n'est jamais touchée, même si le montage échoue. Dans une scène racine,
+    /// il le pose loin de toute carte s'il n'y est pas. Réexécutable.
     /// </summary>
     internal static class AtelierBuilder
     {
@@ -46,22 +48,31 @@ namespace Diciela.EditorTools
             if (EditorAssets.Exists(PrefabPath))
                 return;
 
-            var root = new GameObject("Atelier");
-            Piece(root, "Sol", floor, false, Paint("Sol_A", 0.62f, 0.47f, 0.32f), Paint("Sol_B", 0.57f, 0.43f, 0.29f));
-            Piece(root, "Socle", pedestal, true, Paint("Socle_Pans", 0.36f, 0.23f, 0.14f),
-                Paint("Socle_Dessus", 0.72f, 0.55f, 0.36f));
-            Piece(root, "Fond", backdrop, false, Paint("Fond_Plinthe", 0.3f, 0.19f, 0.11f),
-                Paint("Fond_A", 0.86f, 0.74f, 0.56f), Paint("Fond_B", 0.8f, 0.67f, 0.49f));
-            var spot = new GameObject("Place de la Chimère").transform;
-            spot.SetParent(root.transform, false);
-            spot.localPosition = Vector3.up * AtelierShapes.PedestalHeight;
-            AddLight(root);
-            AddCamera(root);
-            Atelier atelier = root.AddComponent<Atelier>();
-            EditorAssets.AssignIfMissing(atelier, "_spot", spot);
-            PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
-            Object.DestroyImmediate(root);
-            Debug.Log("DICIELA : prefab de l'atelier créé : " + PrefabPath + ".");
+            Scene scene = EditorSceneManager.NewPreviewScene();
+            try
+            {
+                var root = new GameObject("Atelier");
+                SceneManager.MoveGameObjectToScene(root, scene);
+                Piece(root, "Sol", floor, false, Paint("Sol_A", 0.62f, 0.47f, 0.32f),
+                    Paint("Sol_B", 0.57f, 0.43f, 0.29f));
+                Piece(root, "Socle", pedestal, true, Paint("Socle_Pans", 0.36f, 0.23f, 0.14f),
+                    Paint("Socle_Dessus", 0.72f, 0.55f, 0.36f));
+                Piece(root, "Fond", backdrop, false, Paint("Fond_Plinthe", 0.3f, 0.19f, 0.11f),
+                    Paint("Fond_A", 0.86f, 0.74f, 0.56f), Paint("Fond_B", 0.8f, 0.67f, 0.49f));
+                var spot = new GameObject("Place de la Chimère").transform;
+                spot.SetParent(root.transform, false);
+                spot.localPosition = Vector3.up * AtelierShapes.PedestalHeight;
+                AddLight(root);
+                AddCamera(root);
+                Atelier atelier = root.AddComponent<Atelier>();
+                EditorAssets.AssignIfMissing(atelier, "_spot", spot);
+                PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
+                Debug.Log("DICIELA : prefab de l'atelier créé : " + PrefabPath + ".");
+            }
+            finally
+            {
+                EditorSceneManager.ClosePreviewScene(scene);
+            }
         }
 
         /// <summary>L'atelier de cette scène, posé loin de la carte s'il n'y est pas ; null (avec une erreur) sans prefab.</summary>

@@ -6,7 +6,7 @@ namespace Diciela.Tests.EditMode
 {
     /// <summary>
     /// Le contenu du départ et de la ville au travail, lu dans le projet sans rien écrire : le logis de la Chimère, le
-    /// tas de départ (hors de la barre, un entrepôt qui tient son contenu de départ et ouvre un poste), les statistiques
+    /// campement (un entrepôt qui reçoit le stock de départ et ouvre un poste), les statistiques
     /// (chaque sous-statistique dans une seule), les tâches (chacune lit une sous-statistique du catalogue), les coûts
     /// (des marchandises du catalogue).
     /// </summary>
