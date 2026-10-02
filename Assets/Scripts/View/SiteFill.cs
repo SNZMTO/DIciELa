@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Diciela.Data;
 using UnityEngine;
 
 namespace Diciela.View
@@ -10,33 +9,22 @@ namespace Diciela.View
     /// fantôme, TranslucentModel) ne garde que ce qui est au-dessus, et porte la lueur et les étincelles. L'un et l'autre
     /// détourent ce que l'original détoure (des feuilles et leurs tiges, le bord d'un chaume), et dessinent les mêmes
     /// faces. La ligne monte avec l'avancement, de la base de la boîte du modèle (ses fondations comprises) à son sommet,
-    /// et ondule. Chaque couche a son bloc de propriétés : aucun matériau n'est créé par chantier. Ce qui n'est pas un
-    /// maillage (une fumée du pack) attend la fin du chantier.
+    /// et ondule. Sa hauteur est la valeur propre de chaque rendu (SiteLine) : aucun matériau n'est créé par chantier,
+    /// aucun bloc de propriétés ne l'éloigne du SRP Batcher (décision 181). Ce qui n'est pas un maillage (une fumée du
+    /// pack) attend la fin du chantier.
     /// </summary>
     internal sealed class SiteFill
     {
-        private static readonly int FillHeightId = Shader.PropertyToID("_FillHeight");
-        private static readonly int WaveAmplitudeId = Shader.PropertyToID("_WaveAmplitude");
-        private static readonly int WaveLengthId = Shader.PropertyToID("_WaveLength");
-        private static readonly int WaveSecondsId = Shader.PropertyToID("_WaveSeconds");
-        private static readonly int SoftnessId = Shader.PropertyToID("_Softness");
-        private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
-
         private readonly List<Renderer> _built = new List<Renderer>();
         private readonly TranslucentModel _ghost;
-        private readonly MaterialPropertyBlock _builtBlock = new MaterialPropertyBlock();
-        private readonly MaterialPropertyBlock _ghostBlock = new MaterialPropertyBlock();
-        private readonly PlacementSettings _settings;
         private readonly float _bottom;
         private readonly float _height;
-        // La part montrée : les blocs ne changent que quand elle change.
+        // La part montrée : la ligne ne change que quand elle change.
         private double _progress = -1d;
 
         /// <summary>Fait de ce modèle posé un chantier : sa vraie matière, et son fantôme, copie rangée sous lui.</summary>
-        public SiteFill(GameObject view, GameObject model, SiteMaterials materials, SiteGhosts ghosts,
-            PlacementSettings settings)
+        public SiteFill(GameObject view, GameObject model, SiteMaterials materials, SiteGhosts ghosts)
         {
-            _settings = settings;
             var box = new Bounds();
             bool any = false;
             foreach (Renderer renderer in view.GetComponentsInChildren<Renderer>(true))
@@ -72,21 +60,9 @@ namespace Diciela.View
                 return;
             _progress = progress;
             float fill = _bottom + Mathf.Clamp01((float)progress) * _height;
-            Fill(_builtBlock, fill);
-            Fill(_ghostBlock, fill);
-            _ghostBlock.SetColor(BaseColorId, _settings.PlannedColor);
             foreach (Renderer renderer in _built)
-                renderer.SetPropertyBlock(_builtBlock);
-            _ghost.Apply(_ghostBlock);
-        }
-
-        private void Fill(MaterialPropertyBlock block, float fill)
-        {
-            block.SetFloat(FillHeightId, fill);
-            block.SetFloat(WaveAmplitudeId, _settings.WaveAmplitude);
-            block.SetFloat(WaveLengthId, _settings.WaveLength);
-            block.SetFloat(WaveSecondsId, _settings.WaveSeconds);
-            block.SetFloat(SoftnessId, _settings.SiteSoftness);
+                SiteLine.Raise(renderer, fill);
+            _ghost.Raise(fill);
         }
     }
 }

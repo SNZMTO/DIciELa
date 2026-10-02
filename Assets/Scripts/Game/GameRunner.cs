@@ -91,7 +91,8 @@ namespace Diciela.Game
         {
             try
             {
-                _journal = new SimulationJournal(_world);
+                // Le journal sert au développeur : dans l'éditeur et un build de développement, jamais chez le joueur.
+                _journal = Debug.isDebugBuild ? new SimulationJournal(_world) : null;
                 _stage.Open(_world, _catalog, _texts, _placementSettings, _map, StartTime);
                 return true;
             }

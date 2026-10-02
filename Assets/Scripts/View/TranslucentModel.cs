@@ -7,10 +7,10 @@ namespace Diciela.View
     /// <summary>
     /// Un modèle vu en fantôme (décisions 166 et 177), pour l'aperçu de la pose comme pour le fantôme d'un chantier :
     /// chaque matériau de ses maillages devient son fantôme (SiteGhosts : la forme des feuilles et de leurs tiges, du bord
-    /// d'un chaume), sans ombre, et ses couleurs (sur un chantier, sa ligne) se règlent par un bloc de propriétés, sans
-    /// créer de matériau à chaque changement. Sans ligne, le fantôme du chantier est un simple fantôme teinté. Ce qui
-    /// n'est pas un maillage (la fumée des cheminées du pack, un effet) n'est pas dessiné : la construction n'est pas
-    /// encore bâtie.
+    /// d'un chaume, la teinte du fantôme), sans ombre. Sa ligne, sur un chantier, est la valeur propre de chacun de ses
+    /// rendus (SiteLine) ; sans ligne, c'est un simple fantôme teinté. Les couleurs de l'aperçu se règlent par un bloc de
+    /// propriétés, sans créer de matériau à chaque changement. Ce qui n'est pas un maillage (la fumée des cheminées du
+    /// pack, un effet) n'est pas dessiné : la construction n'est pas encore bâtie.
     /// </summary>
     internal sealed class TranslucentModel
     {
@@ -28,12 +28,20 @@ namespace Diciela.View
                     materials[i] = ghosts.For(materials[i]);
                 renderer.sharedMaterials = materials;
                 renderer.shadowCastingMode = ShadowCastingMode.Off;
+                SiteLine.Raise(renderer, SiteLine.Nowhere);
                 meshes.Add(renderer);
             }
             _renderers = meshes.ToArray();
         }
 
-        /// <summary>Règle ses couleurs, et sur un chantier sa ligne, par ce bloc, sur tous ses maillages.</summary>
+        /// <summary>Met sa ligne à cette hauteur, en mètres, sur tous ses maillages.</summary>
+        public void Raise(float height)
+        {
+            foreach (Renderer renderer in _renderers)
+                SiteLine.Raise(renderer, height);
+        }
+
+        /// <summary>Règle ses couleurs par ce bloc, sur tous ses maillages : l'aperçu de pose, vert ou rouge.</summary>
         public void Apply(MaterialPropertyBlock block)
         {
             foreach (Renderer renderer in _renderers)

@@ -3,7 +3,8 @@
 // ombres, la profondeur et les normales coupent au même endroit : la moitié qui n'est pas bâtie ne fait ni ombre ni
 // occlusion. Un matériau qui détoure (des feuilles, le bord d'un chaume) détoure partout, au seuil de l'original
 // (_ALPHATEST_ON, ChantierDetourage) ; un feuillage du pack y garde ses tiges (_TrunkMap, _TRUNKMAP). Les matériaux du
-// pack y sont recopiés à l'exécution (SiteMaterials) ; la ligne se règle par chantier (SiteFill).
+// pack y sont recopiés à l'exécution (SiteMaterials) ; la ligne se règle par chantier (SiteFill), sans bloc de
+// propriétés : le SRP Batcher regroupe les chantiers (ChantierLigne).
 Shader "Diciela/Chantier"
 {
     Properties
@@ -26,11 +27,6 @@ Shader "Diciela/Chantier"
         [HideInInspector] _SrcBlendAlpha("__srcA", Float) = 1.0
         [HideInInspector] _DstBlendAlpha("__dstA", Float) = 0.0
         [HideInInspector] _ZWrite("__zw", Float) = 1.0
-        [HideInInspector] _FillHeight("Fill Height", Float) = -10000
-        [HideInInspector] _WaveAmplitude("Wave Amplitude", Float) = 0.08
-        [HideInInspector] _WaveLength("Wave Length", Float) = 1.6
-        [HideInInspector] _WaveSeconds("Wave Seconds", Float) = 3.0
-        [HideInInspector] _Softness("Softness", Float) = 0.25
     }
 
     SubShader

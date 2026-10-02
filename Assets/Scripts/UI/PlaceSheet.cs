@@ -13,8 +13,9 @@ namespace Diciela.UI
     /// La fiche du lieu touché, en haut à droite de l'écran (GDD, section 16) : un cadre de bois, le nom du lieu, ce qu'il
     /// tient pour la ville (chaque marchandise dans un creux de lin), son poste et qui le tient, ses boutons de feutre
     /// (chacun dans son pastel) et une croix de feutre sable. C'est la vue (le bloc « fiche » de Hud.uxml) ; son
-    /// présentateur décide. Échap la ferme avant tout le reste. Ses boutons se refont seulement quand leur nombre change :
-    /// un clic pendant que le stock bouge tombe sur un bouton vivant.
+    /// présentateur décide. Échap la ferme avant tout le reste. Ses lignes et ses boutons se refont seulement quand leur
+    /// nombre change, sinon ils se remplissent sur place (le stock bouge à chaque charge prise) : un clic pendant que le
+    /// stock bouge tombe sur un bouton vivant.
     /// </summary>
     [RequireComponent(typeof(UIDocument))]
     public sealed class PlaceSheet : MonoBehaviour, IPlaceSheetView, IEscapable
@@ -121,9 +122,17 @@ namespace Diciela.UI
 
         public void ShowStock(IReadOnlyList<PlaceSheetLine> lines)
         {
-            _stock.Clear();
-            foreach (PlaceSheetLine line in lines)
-                _stock.Add(PlaceSheetElements.Line(line));
+            if (_stock.childCount != lines.Count)
+            {
+                _stock.Clear();
+                foreach (PlaceSheetLine line in lines)
+                    _stock.Add(PlaceSheetElements.Line(line));
+            }
+            else
+            {
+                for (int i = 0; i < lines.Count; i++)
+                    PlaceSheetElements.Refill(_stock[i], lines[i]);
+            }
             _stock.EnableInClassList(StyleClasses.Hidden, lines.Count == 0);
         }
 

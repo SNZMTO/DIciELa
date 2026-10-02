@@ -19,23 +19,20 @@ namespace Diciela.Simulation.Economy
         private readonly Reach _reach;
         private readonly int _maxBuilders;
 
-        public TaskOffers(Warehouses warehouses, ConstructionSites sites, Islands islands, Surroundings surroundings,
-            SimulationSettings settings)
+        internal TaskOffers(Warehouses warehouses, ConstructionSites sites, Reach reach, SimulationSettings settings)
         {
             if (ReferenceEquals(warehouses, null))
                 throw new ArgumentNullException(nameof(warehouses));
             if (ReferenceEquals(sites, null))
                 throw new ArgumentNullException(nameof(sites));
-            if (ReferenceEquals(islands, null))
-                throw new ArgumentNullException(nameof(islands));
-            if (ReferenceEquals(surroundings, null))
-                throw new ArgumentNullException(nameof(surroundings));
+            if (ReferenceEquals(reach, null))
+                throw new ArgumentNullException(nameof(reach));
             if (ReferenceEquals(settings, null))
                 throw new ArgumentNullException(nameof(settings));
 
             _warehouses = warehouses;
             _sites = sites;
-            _reach = new Reach(islands, surroundings);
+            _reach = reach;
             _maxBuilders = settings.MaxBuildersPerSite;
         }
 

@@ -115,7 +115,8 @@ namespace Diciela.Tests.PlayMode
             _test.Tool.AimAt(_test.OnScreen(TestWorld.Center));
 
             var mesh = _test.Preview.GetComponentInChildren<MeshRenderer>();
-            Assert.AreSame(_test.Settings.SiteGhostMaterial, mesh.sharedMaterial, "L'aperçu a le fantôme du chantier.");
+            Assert.AreSame(_test.Settings.SiteGhostMaterial.shader, mesh.sharedMaterial.shader,
+                "L'aperçu a le fantôme du chantier.");
             Assert.IsFalse(_test.Preview.GetComponentInChildren<LineRenderer>(true).enabled,
                 "Ce qui n'est pas un maillage (la fumée d'une cheminée) n'est pas dessiné.");
         }

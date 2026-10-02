@@ -88,9 +88,12 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   tenant. Comme une diagonale ne coupe jamais un coin, se rejoindre en huit directions revient à se rejoindre en
   quatre : on les relève rangée par rangée, chaque tronçon de mailles libres relié à ceux qu'il touche en dessous par
   un union-find (chaque tronçon pointe vers un plus ancien de son îlot). Ils se refont quand on les lit et que la
-  version du maillage a changé : une fois pour tout ce qu'un pas a posé, une quinzaine de millisecondes sur la carte de
-  500 m, recherche comprise. La recherche ne garde que les départs et les arrivées d'un même îlot : un départ seul sur
-  le sien ferait fouiller tout l'îlot en vain. Sans les îlots, un A* vers une porte enfermée parcourt toute la carte.
+  version du maillage a changé : une fois pour tout ce qu'un pas a posé. Le maillage retient, rangée par rangée, la
+  version de son dernier changement : les tronçons (`FreeRuns`) ne relisent que les rangées changées et reprennent
+  les autres, puis l'union-find repart des tronçons. Sur la carte de 500 m et sa forêt de 5 000 arbres, les îlots
+  d'après une pose se refont en 0,5 ms au lieu de 3,9 ms (mesuré à l'étape 30) ; un arbre retiré passe par le même
+  chemin. La recherche ne garde que les départs et les arrivées d'un même îlot : un départ seul sur le sien ferait
+  fouiller tout l'îlot en vain. Sans les îlots, un A* vers une porte enfermée parcourt toute la carte.
   La charrette aura les siens, si ses passages diffèrent de ceux du piéton.
 - **La marche** (`Walk`) : le marcheur suit la ligne tendue, et l'avancement se compte en distance, d'un coin à
   l'autre, sans allocation par pas. Il garde son trajet avec la version du maillage où il l'a vérifié ; quand elle
@@ -312,9 +315,13 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 - **Couper un modèle du pack à une hauteur** (le chantier qui monte, décision 166) : ses matériaux sont des Shader
   Graph de Synty (`_Albedo_Map`, `_Normal_Map`, `_Normal_Amount`…), qu'on ne retouche pas. On en fait à l'exécution
   une copie sur un shader du projet (`Diciela/Chantier`, le Lit d'URP repris), propriétés recopiées une à une sous les
-  noms du Lit ; une copie par matériau d'origine, partagée par tous les chantiers, détruite avec la vue. La hauteur et
-  la vague passent par un `MaterialPropertyBlock` par couche : aucun matériau par chantier (le bloc sort ces maillages
-  du SRP Batcher, ce qui reste léger pour quelques dizaines de chantiers). La coupe doit valoir aussi pour les passes
+  noms du Lit ; une copie par matériau d'origine, partagée par tous les chantiers, détruite avec la vue. La hauteur de
+  chaque chantier passe par la valeur propre de chaque rendu (`SetShaderUserValue`, les bits d'un flottant, lus par
+  `asfloat(unity_RendererUserValue)`, dans le tampon par objet d'URP) et la vague par des variables globales
+  (`Shader.SetGlobalFloat`) : aucun matériau par chantier, aucun `MaterialPropertyBlock` (un bloc sort un rendu du SRP
+  Batcher), et aucune propriété hors du tampon `UnityPerMaterial` (la déclarer dans `Properties` sans l'y mettre rend
+  tout le shader incompatible). Le test `SiteShadersTests` lit la compatibilité là où l'Inspector la lit
+  (`ShaderUtil.GetSRPBatcherCompatibilityCode`, interne). La coupe doit valoir aussi pour les passes
   ShadowCaster, DepthOnly et DepthNormals, sinon la moitié pas bâtie fait de l'ombre : celles d'URP n'ont pas la
   position dans le monde, le shader a donc les siennes. Sans MSAA, un bord adouci se fait par une trame (Bayer 4 × 4)
   sur la vraie matière, et le flou par le calque transparent du fantôme. Une erreur de variante d'un shader n'apparaît

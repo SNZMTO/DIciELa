@@ -56,7 +56,8 @@ namespace Diciela.View
             _sites = sites;
             _relief = relief;
             _siteMaterials = new SiteMaterials(_settings.SiteMaterial, _settings.BlendedCutoff);
-            _siteGhosts = new SiteGhosts(_settings.SiteGhostMaterial, _settings.BlendedCutoff);
+            _siteGhosts = new SiteGhosts(_settings.SiteGhostMaterial, _settings.PlannedColor, _settings.BlendedCutoff);
+            SiteLine.Publish(_settings);
             foreach (Structure structure in structures.All)
                 OnStructurePlaced(structure);
             structures.StructurePlaced += OnStructurePlaced;
@@ -131,7 +132,7 @@ namespace Diciela.View
             GameObject view = ModelPose.Instantiate(definition.Model, transform, definition.Id + " n° " + structure.Id);
             ModelPose.Place(view.transform, structure.Placement, _relief);
             SiteFill fill = structure.State == StructureState.Planned
-                ? new SiteFill(view, definition.Model, _siteMaterials, _siteGhosts, _settings)
+                ? new SiteFill(view, definition.Model, _siteMaterials, _siteGhosts)
                 : null;
             _shown.Add(new Shown
             {

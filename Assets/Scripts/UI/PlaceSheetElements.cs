@@ -26,12 +26,31 @@ namespace Diciela.UI
                 row.AddToClassList(style);
             var icon = new VisualElement { pickingMode = PickingMode.Ignore };
             icon.AddToClassList(IconClass);
-            if (line.Icon != null)
-                icon.style.backgroundImage = Background.FromVectorImage(line.Icon);
             row.Add(icon);
             row.Add(Text(line.Name, LineNameClasses));
             row.Add(Text(line.Count.ToString(CultureInfo.InvariantCulture), CountClass));
+            ShowIcon(row, line.Icon);
             return row;
+        }
+
+        /// <summary>Remplit une ligne déjà faite d'un autre contenu, sans la refaire : l'icône, le nom, combien.</summary>
+        public static void Refill(VisualElement row, PlaceSheetLine line)
+        {
+            if (!ReferenceEquals(row.userData, line.Icon))
+                ShowIcon(row, line.Icon);
+            var name = (Label)row[1];
+            if (name.text != line.Name)
+                name.text = line.Name;
+            ((Label)row[2]).text = line.Count.ToString(CultureInfo.InvariantCulture);
+        }
+
+        // L'icône d'une ligne ; la ligne la retient, pour ne la changer que si elle change.
+        private static void ShowIcon(VisualElement row, VectorImage image)
+        {
+            row.userData = image;
+            row[0].style.backgroundImage = image != null
+                ? new StyleBackground(Background.FromVectorImage(image))
+                : new StyleBackground(StyleKeyword.Null);
         }
 
         /// <summary>Un bouton, sans pastel ni phrase encore ; clicked est appelé quand on le clique.</summary>

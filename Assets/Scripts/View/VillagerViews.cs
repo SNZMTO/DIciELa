@@ -27,6 +27,10 @@ namespace Diciela.View
             public Transform Transform;
             public float YawDegrees;
             public bool Lying;
+            // La pose écrite en dernier : un habitant arrêté n'est pas réécrit à chaque image.
+            public Vector2 ShownAt;
+            public float ShownYaw;
+            public bool Posed;
         }
 
         private readonly List<Shown> _shown = new List<Shown>();
@@ -121,6 +125,7 @@ namespace Diciela.View
         {
             Structure home = shown.Villager.IsAsleep ? HomeWithABedOf(shown.Villager) : null;
             shown.Lying = home != null;
+            shown.Posed = false;
             if (shown.Lying)
                 LayDown(shown, home);
             else
@@ -158,8 +163,13 @@ namespace Diciela.View
             }
 
             Vector2 at = Vector2.LerpUnclamped(villager.PreviousPosition, villager.Position, stepFraction);
+            if (shown.Posed && at == shown.ShownAt && shown.YawDegrees == shown.ShownYaw)
+                return;
             shown.Transform.SetPositionAndRotation(new Vector3(at.x, _relief.HeightAt(at.x, at.y), at.y),
                 Quaternion.Euler(0f, shown.YawDegrees, 0f));
+            shown.ShownAt = at;
+            shown.ShownYaw = shown.YawDegrees;
+            shown.Posed = true;
         }
     }
 }

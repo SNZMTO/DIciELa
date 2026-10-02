@@ -37,8 +37,9 @@ namespace Diciela.Simulation
             Ledger = new GoodsLedger();
             Warehouses = new Warehouses(Ledger);
             ConstructionSites = new ConstructionSites(Structures, Ledger);
-            var offers = new TaskOffers(Warehouses, ConstructionSites, Islands, surroundings, settings);
-            Clearings = new ClearingOffers(Nature, Warehouses, Islands, surroundings);
+            var reach = new Reach(Grid, Islands, surroundings);
+            var offers = new TaskOffers(Warehouses, ConstructionSites, reach, settings);
+            Clearings = new ClearingOffers(Nature, Warehouses, reach);
             WorkSlots = new WorkSlots();
             Villagers = new Villagers(Grid, Islands, PathFinder, Clock, surroundings, offers, Clearings, WorkSlots,
                 new StatisticTable(catalog.Statistics, settings));

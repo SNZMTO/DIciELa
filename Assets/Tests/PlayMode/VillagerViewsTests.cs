@@ -98,6 +98,20 @@ namespace Diciela.Tests.PlayMode
         }
 
         [Test]
+        public void StandingStillSheIsNotRewrittenEachFrame()
+        {
+            // Née, elle attend sa première pause : d'une image à l'autre, rien ne bouge.
+            _views.Follow(0.2f, 0.02f);
+            Shown.hasChanged = false;
+            _views.Follow(0.7f, 0.02f);
+            Assert.IsFalse(Shown.hasChanged, "Arrêtée, sa pose n'est pas réécrite.");
+
+            StepUntilSheMoves();
+            _views.Follow(0.5f, 0.02f);
+            Assert.IsTrue(Shown.hasChanged, "En marche, elle suit son chemin.");
+        }
+
+        [Test]
         public void SheTurnsTowardWhereSheGoes()
         {
             Villager chimera = StepUntilSheMoves();
