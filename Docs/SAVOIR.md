@@ -504,6 +504,10 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   De même, un monteur réexécutable ne complète jamais une fiche qui existe (la main du développeur y prime) : une
   construction neuve que la Chimère doit savoir en arrivant ne s'ajoute pas seule au déroulé du départ déjà écrit
   (`Depart.asset`) ; l'y ajouter en créant sa fiche, sinon elle reste inconnue et le panneau ne la propose pas.
+- **Renommer un champ sérialisé** : dans le même changement, renommer sa clé dans le YAML de chaque fiche qui l'a
+  (`_hasBed:` → `_hasCouch:`), puis `Assets/Refresh` ; sinon la fiche perd sa valeur, sans erreur. Un test du contenu
+  prouve qu'elle a survécu (le campement a toujours sa couche). `FormerlySerializedAs` ferait de même, mais resterait
+  dans le code. Une fiche qu'Unity n'a pas réenregistrée gagne ses champs neufs au prochain enregistrement (`_beds: 0`).
 - **`ApplyModifiedPropertiesWithoutUndo` ne marque rien si la valeur ne change pas** : faire suivre d'un
   `EditorUtility.SetDirty`, sinon un champ neuf n'atteint jamais le disque.
 - **Ouvrir une scène en mode Single décharge les assets que rien ne tient** : un ScriptableObject chargé avant et gardé
