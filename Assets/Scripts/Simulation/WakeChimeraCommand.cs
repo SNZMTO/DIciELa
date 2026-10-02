@@ -9,7 +9,7 @@ namespace Diciela.Simulation
     {
         internal override void Execute(World world)
         {
-            world.Villagers.WakeChimera();
+            world.Villagers.Bedtimes.WakeChimera(world.Villagers.Chimera);
         }
     }
 }

@@ -29,6 +29,7 @@ namespace Diciela.EditorTools
         public static void CreateMissing()
         {
             TownContentBuilder.Made town = TownContentBuilder.CreateMissing();
+            VillagerContentBuilder.Made villagers = VillagerContentBuilder.CreateMissing(town.Statistics);
             // Le campement se voit en boîte à sa taille (Défaut : 3 × 3 m, porte de 1,2 m ; GDD, section 16) tant que sa
             // composition n'est pas faite (DICIELA/Contenu/Composer le campement). Il fait tout au départ (décision 172) :
             // il tient 100 marchandises pour la ville et ouvre le poste « à tout faire ».
@@ -75,13 +76,14 @@ namespace Diciela.EditorTools
             VillagerKindDefinition chimera = EditorAssets.CreateIfMissing<VillagerKindDefinition>(ChimeraPath,
                 fiche => EditorAssets.Property(fiche, "_id").stringValue = "chimere");
 
-            // Le déroulé du départ (décisions 172 et 185) : la Chimère sait déjà bâtir le campement et la cabane ; son
-            // campement reçoit 30 Bois et 20 Pierre quand on l'installe.
+            // Le déroulé du départ (décisions 172, 185 et 187) : la Chimère sait déjà bâtir le campement et la cabane ; son
+            // campement reçoit 30 Bois et 20 Pierre quand on l'installe ; puis les premiers habitants arrivent.
             OpeningDefinition opening = EditorAssets.CreateIfMissing<OpeningDefinition>(OpeningPath, fiche =>
             {
                 SetList(EditorAssets.Property(fiche, "_knownStructures"), camp, cabin);
                 TownContentBuilder.SetAmounts(EditorAssets.Property(fiche, "_startingGoods"), town.Wood, 30, town.Stone,
                     20);
+                EditorAssets.SetList(EditorAssets.Property(fiche, "_firstVillagers"), villagers.FirstVillagers);
             });
             Catalog catalog = EditorAssets.CreateIfMissing<Catalog>(CatalogPath, fiche =>
             {
@@ -95,6 +97,7 @@ namespace Diciela.EditorTools
             if (!catalog.AllStructures().Contains(camp))
                 InsertFirst(housing, "_structures", camp);
             EditorAssets.AssignIfMissing(catalog, "_chimeraKind", chimera);
+            EditorAssets.AssignIfMissing(catalog, "_villagerKind", villagers.Kind);
             AppearanceBuilder.CreateMissing(catalog);
         }
 

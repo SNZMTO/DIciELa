@@ -10,7 +10,7 @@ namespace Diciela.Simulation.Society
     /// <summary>
     /// Un habitant (ARCHITECTURE, section 4) : sa sorte, son apparence, ses statistiques, sa place, ce qu'il porte et ce
     /// qu'il fait. Sa place est sa position, en mètres sur le plan XZ ; il garde aussi celle du pas d'avant, pour que la
-    /// vue le montre entre les deux. Avec un poste, il y travaille ; sans poste, il flâne ; envoyé dormir, il laisse sa
+    /// vue le montre entre les deux. Avec un poste, il y travaille ; sans poste, il flâne ; parti dormir, il laisse sa
     /// tâche (il garde son poste), va à son lit, s'y couche et n'en bouge plus jusqu'à ce qu'on le réveille. Une
     /// construction posée sur lui ne l'arrête pas : il laisse sa tâche, en sort à pied, puis reprend sa marche vers son lit
     /// ou son travail. Chaque pas tire son hasard de son numéro et du numéro du pas : les mêmes ordres rejouent la même
@@ -25,7 +25,7 @@ namespace Diciela.Simulation.Society
         private readonly GroundExit _exit;
         private readonly Job _job;
 
-        internal Villager(int id, VillagerKindDefinition kind, Appearance appearance, Vector2 position,
+        internal Villager(int id, VillagerKindDefinition kind, Appearance appearance, Vector2 position, Strength strength,
             VillagerServices services)
         {
             if (ReferenceEquals(kind, null))
@@ -41,7 +41,7 @@ namespace Diciela.Simulation.Society
             Position = position;
             PreviousPosition = position;
             _services = services;
-            Statistics = new VillagerStatistics(services.Statistics, kind.StartingStatistic);
+            Statistics = new VillagerStatistics(services.Statistics, kind, id, strength);
             Load = new Inventory(kind.CarryCapacity);
             float metersPerStep = services.Clock.MetersPerStep(kind.WalkMetersPerSecond);
             _walk = new Walk(services.Grid, services.Finder);

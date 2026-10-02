@@ -13,7 +13,6 @@ namespace Diciela.EditorTools
     /// </summary>
     internal sealed class PackPoses
     {
-        private const string Characters = "Assets/Synty/PolygonFantasyVillage/Prefabs/Characters";
 
         private readonly List<Pose> _poses = new List<Pose>();
 
@@ -44,7 +43,7 @@ namespace Diciela.EditorTools
         public static PackPoses Read()
         {
             var poses = new PackPoses();
-            foreach (string file in Directory.GetFiles(Characters, "*.prefab"))
+            foreach (string file in Directory.GetFiles(PackPaths.Characters, "*.prefab"))
             {
                 string path = file.Replace('\\', '/');
                 var character = AssetDatabase.LoadAssetAtPath<GameObject>(path);

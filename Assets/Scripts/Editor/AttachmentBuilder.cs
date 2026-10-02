@@ -13,7 +13,6 @@ namespace Diciela.EditorTools
     internal static class AttachmentBuilder
     {
         private const string Folder = "Assets/Data/Apparence";
-        private const string Pieces = "Assets/Synty/PolygonFantasyVillage/Prefabs/Characters/Chr_Attach";
         // Les pièces du pack sont numérotées à partir de 01 ; aucune série ne va au-delà.
         private const int MaxPieceNumber = 20;
         private const int AllHuman = int.MaxValue;
@@ -155,7 +154,7 @@ namespace Diciela.EditorTools
                     if (pack == "Hair" && n <= HumanHair)
                         continue;
                     string number = n.ToString("00");
-                    string path = Pieces + "/SM_Chr_Attach_" + pack + "_" + number + ".prefab";
+                    string path = PackPaths.Pieces + "/SM_Chr_Attach_" + pack + "_" + number + ".prefab";
                     if (!EditorAssets.Exists(path))
                         continue;
                     var model = EditorAssets.Load<GameObject>(path);

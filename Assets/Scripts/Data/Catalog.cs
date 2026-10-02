@@ -19,7 +19,11 @@ namespace Diciela.Data
         [Tooltip("La sorte de la Chimère, que le joueur crée au lancement d'une partie (GDD, section 6).")]
         [SerializeField] private VillagerKindDefinition _chimeraKind;
 
-        [Tooltip("Le déroulé du départ : le stock de départ, que reçoit le campement (GDD, section 6).")]
+        [Tooltip("La sorte des habitants ordinaires : les humains du pack (GDD, sections 5 et 16).")]
+        [SerializeField] private VillagerKindDefinition _villagerKind;
+
+        [Tooltip("Le déroulé du départ : ce que la Chimère sait bâtir, le stock de départ, les premiers habitants (GDD, " +
+                 "section 6).")]
         [SerializeField] private OpeningDefinition _opening;
 
         [Tooltip("Les sortes d'arbres et de rochers que le développeur peint sur la carte (GDD, section 2).")]
@@ -48,6 +52,7 @@ namespace Diciela.Data
 
         public IReadOnlyList<StructureFamilyDefinition> Families => _families;
         public VillagerKindDefinition ChimeraKind => _chimeraKind;
+        public VillagerKindDefinition VillagerKind => _villagerKind;
         public OpeningDefinition Opening => _opening;
         public IReadOnlyList<NatureDefinition> Nature => _nature;
         public IReadOnlyList<GoodDefinition> Goods => _goods;

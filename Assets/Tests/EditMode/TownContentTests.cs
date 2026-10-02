@@ -7,7 +7,8 @@ namespace Diciela.Tests.EditMode
     /// <summary>
     /// Le contenu du départ et de la ville au travail, lu dans le projet sans rien écrire : le logis de la Chimère, le
     /// campement (un entrepôt qui reçoit le stock de départ et ouvre un poste), ce que la Chimère sait bâtir en arrivant
-    /// (son campement, et rien hors du catalogue), les statistiques
+    /// (son campement, et rien hors du catalogue), les premiers habitants (un par statistique, chacun son humain), les
+    /// statistiques
     /// (chaque sous-statistique dans une seule), les tâches (chacune lit une sous-statistique du catalogue), les coûts
     /// (des marchandises du catalogue).
     /// </summary>
@@ -81,6 +82,40 @@ namespace Diciela.Tests.EditMode
             foreach (StructureDefinition structure in catalog.Opening.KnownStructures)
                 beds += structure.Beds;
             Assert.Greater(beds, 0, "Rien de ce que la Chimère sait bâtir en arrivant n'offre de lit.");
+        }
+
+        [Test]
+        public void OneFirstVillagerPerStatisticEachWithAHuman()
+        {
+            // Un premier habitant par statistique (GDD, section 6), chacun avec un humain du pack (GDD, section 16) ; ils
+            // restent en ville comme habitants ordinaires, qui rentrent dormir la nuit (GDD, section 3).
+            Catalog catalog = ProjectContent.LoadSingle<Catalog>();
+            Assert.IsNotNull(catalog.VillagerKind, "Le catalogue n'a pas de sorte d'habitant ordinaire.");
+            Assert.IsTrue(catalog.VillagerKind.SleepsAtNight, "Les habitants ordinaires rentrent dormir la nuit.");
+            var statistics = new List<StatisticDefinition>();
+            foreach (FirstVillagerDefinition first in catalog.Opening.FirstVillagers)
+            {
+                Assert.IsNotNull(first, "Le déroulé du départ a un premier habitant vide.");
+                Assert.IsTrue(first.Character != null && first.Character.Model != null, first.Id + " n'a pas son humain.");
+                StatisticDefinition statistic = StatisticOf(catalog, first.Strength);
+                Assert.IsNotNull(statistic, first.Id + " est fort dans une sous-statistique hors du catalogue.");
+                Assert.IsFalse(statistics.Contains(statistic), first.Id + " partage sa statistique avec un autre.");
+                statistics.Add(statistic);
+            }
+            Assert.AreEqual(catalog.Statistics.Count, statistics.Count, "Il faut un premier habitant par statistique.");
+        }
+
+        private static StatisticDefinition StatisticOf(Catalog catalog, SubStatisticDefinition subStatistic)
+        {
+            foreach (StatisticDefinition statistic in catalog.Statistics)
+            {
+                foreach (SubStatisticDefinition each in statistic.SubStatistics)
+                {
+                    if (each != null && each == subStatistic)
+                        return statistic;
+                }
+            }
+            return null;
         }
 
         [Test]

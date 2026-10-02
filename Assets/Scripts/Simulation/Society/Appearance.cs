@@ -5,9 +5,11 @@ using Diciela.Data;
 namespace Diciela.Simulation.Society
 {
     /// <summary>
-    /// L'apparence d'un habitant (GDD, section 6 ; ARCHITECTURE, section 4) : sa tête et son corps, chacun de sa couleur,
-    /// et au plus une pièce par emplacement, chacune de la sienne. Elle est entière dès sa naissance : une apparence
-    /// incohérente ne se construit pas. La simulation la garde avec l'habitant sans jamais la lire ; la vue l'habille.
+    /// L'apparence d'un habitant (GDD, sections 6 et 16 ; ARCHITECTURE, section 4) : celle de la Chimère, sa tête et son
+    /// corps, chacun de sa couleur, et au plus une pièce par emplacement, chacune de la sienne ; ou un personnage du pack,
+    /// tel que le pack le fait (les humains), sans tête ni corps à part, ni pièce. Elle est entière dès sa naissance : une
+    /// apparence incohérente ne se construit pas. La simulation la garde avec l'habitant sans jamais la lire ; la vue
+    /// l'habille.
     /// </summary>
     public sealed class Appearance
     {
@@ -48,6 +50,19 @@ namespace Diciela.Simulation.Society
             Body = body;
             BodyPalette = bodyPalette;
         }
+
+        /// <summary>Un personnage du pack, tel quel : les humains (GDD, section 16).</summary>
+        public Appearance(CharacterDefinition character)
+        {
+            if (ReferenceEquals(character, null))
+                throw new ArgumentNullException(nameof(character));
+
+            Character = character;
+            _attachments = Array.Empty<WornAttachment>();
+        }
+
+        /// <summary>Le personnage du pack qu'il est, tel quel ; null pour une apparence faite d'une tête et d'un corps.</summary>
+        public CharacterDefinition Character { get; }
 
         public HeadDefinition Head { get; }
         public PaletteDefinition HeadPalette { get; }
