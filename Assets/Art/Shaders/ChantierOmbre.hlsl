@@ -17,6 +17,7 @@ struct Attributes
     float4 positionOS : POSITION;
     float3 normalOS : NORMAL;
     float2 texcoord : TEXCOORD0;
+    half4 color : COLOR;
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
@@ -25,6 +26,7 @@ struct Varyings
     float4 positionCS : SV_POSITION;
     float3 positionWS : TEXCOORD0;
     float2 uv : TEXCOORD1;
+    half leaf : TEXCOORD2;
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
@@ -44,6 +46,7 @@ Varyings ChantierShadowVertex(Attributes input)
         TransformWorldToHClip(ApplyShadowBias(positionWS, normalWS, lightDirectionWS)));
     output.positionWS = positionWS;
     output.uv = TRANSFORM_TEX(input.texcoord, _BaseMap);
+    output.leaf = input.color.b;
     return output;
 }
 
@@ -51,7 +54,7 @@ half4 ChantierShadowFragment(Varyings input) : SV_TARGET
 {
     UNITY_SETUP_INSTANCE_ID(input);
     ChantierClipBuilt(input.positionWS, input.positionCS);
-    ChantierClipAlpha(input.uv);
+    ChantierClipAlpha(input.uv, input.leaf);
     return 0;
 }
 

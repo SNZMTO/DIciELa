@@ -318,12 +318,19 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   position dans le monde, le shader a donc les siennes. Sans MSAA, un bord adouci se fait par une trame (Bayer 4 × 4)
   sur la vraie matière, et le flou par le calque transparent du fantôme. Une erreur de variante d'un shader n'apparaît
   qu'au rendu : chercher « Shader error in » dans `Logs/Editor.log` après un Play.
-- **Les feuillages de Synty ont leur propre shader** (étape 25) : leur texture est `_Leaf_Texture` (et `_Trunk_Texture`
-  pour les tiges), ils sont détourés (`_AlphaClip`, au seuil `_Alpha_Clip_Threshold`, 0,5) et dessinent leurs deux faces
-  (`_Cull` à 0). Une copie qui l'ignore les montre en carrés blancs et pleins (le lierre de la cabane, sur son chantier).
-  Toute copie d'un matériau du pack reprend donc la texture sous son nom, le seuil et les faces (`OriginalMaterials`) ;
-  un seuil nul ne détoure rien même si le détourage est coché (l'atlas du pack l'est) : on ne détoure qu'au-dessus de 0,
-  le détourage coûtant au rendu.
+- **Les feuillages de Synty ont leur propre shader** (Foliage) : il lit `_Leaf_Texture` là où le bleu de la couleur du
+  sommet dépasse 0,5, et `_Trunk_Texture` (les tiges) ailleurs, en UV brut ; ils sont détourés (`_AlphaClip`, au seuil
+  `_Alpha_Clip_Threshold`, 0,5) et dessinent leurs deux faces (`_Cull` à 0). Une copie qui l'ignore les montre en carrés
+  pleins, ou coupe leurs tiges (73 % du lierre de la cabane) : l'alpha des feuilles est nul sous les UV des tiges. Toute
+  copie d'un matériau du pack reprend donc la texture sous son nom, la texture des tiges, le seuil et les faces
+  (`OriginalMaterials`). La copie lit les tiges par une branche dynamique (`#pragma dynamic_branch_local _TRUNKMAP` et
+  `if (_TRUNKMAP)` : un mot-clé sans variante de plus) ; le bleu va du sommet au fragment de la passe avant d'URP dans
+  son interpolateur `viewDirTS`, libre sans parallaxe, demandé avant d'inclure `LitForwardPass` (`ChantierAvant`). Un
+  seuil nul ne détoure rien même si le détourage est coché (l'atlas du pack l'est) : on ne détoure qu'au-dessus de 0,
+  le détourage coûtant au rendu. Mais un matériau transparent par mélange (`_Surface` à 1 : le bord d'un chaume, dont le
+  seuil hérité vaut 0) a une texture pleine ou vide : sa copie, opaque, se détoure au seuil de la fiche de la pose. Un
+  shader du pack qu'on ne connaît pas (le triplanaire, les décalcomanies) est dit dans la console, sinon sa copie monte
+  blanche en silence. L'aperçu de pose a le même fantôme que le chantier : sans ligne, c'est un fantôme teinté.
 
 ### 2.10 L'ambiance
 
@@ -595,6 +602,9 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   `_NORMALMAP` et `_EMISSION` sur des copies faites à l'exécution, alors que `Chantier.mat` n'en a aucun : en
   `shader_feature`, les feuilles redeviendraient des carrés dans le jeu compilé, sans erreur (Unity prend la variante
   la plus proche), alors que l'éditeur, qui compile à la demande, les montre justes.
+- **Un `MaterialPropertyBlock` ne se crée pas pendant la construction d'un composant** : dans l'initialiseur d'un champ
+  d'un `MonoBehaviour`, Unity lève « CreateImpl is not allowed to be called from a MonoBehaviour constructor ». Le
+  créer au premier usage (`??=`), ou dans `Awake`.
 - **Une référence perdue n'est pas une référence vide** : un modèle du pack introuvable (le pack absent, ses GUID
   changés) vaut `null` pour l'opérateur `==` d'Unity, comme un champ jamais rempli. Dans l'éditeur, la propriété
   sérialisée les distingue : `objectReferenceValue == null` mais `objectReferenceEntityIdValue.IsValid()` (Unity 6.6 :

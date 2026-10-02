@@ -1,13 +1,16 @@
 // Le fantôme d'un chantier qui monte (décision 166) : translucide au-dessus de la ligne, il s'efface dans la bande sous
 // elle, où la vraie matière s'effrite (Diciela/Chantier) : on voit l'une à travers l'autre. Sur la ligne qui ondule,
 // une lueur douce (le flou), un trait net juste au-dessus (le côté cartoon) et des étincelles qui clignotent. Sans ombre.
-// Le fantôme d'un matériau qui détoure (des feuilles) a sa copie (SiteGhosts) : sa texture ne sert qu'à sa forme.
+// Le fantôme d'un matériau qui détoure (des feuilles, le bord d'un chaume) a sa copie (SiteGhosts) : sa texture ne sert
+// qu'à sa forme, tiges comprises (ChantierDetourage). Sans ligne (_FillHeight tout en bas), c'est un simple fantôme
+// teinté : l'aperçu de pose s'en sert (décision 177).
 Shader "Diciela/ChantierFantome"
 {
     Properties
     {
         _BaseColor("Teinte du fantôme", Color) = (0.7, 0.85, 1, 0.45)
         _BaseMap("Forme (détourage)", 2D) = "white" {}
+        [NoScaleOffset] _TrunkMap("Forme des tiges (feuillage du pack)", 2D) = "white" {}
         _Cutoff("Seuil du détourage", Range(0.0, 1.0)) = 0.5
         [HideInInspector] _Cull("__cull", Float) = 2.0
         _GlowColor("Lueur", Color) = (1, 0.85, 0.5, 0.9)
@@ -46,9 +49,10 @@ Shader "Diciela/ChantierFantome"
 
             HLSLPROGRAM
             #pragma target 2.0
-            #pragma vertex ChantierGhostVertex
+            #pragma vertex ChantierVertex
             #pragma fragment ChantierGhostFragment
             #pragma multi_compile_local_fragment _ _ALPHATEST_ON
+            #pragma dynamic_branch_local _TRUNKMAP
             #pragma multi_compile_instancing
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
@@ -73,37 +77,7 @@ Shader "Diciela/ChantierFantome"
             CBUFFER_END
 
             #include "Assets/Art/Shaders/ChantierDetourage.hlsl"
-
-            struct Attributes
-            {
-                float4 positionOS : POSITION;
-                float3 normalOS : NORMAL;
-                float2 texcoord : TEXCOORD0;
-                UNITY_VERTEX_INPUT_INSTANCE_ID
-            };
-
-            struct Varyings
-            {
-                float4 positionCS : SV_POSITION;
-                float3 positionWS : TEXCOORD0;
-                half3 normalWS : TEXCOORD1;
-                float2 uv : TEXCOORD2;
-                UNITY_VERTEX_INPUT_INSTANCE_ID
-                UNITY_VERTEX_OUTPUT_STEREO
-            };
-
-            Varyings ChantierGhostVertex(Attributes input)
-            {
-                Varyings output = (Varyings)0;
-                UNITY_SETUP_INSTANCE_ID(input);
-                UNITY_TRANSFER_INSTANCE_ID(input, output);
-                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
-                output.positionWS = TransformObjectToWorld(input.positionOS.xyz);
-                output.positionCS = TransformWorldToHClip(output.positionWS);
-                output.normalWS = half3(TransformObjectToWorldNormal(input.normalOS));
-                output.uv = TRANSFORM_TEX(input.texcoord, _BaseMap);
-                return output;
-            }
+            #include "Assets/Art/Shaders/ChantierSommets.hlsl"
 
             // Un nombre de 0 à 1 tiré d'une case de l'espace : toujours le même pour la même case.
             float ChantierHash(float3 cell)
@@ -111,10 +85,10 @@ Shader "Diciela/ChantierFantome"
                 return frac(sin(dot(cell, float3(127.1, 311.7, 74.7))) * 43758.5453);
             }
 
-            half4 ChantierGhostFragment(Varyings input) : SV_Target
+            half4 ChantierGhostFragment(ChantierVaryings input) : SV_Target
             {
                 UNITY_SETUP_INSTANCE_ID(input);
-                ChantierClipAlpha(input.uv);
+                ChantierClipAlpha(input.uv, input.leaf);
                 float h = input.positionWS.y - ChantierLine(input.positionWS);
                 // Sous la bande, la vraie matière est entière : le fantôme n'y est pas.
                 clip(h + _Softness);

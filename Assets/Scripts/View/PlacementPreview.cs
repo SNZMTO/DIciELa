@@ -6,14 +6,21 @@ using UnityEngine;
 namespace Diciela.View
 {
     /// <summary>
-    /// L'aperçu de la pose (GDD, section 9) : une copie translucide du modèle, verte si la pose est permise, rouge sinon,
-    /// posée par la même routine que les constructions. Il ne décide de rien : l'outil de pose lui dit quoi montrer.
+    /// L'aperçu de la pose (GDD, section 9 ; décision 177) : le modèle en fantôme, celui du chantier (sa forme, feuilles
+    /// et tiges comprises), vert si la pose est permise, rouge sinon, posé par la même routine que les constructions. Il
+    /// ne décide de rien : l'outil de pose lui dit quoi montrer. Ses copies des fantômes servent d'un aperçu au suivant,
+    /// et partent avec lui.
     /// </summary>
     public sealed class PlacementPreview : MonoBehaviour
     {
-        [Tooltip("La fiche des réglages de la pose : le matériau et les couleurs de l'aperçu (Assets/Data/Settings).")]
+        private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
+
+        [Tooltip("La fiche des réglages de la pose : le fantôme du chantier et les couleurs de l'aperçu (Assets/Data/Settings).")]
         [SerializeField] private PlacementSettings _settings;
 
+        // Fait au premier usage : Unity refuse d'en créer un pendant la construction d'un composant.
+        private MaterialPropertyBlock _block;
+        private SiteGhosts _ghosts;
         private StructureDefinition _shown;
         private GameObject _view;
         private TranslucentModel _model;
@@ -24,22 +31,21 @@ namespace Diciela.View
         {
             if (ReferenceEquals(definition, null))
                 throw new ArgumentNullException(nameof(definition));
-            if (_settings == null)
-                throw new InvalidOperationException("L'aperçu n'a pas sa fiche de réglages de la pose.");
+            if (_settings == null || _settings.SiteGhostMaterial == null)
+                throw new InvalidOperationException("L'aperçu n'a pas sa fiche de réglages de la pose, ou son fantôme.");
 
             if (!ReferenceEquals(definition, _shown))
             {
                 Clear();
                 _shown = definition;
                 _view = ModelPose.Instantiate(definition.Model, transform, definition.Id);
-                _model = new TranslucentModel(_view, _settings.TranslucentMaterial);
-                _model.SetColor(ColorFor(allowed));
-                _allowed = allowed;
+                _ghosts ??= new SiteGhosts(_settings.SiteGhostMaterial, _settings.BlendedCutoff);
+                _model = new TranslucentModel(_view, _ghosts);
+                Paint(allowed);
             }
             else if (allowed != _allowed)
             {
-                _model.SetColor(ColorFor(allowed));
-                _allowed = allowed;
+                Paint(allowed);
             }
 
             ModelPose.Place(_view.transform, placement, relief);
@@ -63,9 +69,19 @@ namespace Diciela.View
             _shown = null;
         }
 
-        private Color ColorFor(bool allowed)
+        private void OnDestroy()
         {
-            return allowed ? _settings.AllowedColor : _settings.RefusedColor;
+            Clear();
+            _ghosts?.Clear();
+            _ghosts = null;
+        }
+
+        private void Paint(bool allowed)
+        {
+            _block ??= new MaterialPropertyBlock();
+            _block.SetColor(BaseColorId, allowed ? _settings.AllowedColor : _settings.RefusedColor);
+            _model.Apply(_block);
+            _allowed = allowed;
         }
     }
 }

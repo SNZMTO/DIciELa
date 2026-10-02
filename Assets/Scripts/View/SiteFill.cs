@@ -1,18 +1,17 @@
 using System.Collections.Generic;
 using Diciela.Data;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 namespace Diciela.View
 {
     /// <summary>
     /// Un chantier vu (décision 166) : son modèle deux fois, au même endroit. La vraie matière (le shader
     /// Diciela/Chantier) ne garde que ce qui est sous la ligne ; le fantôme (Diciela/ChantierFantome, de la couleur du
-    /// fantôme) ne garde que ce qui est au-dessus, et porte la lueur et les étincelles. L'un et l'autre détourent ce que
-    /// l'original détoure (des feuilles), et dessinent les mêmes faces. La ligne monte avec l'avancement,
-    /// de la base de la boîte du modèle (ses fondations comprises) à son sommet, et ondule. Chaque couche a son bloc de
-    /// propriétés : aucun matériau n'est créé par chantier. Ce qui n'est pas un maillage (une fumée du pack) attend la
-    /// fin du chantier.
+    /// fantôme, TranslucentModel) ne garde que ce qui est au-dessus, et porte la lueur et les étincelles. L'un et l'autre
+    /// détourent ce que l'original détoure (des feuilles et leurs tiges, le bord d'un chaume), et dessinent les mêmes
+    /// faces. La ligne monte avec l'avancement, de la base de la boîte du modèle (ses fondations comprises) à son sommet,
+    /// et ondule. Chaque couche a son bloc de propriétés : aucun matériau n'est créé par chantier. Ce qui n'est pas un
+    /// maillage (une fumée du pack) attend la fin du chantier.
     /// </summary>
     internal sealed class SiteFill
     {
@@ -24,7 +23,7 @@ namespace Diciela.View
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
 
         private readonly List<Renderer> _built = new List<Renderer>();
-        private readonly List<Renderer> _ghost = new List<Renderer>();
+        private readonly TranslucentModel _ghost;
         private readonly MaterialPropertyBlock _builtBlock = new MaterialPropertyBlock();
         private readonly MaterialPropertyBlock _ghostBlock = new MaterialPropertyBlock();
         private readonly PlacementSettings _settings;
@@ -42,7 +41,7 @@ namespace Diciela.View
             bool any = false;
             foreach (Renderer renderer in view.GetComponentsInChildren<Renderer>(true))
             {
-                if (!IsMesh(renderer))
+                if (!TranslucentModel.KeepMesh(renderer))
                     continue;
                 var shared = renderer.sharedMaterials;
                 for (int i = 0; i < shared.Length; i++)
@@ -62,17 +61,7 @@ namespace Diciela.View
             ghost.transform.localPosition = Vector3.zero;
             ghost.transform.localRotation = Quaternion.identity;
             ghost.transform.localScale = Vector3.one;
-            foreach (Renderer renderer in ghost.GetComponentsInChildren<Renderer>(true))
-            {
-                if (!IsMesh(renderer))
-                    continue;
-                var shared = renderer.sharedMaterials;
-                for (int i = 0; i < shared.Length; i++)
-                    shared[i] = ghosts.For(shared[i]);
-                renderer.sharedMaterials = shared;
-                renderer.shadowCastingMode = ShadowCastingMode.Off;
-                _ghost.Add(renderer);
-            }
+            _ghost = new TranslucentModel(ghost, ghosts);
             Show(0d);
         }
 
@@ -88,8 +77,7 @@ namespace Diciela.View
             _ghostBlock.SetColor(BaseColorId, _settings.PlannedColor);
             foreach (Renderer renderer in _built)
                 renderer.SetPropertyBlock(_builtBlock);
-            foreach (Renderer renderer in _ghost)
-                renderer.SetPropertyBlock(_ghostBlock);
+            _ghost.Apply(_ghostBlock);
         }
 
         private void Fill(MaterialPropertyBlock block, float fill)
@@ -99,15 +87,6 @@ namespace Diciela.View
             block.SetFloat(WaveLengthId, _settings.WaveLength);
             block.SetFloat(WaveSecondsId, _settings.WaveSeconds);
             block.SetFloat(SoftnessId, _settings.SiteSoftness);
-        }
-
-        // Une fumée ou un effet du pack n'est pas dessiné tant que la construction n'est pas bâtie.
-        private static bool IsMesh(Renderer renderer)
-        {
-            if (renderer is MeshRenderer || renderer is SkinnedMeshRenderer)
-                return true;
-            renderer.enabled = false;
-            return false;
         }
     }
 }

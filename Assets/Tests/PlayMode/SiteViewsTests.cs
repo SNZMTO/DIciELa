@@ -1,5 +1,4 @@
 using System.Collections;
-using Diciela.Data;
 using Diciela.Simulation;
 using Diciela.Simulation.Land;
 using NUnit.Framework;
@@ -12,15 +11,15 @@ namespace Diciela.Tests.PlayMode
     /// <summary>
     /// Le chantier qui monte, vu (GDD, section 9 ; décision 166), sur le petit monde des tests (le sol à 10 m) : une
     /// cabane posée, dont le modèle est un cube d'un mètre centré sur son origine, est sa vraie matière (le shader du
-    /// chantier) avec son fantôme rangé dessous ; tant que rien n'est fait, la ligne est au pied du cube, à 9,5 m. Les
-    /// copies des matériaux partent avec la vue. Un matériau qui détoure (des feuilles) détoure aussi sur le chantier et
-    /// sur son fantôme, au même seuil, et dessine les mêmes faces : les vignes du pack gardent leurs feuilles.
+    /// chantier) avec son fantôme rangé dessous ; tant que rien n'est fait, la ligne est au pied du cube, à 9,5 m. Un
+    /// matériau qui détoure (des feuilles) détoure aussi sur le chantier et sur son fantôme, au même seuil, et dessine les
+    /// mêmes faces. Les copies des matériaux, vraie matière et fantôme, partent avec la vue. Les matériaux du pack ont
+    /// leurs tests à part (SitePackMaterialsTests).
     /// </summary>
     public sealed class SiteViewsTests
     {
         private static readonly int FillHeightId = Shader.PropertyToID("_FillHeight");
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
-        private const string VinesPath = "Assets/Synty/PolygonFantasyVillage/Materials/Env/Vines_01.mat";
 
         private TestWorld _test;
 
@@ -70,15 +69,10 @@ namespace Diciela.Tests.PlayMode
         [Test]
         public void AClippingMaterialStaysClippedOnTheSiteAndOnItsGhost()
         {
-            // Un Lit d'URP qui détoure au seuil de 0,4 et dessine ses deux faces, comme des feuilles.
             var texture = _test.Keep(new Texture2D(2, 2));
-            var leaves = _test.Keep(new Material(Shader.Find("Universal Render Pipeline/Lit")));
-            leaves.SetTexture("_BaseMap", texture);
-            leaves.SetFloat("_AlphaClip", 1f);
-            leaves.SetFloat("_Cutoff", 0.4f);
-            leaves.SetFloat("_Cull", 0f);
+            Material leaves = Leaves(texture);
 
-            Transform view = PlaceASiteDressedIn(leaves);
+            Transform view = _test.PlaceASiteDressedIn(leaves);
             Material built = view.GetComponent<MeshRenderer>().sharedMaterial;
             Material ghost = view.Find("Fantôme").GetComponent<MeshRenderer>().sharedMaterial;
 
@@ -95,49 +89,31 @@ namespace Diciela.Tests.PlayMode
             Assert.IsFalse(cube.IsKeywordEnabled("_ALPHATEST_ON"), "Le cube de la cabane ne détoure pas.");
         }
 
-        [Test]
-        public void ThePackVinesKeepTheirLeavesOnTheSite()
-        {
-#if UNITY_EDITOR
-            var vines = UnityEditor.AssetDatabase.LoadAssetAtPath<Material>(VinesPath);
-            Assert.IsNotNull(vines, "Le pack doit avoir ses vignes (" + VinesPath + ").");
-
-            Material built = PlaceASiteDressedIn(vines).GetComponent<MeshRenderer>().sharedMaterial;
-
-            Assert.AreSame(vines.GetTexture("_Leaf_Texture"), built.GetTexture("_BaseMap"), "La texture des feuilles.");
-            Assert.IsTrue(built.IsKeywordEnabled("_ALPHATEST_ON"), "Les feuilles sont détourées.");
-            Assert.AreEqual(vines.GetFloat("_Alpha_Clip_Threshold"), built.GetFloat("_Cutoff"), 1e-5f);
-            Assert.AreEqual(vines.GetFloat("_Cull"), built.GetFloat("_Cull"), "Les mêmes faces.");
-#endif
-        }
-
         [UnityTest]
         public IEnumerator HidingTheViewsDestroysTheCopiedMaterials()
         {
             Material copy = _test.Views.transform.GetChild(0).GetComponent<MeshRenderer>().sharedMaterial;
             Assert.AreNotSame(_test.Settings.SiteMaterial, copy, "Une copie, pas la fiche.");
+            Transform hedge = _test.PlaceASiteDressedIn(Leaves(_test.Keep(new Texture2D(2, 2))));
+            Material ghostCopy = hedge.Find("Fantôme").GetComponent<MeshRenderer>().sharedMaterial;
+            Assert.AreNotSame(_test.Settings.SiteGhostMaterial, ghostCopy, "Une copie du fantôme.");
 
             _test.Views.Hide();
             yield return null;
 
-            Assert.IsTrue(copy == null, "La copie est détruite.");
+            Assert.IsTrue(copy == null, "La copie de la vraie matière est détruite.");
+            Assert.IsTrue(ghostCopy == null, "La copie du fantôme aussi.");
         }
 
-        // Une haie de 2 × 2 m, dont le modèle est un quad vêtu de ce matériau, posée en (70 ; 70) : un chantier.
-        private Transform PlaceASiteDressedIn(Material material)
+        // Un Lit d'URP qui détoure au seuil de 0,4 et dessine ses deux faces, comme des feuilles.
+        private Material Leaves(Texture texture)
         {
-            GameObject model = _test.Keep(GameObject.CreatePrimitive(PrimitiveType.Quad));
-            model.GetComponent<MeshRenderer>().sharedMaterial = material;
-            var hedge = _test.Keep(ScriptableObject.CreateInstance<StructureDefinition>());
-#if UNITY_EDITOR
-            TestWorld.Fill(hedge, "_id", "haie");
-            TestWorld.Fill(hedge, "_widthMeters", 2f);
-            TestWorld.Fill(hedge, "_depthMeters", 2f);
-            TestWorld.Fill(hedge, "_model", model);
-#endif
-            _test.World.Submit(new PlaceStructureCommand(hedge, new Placement(new Vector2(70f, 70f), 0f)));
-            _test.World.Step();
-            return _test.Views.transform.GetChild(1);
+            var leaves = _test.Keep(new Material(Shader.Find("Universal Render Pipeline/Lit")));
+            leaves.SetTexture("_BaseMap", texture);
+            leaves.SetFloat("_AlphaClip", 1f);
+            leaves.SetFloat("_Cutoff", 0.4f);
+            leaves.SetFloat("_Cull", 0f);
+            return leaves;
         }
     }
 }

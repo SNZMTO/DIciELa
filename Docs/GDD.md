@@ -355,8 +355,8 @@
 - **Règle.** Rien ne se chevauche, même de quelques centimètres, et on ne se glisse pas entre deux constructions plus
   serrées que 25 cm (une maille du maillage) : deux constructions se collent à 25 cm près.
 - **Défaut.** Devant une porte, 1,5 m restent libres, sur la largeur de la porte.
-- **Règle.** Poser : la construction choisie suit le pointeur ; son aperçu est vert si elle se pose là, rouge sinon,
-  et la raison s'écrit. **R** la tourne : une touche brève d'un cran, tenue en bougeant la souris au degré près. Le
+- **Règle.** Poser : la construction choisie suit le pointeur ; son aperçu, un fantôme comme celui d'un chantier (ses
+  feuilles et ses tiges ont leur forme), est vert si elle se pose là, rouge sinon, et la raison s'écrit. **R** la tourne : une touche brève d'un cran, tenue en bougeant la souris au degré près. Le
   clic gauche pose ; l'outil reste en main pour la suivante, sauf après une construction unique ; un clic droit bref ou
   Échap le pose de côté.
 - **Défaut.** Le cran de rotation : 15°.
