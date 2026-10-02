@@ -2,6 +2,9 @@ clé,fr,en
 famille.logement,Logement,Housing
 construction.campement,Campement,Camp
 construction.cabane,Cabane,Cabin
+famille.metiers,Métiers,Trades
+construction.loge,Loge des bâtisseurs,Builders' lodge
+construction.entrepot,Entrepôt,Warehouse
 pose.refus.OutsideMap,Hors de la carte,Outside the map
 pose.refus.TooSteep,Trop pentu,Too steep
 pose.refus.Overlaps,La place est prise,Something is in the way
@@ -138,6 +141,8 @@ tache.porter,Porter,Carry
 tache.batir,Bâtir,Build
 tache.defricher,Défricher,Clear
 poste.a_tout_faire,À tout faire,Odd jobs
+poste.ouvrier,Ouvrier,Worker
+poste.charretier,Charretier,Carter
 fiche.mettre_chimere,Y mettre la Chimère,Put the Chimera here
 fiche.retirer_chimere,Retirer la Chimère,Take the Chimera away
 habitant.chimere,La Chimère,The Chimera

@@ -137,7 +137,7 @@ sauvegardé.
 | qui tient quel poste ; les postes ouverts pour un premier habitant ; les postes fermés | la société (une seule table) | qui est présent sur un lieu |
 | qui a son lit où ; qui dort (couché ou en chemin) | la société | les lits libres (des maisons bâties) ; où dort chacun (la Chimère : son logis) |
 | les curseurs, les souhaits, les visiteurs, la réputation | la société | les taux de l'étal ; le charme |
-| ce que la ville sait faire (ses constructions ; plus tard ses recettes, ses décos) | le socle (`Knowledge`) : au départ, le déroulé du départ ; puis les déclencheurs | le carnet ; ce que le panneau Construire propose |
+| ce que la ville sait faire (ses constructions ; plus tard ses recettes, ses décos) | le socle (`Knowledge`) : au départ, le déroulé du départ ; puis les idées (celles des premiers habitants, apprises par le déroulé du départ ; plus tard, les déclencheurs) | le carnet ; ce que le panneau Construire propose, et ses onglets |
 | l'avancement des déclencheurs, la part de chaque habitant | le monde | — |
 | l'étape du départ : le prochain premier habitant, l'heure d'où il peut arriver | le monde | le stock de départ donné (le bilan des marchandises le dit) |
 | les effets actifs | ce qui les porte (une lanterne, un maître, une plantation irriguée…) | le registre des effets |
@@ -238,7 +238,7 @@ sauvegardé.
 - Chaque fiche a un identifiant texte stable, que la sauvegarde cite ; jamais le nom du fichier. Un catalogue racine les
   rassemble ; le jeu ne charge que lui.
 - La fiche d'un bâtiment garde son modèle du pack (la source) et le modèle préparé depuis lui par le menu
-  `DICIELA/Contenu/Préparer les modèles` : fusionné, porte au nord, centré sur l'empreinte, son origine au sol. Le menu
+  `DICIELA/Contenu/Préparer les modèles` (une construction neuve, ses fiches nées, se prépare seule) : fusionné, porte au nord, centré sur l'empreinte, son origine au sol. Le menu
   y range aussi l'empreinte et la porte, mesurées sur le modèle (SAVOIR 2.9). Le modèle préparé se refait depuis la
   source ; sans source, le même menu fait une boîte à la taille de la fiche, sa porte marquée, et une source qui ne se
   charge plus (le pack absent) est refusée ; un test vérifie que le modèle suit sa fiche. La fiche dit aussi si le bâtiment est unique, s'il est le logis de la Chimère, s'il se
@@ -315,6 +315,7 @@ code.
 | arriver (la seule arrivée) | `Arrive` | point fort (d'un arrivant) | `Strength` | coucher et lever | `Bedtimes` |
 | premier habitant | `FirstVillagerDefinition` | personnage du pack (tel quel) | `CharacterDefinition` | sorte des habitants ordinaires | `Catalog.VillagerKind` |
 | le nom d'un habitant (sa clé) | `NameKey` | ouvrir un poste pour lui | `WorkSlots.OpenFor` | un poste sur la fiche d'un lieu | `PlaceSheetSlot` |
+| apprendre (une idée) ; appris | `Knowledge.Learn` ; `Learned` | lieu de travail (d'un premier habitant) | `Workplace` | les onglets du panneau | `BuildBarTabs` |
 
 ## 10. La carte, les scènes et la sauvegarde
 

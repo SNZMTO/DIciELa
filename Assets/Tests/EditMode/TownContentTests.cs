@@ -105,6 +105,27 @@ namespace Diciela.Tests.EditMode
             Assert.AreEqual(catalog.Statistics.Count, statistics.Count, "Il faut un premier habitant par statistique.");
         }
 
+        [Test]
+        public void EveryStructureIsKnownAtStartOrBroughtByAFirstVillager()
+        {
+            // Une construction que personne ne sait bâtir, ni la Chimère en arrivant, ni un premier habitant par son idée,
+            // ne pourrait jamais se poser (GDD, sections 6 et 13) : un contenu perdu.
+            Catalog catalog = ProjectContent.LoadSingle<Catalog>();
+            var reachable = new List<StructureDefinition>(catalog.Opening.KnownStructures);
+            foreach (FirstVillagerDefinition first in catalog.Opening.FirstVillagers)
+            {
+                if (first != null && first.Workplace != null)
+                    reachable.Add(first.Workplace);
+            }
+            var lost = new List<string>();
+            foreach (StructureDefinition structure in catalog.AllStructures())
+            {
+                if (!reachable.Contains(structure))
+                    lost.Add(structure.Id);
+            }
+            Assert.IsEmpty(lost, "Personne ne sait bâtir : " + string.Join(", ", lost) + ".");
+        }
+
         private static StatisticDefinition StatisticOf(Catalog catalog, SubStatisticDefinition subStatistic)
         {
             foreach (StatisticDefinition statistic in catalog.Statistics)

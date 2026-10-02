@@ -9,14 +9,16 @@ using UnityEngine;
 namespace Diciela.Simulation
 {
     /// <summary>
-    /// Le déroulé du départ (GDD, section 6 ; décisions 172, 187 et 189) : ce qui se passe de soi-même au début d'une partie.
+    /// Le déroulé du départ (GDD, section 6 ; décisions 172, 187, 189 et 190) : ce qui se passe de soi-même au début
+    /// d'une partie.
     /// Le premier logis de la Chimère qui tient les marchandises de la ville, le campement, reçoit le stock de départ à
     /// sa mise en service, une seule fois par partie : le bilan des marchandises le dit, rien d'autre ne le retient. Puis
     /// les premiers habitants arrivent, dans l'ordre du déroulé, un par un : chacun quand une maison bâtie a un lit
     /// libre, jamais la nuit (GDD, section 3), au moins tant d'heures après le précédent ; il arrive au point d'arrivée de
     /// la carte, fort dans son métier, et prend le poste « à tout faire » ouvert pour lui au logis de la Chimère (GDD,
     /// section 7), et le lit libre le plus proche de ce poste (GDD, section 4) ; sans logis de la Chimère, pas de poste,
-    /// et le lit le plus proche de là où il arrive. Où en est le déroulé appartient au monde (ARCHITECTURE, section 4).
+    /// et le lit le plus proche de là où il arrive. Il apporte l'idée de son lieu de travail : la ville sait aussitôt le
+    /// bâtir (GDD, section 13). Où en est le déroulé appartient au monde (ARCHITECTURE, section 4).
     /// Un catalogue sans déroulé du départ, ou sans sorte d'habitant, n'en fait rien.
     /// </summary>
     internal sealed class Opening
@@ -69,6 +71,8 @@ namespace Diciela.Simulation
             world.Housing.Lodge(villager, house);
             if (post != null)
                 world.WorkSlots.OpenFor(villager, post, _definition.FirstVillagersSlot);
+            if (!ReferenceEquals(first.Workplace, null))
+                world.Knowledge.Learn(first.Workplace);
             _nextArrivalStep = world.Clock.StepCount + world.Clock.StepsIn(_definition.FirstArrivalHours);
         }
     }

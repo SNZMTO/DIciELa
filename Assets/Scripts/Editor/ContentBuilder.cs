@@ -29,7 +29,8 @@ namespace Diciela.EditorTools
         public static void CreateMissing()
         {
             TownContentBuilder.Made town = TownContentBuilder.CreateMissing();
-            VillagerContentBuilder.Made villagers = VillagerContentBuilder.CreateMissing(town.Statistics);
+            TradesContentBuilder.Made trades = TradesContentBuilder.CreateMissing(town);
+            VillagerContentBuilder.Made villagers = VillagerContentBuilder.CreateMissing(town.Statistics, trades);
             // Le campement se voit en boîte à sa taille (Défaut : 3 × 3 m, porte de 1,2 m ; GDD, section 16) tant que sa
             // composition n'est pas faite (DICIELA/Contenu/Composer le campement). Il fait tout au départ (décision 172) :
             // il tient 100 marchandises pour la ville et ouvre le poste « à tout faire ».
@@ -91,7 +92,7 @@ namespace Diciela.EditorTools
             });
             Catalog catalog = EditorAssets.CreateIfMissing<Catalog>(CatalogPath, fiche =>
             {
-                SetList(EditorAssets.Property(fiche, "_families"), housing);
+                SetList(EditorAssets.Property(fiche, "_families"), housing, trades.Family);
                 EditorAssets.Property(fiche, "_opening").objectReferenceValue = opening;
                 SetList(EditorAssets.Property(fiche, "_nature"), town.Nature);
                 SetList(EditorAssets.Property(fiche, "_goods"), town.Wood, town.Stone);

@@ -9,7 +9,8 @@ namespace Diciela.EditorTools
     /// Crée ce qui manque des habitants ordinaires (GDD, sections 5, 6 et 16 ; décision 187) : les dix humains du pack,
     /// chacun tel quel (Assets/Data/Apparence/Humains) ; la sorte des habitants (de 5 à 20 en arrivant, ils rentrent
     /// dormir la nuit) ; les quatre premiers habitants, dans l'ordre de leur arrivée, chacun fort dans son métier, avec
-    /// son humain (décision 188) et, pour nom, son métier : le bâtisseur, la fermière, la charretière, le menuisier.
+    /// son humain (décision 188) et, pour nom, son métier : le bâtisseur, la fermière, la charretière, le menuisier ;
+    /// le bâtisseur apporte l'idée de la loge, la charretière celle de l'entrepôt (décision 190).
     /// Réexécutable : une fiche qui existe n'est jamais touchée.
     /// </summary>
     internal static class VillagerContentBuilder
@@ -27,11 +28,12 @@ namespace Diciela.EditorTools
         };
 
         // Les premiers habitants, dans l'ordre de leur arrivée (GDD, section 6) : le nom de la fiche, la sous-statistique
-        // de leur métier, leur humain.
-        private static readonly (string File, string Strength, string Human)[] FirstVillagers =
+        // de leur métier, leur humain, leur lieu de travail (la loge, l'entrepôt ; les champs et la scierie viendront avec
+        // leurs systèmes).
+        private static readonly (string File, string Strength, string Human, string Workplace)[] FirstVillagers =
         {
-            ("Batisseur", "construction", "Homme_02"), ("Fermiere", "culture", "Femme_04"),
-            ("Charretiere", "transport", "Femme_03"), ("Menuisier", "travail_bois", "Boucher")
+            ("Batisseur", "construction", "Homme_02", "loge"), ("Fermiere", "culture", "Femme_04", null),
+            ("Charretiere", "transport", "Femme_03", "entrepot"), ("Menuisier", "travail_bois", "Boucher", null)
         };
 
         /// <summary>Ce que le monteur rend : la sorte des habitants, et les premiers dans l'ordre de leur arrivée.</summary>
@@ -49,7 +51,7 @@ namespace Diciela.EditorTools
         }
 
         /// <summary>Crée ce qui manque ; les métiers se lisent dans ces statistiques.</summary>
-        public static Made CreateMissing(IReadOnlyList<StatisticDefinition> statistics)
+        public static Made CreateMissing(IReadOnlyList<StatisticDefinition> statistics, TradesContentBuilder.Made trades)
         {
             var humans = new Dictionary<string, CharacterDefinition>();
             foreach ((string file, string pack) in Humans)
@@ -71,7 +73,7 @@ namespace Diciela.EditorTools
                 EditorAssets.Property(fiche, "_sleepsAtNight").boolValue = true;
             });
             var firsts = new List<FirstVillagerDefinition>();
-            foreach ((string file, string strength, string human) in FirstVillagers)
+            foreach ((string file, string strength, string human, string workplace) in FirstVillagers)
             {
                 firsts.Add(EditorAssets.CreateIfMissing<FirstVillagerDefinition>(FirstFolder + "/" + file + ".asset",
                     fiche =>
@@ -80,6 +82,9 @@ namespace Diciela.EditorTools
                         EditorAssets.Property(fiche, "_nameKey").stringValue = "habitant." + file.ToLowerInvariant();
                         EditorAssets.Property(fiche, "_strength").objectReferenceValue = SubStatistic(statistics, strength);
                         EditorAssets.Property(fiche, "_character").objectReferenceValue = humans[human];
+                        EditorAssets.Property(fiche, "_workplace").objectReferenceValue = workplace == "loge"
+                            ? trades.Lodge
+                            : workplace == "entrepot" ? trades.Warehouse : null;
                     }));
             }
             return new Made { Kind = kind, FirstVillagers = firsts };

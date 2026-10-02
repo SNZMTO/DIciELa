@@ -42,6 +42,14 @@ namespace Diciela.Tests.EditMode
             serialized.ApplyModifiedPropertiesWithoutUndo();
         }
 
+        /// <summary>Donne à ce premier habitant son lieu de travail, dont il apporte l'idée en arrivant.</summary>
+        public static void Workplace(FirstVillagerDefinition first, StructureDefinition workplace)
+        {
+            var serialized = new SerializedObject(first);
+            Property(serialized, "_workplace").objectReferenceValue = workplace;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+        }
+
         /// <summary>Dit, dans ce déroulé du départ, les premiers habitants, dans l'ordre de leur arrivée.</summary>
         public static void FirstVillagers(OpeningDefinition opening, params FirstVillagerDefinition[] firsts)
         {

@@ -54,7 +54,8 @@ namespace Diciela.Tests.PlayMode
             var ordinary = Keep(ScriptableObject.CreateInstance<VillagerKindDefinition>());
             TestWorld.Fill(ordinary, "_nameKey", "habitant.ordinaire");
             TestWorld.Fill(Catalog, "_villagerKind", ordinary);
-            var builder = Keep(ScriptableObject.CreateInstance<FirstVillagerDefinition>());
+            Builder = Keep(ScriptableObject.CreateInstance<FirstVillagerDefinition>());
+            FirstVillagerDefinition builder = Builder;
             TestWorld.Fill(builder, "_nameKey", "habitant.batisseur");
             TestWorld.Fill(builder, "_strength", transport);
             TestWorld.Fill(builder, "_character", Keep(ScriptableObject.CreateInstance<CharacterDefinition>()));
@@ -97,6 +98,9 @@ namespace Diciela.Tests.PlayMode
 
         public World World { get; }
         public Catalog Catalog { get; }
+
+        /// <summary>Le bâtisseur, premier habitant ; le test peut lui donner un lieu de travail, son idée.</summary>
+        public FirstVillagerDefinition Builder { get; }
         public GoodDefinition Wood { get; }
         public GoodDefinition Stone { get; }
         public StructureDefinition Camp { get; }

@@ -30,6 +30,7 @@ MonoBehaviour:
   _workSlots:
   - {fileID: 11400000, guid: efdeee55abb7a0c408de680db580711a, type: 2}
   _storageCapacity: 100
+  _beds: 0
   _sourceModel: {fileID: 9071609515276711932, guid: 5d4eb190ab7f5e74cad04a93f40dbf4b, type: 3}
   _model: {fileID: 7260408593367818035, guid: 34c8205f80806744b96df438f24efd48, type: 3}
   _picture: {fileID: 2800000, guid: 809a7121aa89d9a4b812edef696900c3, type: 3}

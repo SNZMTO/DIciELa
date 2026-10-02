@@ -478,6 +478,10 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 - **Restaurer un fichier suivi par Git LFS** (les images, les maillages) : `git show HEAD:chemin` rend le pointeur, pas
   le fichier ; l'écrire à sa place remplace l'image par trois lignes de texte. Passer par `git show HEAD:chemin | git lfs
   smudge chemin`, vers un fichier à part, puis le copier.
+- **« Photographier les constructions » refait toutes les vignettes** : une vignette identique à l'œil change de quelques
+  octets (le rendu n'est pas le même à l'octet près) ; la comparer à l'ancienne, la remettre si rien ne se voit (l'image
+  d'avant est aussi dans `.git/lfs/objects/`), la garder si elle a vraiment changé (étape 38 : le campement y gagne son
+  tas de pierres).
 - **En EditMode, `Awake` et `OnEnable` ne se déclenchent pas** : un composant créé dans un test n'est pas abonné. La
   logique va dans des classes C# pures, testables sans scène.
 - **Démarrage rapide du Play** (Enter Play Mode Options, actif dans ce projet : ni le domaine ni la scène ne sont
