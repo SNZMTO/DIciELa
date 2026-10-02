@@ -15,6 +15,17 @@
 
 ## Les captures
 
+### 02/10/2026 — étapes 34 et 35 : le savoir de la ville, les lits
+
+La vue témoin ne change pas. Le savoir de la ville ne se voit pas : avant le campement, le panneau ne propose que lui ;
+ensuite la cabane, que la Chimère sait bâtir en arrivant. La carte de la cabane dit ce qu'elle offre, comme la
+maquette : à côté de son nom, l'icône du lit et « 2 lits », son coût dessous. Ce qu'une capture ne montre pas : une
+construction que la ville ne sait pas bâtir serait refusée.
+
+![La vue témoin](Album/2026-10-02_etape-35_vue-temoin.jpg)
+
+![Les lits de la cabane](Album/2026-10-02_etape-35_lits-de-la-cabane.jpg)
+
 ### 02/10/2026 — étapes 23 à 33 : le campement, la couche, la revue, les touches des cartes
 
 La vue témoin ne change pas : la Chimère seule sur la carte nue, l'astuce qui dit d'installer le campement. Installé,
