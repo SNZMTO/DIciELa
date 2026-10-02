@@ -7,8 +7,8 @@ namespace Diciela.Tests.PlayMode
 {
     /// <summary>
     /// Le présentateur du panneau Construire, sur le petit monde des tests et une vue qui note ce qu'on lui montre et joue
-    /// les choix du joueur. Un catalogue de deux familles (Logement : la cabane ; Décor : un banc), une table des textes
-    /// écrite ici. Le panneau s'ouvre à la demande et se ferme quand on prend une carte (décision 168).
+    /// les choix du joueur. Un catalogue de deux familles (Logement : la cabane, qui offre deux lits ; Décor : un banc),
+    /// une table des textes écrite ici. Le panneau s'ouvre à la demande et se ferme quand on prend une carte (décision 168).
     /// </summary>
     public sealed class BuildBarPresenterTests
     {
@@ -17,6 +17,7 @@ namespace Diciela.Tests.PlayMode
                                      "famille.decor,Décor\n" +
                                      "construction.cabane,Cabane\n" +
                                      "construction.banc,Banc\n" +
+                                     "carte.lits,{lits} lits\n" +
                                      "pose.refus.Overlaps,La place est prise\n";
 
         private TestWorld _test;
@@ -35,6 +36,7 @@ namespace Diciela.Tests.PlayMode
 #if UNITY_EDITOR
             TestWorld.Fill(_bench, "_id", "banc");
             TestWorld.Fill(_bench, "_nameKey", "construction.banc");
+            TestWorld.Fill(_test.Cabin, "_beds", 2);
             TestWorld.Fill(housing, "_nameKey", "famille.logement");
             TestWorld.Fill(decor, "_nameKey", "famille.decor");
             TestWorld.FillList(housing, "_structures", _test.Cabin);
@@ -161,6 +163,15 @@ namespace Diciela.Tests.PlayMode
 
             _view.Open(1);
             Assert.AreEqual(new[] { "1" }, _view.Keys, "Le banc, première carte du Décor.");
+        }
+
+        [Test]
+        public void EachCardSaysTheBedsItsStructureOffers()
+        {
+            Assert.AreEqual(new[] { "2 lits" }, _view.Beds, "La cabane offre deux lits.");
+
+            _view.Open(1);
+            Assert.AreEqual(new[] { "" }, _view.Beds, "Le banc n'en offre pas : sa carte n'en dit rien.");
         }
 
         [Test]

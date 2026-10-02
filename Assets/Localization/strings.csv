@@ -144,6 +144,7 @@ fiche.la_chimere,La Chimère,The Chimera
 fiche.poste_libre,Libre,Free
 fiche.dormir,Aller dormir,Go to sleep
 fiche.reveiller,Réveiller,Wake up
+carte.lits,{lits} lits,{lits} beds
 fanion.infobulle,"{marchandise}, dans le stock de la ville","{marchandise}, in the town's stock"
 journee.suite.Work,"Travail, puis soirée","Work, then evening"
 journee.suite.Evening,"Soirée, puis nuit","Evening, then night"

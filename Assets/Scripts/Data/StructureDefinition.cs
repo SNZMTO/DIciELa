@@ -35,14 +35,14 @@ namespace Diciela.Data
 
         [Tooltip("Vrai si la Chimère y dort couchée sur une couche qu'on voit (le campement) ; faux : elle entre, et on " +
                  "ne la voit plus (GDD, section 6). Mesurée sur le modèle, d'après son objet « Couche ».")]
-        [SerializeField] private bool _hasBed;
+        [SerializeField] private bool _hasCouch;
 
         [Tooltip("Où se posent ses pieds sur la couche, en mètres, dans le repère du modèle à l'angle 0 (x vers l'est, " +
                  "y vers le haut, z vers le nord).")]
-        [SerializeField] private Vector3 _bedFeet;
+        [SerializeField] private Vector3 _couchFeet;
 
         [Tooltip("Vers où va sa tête, depuis ses pieds, en degrés depuis le nord vers l'est, à l'angle 0.")]
-        [SerializeField] private float _bedHeadingDegrees;
+        [SerializeField] private float _couchHeadingDegrees;
 
         [Tooltip("Une seule dans la ville : le campement puis la maison de la Chimère, la Place, les grands projets (GDD, " +
                  "section 9).")]
@@ -69,6 +69,9 @@ namespace Diciela.Data
                  "0 : elle n'en tient pas (GDD, section 8).")]
         [SerializeField, Min(0)] private int _storageCapacity;
 
+        [Tooltip("Les lits qu'elle offre aux habitants, une fois bâtie (GDD, section 4) ; 0 : elle ne loge personne.")]
+        [SerializeField, Min(0)] private int _beds;
+
         [Tooltip("Le modèle du pack, tel quel : la source que le menu DICIELA/Contenu/Préparer les modèles mesure et " +
                  "fusionne. Vide tant que le modèle n'est pas choisi : le menu fait alors une boîte à la taille de la fiche.")]
         [SerializeField] private GameObject _sourceModel;
@@ -88,9 +91,9 @@ namespace Diciela.Data
         public bool HasDoor => _hasDoor;
         public float DoorOffsetMeters => _doorOffsetMeters;
         public float DoorWidthMeters => _doorWidthMeters;
-        public bool HasBed => _hasBed;
-        public Vector3 BedFeet => _bedFeet;
-        public float BedHeadingDegrees => _bedHeadingDegrees;
+        public bool HasCouch => _hasCouch;
+        public Vector3 CouchFeet => _couchFeet;
+        public float CouchHeadingDegrees => _couchHeadingDegrees;
         public bool IsUnique => _unique;
         public bool IsChimeraHome => _chimeraHome;
         public bool BuiltWhenPlaced => _builtWhenPlaced;
@@ -98,6 +101,7 @@ namespace Diciela.Data
         public float WorkHours => _workHours;
         public IReadOnlyList<WorkSlotDefinition> WorkSlots => _workSlots;
         public int StorageCapacity => _storageCapacity;
+        public int Beds => _beds;
         public GameObject SourceModel => _sourceModel;
         public GameObject Model => _model;
         public Texture2D Picture => _picture;

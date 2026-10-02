@@ -28,7 +28,7 @@ namespace Diciela.EditorTools
                 string path = Folder + "/" + composition.Name + ".prefab";
                 if (!EditorAssets.Exists(path) && !Build(composition, path))
                     continue;
-                AddBedIfMissing(composition, path);
+                AddCouchIfMissing(composition, path);
                 var structure = EditorAssets.Load<StructureDefinition>(composition.StructurePath);
                 EditorAssets.AssignIfMissing(structure, "_sourceModel", AssetDatabase.LoadAssetAtPath<GameObject>(path));
                 ModelPreparer.Prepare(structure);
@@ -71,8 +71,8 @@ namespace Diciela.EditorTools
                             .Append(" × ").Append(size.z.ToString("0.00")).Append(" × ").Append(size.y.ToString("0.00"));
                     }
                 }
-                if (composition.Bed.HasValue)
-                    AddBed(root.transform, composition.Bed.Value);
+                if (composition.Couch.HasValue)
+                    AddCouch(root.transform, composition.Couch.Value);
                 PrefabUtility.SaveAsPrefabAsset(root, path);
                 Debug.Log("DICIELA : " + composition.Name + " composé (" + path + "), largeur × profondeur × hauteur en " +
                           "mètres" + sizes + ".");
@@ -85,18 +85,18 @@ namespace Diciela.EditorTools
         }
 
         // Une composition déjà faite (retouchée, peut-être, par le développeur) reçoit le repère de sa couche s'il lui manque.
-        private static void AddBedIfMissing(PackComposition composition, string path)
+        private static void AddCouchIfMissing(PackComposition composition, string path)
         {
-            if (!composition.Bed.HasValue)
+            if (!composition.Couch.HasValue)
                 return;
             GameObject root = PrefabUtility.LoadPrefabContents(path);
             try
             {
-                if (SourceModelParts.Bed(root) != null)
+                if (SourceModelParts.Couch(root) != null)
                     return;
-                AddBed(root.transform, composition.Bed.Value);
+                AddCouch(root.transform, composition.Couch.Value);
                 PrefabUtility.SaveAsPrefabAsset(root, path);
-                Debug.Log("DICIELA : " + composition.Name + " reçoit le repère de sa couche (« " + SourceModelParts.BedName +
+                Debug.Log("DICIELA : " + composition.Name + " reçoit le repère de sa couche (« " + SourceModelParts.CouchName +
                           " »), à déplacer à la main si la Chimère y dort mal.");
             }
             finally
@@ -105,12 +105,12 @@ namespace Diciela.EditorTools
             }
         }
 
-        private static void AddBed(Transform root, PackComposition.Spot bed)
+        private static void AddCouch(Transform root, PackComposition.Spot couch)
         {
-            var mark = new GameObject(SourceModelParts.BedName).transform;
+            var mark = new GameObject(SourceModelParts.CouchName).transform;
             mark.SetParent(root, false);
-            mark.localPosition = bed.Place;
-            mark.localRotation = Quaternion.Euler(0f, bed.Yaw, 0f);
+            mark.localPosition = couch.Place;
+            mark.localRotation = Quaternion.Euler(0f, couch.Yaw, 0f);
         }
     }
 }

@@ -85,8 +85,9 @@ namespace Diciela.Tests.EditMode
                 TextKeys.CreationTitle, TextKeys.CreationHead, TextKeys.CreationBody, TextKeys.CreationNone,
                 TextKeys.CreationConfirm, TextKeys.DayNumber, TextKeys.SheetPutChimera, TextKeys.SheetRemoveChimera,
                 TextKeys.SheetChimera, TextKeys.SheetFreeSlot, TextKeys.SheetSleep, TextKeys.SheetWake,
-                TextKeys.StockTooltip, TextKeys.TipCamp, TextKeys.TipPost, TextKeys.TipCabin, TextKeys.BuildTool, TextKeys.BuildToolDetail, TextKeys.ClearingTool,
-                TextKeys.ClearingToolDetail, TextKeys.ToolsTooltip, TextKeys.ToolsTooltipDetail
+                TextKeys.StockTooltip, TextKeys.TipCamp, TextKeys.TipPost, TextKeys.TipCabin, TextKeys.BuildTool,
+                TextKeys.BuildToolDetail, TextKeys.ClearingTool, TextKeys.ClearingToolDetail, TextKeys.ToolsTooltip,
+                TextKeys.ToolsTooltipDetail, TextKeys.CardBeds
             });
             foreach (DayPhase phase in Enum.GetValues(typeof(DayPhase)))
             {
@@ -148,10 +149,10 @@ namespace Diciela.Tests.EditMode
                 if (structure.HasDoor && Mathf.Abs(structure.DoorOffsetMeters) + structure.DoorWidthMeters * 0.5f >
                     structure.WidthMeters * 0.5f + Centimeter)
                     faults.Add(structure.Id + " : sa porte déborde de sa façade.");
-                if (structure.HasBed && (Mathf.Abs(structure.BedFeet.x) > structure.WidthMeters * 0.5f ||
-                                         Mathf.Abs(structure.BedFeet.z) > structure.DepthMeters * 0.5f))
+                if (structure.HasCouch && (Mathf.Abs(structure.CouchFeet.x) > structure.WidthMeters * 0.5f ||
+                                         Mathf.Abs(structure.CouchFeet.z) > structure.DepthMeters * 0.5f))
                     faults.Add(structure.Id + " : sa couche est hors de son empreinte.");
-                if (structure.IsChimeraHome && structure.BuiltWhenPlaced && !structure.HasBed)
+                if (structure.IsChimeraHome && structure.BuiltWhenPlaced && !structure.HasCouch)
                     faults.Add(structure.Id + " : le campement n'a pas de couche (un objet « Couche » dans sa composition).");
             }
 

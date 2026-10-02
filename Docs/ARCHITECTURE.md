@@ -133,7 +133,7 @@ sauvegardé.
 | qui tient quel poste ; les postes fermés | la société (une seule table) | qui est présent sur un lieu |
 | qui dort où (la Chimère : couchée ou non) ; la minuterie des arrivées | la société | les lits libres |
 | les curseurs, les souhaits, les visiteurs, la réputation | la société | les taux de l'étal ; le charme |
-| ce que la ville a débloqué | la société, écrit par les déclencheurs | le carnet |
+| ce que la ville sait faire (ses constructions ; plus tard ses recettes, ses décos) | le socle (`Knowledge`) : au départ, le déroulé du départ ; puis les déclencheurs | le carnet ; ce que le panneau Construire propose |
 | l'avancement des déclencheurs, la part de chaque habitant | le monde | — |
 | l'étape du départ | le monde | — |
 | les effets actifs | ce qui les porte (une lanterne, un maître, une plantation irriguée…) | le registre des effets |
@@ -302,9 +302,10 @@ code.
 | onglet, carte (du panneau Construire) | `Tab`, `Card` (`BuildBarElements`) | roue des outils ; son anneau | `ToolWheel` ; `WheelRing` | infobulle | `Tooltips` |
 | gestes des outils ; outil choisi | `ToolControls` ; `ToolChoice` | touches des outils | `IToolKeys` | ouvrir, fermer (un panneau) | `Open`, `Close` (`IBuildMenu`) |
 | la main (un seul outil) | `Hand` | outil de la roue (ses gestes ; son allure) | `ToolAction` ; `WheelTool` | boutons de la fiche | `PlaceSheetActions`, `PlaceSheetAction` |
-| couche (où la Chimère dort) | `HasBed`, `BedFeet` | stock de départ | `StartingGoods` ; `GoodsCause.StartingStock` | classes de style posées par le code | `StyleClasses` |
+| couche (où la Chimère dort) | `HasCouch`, `CouchFeet` | stock de départ | `StartingGoods` ; `GoodsCause.StartingStock` | classes de style posées par le code | `StyleClasses` |
 | mettre en service (l'opération du monde) | `Commissioning` | chantiers finis (à mettre en service) | `ConstructionSites.Finished` | reprendre ses mailles (un pied debout) | `NavGrid.Reclaim` |
 | tronçons (d'une rangée du maillage) | `FreeRuns` | ligne du chantier (côté rendu) | `SiteLine` | stock de la ville changé | `CityStockChanged` |
+| lits (qu'offre une maison) | `Beds` | ce que le panneau propose | `BuildBarOffer` | | |
 
 ## 10. La carte, les scènes et la sauvegarde
 

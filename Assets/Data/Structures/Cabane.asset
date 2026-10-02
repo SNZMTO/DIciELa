@@ -19,9 +19,9 @@ MonoBehaviour:
   _hasDoor: 1
   _doorOffsetMeters: 0.05
   _doorWidthMeters: 2.69
-  _hasBed: 0
-  _bedFeet: {x: 0, y: 0, z: 0}
-  _bedHeadingDegrees: 0
+  _hasCouch: 0
+  _couchFeet: {x: 0, y: 0, z: 0}
+  _couchHeadingDegrees: 0
   _unique: 0
   _chimeraHome: 0
   _builtWhenPlaced: 0
@@ -33,6 +33,7 @@ MonoBehaviour:
   _workHours: 2
   _workSlots: []
   _storageCapacity: 0
+  _beds: 2
   _sourceModel: {fileID: 6781674940470143413, guid: f05490850754d3f41930c7ffe3c75610, type: 3}
   _model: {fileID: 2823797968006156900, guid: 40ad75984bb23f84b91018b2874263c2, type: 3}
   _picture: {fileID: 2800000, guid: 8b48f676fc2cfc444a9dfaae0125c9f7, type: 3}

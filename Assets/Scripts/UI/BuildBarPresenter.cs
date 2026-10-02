@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Diciela.Controls;
 using Diciela.Data;
 using Diciela.Simulation;
@@ -11,9 +12,8 @@ namespace Diciela.UI
     /// Le présentateur du panneau Construire (ARCHITECTURE, section 11) : il le remplit depuis le catalogue et la table des
     /// textes, met dans la main de l'outil de pose la construction choisie, et dit pourquoi une pose est refusée. Le
     /// panneau s'ouvre à la demande (la roue des outils, sa touche) et se ferme quand on prend une carte, pour dégager la
-    /// vue pendant la pose, ou par Échap (décision 168). Il ne propose que ce qui se pose encore : une construction unique
-    /// posée s'en va. Le campement d'abord (GDD, section 6) : tant que la Chimère n'a pas de logis, il ne propose que son
-    /// logis, si le catalogue en a un ; c'est une consigne du panneau, pas une règle des ordres (décision 95). Panneau
+    /// vue pendant la pose, ou par Échap (décision 168). Ce qu'il propose, BuildBarOffer le dit (ce qui se pose encore,
+    /// le campement d'abord) ; chaque carte dit ce que sa construction offre (ses lits) et ce qu'elle coûte. Panneau
     /// ouvert, les touches 1 à 9 prennent les cartes de la famille ouverte, comme un clic, et chaque carte porte sa touche
     /// (décision 184). Il écoute l'outil, les poses et les chantiers finis : le panneau ne photographie jamais.
     /// </summary>
@@ -25,7 +25,7 @@ namespace Diciela.UI
         private readonly PlacementTool _placement;
         private readonly World _world;
         private readonly IToolKeys _keys;
-        private readonly bool _catalogHasAHome;
+        private readonly BuildBarOffer _offer;
         private readonly List<BuildBarFamily> _families = new List<BuildBarFamily>();
         private readonly List<BuildBarCard> _cards = new List<BuildBarCard>();
         private readonly List<StructureDefinition> _offered = new List<StructureDefinition>();
@@ -45,7 +45,7 @@ namespace Diciela.UI
             _placement = placement;
             _world = world;
             _keys = keys;
-            _catalogHasAHome = HasAHome(catalog);
+            _offer = new BuildBarOffer(catalog, world);
             _view.FamilyChosen += OnFamilyChosen;
             _view.StructureChosen += OnStructureChosen;
             _placement.HeldChanged += OnHeldChanged;
@@ -137,22 +137,24 @@ namespace Diciela.UI
                 StructureFamilyDefinition family = _catalog.Families[_openFamily];
                 foreach (StructureDefinition structure in family.Structures)
                 {
-                    if (!IsOffered(structure))
+                    if (!_offer.Offers(structure))
                         continue;
                     _offered.Add(structure);
                     _cards.Add(new BuildBarCard(_texts.Get(structure.NameKey), structure.Picture, family.Pastel,
-                        structure.Cost, _keys.KeyOfCard(_cards.Count)));
+                        BedsOf(structure), structure.Cost, _keys.KeyOfCard(_cards.Count)));
                 }
             }
             _view.ShowStructures(_cards);
             OnHeldChanged();
         }
 
-        private bool IsOffered(StructureDefinition structure)
+        /// <summary>Les lits qu'offre une construction, écrits pour sa carte (« 2 lits ») ; vide si elle n'en a pas.</summary>
+        private string BedsOf(StructureDefinition structure)
         {
-            if (!_world.PlacementRules.IsAvailable(structure))
-                return false;
-            return structure.IsChimeraHome || !_catalogHasAHome || _world.Structures.ChimeraHome != null;
+            if (structure.Beds <= 0)
+                return "";
+            return _texts.Get(TextKeys.CardBeds)
+                .Replace(TextKeys.BedsParameter, structure.Beds.ToString(CultureInfo.InvariantCulture));
         }
 
         /// <summary>Prendre une carte met sa construction en main et ferme le panneau.</summary>
@@ -173,19 +175,6 @@ namespace Diciela.UI
         {
             bool refused = _placement.IsActive && _placement.Result != PlacementResult.Ok;
             _view.ShowReason(refused ? _texts.Get(TextKeys.PlacementRefusal(_placement.Result.ToString())) : "");
-        }
-
-        private static bool HasAHome(Catalog catalog)
-        {
-            foreach (StructureFamilyDefinition family in catalog.Families)
-            {
-                foreach (StructureDefinition structure in family.Structures)
-                {
-                    if (structure != null && structure.IsChimeraHome)
-                        return true;
-                }
-            }
-            return false;
         }
     }
 }

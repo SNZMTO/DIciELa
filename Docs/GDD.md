@@ -627,8 +627,8 @@
   menu viendra.
 - **Règle.** On choisit quoi construire dans le panneau Construire, en bas au centre : les familles en onglets,
   chacune de son pastel avec son icône, et au-dessus de l'onglet ouvert, ses constructions en cartes : la vignette de
-  la construction (une photo de son modèle), son nom et ce qu'elle coûte (chaque marchandise, son icône et combien) ;
-  ce qu'elle offre (des lits) s'y ajoutera avec eux. L'onglet ouvert et la carte en main restent enfoncés. Prendre une
+  la construction (une photo de son modèle), son nom et à côté ce qu'elle offre (ses lits, l'icône du lit devant : « 2
+  lits »), puis ce qu'elle coûte (chaque marchandise, son icône et combien). L'onglet ouvert et la carte en main restent enfoncés. Prendre une
   carte ferme le panneau, pour dégager la vue pendant la pose. Panneau ouvert, une touche prend sa carte dans la
   famille ouverte, comme un clic ; chaque carte porte sa touche, écrite sur elle comme celle d'un outil de la roue.
 - **Défaut.** Les cartes : les touches 1 à 9, de gauche à droite.

@@ -73,6 +73,17 @@ namespace Diciela.Tests.EditMode
         }
 
         [Test]
+        public void SomethingTheChimeraKnowsOffersBeds()
+        {
+            // Les premiers habitants n'attendent qu'un lit (GDD, section 6) : ce qu'elle sait bâtir en arrivant en offre.
+            Catalog catalog = ProjectContent.LoadSingle<Catalog>();
+            int beds = 0;
+            foreach (StructureDefinition structure in catalog.Opening.KnownStructures)
+                beds += structure.Beds;
+            Assert.Greater(beds, 0, "Rien de ce que la Chimère sait bâtir en arrivant n'offre de lit.");
+        }
+
+        [Test]
         public void EachSubStatisticIsInOneStatisticAndEachTaskReadsOne()
         {
             Catalog catalog = ProjectContent.LoadSingle<Catalog>();

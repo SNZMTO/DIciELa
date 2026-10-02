@@ -123,7 +123,7 @@ namespace Diciela.View
         // Endormi : couché sur la couche de son logis, s'il en a une, sinon caché ; éveillé : debout là où il est.
         private void ShowSleep(Shown shown)
         {
-            Structure home = shown.Villager.IsAsleep ? HomeWithABedOf(shown.Villager) : null;
+            Structure home = shown.Villager.IsAsleep ? HomeWithACouchOf(shown.Villager) : null;
             shown.Lying = home != null;
             shown.Posed = false;
             if (shown.Lying)
@@ -134,18 +134,18 @@ namespace Diciela.View
         }
 
         // Seule la Chimère dort sur ordre, dans son logis (GDD, section 6) ; ce logis, s'il a une couche.
-        private Structure HomeWithABedOf(Villager villager)
+        private Structure HomeWithACouchOf(Villager villager)
         {
             Structure home = ReferenceEquals(villager, _villagers.Chimera) ? _structures.ChimeraHome : null;
-            return home != null && home.Definition.HasBed ? home : null;
+            return home != null && home.Definition.HasCouch ? home : null;
         }
 
         // Sur le dos, les pieds au repère de la couche, la tête vers où le dit la fiche, le visage vers le ciel.
         private void LayDown(Shown shown, Structure home)
         {
             StructureDefinition definition = home.Definition;
-            Vector3 feet = ModelPose.PointOf(home.Placement, _relief, definition.BedFeet);
-            Vector3 head = ModelPose.Rotation(home.Placement) * Quaternion.Euler(0f, definition.BedHeadingDegrees, 0f) *
+            Vector3 feet = ModelPose.PointOf(home.Placement, _relief, definition.CouchFeet);
+            Vector3 head = ModelPose.Rotation(home.Placement) * Quaternion.Euler(0f, definition.CouchHeadingDegrees, 0f) *
                            Vector3.forward;
             shown.Transform.SetPositionAndRotation(feet, Quaternion.LookRotation(Vector3.up, head));
         }

@@ -163,9 +163,9 @@ namespace Diciela.Tests.PlayMode
             TestWorld.Fill(camp, "_unique", true);
             TestWorld.Fill(camp, "_chimeraHome", true);
             TestWorld.Fill(camp, "_builtWhenPlaced", true);
-            TestWorld.Fill(camp, "_hasBed", true);
-            TestWorld.Fill(camp, "_bedFeet", new Vector3(-0.5f, 0.2f, 0.4f));
-            TestWorld.Fill(camp, "_bedHeadingDegrees", 180f);
+            TestWorld.Fill(camp, "_hasCouch", true);
+            TestWorld.Fill(camp, "_couchFeet", new Vector3(-0.5f, 0.2f, 0.4f));
+            TestWorld.Fill(camp, "_couchHeadingDegrees", 180f);
 #endif
             Villager chimera = _world.Villagers.Chimera;
             _world.Submit(new PlaceStructureCommand(camp, new Placement(new Vector2(50f, 45f), 90f)));

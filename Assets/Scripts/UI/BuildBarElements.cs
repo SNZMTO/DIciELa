@@ -8,9 +8,9 @@ namespace Diciela.UI
 {
     /// <summary>
     /// Les éléments que la barre de construction range (GDD, section 16) : l'onglet d'une famille (son pastel, son icône,
-    /// son nom) et la carte d'une construction (sa vignette, son nom, ce qu'elle coûte, sa touche sur une étiquette de lin,
-    /// comme les outils de la roue), en feutre, avec les classes de Fusion.uss et de Hud.uss. La barre les place et dit
-    /// lesquels sont enfoncés.
+    /// son nom) et la carte d'une construction (sa vignette, son nom et ce qu'elle offre, ce qu'elle coûte, sa touche sur
+    /// une étiquette de lin, comme les outils de la roue), en feutre, avec les classes de Fusion.uss et de Hud.uss. La
+    /// barre les place et dit lesquels sont enfoncés.
     /// </summary>
     internal static class BuildBarElements
     {
@@ -20,7 +20,11 @@ namespace Diciela.UI
         private const string TabIconClass = "onglet-icone";
         private const string TabNameClass = "action";
         private const string CardPictureClass = "carte-vignette";
+        private const string CardTitleClass = "carte-titre";
         private static readonly string[] CardNameClasses = { "t2", "carte-nom" };
+        private const string CardBedsClass = "carte-lits";
+        private const string CardBedsIconClass = "carte-lits-icone";
+        private const string CardBedsTextClass = "libelle";
         private static readonly string[] CostClasses = { "cout", "carte-cout" };
         private const string CostLineClass = "carte-cout-ligne";
         private const string CostIconClass = "carte-cout-icone";
@@ -51,7 +55,7 @@ namespace Diciela.UI
                 picture.style.backgroundImage = new StyleBackground(card.Picture);
                 button.Add(picture);
             }
-            button.Add(Styled.Text(card.Name, CardNameClasses));
+            button.Add(Title(card));
             if (card.Cost != null && card.Cost.Count > 0)
                 button.Add(Cost(card.Cost));
             if (!string.IsNullOrEmpty(card.Key))
@@ -61,6 +65,24 @@ namespace Diciela.UI
                 button.Add(key);
             }
             return button;
+        }
+
+        /// <summary>
+        /// Le titre d'une carte : son nom, et à côté ce qu'elle offre (ses lits, l'icône du lit devant), qui passe dessous
+        /// quand la place manque, comme dans la maquette.
+        /// </summary>
+        private static VisualElement Title(BuildBarCard card)
+        {
+            var title = Styled.With(new VisualElement { pickingMode = PickingMode.Ignore }, CardTitleClass);
+            title.Add(Styled.Text(card.Name, CardNameClasses));
+            if (!string.IsNullOrEmpty(card.Beds))
+            {
+                var beds = Styled.With(new VisualElement { pickingMode = PickingMode.Ignore }, CardBedsClass);
+                beds.Add(Styled.With(new VisualElement { pickingMode = PickingMode.Ignore }, CardBedsIconClass));
+                beds.Add(Styled.Text(card.Beds, CardBedsTextClass));
+                title.Add(beds);
+            }
+            return title;
         }
 
         /// <summary>Le coût d'une carte : chaque marchandise, son icône et combien.</summary>

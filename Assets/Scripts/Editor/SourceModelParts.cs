@@ -12,14 +12,14 @@ namespace Diciela.EditorTools
         private const string DoorMark = "door";
 
         /// <summary>Le nom du repère de la couche : un objet vide posé aux pieds de qui dort, son avant vers la tête.</summary>
-        public const string BedName = "Couche";
+        public const string CouchName = "Couche";
 
         /// <summary>Le repère de la couche de ce modèle ; null s'il n'en a pas.</summary>
-        public static Transform Bed(GameObject root)
+        public static Transform Couch(GameObject root)
         {
             foreach (Transform part in root.GetComponentsInChildren<Transform>(true))
             {
-                if (part.name == BedName)
+                if (part.name == CouchName)
                     return part;
             }
             return null;
