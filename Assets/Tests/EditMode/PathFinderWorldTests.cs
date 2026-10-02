@@ -58,7 +58,7 @@ namespace Diciela.Tests.EditMode
             World world = CabinWorld();
 
             Assert.IsTrue(world.PathFinder.TryFindPath(South, North, _path));
-            string fault = SlowPaths.Judge(TestGrids.Occupied(world.Grid), South, North, _path.Cells, out int cost);
+            string fault = SlowPaths.Judge(TestGrids.Blocked(world.Grid), South, North, _path.Cells, out int cost);
             Assert.IsNull(fault, fault);
             Assert.AreEqual(272, cost);
         }
