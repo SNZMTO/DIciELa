@@ -34,7 +34,7 @@ namespace Diciela.EditorTools
 
             AlbumMenu.PutPlacementToolAside();
             Vector2 center = site.Structure.Placement.Center;
-            var ground = new Vector3(center.x, world.Map.Relief.HeightAt(center.x, center.y), center.y);
+            var ground = world.Map.Relief.GroundAt(center);
             var middle = new Vector2(rig.Camera.pixelWidth / 2f, rig.Camera.pixelHeight / 2f);
             if (rig.BeginDrag(rig.Camera.WorldToScreenPoint(ground)))
                 rig.DragTo(middle);

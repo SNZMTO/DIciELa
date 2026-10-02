@@ -150,7 +150,7 @@ namespace Diciela.EditorTools
 
         private static Vector3 OnGround(Vector2 point, Relief relief)
         {
-            return new Vector3(point.x, relief.HeightAt(point.x, point.y) + LiftMeters, point.y);
+            return relief.GroundAt(point) + Vector3.up * LiftMeters;
         }
 
         private static float LengthOf(List<Vector2> points)

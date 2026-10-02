@@ -62,6 +62,9 @@ namespace Diciela.UI
             _elements.Icon.Clicked -= OnIconClicked;
             _iconTooltip.Dispose();
             _iconTooltip = null;
+            _ring.Dismissed -= Close;
+            _ring.Picked -= OnPicked;
+            _ring.AimChanged -= OnAimChanged;
             _ring.Dispose();
             _ring = null;
             _elements.Icon.AddToClassList(StyleClasses.Hidden);

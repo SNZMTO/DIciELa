@@ -63,7 +63,7 @@ namespace Diciela.Simulation.Economy
                     if (!reachable)
                         break;
                     GoodDefinition good = site.GoodAt(line);
-                    Structure source = NearestSource(good, island, from);
+                    Structure source = _reach.NearestWithGood(_warehouses, good, island, from);
                     if (source == null)
                         continue;
                     int amount = Math.Min(Math.Min(capacity, missing), _warehouses.StockOf(source).AvailableOf(good));
@@ -146,26 +146,5 @@ namespace Diciela.Simulation.Economy
             shift.Site.RemoveBuilder();
             shift.MarkOver();
         }
-
-        /// <summary>L'entrepôt le plus proche de ce point, à vol d'oiseau, qui a cette marchandise à donner.</summary>
-        private Structure NearestSource(GoodDefinition good, int island, Vector2 from)
-        {
-            Structure nearest = null;
-            float best = float.MaxValue;
-            for (int i = 0; i < _warehouses.Count; i++)
-            {
-                if (_warehouses.StockAt(i).AvailableOf(good) < 1)
-                    continue;
-                Structure warehouse = _warehouses.StructureAt(i);
-                float distance = Vector2.Distance(warehouse.Placement.Center, from);
-                if (distance < best && _reach.IsReachable(warehouse, island))
-                {
-                    best = distance;
-                    nearest = warehouse;
-                }
-            }
-            return nearest;
-        }
-
     }
 }

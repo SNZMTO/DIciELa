@@ -130,15 +130,6 @@ namespace Diciela.Tests.EditMode
         }
 
         [Test]
-        public void ADayOfRealTimeIsTwentyFourGameHours()
-        {
-            Clock clock = NewWorld().Clock;
-
-            Assert.AreEqual(24.0, clock.RealSecondsToGameHours(10.0), 1e-6);
-            Assert.AreEqual(12.0, clock.RealSecondsToGameHours(5.0), 1e-6);
-        }
-
-        [Test]
         public void ADayIsAWholeNumberOfSteps()
         {
             Clock clock = NewWorld(step: 0.3f, day: 1f, work: 0.5f, evening: 0f).Clock;

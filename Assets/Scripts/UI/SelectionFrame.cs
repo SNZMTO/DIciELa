@@ -33,8 +33,8 @@ namespace Diciela.UI
             IPanel panel = _screen.panel;
             if (panel == null)
                 return;
-            Vector2 a = _screen.WorldToLocal(RuntimePanelUtils.ScreenToPanel(panel, FromTop(corner)));
-            Vector2 b = _screen.WorldToLocal(RuntimePanelUtils.ScreenToPanel(panel, FromTop(opposite)));
+            Vector2 a = _screen.WorldToLocal(HudArea.ToPanel(panel, corner));
+            Vector2 b = _screen.WorldToLocal(HudArea.ToPanel(panel, opposite));
             _frame.style.left = Mathf.Min(a.x, b.x);
             _frame.style.top = Mathf.Min(a.y, b.y);
             _frame.style.width = Mathf.Abs(a.x - b.x);
@@ -50,11 +50,6 @@ namespace Diciela.UI
         public void Dispose()
         {
             _frame.RemoveFromHierarchy();
-        }
-
-        private static Vector2 FromTop(Vector2 screenPoint)
-        {
-            return new Vector2(screenPoint.x, Screen.height - screenPoint.y);
         }
     }
 }
