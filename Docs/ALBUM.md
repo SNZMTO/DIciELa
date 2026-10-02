@@ -15,6 +15,17 @@
 
 ## Les captures
 
+### 02/10/2026 — étape 36 : les premiers habitants
+
+La vue témoin ne change pas. La première cabane bâtie, le bâtisseur arrive au centre de la carte, là où la Chimère est
+née ; une heure de jeu plus tard, la fermière. Ce sont des humains du pack, tels que le pack les fait, à l'échelle de
+la Chimère ; comme elle, ils glissent bras tendus (le pack n'a pas d'animations) et flânent, faute de poste. La cabane
+n'a que deux lits : la charretière attend la suivante. Ce qu'une capture ne montre pas : la nuit, ils entrent chez eux.
+
+![La vue témoin](Album/2026-10-02_etape-36_vue-temoin.jpg)
+
+![Les premiers habitants](Album/2026-10-02_etape-36_premiers-habitants.jpg)
+
 ### 02/10/2026 — étapes 34 et 35 : le savoir de la ville, les lits
 
 La vue témoin ne change pas. Le savoir de la ville ne se voit pas : avant le campement, le panneau ne propose que lui ;
