@@ -39,7 +39,7 @@ namespace Diciela.View
                 Clear();
                 _shown = definition;
                 _view = ModelPose.Instantiate(definition.Model, transform, definition.Id);
-                _ghosts ??= new SiteGhosts(_settings.SiteGhostMaterial, _settings.BlendedCutoff);
+                _ghosts ??= new SiteGhosts(_settings.SiteGhostMaterial, _settings.PlannedColor, _settings.BlendedCutoff);
                 _model = new TranslucentModel(_view, _ghosts);
                 Paint(allowed);
             }

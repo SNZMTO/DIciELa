@@ -11,7 +11,8 @@ namespace Diciela.Tests.PlayMode
     /// <summary>
     /// Les fanions du stock et leur présentateur (GDD, section 16 ; décision 153), sur une vue qui note : rien tant que
     /// la ville n'a pas d'entrepôt ; le campement installé, un fanion par marchandise du catalogue (le Bois, 30 ; la Pierre,
-    /// 20), chacun avec son infobulle ; les nombres suivent le stock, jusqu'à zéro, où le fanion reste.
+    /// 20), chacun avec son infobulle ; les nombres suivent le stock, jusqu'à zéro, où le fanion reste ; des entrepôts
+    /// qui bougent dans le même pas ne les mettent à jour qu'une fois.
     /// </summary>
     public sealed class StockPennantsPresenterTests
     {
@@ -24,6 +25,7 @@ namespace Diciela.Tests.PlayMode
         {
             public bool Shown { get; private set; }
             public List<StockPennant> Pennants { get; } = new List<StockPennant>();
+            public int Refreshes { get; private set; }
 
             public void ShowStock(bool shown)
             {
@@ -34,6 +36,7 @@ namespace Diciela.Tests.PlayMode
             {
                 Pennants.Clear();
                 Pennants.AddRange(pennants);
+                Refreshes++;
             }
         }
 
@@ -57,7 +60,7 @@ namespace Diciela.Tests.PlayMode
         }
 
         [Test]
-        public void ThePennantsComeWithThePile()
+        public void ThePennantsComeWithTheCamp()
         {
             Assert.IsFalse(_view.Shown, "Sans entrepôt, pas de stock à montrer.");
 
@@ -84,6 +87,28 @@ namespace Diciela.Tests.PlayMode
             Assert.AreEqual(0, _view.Pennants[1].Count, "La Pierre est partie au chantier.");
             Assert.AreEqual(2, _view.Pennants.Count, "Le fanion à zéro reste.");
             Assert.AreEqual(30, _view.Pennants[0].Count);
+        }
+
+        [Test]
+        public void WarehousesThatChangeTogetherRefreshThePennantsOnce()
+        {
+            _town.InstallTheCamp();
+            var store = _town.Keep(ScriptableObject.CreateInstance<StructureDefinition>());
+#if UNITY_EDITOR
+            TestWorld.Fill(store, "_widthMeters", 2f);
+            TestWorld.Fill(store, "_depthMeters", 2f);
+            TestWorld.Fill(store, "_hasDoor", false);
+            TestWorld.Fill(store, "_builtWhenPlaced", true);
+            TestWorld.Fill(store, "_storageCapacity", 40);
+#endif
+            int before = _view.Refreshes;
+            World world = _town.World;
+            world.Submit(new PlaceStructureCommand(store, new Placement(new Vector2(10f, 30f), 0f)));
+            world.Submit(new PlaceStructureCommand(store, new Placement(new Vector2(30f, 30f), 0f)));
+            world.Step();
+
+            Assert.AreEqual(3, world.Warehouses.Count, "Deux réserves s'ouvrent dans le même pas.");
+            Assert.AreEqual(before + 1, _view.Refreshes, "Une seule mise à jour pour ce pas.");
         }
     }
 }

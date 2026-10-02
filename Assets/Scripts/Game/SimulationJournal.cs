@@ -11,7 +11,8 @@ namespace Diciela.Game
 {
     /// <summary>
     /// Le journal : il écrit dans la console les événements clés du monde, pour qu'un Play court prouve que la
-    /// simulation travaille (ARCHITECTURE, section 12). Il sert au développeur ; le joueur ne le voit jamais.
+    /// simulation travaille (ARCHITECTURE, section 12). Il sert au développeur : il ne tourne que dans l'éditeur et dans
+    /// un build de développement, jamais dans le jeu du joueur, où chaque ligne coûterait sans servir.
     /// </summary>
     public sealed class SimulationJournal
     {

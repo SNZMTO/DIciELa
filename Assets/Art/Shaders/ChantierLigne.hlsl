@@ -1,14 +1,21 @@
 #ifndef DICIELA_CHANTIER_LIGNE_INCLUDED
 #define DICIELA_CHANTIER_LIGNE_INCLUDED
 
-// La ligne d'un chantier qui monte (décision 166) : sa hauteur, son ondulation lente, et la bande sous elle où la vraie
-// matière s'effrite en points. Réglée par chantier (un bloc de propriétés), hors du tampon par matériau : ces shaders ne
-// servent qu'à quelques chantiers à la fois, ils ne sont pas regroupés par le SRP Batcher.
-float _FillHeight;
+// La ligne d'un chantier qui monte (décisions 166 et 181) : sa hauteur, son ondulation lente, et la bande sous elle où
+// la vraie matière s'effrite en points. Sa hauteur est la valeur propre de chaque rendu (la Renderer Shader User Value
+// d'Unity, les bits d'un flottant, SiteLine) ; son ondulation et son effritement, des réglages de la pose, sont des
+// variables globales. Aucune n'est une propriété de matériau, aucun bloc de propriétés ne les porte : le SRP Batcher
+// regroupe les chantiers.
 float _WaveAmplitude;
 float _WaveLength;
 float _WaveSeconds;
 float _Softness;
+
+// La hauteur de la ligne de ce rendu, en mètres.
+float ChantierFillHeight()
+{
+    return asfloat(unity_RendererUserValue);
+}
 
 static const float ChantierBayerTable[16] = { 0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5 };
 
@@ -19,7 +26,7 @@ float ChantierLine(float3 positionWS)
     float k = 6.2831853 / max(_WaveLength, 0.01);
     float wave = 0.6 * sin(k * (positionWS.x + 0.7 * positionWS.z) + t)
                + 0.4 * sin(k * 1.37 * (0.6 * positionWS.x - positionWS.z) - 1.3 * t);
-    return _FillHeight + _WaveAmplitude * wave;
+    return ChantierFillHeight() + _WaveAmplitude * wave;
 }
 
 // Le seuil d'une trame de Bayer 4 × 4, de 0 à 1, à ce pixel.
