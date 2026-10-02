@@ -14,17 +14,17 @@ namespace Diciela.EditorTools
     {
         private const string Pack = "Assets/Synty/PolygonFantasyVillage/Prefabs/";
 
-        private PackComposition(string name, string structurePath, Spot? bed, params Piece[] pieces)
+        private PackComposition(string name, string structurePath, Spot? couch, params Piece[] pieces)
         {
             Name = name;
             StructurePath = structurePath;
-            Bed = bed;
+            Couch = couch;
             Pieces = pieces;
         }
 
         public string Name { get; }
         public string StructurePath { get; }
-        public Spot? Bed { get; }
+        public Spot? Couch { get; }
         public Piece[] Pieces { get; }
 
         /// <summary>Un repère : sa place (en mètres, l'entrée vers +z) et le quart de tour de son avant.</summary>

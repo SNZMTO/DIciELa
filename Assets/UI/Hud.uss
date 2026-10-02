@@ -94,6 +94,30 @@
     align-items: center;
 }
 
+/* Le nom d'une carte, et à côté ce qu'elle offre (ses lits) ; à l'étroit, les lits passent dessous, au milieu. */
+.carte-titre {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.carte-nom, .carte-lits {
+    margin: 1px 6px;
+}
+
+.carte-lits {
+    flex-direction: row;
+    align-items: center;
+}
+
+.carte-lits-icone {
+    width: 22px;
+    height: 22px;
+    margin-right: 5px;
+    background-image: url("Icones/lit.asset");
+}
+
 .carte-cout {
     flex-direction: row;
     justify-content: center;

@@ -45,13 +45,15 @@ namespace Diciela.EditorTools
                 EditorAssets.Property(fiche, "_storageCapacity").intValue = 100;
                 EditorAssets.SetList(EditorAssets.Property(fiche, "_workSlots"), new[] { town.OddJobs });
             });
-            // Une cabane coûte 10 Bois et 5 Pierre, et demande 2 h de travail à un débutant (décision 137).
+            // Une cabane coûte 10 Bois et 5 Pierre, demande 2 h de travail à un débutant (décision 137) et offre deux lits
+            // (GDD, section 4).
             StructureDefinition cabin = EditorAssets.CreateIfMissing<StructureDefinition>(CabinPath, fiche =>
             {
                 EditorAssets.Property(fiche, "_id").stringValue = "cabane";
                 EditorAssets.Property(fiche, "_nameKey").stringValue = "construction.cabane";
                 TownContentBuilder.SetAmounts(EditorAssets.Property(fiche, "_cost"), town.Wood, 10, town.Stone, 5);
                 EditorAssets.Property(fiche, "_workHours").floatValue = 2f;
+                EditorAssets.Property(fiche, "_beds").intValue = 2;
             });
             // Les modèles se font ici une fois ; ensuite, par le menu DICIELA/Contenu/Préparer les modèles.
             EditorAssets.AssignIfMissing(cabin, "_sourceModel", EditorAssets.Load<GameObject>(CabinSourcePath));

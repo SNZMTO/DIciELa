@@ -131,7 +131,7 @@ namespace Diciela.EditorTools
             World world = AlbumWorld.Running();
             Structure home = world != null ? world.Structures.ChimeraHome : null;
             var rig = Object.FindAnyObjectByType<CameraRig>();
-            if (home == null || !home.Definition.HasBed || rig == null)
+            if (home == null || !home.Definition.HasCouch || rig == null)
             {
                 Debug.LogError("DICIELA : on se rapproche de la couche en Play, une fois le campement installé.");
                 return;
@@ -139,7 +139,7 @@ namespace Diciela.EditorTools
 
             // La couche d'abord au milieu de l'écran, comme par un glisser, même si la vue regardait ailleurs ; puis on
             // s'en approche.
-            Vector3 couch = ModelPose.PointOf(home.Placement, world.Map.Relief, home.Definition.BedFeet);
+            Vector3 couch = ModelPose.PointOf(home.Placement, world.Map.Relief, home.Definition.CouchFeet);
             var middle = new Vector2(rig.Camera.pixelWidth / 2f, rig.Camera.pixelHeight / 2f);
             if (rig.BeginDrag(rig.Camera.WorldToScreenPoint(couch)))
                 rig.DragTo(middle);
