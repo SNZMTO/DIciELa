@@ -3,6 +3,7 @@ famille.logement,Logement,Housing
 construction.campement,Campement,Camp
 construction.cabane,Cabane,Cabin
 famille.metiers,Métiers,Trades
+construction.place,Place,Square
 construction.loge,Loge des bâtisseurs,Builders' lodge
 construction.entrepot,Entrepôt,Warehouse
 pose.refus.OutsideMap,Hors de la carte,Outside the map

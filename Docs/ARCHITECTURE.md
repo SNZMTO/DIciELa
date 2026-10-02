@@ -83,8 +83,10 @@ la société, qui voit tout ce qui est en dessous.
   lisent comme le panneau Construire, et plus tard les recettes et les décos (décision 185).
 - **Le terrain.** La carte reçue au lancement (section 10) et son état : arbres et rochers retirés, champs sauvages
   (désigné, récolté, minuterie de repousse). Les emprises peintes (section 8). Les constructions : bâtiments, décos,
-  la Place, la réserve. Le maillage (SAVOIR 2.1), avec ses îlots, son A*, la ligne tendue qu'on tire d'un trajet,
-  la sortie d'une construction posée sur un piéton et ses distances par la route, écrits pour lui. L'eau :
+  la Place, la réserve ; les devants de porte, déduits des constructions, que lisent les règles de pose. Le maillage
+  (SAVOIR 2.1), avec ses îlots, son A*, la ligne tendue qu'on tire d'un trajet, la sortie d'une construction posée sur
+  un piéton et ses distances par la route, écrits pour lui ; il dit seul où l'on marche (sur un sol qu'on traverse,
+  comme la Place, aussi). L'eau :
   canaux, relief creusé, zones irriguées. La force : réseaux et budget, un moulin bâti consommant qu'il travaille ou
   non.
 - **L'économie.** Les stocks : portes des bâtiments, entrepôts, étagères de l'étal, charge d'un porteur, panier d'un
@@ -128,7 +130,7 @@ sauvegardé.
 | arbres et rochers : marqués (dans l'ordre des marques), retirés ; champ sauvage : désigné, récolté, minuterie | le terrain | le maillage |
 | le travail déjà fait sur un arbre ou un rocher marqué ; qui l'a pris | l'économie | — |
 | tracés et plantations : forme, sorte, état (en chantier, bâti) | le terrain | les coûts du maillage ; les champs, leur surface, leurs postes |
-| une construction : sorte, place, angle, niveau, état (fantôme, bâtie, en déplacement avec sa place visée, rangée) | le terrain | le maillage et ses îlots ; la réserve ; le logis de la Chimère (la construction bâtie que sa fiche dit être son logis) |
+| une construction : sorte, place, angle, niveau, état (fantôme, bâtie, en déplacement avec sa place visée, rangée) | le terrain | le maillage et ses îlots ; les devants de porte ; la réserve ; le logis de la Chimère (la construction bâtie que sa fiche dit être son logis) |
 | un chantier : rang dans la file, livraisons déposées, avancement | l'économie | — |
 | contenu et consigne de chaque stock | l'économie | le stock de la ville |
 | les réservations (quantité promise, place retenue) | l'économie, jamais sauvegardées | — |
@@ -317,7 +319,8 @@ code.
 | premier habitant | `FirstVillagerDefinition` | personnage du pack (tel quel) | `CharacterDefinition` | sorte des habitants ordinaires | `Catalog.VillagerKind` |
 | le nom d'un habitant (sa clé) | `NameKey` | ouvrir un poste pour lui | `WorkSlots.OpenFor` | un poste sur la fiche d'un lieu | `PlaceSheetSlot` |
 | apprendre (une idée) ; appris | `Knowledge.Learn` ; `Learned` | lieu de travail (d'un premier habitant) | `Workplace` | les onglets du panneau | `BuildBarTabs` |
-| fermer un poste | `WorkSlots.Close` | s'installer à son lieu de travail | `Opening.Settle` | | |
+| fermer un poste | `WorkSlots.Close` | s'installer à son lieu de travail | `Opening.Settle` | un sol qu'on traverse (la Place) | `IsWalkable` |
+| devants de porte | `Doorways` | | | | |
 
 ## 10. La carte, les scènes et la sauvegarde
 

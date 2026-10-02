@@ -25,6 +25,7 @@ MonoBehaviour:
   _unique: 1
   _chimeraHome: 1
   _builtWhenPlaced: 1
+  _walkable: 0
   _cost: []
   _workHours: 0
   _workSlots:

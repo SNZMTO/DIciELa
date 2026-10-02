@@ -6,11 +6,11 @@ using Diciela.Simulation.Core;
 namespace Diciela.Simulation.Land
 {
     /// <summary>
-    /// Les constructions posées sur la carte (ARCHITECTURE, section 4) : la vérité, dont le maillage est déduit et tenu
-    /// à jour ici. Une pose passe par les règles de pose, qu'elles créent et qui les lisent ; refusée, elle ne change
-    /// rien et dit pourquoi. Une construction posée en fantôme devient bâtie quand son chantier est fini. Les événements
-    /// d'un pas attendent la fin de leur couche, dans une seule file, dans l'ordre où ils sont arrivés (ARCHITECTURE,
-    /// section 5).
+    /// Les constructions posées sur la carte (ARCHITECTURE, section 4) : la vérité, dont le maillage et les devants de
+    /// porte sont déduits et tenus à jour ici. Une pose passe par les règles de pose, qu'elles créent et qui les lisent ;
+    /// refusée, elle ne change rien et dit pourquoi. Une construction posée en fantôme devient bâtie quand son chantier
+    /// est fini. Les événements d'un pas attendent la fin de leur couche, dans une seule file, dans l'ordre où ils sont
+    /// arrivés (ARCHITECTURE, section 5).
     /// </summary>
     public sealed class Structures
     {
@@ -26,6 +26,7 @@ namespace Diciela.Simulation.Land
                 throw new ArgumentNullException(nameof(grid));
 
             _grid = grid;
+            Doorways = new Doorways(grid);
             _rules = new PlacementRules(grid, relief, settings, this, knowledge);
         }
 
@@ -39,6 +40,9 @@ namespace Diciela.Simulation.Land
         public event Action<Structure> StructureBuilt;
 
         public IReadOnlyList<Structure> All => _all;
+
+        /// <summary>Les devants de porte des constructions posées, où rien ne se pose (sauf un sol).</summary>
+        public Doorways Doorways { get; }
 
         /// <summary>Les règles de pose, que le monde montre au-dessus de lui (World.PlacementRules).</summary>
         internal PlacementRules Rules => _rules;
@@ -98,9 +102,9 @@ namespace Diciela.Simulation.Land
 
             var structure = new Structure(_nextId++, definition, placement);
             _all.Add(structure);
-            _grid.SetOccupant(PlacementRules.Footprint(definition, placement), structure.Id);
+            _grid.SetOccupant(PlacementRules.Footprint(definition, placement), structure.Id, definition.IsWalkable);
             if (definition.HasDoor)
-                _grid.AddDoorway(_rules.Doorway(definition, placement));
+                Doorways.Add(_rules.Doorway(definition, placement));
             _happened.Add(Happening.Of(HappeningKind.Placed, structure));
             return structure;
         }

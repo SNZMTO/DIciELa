@@ -246,8 +246,9 @@
   poste ne fait que porter et bâtir.
 - **Défaut.** Le campement tient 100 marchandises : 30 Bois et 20 Pierre au départ, et la place de ce que rendent les
   premiers arbres et rochers. La Place, la cabane et les premiers bâtiments ne demandent que du
-  Bois et de la Pierre ; le stock de départ suffit à la Place et à deux cabanes. Une cabane coûte 10 Bois et 5 Pierre
-  et demande 2 h de travail à un débutant ; à pied, on porte 5 marchandises par voyage.
+  Bois et de la Pierre ; le stock de départ suffit à la Place et à deux cabanes. La Place coûte 5 Bois et 10 Pierre,
+  une cabane 10 Bois et 5 Pierre ; chacune demande 2 h de travail à un débutant ; à pied, on porte 5 marchandises par
+  voyage.
 - **Règle.** Les premiers habitants arrivent vite, un par un, à mesure que les lits le permettent. Chacun est fort dans
   une discipline, apporte l'idée de son lieu de travail et le bâtit avec la Chimère, avant même la loge. Ils restent en
   ville comme habitants ordinaires ; ce ne sont pas des maîtres.
@@ -372,7 +373,8 @@
   sont pris dans la construction. Un habitant qu'une construction posée sur lui pousse dehors laisse sa tâche, comme
   pour aller dormir (voir 6), et en reprend une une fois sorti.
 - **Règle.** Pose libre : aucune case pour le joueur, on parle en mètres. La porte d'un bâtiment reste dégagée : rien ne
-  se pose devant. Un bâtiment qu'on ne peut plus atteindre le montre.
+  se pose devant, sauf un sol qu'on traverse, comme la Place, qui la laisse ouverte ; une porte peut aussi s'ouvrir sur
+  un tel sol. Un bâtiment qu'on ne peut plus atteindre le montre.
 - **Règle.** Rien ne se chevauche, même de quelques centimètres, et on ne se glisse pas entre deux constructions plus
   serrées que 25 cm (une maille du maillage) : deux constructions se collent à 25 cm près.
 - **Défaut.** Devant une porte, 1,5 m restent libres, sur la largeur de la porte.
@@ -390,6 +392,8 @@
   son trajet coupé en cherche un autre ; qui se trouve dessous en sort à pied, tout droit, par le sol libre qui la
   borde, jamais celui qu'une autre construction cache : du côté où il est le plus vaste (jamais une poche qu'elle vient
   de fermer), au plus près.
+- **Règle.** Seule exception, un sol qu'on traverse, comme la Place : on y marche dès sa pose, fantôme comme bâti, et
+  personne n'en est chassé. Rien ne le chevauche, et il ne chevauche rien ; on le bâtit depuis son bord, jamais dessus.
 - **Règle.** Retirer un arbre ou un rocher ne passe pas par la file des chantiers : c'est une tâche des défricheurs,
   dans l'ordre où le joueur les a marqués (voir 2).
 - **À toi.** Planter un arbre passe-t-il par la file des chantiers ? Ma reco : non, c'est une tâche des paysagistes,
@@ -411,7 +415,7 @@
   Pavés, faits par l'atelier de pierre. Un pont est un bout de route posé sur l'eau. Routes et ponts ne se rangent pas :
   ils s'effacent, par un petit chantier qui rend leurs matériaux.
 - **Défaut.** Un pont coûte du Bois.
-- **Règle.** Les piétons marchent partout où rien n'est posé, par le trajet le plus court ; les charrettes vont
+- **Règle.** Les piétons marchent partout où rien n'est posé, et sur la Place, par le trajet le plus court ; les charrettes vont
   lentement dans l'herbe, plus vite sur la terre, encore plus vite sur les pavés. Une route est un investissement,
   jamais une obligation.
 - **Défaut.** Charrettes : moitié moins vite dans l'herbe, vitesse normale sur la terre, une fois et demie plus vite sur
@@ -447,10 +451,15 @@
 ## 11. L'étal, le troc et la réputation
 
 - **Règle.** Aucune monnaie en ville : tout se paie en marchandises.
-- **Règle.** La Place est un sol de pierre beige bordé de cailloux, posé comme un bâtiment. C'est là qu'arrivent les
-  visiteurs et que se tient l'étal, et là que se jouera la run. Elle a des niveaux qui la rendent plus cozy, chacun par
-  un petit chantier.
-- **Défaut.** Trois niveaux ; chacun ajoute un poste de marchand, du charme et un visiteur par jour.
+- **Règle.** La Place est un sol de pierre beige bordé de cailloux, posé comme un bâtiment, et l'on y marche (voir 9).
+  C'est là qu'arrivent les visiteurs et que se tient l'étal, et là que se jouera la run. Elle a des niveaux qui la
+  rendent plus cozy, chacun par un petit chantier.
+- **Défaut.** Elle fait 12 × 12 m, sans porte (son coût : voir 6). Trois niveaux ; chacun ajoute un poste de marchand,
+  du charme et un visiteur par jour.
+- **À toi.** Sa composition, avec des pièces du pack ; en attendant, un sol plat beige à sa taille. Sur une pente, un
+  sol plat s'enfonce d'un côté et flotte de l'autre, et qui y marche suit le relief, pas lui. Ma reco : la peindre dans
+  le sol, comme les routes (une pierre beige), avec ses cailloux du pack posés en bordure : elle suivrait la pente et
+  les pas.
 - **Règle.** Les postes de l'étal sont ceux des marchands, dont la sous-statistique troc règle la cadence (combien de
   visiteurs ils servent).
 - **Règle.** L'étal a deux étagères, « habitants » et « troc », que le joueur garnit : une quantité, ou « garder au
@@ -640,8 +649,8 @@
 - **Défaut.** La roue : Tab, tenu ; Construire : B ; Retirer : X. Les touches se changeront dans les réglages, quand le
   menu viendra.
 - **Règle.** On choisit quoi construire dans le panneau Construire, en bas au centre : les familles en onglets,
-  chacune de son pastel avec son icône (une famille qui ne propose rien ne paraît pas : les Métiers, tant que
-  personne n'en a apporté l'idée), et au-dessus de l'onglet ouvert, ses constructions en cartes : la vignette de
+  chacune de son pastel avec son icône (une famille qui ne propose rien ne paraît pas), et au-dessus de l'onglet
+  ouvert, ses constructions en cartes : la vignette de
   la construction (une photo de son modèle), son nom et à côté ce qu'elle offre (ses lits, l'icône du lit devant : « 2
   lits »), puis ce qu'elle coûte (chaque marchandise, son icône et combien). L'onglet ouvert et la carte en main restent enfoncés. Prendre une
   carte ferme le panneau, pour dégager la vue pendant la pose. Panneau ouvert, une touche prend sa carte dans la
@@ -657,7 +666,7 @@
 - **Règle.** Sans rien en main, un clic gauche touche la construction qu'on voit sous le pointeur : on vise son modèle,
   pas le sol derrière lui.
 - **Règle.** Tant que le modèle d'une construction n'est pas choisi, elle se voit en boîte à sa taille, sa porte
-  marquée.
+  marquée ; un sol qu'on traverse, comme la Place, en sol plat à sa taille.
 - **Règle.** La cabane a le modèle `Bld_Preset_Shed_02` du pack ; `House_03` est pressentie pour la maison.
 - **Règle.** Une construction se pose la porte au niveau du sol : ses fondations s'enfoncent, et cachent le vide sous
   elle sur une pente. Son empreinte est la boîte de son modèle, accessoires compris : rien ne se chevauche à l'écran.
@@ -688,7 +697,12 @@
   on valide) et une phrase du jeu, qui dit quoi faire ensuite au début d'une partie : installer le campement, puis y
   mettre la Chimère, puis poser une première construction à bâtir ; ensuite, elle se tait. C'est le jeu qui parle.
 - **À toi.** La voix de la Chimère (ses répliques), avec son histoire.
-- **Règle.** Chaque famille reçoit un pastel libre, dans l'ordre : le Logement le rose, les Métiers la pêche.
+- **Règle.** Chaque famille reçoit un pastel libre, dans l'ordre : le Logement le rose, les Métiers la pêche. Aucun
+  pastel ne reste libre.
+- **Règle.** La Place est la première carte des Métiers : l'onglet des Métiers paraît dès le campement installé, et
+  les idées des premiers habitants y ajoutent leurs cartes.
+- **À toi.** La famille de la Place. Ma reco, appliquée : les Métiers, où travailleront ses marchands ; une famille à
+  elle demanderait un pastel de plus, et l'onglet des Métiers ne paraîtrait qu'avec l'idée du bâtisseur.
 - **À toi.** L'icône des Métiers : en attendant, celle de « bâtir ». Les autres questions ouvertes du HUD. Ma reco :
   le bandeau de brique montre les animaux du pack.
 

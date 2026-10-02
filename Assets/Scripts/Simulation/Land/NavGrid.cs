@@ -7,13 +7,14 @@ namespace Diciela.Simulation.Land
     /// <summary>
     /// Le maillage : un quadrillage invisible, plus fin que le mètre, qui dit ce qui occupe chaque maille (SAVOIR, 2.1).
     /// Il est déduit des constructions et des arbres et rochers, jamais sauvegardé : chaque maille garde l'identifiant de
-    /// ce qui la couvre (0 : libre ; négatif : un arbre ou un rocher) et le nombre de portes qui en ont besoin pour rester
-    /// dégagées. Une maille se désigne par un Vector2Int : en x sa colonne, en y sa rangée sur l'axe z du monde.
+    /// ce qui la couvre (0 : libre ; négatif : un arbre ou un rocher), et si on le traverse (un sol, comme la Place).
+    /// Une maille se désigne par un Vector2Int : en x sa colonne, en y sa rangée sur l'axe z du monde.
     /// </summary>
     public sealed class NavGrid
     {
         private readonly int[] _occupant;
-        private readonly byte[] _doorCount;
+        // Par maille, vrai si ce qui la couvre se traverse : un sol (décision 192).
+        private readonly bool[] _floor;
         // Par rangée, la version du maillage où l'une de ses mailles a changé pour la dernière fois.
         private readonly int[] _rowVersion;
 
@@ -26,7 +27,7 @@ namespace Diciela.Simulation.Land
             Width = metrics.CellCount(relief.SizeX);
             Depth = metrics.CellCount(relief.SizeZ);
             _occupant = new int[Width * Depth];
-            _doorCount = new byte[Width * Depth];
+            _floor = new bool[Width * Depth];
             _rowVersion = new int[Depth];
         }
 
@@ -55,16 +56,11 @@ namespace Diciela.Simulation.Land
             return _occupant[IndexOf(cell)];
         }
 
-        /// <summary>Vrai si cette maille doit rester dégagée devant une porte.</summary>
-        public bool IsDoorway(Vector2Int cell)
-        {
-            return _doorCount[IndexOf(cell)] > 0;
-        }
-
         /// <summary>
-        /// Vrai si un piéton peut entrer dans cette maille : elle est libre. Un fantôme la prend dès sa pose, comme un
-        /// bâtiment ; le devant d'une porte reste libre (sauf la rangée que touche son propre mur), les règles de pose y
-        /// refusent tout. La seule réponse à « se traverse-t-elle ? ».
+        /// Vrai si un piéton peut entrer dans cette maille : elle est libre, ou ce qui la couvre est un sol qu'on traverse
+        /// (la Place), fantôme ou bâti. Un autre fantôme la prend dès sa pose, comme un bâtiment ; le devant d'une porte
+        /// reste libre, les règles de pose y refusent tout sauf un sol (Doorways). La seule réponse à « se
+        /// traverse-t-elle ? ».
         /// </summary>
         public bool IsWalkable(Vector2Int cell)
         {
@@ -74,7 +70,7 @@ namespace Diciela.Simulation.Land
         /// <summary>La même réponse, pour la maille à cette place dans les tableaux du maillage.</summary>
         internal bool IsWalkable(int index)
         {
-            return _occupant[index] == 0;
+            return _occupant[index] == 0 || _floor[index];
         }
 
         /// <summary>
@@ -120,13 +116,17 @@ namespace Diciela.Simulation.Land
             return new CoveredCells(this, rect);
         }
 
-        /// <summary>Donne à chaque maille du rectangle cet occupant (0 pour la libérer).</summary>
-        internal void SetOccupant(RotatedRect rect, int occupant)
+        /// <summary>
+        /// Donne à chaque maille du rectangle cet occupant ; s'il se traverse (un sol), elles restent ouvertes aux piétons.
+        /// </summary>
+        internal void SetOccupant(RotatedRect rect, int occupant, bool walkable)
         {
             Version++;
             foreach (Vector2Int cell in CellsCoveredBy(rect))
             {
-                _occupant[IndexOf(cell)] = occupant;
+                int index = IndexOf(cell);
+                _occupant[index] = occupant;
+                _floor[index] = walkable;
                 _rowVersion[cell.y] = Version;
             }
         }
@@ -144,6 +144,7 @@ namespace Diciela.Simulation.Land
                 if (_occupant[index] != occupant)
                     continue;
                 _occupant[index] = 0;
+                _floor[index] = false;
                 _rowVersion[cell.y] = Version;
             }
         }
@@ -163,17 +164,6 @@ namespace Diciela.Simulation.Land
                 _occupant[index] = occupant;
                 _rowVersion[cell.y] = next;
                 Version = next;
-            }
-        }
-
-        /// <summary>Compte une porte de plus devant chaque maille du rectangle.</summary>
-        internal void AddDoorway(RotatedRect rect)
-        {
-            foreach (Vector2Int cell in CellsCoveredBy(rect))
-            {
-                int index = IndexOf(cell);
-                if (_doorCount[index] < byte.MaxValue)
-                    _doorCount[index]++;
             }
         }
 
