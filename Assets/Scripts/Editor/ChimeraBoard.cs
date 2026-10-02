@@ -110,7 +110,7 @@ namespace Diciela.EditorTools
                 dressed.name = "Planche : " + name;
                 float x = _center.x + (index % Columns - (Columns - 1) * 0.5f) * ColumnMeters;
                 float z = _center.z + ((rows - 1) * 0.5f - index / Columns) * RowMeters;
-                dressed.transform.SetPositionAndRotation(new Vector3(x, _relief.HeightAt(x, z), z),
+                dressed.transform.SetPositionAndRotation(_relief.GroundAt(new Vector2(x, z)),
                     Quaternion.Euler(0f, facing, 0f));
             }
         }

@@ -48,6 +48,10 @@ namespace Diciela.Data
         [Tooltip("Le nombre d'ouvriers au plus sur un chantier (GDD, section 9).")]
         [SerializeField, Min(1)] private int _maxBuildersPerSite = 3;
 
+        [Tooltip("Les essais d'un habitant qui flâne pour trouver un point libre, à chaque départ ; tous ratés, c'est " +
+                 "une pause de plus (une borne de boucle, GDD, section 7).")]
+        [SerializeField, Min(1)] private int _wanderDraws = 8;
+
         public float StepSeconds => _stepSeconds;
         public int CellsPerMeter => _cellsPerMeter;
         public float MaxBuildSlopeDegrees => _maxBuildSlopeDegrees;
@@ -60,5 +64,6 @@ namespace Diciela.Data
         public float SubStatisticShare => _subStatisticShare;
         public float ExpertWorkRate => _expertWorkRate;
         public int MaxBuildersPerSite => _maxBuildersPerSite;
+        public int WanderDraws => _wanderDraws;
     }
 }

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -21,7 +20,7 @@ namespace Diciela.View
         private readonly Material _ghost;
         private readonly Color _tint;
         private readonly float _blendedCutoff;
-        private readonly Dictionary<Material, Material> _copies = new Dictionary<Material, Material>();
+        private readonly MaterialCopies _copies = new MaterialCopies();
         // Le fantôme de tous, à la teinte du fantôme.
         private Material _common;
 
@@ -34,9 +33,6 @@ namespace Diciela.View
             _tint = tint;
             _blendedCutoff = blendedCutoff;
         }
-
-        /// <summary>Le nombre de copies vivantes faites pour un matériau d'origine.</summary>
-        public int Count => _copies.Count;
 
         /// <summary>Le fantôme de ce matériau : sa copie s'il détoure ou dessine ses deux faces, sinon le fantôme de tous.</summary>
         public Material For(Material original)
@@ -52,7 +48,7 @@ namespace Diciela.View
             float cull = OriginalMaterials.CullOf(original);
             if (!clips && cull == FrontFaces)
                 return _common;
-            if (!_copies.TryGetValue(original, out Material copy))
+            if (!_copies.TryGet(original, out Material copy))
             {
                 copy = new Material(_common) { name = original.name + " (fantôme)" };
                 if (clips)
@@ -63,15 +59,13 @@ namespace Diciela.View
                     copy.EnableKeyword("_ALPHATEST_ON");
                 }
                 copy.SetFloat("_Cull", cull);
-                _copies.Add(original, copy);
+                _copies.Keep(original, copy);
             }
             return copy;
         }
 
         public void Clear()
         {
-            foreach (Material copy in _copies.Values)
-                Object.Destroy(copy);
             _copies.Clear();
             if (_common != null)
                 Object.Destroy(_common);

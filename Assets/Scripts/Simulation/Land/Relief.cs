@@ -63,6 +63,12 @@ namespace Diciela.Simulation.Land
             return x >= 0f && x <= SizeX && z >= 0f && z <= SizeZ;
         }
 
+        /// <summary>Le point du sol sous ce point du plan (x, z), en mètres.</summary>
+        public Vector3 GroundAt(Vector2 point)
+        {
+            return new Vector3(point.x, HeightAt(point.x, point.y), point.y);
+        }
+
         /// <summary>La hauteur du sol en mètres ; hors de la carte, celle du bord le plus proche.</summary>
         public float HeightAt(float x, float z)
         {

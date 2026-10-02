@@ -68,7 +68,7 @@ namespace Diciela.EditorTools
 
             PutPlacementToolAside();
             Vector2 at = chimera.Position;
-            var ground = new Vector3(at.x, world.Map.Relief.HeightAt(at.x, at.y), at.y);
+            var ground = world.Map.Relief.GroundAt(at);
             rig.Zoom(ChimeraZoomNotches, rig.Camera.WorldToScreenPoint(ground));
             Debug.Log("DICIELA : la vue se rapproche de la Chimère, en " + at + ".");
         }
@@ -152,7 +152,7 @@ namespace Diciela.EditorTools
             Vector3 ahead = Vector3.ProjectOnPlane(camera.transform.forward, Vector3.up).normalized;
             Vector3 flat = right * around.x + ahead * around.y;
             Vector2 at = anchor + new Vector2(flat.x, flat.z);
-            return camera.WorldToScreenPoint(new Vector3(at.x, world.Map.Relief.HeightAt(at.x, at.y), at.y));
+            return camera.WorldToScreenPoint(world.Map.Relief.GroundAt(at));
         }
 
         /// <summary>Joue ce geste dans ce nombre de secondes, si le Play dure encore.</summary>

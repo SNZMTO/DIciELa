@@ -136,9 +136,16 @@ namespace Diciela.View
                 : null;
             _shown.Add(new Shown
             {
-                Structure = structure, Transform = view.transform, LocalBox = LocalBox(view), Fill = fill,
+                Structure = structure, Transform = view.transform, LocalBox = BoxOf(view), Fill = fill,
                 Site = _sites.SiteOf(structure),
             });
+        }
+
+        // La boîte qu'on vise pour toucher ce modèle ; sans maillage, vide : on ne le touche pas.
+        private static Bounds BoxOf(GameObject view)
+        {
+            ModelPose.TryLocalBox(view, out Bounds box);
+            return box;
         }
 
         /// <summary>Son chantier est fini : le chantier part, le modèle bâti prend sa place.</summary>
@@ -153,33 +160,6 @@ namespace Diciela.View
                 break;
             }
             OnStructurePlaced(structure);
-        }
-
-        /// <summary>La boîte des maillages de ce modèle, dans son propre repère.</summary>
-        private static Bounds LocalBox(GameObject model)
-        {
-            var box = new Bounds();
-            bool any = false;
-            Matrix4x4 toModel = model.transform.worldToLocalMatrix;
-            foreach (MeshFilter filter in model.GetComponentsInChildren<MeshFilter>(true))
-            {
-                if (filter.sharedMesh == null)
-                    continue;
-                Matrix4x4 toLocal = toModel * filter.transform.localToWorldMatrix;
-                Bounds mesh = filter.sharedMesh.bounds;
-                for (int corner = 0; corner < 8; corner++)
-                {
-                    var offset = new Vector3((corner & 1) == 0 ? -1f : 1f, (corner & 2) == 0 ? -1f : 1f,
-                        (corner & 4) == 0 ? -1f : 1f);
-                    Vector3 point = toLocal.MultiplyPoint3x4(mesh.center + Vector3.Scale(mesh.extents, offset));
-                    if (any)
-                        box.Encapsulate(point);
-                    else
-                        box = new Bounds(point, Vector3.zero);
-                    any = true;
-                }
-            }
-            return box;
         }
     }
 }

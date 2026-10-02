@@ -42,7 +42,7 @@ namespace Diciela.Simulation
             Clearings = new ClearingOffers(Nature, Warehouses, reach);
             WorkSlots = new WorkSlots();
             Villagers = new Villagers(Grid, Islands, PathFinder, Clock, surroundings, offers, Clearings, WorkSlots,
-                new StatisticTable(catalog.Statistics, settings));
+                new StatisticTable(catalog.Statistics, settings), settings);
             _commissioning = new Commissioning(this, new Opening(catalog.Opening));
             Placing = new Placing(this, _commissioning);
         }

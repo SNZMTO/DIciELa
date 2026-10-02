@@ -87,7 +87,7 @@ namespace Diciela.Controls
                 if (item.IsRemoved || item.IsMarked)
                     continue;
                 Vector2 at = item.Placement.Center;
-                Vector3 onScreen = _camera.WorldToScreenPoint(new Vector3(at.x, relief.HeightAt(at.x, at.y), at.y));
+                Vector3 onScreen = _camera.WorldToScreenPoint(relief.GroundAt(at));
                 if (onScreen.z > 0f && frame.Contains(onScreen))
                     _framed.Add(new KeyValuePair<float, int>(Vector2.Distance(onScreen, corner), item.Id));
             }
