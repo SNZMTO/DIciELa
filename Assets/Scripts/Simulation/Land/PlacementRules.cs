@@ -6,21 +6,23 @@ using UnityEngine;
 namespace Diciela.Simulation.Land
 {
     /// <summary>
-    /// Les règles de pose (GDD, sections 2 et 9) : une construction unique pas encore posée ; dans la carte, sur un sol
-    /// assez plat, sans rien recouvrir, sans se poser devant une porte, et la sienne dégagée. Une seule fonction répond,
-    /// pour l'aperçu comme pour l'ordre. Les règles disent aussi quel sol une construction occupe (son empreinte) et
-    /// lequel elle garde libre (le devant de sa porte). Elles lisent le maillage, le relief et les constructions posées,
-    /// sans rien changer ; les constructions les créent.
+    /// Les règles de pose (GDD, sections 2, 9 et 13) : une construction que la ville sait bâtir, et unique, pas encore
+    /// posée ; dans la carte, sur un sol assez plat, sans rien recouvrir, sans se poser devant une porte, et la sienne
+    /// dégagée. Une seule fonction répond, pour l'aperçu comme pour l'ordre. Les règles disent aussi quel sol une
+    /// construction occupe (son empreinte) et lequel elle garde libre (le devant de sa porte). Elles lisent le maillage,
+    /// le relief, les constructions posées et le savoir de la ville, sans rien changer ; les constructions les créent.
     /// </summary>
     public sealed class PlacementRules
     {
         private readonly NavGrid _grid;
         private readonly Relief _relief;
         private readonly Structures _structures;
+        private readonly Knowledge _knowledge;
         private readonly float _maxSlopeDegrees;
         private readonly float _doorClearanceMeters;
 
-        internal PlacementRules(NavGrid grid, Relief relief, SimulationSettings settings, Structures structures)
+        internal PlacementRules(NavGrid grid, Relief relief, SimulationSettings settings, Structures structures,
+            Knowledge knowledge)
         {
             if (ReferenceEquals(grid, null))
                 throw new ArgumentNullException(nameof(grid));
@@ -30,30 +32,32 @@ namespace Diciela.Simulation.Land
                 throw new ArgumentNullException(nameof(settings));
             if (ReferenceEquals(structures, null))
                 throw new ArgumentNullException(nameof(structures));
+            if (ReferenceEquals(knowledge, null))
+                throw new ArgumentNullException(nameof(knowledge));
 
             _grid = grid;
             _relief = relief;
             _structures = structures;
+            _knowledge = knowledge;
             _maxSlopeDegrees = settings.MaxBuildSlopeDegrees;
             _doorClearanceMeters = settings.DoorClearanceMeters;
         }
 
         /// <summary>
-        /// Vrai si cette construction peut encore se poser quelque part : une construction unique déjà posée, non (GDD,
-        /// section 9). La barre ne propose pas ce qui ne se pose plus.
+        /// Vrai si cette construction peut encore se poser quelque part : la ville sait la bâtir (GDD, section 13), et
+        /// unique, elle n'est pas encore posée (GDD, section 9). Le panneau ne propose pas ce qui ne se pose pas.
         /// </summary>
         public bool IsAvailable(StructureDefinition definition)
         {
-            if (ReferenceEquals(definition, null))
-                throw new ArgumentNullException(nameof(definition));
-            return !definition.IsUnique || !_structures.IsPlaced(definition);
+            return AvailabilityOf(definition) == PlacementResult.Ok;
         }
 
         /// <summary>Peut-on poser cette construction à cette place ? La même réponse pour l'aperçu et pour l'ordre.</summary>
         public PlacementResult Check(StructureDefinition definition, Placement placement)
         {
-            if (!IsAvailable(definition))
-                return PlacementResult.AlreadyPlaced;
+            PlacementResult availability = AvailabilityOf(definition);
+            if (availability != PlacementResult.Ok)
+                return availability;
 
             RotatedRect footprint = Footprint(definition, placement);
             if (!IsInsideMap(footprint))
@@ -69,6 +73,19 @@ namespace Diciela.Simulation.Land
             if (definition.HasDoor && IsOccupied(Doorway(definition, placement)))
                 return PlacementResult.DoorBlocked;
             return PlacementResult.Ok;
+        }
+
+        // Ce qui empêche cette construction de se poser où que ce soit : qu'on ne sache pas la bâtir, ou qu'elle soit unique
+        // et déjà posée.
+        private PlacementResult AvailabilityOf(StructureDefinition definition)
+        {
+            if (ReferenceEquals(definition, null))
+                throw new ArgumentNullException(nameof(definition));
+            if (!_knowledge.Knows(definition))
+                return PlacementResult.Unknown;
+            return definition.IsUnique && _structures.IsPlaced(definition)
+                ? PlacementResult.AlreadyPlaced
+                : PlacementResult.Ok;
         }
 
         /// <summary>L'empreinte au sol de cette construction à cette place.</summary>

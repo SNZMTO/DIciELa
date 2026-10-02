@@ -26,6 +26,9 @@ namespace Diciela.Simulation.Land
         /// <summary>Elle est unique, et déjà posée : une seule dans la ville (GDD, section 9).</summary>
         AlreadyPlaced = 6,
         /// <summary>Un arbre ou un rocher est sous l'empreinte : il faut d'abord le retirer (GDD, section 2).</summary>
-        NatureInTheWay = 7
+        NatureInTheWay = 7,
+
+        /// <summary>La ville ne sait pas encore bâtir cette construction : il lui en faut l'idée (GDD, section 13).</summary>
+        Unknown = 8
     }
 }

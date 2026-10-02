@@ -66,7 +66,7 @@ namespace Diciela.Tests.EditMode
         public void OrdersThatCannotBeDoneAreRefusedWithTheirReason()
         {
             // Un bloc sans poste : ce n'est pas un lieu de travail.
-            Structure block = TestTown.Place(_world, _town.Keep(TestData.Structure("bloc", 2f, 2f, hasDoor: false)), 30f, 30f);
+            Structure block = TestTown.Place(_world, _town.KeepKnown(TestData.Structure("bloc", 2f, 2f, hasDoor: false)), 30f, 30f);
             Send(new AssignVillagerCommand(_chimera.Id, block.Id));
             Send(new AssignVillagerCommand(_chimera.Id, 999));
             Send(new AssignVillagerCommand(999, _camp.Id));

@@ -54,7 +54,7 @@ namespace Diciela.Tests.EditMode
         {
             World world = _town.World();
             TestTown.Place(world, _town.Camp, 20f, 14f);
-            StructureDefinition house = _town.Keep(TestData.Home("maison", 3f, true, 100));
+            StructureDefinition house = _town.KeepKnown(TestData.Home("maison", 3f, true, 100));
             Structure second = TestTown.Place(world, house, 30f, 14f);
 
             Assert.IsNotNull(second);
@@ -67,10 +67,10 @@ namespace Diciela.Tests.EditMode
         {
             // Un abri qui ne tient rien ouvre le poste ; la maison, qui tient des marchandises, attend ses bâtisseurs.
             World world = _town.World();
-            Structure shelter = TestTown.Place(world, _town.Keep(TestData.Home("abri", 3f, true, 0, _town.OddJobs)),
+            Structure shelter = TestTown.Place(world, _town.KeepKnown(TestData.Home("abri", 3f, true, 0, _town.OddJobs)),
                 20f, 14f);
             TestTown.Send(world, new AssignVillagerCommand(world.Villagers.Chimera.Id, shelter.Id));
-            StructureDefinition plan = _town.Keep(TestData.Home("maison", 3f, false, 100, _town.OddJobs));
+            StructureDefinition plan = _town.KeepKnown(TestData.Home("maison", 3f, false, 100, _town.OddJobs));
             TestData.Cost(plan, 0.5f);
             Structure house = TestTown.Place(world, plan, 28f, 14f);
             Assert.AreEqual(StructureState.Planned, house.State);
@@ -96,7 +96,7 @@ namespace Diciela.Tests.EditMode
         public void AHomeThatHoldsNothingGetsNothing()
         {
             World world = _town.World();
-            Assert.IsNotNull(TestTown.Place(world, _town.Keep(TestData.Home("abri_vide")), 20f, 14f),
+            Assert.IsNotNull(TestTown.Place(world, _town.KeepKnown(TestData.Home("abri_vide")), 20f, 14f),
                 "Le logis vide se pose : rien ne lui est donné, ce n'est pas faute d'être là.");
 
             Assert.AreEqual(0, world.Warehouses.Count);

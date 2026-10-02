@@ -12,16 +12,18 @@ namespace Diciela.Tests.PlayMode
     /// Le petit monde des tests de l'interface du campement : plat, 40 × 40 m (ou la carte donnée), la Chimère née au
     /// centre (sauf si le test la crée lui-même) ; le Bois et la Pierre ; un campement de 3 × 3 m qui tient 100
     /// marchandises et ouvre le poste « à tout faire » (porter, puis défricher) ; le déroulé du départ, qui lui donne
-    /// 30 Bois et 20 Pierre quand on l'installe. Les fiches sont remplies par SerializedObject, le chemin de
-    /// l'Inspector, et détruites avec lui.
+    /// 30 Bois et 20 Pierre quand on l'installe, et qui sait bâtir le campement et ce que le test y ajoute. Les fiches
+    /// sont remplies par SerializedObject, le chemin de l'Inspector, et détruites avec lui.
     /// </summary>
     internal sealed class TestCampTown : IDisposable
     {
         private readonly List<Object> _created = new List<Object>();
         private readonly VillagerKindDefinition _kind;
+        private readonly OpeningDefinition _opening;
 
         public TestCampTown(bool withChimera = true, MapDescription map = null)
         {
+            _opening = Keep(ScriptableObject.CreateInstance<OpeningDefinition>());
 #if UNITY_EDITOR
             var settings = Keep(ScriptableObject.CreateInstance<SimulationSettings>());
             Wood = Good("bois", "marchandise.bois");
@@ -40,15 +42,14 @@ namespace Diciela.Tests.PlayMode
             var slot = Keep(ScriptableObject.CreateInstance<WorkSlotDefinition>());
             TestWorld.Fill(slot, "_nameKey", "poste.a_tout_faire");
             TestWorld.FillList(slot, "_tasks", carry, clear);
-            var opening = Keep(ScriptableObject.CreateInstance<OpeningDefinition>());
-            FillGoods(opening, "_startingGoods", new GoodAmount(Wood, 30), new GoodAmount(Stone, 20));
+            FillGoods(_opening, "_startingGoods", new GoodAmount(Wood, 30), new GoodAmount(Stone, 20));
             Catalog = Keep(ScriptableObject.CreateInstance<Catalog>());
-            TestWorld.Fill(Catalog, "_opening", opening);
+            TestWorld.Fill(Catalog, "_opening", _opening);
             TestWorld.FillList(Catalog, "_goods", Wood, Stone);
             TestWorld.FillList(Catalog, "_statistics", trade, land);
             _kind = Keep(ScriptableObject.CreateInstance<VillagerKindDefinition>());
             TestWorld.Fill(_kind, "_id", "chimere");
-            Camp = Keep(ScriptableObject.CreateInstance<StructureDefinition>());
+            Camp = KeepKnown(ScriptableObject.CreateInstance<StructureDefinition>());
             TestWorld.Fill(Camp, "_id", "campement");
             TestWorld.Fill(Camp, "_nameKey", "construction.campement");
             TestWorld.Fill(Camp, "_widthMeters", 3f);
@@ -91,11 +92,25 @@ namespace Diciela.Tests.PlayMode
         /// <summary>Une construction de 4 × 4 m qui coûte ces marchandises, gardée pour être détruite avec le monde.</summary>
         public StructureDefinition Cabin(params GoodAmount[] cost)
         {
-            var cabin = Keep(ScriptableObject.CreateInstance<StructureDefinition>());
+            StructureDefinition cabin = KeepKnown(ScriptableObject.CreateInstance<StructureDefinition>());
 #if UNITY_EDITOR
             FillGoods(cabin, "_cost", cost);
 #endif
             return cabin;
+        }
+
+        /// <summary>Garde cette construction, et la Chimère sait la bâtir en arrivant, d'après le déroulé du départ.</summary>
+        public StructureDefinition KeepKnown(StructureDefinition structure)
+        {
+            Keep(structure);
+#if UNITY_EDITOR
+            var serialized = new UnityEditor.SerializedObject(_opening);
+            UnityEditor.SerializedProperty known = serialized.FindProperty("_knownStructures");
+            known.arraySize++;
+            known.GetArrayElementAtIndex(known.arraySize - 1).objectReferenceValue = structure;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+#endif
+            return structure;
         }
 
         public T Keep<T>(T created) where T : Object

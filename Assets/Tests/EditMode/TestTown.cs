@@ -18,8 +18,9 @@ namespace Diciela.Tests.EditMode
     /// (porter, puis bâtir, puis défricher) ; le campement de 3 × 3 m, qui tient 100 marchandises et ouvre ce poste, et
     /// reçoit 30 Bois et 20 Pierre quand on l'installe ; une cabane de 4 × 4 m qui coûte 10 Bois et 5 Pierre et 2 h
     /// de travail ; un arbre (pied de 1 m, 3 Bois, 30 min) et un rocher (pied de 1,5 m, 2 Pierre, 45 min). La Chimère
-    /// commence à 10 partout et porte 5 marchandises. Ses mondes sont plats, 40 × 40 m, nus ou avec les arbres et
-    /// rochers qu'on leur donne ; les fiches qu'il crée sont détruites avec lui.
+    /// commence à 10 partout et porte 5 marchandises ; elle sait bâtir en arrivant le campement, la cabane et ce que le
+    /// test y ajoute. Ses mondes sont plats, 40 × 40 m, nus ou avec les arbres et rochers qu'on leur donne ; les fiches
+    /// qu'il crée sont détruites avec lui.
     /// </summary>
     internal sealed class TestTown : IDisposable
     {
@@ -49,6 +50,7 @@ namespace Diciela.Tests.EditMode
             Tree = Keep(TestData.Nature("arbre", 1f, new GoodAmount(Wood, 3), 0.5f));
             Rock = Keep(TestData.Nature("rocher", 1.5f, new GoodAmount(Stone, 2), 0.75f));
             Opening = Keep(TestData.Opening(new GoodAmount(Wood, 30), new GoodAmount(Stone, 20)));
+            TestData.Knows(Opening, Camp, Cabin);
             Catalog = Keep(TestData.TownCatalog(Opening, new[] { Wood, Stone }, new[] { building, trade, land }));
         }
 
@@ -134,6 +136,13 @@ namespace Diciela.Tests.EditMode
                 }
             }
             return count;
+        }
+
+        /// <summary>Garde cette construction, et la Chimère sait la bâtir en arrivant, d'après le déroulé du départ.</summary>
+        public StructureDefinition KeepKnown(StructureDefinition structure)
+        {
+            TestData.AlsoKnows(Opening, Keep(structure));
+            return structure;
         }
 
         public T Keep<T>(T created) where T : Object

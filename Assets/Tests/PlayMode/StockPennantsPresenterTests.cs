@@ -93,7 +93,7 @@ namespace Diciela.Tests.PlayMode
         public void WarehousesThatChangeTogetherRefreshThePennantsOnce()
         {
             _town.InstallTheCamp();
-            var store = _town.Keep(ScriptableObject.CreateInstance<StructureDefinition>());
+            StructureDefinition store = _town.KeepKnown(ScriptableObject.CreateInstance<StructureDefinition>());
 #if UNITY_EDITOR
             TestWorld.Fill(store, "_widthMeters", 2f);
             TestWorld.Fill(store, "_depthMeters", 2f);

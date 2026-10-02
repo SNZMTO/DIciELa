@@ -219,6 +219,7 @@
 - **Défaut.** Elle commence à 10 partout ; tous ses plafonds sont à 100.
 - **Règle.** Selon où elle travaille, elle débloque des répliques, des tenues et des idées.
 - **Règle.** Personne ne la connaît. Elle arrive dans un lieu vide, avec des trous de mémoire et quelques idées.
+- **Règle.** Ce qu'elle sait bâtir en arrivant, le déroulé du départ le dit, et rien d'autre (voir 13).
 - **À toi.** Son histoire, que tu écriras.
 - **Règle.** Le campement vient en premier, la Place en deuxième. Au départ, le campement fait tout : il est le logis de
   la Chimère, le stock de départ et le poste « à tout faire ». Il s'installe d'un coup, sans chantier.
@@ -494,6 +495,9 @@
 
 - **Règle.** À force de faire des choses et de voir la ville avancer, la Chimère ou des habitants ont des idées : des
   plans de bâtiments, de recettes, de décos.
+- **Règle.** La ville ne bâtit que ce qu'elle sait : ce que la Chimère sait en arrivant (voir 6), puis ses idées et
+  celles des habitants. Le panneau Construire ne propose que cela ; un ordre qui poserait autre chose est refusé, et
+  l'aperçu le dit (« Pas encore d'idée pour la bâtir »).
 - **Règle.** Une idée a un déclencheur : une chose faite (« après 50 Planches, le menuisier imagine la table ») ou un
   métier exercé (la Chimère a travaillé à la scierie : elle imagine le moulin à eau). Pour l'histoire, elle revient à
   l'habitant qui y a le plus contribué, ou à la Chimère.

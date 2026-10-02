@@ -99,7 +99,7 @@ namespace Diciela.Tests.EditMode
             _town.Dispose();
             _town = new TestTown(dayLengthSeconds: 100f);
             // 1 000 pas par jour, 667 de travail : une cabane de 10 h de travail ne se finit pas le premier jour.
-            StructureDefinition longCabin = _town.Keep(TestData.Structure("grande_cabane", 4f, 4f));
+            StructureDefinition longCabin = _town.KeepKnown(TestData.Structure("grande_cabane", 4f, 4f));
             TestData.Cost(longCabin, 10f, new GoodAmount(_town.Wood, 10),
                 new GoodAmount(_town.Stone, 5));
             World world = _town.WorkingWorld();
@@ -144,7 +144,7 @@ namespace Diciela.Tests.EditMode
             // Un mur de 50 cm tout le long du côté où elle bâtit, posé sur elle : elle en sort du côté opposé au chantier.
             Vector2 at = chimera.Position;
             bool west = at.x < 26f;
-            StructureDefinition wall = _town.Keep(TestData.Structure("mur", west ? 0.5f : 5f, west ? 5f : 0.5f,
+            StructureDefinition wall = _town.KeepKnown(TestData.Structure("mur", west ? 0.5f : 5f, west ? 5f : 0.5f,
                 hasDoor: false));
             Structure placed = TestTown.Place(world, wall, west ? 25.75f : 28f, west ? 20f : 17.75f);
             Assert.IsNotNull(placed, "Le mur se pose sur elle, contre le chantier.");

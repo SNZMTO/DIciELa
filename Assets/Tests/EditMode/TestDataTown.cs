@@ -117,6 +117,24 @@ namespace Diciela.Tests.EditMode
             return opening;
         }
 
+        /// <summary>Dit, dans ce déroulé du départ, ce que la Chimère sait bâtir en arrivant.</summary>
+        public static void Knows(OpeningDefinition opening, params StructureDefinition[] structures)
+        {
+            var serialized = new SerializedObject(opening);
+            Fill(Property(serialized, "_knownStructures"), structures);
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        /// <summary>Ajoute cette construction à ce que la Chimère sait bâtir en arrivant, d'après ce déroulé du départ.</summary>
+        public static void AlsoKnows(OpeningDefinition opening, StructureDefinition structure)
+        {
+            var serialized = new SerializedObject(opening);
+            SerializedProperty known = Property(serialized, "_knownStructures");
+            known.arraySize++;
+            known.GetArrayElementAtIndex(known.arraySize - 1).objectReferenceValue = structure;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+        }
+
         /// <summary>Un catalogue qui n'a que ce déroulé du départ, ces marchandises et ces statistiques.</summary>
         public static Catalog TownCatalog(OpeningDefinition opening, GoodDefinition[] goods,
             StatisticDefinition[] statistics)

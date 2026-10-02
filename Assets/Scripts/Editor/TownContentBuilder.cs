@@ -8,9 +8,9 @@ namespace Diciela.EditorTools
     /// <summary>
     /// Crée le contenu de la ville au travail qui manque (GDD, sections 2 et 5 à 7 ; décisions 137 à 139 et 157 à 160) :
     /// le Bois et la Pierre, les quatre statistiques et leurs sous-statistiques, les tâches « porter », « bâtir » et
-    /// « défricher », le poste « à tout faire », le déroulé du départ (le stock de départ), l'arbre et le rocher (sans
-    /// modèle : le développeur y range ceux qu'il peint). Le campement, la cabane et le catalogue naissent avec eux
-    /// (ContentBuilder). Réexécutable : une fiche qui existe n'est jamais touchée, un réglage fait à la main jamais remis.
+    /// « défricher », le poste « à tout faire », l'arbre et le rocher (sans modèle : le développeur y range ceux qu'il
+    /// peint). Le campement, la cabane, le déroulé du départ et le catalogue naissent avec eux (ContentBuilder).
+    /// Réexécutable : une fiche qui existe n'est jamais touchée, un réglage fait à la main jamais remis.
     /// </summary>
     internal static class TownContentBuilder
     {
@@ -20,7 +20,6 @@ namespace Diciela.EditorTools
             public GoodDefinition Wood;
             public GoodDefinition Stone;
             public WorkSlotDefinition OddJobs;
-            public OpeningDefinition Opening;
             public NatureDefinition[] Nature;
             public List<StatisticDefinition> Statistics;
         }
@@ -29,7 +28,6 @@ namespace Diciela.EditorTools
         private const string StatisticsFolder = "Assets/Data/Statistiques";
         private const string WorkFolder = "Assets/Data/Travail";
         private const string NatureFolder = "Assets/Data/Nature";
-        private const string OpeningPath = "Assets/Data/Depart.asset";
 
         // Les statistiques et leurs sous-statistiques (GDD, section 5) : l'identifiant de la statistique, puis ceux de
         // ses sous-statistiques ; l'Artisanat en a une par famille d'atelier.
@@ -61,15 +59,12 @@ namespace Diciela.EditorTools
                     EditorAssets.Property(fiche, "_nameKey").stringValue = "poste.a_tout_faire";
                     EditorAssets.SetList(EditorAssets.Property(fiche, "_tasks"), new[] { carry, build, clear });
                 });
-            // Le déroulé du départ donne 30 Bois et 20 Pierre au campement quand on l'installe (décision 172).
-            OpeningDefinition opening = EditorAssets.CreateIfMissing<OpeningDefinition>(OpeningPath, fiche =>
-                SetAmounts(EditorAssets.Property(fiche, "_startingGoods"), wood, 30, stone, 20));
             // Un arbre rend 3 Bois pour 30 min de travail, un rocher 2 Pierre pour 45 min (décision 160).
             NatureDefinition tree = Nature("Arbre", "arbre", 1f, wood, 3, 0.5f);
             NatureDefinition rock = Nature("Rocher", "rocher", 1.5f, stone, 2, 0.75f);
             return new Made
             {
-                Wood = wood, Stone = stone, OddJobs = oddJobs, Opening = opening, Nature = new[] { tree, rock },
+                Wood = wood, Stone = stone, OddJobs = oddJobs, Nature = new[] { tree, rock },
                 Statistics = statistics
             };
         }
