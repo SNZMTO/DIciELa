@@ -253,9 +253,8 @@
   aucun champ ne tourne) : il leur faut seulement un lit. La règle de la nourriture vaut pour les arrivées suivantes.
 - **Défaut.** Ils arrivent au point d'arrivée de la carte, une heure de jeu au moins après le précédent, jamais la
   nuit (voir 3). Ils commencent à 40 dans la sous-statistique de leur métier, ailleurs comme tout arrivant (voir 5).
-- **Règle.** Chacun a son humain du pack (voir 16).
-- **À toi.** Lesquels. Ma reco, sur la planche des humains : le bâtisseur, l'homme 2 (chapeau, chemise ouverte) ; la
-  fermière, la femme 4 (fichu, tablier) ; la charretière, la femme 3 (pantalon, écharpe) ; le menuisier, le boucher.
+- **Règle.** Chacun a son humain du pack (voir 16) : le bâtisseur, l'homme 2 (chapeau, chemise ouverte) ; la fermière,
+  la femme 4 (fichu, tablier) ; la charretière, la femme 3 (pantalon, écharpe) ; le menuisier, le boucher.
 - **À toi.** Leurs noms. En attendant, leur métier : « le bâtisseur », « la fermière », « la charretière », « le
   menuisier ».
 - **Défaut.** Le déroulé :
