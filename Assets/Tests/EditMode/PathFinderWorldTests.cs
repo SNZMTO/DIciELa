@@ -69,7 +69,7 @@ namespace Diciela.Tests.EditMode
             World world = CabinWorld();
             var doorway = new Vector2Int(20, 25);
 
-            Assert.IsTrue(world.Grid.IsDoorway(doorway));
+            Assert.IsTrue(world.Structures.Doorways.Covers(doorway));
             Assert.IsTrue(world.PathFinder.TryFindPath(South, new[] { doorway }, _path));
             Assert.AreEqual(doorway, _path.Cells[_path.Cells.Count - 1]);
         }

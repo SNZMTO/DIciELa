@@ -30,7 +30,8 @@ namespace Diciela.Tests.EditMode
         [Test]
         public void ACellOutsideTheGridIsAnError()
         {
-            NavGrid grid = new World(_settings, TestData.FlatMap(), TestData.EmptyCatalog).Grid;
+            var world = new World(_settings, TestData.FlatMap(), TestData.EmptyCatalog);
+            NavGrid grid = world.Grid;
             var outside = new[] { new Vector2Int(-1, 5), new Vector2Int(20, 5), new Vector2Int(5, -1), new Vector2Int(5, 20) };
 
             Assert.IsTrue(grid.Contains(new Vector2Int(19, 19)));
@@ -38,7 +39,8 @@ namespace Diciela.Tests.EditMode
             {
                 Assert.IsFalse(grid.Contains(cell));
                 Assert.Throws<ArgumentOutOfRangeException>(() => grid.OccupantAt(cell));
-                Assert.Throws<ArgumentOutOfRangeException>(() => grid.IsDoorway(cell));
+                Assert.Throws<ArgumentOutOfRangeException>(() => grid.IsWalkable(cell));
+                Assert.Throws<ArgumentOutOfRangeException>(() => world.Structures.Doorways.Covers(cell));
             }
         }
     }

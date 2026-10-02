@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2865aac5748c02846858e8a8cb4e3eab, type: 3}
+  m_Name: Place
+  m_EditorClassIdentifier: Diciela.Data::Diciela.Data.StructureDefinition
+  _id: place
+  _nameKey: construction.place
+  _widthMeters: 12
+  _depthMeters: 12
+  _hasDoor: 0
+  _doorOffsetMeters: 0
+  _doorWidthMeters: 1.5
+  _hasCouch: 0
+  _couchFeet: {x: 0, y: 0, z: 0}
+  _couchHeadingDegrees: 0
+  _unique: 1
+  _chimeraHome: 0
+  _builtWhenPlaced: 0
+  _walkable: 1
+  _cost:
+  - _good: {fileID: 11400000, guid: 66ef54aedacec184faa974adebaddff0, type: 2}
+    _amount: 5
+  - _good: {fileID: 11400000, guid: cdf728502b1356442ae522146e1539f0, type: 2}
+    _amount: 10
+  _workHours: 2
+  _workSlots: []
+  _storageCapacity: 0
+  _beds: 0
+  _sourceModel: {fileID: 0}
+  _model: {fileID: 7951676779053614994, guid: 4f076a2bf0b9b174c9dffaa882a6a22a, type: 3}
+  _picture: {fileID: 2800000, guid: 2e4dce3a5ea1b3447bd3a4285eb50f55, type: 3}

@@ -26,7 +26,7 @@ namespace Diciela.Tests.EditMode.Architecture
         {
             (typeof(Clock), "Advance"),
             (typeof(NavGrid), "SetOccupant"),
-            (typeof(NavGrid), "AddDoorway"),
+            (typeof(Doorways), "Add"),
             (typeof(NavGrid), "ReleaseOccupant"),
             (typeof(NavGrid), "Reclaim"),
             (typeof(Nature), "Mark"),

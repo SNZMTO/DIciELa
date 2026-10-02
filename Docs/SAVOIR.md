@@ -48,6 +48,10 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 
 - **Le maillage** : un quadrillage invisible, plus fin que le mètre (4 mailles par mètre), où tout ce qui se pose
   s'inscrit. Une maille porte au plus un objet : c'est la vérité pour « rien ne se chevauche » et pour le passage.
+  Un sol qu'on traverse (la Place) garde ses mailles comme un autre objet, pour que rien ne le chevauche, et la maille
+  dit en plus qu'on y marche : une seule question, « se traverse-t-elle ? », répond pour le A\*, les îlots, la sortie
+  et la flânerie. Les abords d'un objet (où l'on se tient pour le servir) sont hors de ses mailles : un sol se bâtit
+  depuis son bord. Les devants de porte sont à part, déduits des constructions : seules les règles de pose les lisent.
   C# pur. Une maille a un coût d'entrée par façon de se déplacer, en entiers, lu dans les fiches : un piéton paie le
   même prix partout où l'on passe ; une charrette paie plus cher l'herbe que la terre, et la terre que les pavés
   (GDD, section 9). Une maille peut être bloquée. Un objet posé s'y **trame** : son empreinte (un rectangle tourné)
