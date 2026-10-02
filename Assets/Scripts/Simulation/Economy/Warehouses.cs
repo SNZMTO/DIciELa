@@ -9,8 +9,9 @@ namespace Diciela.Simulation.Economy
     /// Ce qui tient les marchandises de la ville (GDD, section 8) : le campement, puis les entrepôts ; toute
     /// construction bâtie dont la fiche dit qu'elle en tient. Le stock de la ville est ce qu'ils tiennent, un chiffre par
     /// marchandise. Seule fonction qui fait naître des marchandises (<c>Create</c>, dans un entrepôt ou dans la charge
-    /// d'un habitant), et seule qui rend à la ville ce qu'un porteur n'a pas livré (<see cref="ReturnToTown"/>). Les
-    /// événements d'un pas attendent la fin de leur couche (ARCHITECTURE, section 5).
+    /// d'un habitant), et seule qui rend à la ville ce qu'un habitant porte (<see cref="Store"/>) : toujours à une place
+    /// retenue pour lui, celle d'où sa charge vient ou celle qu'on lui a gardée (décision 178). Les événements d'un pas
+    /// attendent la fin de leur couche (ARCHITECTURE, section 5).
     /// </summary>
     public sealed class Warehouses
     {
@@ -60,8 +61,8 @@ namespace Diciela.Simulation.Economy
         }
 
         /// <summary>
-        /// Une construction vient d'être posée ou bâtie : si elle est bâtie et que sa fiche dit qu'elle tient des
-        /// marchandises, elle sert d'entrepôt. Seuls le monde et les chantiers l'appellent.
+        /// Une construction est mise en service : si elle est bâtie et que sa fiche dit qu'elle tient des marchandises,
+        /// elle sert d'entrepôt. Seule la mise en service du monde l'appelle (Commissioning).
         /// </summary>
         internal void Track(Structure structure)
         {
@@ -123,40 +124,17 @@ namespace Diciela.Simulation.Economy
             Required(warehouse).Release(good, amount);
         }
 
-        /// <summary>Le porteur prend ce qu'on lui avait promis ; il le met dans sa charge.</summary>
+        /// <summary>
+        /// Le porteur prend ce qu'on lui avait promis ; il le met dans sa charge. La place qu'il quitte reste retenue tant
+        /// qu'il porte (décision 178) : livré, elle se rend ; rendu, sa charge y revient toujours (<see cref="Store"/>).
+        /// </summary>
         internal void Take(Structure warehouse, GoodDefinition good, int amount, Inventory load)
         {
-            Required(warehouse).Remove(good, amount, true);
+            Inventory stock = Required(warehouse);
+            stock.Remove(good, amount, true);
+            stock.ReserveSpace(amount);
             load.Add(good, amount);
             Changed(warehouse);
-        }
-
-        /// <summary>
-        /// Rend à la ville tout ce que tient cette charge : chaque marchandise va dans les entrepôts qui ont la place,
-        /// dans l'ordre où ils ont servi. Ce qui revient avait sa place : prise dans un entrepôt, la place d'où elle vient
-        /// est restée libre ; née d'un arbre abattu, sa place retenue est rendue juste avant. Une ville sans place pour
-        /// elles est une erreur.
-        /// </summary>
-        internal void ReturnToTown(Inventory load)
-        {
-            for (int line = 0; line < load.LineCount; line++)
-            {
-                GoodDefinition good = load.GoodAt(line);
-                int left = load.CountAt(line);
-                for (int i = 0; i < _stocks.Count && left > 0; i++)
-                {
-                    int amount = Math.Min(left, _stocks[i].FreeSpace);
-                    if (amount < 1)
-                        continue;
-                    load.Remove(good, amount, false);
-                    _stocks[i].Add(good, amount);
-                    Changed(_structures[i]);
-                    left -= amount;
-                }
-                if (left > 0)
-                    throw new InvalidOperationException("La ville n'a pas la place de reprendre " + left + " " +
-                                                        good.Id + ".");
-            }
         }
 
         /// <summary>Livre les événements du pas, dans leur ordre, puis vide la file. Seul le monde l'appelle.</summary>

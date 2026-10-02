@@ -41,7 +41,9 @@
 - **Défaut.** Pente maximale pour poser un bâtiment : 15°.
 - **Règle.** Le développeur peint les arbres et les rochers sur le Terrain de la carte, au pinceau à arbres, avec les
   modèles du pack ; chaque modèle est rangé dans une sorte, arbre ou rocher. Debout, un arbre ou un rocher prend sa
-  place au sol : on ne le traverse pas, rien ne se pose dessus.
+  place au sol : on ne le traverse pas, rien ne se pose dessus. Deux pieds peints l'un contre l'autre se partagent le
+  sol : retirer l'un laisse l'autre entier. Un pied que couvre entièrement un autre, peint par-dessus, attend pour se
+  retirer qu'on retire celui qui le couvre.
 - **Règle.** Le joueur marque les arbres et les rochers à retirer, et peut les démarquer ; ils se retirent dans l'ordre
   où il les a marqués. Les paysagistes les retirent ; au début, la Chimère, à son poste « à tout faire ». Le défricheur
   y travaille sur place, puis porte ce qu'il rend à l'entrepôt le plus proche qui a la place, retenue dès qu'il prend
@@ -288,8 +290,9 @@
   finit l'étape en cours, dépose ce qu'il porte, puis part en soirée ; la Chimère, elle, flâne près de son poste. Une
   marche commencée se finit, mais arrivé au stock, on n'y prend plus rien ; le travail sur un chantier s'arrête tout de
   suite ; on n'entame rien d'autre avant le matin.
-- **Règle.** Une tâche qui échoue (son but n'est plus joignable) : l'habitant rend au stock ce qu'il porte, garde son
-  poste, et flâne une pause avant d'en reprendre une. Retiré de son poste, il laisse sa tâche de même.
+- **Règle.** Une tâche qui échoue (son but n'est plus joignable) : l'habitant rapporte ce qu'il porte à la place qu'il
+  gardait (voir 8), garde son poste, et flâne une pause avant d'en reprendre une. Retiré de son poste, il laisse sa
+  tâche de même.
 - **À toi.** Une pastille ou plusieurs quand un lieu cumule les pannes ? Ma reco : une seule, la plus urgente :
   injoignable, pas de force, personne au poste, pas de graines ou d'ingrédients, stock plein.
 - **À toi.** Quel poste tient un premier habitant avant que son lieu de travail existe (voir 6) ? Ma reco : un poste
@@ -327,14 +330,18 @@
   les ateliers et les chantiers ont besoin. Tout passe par un entrepôt ; ils vont au plus près.
 - **Règle.** Le stock de la ville est ce que tiennent ses entrepôts (le campement au début) : un chiffre par
   marchandise.
+- **Règle.** Ce qu'un habitant porte garde sa place à l'entrepôt d'où il vient, ou à celui qu'on lui a retenu, jusqu'à
+  ce qu'il le livre ; rien d'autre n'y entre entre-temps. Interrompu, il l'y rapporte : une charge rendue a toujours sa
+  place.
 - **Règle.** Une liaison prioritaire, tirée par le joueur entre deux bâtiments, livre directement de l'un à l'autre sans
   passer par l'entrepôt : c'est l'outil pour optimiser.
 - **Défaut.** Chacun des deux petits stocks d'un bâtiment tient 10 marchandises ; un entrepôt en tient 200.
-- **À toi.** Où vont les marchandises rendues au stock quand les entrepôts sont pleins ? Ma reco : en tas au sol, sur
-  place, avec une pastille ; les charretiers les reprennent dès qu'il y a de la place.
+- **À toi.** Où vont les marchandises rendues au stock quand les entrepôts sont pleins (les graines d'un champ
+  effacé) ? Une charge rendue n'en est pas : sa place l'attend. Ma reco : en tas au sol, sur place, avec une pastille ;
+  les charretiers les reprennent dès qu'il y a de la place.
 - **À toi.** Un entrepôt rangé compte-t-il dans le stock de la ville ? Ma reco : non ; il garde ses marchandises.
-- **À toi.** Que fait un charretier chargé quand on recharge la partie ? Ma reco : il dépose à l'entrepôt joignable le
-  plus proche.
+- **À toi.** Que fait un charretier chargé quand on recharge la partie ? Ma reco : il reprend sa livraison ; sa charge
+  garde sa place.
 - **Règle.** Les récoltes de fruits et de légumes sont des marchandises : elles se troquent, et serviront plus tard à la
   cuisine.
 

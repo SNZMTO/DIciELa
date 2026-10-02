@@ -108,30 +108,31 @@ namespace Diciela.Simulation.Economy
             delivery.MarkPickedUp();
         }
 
-        /// <summary>Le porteur est au chantier : il y dépose sa charge.</summary>
+        /// <summary>Le porteur est au chantier : il y dépose sa charge, et la place qu'elle gardait à son départ se rend.</summary>
         internal void DropOff(Delivery delivery, Inventory load)
         {
             if (delivery.IsOver || !delivery.IsPickedUp)
                 throw new InvalidOperationException("Cette livraison n'a rien à déposer.");
+            delivery.MarkOver();
             load.Remove(delivery.Good, delivery.Amount, false);
             _sites.Receive(delivery.Site, delivery.Good, delivery.Amount);
-            delivery.MarkOver();
+            _warehouses.ReleaseSpace(delivery.Source, delivery.Amount);
         }
 
         /// <summary>
-        /// La livraison ne se fera pas : ses promesses sont rendues, et ce que le porteur avait déjà pris retourne à la
-        /// ville.
+        /// La livraison ne se fera pas : ses promesses sont rendues, et ce que le porteur avait déjà pris retourne à
+        /// l'entrepôt d'où il vient, à la place qu'il y gardait (décision 178). Finie d'abord : rien ne se rend deux fois.
         /// </summary>
         internal void Cancel(Delivery delivery, Inventory load)
         {
             if (delivery.IsOver)
                 return;
+            delivery.MarkOver();
             delivery.Site.Unpromise(delivery.Good, delivery.Amount);
             if (delivery.IsPickedUp)
-                _warehouses.ReturnToTown(load);
+                _warehouses.Store(delivery.Source, load, delivery.Good, delivery.Amount);
             else
                 _warehouses.Release(delivery.Source, delivery.Good, delivery.Amount);
-            delivery.MarkOver();
         }
 
         /// <summary>L'ouvrier apporte ce travail, en heures d'un débutant ; vrai si le chantier est fini.</summary>

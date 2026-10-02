@@ -51,8 +51,8 @@ namespace Diciela.Simulation.Society
         }
 
         /// <summary>
-        /// Une construction vient d'être posée ou bâtie : bâtie, elle ouvre les postes que sa fiche liste. Seuls le monde
-        /// et les ouvriers qui finissent un chantier l'appellent.
+        /// Une construction est mise en service : bâtie, elle ouvre les postes que sa fiche liste. Seule la mise en service
+        /// du monde l'appelle (Commissioning).
         /// </summary>
         internal void Track(Structure structure)
         {

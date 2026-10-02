@@ -87,7 +87,8 @@ la société, qui voit tout ce qui est en dessous.
   non.
 - **L'économie.** Les stocks : portes des bâtiments, entrepôts, étagères de l'étal, charge d'un porteur, panier d'un
   visiteur, tas au sol ; chacun a son contenu et sa consigne. Une seule fonction crée ou détruit une marchandise, avec
-  sa cause ; une seule fonction « rend à la ville ». Les réservations. Les ateliers (recette, avancement). La culture
+  sa cause ; une seule fonction « rend à la ville », toujours à une place retenue (une charge en route garde la sienne
+  à son départ, décision 178). Les réservations. Les ateliers (recette, avancement). La culture
   des plantations (semis, pousse, graines gardées, récolte). Les chantiers (rang dans la file, livraisons, avancement).
   La production comptée par marchandise. La valeur des marchandises. La publication des tâches à prendre.
 - **La société.** Les habitants (ordinaires, maîtres, la Chimère : trois sortes décrites par leurs fiches, jamais un
@@ -102,9 +103,11 @@ la société, qui voit tout ce qui est en dessous.
   sa classe : le traitement des ordres ; les déclencheurs (une condition mène à une récompense : idée, réplique,
   tenue) ;
   le déroulé du départ ; les opérations qui touchent plusieurs couches, faites par des appels vers le bas dans un ordre
-  écrit (poser : le terrain, puis l'économie ouvre un stock ou un chantier, la société des postes, puis le déroulé du
-  départ la regarde ; plus tard, la maison de la Chimère qui remplace le campement) ; la capture et la restauration. Le
-  monde reçoit les réglages, la carte et le catalogue, d'où il tire le déroulé du départ et les statistiques.
+  écrit (poser : le terrain, puis l'économie ouvre un chantier, ou la construction, dressée dès la pose, est mise en
+  service ; mettre en service, une seule opération, à la pose ou à la fin du pas où un chantier finit : l'économie
+  ouvre un stock, la société des postes, puis le déroulé du départ la regarde, décision 179 ; plus tard, la maison de
+  la Chimère qui remplace le campement) ; la capture et la restauration. Le monde reçoit les réglages, la carte et le
+  catalogue, d'où il tire le déroulé du départ et les statistiques.
 
 ## 4. Qui possède quoi
 
@@ -296,6 +299,7 @@ code.
 | gestes des outils ; outil choisi | `ToolControls` ; `ToolChoice` | touches des outils | `IToolKeys` | ouvrir, fermer (un panneau) | `Open`, `Close` (`IBuildMenu`) |
 | la main (un seul outil) | `Hand` | outil de la roue (ses gestes ; son allure) | `ToolAction` ; `WheelTool` | boutons de la fiche | `PlaceSheetActions`, `PlaceSheetAction` |
 | couche (où la Chimère dort) | `HasBed`, `BedFeet` | stock de départ | `StartingGoods` ; `GoodsCause.StartingStock` | classes de style posées par le code | `StyleClasses` |
+| mettre en service (l'opération du monde) | `Commissioning` | chantiers finis (à mettre en service) | `ConstructionSites.Finished` | reprendre ses mailles (un pied debout) | `NavGrid.Reclaim` |
 
 ## 10. La carte, les scènes et la sauvegarde
 
