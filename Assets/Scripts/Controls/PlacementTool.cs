@@ -57,6 +57,9 @@ namespace Diciela.Controls
 
         public bool IsActive => !ReferenceEquals(Current, null);
 
+        /// <summary>L'angle de la construction en main, en degrés depuis le nord vers l'est ; il reste d'une pose à l'autre.</summary>
+        public float RotationDegrees => _rotationDegrees;
+
         /// <summary>La réponse des règles de pose à la place visée ; Ok quand rien n'est visé.</summary>
         public PlacementResult Result { get; private set; }
 

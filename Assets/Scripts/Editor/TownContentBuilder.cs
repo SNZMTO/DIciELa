@@ -8,14 +8,23 @@ namespace Diciela.EditorTools
     /// <summary>
     /// Crée le contenu de la ville au travail qui manque (GDD, sections 2 et 5 à 7 ; décisions 137 à 139 et 157 à 160) :
     /// le Bois et la Pierre, les quatre statistiques et leurs sous-statistiques, les tâches « porter », « bâtir » et
-    /// « défricher », le poste « à tout faire », le stock et le poste du campement, le déroulé du départ (le stock de
-    /// départ), le coût de la cabane, l'arbre et le rocher (sans modèle : le développeur y range ceux qu'il peint), et leur
-    /// place dans le catalogue.
-    /// Réexécutable : une fiche qui existe n'est jamais touchée, sauf pour ce qui lui manque (une liste vide, un
-    /// nombre à 0, la tâche « défricher » au poste).
+    /// « défricher », le poste « à tout faire », le déroulé du départ (le stock de départ), l'arbre et le rocher (sans
+    /// modèle : le développeur y range ceux qu'il peint). Le campement, la cabane et le catalogue naissent avec eux
+    /// (ContentBuilder). Réexécutable : une fiche qui existe n'est jamais touchée, un réglage fait à la main jamais remis.
     /// </summary>
     internal static class TownContentBuilder
     {
+        /// <summary>Le contenu de la ville au travail, tel qu'il est sur le disque, fait ou trouvé.</summary>
+        internal sealed class Made
+        {
+            public GoodDefinition Wood;
+            public GoodDefinition Stone;
+            public WorkSlotDefinition OddJobs;
+            public OpeningDefinition Opening;
+            public NatureDefinition[] Nature;
+            public List<StatisticDefinition> Statistics;
+        }
+
         private const string GoodsFolder = "Assets/Data/Marchandises";
         private const string StatisticsFolder = "Assets/Data/Statistiques";
         private const string WorkFolder = "Assets/Data/Travail";
@@ -32,7 +41,7 @@ namespace Diciela.EditorTools
             new[] { "echange", "transport", "troc", "expedition" }
         };
 
-        public static void CreateMissing(Catalog catalog, StructureDefinition camp, StructureDefinition cabin)
+        public static Made CreateMissing()
         {
             GoodDefinition wood = Good("Bois", "bois");
             GoodDefinition stone = Good("Pierre", "pierre");
@@ -52,42 +61,17 @@ namespace Diciela.EditorTools
                     EditorAssets.Property(fiche, "_nameKey").stringValue = "poste.a_tout_faire";
                     EditorAssets.SetList(EditorAssets.Property(fiche, "_tasks"), new[] { carry, build, clear });
                 });
-            if (!Contains(oddJobs.Tasks, clear))
-            {
-                var tasks = new List<TaskKindDefinition>(oddJobs.Tasks) { clear };
-                EditorAssets.Set(oddJobs, fiche => EditorAssets.SetList(EditorAssets.Property(fiche, "_tasks"), tasks));
-            }
-
-            // Le campement fait tout au départ (décision 172) : il tient 100 marchandises pour la ville et ouvre le poste
-            // « à tout faire » ; le déroulé du départ lui donne 30 Bois et 20 Pierre quand on l'installe.
-            if (camp.StorageCapacity <= 0)
-                EditorAssets.Set(camp, fiche => EditorAssets.Property(fiche, "_storageCapacity").intValue = 100);
-            if (camp.WorkSlots.Count == 0)
-                EditorAssets.Set(camp, fiche => EditorAssets.SetList(EditorAssets.Property(fiche, "_workSlots"),
-                    new[] { oddJobs }));
+            // Le déroulé du départ donne 30 Bois et 20 Pierre au campement quand on l'installe (décision 172).
             OpeningDefinition opening = EditorAssets.CreateIfMissing<OpeningDefinition>(OpeningPath, fiche =>
                 SetAmounts(EditorAssets.Property(fiche, "_startingGoods"), wood, 30, stone, 20));
-
-            // Une cabane coûte 10 Bois et 5 Pierre, et demande 2 h de travail à un débutant (décision 137).
-            if (cabin.Cost.Count == 0)
-                EditorAssets.Set(cabin, fiche => SetAmounts(EditorAssets.Property(fiche, "_cost"), wood, 10, stone, 5));
-            if (cabin.WorkHours <= 0f)
-                EditorAssets.Set(cabin, fiche => EditorAssets.Property(fiche, "_workHours").floatValue = 2f);
-
             // Un arbre rend 3 Bois pour 30 min de travail, un rocher 2 Pierre pour 45 min (décision 160).
             NatureDefinition tree = Nature("Arbre", "arbre", 1f, wood, 3, 0.5f);
             NatureDefinition rock = Nature("Rocher", "rocher", 1.5f, stone, 2, 0.75f);
-
-            EditorAssets.AssignIfMissing(catalog, "_opening", opening);
-            if (catalog.Nature.Count == 0)
-                EditorAssets.Set(catalog, fiche =>
-                    EditorAssets.SetList(EditorAssets.Property(fiche, "_nature"), new[] { tree, rock }));
-            if (catalog.Goods.Count == 0)
-                EditorAssets.Set(catalog, fiche =>
-                    EditorAssets.SetList(EditorAssets.Property(fiche, "_goods"), new[] { wood, stone }));
-            if (catalog.Statistics.Count == 0)
-                EditorAssets.Set(catalog, fiche =>
-                    EditorAssets.SetList(EditorAssets.Property(fiche, "_statistics"), statistics));
+            return new Made
+            {
+                Wood = wood, Stone = stone, OddJobs = oddJobs, Opening = opening, Nature = new[] { tree, rock },
+                Statistics = statistics
+            };
         }
 
         private static GoodDefinition Good(string file, string id)
@@ -150,23 +134,13 @@ namespace Diciela.EditorTools
             });
         }
 
-        private static bool Contains(IReadOnlyList<TaskKindDefinition> tasks, TaskKindDefinition task)
-        {
-            foreach (TaskKindDefinition each in tasks)
-            {
-                if (each == task)
-                    return true;
-            }
-            return false;
-        }
-
         private static VectorImage Icon(string name)
         {
             return EditorAssets.Load<VectorImage>(InterfaceIconBuilder.Folder + "/" + name + ".asset");
         }
 
         /// <summary>Remplit une liste de quantités : une marchandise, son nombre, une autre, son nombre…</summary>
-        private static void SetAmounts(SerializedProperty list, GoodDefinition first, int firstAmount,
+        internal static void SetAmounts(SerializedProperty list, GoodDefinition first, int firstAmount,
             GoodDefinition second, int secondAmount)
         {
             list.arraySize = 2;

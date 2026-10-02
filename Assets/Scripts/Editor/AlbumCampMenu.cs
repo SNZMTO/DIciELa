@@ -59,8 +59,10 @@ namespace Diciela.EditorTools
                 Vector2 ahead = new Vector2(forward.x, forward.z).normalized;
                 Vector2 center = chimera.Position + ahead * CampDistance;
                 tool.Begin(camp);
-                // L'angle se compte depuis le nord, vers l'est : l'entrée regarde vers la caméra.
-                tool.RotateBy(Mathf.Atan2(-ahead.x, -ahead.y) * Mathf.Rad2Deg);
+                // L'angle se compte depuis le nord, vers l'est : l'entrée regarde vers la caméra. L'outil garde l'angle de
+                // la pose d'avant : on tourne de ce qui manque.
+                float facing = Mathf.Atan2(-ahead.x, -ahead.y) * Mathf.Rad2Deg;
+                tool.RotateBy(Mathf.DeltaAngle(tool.RotationDegrees, facing));
                 tool.AimAt(camera.WorldToScreenPoint(Ground(world, center)));
                 bool sent = tool.Confirm();
                 Debug.Log("DICIELA : mise en scène de l'album : le campement " + (sent ? "est installé" : "ne s'installe pas") +

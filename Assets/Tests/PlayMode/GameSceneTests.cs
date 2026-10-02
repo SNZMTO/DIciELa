@@ -5,6 +5,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
+using UnityEngine.UIElements;
 
 namespace Diciela.Tests.PlayMode
 {
@@ -12,7 +13,8 @@ namespace Diciela.Tests.PlayMode
     /// La scène de test, jouée comme par le joueur : on la charge, elle charge sa carte de test et ouvre l'écran de
     /// création, on valide, on la laisse tourner, on la quitte. Le journal du jeu dit si le monde a reçu sa carte, si la
     /// Chimère y est née et s'il a avancé ; toute erreur dans la console fait échouer le test. La vraie carte n'est
-    /// jamais chargée.
+    /// jamais chargée. Une ville qui ne peut pas s'ouvrir (un HUD qui a perdu un élément) arrête la partie, l'erreur dite,
+    /// au lieu de la laisser figée.
     /// </summary>
     public sealed class GameSceneTests
     {
@@ -55,6 +57,33 @@ namespace Diciela.Tests.PlayMode
 
             Assert.IsFalse(SceneManager.GetSceneByPath(ScenePaths.MapTest).isLoaded,
                 "La carte de test doit partir avec sa scène de jeu.");
+        }
+
+        [UnityTest]
+        public IEnumerator ATownThatCannotOpenStopsTheGameInsteadOfFreezingIt()
+        {
+#if UNITY_EDITOR
+            yield return UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode(ScenePaths.GameTest,
+                new LoadSceneParameters(LoadSceneMode.Additive));
+#endif
+            // Le HUD perd la fiche d'un lieu, comme après une retouche ratée de son UXML : la ville ne peut pas s'ouvrir.
+            GameRunner runner = null;
+            for (int frame = 0; frame < MaxFrames && (runner == null || runner.World == null); frame++)
+            {
+                runner = Object.FindAnyObjectByType<GameRunner>();
+                yield return null;
+            }
+            Assert.IsNotNull(runner?.World, "Le monde de la scène de test n'est pas né.");
+            Object.FindAnyObjectByType<Diciela.UI.PlaceSheet>().GetComponent<UIDocument>()
+                .rootVisualElement.Q("fiche").RemoveFromHierarchy();
+            LogAssert.Expect(LogType.Exception, new Regex("La fiche d'un lieu ne trouve pas ses éléments"));
+
+            yield return TestOpening.Confirm(MaxFrames);
+            yield return null;
+
+            Assert.IsFalse(runner.enabled, "Le démarrage s'arrête au lieu de rester figé, ville à moitié ouverte.");
+            Assert.IsNull(runner.World, "Le monde est libéré.");
+            yield return TestOpening.Leave(MaxFrames);
         }
     }
 }

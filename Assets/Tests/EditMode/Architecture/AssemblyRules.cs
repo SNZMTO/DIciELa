@@ -3,8 +3,9 @@ using System.Collections.Generic;
 namespace Diciela.Tests.EditMode.Architecture
 {
     /// <summary>
-    /// Le tableau des assemblages de ARCHITECTURE.md, section 2 : leur dossier et ce qu'ils ont le droit de
-    /// référencer. Changer ce tableau est un changement d'architecture : ARCHITECTURE.md et une décision d'abord.
+    /// Le tableau des assemblages de ARCHITECTURE.md, section 2 : leur dossier, ce qu'ils ont le droit de référencer, et
+    /// où ils existent (l'éditeur seulement, ou partout ; les tests, seulement quand les tests sont compilés). Changer ce
+    /// tableau est un changement d'architecture : ARCHITECTURE.md et une décision d'abord.
     /// </summary>
     internal static class AssemblyRules
     {
@@ -15,6 +16,8 @@ namespace Diciela.Tests.EditMode.Architecture
         };
 
         private static readonly string[] TestRunner = { "UnityEngine.TestRunner", "UnityEditor.TestRunner" };
+        private static readonly string[] EditorOnly = { "Editor" };
+        private static readonly string[] TestsOnly = { "UNITY_INCLUDE_TESTS" };
 
         public sealed class Rule
         {
@@ -22,6 +25,10 @@ namespace Diciela.Tests.EditMode.Architecture
             public string[] Diciela;
             public string[] External = new string[0];
             public string[] Precompiled = new string[0];
+
+            // Les plateformes où il existe (aucune : partout) et les symboles sans lesquels il ne se compile pas.
+            public string[] Platforms = new string[0];
+            public string[] Defines = new string[0];
         }
 
         public static readonly IReadOnlyDictionary<string, Rule> Rules = new Dictionary<string, Rule>
@@ -71,13 +78,15 @@ namespace Diciela.Tests.EditMode.Architecture
                 External = new[]
                 {
                     "Unity.InputSystem", "Unity.RenderPipelines.Core.Runtime", "Unity.RenderPipelines.Universal.Runtime"
-                }
+                },
+                Platforms = EditorOnly
             },
             ["Diciela.Tests.EditMode"] = new Rule
             {
                 Folder = "Assets/Tests/EditMode",
                 Diciela = With(Layers(5), "Diciela.Persistence", "Diciela.Scenarios"),
-                External = TestRunner, Precompiled = new[] { "nunit.framework.dll" }
+                External = TestRunner, Precompiled = new[] { "nunit.framework.dll" }, Platforms = EditorOnly,
+                Defines = TestsOnly
             },
             ["Diciela.Tests.PlayMode"] = new Rule
             {
@@ -86,7 +95,7 @@ namespace Diciela.Tests.EditMode.Architecture
                     "Diciela.Game"),
                 External = With(TestRunner, "Unity.InputSystem", "Unity.InputSystem.TestFramework",
                     "Unity.RenderPipelines.Core.Runtime", "Unity.RenderPipelines.Universal.Runtime"),
-                Precompiled = new[] { "nunit.framework.dll" }
+                Precompiled = new[] { "nunit.framework.dll" }, Defines = TestsOnly
             },
         };
 
