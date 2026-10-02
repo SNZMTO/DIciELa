@@ -94,15 +94,24 @@
     align-items: center;
 }
 
-/* Le nom d'une carte, et à côté ce qu'elle offre (ses lits) ; à l'étroit, les lits passent dessous, au milieu. */
+/* Le nom d'une carte, et à côté ce qu'elle offre (ses lits) ; à l'étroit, les lits passent dessous, au milieu. UI
+   Toolkit n'a pas d'écart (gap) : chaque élément a 6 px de chaque côté, que la marge négative de la ligne rend. */
 .carte-titre {
+    align-self: stretch;
+    margin: 0 -6px;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
 }
 
-.carte-nom, .carte-lits {
+/* Ses textes perdent les retraits que le thème d'Unity donne à chaque texte : l'écart est celui de la maquette. */
+.carte-titre .unity-label {
+    margin: 0;
+    padding: 0;
+}
+
+.carte-titre > .carte-nom, .carte-titre > .carte-lits {
     margin: 1px 6px;
 }
 

@@ -549,6 +549,10 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   rapetisse sur une fenêtre étroite ; un bouton dont le texte passe à la ligne double la hauteur d'une barre.
 - **Un `PanelSettings` créé par script n'a pas de thème**, et sans thème aucun texte ne s'affiche : un fichier `.tss`
   d'une ligne, `@import url("unity-theme://default");`, lui en donne un.
+- **UI Toolkit n'a pas d'écart (`gap`) entre les éléments d'une rangée** : on le simule par une marge de chaque côté des
+  éléments et une marge négative égale sur la rangée, étirée sur la largeur de son parent. Et ce thème par défaut donne
+  à chaque texte des marges et des retraits (`padding`) qui s'ajoutent : les remettre à 0 dans la rangée, sinon elle
+  passe à la ligne plus tôt que la maquette (le titre des cartes : « Cabane · 2 lits », étape 35).
 - **Le pointeur compte depuis le bas de l'écran, UI Toolkit depuis le haut** : retourner y avant
   `RuntimePanelUtils.ScreenToPanel`, mettre la racine du document en `PickingMode.Ignore`, et vérifier que l'élément
   trouvé par `panel.Pick` est bien dans la barre. Le test inverse la conversion d'UI Toolkit pour viser le milieu de
