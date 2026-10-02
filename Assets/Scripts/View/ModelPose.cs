@@ -30,13 +30,44 @@ namespace Diciela.View
         public static Vector3 PointOf(Placement placement, Relief relief, Vector3 local)
         {
             Vector2 center = placement.Center;
-            return new Vector3(center.x, relief.HeightAt(center.x, center.y), center.y) + Rotation(placement) * local;
+            return relief.GroundAt(center) + Rotation(placement) * local;
         }
 
         /// <summary>Comment le modèle est tourné à cette place : de son angle, autour de la verticale.</summary>
         public static Quaternion Rotation(Placement placement)
         {
             return Quaternion.Euler(0f, placement.RotationDegrees, 0f);
+        }
+
+        /// <summary>
+        /// La boîte des maillages de ce modèle (ses morceaux cachés compris), dans son propre repère ; faux s'il n'a
+        /// aucun maillage. La seule mesure d'un modèle pour le viser : une construction, un arbre, un rocher.
+        /// </summary>
+        public static bool TryLocalBox(GameObject model, out Bounds box)
+        {
+            box = new Bounds();
+            bool any = false;
+            Matrix4x4 toModel = model.transform.worldToLocalMatrix;
+            foreach (MeshFilter filter in model.GetComponentsInChildren<MeshFilter>(true))
+            {
+                if (filter.sharedMesh == null)
+                    continue;
+                // Le repère du morceau, ramené à celui du modèle : ses huit coins suffisent à sa boîte.
+                Matrix4x4 toLocal = toModel * filter.transform.localToWorldMatrix;
+                Bounds mesh = filter.sharedMesh.bounds;
+                for (int corner = 0; corner < 8; corner++)
+                {
+                    var offset = new Vector3((corner & 1) == 0 ? -1f : 1f, (corner & 2) == 0 ? -1f : 1f,
+                        (corner & 4) == 0 ? -1f : 1f);
+                    Vector3 point = toLocal.MultiplyPoint3x4(mesh.center + Vector3.Scale(mesh.extents, offset));
+                    if (any)
+                        box.Encapsulate(point);
+                    else
+                        box = new Bounds(point, Vector3.zero);
+                    any = true;
+                }
+            }
+            return any;
         }
     }
 }

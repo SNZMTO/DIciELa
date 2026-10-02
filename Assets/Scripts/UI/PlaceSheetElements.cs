@@ -21,14 +21,10 @@ namespace Diciela.UI
         /// <summary>Une ligne du contenu : l'icône de la marchandise, son nom, combien.</summary>
         public static VisualElement Line(PlaceSheetLine line)
         {
-            var row = new Facet { pickingMode = PickingMode.Ignore };
-            foreach (string style in LineClasses)
-                row.AddToClassList(style);
-            var icon = new VisualElement { pickingMode = PickingMode.Ignore };
-            icon.AddToClassList(IconClass);
-            row.Add(icon);
-            row.Add(Text(line.Name, LineNameClasses));
-            row.Add(Text(line.Count.ToString(CultureInfo.InvariantCulture), CountClass));
+            Facet row = Styled.With(new Facet { pickingMode = PickingMode.Ignore }, LineClasses);
+            row.Add(Styled.With(new VisualElement { pickingMode = PickingMode.Ignore }, IconClass));
+            row.Add(Styled.Text(line.Name, LineNameClasses));
+            row.Add(Styled.Text(line.Count.ToString(CultureInfo.InvariantCulture), CountClass));
             ShowIcon(row, line.Icon);
             return row;
         }
@@ -56,21 +52,11 @@ namespace Diciela.UI
         /// <summary>Un bouton, sans pastel ni phrase encore ; clicked est appelé quand on le clique.</summary>
         public static FeltButton Button(Action clicked, out Label text)
         {
-            var button = new FeltButton();
-            foreach (string style in ActionClasses)
-                button.AddToClassList(style);
+            FeltButton button = Styled.With(new FeltButton(), ActionClasses);
             button.Clicked += clicked;
-            text = Text("", ActionTextClass);
+            text = Styled.Text("", ActionTextClass);
             button.Add(text);
             return button;
-        }
-
-        private static Label Text(string text, params string[] classes)
-        {
-            var label = new Label(text) { pickingMode = PickingMode.Ignore };
-            foreach (string style in classes)
-                label.AddToClassList(style);
-            return label;
         }
     }
 }

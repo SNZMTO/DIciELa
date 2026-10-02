@@ -14,7 +14,6 @@ namespace Diciela.Simulation.Core
         private readonly long _stepsPerDay;
         private readonly long _workEndStep;
         private readonly long _eveningEndStep;
-        private readonly double _gameHoursPerRealSecond;
         private readonly double _realSecondsPerStep;
 
         /// <summary>Levé quand une nouvelle journée commence, avec son numéro (la première est la 1).</summary>
@@ -38,7 +37,6 @@ namespace Diciela.Simulation.Core
 
             _workEndStep = (long)Math.Round(_stepsPerDay * (double)settings.WorkFraction, MidpointRounding.AwayFromZero);
             _eveningEndStep = (long)Math.Round(_stepsPerDay * workAndEvening, MidpointRounding.AwayFromZero);
-            _gameHoursPerRealSecond = HoursPerDay / (_stepsPerDay * (double)settings.StepSeconds);
             _realSecondsPerStep = settings.StepSeconds;
             Phase = PhaseAt(0);
         }
@@ -67,12 +65,6 @@ namespace Diciela.Simulation.Core
 
         /// <summary>La part de la journée déjà passée, de 0 à 1.</summary>
         public double DayProgress => (double)(StepCount % _stepsPerDay) / _stepsPerDay;
-
-        /// <summary>La seule conversion du temps réel en heures de jeu (ARCHITECTURE, section 5).</summary>
-        public double RealSecondsToGameHours(double realSeconds)
-        {
-            return realSeconds * _gameHoursPerRealSecond;
-        }
 
         /// <summary>
         /// Le nombre de pas que durent ces heures de jeu, arrondi au plus proche : la seule conversion des heures de jeu

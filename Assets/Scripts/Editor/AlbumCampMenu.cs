@@ -144,7 +144,7 @@ namespace Diciela.EditorTools
 
         private static Vector3 Ground(World world, Vector2 at)
         {
-            return new Vector3(at.x, world.Map.Relief.HeightAt(at.x, at.y), at.y);
+            return world.Map.Relief.GroundAt(at);
         }
     }
 }

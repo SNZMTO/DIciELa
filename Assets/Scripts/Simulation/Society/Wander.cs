@@ -16,9 +16,6 @@ namespace Diciela.Simulation.Society
     /// </summary>
     internal sealed class Wander
     {
-        // Les essais pour trouver un point à chaque départ ; tous ratés, c'est une pause de plus.
-        private const int Draws = 8;
-
         private readonly NavGrid _grid;
         private readonly Islands _islands;
         private readonly Clock _clock;
@@ -28,11 +25,13 @@ namespace Diciela.Simulation.Society
         private readonly float _minHopMeters;
         private readonly double _pauseMinHours;
         private readonly double _pauseMaxHours;
+        // Les essais pour trouver un point à chaque départ ; tous ratés, c'est une pause de plus.
+        private readonly int _draws;
         private Vector2 _anchor;
         private long _pauseLeft;
 
         public Wander(VillagerKindDefinition kind, NavGrid grid, Islands islands, Clock clock, Walk walk,
-            float metersPerStep)
+            float metersPerStep, int draws)
         {
             if (ReferenceEquals(kind, null))
                 throw new ArgumentNullException(nameof(kind));
@@ -54,6 +53,7 @@ namespace Diciela.Simulation.Society
             _minHopMeters = kind.WanderMinHopMeters;
             _pauseMinHours = kind.WanderPauseMinHours;
             _pauseMaxHours = kind.WanderPauseMaxHours;
+            _draws = Math.Max(1, draws);
         }
 
         /// <summary>Se met à flâner autour de ce point, en commençant par une pause.</summary>
@@ -111,7 +111,7 @@ namespace Diciela.Simulation.Society
             Vector2Int anchor = _grid.CellOf(_anchor);
             int island = _islands.IslandOf(_grid.CellOf(position));
             int span = 2 * _radiusCells + 1;
-            for (int draw = 0; draw < Draws; draw++)
+            for (int draw = 0; draw < _draws; draw++)
             {
                 var offset = new Vector2Int(random.Range(span) - _radiusCells, random.Range(span) - _radiusCells);
                 target = anchor + offset;

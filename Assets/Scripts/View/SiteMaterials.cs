@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Diciela.View
@@ -15,7 +14,7 @@ namespace Diciela.View
     {
         private readonly Material _template;
         private readonly float _blendedCutoff;
-        private readonly Dictionary<Material, Material> _copies = new Dictionary<Material, Material>();
+        private readonly MaterialCopies _copies = new MaterialCopies();
 
         /// <summary>Les copies faites sur ce modèle ; un matériau transparent par mélange s'y détoure à ce seuil.</summary>
         public SiteMaterials(Material template, float blendedCutoff)
@@ -24,26 +23,16 @@ namespace Diciela.View
             _blendedCutoff = blendedCutoff;
         }
 
-        /// <summary>Le nombre de copies vivantes.</summary>
-        public int Count => _copies.Count;
-
         /// <summary>La copie de ce matériau au shader du chantier ; le modèle de copie s'il n'y en a pas.</summary>
         public Material For(Material original)
         {
             if (original == null)
                 return _template;
-            if (!_copies.TryGetValue(original, out Material copy))
-            {
-                copy = Copy(original);
-                _copies.Add(original, copy);
-            }
-            return copy;
+            return _copies.TryGet(original, out Material copy) ? copy : _copies.Keep(original, Copy(original));
         }
 
         public void Clear()
         {
-            foreach (Material copy in _copies.Values)
-                Object.Destroy(copy);
             _copies.Clear();
         }
 

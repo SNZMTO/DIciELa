@@ -57,30 +57,9 @@ namespace Diciela.View
         /// <summary>La boîte des maillages du modèle, dans son repère ; une boîte d'un mètre s'il n'en a pas.</summary>
         private static Bounds ModelBox(GameObject model)
         {
-            var box = new Bounds(new Vector3(0f, 0.5f, 0f), Vector3.one);
-            if (model == null)
+            if (model != null && ModelPose.TryLocalBox(model, out Bounds box))
                 return box;
-            bool first = true;
-            foreach (MeshFilter filter in model.GetComponentsInChildren<MeshFilter>())
-            {
-                if (filter.sharedMesh == null)
-                    continue;
-                Bounds local = filter.sharedMesh.bounds;
-                // Le repère du morceau, ramené à celui du modèle : ses huit coins suffisent à sa boîte.
-                Matrix4x4 toModel = model.transform.worldToLocalMatrix * filter.transform.localToWorldMatrix;
-                for (int corner = 0; corner < 8; corner++)
-                {
-                    var offset = new Vector3((corner & 1) == 0 ? -1f : 1f, (corner & 2) == 0 ? -1f : 1f,
-                        (corner & 4) == 0 ? -1f : 1f);
-                    Vector3 point = toModel.MultiplyPoint3x4(local.center + Vector3.Scale(local.extents, offset));
-                    if (first)
-                        box = new Bounds(point, Vector3.zero);
-                    else
-                        box.Encapsulate(point);
-                    first = false;
-                }
-            }
-            return box;
+            return new Bounds(new Vector3(0f, 0.5f, 0f), Vector3.one);
         }
     }
 }

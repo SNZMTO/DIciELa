@@ -165,7 +165,7 @@ namespace Diciela.View
             Vector2 at = Vector2.LerpUnclamped(villager.PreviousPosition, villager.Position, stepFraction);
             if (shown.Posed && at == shown.ShownAt && shown.YawDegrees == shown.ShownYaw)
                 return;
-            shown.Transform.SetPositionAndRotation(new Vector3(at.x, _relief.HeightAt(at.x, at.y), at.y),
+            shown.Transform.SetPositionAndRotation(_relief.GroundAt(at),
                 Quaternion.Euler(0f, shown.YawDegrees, 0f));
             shown.ShownAt = at;
             shown.ShownYaw = shown.YawDegrees;

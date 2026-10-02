@@ -24,13 +24,14 @@ namespace Diciela.Simulation.Society
 
         /// <summary>
         /// Les habitants de ce monde : ils vivent sur ce maillage, à cette horloge, prennent leurs tâches ici, tiennent
-        /// les postes de cette table, et leurs statistiques suivent celles-ci.
+        /// les postes de cette table, leurs statistiques suivent celles-ci, et leurs bornes, ces réglages.
         /// </summary>
         public Villagers(NavGrid grid, Islands islands, PathFinder finder, Clock clock, Surroundings surroundings,
-            TaskOffers offers, ClearingOffers clearings, WorkSlots slots, StatisticTable statistics)
+            TaskOffers offers, ClearingOffers clearings, WorkSlots slots, StatisticTable statistics,
+            SimulationSettings settings)
         {
             _services = new VillagerServices(clock, grid, islands, finder, surroundings, offers, clearings, slots,
-                statistics);
+                statistics, settings);
             _grid = grid;
         }
 

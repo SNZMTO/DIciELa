@@ -166,7 +166,7 @@ namespace Diciela.View
                 NatureItem item = marked[i];
                 float halfWidth = item.Definition.WidthMeters * item.Scale * 0.5f;
                 Vector2 foot = item.Placement.Center + new Vector2(halfWidth + MarkGap, 0f);
-                var ground = new Vector3(foot.x, _relief.HeightAt(foot.x, foot.y), foot.y);
+                var ground = _relief.GroundAt(foot);
                 _marks.Add(Matrix4x4.Translate(ground));
             }
         }

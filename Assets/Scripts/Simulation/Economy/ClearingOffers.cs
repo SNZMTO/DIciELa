@@ -60,7 +60,7 @@ namespace Diciela.Simulation.Economy
                 Structure warehouse = null;
                 if (yields)
                 {
-                    warehouse = NearestWithRoom(yield.Amount, island, item.Placement.Center);
+                    warehouse = _reach.NearestWithRoom(_warehouses, yield.Amount, island, item.Placement.Center);
                     if (warehouse == null)
                         continue;
                     _warehouses.ReserveSpace(warehouse, yield.Amount);
@@ -126,26 +126,6 @@ namespace Diciela.Simulation.Economy
             if (clearing.Amount > 0)
                 _warehouses.ReleaseSpace(clearing.Warehouse, clearing.Amount);
             _taken.Remove(clearing.Item);
-        }
-
-        /// <summary>L'entrepôt le plus proche de ce point, à vol d'oiseau, qui a la place de tant de marchandises.</summary>
-        private Structure NearestWithRoom(int amount, int island, Vector2 from)
-        {
-            Structure nearest = null;
-            float best = float.MaxValue;
-            for (int i = 0; i < _warehouses.Count; i++)
-            {
-                if (_warehouses.StockAt(i).FreeSpace < amount)
-                    continue;
-                Structure warehouse = _warehouses.StructureAt(i);
-                float distance = Vector2.Distance(warehouse.Placement.Center, from);
-                if (distance < best && _reach.IsReachable(warehouse, island))
-                {
-                    best = distance;
-                    nearest = warehouse;
-                }
-            }
-            return nearest;
         }
     }
 }

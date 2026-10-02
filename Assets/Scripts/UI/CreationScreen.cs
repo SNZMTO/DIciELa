@@ -111,11 +111,11 @@ namespace Diciela.UI
             for (int i = 0; i < labels.Count; i++)
             {
                 int row = i;
-                var line = Styled(new VisualElement(), RowClass);
-                line.Add(Styled(new VisualElement { pickingMode = PickingMode.Ignore }, IconClass, RowIconPrefix + rowIds[i]));
-                line.Add(Styled(new Label(labels[i]), LabelClass));
+                var line = Styled.With(new VisualElement(), RowClass);
+                line.Add(Styled.With(new VisualElement { pickingMode = PickingMode.Ignore }, IconClass, RowIconPrefix + rowIds[i]));
+                line.Add(Styled.With(new Label(labels[i]), LabelClass));
                 _choices.Add(Selector(line, ChoiceClass, direction => Stepped?.Invoke(row, direction)));
-                var palette = Styled(new VisualElement(), PaletteClass);
+                var palette = Styled.With(new VisualElement(), PaletteClass);
                 _colors.Add(Selector(palette, ColorClass, direction => Recolored?.Invoke(row, direction)));
                 _palettes.Add(palette);
                 line.Add(palette);
@@ -141,8 +141,7 @@ namespace Diciela.UI
             IPanel panel = _document != null ? _document.rootVisualElement?.panel : null;
             if (panel == null || _panel == null || _panel.ClassListContains(StyleClasses.Hidden))
                 return false;
-            var fromTop = new Vector2(screenPoint.x, Screen.height - screenPoint.y);
-            VisualElement picked = panel.Pick(RuntimePanelUtils.ScreenToPanel(panel, fromTop));
+            VisualElement picked = panel.Pick(HudArea.ToPanel(panel, screenPoint));
             return picked != null && (picked == _panel || _panel.Contains(picked));
         }
 
@@ -155,7 +154,7 @@ namespace Diciela.UI
         private static Label Selector(VisualElement line, string style, Action<int> stepped)
         {
             line.Add(Arrow(PreviousClass, () => stepped(-1)));
-            var shown = Styled(new Label(), style);
+            var shown = Styled.With(new Label(), style);
             line.Add(shown);
             line.Add(Arrow(NextClass, () => stepped(1)));
             return shown;
@@ -163,16 +162,9 @@ namespace Diciela.UI
 
         private static Button Arrow(string direction, Action clicked)
         {
-            var arrow = Styled(new Button(clicked), ArrowClass);
-            arrow.Add(Styled(new VisualElement { pickingMode = PickingMode.Ignore }, direction));
+            var arrow = Styled.With(new Button(clicked), ArrowClass);
+            arrow.Add(Styled.With(new VisualElement { pickingMode = PickingMode.Ignore }, direction));
             return arrow;
-        }
-
-        private static T Styled<T>(T element, params string[] styles) where T : VisualElement
-        {
-            foreach (string style in styles)
-                element.AddToClassList(style);
-            return element;
         }
     }
 }

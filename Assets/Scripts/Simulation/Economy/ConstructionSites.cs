@@ -14,7 +14,6 @@ namespace Diciela.Simulation.Economy
     public sealed class ConstructionSites
     {
         private readonly List<ConstructionSite> _queue = new List<ConstructionSite>();
-        private readonly List<ConstructionSite> _opened = new List<ConstructionSite>();
         private readonly List<ConstructionSite> _supplied = new List<ConstructionSite>();
         private readonly List<Structure> _finished = new List<Structure>();
         private readonly Structures _structures;
@@ -30,9 +29,6 @@ namespace Diciela.Simulation.Economy
             _structures = structures;
             _ledger = ledger;
         }
-
-        /// <summary>Levé quand une construction posée en fantôme ouvre son chantier.</summary>
-        public event Action<ConstructionSite> SiteOpened;
 
         /// <summary>Levé quand des matériaux arrivent sur un chantier.</summary>
         public event Action<ConstructionSite> GoodsReceived;
@@ -65,9 +61,7 @@ namespace Diciela.Simulation.Economy
         {
             if (structure.State != StructureState.Planned || SiteOf(structure) != null)
                 return;
-            var site = new ConstructionSite(structure);
-            _queue.Add(site);
-            _opened.Add(site);
+            _queue.Add(new ConstructionSite(structure));
         }
 
         /// <summary>Des matériaux en route arrivent sur le chantier.</summary>
@@ -113,14 +107,11 @@ namespace Diciela.Simulation.Economy
         {
             try
             {
-                for (int i = 0; i < _opened.Count; i++)
-                    SiteOpened?.Invoke(_opened[i]);
                 for (int i = 0; i < _supplied.Count; i++)
                     GoodsReceived?.Invoke(_supplied[i]);
             }
             finally
             {
-                _opened.Clear();
                 _supplied.Clear();
             }
         }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Diciela.Data;
 using Diciela.Simulation.Core;
 using Diciela.Simulation.Land;
 using UnityEngine;
@@ -67,6 +68,46 @@ namespace Diciela.Simulation.Economy
                     return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// L'entrepôt le plus proche de ce point, à vol d'oiseau, joignable depuis cet îlot, qui a cette marchandise à
+        /// donner ; null s'il n'y en a pas.
+        /// </summary>
+        public Structure NearestWithGood(Warehouses warehouses, GoodDefinition good, int island, Vector2 from)
+        {
+            return Nearest(warehouses, good, 1, island, from);
+        }
+
+        /// <summary>
+        /// L'entrepôt le plus proche de ce point, à vol d'oiseau, joignable depuis cet îlot, qui a la place de tant de
+        /// marchandises ; null s'il n'y en a pas.
+        /// </summary>
+        public Structure NearestWithRoom(Warehouses warehouses, int amount, int island, Vector2 from)
+        {
+            return Nearest(warehouses, null, amount, island, from);
+        }
+
+        // Le seul parcours des entrepôts par la distance : avec tant de cette marchandise à donner, ou, sans marchandise,
+        // la place de tant.
+        private Structure Nearest(Warehouses warehouses, GoodDefinition good, int amount, int island, Vector2 from)
+        {
+            Structure nearest = null;
+            float best = float.MaxValue;
+            for (int i = 0; i < warehouses.Count; i++)
+            {
+                Inventory stock = warehouses.StockAt(i);
+                if ((good != null ? stock.AvailableOf(good) : stock.FreeSpace) < amount)
+                    continue;
+                Structure warehouse = warehouses.StructureAt(i);
+                float distance = Vector2.Distance(warehouse.Placement.Center, from);
+                if (distance < best && IsReachable(warehouse, island))
+                {
+                    best = distance;
+                    nearest = warehouse;
+                }
+            }
+            return nearest;
         }
 
         // Les îlots, sans doublon, que touchent les abords de cet occupant, rangés au bout de _around.

@@ -45,7 +45,8 @@ namespace Diciela.Simulation.Society
             Load = new Inventory(kind.CarryCapacity);
             float metersPerStep = services.Clock.MetersPerStep(kind.WalkMetersPerSecond);
             _walk = new Walk(services.Grid, services.Finder);
-            _wander = new Wander(kind, services.Grid, services.Islands, services.Clock, _walk, metersPerStep);
+            _wander = new Wander(kind, services.Grid, services.Islands, services.Clock, _walk, metersPerStep,
+                services.Settings.WanderDraws);
             _bedtime = new Bedtime(_walk, metersPerStep);
             _exit = new GroundExit(services.Grid, services.Islands, metersPerStep);
             _job = new Job(services, kind, Statistics, Load, _walk, _wander, metersPerStep);

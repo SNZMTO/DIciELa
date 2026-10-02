@@ -28,12 +28,11 @@ namespace Diciela.UI
         public static FeltButton Tab(BuildBarFamily family, Action clicked)
         {
             FeltButton tab = Button(TabClasses, Pastels.ClassOf(family.Pastel), clicked);
-            var icon = new VisualElement { pickingMode = PickingMode.Ignore };
-            icon.AddToClassList(TabIconClass);
+            var icon = Styled.With(new VisualElement { pickingMode = PickingMode.Ignore }, TabIconClass);
             if (family.Icon != null)
                 icon.style.backgroundImage = Background.FromVectorImage(family.Icon);
             tab.Add(icon);
-            tab.Add(Text(family.Name, TabNameClass));
+            tab.Add(Styled.Text(family.Name, TabNameClass));
             return tab;
         }
 
@@ -45,12 +44,11 @@ namespace Diciela.UI
             FeltButton button = Button(CardClasses, Pastels.ClassOf(card.Pastel) + PaleSuffix, clicked);
             if (card.Picture != null)
             {
-                var picture = new VisualElement { pickingMode = PickingMode.Ignore };
-                picture.AddToClassList(CardPictureClass);
+                var picture = Styled.With(new VisualElement { pickingMode = PickingMode.Ignore }, CardPictureClass);
                 picture.style.backgroundImage = new StyleBackground(card.Picture);
                 button.Add(picture);
             }
-            button.Add(Text(card.Name, CardNameClasses));
+            button.Add(Styled.Text(card.Name, CardNameClasses));
             if (card.Cost != null && card.Cost.Count > 0)
                 button.Add(Cost(card.Cost));
             return button;
@@ -59,19 +57,15 @@ namespace Diciela.UI
         /// <summary>Le coût d'une carte : chaque marchandise, son icône et combien.</summary>
         private static VisualElement Cost(IReadOnlyList<GoodAmount> cost)
         {
-            var row = new VisualElement { pickingMode = PickingMode.Ignore };
-            foreach (string style in CostClasses)
-                row.AddToClassList(style);
+            var row = Styled.With(new VisualElement { pickingMode = PickingMode.Ignore }, CostClasses);
             foreach (GoodAmount goods in cost)
             {
-                var line = new VisualElement { pickingMode = PickingMode.Ignore };
-                line.AddToClassList(CostLineClass);
-                var icon = new VisualElement { pickingMode = PickingMode.Ignore };
-                icon.AddToClassList(CostIconClass);
+                var line = Styled.With(new VisualElement { pickingMode = PickingMode.Ignore }, CostLineClass);
+                var icon = Styled.With(new VisualElement { pickingMode = PickingMode.Ignore }, CostIconClass);
                 if (goods.Good != null && goods.Good.Icon != null)
                     icon.style.backgroundImage = Background.FromVectorImage(goods.Good.Icon);
                 line.Add(icon);
-                line.Add(Text(goods.Amount.ToString(CultureInfo.InvariantCulture)));
+                line.Add(Styled.Text(goods.Amount.ToString(CultureInfo.InvariantCulture)));
                 row.Add(line);
             }
             return row;
@@ -79,20 +73,10 @@ namespace Diciela.UI
 
         private static FeltButton Button(string[] classes, string pastel, Action clicked)
         {
-            var button = new FeltButton();
-            foreach (string style in classes)
-                button.AddToClassList(style);
+            FeltButton button = Styled.With(new FeltButton(), classes);
             button.AddToClassList(pastel);
             button.Clicked += clicked;
             return button;
-        }
-
-        private static Label Text(string text, params string[] classes)
-        {
-            var label = new Label(text) { pickingMode = PickingMode.Ignore };
-            foreach (string style in classes)
-                label.AddToClassList(style);
-            return label;
         }
     }
 }
