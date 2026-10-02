@@ -57,9 +57,19 @@ namespace Diciela.Controls
             return Key(ToolAction.Of(choice).Name);
         }
 
+        /// <summary>
+        /// La touche d'une carte, liée à sa place sur la rangée des chiffres : elle se lit sur le nom de cette place
+        /// (« 1 »), pas sur le caractère qu'elle tape sur ce clavier (« & » en AZERTY).
+        /// </summary>
         public string KeyOfCard(int index)
         {
-            return index >= 0 && index < CardKeys ? Key(CardAction(index)) : "";
+            InputAction action = index >= 0 && index < CardKeys && _actions != null
+                ? _actions.FindAction(MapName + "/" + CardAction(index))
+                : null;
+            return action != null && action.bindings.Count > 0
+                ? InputControlPath.ToHumanReadableString(action.bindings[0].effectivePath,
+                    InputControlPath.HumanReadableStringOptions.OmitDevice)
+                : "";
         }
 
         private void OnEnable()

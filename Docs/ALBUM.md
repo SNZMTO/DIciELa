@@ -15,6 +15,33 @@
 
 ## Les captures
 
+### 02/10/2026 — étapes 23 à 33 : le campement, la couche, la revue, les touches des cartes
+
+La vue témoin ne change pas : la Chimère seule sur la carte nue, l'astuce qui dit d'installer le campement. Installé,
+le campement fait tout : son foyer, sa couche, son coffre, son sac, sa marmite, et son stock, la pile de bûches et le
+tas de pierres ; les fanions disent 30 Bois et 20 Pierre. Sa fiche dit son stock et son poste, avec ses deux boutons
+cousus : « Y mettre la Chimère » en menthe, « Aller dormir » en lavande. Le chantier monte comme avant, sa ligne passée
+par la valeur propre de chaque rendu (le SRP Batcher le regroupe) ; à la fin, le toit garde les franges de son chaume
+et le lierre ses tiges. L'aperçu de pose a la forme du fantôme du chantier, ici en rouge (devant une porte). Panneau
+ouvert, chaque carte porte sa touche, « 1 » même sur un clavier AZERTY. Envoyée dormir, la Chimère est couchée sur le
+tapis, la tête au coussin. Ce qu'une capture ne montre pas : la vague de la ligne, et la touche 1 qui prend la carte.
+
+![La vue témoin](Album/2026-10-02_etape-33_vue-temoin.jpg)
+
+![Le campement](Album/2026-10-02_etape-24_campement.jpg)
+
+![La fiche du campement](Album/2026-10-02_etape-26_fiche-du-campement.jpg)
+
+![Le chantier à mi-hauteur](Album/2026-10-02_etape-30_chantier-a-mi-hauteur.jpg)
+
+![Le toit et le lierre](Album/2026-10-02_etape-28_toit-et-lierre.jpg)
+
+![L'aperçu de pose](Album/2026-10-02_etape-28_apercu.jpg)
+
+![La touche des cartes](Album/2026-10-02_etape-33_touche-des-cartes.jpg)
+
+![La Chimère couchée](Album/2026-10-02_etape-23_chimere-couchee.jpg)
+
 ### 01/10/2026 — étape 20b : la roue des outils
 
 Le HUD s'aère : au repos, en bas, il ne reste que l'icône des outils, au coin droit, la touche de la roue (Tab) sur une

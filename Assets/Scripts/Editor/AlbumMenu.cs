@@ -13,8 +13,8 @@ using Object = UnityEngine.Object;
 namespace Diciela.EditorTools
 {
     /// <summary>
-    /// Les mises en scène de l'album (Docs/ALBUM.md), en Play. Poser trois cabanes : on se rapproche du centre de la vue,
-    /// puis on tient l'outil de pose à la place de la souris, par les mêmes appels que les gestes, le temps d'une
+    /// Les mises en scène de l'album (Docs/ALBUM.md), en Play. Poser trois cabanes : la caméra se met à sa distance de la
+    /// mise en scène, puis on tient l'outil de pose à la place de la souris, par les mêmes appels que les gestes, le temps d'une
     /// capture ; les cabanes vont autour du logis de la Chimère (ou d'elle), à gauche, derrière et à droite vu de la
     /// caméra, loin du campement ; les gestes de la caméra et de la pose restent coupés jusqu'à la fin du Play. Se rapprocher de la
     /// Chimère : des crans de molette vers là où on la voit, comme le ferait la souris posée sur elle. Tourner la Chimère
@@ -22,8 +22,9 @@ namespace Diciela.EditorTools
     /// </summary>
     public static class AlbumMenu
     {
-        // Les crans de molette vers le centre, puis les temps laissés à la caméra et au monde (par pose), en secondes.
-        private const float ZoomNotches = 2f;
+        // La distance de la caméra au centre de la vue, en mètres, quel que soit le zoom d'avant : le campement, les trois
+        // cabanes et l'aperçu dans le cadre ; puis les temps laissés à la caméra et au monde (par pose), en secondes.
+        private const float StageFramingMeters = 30f;
         private const double ZoomSeconds = 0.8;
         private const double StepsSeconds = 0.5;
 
@@ -34,12 +35,13 @@ namespace Diciela.EditorTools
         private const float ThreeQuarterDegrees = -35f;
 
         // Trois places pour trois cabanes, en mètres autour du logis de la Chimère, vues de la caméra (x à droite de
-        // l'écran, y vers le fond) : à gauche, derrière, à droite ; une place libre devant.
+        // l'écran, y vers le fond) : à gauche, derrière, à droite ; une place libre devant à gauche, assez loin de la
+        // caméra pour que l'aperçu ne la couvre pas.
         private static readonly Vector2[] Places =
         {
             new Vector2(-8f, 2f), new Vector2(0f, 9f), new Vector2(8f, 2f)
         };
-        private static readonly Vector2 FreePlace = new Vector2(0f, -10f);
+        private static readonly Vector2 FreePlace = new Vector2(-7f, -6f);
 
         [MenuItem("DICIELA/Album/Poser trois cabanes, viser une place libre")]
         public static void StageFreePlace()
@@ -117,7 +119,7 @@ namespace Diciela.EditorTools
             PlacementTool tool = controls.Tool;
             Camera camera = rig.Camera;
             var cabin = EditorAssets.Load<StructureDefinition>(ContentBuilder.CabinPath);
-            rig.Zoom(ZoomNotches, camera.ViewportToScreenPoint(new Vector2(0.5f, 0.5f)));
+            rig.ZoomTo(StageFramingMeters);
 
             // Une pose par temps laissé au monde : l'outil n'envoie pas d'ordre tant que le précédent n'est pas joué.
             After(ZoomSeconds, () => tool.Begin(cabin));
