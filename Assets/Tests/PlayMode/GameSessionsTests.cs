@@ -58,7 +58,7 @@ namespace Diciela.Tests.PlayMode
                         ScenePaths.GameTest, new LoadSceneParameters(LoadSceneMode.Additive));
 #endif
                     yield return TestOpening.Confirm(MaxFrames);
-                    var controls = FindIn<PlacementControls>(ScenePaths.GameTest);
+                    var controls = TestOpening.FindIn<PlacementControls>(ScenePaths.GameTest);
                     for (int frame = 0; frame < MaxFrames && controls.Tool == null; frame++)
                         yield return null;
                     Assert.IsNotNull(controls.Tool, "Le monde de la partie " + session + " est né.");
@@ -67,19 +67,19 @@ namespace Diciela.Tests.PlayMode
                     Assert.IsFalse(UnityEditor.AssetDatabase.Contains(terrain), "La partie joue sur une copie du sol.");
 #endif
 
-                    var bar = FindIn<BuildBar>(ScenePaths.GameTest);
+                    var bar = TestOpening.FindIn<BuildBar>(ScenePaths.GameTest);
                     bar.Open();
                     bar.TakeCard(0);
                     StructureDefinition held = controls.Tool.Current;
                     Assert.IsTrue(held != null && held.IsChimeraHome, "La première carte est le campement.");
-                    controls.Tool.AimAt(FindIn<CameraRig>(ScenePaths.GameTest).Camera.pixelRect.center);
+                    controls.Tool.AimAt(TestOpening.FindIn<CameraRig>(ScenePaths.GameTest).Camera.pixelRect.center);
                     Assert.IsTrue(controls.Tool.Confirm(), "Le centre de la carte de test est libre.");
                     for (int frame = 0; frame < MaxFrames && _placed < session; frame++)
                         yield return null;
 
                     Assert.AreEqual(session, _created, "Un seul monde par partie.");
                     Assert.AreEqual(session, _placed, "Une seule pose par partie, numérotée depuis 1.");
-                    Assert.AreEqual(1, FindIn<StructureViews>(ScenePaths.GameTest).transform.childCount);
+                    Assert.AreEqual(1, TestOpening.FindIn<StructureViews>(ScenePaths.GameTest).transform.childCount);
 #if UNITY_EDITOR
                     Assert.AreEqual(heightsBefore, Heights(asset), "L'asset du Terrain de la carte n'est jamais modifié.");
 #endif
@@ -111,19 +111,6 @@ namespace Diciela.Tests.PlayMode
         private static float[,] Heights(TerrainData terrain)
         {
             return terrain.GetHeights(0, 0, terrain.heightmapResolution, terrain.heightmapResolution);
-        }
-
-        /// <summary>Le premier composant de ce type dans une scène chargée, même sur un objet inactif.</summary>
-        private static T FindIn<T>(string scenePath) where T : Component
-        {
-            foreach (GameObject root in SceneManager.GetSceneByPath(scenePath).GetRootGameObjects())
-            {
-                var found = root.GetComponentInChildren<T>(true);
-                if (found != null)
-                    return found;
-            }
-            Assert.Fail("La scène « " + scenePath + " » n'a pas de " + typeof(T).Name + ".");
-            return null;
         }
     }
 }
