@@ -99,21 +99,21 @@ namespace Diciela.Simulation.Economy
         }
 
         /// <summary>Retient dans cet entrepôt la place de ce qu'un habitant y apportera.</summary>
-        internal void ReserveSpace(Structure warehouse, int amount)
+        internal void ReserveSpace(Structure warehouse, GoodDefinition good, int amount)
         {
-            Required(warehouse).ReserveSpace(amount);
+            Required(warehouse).ReserveSpace(good, amount);
         }
 
-        internal void ReleaseSpace(Structure warehouse, int amount)
+        internal void ReleaseSpace(Structure warehouse, GoodDefinition good, int amount)
         {
-            Required(warehouse).ReleaseSpace(amount);
+            Required(warehouse).ReleaseSpace(good, amount);
         }
 
         /// <summary>L'habitant range dans cet entrepôt ce qu'il porte, à la place qu'on lui avait retenue.</summary>
         internal void Store(Structure warehouse, Inventory load, GoodDefinition good, int amount)
         {
             Inventory stock = Required(warehouse);
-            stock.ReleaseSpace(amount);
+            stock.ReleaseSpace(good, amount);
             load.Remove(good, amount, false);
             stock.Add(good, amount);
             Changed(warehouse);
@@ -138,7 +138,7 @@ namespace Diciela.Simulation.Economy
         {
             Inventory stock = Required(warehouse);
             stock.Remove(good, amount, true);
-            stock.ReserveSpace(amount);
+            stock.ReserveSpace(good, amount);
             load.Add(good, amount);
             Changed(warehouse);
         }

@@ -29,11 +29,13 @@ namespace Diciela.Tests.EditMode
             }
         }
 
-        public static GoodDefinition Good(string id)
+        /// <summary>Une marchandise ; elle prend tant de places dans un stock (1 par défaut, comme le Bois).</summary>
+        public static GoodDefinition Good(string id, int space = 1)
         {
             GoodDefinition good = ScriptableObject.CreateInstance<GoodDefinition>();
             var serialized = new SerializedObject(good);
             Property(serialized, "_id").stringValue = id;
+            Property(serialized, "_space").intValue = space;
             serialized.ApplyModifiedPropertiesWithoutUndo();
             return good;
         }
@@ -114,6 +116,14 @@ namespace Diciela.Tests.EditMode
             var serialized = new SerializedObject(definition);
             Property(serialized, "_workHours").floatValue = workHours;
             FillAmounts(Property(serialized, "_cost"), cost);
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        /// <summary>Change le stock de départ de ce déroulé.</summary>
+        public static void StartingGoods(OpeningDefinition opening, params GoodAmount[] goods)
+        {
+            var serialized = new SerializedObject(opening);
+            FillAmounts(Property(serialized, "_startingGoods"), goods);
             serialized.ApplyModifiedPropertiesWithoutUndo();
         }
 
