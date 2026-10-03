@@ -47,8 +47,13 @@ namespace Diciela.Data
                  "qui dort quand le joueur le veut (GDD, section 6).")]
         [SerializeField] private bool _sleepsAtNight;
 
-        [Tooltip("Les marchandises qu'il porte à pied en un voyage (GDD, section 6).")]
+        [Tooltip("Les places de sa charge : ce qu'il porte à pied en un voyage, selon l'encombrement de chaque " +
+                 "marchandise (GDD, sections 6 et 8).")]
         [SerializeField, Min(1)] private int _carryCapacity = 5;
+
+        [Tooltip("L'échelle de son modèle à l'écran, pour la vue seule (décision 195) : les animaux (la Chimère, les " +
+                 "maîtres) à 0,83, pour passer les portes comme les humains ; les humains tels que le pack les fait, à 1.")]
+        [SerializeField, Range(0.5f, 1.5f)] private float _modelScale = 1f;
 
         public string Id => _id;
         public string NameKey => _nameKey;
@@ -62,5 +67,6 @@ namespace Diciela.Data
         public float StartingStatisticMax => _startingStatisticMax;
         public bool SleepsAtNight => _sleepsAtNight;
         public int CarryCapacity => _carryCapacity;
+        public float ModelScale => _modelScale;
     }
 }

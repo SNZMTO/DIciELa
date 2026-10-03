@@ -677,6 +677,10 @@
 - **Règle.** Tant que le modèle d'une construction n'est pas choisi, elle se voit en boîte à sa taille, sa porte
   marquée ; un sol qu'on traverse, comme la Place, en sol plat à sa taille.
 - **Règle.** La cabane a le modèle `Bld_Preset_Shed_02` du pack ; `House_03` est pressentie pour la maison.
+- **Règle.** Les maisons sont à la taille de leurs habitants : un animal (la Chimère, les maîtres) passe une porte comme
+  un humain.
+- **Défaut.** Les animaux sont à 83 % du pack : 1,86 m oreilles comprises, sous la porte de la cabane (1,97 m) ; les
+  humains tels que le pack les fait (1,80 à 1,90 m).
 - **Règle.** Une construction se pose la porte au niveau du sol : ses fondations s'enfoncent, et cachent le vide sous
   elle sur une pente. Son empreinte est la boîte de son modèle, accessoires compris : rien ne se chevauche à l'écran.
 - **Règle.** Le campement est fait avec les moyens du bord, d'objets du pack tels quels : un foyer au milieu (le cercle de
