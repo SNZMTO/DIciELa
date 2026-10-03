@@ -16,6 +16,12 @@ MonoBehaviour:
   _capacity: 20
   _speedFactor: 0.5
   _pullMeters: 2.2
-  _parkRadius: 0.55
-  _parkTurnDegrees: 30
-  _model: {fileID: 6459290952036450242, guid: d942605142dedcb4aa49dd46e9110f3c, type: 3}
+  _parkRadius: 0.47
+  _parkTurnDegrees: 10
+  _models:
+  - {fileID: 1326200321975397654, guid: 62148b1d19035244a99ce2c20c6a23ab, type: 3}
+  - {fileID: 3564645674989258486, guid: 97439727a5db29949b543767c603543e, type: 3}
+  - {fileID: 6459290952036450242, guid: d942605142dedcb4aa49dd46e9110f3c, type: 3}
+  - {fileID: 4898146812844862131, guid: 19711832f429c6d4cab7d032f86f3699, type: 3}
+  _settleMetersPerSecond: 1.5
+  _settleDegreesPerSecond: 120

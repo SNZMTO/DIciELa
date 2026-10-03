@@ -10,11 +10,14 @@ namespace Diciela.Simulation.Economy
     /// <summary>
     /// Les charrettes de l'étal et les places qui les appellent (GDD, section 11 ; décision 194) : chaque construction
     /// bâtie dont la fiche le dit garde ses charrettes (un entrepôt, le campement : une) ; la Place offre ses places de
-    /// charrette. Seule fonction qui change une charrette : l'appeler, l'atteler, la tirer, la garer, la renvoyer chez
-    /// elle. Les événements d'un pas attendent la fin de leur couche (ARCHITECTURE, section 5).
+    /// charrette. Chaque charrette prend au hasard l'un des modèles de sa fiche (décision 198). Seule fonction qui change
+    /// une charrette : l'appeler, l'atteler, la tirer, la garer, la renvoyer chez elle. Les événements d'un pas attendent la fin de leur couche (ARCHITECTURE, section 5).
     /// </summary>
     public sealed class Carts
     {
+        // Le second entier du tirage du modèle d'une charrette, le premier étant son numéro.
+        private const int ModelDraw = 198;
+
         private readonly CartDefinition _definition;
         private readonly List<Cart> _all = new List<Cart>();
         private readonly List<CartSpot> _spots = new List<CartSpot>();
@@ -68,7 +71,10 @@ namespace Diciela.Simulation.Economy
             _tracked.Add(structure);
             for (int i = 0; i < definition.Carts; i++)
             {
-                var cart = new Cart(_nextId++, structure, _definition);
+                int id = _nextId++;
+                int models = _definition.Models.Count;
+                int model = models > 0 ? new HashRandom(id, ModelDraw).Range(models) : 0;
+                var cart = new Cart(id, structure, _definition, model);
                 _all.Add(cart);
                 _added.Add(cart);
             }

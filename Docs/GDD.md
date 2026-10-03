@@ -473,11 +473,13 @@
   l'attelle, la tire au bout de son timon jusque devant sa place, au pas d'une charrette (voir 9), et l'y gare. Laissée
   en chemin, elle retourne aussitôt à son entrepôt, et sa place en appelle une autre ; la journée finie, il finit de
   la garer. On passe à travers une charrette.
+- **Règle.** Chaque charrette prend au hasard l'une des quatre charrettes du pack, toujours la même ; l'avant de la
+  charrette est à qui la tire. Garée, elle glisse et se tourne en douceur jusqu'à sa place ; elle se penche comme le sol
+  sous ses roues.
 - **Défaut.** Les places de charrette se tirent au hasard quand la Place est bâtie : sur un cercle autour de son
-  milieu, à 55 % de son demi-côté, à intervalles égaux depuis un angle tiré ; chaque charrette tournée vers le milieu
-  ou vers le bord, de travers de 30° au plus. Le milieu reste libre. Un timon de 2,2 m.
-- **À toi.** Laquelle des quatre charrettes du pack ? Ma reco : la charrette ouverte à l'auvent (`SM_Veh_Cart_03`),
-  qui a déjà l'air d'un étal.
+  milieu, à 47 % de son demi-côté, à intervalles égaux depuis un angle tiré ; chaque charrette garée le long du cercle,
+  dans un sens ou dans l'autre, de travers de 10° au plus : la plus grande charrette du pack (5,8 × 2,8 m) tient ainsi
+  sur la Place. Le milieu reste libre. Un timon de 2,2 m.
 - **Défaut.** Deux places de charrette, une pour les habitants et une pour le troc, et une de plus par niveau : cinq au
   plus. Une charrette tient 20 places (voir 8 : chaque marchandise en prend plus ou moins).
 - **Règle.** Le joueur garnit chaque charrette dans la fiche de la Place : une liste de marchandises, chacune une

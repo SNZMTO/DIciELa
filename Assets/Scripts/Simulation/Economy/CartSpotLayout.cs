@@ -7,10 +7,11 @@ using UnityEngine;
 namespace Diciela.Simulation.Economy
 {
     /// <summary>
-    /// Où se garent les charrettes sur une Place (GDD, section 11 ; décision 197) : sur un cercle autour de son milieu, à
-    /// la part de son demi-côté que dit la fiche de la charrette, à intervalles égaux depuis un angle tiré au hasard ;
-    /// chacune tournée vers le milieu ou vers le bord, au hasard, puis de travers d'un écart tiré. Le milieu reste libre.
-    /// Le tirage suit le numéro de la Place : la même Place, les mêmes places.
+    /// Où se garent les charrettes sur une Place (GDD, section 11 ; décisions 197 et 198) : sur un cercle autour de son
+    /// milieu, à la part de son demi-côté que dit la fiche de la charrette, à intervalles égaux depuis un angle tiré au
+    /// hasard ; chacune le long du cercle, dans un sens ou dans l'autre, au hasard, puis de travers d'un écart tiré : la
+    /// grande charrette du pack, longue de près de 6 m, tient ainsi sur la Place. Le milieu reste libre. Le tirage suit le
+    /// numéro de la Place : la même Place, les mêmes places.
     /// </summary>
     internal static class CartSpotLayout
     {
@@ -28,7 +29,7 @@ namespace Diciela.Simulation.Economy
             for (int i = 0; i < count; i++)
             {
                 float angle = start + i * 360f / count;
-                float turn = random.Range(2) == 0 ? 0f : 180f;
+                float turn = random.Range(2) == 0 ? 90f : -90f;
                 float slant = ((float)random.Unit() * 2f - 1f) * cart.ParkTurnDegrees;
                 spots.Add(new CartSpot(place, i, footprint.Center + Heading.Direction(angle) * radius,
                     Mathf.Repeat(angle + turn + slant, 360f)));

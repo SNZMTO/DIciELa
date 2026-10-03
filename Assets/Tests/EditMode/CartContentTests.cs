@@ -6,7 +6,7 @@ namespace Diciela.Tests.EditMode
 {
     /// <summary>
     /// Les charrettes de l'étal du projet (GDD, sections 7 et 11 ; décisions 194 et 197), lues sans rien écrire : la
-    /// charrette du catalogue, son modèle du pack ; chaque construction qui tient des marchandises garde la sienne, et la
+    /// charrette du catalogue, ses modèles du pack ; chaque construction qui tient des marchandises garde la sienne, et la
     /// Place a des places de charrette ; dans chaque poste, conduire vient juste après porter.
     /// </summary>
     public sealed class CartContentTests
@@ -16,7 +16,9 @@ namespace Diciela.Tests.EditMode
         {
             Catalog catalog = ProjectContent.LoadSingle<Catalog>();
             Assert.IsNotNull(catalog.Cart, "Le catalogue n'a pas de charrette.");
-            Assert.IsNotNull(catalog.Cart.Model, "La charrette n'a pas son modèle du pack : on ne la verrait pas.");
+            Assert.IsNotEmpty(catalog.Cart.Models, "La charrette n'a pas de modèle du pack : on ne la verrait pas.");
+            CollectionAssert.AllItemsAreNotNull(catalog.Cart.Models, "Un modèle de la charrette est vide.");
+            CollectionAssert.AllItemsAreUnique(catalog.Cart.Models, "Un modèle de la charrette y est deux fois.");
 
             var faults = new List<string>();
             int spots = 0;

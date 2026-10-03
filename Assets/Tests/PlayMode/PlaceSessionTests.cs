@@ -16,17 +16,27 @@ using UnityEngine.UIElements;
 namespace Diciela.Tests.PlayMode
 {
     /// <summary>
-    /// La Place de bout en bout, sur la scène de test et avec le vrai contenu (décisions 192 et 193), par les gestes du
-    /// joueur : le campement pris à sa carte et posé au milieu de l'écran, la Chimère mise à son poste (l'ordre du bouton
-    /// de sa fiche) ; l'onglet des Métiers, cliqué, offre la Place en première carte ; prise et posée à 10 m à l'est du
-    /// campement, elle se bâtit avec le stock de départ, qui paie son coût ; un trajet la traverse tout droit. Le monde
-    /// avance plus vite que le temps réel : le test joue ses pas lui-même, bornés.
+    /// La Place de bout en bout, sur la scène de test et avec le vrai contenu (décisions 192, 193, 197 et 198), par les
+    /// gestes du joueur : le campement pris à sa carte et posé au milieu de l'écran, la Chimère mise à son poste (l'ordre
+    /// du bouton de sa fiche) ; l'onglet des Métiers, cliqué, offre la Place en première carte ; prise et posée à 10 m à
+    /// l'est du campement, elle se bâtit avec le stock de départ, qui paie son coût ; un trajet la traverse tout droit ;
+    /// la Chimère y gare la charrette du campement, qu'on voit glisser jusqu'à sa place. Le monde avance plus vite que le
+    /// temps réel : le test joue ses pas lui-même, bornés.
     /// </summary>
     public sealed class PlaceSessionTests
     {
         private const int MaxFrames = 3600;
         private const int MaxSteps = 12000;
         private const int StepsPerFrame = 200;
+
+        // Ce que la mise en place laisse au test : le monde, le campement, la Place bâtie et son milieu.
+        private sealed class Session
+        {
+            public World World;
+            public Structure Camp;
+            public Structure Place;
+            public Vector2 At;
+        }
 
         [UnityTearDown]
         public IEnumerator LeaveTheTestScene()
@@ -36,6 +46,60 @@ namespace Diciela.Tests.PlayMode
 
         [UnityTest]
         public IEnumerator ThePlaceComesFromTheTradesTabAndIsBuiltFromTheStartingStock()
+        {
+            var session = new Session();
+            yield return BuildThePlace(session);
+            World world = session.World;
+            Inventory stock = world.Warehouses.StockOf(session.Camp);
+            foreach (GoodAmount goods in CatalogOf().Opening.StartingGoods)
+                Assert.AreEqual(goods.Amount - CostOf(session.Place.Definition, goods.Good), stock.CountOf(goods.Good),
+                    "Le stock de départ a payé la Place en " + goods.Good.Id + ".");
+
+            NavGrid grid = world.Grid;
+            Vector2Int from = grid.CellOf(session.At - new Vector2(7f, 0f));
+            Vector2Int to = grid.CellOf(session.At + new Vector2(7f, 0f));
+            var path = new Path();
+            Assert.IsTrue(world.PathFinder.TryFindPath(new[] { from }, new[] { to }, path), "On traverse la Place.");
+            Assert.AreEqual(to.x - from.x + 1, path.Cells.Count, "Le trajet la traverse tout droit.");
+            foreach (Vector2Int cell in path.Cells)
+                Assert.AreEqual(from.y, cell.y, "Le trajet reste sur sa rangée.");
+        }
+
+        [UnityTest]
+        public IEnumerator TheCampCartComesToThePlaceAndIsSeenParkedThere()
+        {
+            var session = new Session();
+            yield return BuildThePlace(session);
+            World world = session.World;
+            Cart cart = null;
+            foreach (Cart kept in world.Carts.All)
+            {
+                if (ReferenceEquals(kept.Home, session.Camp))
+                    cart = kept;
+            }
+            Assert.IsNotNull(cart, "Le campement garde sa charrette.");
+
+            for (int step = 0; step < MaxSteps && cart.State != CartState.Parked; step++)
+            {
+                world.Step();
+                if (step % StepsPerFrame == 0)
+                    yield return null;
+            }
+            Assert.AreEqual(CartState.Parked, cart.State, "La Chimère gare la charrette du campement sur la Place.");
+            Transform shown = TestOpening.FindIn<CartViews>(ScenePaths.GameTest).transform.Find("charrette n° " + cart.Id);
+            Assert.IsNotNull(shown, "La charrette a sa vue.");
+            Vector2 spot = cart.Spot.Position;
+            for (int frame = 0; frame < MaxFrames && Vector2.Distance(Flat(shown.position), spot) > 0.01f; frame++)
+                yield return null;
+            Assert.IsTrue(shown.gameObject.activeInHierarchy, "Garée, on la voit.");
+            Assert.Less(Vector2.Distance(Flat(shown.position), spot), 0.01f, "Elle a glissé jusqu'à sa place.");
+            Assert.AreEqual(cart.Definition.Models[cart.ModelIndex].name + "(Clone)", shown.GetChild(0).name,
+                "On voit le modèle du pack que la simulation lui a tiré.");
+        }
+
+        // Le campement posé au milieu de l'écran, la Chimère à son poste, la Place prise aux Métiers, posée à 10 m à l'est
+        // du campement, puis bâtie.
+        private static IEnumerator BuildThePlace(Session session)
         {
 #if UNITY_EDITOR
             yield return UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode(ScenePaths.GameTest,
@@ -71,8 +135,12 @@ namespace Diciela.Tests.PlayMode
             StructureDefinition place = controls.Tool.Current;
             Assert.IsTrue(place != null && place.Id == "place", "La première carte des Métiers est la Place.");
 
+            // La caméra, partie tout près de la Chimère, recule à sa distance de départ : on attend d'y voir la Place.
             Vector2 at = camp.Placement.Center + new Vector2(10f, 0f);
-            Vector3 aim = camera.WorldToScreenPoint(world.Map.Relief.GroundAt(at));
+            Vector3 ground = world.Map.Relief.GroundAt(at);
+            for (int frame = 0; frame < MaxFrames && !camera.pixelRect.Contains(camera.WorldToScreenPoint(ground)); frame++)
+                yield return null;
+            Vector3 aim = camera.WorldToScreenPoint(ground);
             Assert.IsTrue(camera.pixelRect.Contains(aim), "On voit l'endroit de la Place.");
             controls.Tool.AimAt(aim);
             Assert.AreEqual(PlacementResult.Ok, controls.Tool.Result, "La Place se pose à l'est du campement.");
@@ -89,19 +157,15 @@ namespace Diciela.Tests.PlayMode
                     yield return null;
             }
             Assert.AreEqual(StructureState.Built, placed.State, "La Chimère bâtit la Place.");
-            Inventory stock = world.Warehouses.StockOf(camp);
-            foreach (GoodAmount goods in CatalogOf().Opening.StartingGoods)
-                Assert.AreEqual(goods.Amount - CostOf(place, goods.Good), stock.CountOf(goods.Good),
-                    "Le stock de départ a payé la Place en " + goods.Good.Id + ".");
+            session.World = world;
+            session.Camp = camp;
+            session.Place = placed;
+            session.At = at;
+        }
 
-            NavGrid grid = world.Grid;
-            Vector2Int from = grid.CellOf(at - new Vector2(7f, 0f));
-            Vector2Int to = grid.CellOf(at + new Vector2(7f, 0f));
-            var path = new Path();
-            Assert.IsTrue(world.PathFinder.TryFindPath(new[] { from }, new[] { to }, path), "On traverse la Place.");
-            Assert.AreEqual(to.x - from.x + 1, path.Cells.Count, "Le trajet la traverse tout droit.");
-            foreach (Vector2Int cell in path.Cells)
-                Assert.AreEqual(from.y, cell.y, "Le trajet reste sur sa rangée.");
+        private static Vector2 Flat(Vector3 point)
+        {
+            return new Vector2(point.x, point.z);
         }
 
         private static Structure PlacedOf(World world, StructureDefinition definition)
