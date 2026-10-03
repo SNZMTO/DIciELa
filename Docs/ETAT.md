@@ -15,8 +15,8 @@ tâche « garnir », le surplus rapporté (sans fiche encore : `DICIELA/Album/Ga
 **À vérifier par toi, à la souris** : la Chimère réveillée en chemin flâne devant sa porte ; un Tab bref ne choisit
 rien ; un clic à côté de la roue la ferme ; la Place devant une porte, sur une pente.
 **Prochaine étape** : un Play avec toi (Unity au premier plan) pour voir 41 à 50, et l'album ; puis la fiche de la Place
-(les consignes, ta maquette), les niveaux de la Place (découper avant `PlacementTool`, `Villager`, `Villagers`,
-`WorkSlots`, tous près de 200 lignes).
+(les consignes, ta maquette), les niveaux de la Place (découper avant `PlacementTool`, `StallOffers`, `Villager`,
+`Villagers`, `WorkSlots`, tous près de 200 lignes).
 **À toi** : la fiche de la Place, où l'on règle les consignes (ma reco : sous chaque place de charrette, une ligne par
 marchandise, son icône, sa quantité ou « garder au moins », des boutons + et −, « Ajouter une marchandise », la
 jauge des places) ; « Run In Background » (le Play avancerait sans le focus ; les captures non) ; peindre la carte,
