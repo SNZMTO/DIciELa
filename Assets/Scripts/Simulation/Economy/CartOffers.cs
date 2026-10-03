@@ -11,7 +11,8 @@ namespace Diciela.Simulation.Economy
     /// de charrette libre, d'une Place que le charretier peut rejoindre, appelle la charrette rangée de l'entrepôt le plus
     /// proche de cette Place qu'il peut rejoindre. Prendre est un appel unique qui lie l'une à l'autre : deux charretiers
     /// ne prennent jamais la même. Il va la prendre à son entrepôt, l'attelle, la tire jusqu'à sa place et l'y gare.
-    /// Rendue en chemin, elle retourne à son entrepôt, comme une charge à la place qu'elle gardait (décision 178).
+    /// Rendue en chemin, elle retourne à son entrepôt, comme une charge à la place qu'elle gardait (décision 178). Une
+    /// Place qu'on déplace n'appelle pas, la charrette d'un entrepôt qu'on déplace ne répond pas (décision 200).
     /// </summary>
     public sealed class CartOffers
     {
@@ -44,7 +45,8 @@ namespace Diciela.Simulation.Economy
             for (int i = 0; i < spots.Count; i++)
             {
                 CartSpot spot = spots[i];
-                if (_carts.CartAt(spot) != null || !_reach.IsReachable(spot.Place, island))
+                if (_carts.CartAt(spot) != null || spot.Place.State != StructureState.Built ||
+                    !_reach.IsReachable(spot.Place, island))
                     continue;
                 Cart cart = NearestAtHome(spot.Place.Placement.Center, island);
                 if (cart == null)
@@ -110,7 +112,7 @@ namespace Diciela.Simulation.Economy
             for (int i = 0; i < all.Count; i++)
             {
                 Cart cart = all[i];
-                if (cart.State != CartState.AtHome || cart.Spot != null)
+                if (cart.State != CartState.AtHome || cart.Spot != null || cart.Home.State != StructureState.Built)
                     continue;
                 float distance = Vector2.Distance(cart.Home.Placement.Center, from);
                 if (distance < best && _reach.IsReachable(cart.Home, island))

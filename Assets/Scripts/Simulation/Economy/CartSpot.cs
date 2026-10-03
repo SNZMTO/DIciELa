@@ -5,8 +5,8 @@ namespace Diciela.Simulation.Economy
 {
     /// <summary>
     /// Une place de charrette de la Place (GDD, section 11) : là où se gare la charrette qu'elle appelle, et son cap, tirés
-    /// au hasard quand la Place est bâtie (CartSpotLayout). Quelle charrette elle a appelée, la charrette le dit
-    /// (<see cref="Cart.Spot"/>).
+    /// au hasard quand la Place est bâtie (CartSpotLayout), et qui la suivent quand on la déplace. Quelle charrette elle a
+    /// appelée, la charrette le dit (<see cref="Cart.Spot"/>).
     /// </summary>
     public sealed class CartSpot
     {
@@ -25,9 +25,16 @@ namespace Diciela.Simulation.Economy
         public int Index { get; }
 
         /// <summary>Le milieu de la charrette garée, au sol, en mètres.</summary>
-        public Vector2 Position { get; }
+        public Vector2 Position { get; private set; }
 
         /// <summary>Vers où pointe l'avant de la charrette garée, son timon, en degrés depuis le nord vers l'est.</summary>
-        public float HeadingDegrees { get; }
+        public float HeadingDegrees { get; private set; }
+
+        /// <summary>Sa Place a changé de place : elle suit.</summary>
+        internal void MoveTo(Vector2 position, float headingDegrees)
+        {
+            Position = position;
+            HeadingDegrees = headingDegrees;
+        }
     }
 }

@@ -29,6 +29,9 @@ namespace Diciela.Simulation.Land
         NatureInTheWay = 7,
 
         /// <summary>La ville ne sait pas encore bâtir cette construction : il lui en faut l'idée (GDD, section 13).</summary>
-        Unknown = 8
+        Unknown = 8,
+
+        /// <summary>Elle se déplace déjà : on la déplace de nouveau une fois remontée (décision 200).</summary>
+        Moving = 9
     }
 }

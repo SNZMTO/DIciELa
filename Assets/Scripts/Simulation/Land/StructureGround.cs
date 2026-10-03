@@ -29,6 +29,16 @@ namespace Diciela.Simulation.Land
                 _doorways.Add(_rules.Doorway(structure.Definition, placement));
         }
 
+        /// <summary>
+        /// La construction reprend les mailles de cette place, dont elle tient déjà le devant de porte : après avoir rendu
+        /// une autre place qui en partageait.
+        /// </summary>
+        public void Cover(Structure structure, Placement placement)
+        {
+            _grid.SetOccupant(PlacementRules.Footprint(structure.Definition, placement), structure.Id,
+                structure.Definition.IsWalkable);
+        }
+
         /// <summary>La construction rend son sol à cette place : les mailles qu'elle y tient, et le devant de sa porte.</summary>
         public void Release(Structure structure, Placement placement)
         {

@@ -8,14 +8,14 @@ focus ; je ne le prends jamais : laisse-le au premier plan, ou dis-moi quand tu 
 (192, 193 ; album : `DICIELA/Album/Poser la Place près du campement`) ; 44, l'encombrement (194) ; 45, les animaux à
 83 % (195) ; 46, la Place ronde (196) ; 47, les charrettes qui accourent (197, 198) : chaque entrepôt, le campement
 compris, a sa charrette, l'une des quatre du pack au hasard ; un charretier la tire jusqu'à la Place bâtie et la gare le
-long d'un cercle, où elle glisse en douceur ; 48a, déplacer (199) : l'ordre « déplacer », vérifié par les règles de pose
-sans compter la construction elle-même ; un chantier saute aussitôt, qui le sert le suit (un bâtiment bâti saute encore
-d'un coup : son petit chantier vient en 48b). **EditMode 233/233, PlayMode 194/194.**
+long d'un cercle, où elle glisse en douceur ; 48, déplacer (199, 200), dans la simulation : l'ordre « déplacer », vérifié
+par les règles de pose sans compter la construction elle-même ; un chantier saute aussitôt ; un bâtiment retient sa
+place, un ouvrier le défait, il saute, on le remonte ; qui le sert le suit. **EditMode 238/238, PlayMode 194/194.**
 
 **À vérifier par toi, à la souris** : la Chimère réveillée en chemin flâne devant sa porte ; un Tab bref ne choisit
 rien ; un clic à côté de la roue la ferme ; la Place devant une porte, sur une pente.
-**Prochaine étape** : 48b, le petit chantier d'un bâtiment déplacé (le défaire, le remonter) ; 49, l'outil Déplacer
-dans la roue (M) ; puis remplir les charrettes, les niveaux de la Place (découper avant `GameStage`, `Villager`, `Villagers`,
+**Prochaine étape** : 49, l'outil Déplacer dans la roue (M) et sa vue (le fantôme qui suit le pointeur, la place
+retenue, le bâtiment qu'on défait et remonte) ; puis remplir les charrettes, les niveaux de la Place (découper avant `GameStage`, `Villager`, `Villagers`,
 `WorkSlots`, tous près de 200 lignes).
 **À toi** : peindre la carte, ranger tes modèles (`Assets/Data/Nature`) ; retoucher la composition de la
 Place (`Assets/Art/Compositions/Place.prefab`, puis « Préparer les modèles ») ; les modèles de la loge et de l'entrepôt
