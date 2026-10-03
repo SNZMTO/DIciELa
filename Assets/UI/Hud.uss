@@ -468,7 +468,7 @@
     background-image: url("Icones/defricher.asset");
 }
 
-/* Quatre flèches qui partent du milieu : déplacer. */
+/* Quatre flèches qui partent du milieu : l'outil Déplacer, à droite de la roue. */
 .fleches {
     background-image: url("Icones/deplacer.asset");
 }
