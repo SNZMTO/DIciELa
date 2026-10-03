@@ -67,6 +67,17 @@ namespace Diciela.Simulation.Economy
         }
 
         /// <summary>
+        /// Ce que la ville peut donner de cette marchandise : ce que tiennent ses entrepôts, moins ce qui est déjà promis.
+        /// </summary>
+        public int CityAvailableOf(GoodDefinition good)
+        {
+            int sum = 0;
+            for (int i = 0; i < _stocks.Count; i++)
+                sum += _stocks[i].AvailableOf(good);
+            return sum;
+        }
+
+        /// <summary>
         /// Une construction est mise en service : si elle est bâtie et que sa fiche dit qu'elle tient des marchandises,
         /// elle sert d'entrepôt. Seule la mise en service du monde l'appelle (Commissioning).
         /// </summary>

@@ -1,6 +1,6 @@
 # DICIELA — état actuel
 
-**Branches** : `main` : l'étape 36. De `etape-37-travail` à `etape-49-outil-deplacer`, chacune partie de la précédente,
+**Branches** : `main` : l'étape 36. De `etape-37-travail` à `etape-50-garnir`, chacune partie de la précédente,
 pas encore vues rendues : elles se fusionnent dans l'ordre après un Play et l'album (un Play n'avance que si Unity a le
 focus ; je ne le prends jamais : laisse-le au premier plan, ou dis-moi quand tu cliques dedans).
 
@@ -11,7 +11,9 @@ compris, a sa charrette, l'une des quatre du pack au hasard ; un charretier la t
 long d'un cercle, où elle glisse en douceur ; 48, déplacer (199, 200), dans la simulation : l'ordre « déplacer », vérifié
 par les règles de pose sans compter la construction elle-même ; un chantier saute aussitôt ; un bâtiment retient sa
 place, un ouvrier le défait, il saute, on le remonte ; qui le sert le suit ; 49, l'outil Déplacer (201) : à droite dans la
-roue (M), on touche une construction, son fantôme suit le pointeur, un clic l'envoie. **EditMode 238/238, PlayMode 200/200.**
+roue (M), on touche une construction, son fantôme suit le pointeur, un clic l'envoie ; 50, garnir (202) : la consigne de
+chaque place de charrette, la tâche « garnir », le surplus rapporté (sans fiche encore : menu d'album). **EditMode
+247/247, PlayMode 200/200.**
 
 **À vérifier par toi, à la souris** : la Chimère réveillée en chemin flâne devant sa porte ; un Tab bref ne choisit
 rien ; un clic à côté de la roue la ferme ; la Place devant une porte, sur une pente.

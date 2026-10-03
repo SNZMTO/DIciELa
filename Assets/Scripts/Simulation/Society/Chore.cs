@@ -8,13 +8,13 @@ using UnityEngine;
 namespace Diciela.Simulation.Society
 {
     /// <summary>
-    /// La tâche en cours d'un habitant (ARCHITECTURE, section 7) : marcher jusqu'où mène son geste, y faire ce que le geste
-    /// dit, travailler sur place, et ainsi de suite. Les gestes : porter, bâtir, défricher, conduire, un par valeur de
-    /// TaskWork ; un geste peut ralentir la marche (une charrette tirée), et suit chacun de ses pas. Si ce qu'il sert
-    /// change de place, il y retourne, puis s'y remet (décision 199).
-    /// Quand le travail s'arrête, il finit sa marche et dépose ce qu'il porte, mais n'entame pas l'étape suivante ; le
-    /// travail sur place s'arrête tout de suite (décisions 140 et 149). Échec : le but n'est plus joignable ; ce qu'il
-    /// porte retourne à la ville et ses réservations sont rendues. La marche est celle de l'habitant.
+    /// La tâche en cours d'un habitant (ARCHITECTURE, section 7) : marcher jusqu'où mène son geste, y faire ce que le
+    /// geste dit, travailler sur place, et ainsi de suite. Les gestes : porter, bâtir, défricher, conduire, garnir, un
+    /// par valeur de TaskWork ; un geste peut ralentir la marche (une charrette tirée), et suit chacun de ses pas. Si
+    /// ce qu'il sert change de place, il y retourne, puis s'y remet (décision 199). Quand le travail s'arrête, il finit
+    /// sa marche et dépose ce qu'il porte, mais n'entame pas l'étape suivante ; le travail sur place s'arrête tout de
+    /// suite (décisions 140 et 149). Échec : le but n'est plus joignable ; ce qu'il porte retourne à la ville et ses
+    /// réservations sont rendues. La marche est celle de l'habitant.
     /// </summary>
     internal sealed class Chore
     {
@@ -40,13 +40,14 @@ namespace Diciela.Simulation.Society
             _statistics = statistics;
             _walk = walk;
             _metersPerStep = metersPerStep;
-            // Un geste par valeur de TaskWork, à sa place : Carry, Build, Clear, Drive.
+            // Un geste par valeur de TaskWork, à sa place : Carry, Build, Clear, Drive, Stock.
             _gestures = new Gesture[]
             {
                 new CarryGesture(services.Offers, load),
                 new BuildGesture(services.Offers),
                 new ClearGesture(services.Clearings, load),
-                new DriveGesture(services.Carts)
+                new DriveGesture(services.Carts),
+                new StockGesture(services.Stalls, load)
             };
         }
 

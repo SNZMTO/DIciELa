@@ -21,6 +21,7 @@ namespace Diciela.Simulation.Economy
             ModelIndex = modelIndex;
             Position = home.Placement.Center;
             PreviousPosition = Position;
+            Stock = new Inventory(definition.Capacity);
         }
 
         public int Id { get; }
@@ -34,6 +35,12 @@ namespace Diciela.Simulation.Economy
         public int ModelIndex { get; }
 
         public CartState State { get; private set; }
+
+        /// <summary>
+        /// Ce qu'elle porte pour l'étal, en places (GDD, sections 8 et 11) : hors du stock de la ville. Seuls les étals le
+        /// changent (StallOffers).
+        /// </summary>
+        public Inventory Stock { get; }
 
         /// <summary>La place de charrette qui l'a appelée ; null tant qu'aucune ne l'appelle.</summary>
         public CartSpot Spot { get; private set; }
