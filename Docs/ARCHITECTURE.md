@@ -335,6 +335,7 @@ code.
 | bordure de la Place | `PlaceBorder` | poser par le milieu de sa boîte | `Piece.Centered` | encombrement ; places libres ; ce qui tient encore | `GoodDefinition.Space` ; `FreeSpace` ; `RoomFor` |
 | charrettes de l'étal ; à conduire ; vues | `Carts` ; `CartOffers` ; `CartViews` | conduire ; atteler ; tirer ; garer | `Drive` ; `Hitch` ; `Pull` ; `Park` | cap (au sol) ; où se garent les charrettes | `Heading` ; `CartSpotLayout` |
 | déplacer (une construction) ; son sol | `MoveStructureCommand`, `StructureMoves` ; `StructureGround` | déplacée ; déplacement refusé | `StructureMoved` ; `MoveRefused` |
+| outil Déplacer ; outil qui vise | `MoveTool` ; `IAimingTool` | lâcher (un outil) | `PutDown` | défaite ; en déplacement | `StructureTakenDown` ; `StructureState.Moving` |
 
 ## 10. La carte, les scènes et la sauvegarde
 
@@ -378,7 +379,9 @@ code.
   puis suit les événements, par la même routine de pose (SAVOIR 2.9). Chaque abonnement est défait dans `OnDestroy`.
   Ce qui bouge se lit à chaque image : le démarrage donne aux habitants et aux charrettes vus la fraction du pas en
   cours, et chacun se montre entre sa position du pas d'avant et celle du dernier (SAVOIR 2.2) ; une charrette garée
-  glisse en douceur jusqu'à sa place. Les vues du monde (constructions, habitants, nature, charrettes) se montrent,
+  glisse en douceur jusqu'à sa place. Chaque construction a sa vue (`StructureView`), refaite à chaque moment de sa vie :
+  posée, bâtie, déplacée (sa nouvelle place en fantôme), défaite, sautée, remontée. Les vues du monde (constructions,
+  habitants, nature, charrettes) se montrent,
   se suivent et se cachent ensemble (`WorldViews`) ; celle des charrettes (`CartViews`) naît au démarrage, hors de la
   scène. Endormie, la Chimère reste pour la
   simulation devant la porte de son logis ; la vue la montre couchée sur sa couche, si la fiche du logis en a une (le
@@ -393,8 +396,11 @@ code.
   ce qui l'a reçu disparaît aussitôt (la roue qu'on congédie), et à l'outil qui était en main à l'enfoncement : l'outil
   pris pendant l'appui n'en fait rien ; clic ou glisser se décide au relâchement (SAVOIR 2.8). Sans outil en main, un clic gauche touche la construction dont le
   modèle est sous le pointeur : la vue dit laquelle (SAVOIR 2.7), l'outil « choisir » en fait un ordre. Un outil en
-  main (`IHeldTool` : poser, retirer) prend le clic gauche ; un seul à la fois : la main (`Hand`) lâche les autres
-  quand on en prend un, par n'importe quel chemin, et le geste « toucher » y lit si un outil est en main. La roue des
+  main (`IHeldTool` : poser, retirer, déplacer) prend le clic gauche ; un seul à la fois : la main (`Hand`) lâche tout à
+  fait les autres (`PutDown`) quand on en prend un, par n'importe quel chemin, et le geste « toucher » y lit si un outil
+  est en main. Les outils qui visent le sol et se posent d'un clic (`IAimingTool` : poser, déplacer) sont pilotés par les
+  mêmes gestes (`PlacementControls`) ; l'outil Déplacer (`MoveTool`) touche une construction par la même visée que
+  « choisir », puis son fantôme suit le pointeur dans l'aperçu de la pose. La roue des
   outils les prend : Retirer en main, ou Construire, qui ouvre le panneau Construire, dont une carte met la
   construction en main ; ses gestes (`ToolControls` : la touche de la roue tenue, celle de chaque outil) ne la
   connaissent que par `IToolWheel`, et elle lit leurs touches par `IToolKeys`. Ses outils sont décrits par deux

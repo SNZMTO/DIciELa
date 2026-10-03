@@ -14,7 +14,7 @@ namespace Diciela.Controls
     /// ordre envoyé attend d'être joué avant le suivant ; posé ou refusé, l'aperçu se refait. Les gestes et les tests
     /// l'appellent par les mêmes méthodes. Celui qui le crée le libère (Dispose).
     /// </summary>
-    public sealed class PlacementTool : IDisposable, IEscapable, IHeldTool
+    public sealed class PlacementTool : IDisposable, IEscapable, IHeldTool, IAimingTool
     {
         private readonly World _world;
         private readonly Camera _camera;
@@ -138,6 +138,12 @@ namespace Diciela.Controls
                 return false;
             Cancel();
             return true;
+        }
+
+        /// <summary>Le lâche tout à fait : comme le clic droit.</summary>
+        public void PutDown()
+        {
+            Cancel();
         }
 
         /// <summary>Pose l'outil de côté : plus d'aperçu, plus de construction en main.</summary>

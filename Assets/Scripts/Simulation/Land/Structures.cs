@@ -46,6 +46,9 @@ namespace Diciela.Simulation.Land
         /// <summary>Levé quand on ordonne de déplacer un bâtiment : sa nouvelle place est retenue (MovingTo).</summary>
         public event Action<Structure> MoveStarted;
 
+        /// <summary>Levé quand un ouvrier commence à défaire un bâtiment qu'on déplace : il ne sert plus.</summary>
+        public event Action<Structure> StructureTakenDown;
+
         /// <summary>Levé quand un déplacement est refusé, avec la construction, la place demandée et la raison.</summary>
         public event Action<Structure, Placement, PlacementResult> MoveRefused;
 
@@ -170,6 +173,9 @@ namespace Diciela.Simulation.Land
                     break;
                 case StructureHappening.Kinds.MoveStarted:
                     MoveStarted?.Invoke(happening.Structure);
+                    break;
+                case StructureHappening.Kinds.TakenDown:
+                    StructureTakenDown?.Invoke(happening.Structure);
                     break;
                 case StructureHappening.Kinds.MoveRefused:
                     MoveRefused?.Invoke(happening.Structure, happening.Placement, happening.Result);

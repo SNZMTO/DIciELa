@@ -47,6 +47,12 @@ namespace Diciela.Controls
             HeldChanged?.Invoke();
         }
 
+        /// <summary>Le lâche tout à fait.</summary>
+        public void PutDown()
+        {
+            Escape();
+        }
+
         /// <summary>Le lâche ; faux s'il n'était pas en main.</summary>
         public bool Escape()
         {
