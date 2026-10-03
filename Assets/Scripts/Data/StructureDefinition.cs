@@ -78,6 +78,13 @@ namespace Diciela.Data
         [Tooltip("Les lits qu'elle offre aux habitants, une fois bâtie (GDD, section 4) ; 0 : elle ne loge personne.")]
         [SerializeField, Min(0)] private int _beds;
 
+        [Tooltip("Les charrettes de l'étal qu'elle garde, bâtie (un entrepôt, le campement : une ; GDD, section 11).")]
+        [SerializeField, Min(0)] private int _carts;
+
+        [Tooltip("Les places de charrette qu'elle offre, bâtie : les charrettes de l'étal s'y garent (la Place ; GDD, " +
+                 "section 11).")]
+        [SerializeField, Min(0)] private int _cartSpots;
+
         [Tooltip("Le modèle du pack, tel quel : la source que le menu DICIELA/Contenu/Préparer les modèles mesure et " +
                  "fusionne. Vide tant que le modèle n'est pas choisi : le menu fait alors une boîte à la taille de la fiche.")]
         [SerializeField] private GameObject _sourceModel;
@@ -109,6 +116,8 @@ namespace Diciela.Data
         public IReadOnlyList<WorkSlotDefinition> WorkSlots => _workSlots;
         public int StorageCapacity => _storageCapacity;
         public int Beds => _beds;
+        public int Carts => _carts;
+        public int CartSpots => _cartSpots;
         public GameObject SourceModel => _sourceModel;
         public GameObject Model => _model;
         public Texture2D Picture => _picture;

@@ -94,7 +94,9 @@ la société, qui voit tout ce qui est en dessous.
   sa cause ; une seule fonction « rend à la ville », toujours à une place retenue (une charge en route garde la sienne
   à son départ, décision 178). Les réservations. Les ateliers (recette, avancement). La culture
   des plantations (semis, pousse, graines gardées, récolte). Les chantiers (rang dans la file, livraisons, avancement).
-  La production comptée par marchandise. La valeur des marchandises. La publication des tâches à prendre.
+  La production comptée par marchandise. La valeur des marchandises. La publication des tâches à prendre (porter,
+  bâtir, retirer un arbre, conduire une charrette). Les charrettes de l'étal et les places de charrette de la Place
+  (`Carts`, la seule fonction qui change une charrette ; `CartOffers`, les charrettes à conduire).
 - **La société.** Les habitants (ordinaires, maîtres, la Chimère : trois sortes décrites par leurs fiches, jamais un
   cas particulier par nom) et leur journée (travail, soirée, nuit). Leur marche, le long de la ligne tendue d'un
   trajet, et la sortie d'une construction qu'on ne traverse pas, posée sur eux ; la flânerie de qui n'a pas de poste ;
@@ -114,7 +116,8 @@ la société, qui voit tout ce qui est en dessous.
   pas, chacune avec son idée ; leur installation à leur lieu de travail, quand il est mis en service) ; les opérations qui touchent plusieurs couches, faites par des appels vers le bas dans un ordre
   écrit (poser : le terrain, puis l'économie ouvre un chantier, ou la construction, dressée dès la pose, est mise en
   service ; mettre en service, une seule opération, à la pose ou à la fin du pas où un chantier finit : l'économie
-  ouvre un stock, la société des postes, puis le déroulé du départ la regarde, décisions 179 et 191 : le stock de
+  ouvre un stock, la société des postes, l'économie des charrettes ou des places de charrette (décision 197), puis le
+  déroulé du départ la regarde, décisions 179 et 191 : le stock de
   départ pour le premier logis de la Chimère, et le premier habitant dont c'est le lieu de travail y prend un poste ;
   plus tard, la maison de la Chimère qui remplace le campement) ; la capture et la restauration. Le monde reçoit les réglages, la carte et le
   catalogue, d'où il tire le déroulé du départ et les statistiques.
@@ -130,6 +133,7 @@ sauvegardé.
 | la carte peinte | reçue au lancement ; seule son empreinte est sauvegardée | le relief creusé, l'eau |
 | arbres et rochers : marqués (dans l'ordre des marques), retirés ; champ sauvage : désigné, récolté, minuterie | le terrain | le maillage |
 | le travail déjà fait sur un arbre ou un rocher marqué ; qui l'a pris | l'économie | — |
+| une charrette de l'étal : son entrepôt, la place qui l'appelle, garée ou non ; les places de charrette d'une Place, tirées à sa mise en service | l'économie (`Carts`) | — |
 | tracés et plantations : forme, sorte, état (en chantier, bâti) | le terrain | les coûts du maillage ; les champs, leur surface, leurs postes |
 | une construction : sorte, place, angle, niveau, état (fantôme, bâtie, en déplacement avec sa place visée, rangée) | le terrain | le maillage et ses îlots ; les devants de porte ; la réserve ; le logis de la Chimère (la construction bâtie que sa fiche dit être son logis) |
 | un chantier : rang dans la file, livraisons déposées, avancement | l'économie | — |
@@ -213,8 +217,9 @@ sauvegardé.
   (`Job` : le poste tenu, le choix de la tâche dans l'ordre du poste, la flânerie près du poste) et sa tâche en cours
   (`Chore` : marcher jusqu'au but de son geste, y faire ce qu'il dit, travailler sur place ; chaque marche a son issue
   d'échec). La sorte de tâche dit, par une valeur fixe de sa fiche, quel geste le code joue (`TaskWork`) ; chaque geste
-  (`Gesture` : porter, bâtir, défricher) est le seul à parler à l'économie. Ce qu'une tâche réserve vit dans
-  l'économie (`Delivery`, `BuildShift`, `Clearing`), jusqu'à la place retenue dans un entrepôt pour ce qu'on y
+  (`Gesture` : porter, bâtir, défricher, conduire) est le seul à parler à l'économie ; il peut ralentir la marche (une
+  charrette tirée) et suit chacun de ses pas. Ce qu'une tâche réserve vit dans l'économie (`Delivery`, `BuildShift`,
+  `Clearing`, `Drive`), jusqu'à la place retenue dans un entrepôt pour ce qu'on y
   apportera.
 - La cadence d'un lieu est la somme de ce qu'apportent les présents. Qui est présent se déduit des tâches en cours ; le
   plafond d'ouvriers d'un chantier et l'effet d'un maître lisent la même donnée.
@@ -323,6 +328,7 @@ code.
 | fermer un poste | `WorkSlots.Close` | s'installer à son lieu de travail | `Opening.Settle` | un sol qu'on traverse (la Place) | `IsWalkable` |
 | devants de porte | `Doorways` | épouser le relief (un sol) | `FloorDrape` | dallage (d'une composition) | `FloorMesh`, `PackComposition.Floor` |
 | bordure de la Place | `PlaceBorder` | poser par le milieu de sa boîte | `Piece.Centered` | encombrement ; places libres ; ce qui tient encore | `GoodDefinition.Space` ; `FreeSpace` ; `RoomFor` |
+| charrettes de l'étal ; à conduire | `Carts` ; `CartOffers` | conduire ; atteler ; tirer ; garer | `Drive` ; `Hitch` ; `Pull` ; `Park` | cap (au sol) ; où se garent les charrettes | `Heading` ; `CartSpotLayout` |
 
 ## 10. La carte, les scènes et la sauvegarde
 

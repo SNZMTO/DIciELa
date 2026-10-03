@@ -37,6 +37,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b8dedcc23bb31f745b8f1042156f0bfc, type: 2}
   _storageCapacity: 200
   _beds: 0
+  _carts: 1
+  _cartSpots: 0
   _sourceModel: {fileID: 0}
   _model: {fileID: 2878258042761602162, guid: 5c87c216d65897847902a6fa7799cf56, type: 3}
   _picture: {fileID: 2800000, guid: 037c2941410795f478da1de2c93e520d, type: 3}

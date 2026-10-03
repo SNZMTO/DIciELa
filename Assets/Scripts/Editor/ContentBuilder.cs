@@ -23,6 +23,10 @@ namespace Diciela.EditorTools
         private const string HousingPath = StructuresFolder + "/Famille_Logement.asset";
         private const string ChimeraPath = "Assets/Data/Habitants/Chimere.asset";
         private const string OpeningPath = "Assets/Data/Depart.asset";
+        private const string CartPath = "Assets/Data/Charrette.asset";
+
+        // Le modèle du pack de la charrette de l'étal (décision 197) : la charrette ouverte, à l'auvent.
+        private const string CartModelPath = "Assets/Synty/PolygonFantasyVillage/Prefabs/Vehicles/SM_Veh_Cart_03.prefab";
 
         // Le modèle du pack de la cabane (décision 75).
         private const string CabinSourcePath =
@@ -35,7 +39,7 @@ namespace Diciela.EditorTools
             VillagerContentBuilder.Made villagers = VillagerContentBuilder.CreateMissing(town.Statistics, trades);
             // Le campement se voit en boîte à sa taille (Défaut : 3 × 3 m, porte de 1,2 m ; GDD, section 16) tant que sa
             // composition n'est pas faite (DICIELA/Contenu/Composer les modèles). Il fait tout au départ (décision 172) :
-            // il tient 100 marchandises pour la ville et ouvre le poste « à tout faire ».
+            // il tient 100 places pour la ville, ouvre le poste « à tout faire » et garde sa charrette, comme un entrepôt.
             StructureDefinition camp = EditorAssets.CreateIfMissing<StructureDefinition>(CampPath, fiche =>
             {
                 EditorAssets.Property(fiche, "_id").stringValue = "campement";
@@ -47,6 +51,7 @@ namespace Diciela.EditorTools
                 EditorAssets.Property(fiche, "_chimeraHome").boolValue = true;
                 EditorAssets.Property(fiche, "_builtWhenPlaced").boolValue = true;
                 EditorAssets.Property(fiche, "_storageCapacity").intValue = 100;
+                EditorAssets.Property(fiche, "_carts").intValue = 1;
                 EditorAssets.SetList(EditorAssets.Property(fiche, "_workSlots"), new[] { town.OddJobs });
             });
             // Une cabane coûte 10 Bois et 5 Pierre, demande 2 h de travail à un débutant (décision 137) et offre deux lits
@@ -59,8 +64,9 @@ namespace Diciela.EditorTools
                 EditorAssets.Property(fiche, "_workHours").floatValue = 2f;
                 EditorAssets.Property(fiche, "_beds").intValue = 2;
             });
-            // La Place (décision 192) : 12 × 12 m, unique, sans porte, un sol qu'on traverse ; 5 Bois et 10 Pierre, 2 h de
-            // travail à un débutant. Elle se voit en sol plat à sa taille tant que sa composition n'est pas faite.
+            // La Place (décisions 192 et 194) : 12 × 12 m, unique, sans porte, un sol qu'on traverse ; 5 Bois et 10 Pierre,
+            // 2 h de travail à un débutant ; deux places de charrette. Elle se voit en sol plat à sa taille tant que sa
+            // composition n'est pas faite.
             StructureDefinition place = EditorAssets.CreateIfMissing<StructureDefinition>(PlacePath, fiche =>
             {
                 EditorAssets.Property(fiche, "_id").stringValue = "place";
@@ -72,7 +78,12 @@ namespace Diciela.EditorTools
                 EditorAssets.Property(fiche, "_walkable").boolValue = true;
                 TownContentBuilder.SetAmounts(EditorAssets.Property(fiche, "_cost"), town.Wood, 5, town.Stone, 10);
                 EditorAssets.Property(fiche, "_workHours").floatValue = 2f;
+                EditorAssets.Property(fiche, "_cartSpots").intValue = 2;
             });
+            // La charrette de l'étal (décision 194) : 20 places ; ses autres réglages, ceux de sa fiche par défaut.
+            CartDefinition cart = EditorAssets.CreateIfMissing<CartDefinition>(CartPath,
+                fiche => EditorAssets.Property(fiche, "_id").stringValue = "charrette");
+            EditorAssets.AssignIfMissing(cart, "_model", EditorAssets.Load<GameObject>(CartModelPath));
             // Les modèles se font ici une fois ; ensuite, par le menu DICIELA/Contenu/Préparer les modèles.
             EditorAssets.AssignIfMissing(cabin, "_sourceModel", EditorAssets.Load<GameObject>(CabinSourcePath));
             if (camp.Model == null)
@@ -127,6 +138,7 @@ namespace Diciela.EditorTools
                 InsertFirst(trades.Family, "_structures", place);
             EditorAssets.AssignIfMissing(catalog, "_chimeraKind", chimera);
             EditorAssets.AssignIfMissing(catalog, "_villagerKind", villagers.Kind);
+            EditorAssets.AssignIfMissing(catalog, "_cart", cart);
             AppearanceBuilder.CreateMissing(catalog);
         }
 

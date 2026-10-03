@@ -9,7 +9,8 @@ namespace Diciela.Simulation.Society
 {
     /// <summary>
     /// La tâche en cours d'un habitant (ARCHITECTURE, section 7) : marcher jusqu'où mène son geste, y faire ce que le geste
-    /// dit, travailler sur place, et ainsi de suite. Les gestes : porter, bâtir, défricher, un par valeur de TaskWork.
+    /// dit, travailler sur place, et ainsi de suite. Les gestes : porter, bâtir, défricher, conduire, un par valeur de
+    /// TaskWork ; un geste peut ralentir la marche (une charrette tirée), et suit chacun de ses pas.
     /// Quand le travail s'arrête, il finit sa marche et dépose ce qu'il porte, mais n'entame pas l'étape suivante ; le
     /// travail sur place s'arrête tout de suite (décisions 140 et 149). Échec : le but n'est plus joignable ; ce qu'il
     /// porte retourne à la ville et ses réservations sont rendues. La marche est celle de l'habitant.
@@ -36,12 +37,13 @@ namespace Diciela.Simulation.Society
             _statistics = statistics;
             _walk = walk;
             _metersPerStep = metersPerStep;
-            // Un geste par valeur de TaskWork, à sa place : Carry, Build, Clear.
+            // Un geste par valeur de TaskWork, à sa place : Carry, Build, Clear, Drive.
             _gestures = new Gesture[]
             {
                 new CarryGesture(services.Offers, load),
                 new BuildGesture(services.Offers),
-                new ClearGesture(services.Clearings, load)
+                new ClearGesture(services.Clearings, load),
+                new DriveGesture(services.Carts)
             };
         }
 
@@ -80,12 +82,15 @@ namespace Diciela.Simulation.Society
                 return Follow(_gesture.Work(hours), position);
             }
 
-            WalkOutcome outcome = _walk.IsWalking ? _walk.Advance(ref position, _metersPerStep) : WalkOutcome.Lost;
-            if (outcome == WalkOutcome.Walking)
-                return ChoreOutcome.Continuing;
+            WalkOutcome outcome = _walk.IsWalking
+                ? _walk.Advance(ref position, _metersPerStep * _gesture.SpeedFactor)
+                : WalkOutcome.Lost;
             if (outcome == WalkOutcome.Lost)
                 return End(ChoreOutcome.Failed);
-            return Follow(_gesture.Arrive(workTime), position);
+            _gesture.Walked(position);
+            if (outcome == WalkOutcome.Walking)
+                return ChoreOutcome.Continuing;
+            return Follow(_gesture.Arrive(position, workTime), position);
         }
 
         /// <summary>
@@ -116,10 +121,12 @@ namespace Diciela.Simulation.Society
             }
         }
 
-        /// <summary>Part vers les abords du but du geste ; faux s'ils ne sont pas joignables d'ici.</summary>
+        /// <summary>Part vers le but du geste, ou vers ses abords ; faux s'il n'est pas joignable d'ici.</summary>
         private bool WalkTo(Vector2 position)
         {
             ChoreGoal goal = _gesture.Goal;
+            if (goal.IsCell)
+                return _walk.TryStart(position, goal.Cell);
             _services.Surroundings.Collect(goal.Footprint, goal.Occupant, _cells);
             return _walk.TryStart(position, _cells);
         }
