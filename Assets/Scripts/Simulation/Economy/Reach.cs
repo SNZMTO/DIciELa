@@ -89,6 +89,7 @@ namespace Diciela.Simulation.Economy
         }
 
         // Le seul parcours des entrepôts par la distance : avec tant de cette marchandise à donner, ou la place de tant.
+        // Un entrepôt qu'on déplace ne prend ni ne donne rien de neuf (décision 199).
         private Structure Nearest(Warehouses warehouses, GoodDefinition good, int amount, bool room, int island,
             Vector2 from)
         {
@@ -100,6 +101,8 @@ namespace Diciela.Simulation.Economy
                 if ((room ? stock.RoomFor(good) : stock.AvailableOf(good)) < amount)
                     continue;
                 Structure warehouse = warehouses.StructureAt(i);
+                if (warehouse.State != StructureState.Built)
+                    continue;
                 float distance = Vector2.Distance(warehouse.Placement.Center, from);
                 if (distance < best && IsReachable(warehouse, island))
                 {

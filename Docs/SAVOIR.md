@@ -687,5 +687,9 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 - **Un test de scène court** (PlayMode) qui pose, tourne, déplace et retire par les mêmes appels que les gestes. Un
   test qui charge la scène de test la quitte par `TestOpening.Leave`, à sa fin et dans son `[UnityTearDown]` : s'il
   échoue en chemin, sa scène et sa carte ne restent pas aux suivants, qui écriraient « carte déjà ouverte » et
-  cacheraient la vraie panne.
+  cacheraient la vraie panne. Il ne suppose rien de la vue du jeu : sa forme suit la disposition des fenêtres du
+  développeur (une vue haute et étroite cache ce qui est à 10 m sur le côté) ; ce qu'il doit voir, il le pose droit
+  devant la caméra, et il attend qu'elle ait fini de reculer.
+- **Une contre-épreuve** pour un test de règle : retirer la règle un instant, relancer, voir le test échouer. Un test
+  qui reste vert sans sa règle ne vérifie rien (un stock en déplacement : la mesure partait après la première prise).
 - **Une campagne ne doit jamais toucher la vraie partie** ni les assets du projet.
