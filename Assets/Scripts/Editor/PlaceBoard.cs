@@ -70,7 +70,7 @@ namespace Diciela.EditorTools
 
         /// <summary>
         /// La Place préparée (son modèle, tel que le jeu le pose), en fichier : de trois quarts, d'en haut, puis deux bouts de
-        /// son bord de près.
+        /// son bord rond de près, au sud-est et au sud.
         /// </summary>
         [MenuItem("DICIELA/Album/Planche de la Place préparée (fichier)")]
         private static void WritePrepared()
@@ -89,7 +89,8 @@ namespace Diciela.EditorTools
                 float half = place.WidthMeters * 0.5f;
                 photos.Add(studio.Shoot(Vector3.zero, new Vector3(0.6f, 0.8f, -1f), half * 1.25f));
                 photos.Add(studio.Shoot(Vector3.zero, new Vector3(0f, 1f, -0.01f), half * 1.1f));
-                photos.Add(studio.Shoot(new Vector3(half - 1f, 0f, -half + 1f), new Vector3(0.5f, 0.7f, -1f), 1.6f));
+                float diagonal = (half - 1f) * Mathf.Sqrt(0.5f);
+                photos.Add(studio.Shoot(new Vector3(diagonal, 0f, -diagonal), new Vector3(0.5f, 0.7f, -1f), 1.6f));
                 photos.Add(studio.Shoot(new Vector3(0f, 0f, -half + 0.5f), new Vector3(0.3f, 0.6f, -1f), 1.6f));
                 studio.Save(photos, 2, "Temp/Planches/Place_preparee.jpg");
             }

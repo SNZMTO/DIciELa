@@ -56,7 +56,8 @@ En cas de doute, `unity list` (les outils du paquet `com.unity.pipeline`) ou la 
 - **PlayMode** : le CLI refuse le mode synchrone ; `bash Tools/playtests.sh <dossier déjà créé>` (asynchrone, attend
   `completed`, refuse de partir en Play).
 - **Une campagne ne part qu'après une compilation réussie, sur toute la chaîne** : `bash compile.sh && run_tests … &&
-  playtests.sh …`, jamais un `;` entre eux (le 01/10/2026, un `;` a lancé les deux campagnes malgré l'erreur). Une
+  playtests.sh …`, jamais un `;` entre eux (le 01/10/2026, un `;` a lancé les deux campagnes malgré l'erreur), ni un
+  tube : `compile.sh | tail -3 && …` suit le code de `tail`, et la campagne part sur l'erreur (étape 51). Une
   campagne bloquée se règle par le redémarrage d'Unity, par le développeur ; `cancel_tests` n'a pas été éprouvé (le
   01/10/2026, Unity a planté juste après, mais une campagne sans lui a planté de même : voir l'étape 21).
 - **Jamais de campagne PlayMode après une erreur de compilation** : la campagne resterait en file, puis toutes les

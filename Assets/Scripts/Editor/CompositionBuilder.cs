@@ -62,19 +62,11 @@ namespace Diciela.EditorTools
                         door.SetParent(root.transform, false);
                     }
                     var instance = (GameObject)PrefabUtility.InstantiatePrefab(prefab, scene);
-                    instance.transform.SetParent(piece.AtTheDoor ? door : root.transform, false);
-                    instance.transform.localPosition = piece.Place;
-                    instance.transform.localRotation = Quaternion.Euler(piece.Pitch, piece.Yaw, 0f);
-                    instance.transform.localScale = Vector3.one * piece.Scale;
-                    if (instance.GetComponentInChildren<MeshFilter>() != null)
+                    bool measured = instance.GetComponentInChildren<MeshFilter>() != null;
+                    Bounds box = measured ? PackMeasures.GeometryOf(prefab).Box : default;
+                    piece.Pose(instance.transform, piece.AtTheDoor ? door : root.transform, box);
+                    if (measured)
                     {
-                        Bounds box = PackMeasures.GeometryOf(prefab).Box;
-                        // Posé par le milieu de sa boîte : son origine recule d'autant, tournée avec lui, au sol.
-                        if (piece.Centered)
-                        {
-                            Vector3 middle = instance.transform.localRotation * (box.center * piece.Scale);
-                            instance.transform.localPosition -= new Vector3(middle.x, 0f, middle.z);
-                        }
                         Vector3 size = box.size * piece.Scale;
                         sizes.Append(" ; ").Append(prefab.name).Append(' ').Append(size.x.ToString("0.00"))
                             .Append(" × ").Append(size.z.ToString("0.00")).Append(" × ").Append(size.y.ToString("0.00"));
@@ -122,17 +114,12 @@ namespace Diciela.EditorTools
             var made = AssetDatabase.LoadAssetAtPath<Material>(path);
             if (made != null)
                 return made;
-            var template = AssetDatabase.LoadAssetAtPath<Material>(floor.TemplatePath);
-            var texture = AssetDatabase.LoadAssetAtPath<Texture2D>(floor.TexturePath);
-            var normals = AssetDatabase.LoadAssetAtPath<Texture2D>(floor.NormalsPath);
-            if (template == null || texture == null || normals == null)
+            Material material = floor.Dressed(name + "_Dallage");
+            if (material == null)
             {
                 Debug.LogError("DICIELA : " + name + " ne trouve pas la matière ou les textures de son dallage dans le pack.");
                 return null;
             }
-            var material = new Material(template) { name = name + "_Dallage" };
-            material.SetTexture("_Albedo_Map", texture);
-            material.SetTexture("_Normal_Map", normals);
             AssetDatabase.CreateAsset(material, path);
             return AssetDatabase.LoadAssetAtPath<Material>(path);
         }

@@ -15,6 +15,29 @@
 
 ## Les captures
 
+### 03/10/2026 — étapes 37 à 50 : la Place, ses charrettes, déplacer
+
+La vue témoin ne change pas. La Place ronde de 12 m (elle passe à 24 m à l'étape 51) : son chantier en fantôme près
+du campement, puis bâtie en galets de rivière, entourée de petits cailloux. La Chimère y amène la charrette du
+campement et la gare le long d'un cercle, l'une des quatre charrettes du pack, tirée au hasard. On lui demande 10 Bois
+(menu d'album, en attendant la fiche de la Place) : le compteur de Bois passe de 25 à 15 quand elle les charge sur la
+charrette ; ce qu'elle porte ne se voit pas encore. L'outil Déplacer envoie la Place quatre mètres plus loin : son
+fantôme à sa nouvelle place, puis la Place remontée là, sa charrette avec elle. Ce qu'une capture ne montre pas : les
+premiers habitants au travail (37 à 39), l'encombrement (44), les animaux (45) ; la Place défaite puis remontée passe
+en quelques secondes.
+
+![La vue témoin](Album/2026-10-03_etape-50_vue-temoin.jpg)
+
+![Le chantier de la Place ronde](Album/2026-10-03_etape-46_place-ronde.jpg)
+
+![La charrette garée sur la Place](Album/2026-10-03_etape-47_charrette-garee.jpg)
+
+![La charrette garnie : 10 Bois quittent le stock](Album/2026-10-03_etape-50_charrette-garnie.jpg)
+
+![L'ordre de déplacer la Place](Album/2026-10-03_etape-49_deplacer.jpg)
+
+![La Place déplacée, sa charrette avec elle](Album/2026-10-03_etape-48_place-deplacee.jpg)
+
 ### 02/10/2026 — étape 36 : les premiers habitants
 
 La vue témoin ne change pas. La première cabane bâtie, le bâtisseur arrive au centre de la carte, là où la Chimère est

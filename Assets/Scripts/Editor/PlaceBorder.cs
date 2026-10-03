@@ -7,9 +7,9 @@ namespace Diciela.EditorTools
     /// <summary>
     /// Les petits cailloux qui entourent la Place ronde (GDD, section 11 ; décisions 193 et 196), en objets du pack : des
     /// rangées de pierres (SM_Bld_Stone_Edge, réduites : des cailloux d'une quinzaine de centimètres) posées bout à bout,
-    /// chacune tangente au cercle, à cheval sur le bord du dallage, par tronçons d'environ 1,6 m ; et quelques galets
-    /// (SM_Env_Stepping_Stone, réduits) semés juste en dedans. Le tirage est fixe : la même bordure à chaque composition.
-    /// Tout tient dans l'empreinte, que la préparation mesure sur la composition.
+    /// chacune tangente au cercle, à cheval sur le bord du dallage, par tronçons d'environ 1,6 m ; et des galets
+    /// (SM_Env_Stepping_Stone, réduits) semés juste en dedans, un tous les 3 m du tour environ. Le tirage est fixe : la
+    /// même bordure à chaque composition. Tout tient dans l'empreinte, que la préparation mesure sur la composition.
     /// </summary>
     internal static class PlaceBorder
     {
@@ -17,7 +17,7 @@ namespace Diciela.EditorTools
         // Le milieu des rangées, en dedans du bord de l'empreinte ; un peu levées, pour dépasser des galets.
         private const float Inset = 0.2f;
         private const float Lift = 0.03f;
-        private const int Pebbles = 12;
+        private const float PebbleSpacing = 3f;
         private const int Seed = 193;
 
         // Les rangées du pack et leur longueur, mesurée sur le pack (planche de la Place) : 2,67 m, 2,84 m, et la demie, 1,35 m.
@@ -71,8 +71,9 @@ namespace Diciela.EditorTools
                     Lift, Scale, centered: true));
             }
 
-            // Quelques galets juste en dedans des rangées, au hasard autour du cercle.
-            for (int i = 0; i < Pebbles; i++)
+            // Des galets juste en dedans des rangées, au hasard autour du cercle, d'autant plus nombreux qu'il est grand.
+            int pebbles = Mathf.RoundToInt(around / PebbleSpacing);
+            for (int i = 0; i < pebbles; i++)
             {
                 float angle = (float)random.NextDouble() * 2f * Mathf.PI;
                 float r = radius - 0.45f - (float)random.NextDouble() * 0.3f;
