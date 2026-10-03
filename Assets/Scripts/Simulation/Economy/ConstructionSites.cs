@@ -9,7 +9,8 @@ namespace Diciela.Simulation.Economy
     /// Les chantiers et leur file (GDD, section 9) : chaque construction posée en fantôme en a un, dans l'ordre où elle
     /// a été posée, et les chantiers se servent dans cet ordre. Quand le dernier travail est fait, ses matériaux entrent
     /// dans la construction (ils disparaissent du bilan) et elle devient bâtie ; le monde la met en service à la fin du
-    /// pas (décision 179). Les événements d'un pas attendent la fin de leur couche (ARCHITECTURE, section 5).
+    /// pas (décision 179). Un bâtiment qu'on déplace a son petit chantier (décision 199) : le premier travail le défait,
+    /// défait il saute à sa nouvelle place, remonté il sert de nouveau, sans nouvelle mise en service. Les événements d'un pas attendent la fin de leur couche (ARCHITECTURE, section 5).
     /// </summary>
     public sealed class ConstructionSites
     {
@@ -18,9 +19,13 @@ namespace Diciela.Simulation.Economy
         private readonly List<Structure> _finished = new List<Structure>();
         private readonly Structures _structures;
         private readonly GoodsLedger _ledger;
+        private readonly double _takeDownHours;
+        private readonly double _putBackHours;
 
-        public ConstructionSites(Structures structures, GoodsLedger ledger)
+        public ConstructionSites(Structures structures, GoodsLedger ledger, SimulationSettings settings)
         {
+            if (ReferenceEquals(settings, null))
+                throw new ArgumentNullException(nameof(settings));
             if (ReferenceEquals(structures, null))
                 throw new ArgumentNullException(nameof(structures));
             if (ReferenceEquals(ledger, null))
@@ -28,6 +33,8 @@ namespace Diciela.Simulation.Economy
 
             _structures = structures;
             _ledger = ledger;
+            _takeDownHours = settings.TakeDownHours;
+            _putBackHours = settings.PutBackHours;
         }
 
         /// <summary>Levé quand des matériaux arrivent sur un chantier.</summary>
@@ -64,6 +71,17 @@ namespace Diciela.Simulation.Economy
             _queue.Add(new ConstructionSite(structure));
         }
 
+        /// <summary>
+        /// On déplace ce bâtiment bâti, dont la nouvelle place est retenue : son petit chantier s'ouvre, au bout de la file.
+        /// Seul le monde l'appelle.
+        /// </summary>
+        internal void TrackMove(Structure structure)
+        {
+            if (structure.State != StructureState.Built || !structure.MovingTo.HasValue || SiteOf(structure) != null)
+                return;
+            _queue.Add(ConstructionSite.ForMove(structure, _takeDownHours, _putBackHours));
+        }
+
         /// <summary>Des matériaux en route arrivent sur le chantier.</summary>
         internal void Receive(ConstructionSite site, GoodDefinition good, int amount)
         {
@@ -77,9 +95,32 @@ namespace Diciela.Simulation.Economy
         {
             if (site.IsFinished)
                 return true;
+            if (site.IsMove)
+                return WorkOnMove(site, hours);
             if (!site.AddWork(hours))
                 return false;
             Finish(site);
+            return true;
+        }
+
+        // Le premier travail défait le bâtiment, qui ne sert plus ; défait, il saute à sa nouvelle place ; remonté, il sert
+        // de nouveau, et son petit chantier quitte la file.
+        private bool WorkOnMove(ConstructionSite site, double hours)
+        {
+            Structure structure = site.Structure;
+            if (structure.State == StructureState.Built)
+                _structures.Moves.TakeDown(structure);
+            bool done = site.AddWork(hours);
+            if (!site.HasLanded && site.WorkDone >= site.TakeDownHours)
+            {
+                _structures.Moves.Land(structure);
+                site.MarkLanded();
+            }
+            if (!done)
+                return false;
+            _queue.Remove(site);
+            site.MarkFinished();
+            _structures.Moves.Finish(structure);
             return true;
         }
 

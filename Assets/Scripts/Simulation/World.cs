@@ -38,11 +38,11 @@ namespace Diciela.Simulation
             var surroundings = new Surroundings(Grid);
             Ledger = new GoodsLedger();
             Warehouses = new Warehouses(Ledger);
-            ConstructionSites = new ConstructionSites(Structures, Ledger);
+            ConstructionSites = new ConstructionSites(Structures, Ledger, settings);
             var reach = new Reach(Grid, Islands, surroundings);
             var offers = new TaskOffers(Warehouses, ConstructionSites, reach, settings);
             Clearings = new ClearingOffers(Nature, Warehouses, reach);
-            Carts = new Carts(catalog.Cart);
+            Carts = new Carts(catalog.Cart, Structures);
             WorkSlots = new WorkSlots();
             Housing = new Housing(Structures, Structures.Rules);
             Villagers = new Villagers(Grid, Islands, PathFinder, Clock, surroundings, offers, Clearings,

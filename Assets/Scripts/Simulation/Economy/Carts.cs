@@ -26,10 +26,17 @@ namespace Diciela.Simulation.Economy
         private readonly List<Cart> _changed = new List<Cart>();
         private int _nextId = 1;
 
-        /// <summary>Les charrettes de cette fiche ; sans fiche, aucune construction ne peut en garder ni en appeler.</summary>
-        public Carts(CartDefinition definition)
+        /// <summary>
+        /// Les charrettes de cette fiche ; sans fiche, aucune construction ne peut en garder ni en appeler. Elles suivent ces
+        /// constructions : une Place déplacée emmène ses places de charrette, et les charrettes qui y sont garées.
+        /// </summary>
+        public Carts(CartDefinition definition, Structures structures)
         {
+            if (ReferenceEquals(structures, null))
+                throw new ArgumentNullException(nameof(structures));
+
             _definition = definition;
+            structures.StructureMoved += OnStructureMoved;
         }
 
         /// <summary>Levé quand une charrette naît, rangée à son entrepôt.</summary>
@@ -151,6 +158,23 @@ namespace Diciela.Simulation.Economy
             {
                 _added.Clear();
                 _changed.Clear();
+            }
+        }
+
+        // Une Place déplacée emmène ses places de charrette, et les charrettes qui y sont garées (décision 200).
+        private void OnStructureMoved(Structure moved)
+        {
+            if (moved.Definition.CartSpots < 1 || !_tracked.Contains(moved))
+                return;
+            CartSpotLayout.Relay(moved, _definition, _spots);
+            for (int i = 0; i < _all.Count; i++)
+            {
+                Cart cart = _all[i];
+                if (cart.State == CartState.Parked && ReferenceEquals(cart.Spot.Place, moved))
+                {
+                    cart.Park();
+                    Changed(cart);
+                }
             }
         }
 

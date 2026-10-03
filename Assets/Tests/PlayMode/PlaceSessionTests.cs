@@ -18,12 +18,13 @@ namespace Diciela.Tests.PlayMode
     /// <summary>
     /// La Place de bout en bout, sur la scène de test et avec le vrai contenu (décisions 192, 193, 197 et 198), par les
     /// gestes du joueur : le campement pris à sa carte et posé au milieu de l'écran, la Chimère mise à son poste (l'ordre
-    /// du bouton de sa fiche) ; l'onglet des Métiers, cliqué, offre la Place en première carte ; prise et posée à 10 m à
-    /// l'est du campement, elle se bâtit avec le stock de départ, qui paie son coût ; un trajet la traverse tout droit ;
+    /// du bouton de sa fiche) ; l'onglet des Métiers, cliqué, offre la Place en première carte ; prise et posée à 10 m du
+    /// campement, droit devant la caméra, elle se bâtit avec le stock de départ, qui paie son coût ; un trajet la traverse tout droit ;
     /// la Chimère y gare la charrette du campement, qu'on voit glisser jusqu'à sa place. Le monde avance plus vite que le
-    /// temps réel : le test joue ses pas lui-même, bornés.
+    /// temps réel : le test joue ses pas lui-même, bornés. Les vrais appareils sont coupés (GestureFixture) : la souris du
+    /// développeur ne fait pas défiler la caméra par les bords pendant le test.
     /// </summary>
-    public sealed class PlaceSessionTests
+    public sealed class PlaceSessionTests : GestureFixture
     {
         private const int MaxFrames = 3600;
         private const int MaxSteps = 12000;
@@ -97,8 +98,8 @@ namespace Diciela.Tests.PlayMode
                 "On voit le modèle du pack que la simulation lui a tiré.");
         }
 
-        // Le campement posé au milieu de l'écran, la Chimère à son poste, la Place prise aux Métiers, posée à 10 m à l'est
-        // du campement, puis bâtie.
+        // Le campement posé au milieu de l'écran, la Chimère à son poste, la Place prise aux Métiers, posée à 10 m du
+        // campement, droit devant la caméra, puis bâtie.
         private static IEnumerator BuildThePlace(Session session)
         {
 #if UNITY_EDITOR
@@ -135,15 +136,19 @@ namespace Diciela.Tests.PlayMode
             StructureDefinition place = controls.Tool.Current;
             Assert.IsTrue(place != null && place.Id == "place", "La première carte des Métiers est la Place.");
 
-            // La caméra, partie tout près de la Chimère, recule à sa distance de départ : on attend d'y voir la Place.
-            Vector2 at = camp.Placement.Center + new Vector2(10f, 0f);
+            // À 10 m du campement, droit devant la caméra : on la voit, quelle que soit la forme de la vue du jeu. La caméra,
+            // partie tout près de la Chimère, recule à sa distance de départ : on attend d'y voir la Place.
+            Vector3 forward = camera.transform.forward;
+            Vector2 at = camp.Placement.Center + new Vector2(forward.x, forward.z).normalized * 10f;
             Vector3 ground = world.Map.Relief.GroundAt(at);
             for (int frame = 0; frame < MaxFrames && !camera.pixelRect.Contains(camera.WorldToScreenPoint(ground)); frame++)
                 yield return null;
             Vector3 aim = camera.WorldToScreenPoint(ground);
-            Assert.IsTrue(camera.pixelRect.Contains(aim), "On voit l'endroit de la Place.");
+            Assert.IsTrue(camera.pixelRect.Contains(aim), "On voit l'endroit de la Place (" + at + ", vu en " + aim +
+                " ; caméra en " + camera.transform.position + ", vers " + camera.transform.forward + ", écran " +
+                camera.pixelRect + ", campement en " + camp.Placement.Center + ").");
             controls.Tool.AimAt(aim);
-            Assert.AreEqual(PlacementResult.Ok, controls.Tool.Result, "La Place se pose à l'est du campement.");
+            Assert.AreEqual(PlacementResult.Ok, controls.Tool.Result, "La Place se pose devant le campement.");
             Assert.IsTrue(controls.Tool.Confirm());
             // L'ordre « poser » s'applique au début du pas suivant.
             world.Step();

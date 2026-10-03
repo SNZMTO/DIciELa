@@ -412,6 +412,12 @@
   ses travailleurs gardent leur poste et attendent, et ses stocks voyagent avec lui : on n'y prend ni n'y dépose rien.
   Un chantier pas encore bâti n'est qu'un plan : il saute tout de suite à sa nouvelle place, avec ce qui lui a été
   livré. Qui sert une construction qui change de place (un porteur, un ouvrier) la suit.
+- **Règle.** Le temps d'un déplacement, le bâtiment ne sert pas : ses lits libres ne s'offrent plus (chacun garde le
+  sien), son stock ne promet rien de neuf (ce qui était déjà promis s'y prend encore), une Place n'appelle pas de
+  charrette et la charrette d'un entrepôt qu'on déplace ne répond pas ; ce que ses travailleurs font sur place s'arrête,
+  mais les tâches de la ville continuent : celui qui bâtit peut défaire et remonter son propre lieu de travail. Le logis
+  de la Chimère reste son logis. La journée finie, le déplacement attend le matin. On ne déplace pas une construction
+  qui se déplace déjà. Une Place déplacée emmène ses places de charrette, et les charrettes qui y sont garées.
 - **Défaut.** Défaire un bâtiment demande 0,1 h de travail à un débutant (3 s), le remonter autant.
 - **À toi.** Peut-on ranger le dernier lieu qui ouvre des postes de bâtisseurs ? Ma reco : non, le jeu dit pourquoi ;
   sinon plus personne ne pourrait le reposer.

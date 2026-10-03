@@ -43,6 +43,9 @@ namespace Diciela.Simulation.Land
         /// <summary>Levé quand une construction change de place.</summary>
         public event Action<Structure> StructureMoved;
 
+        /// <summary>Levé quand on ordonne de déplacer un bâtiment : sa nouvelle place est retenue (MovingTo).</summary>
+        public event Action<Structure> MoveStarted;
+
         /// <summary>Levé quand un déplacement est refusé, avec la construction, la place demandée et la raison.</summary>
         public event Action<Structure, Placement, PlacementResult> MoveRefused;
 
@@ -58,8 +61,8 @@ namespace Diciela.Simulation.Land
         internal StructureMoves Moves { get; }
 
         /// <summary>
-        /// Le logis de la Chimère : la construction bâtie que sa fiche dit être son logis (le campement, puis sa maison) ;
-        /// null tant qu'elle n'en a pas (GDD, section 6).
+        /// Le logis de la Chimère : la construction bâtie que sa fiche dit être son logis (le campement, puis sa maison),
+        /// le restant pendant qu'on la déplace (décision 200) ; null tant qu'elle n'en a pas (GDD, section 6).
         /// </summary>
         public Structure ChimeraHome
         {
@@ -67,7 +70,7 @@ namespace Diciela.Simulation.Land
             {
                 foreach (Structure structure in _all)
                 {
-                    if (structure.Definition.IsChimeraHome && structure.State == StructureState.Built)
+                    if (structure.Definition.IsChimeraHome && structure.State != StructureState.Planned)
                         return structure;
                 }
                 return null;
@@ -164,6 +167,9 @@ namespace Diciela.Simulation.Land
                     break;
                 case StructureHappening.Kinds.Moved:
                     StructureMoved?.Invoke(happening.Structure);
+                    break;
+                case StructureHappening.Kinds.MoveStarted:
+                    MoveStarted?.Invoke(happening.Structure);
                     break;
                 case StructureHappening.Kinds.MoveRefused:
                     MoveRefused?.Invoke(happening.Structure, happening.Placement, happening.Result);

@@ -14,6 +14,7 @@ pose.refus.DoorBlocked,Sa porte serait bouchée,Its door would be blocked
 pose.refus.AlreadyPlaced,Déjà posée : une seule par ville,Already placed: one per town
 pose.refus.NatureInTheWay,Un arbre ou un rocher est dans le chemin : retire-le d'abord,A tree or a rock is in the way: clear it first
 pose.refus.Unknown,Pas encore d'idée pour la bâtir,No idea how to build it yet
+pose.refus.Moving,"Elle se déplace déjà : attends qu'elle soit remontée",It is already moving: wait until it is back up
 corps.chat_a,Chat A,Cat A
 corps.chat_b,Chat B,Cat B
 corps.cochon_a,Cochon A,Pig A

@@ -95,7 +95,10 @@ la société, qui voit tout ce qui est en dessous.
   visiteur, tas au sol ; chacun a son contenu et sa consigne. Une seule fonction crée ou détruit une marchandise, avec
   sa cause ; une seule fonction « rend à la ville », toujours à une place retenue (une charge en route garde la sienne
   à son départ, décision 178). Les réservations. Les ateliers (recette, avancement). La culture
-  des plantations (semis, pousse, graines gardées, récolte). Les chantiers (rang dans la file, livraisons, avancement).
+  des plantations (semis, pousse, graines gardées, récolte). Les chantiers (rang dans la file, livraisons, avancement),
+  et le petit chantier d'un bâtiment qu'on déplace : son premier travail le défait (`StructureState.Moving` : il ne sert
+  plus), défait il saute à la place qu'il retenait, remonté il sert de nouveau, sans nouvelle mise en service ; les
+  charrettes suivent une Place déplacée (`Carts` écoute `StructureMoved`, pour ses places de charrette).
   La production comptée par marchandise. La valeur des marchandises. La publication des tâches à prendre (porter,
   bâtir, retirer un arbre, conduire une charrette). Les charrettes de l'étal et les places de charrette de la Place
   (`Carts`, la seule fonction qui change une charrette ; `CartOffers`, les charrettes à conduire).
