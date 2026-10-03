@@ -11,36 +11,24 @@ namespace Diciela.View
     /// Les constructions posées, vues (ARCHITECTURE, section 11) : à l'ouverture, celles qui existent déjà ; ensuite,
     /// chaque construction posée, par l'événement de la simulation, jamais par une photographie. Tant qu'elle attend
     /// d'être bâtie, une construction est un chantier qui monte (GDD, section 9 ; décision 166) : sa vraie matière sous
-    /// une ligne qui suit le travail fait, son fantôme au-dessus ; bâtie, le modèle tel quel. Un sol qu'on traverse, comme
-    /// la Place, épouse le relief (FloorDrape). On touche une construction en visant son modèle, pas le sol : vu de biais,
-    /// le toit d'une maison cache le sol derrière elle.
+    /// une ligne qui suit le travail fait, son fantôme au-dessus ; bâtie, le modèle tel quel. Déplacée, elle montre sa
+    /// nouvelle place en fantôme, se défait, saute, puis se remonte (décision 201) : chaque moment refait sa vue
+    /// (StructureView). Un sol qu'on traverse, comme la Place, épouse le relief (FloorDrape). On touche une construction
+    /// en visant son modèle, pas le sol : vu de biais, le toit d'une maison cache le sol derrière elle.
     /// </summary>
     public sealed class StructureViews : MonoBehaviour
     {
         [Tooltip("La fiche des réglages de la pose : les matériaux du chantier et la couleur du fantôme (Assets/Data/Settings).")]
         [SerializeField] private PlacementSettings _settings;
 
-        private sealed class Shown
-        {
-            public Structure Structure;
-            public Transform Transform;
-            // La boîte de ses maillages, dans le repère du modèle : celle qu'on vise pour le toucher.
-            public Bounds LocalBox;
-            // Tant qu'elle n'est pas bâtie : sa ligne qui monte, et son chantier, trouvé à son ouverture.
-            public SiteFill Fill;
-            public ConstructionSite Site;
-            // Un sol : les maillages copiés pour épouser le relief, détruits avec sa vue.
-            public Mesh[] Draped;
-        }
-
-        private readonly List<Shown> _shown = new List<Shown>();
+        private readonly List<StructureView> _shown = new List<StructureView>();
         private Structures _structures;
         private ConstructionSites _sites;
         private Relief _relief;
         private SiteMaterials _siteMaterials;
         private SiteGhosts _siteGhosts;
 
-        /// <summary>Montre les constructions de ce monde, puis suit celles qu'on pose.</summary>
+        /// <summary>Montre les constructions de ce monde, puis suit celles qu'on pose, qu'on bâtit ou qu'on déplace.</summary>
         public void Show(Structures structures, ConstructionSites sites, Relief relief)
         {
             if (ReferenceEquals(structures, null))
@@ -64,7 +52,10 @@ namespace Diciela.View
             foreach (Structure structure in structures.All)
                 OnStructurePlaced(structure);
             structures.StructurePlaced += OnStructurePlaced;
-            structures.StructureBuilt += OnStructureBuilt;
+            structures.StructureBuilt += Rebuild;
+            structures.MoveStarted += Rebuild;
+            structures.StructureTakenDown += Rebuild;
+            structures.StructureMoved += Rebuild;
         }
 
         /// <summary>Cesse de suivre le monde et retire ce qu'on montrait.</summary>
@@ -73,13 +64,16 @@ namespace Diciela.View
             if (_structures != null)
             {
                 _structures.StructurePlaced -= OnStructurePlaced;
-                _structures.StructureBuilt -= OnStructureBuilt;
+                _structures.StructureBuilt -= Rebuild;
+                _structures.MoveStarted -= Rebuild;
+                _structures.StructureTakenDown -= Rebuild;
+                _structures.StructureMoved -= Rebuild;
             }
             _structures = null;
             _sites = null;
             _relief = null;
-            foreach (Shown shown in _shown)
-                Forget(shown);
+            foreach (StructureView shown in _shown)
+                shown.Forget();
             _shown.Clear();
             _siteMaterials?.Clear();
             _siteMaterials = null;
@@ -89,13 +83,13 @@ namespace Diciela.View
 
         /// <summary>
         /// La construction dont le modèle est touché le premier par ce rayon (en général, celui du pointeur) ; faux si le
-        /// rayon n'en touche aucune.
+        /// rayon n'en touche aucune. Le fantôme d'une nouvelle place ne se touche pas.
         /// </summary>
         public bool TryPick(Ray ray, out Structure picked)
         {
             picked = null;
             float nearest = float.PositiveInfinity;
-            foreach (Shown shown in _shown)
+            foreach (StructureView shown in _shown)
             {
                 // Les modèles ne sont ni agrandis ni réduits : les distances restent en mètres, comparables entre elles.
                 var local = new Ray(shown.Transform.InverseTransformPoint(ray.origin),
@@ -114,14 +108,8 @@ namespace Diciela.View
         {
             if (_sites == null)
                 return;
-            foreach (Shown shown in _shown)
-            {
-                if (shown.Fill == null)
-                    continue;
-                if (shown.Site == null)
-                    shown.Site = _sites.SiteOf(shown.Structure);
-                shown.Fill.Show(shown.Site != null ? shown.Site.Progress : 0d);
-            }
+            foreach (StructureView shown in _shown)
+                shown.Follow();
         }
 
         private void OnDestroy()
@@ -131,52 +119,17 @@ namespace Diciela.View
 
         private void OnStructurePlaced(Structure structure)
         {
-            StructureDefinition definition = structure.Definition;
-            GameObject view = ModelPose.Instantiate(definition.Model, transform, definition.Id + " n° " + structure.Id);
-            ModelPose.Place(view.transform, structure.Placement, _relief);
-            Mesh[] draped = definition.IsWalkable ? FloorDrape.Apply(view, _relief) : null;
-            SiteFill fill = structure.State == StructureState.Planned
-                ? new SiteFill(view, _siteMaterials, _siteGhosts)
-                : null;
-            _shown.Add(new Shown
-            {
-                Structure = structure, Transform = view.transform, LocalBox = BoxOf(view), Fill = fill,
-                Site = _sites.SiteOf(structure), Draped = draped,
-            });
+            _shown.Add(new StructureView(structure, transform, _relief, _siteMaterials, _siteGhosts, _sites));
         }
 
-        // Retire cette vue, et les maillages copiés pour elle.
-        private static void Forget(Shown shown)
+        /// <summary>Un moment de sa vie : bâtie, déplacée, défaite, sautée à sa nouvelle place ; sa vue se refait.</summary>
+        private void Rebuild(Structure structure)
         {
-            Destroy(shown.Transform.gameObject);
-            if (shown.Draped == null)
-                return;
-            foreach (Mesh mesh in shown.Draped)
+            foreach (StructureView shown in _shown)
             {
-                if (mesh != null)
-                    Destroy(mesh);
+                if (ReferenceEquals(shown.Structure, structure))
+                    shown.Rebuild();
             }
-        }
-
-        // La boîte qu'on vise pour toucher ce modèle ; sans maillage, vide : on ne le touche pas.
-        private static Bounds BoxOf(GameObject view)
-        {
-            ModelPose.TryLocalBox(view, out Bounds box);
-            return box;
-        }
-
-        /// <summary>Son chantier est fini : le chantier part, le modèle bâti prend sa place.</summary>
-        private void OnStructureBuilt(Structure structure)
-        {
-            for (int i = 0; i < _shown.Count; i++)
-            {
-                if (!ReferenceEquals(_shown[i].Structure, structure))
-                    continue;
-                Forget(_shown[i]);
-                _shown.RemoveAt(i);
-                break;
-            }
-            OnStructurePlaced(structure);
         }
     }
 }

@@ -4,6 +4,7 @@ namespace Diciela.Controls
     public enum ToolChoice
     {
         Build = 0,
-        Clear = 1
+        Clear = 1,
+        Move = 2
     }
 }

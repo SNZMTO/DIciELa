@@ -62,6 +62,7 @@ namespace Diciela.Simulation.Land
             if (structure.State != StructureState.Built || !structure.MovingTo.HasValue)
                 throw new InvalidOperationException("La construction n° " + structure.Id + " n'attend pas d'être défaite.");
             structure.TakeDown();
+            _structures.Record(StructureHappening.Of(StructureHappening.Kinds.TakenDown, structure));
         }
 
         /// <summary>

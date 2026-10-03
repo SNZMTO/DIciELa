@@ -10,8 +10,8 @@ namespace Diciela.View
     /// Les charrettes de l'étal, vues (GDD, section 11 ; décisions 197 et 198) : chacune le modèle du pack que la
     /// simulation lui a tiré, tel quel, l'avant du modèle à qui la tire. Rangée à son entrepôt, on ne la voit pas ;
     /// attelée, elle suit son charretier à la fraction du pas en cours (SAVOIR, 2.2) ; garée, elle glisse et se tourne
-    /// jusqu'à sa place, sans à-coup, à l'allure que dit sa fiche. Elle épouse le relief : posée sur le sol sous son
-    /// milieu, penchée comme lui sous ses roues.
+    /// jusqu'à sa place, sans à-coup, à l'allure que dit sa fiche ; garée, si sa Place est déplacée, elle la suit d'un
+    /// coup. Elle épouse le relief : posée sur le sol sous son milieu, penchée comme lui sous ses roues.
     /// </summary>
     public sealed class CartViews : MonoBehaviour
     {
@@ -23,6 +23,8 @@ namespace Diciela.View
             public Vector3 Middle;
             public Vector2 HalfSize;
             public bool Seen;
+            // Garée, et déjà vue garée : un changement la fait suivre sa Place, sans glisser.
+            public bool Parked;
             public Vector2 At;
             public float Yaw;
             // La pose écrite en dernier : une charrette garée n'est pas réécrite à chaque image.
@@ -48,13 +50,17 @@ namespace Diciela.View
             foreach (Cart cart in carts.All)
                 OnCartAdded(cart);
             carts.CartAdded += OnCartAdded;
+            carts.CartChanged += OnCartChanged;
         }
 
         /// <summary>Cesse de suivre le monde et retire ce qu'on montrait.</summary>
         public void Hide()
         {
             if (_carts != null)
+            {
                 _carts.CartAdded -= OnCartAdded;
+                _carts.CartChanged -= OnCartChanged;
+            }
             _carts = null;
             _relief = null;
             foreach (Shown shown in _shown)
@@ -104,6 +110,16 @@ namespace Diciela.View
             root.gameObject.SetActive(false);
         }
 
+        // Une charrette garée qui change encore : sa Place a été déplacée ; elle la suit d'un coup.
+        private void OnCartChanged(Cart cart)
+        {
+            foreach (Shown shown in _shown)
+            {
+                if (ReferenceEquals(shown.Cart, cart) && shown.Parked && cart.State == CartState.Parked)
+                    shown.Seen = false;
+            }
+        }
+
         // La boîte du modèle, dans le repère de la racine, posée à l'origine sans tourner.
         private static Bounds BoxOf(GameObject model)
         {
@@ -125,8 +141,10 @@ namespace Diciela.View
             if (!seen)
             {
                 shown.Seen = false;
+                shown.Parked = false;
                 return;
             }
+            shown.Parked = cart.State == CartState.Parked;
 
             Vector2 target = Vector2.LerpUnclamped(cart.PreviousPosition, cart.Position, stepFraction);
             float yaw = Mathf.LerpAngle(cart.PreviousHeadingDegrees, cart.HeadingDegrees, stepFraction);

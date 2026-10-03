@@ -404,9 +404,12 @@
 - **À toi.** Planter un arbre passe-t-il par la file des chantiers ? Ma reco : non, c'est une tâche des paysagistes,
   dans l'ordre où le joueur les a posés.
 - **Règle.** On déplace une construction avec l'outil Déplacer : on la clique, son fantôme suit le pointeur comme à la
-  pose (on le tourne de même), un clic la pose à sa nouvelle place ; clic droit ou Échap annule, et l'outil reste en
-  main. La nouvelle place suit les règles de pose, la construction elle-même ne comptant pas : on peut la décaler d'un
-  mètre ou la tourner sur place.
+  pose (on le tourne de même), un clic la pose à sa nouvelle place ; clic droit ou Échap reposent le fantôme, et l'outil
+  reste en main ; sans fantôme, ils lâchent l'outil. La nouvelle place suit les règles de pose, la construction
+  elle-même ne comptant pas : on peut la décaler d'un mètre ou la tourner sur place. Une construction qu'on déplace déjà
+  ne se reprend pas.
+- **Règle.** Un bâtiment qu'on déplace montre sa nouvelle place en fantôme dès l'ordre ; on le voit se défaire comme un
+  chantier dont la ligne descend, puis se remonter à sa nouvelle place comme un chantier qui monte.
 - **Règle.** Ranger ou déplacer un bâtiment est un tout petit chantier, sans nouveaux matériaux : il sert jusqu'à ce
   qu'un ouvrier vienne le défaire, en quelques secondes, puis il se remonte de même à sa nouvelle place. Entre les deux,
   ses travailleurs gardent leur poste et attendent, et ses stocks voyagent avec lui : on n'y prend ni n'y dépose rien.

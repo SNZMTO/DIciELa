@@ -71,6 +71,7 @@ namespace Diciela.Tests.PlayMode
             Views.Show(World.Structures, World.ConstructionSites, map.Relief);
             Tool = new PlacementTool(World, Camera, Preview, Settings);
             Clearing = new ClearingTool(World, Camera, Keep(new GameObject("Arbres de test")).AddComponent<NatureViews>());
+            Mover = new MoveTool(World, Camera, Views, Preview, Settings);
         }
 
         public World World { get; }
@@ -82,6 +83,7 @@ namespace Diciela.Tests.PlayMode
         public StructureDefinition Camp { get; }
         public PlacementTool Tool { get; }
         public ClearingTool Clearing { get; }
+        public MoveTool Mover { get; }
 
         /// <summary>Le point de l'écran où l'on voit ce point du sol.</summary>
         public Vector2 OnScreen(Vector3 ground)
@@ -119,6 +121,7 @@ namespace Diciela.Tests.PlayMode
         public void Dispose()
         {
             Tool.Dispose();
+            Mover.Dispose();
             Views.Hide();
             foreach (Object created in _created)
                 Object.Destroy(created);

@@ -9,7 +9,15 @@ namespace Diciela.Tests.PlayMode
 
         public string KeyOf(ToolChoice choice)
         {
-            return choice == ToolChoice.Build ? "B" : "X";
+            switch (choice)
+            {
+                case ToolChoice.Build:
+                    return "B";
+                case ToolChoice.Clear:
+                    return "X";
+                default:
+                    return "M";
+            }
         }
 
         public string KeyOfCard(int index)

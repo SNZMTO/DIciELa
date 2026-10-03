@@ -7,7 +7,8 @@ namespace Diciela.Controls
     /// <summary>
     /// Les gestes de la pose (GDD, section 9 ; SAVOIR, 2.8) : le pointeur vise ; R bref tourne d'un cran, R tenu en
     /// bougeant la souris tourne au degré (le curseur est tenu et la visée attend) ; un clic gauche pose ; un clic droit
-    /// bref pose l'outil de côté (Échap aussi, par son geste à lui). Il lit les actions et appelle l'outil, rien d'autre. Il passe après la caméra
+    /// bref pose l'outil de côté (Échap aussi, par son geste à lui). Ils pilotent de même l'outil Déplacer, quand c'est lui
+    /// qui est en main (IAimingTool). Il lit les actions et appelle l'outil, rien d'autre. Il passe après la caméra
     /// (ordre 100) : la visée se fait avec la vue de l'image qu'on va voir, jamais celle d'avant.
     /// </summary>
     [DefaultExecutionOrder(100)]
@@ -41,18 +42,33 @@ namespace Diciela.Controls
         private DragGesture _rotateGesture;
         private DragGesture _secondaryGesture;
 
-        /// <summary>L'outil que ces gestes pilotent ; null tant qu'aucun monde n'est né.</summary>
+        /// <summary>L'outil de pose que ces gestes pilotent ; null tant qu'aucun monde n'est né.</summary>
         public PlacementTool Tool { get; private set; }
 
+        /// <summary>L'outil Déplacer qu'ils pilotent aussi, quand il est en main ; null s'il n'y en a pas.</summary>
+        public MoveTool Mover { get; private set; }
+
         /// <summary>
-        /// Relie les gestes à l'outil du monde qui vient de naître, et à l'interface, sur laquelle ils se taisent ; null
+        /// Relie les gestes aux outils du monde qui vient de naître, et à l'interface, sur laquelle ils se taisent ; null
         /// les rend muets.
         /// </summary>
-        public void Bind(PlacementTool tool, IInterfaceArea interfaceArea)
+        public void Bind(PlacementTool tool, IInterfaceArea interfaceArea, MoveTool mover = null)
         {
             Tool = tool;
+            Mover = mover;
             _interfaceArea = interfaceArea;
             ResetGestures();
+        }
+
+        // L'outil en main que ces gestes pilotent : la main n'en tient qu'un.
+        private IAimingTool Held
+        {
+            get
+            {
+                if (Tool != null && Tool.IsActive)
+                    return Tool;
+                return Mover != null && Mover.IsActive ? Mover : null;
+            }
         }
 
         private void OnEnable()
@@ -83,7 +99,8 @@ namespace Diciela.Controls
 
         private void LateUpdate()
         {
-            if (Tool == null || !Tool.IsActive)
+            IAimingTool held = Held;
+            if (held == null)
             {
                 // Un appui commencé avant de prendre une carte ne la pose pas, même relâché la carte en main.
                 _rotateGrip.Release();
@@ -104,31 +121,31 @@ namespace Diciela.Controls
             {
                 float turn = rotateStarts ? _rotateGesture.Delta.x : _look.ReadValue<Vector2>().x;
                 _rotateGrip.Hold(_rotateGesture.Start);
-                Tool.RotateBy(turn * _settings.RotationDegreesPerPixel);
+                held.RotateBy(turn * _settings.RotationDegreesPerPixel);
             }
             else
             {
                 _rotateGrip.Release();
                 if (_rotateGesture.Clicked)
-                    Tool.RotateStep();
+                    held.RotateStep();
             }
             // Le curseur rendu n'est à sa place qu'à l'image suivante : on ne vise pas avec l'ancienne position.
             bool justReleased = gripWasHeld && !_rotateGrip.IsHeld;
             if (!_rotate.IsPressed() && !justReleased)
             {
                 if (onInterface)
-                    Tool.LoseAim();
+                    held.LoseAim();
                 else
-                    Tool.AimAt(pointer);
+                    held.AimAt(pointer);
             }
 
             _placeGesture.Update(_place.IsPressed(), pointer, threshold, onInterface);
             if (_placeGesture.Clicked)
-                Tool.Confirm();
+                held.Confirm();
 
             _secondaryGesture.Update(_secondary.IsPressed(), pointer, threshold, onInterface);
             if (_secondaryGesture.Clicked)
-                Tool.Cancel();
+                held.Cancel();
         }
 
         private void ResetGestures()

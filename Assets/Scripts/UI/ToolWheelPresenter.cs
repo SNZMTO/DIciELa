@@ -6,10 +6,10 @@ namespace Diciela.UI
 {
     /// <summary>
     /// Le présentateur de la roue des outils (GDD, section 16 ; décision 168). Choisir un outil l'allume, en éteignant
-    /// les autres, ou l'éteint s'il l'était : Construire ouvre ou ferme le panneau Construire, Retirer prend ou lâche
-    /// l'outil. Ce que fait chaque outil n'est écrit qu'ici, dans sa table ; le reste se lit dans la table des outils
-    /// (WheelTool). La bulle du milieu dit le nom et l'usage de l'outil visé ; un outil actif reste enfoncé. Les touches
-    /// se lisent sur les liaisons, l'icône dit celle de la roue dans son infobulle.
+    /// les autres, ou l'éteint s'il l'était : Construire ouvre ou ferme le panneau Construire, Retirer et Déplacer
+    /// prennent ou lâchent leur outil. Ce que fait chaque outil n'est écrit qu'ici, dans sa table ; le reste se lit
+    /// dans la table des outils (WheelTool). La bulle du milieu dit le nom et l'usage de l'outil visé ; un outil actif
+    /// reste enfoncé. Les touches se lisent sur les liaisons, l'icône dit celle de la roue dans son infobulle.
     /// </summary>
     public sealed class ToolWheelPresenter : IDisposable
     {
@@ -18,6 +18,7 @@ namespace Diciela.UI
         private readonly IToolKeys _keys;
         private readonly ClearingTool _clearing;
         private readonly IBuildMenu _build;
+        private readonly MoveTool _move;
         private readonly Switch[] _switches;
 
         /// <summary>Ce qu'un outil allume et éteint, et s'il est allumé.</summary>
@@ -36,27 +37,30 @@ namespace Diciela.UI
         }
 
         public ToolWheelPresenter(IToolWheelView view, TextTable texts, IToolKeys keys, ClearingTool clearing,
-            IBuildMenu build)
+            IBuildMenu build, MoveTool move)
         {
             if (view == null || ReferenceEquals(texts, null) || keys == null || ReferenceEquals(clearing, null) ||
-                build == null)
-                throw new ArgumentException("La roue des outils a besoin de sa vue, des textes, des touches, de " +
-                                            "l'outil « Retirer » et du panneau Construire.");
+                build == null || ReferenceEquals(move, null))
+                throw new ArgumentException("La roue des outils a besoin de sa vue, des textes, des touches, des " +
+                                            "outils « Retirer » et « Déplacer » et du panneau Construire.");
 
             _view = view;
             _texts = texts;
             _keys = keys;
             _clearing = clearing;
             _build = build;
+            _move = move;
             // Au rang du choix de chaque outil (ToolChoice).
             _switches = new[]
             {
                 new Switch(() => _build.IsOpen, _build.Open, _build.Close),
-                new Switch(() => _clearing.IsActive, _clearing.Take, () => _clearing.Escape())
+                new Switch(() => _clearing.IsActive, _clearing.Take, () => _clearing.Escape()),
+                new Switch(() => _move.IsActive, _move.Take, _move.PutDown)
             };
             _view.Chosen += OnChosen;
             _view.Pointed += OnPointed;
             _clearing.HeldChanged += ShowActive;
+            _move.HeldChanged += ShowActive;
             _build.OpenChanged += ShowActive;
             _view.ShowWheelKey(keys.WheelKey);
             for (int i = 0; i < _switches.Length; i++)
@@ -70,6 +74,7 @@ namespace Diciela.UI
             _view.Chosen -= OnChosen;
             _view.Pointed -= OnPointed;
             _clearing.HeldChanged -= ShowActive;
+            _move.HeldChanged -= ShowActive;
             _build.OpenChanged -= ShowActive;
         }
 

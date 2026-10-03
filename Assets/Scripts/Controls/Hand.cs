@@ -56,7 +56,7 @@ namespace Diciela.Controls
             foreach (IHeldTool tool in _tools)
             {
                 if (!ReferenceEquals(tool, taken) && tool.IsActive)
-                    tool.Escape();
+                    tool.PutDown();
             }
         }
     }
