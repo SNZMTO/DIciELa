@@ -295,12 +295,13 @@
 - **Règle.** Des bâtiments de service ouvrent les postes des métiers qui ne produisent rien : la loge des bâtisseurs
   (les ouvriers : chantiers, canaux, décos), l'entrepôt (les charretiers), la cabane du paysagiste (les paysagistes).
 - **Défaut.** La loge des bâtisseurs : 5 × 4 m, 15 Bois et 10 Pierre, 3 h de travail, deux postes d'ouvrier (bâtir).
-  L'entrepôt : 6 × 5 m, 20 Bois et 10 Pierre, 3 h, 200 places (voir 8), deux postes de charretier (porter, conduire). Le
+  L'entrepôt : 6 × 5 m, 20 Bois et 10 Pierre, 3 h, 200 places (voir 8), deux postes de charretier (porter, conduire, garnir). Le
   stock de départ n'y suffit pas : il faut d'abord défricher.
 - **À toi.** Un habitant en pleine tâche est-il interrompu par une tâche plus urgente ? Ma reco : non, il va au bout,
   comme dans Oxygen Not Included.
 - **Règle.** Le poste « à tout faire » choisit ses tâches dans cet ordre : porter, conduire (une charrette de l'étal,
-  voir 11), bâtir, récolter, défricher. Conduire suit porter dans tout poste qui porte.
+  voir 11), bâtir, garnir (les charrettes de l'étal, voir 11), récolter, défricher. Conduire suit porter dans tout
+  poste qui porte ; le charretier porte, conduit, puis garnit.
 - **Règle.** On ne travaille que pendant les heures de travail. Si la journée finit pendant une tâche, l'habitant
   finit l'étape en cours, dépose ce qu'il porte, puis part en soirée ; la Chimère, elle, flâne près de son poste. Une
   marche commencée se finit, mais arrivé au stock, on n'y prend plus rien ; le travail sur un chantier s'arrête tout de
@@ -497,9 +498,14 @@
   sur la Place. Le milieu reste libre. Un timon de 2,2 m.
 - **Défaut.** Deux places de charrette, une pour les habitants et une pour le troc, et une de plus par niveau : cinq au
   plus. Une charrette tient 20 places (voir 8 : chaque marchandise en prend plus ou moins).
-- **Règle.** Le joueur garnit chaque charrette dans la fiche de la Place : une liste de marchandises, chacune une
-  quantité, ou « garder au moins N » au stock, dans la limite de ses places. Les charretiers la remplissent depuis les
-  entrepôts.
+- **Règle.** Le joueur garnit chaque charrette dans la fiche de la Place : la consigne de sa place de charrette, une
+  liste de marchandises, chacune une quantité, ou « garder au moins N » au stock, dans la limite de ses places. Les
+  charretiers la remplissent depuis les entrepôts, par la tâche « garnir », ligne après ligne : la première ligne est
+  servie d'abord, la suivante prend les places qui restent. Une ligne « garder au moins N » prend ce qui dépasse N de
+  ce que la ville peut donner, et ne fait que remplir : la charrette ne rend jamais ce qu'elle a pris. Seul le joueur
+  fait du surplus, en baissant une quantité ou en retirant une ligne : les charretiers le rapportent à l'entrepôt le
+  plus proche qui a la place, avant de garnir. Ce qui est sur une charrette n'est plus au stock de la ville. On ne
+  garnit qu'une charrette garée, sur une Place bâtie.
 - **Règle.** Une charrette de troc demande un marchand : la Place ouvre un poste de marchand par charrette de troc. La
   sous-statistique troc d'un marchand règle sa cadence (combien de visiteurs il sert).
 - **Règle.** Les visiteurs viennent le jour, par la route du bord de la carte, avec un panier, parfois un objet rare. Le

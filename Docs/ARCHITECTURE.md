@@ -101,7 +101,10 @@ la société, qui voit tout ce qui est en dessous.
   charrettes suivent une Place déplacée (`Carts` écoute `StructureMoved`, pour ses places de charrette).
   La production comptée par marchandise. La valeur des marchandises. La publication des tâches à prendre (porter,
   bâtir, retirer un arbre, conduire une charrette). Les charrettes de l'étal et les places de charrette de la Place
-  (`Carts`, la seule fonction qui change une charrette ; `CartOffers`, les charrettes à conduire).
+  (`Carts`, la seule fonction qui change une charrette ; `CartOffers`, les charrettes à conduire). L'étal (`Stalls`) :
+  la consigne de chaque place de charrette, ce qu'elle demande à sa charrette, ce qu'on lui apporte déjà ; garnir les
+  charrettes garées et en rapporter le surplus, comme tâches à prendre (`StallOffers`, la seule fonction qui change le
+  contenu d'une charrette, avec les réservations des deux côtés, comme une livraison).
 - **La société.** Les habitants (ordinaires, maîtres, la Chimère : trois sortes décrites par leurs fiches, jamais un
   cas particulier par nom) et leur journée (travail, soirée, nuit). Leur marche, le long de la ligne tendue d'un
   trajet, et la sortie d'une construction qu'on ne traverse pas, posée sur eux ; la flânerie de qui n'a pas de poste ;
@@ -138,7 +141,7 @@ sauvegardé.
 | la carte peinte | reçue au lancement ; seule son empreinte est sauvegardée | le relief creusé, l'eau |
 | arbres et rochers : marqués (dans l'ordre des marques), retirés ; champ sauvage : désigné, récolté, minuterie | le terrain | le maillage |
 | le travail déjà fait sur un arbre ou un rocher marqué ; qui l'a pris | l'économie | — |
-| une charrette de l'étal : son entrepôt, la place qui l'appelle, garée ou non ; les places de charrette d'une Place, tirées à sa mise en service | l'économie (`Carts`) | — |
+| une charrette de l'étal : son entrepôt, la place qui l'appelle, garée ou non, ce qu'elle porte ; les places de charrette d'une Place, tirées à sa mise en service, et leur consigne | l'économie (`Carts`, `Stalls`) | ce qui manque à une charrette, son surplus |
 | tracés et plantations : forme, sorte, état (en chantier, bâti) | le terrain | les coûts du maillage ; les champs, leur surface, leurs postes |
 | une construction : sorte, place, angle, niveau, état (fantôme, bâtie, en déplacement avec sa place visée, rangée) | le terrain | le maillage et ses îlots ; les devants de porte ; la réserve ; le logis de la Chimère (la construction bâtie que sa fiche dit être son logis) |
 | un chantier : rang dans la file, livraisons déposées, avancement | l'économie | — |
@@ -222,9 +225,9 @@ sauvegardé.
   (`Job` : le poste tenu, le choix de la tâche dans l'ordre du poste, la flânerie près du poste) et sa tâche en cours
   (`Chore` : marcher jusqu'au but de son geste, y faire ce qu'il dit, travailler sur place ; chaque marche a son issue
   d'échec ; une construction servie qui change de place, il la suit : le but d'une tâche se lit là où elle est). La sorte de tâche dit, par une valeur fixe de sa fiche, quel geste le code joue (`TaskWork`) ; chaque geste
-  (`Gesture` : porter, bâtir, défricher, conduire) est le seul à parler à l'économie ; il peut ralentir la marche (une
+  (`Gesture` : porter, bâtir, défricher, conduire, garnir) est le seul à parler à l'économie ; il peut ralentir la marche (une
   charrette tirée) et suit chacun de ses pas. Ce qu'une tâche réserve vit dans l'économie (`Delivery`, `BuildShift`,
-  `Clearing`, `Drive`), jusqu'à la place retenue dans un entrepôt pour ce qu'on y
+  `Clearing`, `Drive`, `StallDelivery`), jusqu'à la place retenue dans un entrepôt pour ce qu'on y
   apportera.
 - La cadence d'un lieu est la somme de ce qu'apportent les présents. Qui est présent se déduit des tâches en cours ; le
   plafond d'ouvriers d'un chantier et l'effet d'un maître lisent la même donnée.
@@ -335,6 +338,7 @@ code.
 | bordure de la Place | `PlaceBorder` | poser par le milieu de sa boîte | `Piece.Centered` | encombrement ; places libres ; ce qui tient encore | `GoodDefinition.Space` ; `FreeSpace` ; `RoomFor` |
 | charrettes de l'étal ; à conduire ; vues | `Carts` ; `CartOffers` ; `CartViews` | conduire ; atteler ; tirer ; garer | `Drive` ; `Hitch` ; `Pull` ; `Park` | cap (au sol) ; où se garent les charrettes | `Heading` ; `CartSpotLayout` |
 | déplacer (une construction) ; son sol | `MoveStructureCommand`, `StructureMoves` ; `StructureGround` | déplacée ; déplacement refusé | `StructureMoved` ; `MoveRefused` |
+| consigne (d'une place de charrette) ; sa ligne | `Consigne` ; `ConsigneLine`, `ConsigneMode` | garnir ; l'étal | `TaskWork.Stock`, `StockGesture` ; `Stalls`, `StallOffers` | ce qu'on porte pour l'étal | `StallDelivery` |
 | outil Déplacer ; outil qui vise | `MoveTool` ; `IAimingTool` | lâcher (un outil) | `PutDown` | défaite ; en déplacement | `StructureTakenDown` ; `StructureState.Moving` |
 
 ## 10. La carte, les scènes et la sauvegarde

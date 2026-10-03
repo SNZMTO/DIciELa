@@ -43,11 +43,12 @@ namespace Diciela.Simulation
             var offers = new TaskOffers(Warehouses, ConstructionSites, reach, settings);
             Clearings = new ClearingOffers(Nature, Warehouses, reach);
             Carts = new Carts(catalog.Cart, Structures);
+            Stalls = new Stalls(Carts, Warehouses);
             WorkSlots = new WorkSlots();
             Housing = new Housing(Structures, Structures.Rules);
             Villagers = new Villagers(Grid, Islands, PathFinder, Clock, surroundings, offers, Clearings,
-                new CartOffers(Carts, reach, Grid), new StatisticTable(catalog.Statistics, settings), settings,
-                Structures, Housing);
+                new CartOffers(Carts, reach, Grid), new StallOffers(Carts, Stalls, Warehouses, reach, Grid),
+                new StatisticTable(catalog.Statistics, settings), settings, Structures, Housing);
             _opening = new Opening(catalog.Opening, catalog.VillagerKind);
             _commissioning = new Commissioning(this, _opening);
             Placing = new Placing(this, _commissioning);
@@ -89,6 +90,9 @@ namespace Diciela.Simulation
 
         /// <summary>Les charrettes de l'étal, et les places de la Place qui les appellent.</summary>
         public Carts Carts { get; }
+
+        /// <summary>L'étal : la consigne de chaque place de charrette, et ce qu'elle demande à sa charrette.</summary>
+        public Stalls Stalls { get; }
 
         /// <summary>Les chantiers et leur file.</summary>
         public ConstructionSites ConstructionSites { get; }
@@ -159,6 +163,7 @@ namespace Diciela.Simulation
             Nature.DeliverEvents();
             Warehouses.DeliverEvents();
             Carts.DeliverEvents();
+            Stalls.DeliverEvents();
             ConstructionSites.DeliverEvents();
             WorkSlots.DeliverEvents();
             Villagers.DeliverEvents();

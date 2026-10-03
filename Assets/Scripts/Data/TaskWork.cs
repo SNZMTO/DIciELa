@@ -16,6 +16,9 @@ namespace Diciela.Data
         Clear = 2,
 
         /// <summary>Conduire : mener la charrette d'un entrepôt à sa place sur la Place, où elle sert d'étal.</summary>
-        Drive = 3
+        Drive = 3,
+
+        /// <summary>Garnir : porter aux charrettes garées ce que demande leur consigne, et en rapporter le surplus.</summary>
+        Stock = 4
     }
 }
