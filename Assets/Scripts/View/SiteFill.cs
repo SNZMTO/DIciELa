@@ -23,11 +23,20 @@ namespace Diciela.View
         private double _progress = -1d;
 
         /// <summary>Fait de ce modèle posé un chantier : sa vraie matière, et son fantôme, copie rangée sous lui.</summary>
-        public SiteFill(GameObject view, GameObject model, SiteMaterials materials, SiteGhosts ghosts)
+        public SiteFill(GameObject view, SiteMaterials materials, SiteGhosts ghosts)
         {
+            Renderer[] renderers = view.GetComponentsInChildren<Renderer>(true);
+            // Le fantôme est la copie du modèle tel qu'il est posé (un sol épouse déjà le relief), faite avant que la
+            // vraie matière ne prenne la place de ses matériaux.
+            GameObject ghost = Object.Instantiate(view, view.transform, false);
+            ghost.name = "Fantôme";
+            ghost.transform.localPosition = Vector3.zero;
+            ghost.transform.localRotation = Quaternion.identity;
+            ghost.transform.localScale = Vector3.one;
+
             var box = new Bounds();
             bool any = false;
-            foreach (Renderer renderer in view.GetComponentsInChildren<Renderer>(true))
+            foreach (Renderer renderer in renderers)
             {
                 if (!TranslucentModel.KeepMesh(renderer))
                     continue;
@@ -44,11 +53,6 @@ namespace Diciela.View
             }
             _bottom = box.min.y;
             _height = box.size.y;
-
-            GameObject ghost = ModelPose.Instantiate(model, view.transform, "Fantôme");
-            ghost.transform.localPosition = Vector3.zero;
-            ghost.transform.localRotation = Quaternion.identity;
-            ghost.transform.localScale = Vector3.one;
             _ghost = new TranslucentModel(ghost, ghosts);
             Show(0d);
         }

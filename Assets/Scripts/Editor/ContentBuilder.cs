@@ -18,7 +18,7 @@ namespace Diciela.EditorTools
         internal const string CatalogPath = "Assets/Data/Catalogue.asset";
         private const string StructuresFolder = "Assets/Data/Structures";
         internal const string CampPath = StructuresFolder + "/Campement.asset";
-        private const string PlacePath = StructuresFolder + "/Place.asset";
+        internal const string PlacePath = StructuresFolder + "/Place.asset";
         internal const string CabinPath = StructuresFolder + "/Cabane.asset";
         private const string HousingPath = StructuresFolder + "/Famille_Logement.asset";
         private const string ChimeraPath = "Assets/Data/Habitants/Chimere.asset";
@@ -34,7 +34,7 @@ namespace Diciela.EditorTools
             TradesContentBuilder.Made trades = TradesContentBuilder.CreateMissing(town);
             VillagerContentBuilder.Made villagers = VillagerContentBuilder.CreateMissing(town.Statistics, trades);
             // Le campement se voit en boîte à sa taille (Défaut : 3 × 3 m, porte de 1,2 m ; GDD, section 16) tant que sa
-            // composition n'est pas faite (DICIELA/Contenu/Composer le campement). Il fait tout au départ (décision 172) :
+            // composition n'est pas faite (DICIELA/Contenu/Composer les modèles). Il fait tout au départ (décision 172) :
             // il tient 100 marchandises pour la ville et ouvre le poste « à tout faire ».
             StructureDefinition camp = EditorAssets.CreateIfMissing<StructureDefinition>(CampPath, fiche =>
             {
