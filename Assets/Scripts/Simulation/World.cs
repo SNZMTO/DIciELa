@@ -42,10 +42,12 @@ namespace Diciela.Simulation
             var reach = new Reach(Grid, Islands, surroundings);
             var offers = new TaskOffers(Warehouses, ConstructionSites, reach, settings);
             Clearings = new ClearingOffers(Nature, Warehouses, reach);
+            Carts = new Carts(catalog.Cart);
             WorkSlots = new WorkSlots();
             Housing = new Housing(Structures, Structures.Rules);
             Villagers = new Villagers(Grid, Islands, PathFinder, Clock, surroundings, offers, Clearings,
-                new StatisticTable(catalog.Statistics, settings), settings, Structures, Housing);
+                new CartOffers(Carts, reach, Grid), new StatisticTable(catalog.Statistics, settings), settings,
+                Structures, Housing);
             _opening = new Opening(catalog.Opening, catalog.VillagerKind);
             _commissioning = new Commissioning(this, _opening);
             Placing = new Placing(this, _commissioning);
@@ -85,6 +87,9 @@ namespace Diciela.Simulation
         /// <summary>Ce qui tient les marchandises de la ville : le campement, puis les entrepôts.</summary>
         public Warehouses Warehouses { get; }
 
+        /// <summary>Les charrettes de l'étal, et les places de la Place qui les appellent.</summary>
+        public Carts Carts { get; }
+
         /// <summary>Les chantiers et leur file.</summary>
         public ConstructionSites ConstructionSites { get; }
 
@@ -118,6 +123,7 @@ namespace Diciela.Simulation
         {
             ApplyPendingCommands();
             Clock.Advance();
+            Carts.BeginStep();
             Villagers.Step();
             CommissionWhatWasBuilt();
             _opening.Step(this);
@@ -152,6 +158,7 @@ namespace Diciela.Simulation
             Structures.DeliverEvents();
             Nature.DeliverEvents();
             Warehouses.DeliverEvents();
+            Carts.DeliverEvents();
             ConstructionSites.DeliverEvents();
             WorkSlots.DeliverEvents();
             Villagers.DeliverEvents();

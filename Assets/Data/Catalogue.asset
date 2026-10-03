@@ -18,6 +18,7 @@ MonoBehaviour:
   _chimeraKind: {fileID: 11400000, guid: 6f852c15c2b34904c91165f54350ffdb, type: 2}
   _villagerKind: {fileID: 11400000, guid: c43b9e828fcd4344eaa192fc79dbacfb, type: 2}
   _opening: {fileID: 11400000, guid: 5f1be715bcd2f7d4ea5ebe7cd8d40508, type: 2}
+  _cart: {fileID: 11400000, guid: 0f9307cb8bc68464d9c43794b4334668, type: 2}
   _nature:
   - {fileID: 11400000, guid: a818e0fa99a21944ca0833614f8fd4d6, type: 2}
   - {fileID: 11400000, guid: bb02470ad0228224d857d947456e789e, type: 2}

@@ -31,11 +31,11 @@ namespace Diciela.Simulation.Society
         /// la Chimère dans son logis, les autres là où ils ont leur lit.
         /// </summary>
         public Villagers(NavGrid grid, Islands islands, PathFinder finder, Clock clock, Surroundings surroundings,
-            TaskOffers offers, ClearingOffers clearings, StatisticTable statistics, SimulationSettings settings,
-            Structures structures, Housing housing)
+            TaskOffers offers, ClearingOffers clearings, CartOffers carts, StatisticTable statistics,
+            SimulationSettings settings, Structures structures, Housing housing)
         {
-            _services = new VillagerServices(clock, grid, islands, finder, surroundings, offers, clearings, statistics,
-                settings);
+            _services = new VillagerServices(clock, grid, islands, finder, surroundings, offers, clearings, carts,
+                statistics, settings);
             _grid = grid;
             _structures = structures ?? throw new ArgumentNullException(nameof(structures));
             _housing = housing ?? throw new ArgumentNullException(nameof(housing));

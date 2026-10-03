@@ -6,11 +6,12 @@ using UnityEngine.UIElements;
 namespace Diciela.EditorTools
 {
     /// <summary>
-    /// Crée le contenu de la ville au travail qui manque (GDD, sections 2 et 5 à 7 ; décisions 137 à 139 et 157 à 160) :
-    /// le Bois et la Pierre, les quatre statistiques et leurs sous-statistiques, les tâches « porter », « bâtir » et
-    /// « défricher », le poste « à tout faire », l'arbre et le rocher (sans modèle : le développeur y range ceux qu'il
-    /// peint). Le campement, la cabane, le déroulé du départ et le catalogue naissent avec eux (ContentBuilder).
-    /// Réexécutable : une fiche qui existe n'est jamais touchée, un réglage fait à la main jamais remis.
+    /// Crée le contenu de la ville au travail qui manque (GDD, sections 2 et 5 à 7 ; décisions 137 à 139 et 157 à
+    /// 160) : le Bois et la Pierre, les quatre statistiques et leurs sous-statistiques, les tâches « porter »,
+    /// « conduire », « bâtir » et « défricher », le poste « à tout faire », l'arbre et le rocher (sans modèle : le
+    /// développeur y range ceux qu'il peint). Le campement, la cabane, le déroulé du départ et le catalogue naissent
+    /// avec eux (ContentBuilder). Réexécutable : une fiche qui existe n'est jamais touchée, un réglage fait à la main
+    /// jamais remis.
     /// </summary>
     internal static class TownContentBuilder
     {
@@ -21,6 +22,7 @@ namespace Diciela.EditorTools
             public GoodDefinition Stone;
             public WorkSlotDefinition OddJobs;
             public TaskKindDefinition Carry;
+            public TaskKindDefinition Drive;
             public TaskKindDefinition Build;
             public NatureDefinition[] Nature;
             public List<StatisticDefinition> Statistics;
@@ -51,23 +53,25 @@ namespace Diciela.EditorTools
                 statistics.Add(Statistic(ids, subStatistics));
 
             TaskKindDefinition carry = Task("Tache_Porter", "porter", TaskWork.Carry, subStatistics["transport"]);
+            TaskKindDefinition drive = Task("Tache_Conduire", "conduire", TaskWork.Drive, subStatistics["transport"]);
             TaskKindDefinition build = Task("Tache_Batir", "batir", TaskWork.Build, subStatistics["construction"]);
             TaskKindDefinition clear = Task("Tache_Defricher", "defricher", TaskWork.Clear, subStatistics["paysage"]);
-            // Récolter s'ajoutera avec les champs sauvages, entre bâtir et défricher (décision 139).
+            // Conduire suit porter (décision 197) ; récolter s'ajoutera avec les champs sauvages, entre bâtir et défricher
+            // (décision 139).
             WorkSlotDefinition oddJobs = EditorAssets.CreateIfMissing<WorkSlotDefinition>(
                 WorkFolder + "/Poste_AToutFaire.asset", fiche =>
                 {
                     EditorAssets.Property(fiche, "_id").stringValue = "a_tout_faire";
                     EditorAssets.Property(fiche, "_nameKey").stringValue = "poste.a_tout_faire";
-                    EditorAssets.SetList(EditorAssets.Property(fiche, "_tasks"), new[] { carry, build, clear });
+                    EditorAssets.SetList(EditorAssets.Property(fiche, "_tasks"), new[] { carry, drive, build, clear });
                 });
             // Un arbre rend 3 Bois pour 30 min de travail, un rocher 2 Pierre pour 45 min (décision 160).
             NatureDefinition tree = Nature("Arbre", "arbre", 1f, wood, 3, 0.5f);
             NatureDefinition rock = Nature("Rocher", "rocher", 1.5f, stone, 2, 0.75f);
             return new Made
             {
-                Wood = wood, Stone = stone, OddJobs = oddJobs, Carry = carry, Build = build, Nature = new[] { tree, rock },
-                Statistics = statistics
+                Wood = wood, Stone = stone, OddJobs = oddJobs, Carry = carry, Drive = drive, Build = build,
+                Nature = new[] { tree, rock }, Statistics = statistics
             };
         }
 

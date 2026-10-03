@@ -3,10 +3,10 @@ using System.Collections.Generic;
 namespace Diciela.EditorTools
 {
     /// <summary>
-    /// Les icônes du travail, à l'encre sur 20 unités : les tâches d'un poste (porter, bâtir, défricher) et l'icône des
-    /// outils, qui croise le marteau de « bâtir », retourné, avec la hache de « défricher ». Chaque outil n'est dessiné
-    /// qu'une fois. La hache et les outils sont des remplaçants simples : la maquette n'en a pas. Le menu des images de
-    /// l'interface les génère avec les autres (InterfaceIcons).
+    /// Les icônes du travail, à l'encre sur 20 unités : les tâches d'un poste (porter, bâtir, défricher, conduire) et
+    /// l'icône des outils, qui croise le marteau de « bâtir », retourné, avec la hache de « défricher ». Chaque outil
+    /// n'est dessiné qu'une fois. La hache, la charrette et les outils sont des remplaçants simples : la maquette n'en
+    /// a pas. Le menu des images de l'interface les génère avec les autres (InterfaceIcons).
     /// </summary>
     internal static class WorkIcons
     {
@@ -24,6 +24,13 @@ namespace Diciela.EditorTools
             });
             yield return new InterfaceIcons.Icon("batir", Size, Hammer());
             yield return new InterfaceIcons.Icon("defricher", Size, Axe());
+            // La charrette, de profil : sa caisse, son timon levé vers l'avant, sa roue et son moyeu.
+            yield return new InterfaceIcons.Icon("conduire", Size, new[]
+            {
+                F(Ink, 2f, 5f, 14f, 5f, 14f, 11f, 2f, 11f), F(Ink, 13.5f, 8f, 19f, 5.6f, 19.6f, 7f, 13.5f, 9.8f),
+                F(Ink, 12f, 14f, 10.8f, 16.8f, 8f, 18f, 5.2f, 16.8f, 4f, 14f, 5.2f, 11.2f, 8f, 10f, 10.8f, 11.2f),
+                Faded(0.45f, 3f, 6f, 13f, 6f, 13f, 7f, 3f, 7f), Faded(0.6f, 7f, 13f, 9f, 13f, 9f, 15f, 7f, 15f)
+            });
             var tools = new List<InterfaceIcons.Face>(Mirrored(Hammer()));
             tools.AddRange(Axe());
             yield return new InterfaceIcons.Icon("outils", Size, tools.ToArray());

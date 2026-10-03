@@ -155,15 +155,19 @@ namespace Diciela.Tests.EditMode
             serialized.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        /// <summary>Un catalogue qui n'a que ce déroulé du départ, ces marchandises et ces statistiques.</summary>
+        /// <summary>
+        /// Un catalogue qui n'a que ce déroulé du départ, ces marchandises, ces statistiques, et cette charrette s'il y en a
+        /// une.
+        /// </summary>
         public static Catalog TownCatalog(OpeningDefinition opening, GoodDefinition[] goods,
-            StatisticDefinition[] statistics)
+            StatisticDefinition[] statistics, CartDefinition cart = null)
         {
             Catalog catalog = ScriptableObject.CreateInstance<Catalog>();
             var serialized = new SerializedObject(catalog);
             Property(serialized, "_opening").objectReferenceValue = opening;
             Fill(Property(serialized, "_goods"), goods);
             Fill(Property(serialized, "_statistics"), statistics);
+            Property(serialized, "_cart").objectReferenceValue = cart;
             serialized.ApplyModifiedPropertiesWithoutUndo();
             return catalog;
         }

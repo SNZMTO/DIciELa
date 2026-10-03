@@ -13,14 +13,15 @@ namespace Diciela.Tests.EditMode
     /// <summary>
     /// Le banc de la ville au travail : les réglages du banc de la Chimère (un pas de 0,1 s, 300 pas par heure de jeu,
     /// deux mailles par mètre, 1 m libre devant une porte), ou une journée plus courte ; trois statistiques de deux
-    /// sous-statistiques (Bâtisse : construction, terrassement ; Échange : transport, troc ; Terre : paysage, coupe) ; le
-    /// Bois et la Pierre ; porter (transport), bâtir (construction) et défricher (paysage) ; le poste « à tout faire »
-    /// (porter, puis bâtir, puis défricher) ; le campement de 3 × 3 m, qui tient 100 marchandises et ouvre ce poste, et
-    /// reçoit 30 Bois et 20 Pierre quand on l'installe ; une cabane de 4 × 4 m qui coûte 10 Bois et 5 Pierre et 2 h
-    /// de travail ; un arbre (pied de 1 m, 3 Bois, 30 min) et un rocher (pied de 1,5 m, 2 Pierre, 45 min). La Chimère
-    /// commence à 10 partout et porte 5 places ; elle sait bâtir en arrivant le campement, la cabane et ce que le
-    /// test y ajoute. Ses mondes sont plats, 40 × 40 m, nus ou avec les arbres et rochers qu'on leur donne ; les fiches
-    /// qu'il crée sont détruites avec lui.
+    /// sous-statistiques (Bâtisse : construction, terrassement ; Échange : transport, troc ; Terre : paysage, coupe) ;
+    /// le Bois et la Pierre ; porter et conduire (transport), bâtir (construction) et défricher (paysage) ; le poste
+    /// « à tout faire » (porter, conduire, bâtir, puis défricher) ; le campement de 3 × 3 m, qui tient 100 places et
+    /// ouvre ce poste, et reçoit 30 Bois et 20 Pierre quand on l'installe ; la charrette de l'étal (20 places, moitié
+    /// moins vite, timon de 2,2 m), qu'aucune construction ne garde tant que le test ne le dit pas ; une cabane de
+    /// 4 × 4 m qui coûte 10 Bois et 5 Pierre et 2 h de travail ; un arbre (pied de 1 m, 3 Bois, 30 min) et un rocher
+    /// (pied de 1,5 m, 2 Pierre, 45 min). La Chimère commence à 10 partout et porte 5 places ; elle sait bâtir en
+    /// arrivant le campement, la cabane et ce que le test y ajoute. Ses mondes sont plats, 40 × 40 m, nus ou avec les
+    /// arbres et rochers qu'on leur donne ; les fiches qu'il crée sont détruites avec lui.
     /// </summary>
     internal sealed class TestTown : IDisposable
     {
@@ -41,9 +42,10 @@ namespace Diciela.Tests.EditMode
             SubStatisticDefinition landscape = Keep(TestData.SubStatistic("paysage"));
             var land = Keep(TestData.Statistic("terre", landscape, Keep(TestData.SubStatistic("coupe"))));
             Carry = Keep(TestData.TaskKind("porter", TaskWork.Carry, transport));
+            Drive = Keep(TestData.TaskKind("conduire", TaskWork.Drive, transport));
             Build = Keep(TestData.TaskKind("batir", TaskWork.Build, construction));
             Clear = Keep(TestData.TaskKind("defricher", TaskWork.Clear, landscape));
-            OddJobs = Keep(TestData.WorkSlot("a_tout_faire", Carry, Build, Clear));
+            OddJobs = Keep(TestData.WorkSlot("a_tout_faire", Carry, Drive, Build, Clear));
             Camp = Keep(TestData.Home("campement", 3f, true, 100, OddJobs));
             Cabin = Keep(TestData.Structure("cabane", 4f, 4f));
             TestData.Cost(Cabin, 2f, new GoodAmount(Wood, 10), new GoodAmount(Stone, 5));
@@ -51,13 +53,15 @@ namespace Diciela.Tests.EditMode
             Rock = Keep(TestData.Nature("rocher", 1.5f, new GoodAmount(Stone, 2), 0.75f));
             Opening = Keep(TestData.Opening(new GoodAmount(Wood, 30), new GoodAmount(Stone, 20)));
             TestData.Knows(Opening, Camp, Cabin);
-            Catalog = Keep(TestData.TownCatalog(Opening, new[] { Wood, Stone }, new[] { building, trade, land }));
+            Cart = Keep(TestData.Cart(20, 0.5f, 2.2f));
+            Catalog = Keep(TestData.TownCatalog(Opening, new[] { Wood, Stone }, new[] { building, trade, land }, Cart));
         }
 
         public SimulationSettings Settings { get; }
         public GoodDefinition Wood { get; }
         public GoodDefinition Stone { get; }
         public TaskKindDefinition Carry { get; }
+        public TaskKindDefinition Drive { get; }
         public TaskKindDefinition Build { get; }
         public TaskKindDefinition Clear { get; }
         public WorkSlotDefinition OddJobs { get; }
@@ -66,6 +70,7 @@ namespace Diciela.Tests.EditMode
         public NatureDefinition Tree { get; }
         public NatureDefinition Rock { get; }
         public OpeningDefinition Opening { get; }
+        public CartDefinition Cart { get; }
         public Catalog Catalog { get; }
 
         /// <summary>

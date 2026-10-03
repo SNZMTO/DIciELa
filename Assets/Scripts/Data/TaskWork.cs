@@ -13,6 +13,9 @@ namespace Diciela.Data
         Build = 1,
 
         /// <summary>Défricher : retirer un arbre ou un rocher marqué, et porter ce qu'il rend à un entrepôt.</summary>
-        Clear = 2
+        Clear = 2,
+
+        /// <summary>Conduire : mener la charrette d'un entrepôt à sa place sur la Place, où elle sert d'étal.</summary>
+        Drive = 3
     }
 }

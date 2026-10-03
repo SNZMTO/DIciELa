@@ -295,11 +295,12 @@
 - **Règle.** Des bâtiments de service ouvrent les postes des métiers qui ne produisent rien : la loge des bâtisseurs
   (les ouvriers : chantiers, canaux, décos), l'entrepôt (les charretiers), la cabane du paysagiste (les paysagistes).
 - **Défaut.** La loge des bâtisseurs : 5 × 4 m, 15 Bois et 10 Pierre, 3 h de travail, deux postes d'ouvrier (bâtir).
-  L'entrepôt : 6 × 5 m, 20 Bois et 10 Pierre, 3 h, 200 places (voir 8), deux postes de charretier (porter). Le
+  L'entrepôt : 6 × 5 m, 20 Bois et 10 Pierre, 3 h, 200 places (voir 8), deux postes de charretier (porter, conduire). Le
   stock de départ n'y suffit pas : il faut d'abord défricher.
 - **À toi.** Un habitant en pleine tâche est-il interrompu par une tâche plus urgente ? Ma reco : non, il va au bout,
   comme dans Oxygen Not Included.
-- **Règle.** Le poste « à tout faire » choisit ses tâches dans cet ordre : porter, bâtir, récolter, défricher.
+- **Règle.** Le poste « à tout faire » choisit ses tâches dans cet ordre : porter, conduire (une charrette de l'étal,
+  voir 11), bâtir, récolter, défricher. Conduire suit porter dans tout poste qui porte.
 - **Règle.** On ne travaille que pendant les heures de travail. Si la journée finit pendant une tâche, l'habitant
   finit l'étape en cours, dépose ce qu'il porte, puis part en soirée ; la Chimère, elle, flâne près de son poste. Une
   marche commencée se finit, mais arrivé au stock, on n'y prend plus rien ; le travail sur un chantier s'arrête tout de
@@ -467,6 +468,16 @@
   Chaque entrepôt, le campement compris, a sa charrette. La Place a des places de charrette ; chacune appelle la
   charrette d'un entrepôt, qu'un charretier y conduit et gare au hasard sur la Place, où elle sert d'étal. Chaque place
   de charrette sert les habitants ou le troc, au choix du joueur.
+- **Règle.** Une charrette rangée à son entrepôt ne se voit pas. Quand la Place est bâtie, chaque place de charrette,
+  dans l'ordre, appelle la charrette rangée de l'entrepôt le plus proche de la Place ; un charretier va la prendre,
+  l'attelle, la tire au bout de son timon jusque devant sa place, au pas d'une charrette (voir 9), et l'y gare. Laissée
+  en chemin, elle retourne aussitôt à son entrepôt, et sa place en appelle une autre ; la journée finie, il finit de
+  la garer. On passe à travers une charrette.
+- **Défaut.** Les places de charrette se tirent au hasard quand la Place est bâtie : sur un cercle autour de son
+  milieu, à 55 % de son demi-côté, à intervalles égaux depuis un angle tiré ; chaque charrette tournée vers le milieu
+  ou vers le bord, de travers de 30° au plus. Le milieu reste libre. Un timon de 2,2 m.
+- **À toi.** Laquelle des quatre charrettes du pack ? Ma reco : la charrette ouverte à l'auvent (`SM_Veh_Cart_03`),
+  qui a déjà l'air d'un étal.
 - **Défaut.** Deux places de charrette, une pour les habitants et une pour le troc, et une de plus par niveau : cinq au
   plus. Une charrette tient 20 places (voir 8 : chaque marchandise en prend plus ou moins).
 - **Règle.** Le joueur garnit chaque charrette dans la fiche de la Place : une liste de marchandises, chacune une
