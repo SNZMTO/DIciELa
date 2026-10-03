@@ -1,30 +1,30 @@
 # DICIELA — état actuel
 
-**Branches** : `main` : l'étape 36. `etape-37-travail`, `etape-38-idees`, `etape-39-lieux` et `etape-40-place` (chacune
-partie de la précédente) : commitées, pas encore vues rendues ; elles se fusionnent dans l'ordre après un Play et
-l'album (Unity doit avoir le focus pour que le Play avance : je ne le prends jamais ; dis-moi quand tu cliques dedans).
+**Branches** : `main` : l'étape 36. De `etape-37-travail` à `etape-41-art-place` (chacune partie de la précédente) :
+commitées, pas encore vues rendues ; elles se fusionnent dans l'ordre après un Play et l'album (un Play n'avance que si
+Unity a le focus : je ne le prends jamais ; laisse-le au premier plan, ou dis-moi quand tu cliques dedans).
 
-**Fait** : 23 à 36, vus en Play le 02/10 ; 37, le travail des premiers habitants (189) ; 38, leurs idées, la loge et
-l'entrepôt en boîtes (190) ; 39, leur lieu bâti (191) ; 40, la Place (192) : 12 × 12 m, 5 Bois et 10 Pierre, sue au
-départ, première carte des Métiers, en sol plat beige ; on y marche dès sa pose, une porte s'ouvre dessus, elle
-s'étend devant une porte, on la bâtit depuis son bord. **EditMode 214/214, PlayMode 189/189.**
+**Fait** : 23 à 36, vus en Play le 02/10 ; 37, le travail des premiers habitants (189) ; 38, leurs idées (190) ; 39,
+leur lieu bâti (191) ; 40, la Place, un sol qu'on traverse (192) ; 41, son art (193) : un dallage de pierre beige du
+pack entouré de petits cailloux, qui épouse le relief ; un modèle préparé deux fois ne perd plus son maillage.
+**EditMode 214/214, PlayMode 191/191.**
 
 **À vérifier par toi, à la souris** : la Chimère réveillée en chemin flâne devant sa porte ; un Tab bref ne choisit
-rien ; un clic à côté de la roue la ferme ; 1 met la cabane en main ; les cartes ; la Place devant une porte.
+rien ; un clic à côté de la roue la ferme ; 1 met la cabane en main ; la Place devant une porte, sur une pente.
 
-**Prochaine étape : un ménage** (le dernier date de l'étape 32) : la société, que 36 à 39 ont fait grandir (le déroulé
-du départ, les postes, les logements, les habitants), relue en entier, sans agent. **Puis 41, l'étal** (GDD 11), et les
-visiteurs, le troc et la réputation (42-43). À trancher pour 41 : l'étal fait-il partie de la Place (ma reco) ou se
-pose-t-il dessus ? Et où le marchand se tient pour y travailler : les abords de la Place sont autour d'elle.
+**Tes idées à trancher, les charrettes-étals** (mes recos entre parenthèses) : a) le joueur charge une charrette et
+l'envoie (la fiche de la Place, une liste par place de charrette ; un charretier l'amène, la gare au hasard et la
+remplit) ; b) les étagères « habitants » et « troc » deviennent deux sortes de charrettes (oui) ; c) la place d'une
+marchandise compte partout ou dans les charrettes seules (partout, comme les piles de Satisfactory) ; d) combien de
+charrettes (2, puis +1 par niveau, 5 au plus) ; e) d'où elles viennent (une par entrepôt, le campement compris).
 
-**À toi** : peindre la carte, ranger tes modèles (`Assets/Data/Nature`) ; composer la Place (ma reco : la peindre dans
-le sol, comme les routes, pour suivre la pente ; GDD 11) et sa famille (ma reco appliquée : les Métiers ; GDD 16) ; les
-modèles de la loge et de l'entrepôt (boîtes) ; l'icône des Métiers ; le fanion des arbres marqués ; l'icône des
-outils, le plateau de la roue ; le bandeau de brique ; la voix de la Chimère ; les noms (dont ceux des premiers
-habitants) ; GDD 8 (marchandises rendues).
-**Dette** : `Fusion.uss` répète `:root` ; à trois cartes, le panneau chevauchera l'astuce en 720 p ; des réglages de
-l'interface restent dans le code (zone morte de la roue, écart des infobulles, portrait) ; « Monter les scènes » reste
-à repasser ; le rapport d'équilibrage (`EQUILIBRAGE.md`) n'a pas encore de menu : à créer quand les chiffres s'étoffent.
+**Prochaine étape** : un ménage de la société (le dernier date de l'étape 32) ; puis les charrettes-étals.
 
+**À toi** : peindre la carte, ranger tes modèles (`Assets/Data/Nature`) ; retoucher la composition de la Place
+(`Assets/Art/Compositions/Place.prefab`, puis « Préparer les modèles ») ; la famille de la Place (ma reco appliquée :
+les Métiers) ; les modèles de la loge et de l'entrepôt (boîtes) ; l'icône des Métiers ; le fanion des arbres marqués ;
+l'icône des outils, le plateau de la roue ; le bandeau de brique ; la voix de la Chimère ; les noms ; GDD 8.
+**Dette** : `Fusion.uss` répète `:root` ; trois cartes chevaucheront l'astuce en 720 p ; des réglages de l'interface
+restent dans le code ; « Monter les scènes » à repasser ; `EQUILIBRAGE.md` sans menu.
 **Prompt de la session suivante**
 > Lis CLAUDE.md et Docs/ETAT.md. Mes réponses : …

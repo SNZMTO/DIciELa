@@ -11,8 +11,9 @@ namespace Diciela.View
     /// Les constructions posées, vues (ARCHITECTURE, section 11) : à l'ouverture, celles qui existent déjà ; ensuite,
     /// chaque construction posée, par l'événement de la simulation, jamais par une photographie. Tant qu'elle attend
     /// d'être bâtie, une construction est un chantier qui monte (GDD, section 9 ; décision 166) : sa vraie matière sous
-    /// une ligne qui suit le travail fait, son fantôme au-dessus ; bâtie, le modèle tel quel. On touche une construction
-    /// en visant son modèle, pas le sol : vu de biais, le toit d'une maison cache le sol derrière elle.
+    /// une ligne qui suit le travail fait, son fantôme au-dessus ; bâtie, le modèle tel quel. Un sol qu'on traverse, comme
+    /// la Place, épouse le relief (FloorDrape). On touche une construction en visant son modèle, pas le sol : vu de biais,
+    /// le toit d'une maison cache le sol derrière elle.
     /// </summary>
     public sealed class StructureViews : MonoBehaviour
     {
@@ -28,6 +29,8 @@ namespace Diciela.View
             // Tant qu'elle n'est pas bâtie : sa ligne qui monte, et son chantier, trouvé à son ouverture.
             public SiteFill Fill;
             public ConstructionSite Site;
+            // Un sol : les maillages copiés pour épouser le relief, détruits avec sa vue.
+            public Mesh[] Draped;
         }
 
         private readonly List<Shown> _shown = new List<Shown>();
@@ -76,7 +79,7 @@ namespace Diciela.View
             _sites = null;
             _relief = null;
             foreach (Shown shown in _shown)
-                Destroy(shown.Transform.gameObject);
+                Forget(shown);
             _shown.Clear();
             _siteMaterials?.Clear();
             _siteMaterials = null;
@@ -131,14 +134,28 @@ namespace Diciela.View
             StructureDefinition definition = structure.Definition;
             GameObject view = ModelPose.Instantiate(definition.Model, transform, definition.Id + " n° " + structure.Id);
             ModelPose.Place(view.transform, structure.Placement, _relief);
+            Mesh[] draped = definition.IsWalkable ? FloorDrape.Apply(view, _relief) : null;
             SiteFill fill = structure.State == StructureState.Planned
-                ? new SiteFill(view, definition.Model, _siteMaterials, _siteGhosts)
+                ? new SiteFill(view, _siteMaterials, _siteGhosts)
                 : null;
             _shown.Add(new Shown
             {
                 Structure = structure, Transform = view.transform, LocalBox = BoxOf(view), Fill = fill,
-                Site = _sites.SiteOf(structure),
+                Site = _sites.SiteOf(structure), Draped = draped,
             });
+        }
+
+        // Retire cette vue, et les maillages copiés pour elle.
+        private static void Forget(Shown shown)
+        {
+            Destroy(shown.Transform.gameObject);
+            if (shown.Draped == null)
+                return;
+            foreach (Mesh mesh in shown.Draped)
+            {
+                if (mesh != null)
+                    Destroy(mesh);
+            }
         }
 
         // La boîte qu'on vise pour toucher ce modèle ; sans maillage, vide : on ne le touche pas.
@@ -155,7 +172,7 @@ namespace Diciela.View
             {
                 if (!ReferenceEquals(_shown[i].Structure, structure))
                     continue;
-                Destroy(_shown[i].Transform.gameObject);
+                Forget(_shown[i]);
                 _shown.RemoveAt(i);
                 break;
             }

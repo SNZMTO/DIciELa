@@ -320,7 +320,8 @@ code.
 | le nom d'un habitant (sa clé) | `NameKey` | ouvrir un poste pour lui | `WorkSlots.OpenFor` | un poste sur la fiche d'un lieu | `PlaceSheetSlot` |
 | apprendre (une idée) ; appris | `Knowledge.Learn` ; `Learned` | lieu de travail (d'un premier habitant) | `Workplace` | les onglets du panneau | `BuildBarTabs` |
 | fermer un poste | `WorkSlots.Close` | s'installer à son lieu de travail | `Opening.Settle` | un sol qu'on traverse (la Place) | `IsWalkable` |
-| devants de porte | `Doorways` | | | | |
+| devants de porte | `Doorways` | épouser le relief (un sol) | `FloorDrape` | dallage (d'une composition) | `FloorMesh`, `PackComposition.Floor` |
+| bordure de la Place | `PlaceBorder` | poser par le milieu de sa boîte | `Piece.Centered` | | |
 
 ## 10. La carte, les scènes et la sauvegarde
 
