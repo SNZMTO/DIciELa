@@ -455,12 +455,13 @@
 ## 11. L'étal, le troc et la réputation
 
 - **Règle.** Aucune monnaie en ville : tout se paie en marchandises.
-- **Règle.** La Place est un dallage de pierre beige entouré de petits cailloux, posé comme un bâtiment, et l'on y marche
-  (voir 9). Elle épouse le relief : qui y marche garde les pieds sur ses dalles. C'est là qu'arrivent les visiteurs et
+- **Règle.** La Place est un disque de galets de rivière sur la terre, entouré de petits cailloux, posé comme un
+  bâtiment, et l'on y marche (voir 9). Elle épouse le relief : qui y marche garde les pieds sur ses galets. C'est là qu'arrivent les visiteurs et
   que se tient l'étal, et là que se jouera la run. Elle a des niveaux qui la rendent plus cozy, chacun par un petit
   chantier.
 - **Règle.** Une route qui rejoint la Place enlève les cailloux du bord là où elle la touche (avec les routes).
-- **Défaut.** Elle fait 12 × 12 m, sans porte (son coût : voir 6). Trois niveaux ; chacun ajoute une place de charrette,
+- **Défaut.** Elle fait 12 m de diamètre, sans porte (son coût : voir 6) ; son empreinte, la boîte de son modèle,
+  12 × 12 m. Trois niveaux ; chacun ajoute une place de charrette,
   du charme et un visiteur par jour.
 - **Règle.** L'étal, ce sont des charrettes, comme les étals qui s'installent sur la place du marché de Manor Lords.
   Chaque entrepôt, le campement compris, a sa charrette. La Place a des places de charrette ; chacune appelle la
@@ -687,10 +688,10 @@
   pierres du pack, réduit au quart), une couche à gauche (un tapis et un coussin, où la Chimère dort), un coffre, un
   sac, une marmite, et son stock : une pile de bûches et un tas de pierres du pack (réduit au cinquième) ; deux pierres
   plates font son entrée. Sa taille et son entrée sont la boîte de sa composition, qui est au développeur.
-- **Règle.** La Place est faite de pièces et de textures du pack : son dallage porte les dalles beiges du pack (des
-  dalles de 75 cm, la texture tournée d'un quart de tour d'un bloc de 3 m à l'autre, pour ne pas faire de grille) ;
-  tout autour, à cheval sur son bord, des rangées de petits cailloux gris (les rangées de pierres du pack, réduites),
-  en tronçons d'environ 1,6 m, et quelques galets. Sa taille est la boîte de sa composition, qui est au développeur.
+- **Règle.** La Place est faite de pièces et de textures du pack : un disque qui porte les galets de rivière du pack
+  sur la terre (la texture de son calque de sol, posée à plat) ; tout autour, à cheval sur son bord, des rangées de
+  petits cailloux gris (les rangées de pierres du pack, réduites), tangentes au cercle, en tronçons d'environ 1,6 m, et
+  quelques galets semés en dedans. Sa taille est la boîte de sa composition, qui est au développeur.
 - **À toi.** Le reste du plan de l'interface ; le son et la musique. Ma reco : chaque panneau naît avec son système
   (la liste des habitants avec eux, l'étal avec le troc), sur le côté, la ville visible derrière, comme dans
   Timberborn ; le son et la musique après le premier jouable, avec un pack acheté, comme l'art.

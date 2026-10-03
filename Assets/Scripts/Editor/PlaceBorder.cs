@@ -1,23 +1,23 @@
-using System;
 using System.Collections.Generic;
+using UnityEngine;
+using Random = System.Random;
 
 namespace Diciela.EditorTools
 {
     /// <summary>
-    /// Les petits cailloux qui bordent la Place (GDD, section 11 ; décision 193), en objets du pack : sur chaque côté,
-    /// des rangées de pierres (SM_Bld_Stone_Edge, réduites : des cailloux d'une quinzaine de centimètres) posées bout à
-    /// bout un peu en dedans du bord, par tronçons d'environ 1,6 m ; à chaque coin, deux galets (SM_Env_Stepping_Stone,
-    /// réduits) ; et quelques galets semés juste en dedans des rangées. Le tirage est fixe : la même bordure à chaque
-    /// composition. Tout tient dans l'empreinte, que la préparation mesure sur la composition.
+    /// Les petits cailloux qui entourent la Place ronde (GDD, section 11 ; décisions 193 et 196), en objets du pack : des
+    /// rangées de pierres (SM_Bld_Stone_Edge, réduites : des cailloux d'une quinzaine de centimètres) posées bout à bout,
+    /// chacune tangente au cercle, à cheval sur le bord du dallage, par tronçons d'environ 1,6 m ; et quelques galets
+    /// (SM_Env_Stepping_Stone, réduits) semés juste en dedans. Le tirage est fixe : la même bordure à chaque composition.
+    /// Tout tient dans l'empreinte, que la préparation mesure sur la composition.
     /// </summary>
     internal static class PlaceBorder
     {
         private const float Scale = 0.6f;
-        // Le milieu des rangées, en dedans du bord ; un peu levées, pour dépasser du dallage d'une dizaine de centimètres.
+        // Le milieu des rangées, en dedans du bord de l'empreinte ; un peu levées, pour dépasser des galets.
         private const float Inset = 0.2f;
         private const float Lift = 0.03f;
-        // La place laissée à chaque coin, en mètres, le long de chaque côté.
-        private const float CornerRoom = 0.5f;
+        private const int Pebbles = 12;
         private const int Seed = 193;
 
         // Les rangées du pack et leur longueur, mesurée sur le pack (planche de la Place) : 2,67 m, 2,84 m, et la demie, 1,35 m.
@@ -26,77 +26,61 @@ namespace Diciela.EditorTools
         private const string HalfRow = "Buildings/SM_Bld_Stone_Edge_Half_01";
         private const float HalfLength = 1.35f;
 
-        // Les galets : le gris et le beige du pack (le rouge, le quatrième, jure avec le dallage).
-        private static readonly string[] Pebbles =
+        // Les galets : le gris et le beige du pack (le rouge, le quatrième, jure avec les galets).
+        private static readonly string[] Stones =
         {
             "Environment/SM_Env_Stepping_Stone_01", "Environment/SM_Env_Stepping_Stone_02",
             "Environment/SM_Env_Stepping_Stone_03", "Environment/SM_Env_Stepping_Stone_05"
         };
 
-        /// <summary>La bordure d'une Place de size mètres de côté, centrée sur son origine.</summary>
-        public static PackComposition.Piece[] For(float size)
+        /// <summary>La bordure d'une Place ronde de ce diamètre, centrée sur son origine.</summary>
+        public static PackComposition.Piece[] For(float diameter)
         {
             var random = new Random(Seed);
             var pieces = new List<PackComposition.Piece>();
-            float half = size * 0.5f;
-            for (int side = 0; side < 4; side++)
-                AddSide(side, half, random, pieces);
-            for (int corner = 0; corner < 4; corner++)
-            {
-                float x = corner == 0 || corner == 3 ? -1f : 1f;
-                float z = corner < 2 ? -1f : 1f;
-                pieces.Add(Pebble(random, x * (half - 0.35f), z * (half - 0.3f), 0.45f));
-                pieces.Add(Pebble(random, x * (half - 0.7f), z * (half - 0.25f), 0.35f));
-            }
-            return pieces.ToArray();
-        }
+            float radius = diameter * 0.5f - Inset;
+            float around = 2f * Mathf.PI * radius;
 
-        // Un côté : 0 au sud, puis l'est, le nord, l'ouest. Les rangées, longues et demies, tiennent entre les coins.
-        private static void AddSide(int side, float half, Random random, List<PackComposition.Piece> pieces)
-        {
-            float room = 2f * (half - CornerRoom);
-            var run = new List<int>();
+            // Les rangées, longues puis demies, tant qu'elles tiennent sur le tour ; le reste se partage en joints.
+            var run = new List<float>();
+            var paths = new List<string>();
             float length = 0f;
-            for (int i = 0; length + RowLengths[i % 2] * Scale <= room; i++)
+            for (int i = 0; length + RowLengths[i % 2] * Scale <= around; i++)
             {
-                run.Add(i % 2);
+                run.Add(RowLengths[i % 2] * Scale);
+                paths.Add(Rows[i % 2]);
                 length += RowLengths[i % 2] * Scale;
             }
-            while (length + HalfLength * Scale <= room)
+            while (length + HalfLength * Scale <= around)
             {
-                run.Insert(random.Next(run.Count + 1), -1);
+                int at = random.Next(run.Count + 1);
+                run.Insert(at, HalfLength * Scale);
+                paths.Insert(at, HalfRow);
                 length += HalfLength * Scale;
             }
-
-            bool alongX = side % 2 == 0;
-            float across = (side == 0 || side == 3 ? -1f : 1f) * (half - Inset);
-            float at = -length * 0.5f;
-            foreach (int row in run)
+            float joint = (around - length) / run.Count;
+            float arc = 0f;
+            for (int i = 0; i < run.Count; i++)
             {
-                float piece = (row < 0 ? HalfLength : RowLengths[row]) * Scale;
-                float middle = at + piece * 0.5f;
-                at += piece;
-                float yaw = (alongX ? 0f : 90f) + (random.Next(2) == 0 ? 0f : 180f) + Jitter(random, 3f);
-                string path = row < 0 ? HalfRow : Rows[row];
-                pieces.Add(alongX
-                    ? new PackComposition.Piece(path, middle, across, yaw, Lift, Scale, centered: true)
-                    : new PackComposition.Piece(path, across, middle, yaw, Lift, Scale, centered: true));
+                float angle = (arc + run[i] * 0.5f) / radius;
+                arc += run[i] + joint;
+                // Le long de la rangée, l'axe x du pack, suit la tangente au cercle.
+                float yaw = Mathf.Atan2(-Mathf.Cos(angle), -Mathf.Sin(angle)) * Mathf.Rad2Deg +
+                            (random.Next(2) == 0 ? 0f : 180f) + Jitter(random, 3f);
+                pieces.Add(new PackComposition.Piece(paths[i], Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius, yaw,
+                    Lift, Scale, centered: true));
             }
 
-            // Trois galets juste en dedans des rangées, au hasard le long du côté.
-            for (int i = 0; i < 3; i++)
+            // Quelques galets juste en dedans des rangées, au hasard autour du cercle.
+            for (int i = 0; i < Pebbles; i++)
             {
-                float along = Jitter(random, half - 1.2f);
-                float inside = (half - Inset - 0.45f - (float)random.NextDouble() * 0.3f) * Math.Sign(across);
+                float angle = (float)random.NextDouble() * 2f * Mathf.PI;
+                float r = radius - 0.45f - (float)random.NextDouble() * 0.3f;
                 float scale = 0.25f + (float)random.NextDouble() * 0.1f;
-                pieces.Add(alongX ? Pebble(random, along, inside, scale) : Pebble(random, inside, along, scale));
+                pieces.Add(new PackComposition.Piece(Stones[random.Next(Stones.Length)], Mathf.Cos(angle) * r,
+                    Mathf.Sin(angle) * r, random.Next(360), 0f, scale, centered: true));
             }
-        }
-
-        private static PackComposition.Piece Pebble(Random random, float x, float z, float scale)
-        {
-            return new PackComposition.Piece(Pebbles[random.Next(Pebbles.Length)], x, z, random.Next(360), 0f, scale,
-                centered: true);
+            return pieces.ToArray();
         }
 
         // Un écart tiré entre -spread et +spread.
