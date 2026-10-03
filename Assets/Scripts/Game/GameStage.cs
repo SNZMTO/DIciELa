@@ -44,10 +44,7 @@ namespace Diciela.Game
         // Le portrait de l'astuce : 48 px de l'interface, en triple résolution.
         private const int PortraitPixels = 144;
 
-        private PlacementTool _placementTool;
-        private ChooseTool _chooseTool;
-        private ClearingTool _clearingTool;
-        private Hand _hand;
+        private TownTools _tools;
         private SelectionFrame _selectionFrame;
         private Texture2D _portrait;
         private Tooltips _tooltips;
@@ -104,14 +101,10 @@ namespace Diciela.Game
             _clearingControls.Bind(null, null, null);
             _toolControls.Bind(null, null);
             _escapeControls.Bind();
-            _hand?.Dispose();
-            _hand = null;
-            _clearingTool = null;
             _selectionFrame?.Dispose();
             _selectionFrame = null;
-            if (_chooseTool != null)
-                _chooseTool.Touched -= _placeSheet.Touch;
-            _chooseTool = null;
+            if (_tools != null)
+                _tools.Choose.Touched -= _placeSheet.Touch;
             _cameraControls.Bind(null);
             _creationScreen.Hide();
             _appearancePreview.Hide();
@@ -127,12 +120,8 @@ namespace Diciela.Game
             if (_portrait != null)
                 Destroy(_portrait);
             _portrait = null;
-            if (_placementTool != null)
-            {
-                _placementTool.Cancel();
-                _placementTool.Dispose();
-            }
-            _placementTool = null;
+            _tools?.Dispose();
+            _tools = null;
             _cameraRig.Hide();
             _worldViews?.Hide();
             _worldViews = null;
@@ -166,27 +155,24 @@ namespace Diciela.Game
             _cameraRig.Show(world.Map);
             _cameraRig.Rotate(180f);
             _cameraRig.PullBack();
-            _placementTool = new PlacementTool(world, _cameraRig.Camera, _placementPreview, placement);
-            _clearingTool = new ClearingTool(world, _cameraRig.Camera, _natureViews);
-            _hand = new Hand(_placementTool, _clearingTool);
+            _tools = new TownTools(world, _cameraRig.Camera, _placementPreview, placement, _natureViews, _structureViews);
             var document = _buildBar.GetComponent<UnityEngine.UIElements.UIDocument>();
             _tooltips = new Tooltips(document);
-            _buildBar.Show(catalog, texts, _placementTool, world, _toolControls);
-            _toolWheel.Show(texts, _toolControls, _clearingTool, _buildBar, _tooltips);
+            _buildBar.Show(catalog, texts, _tools.Placement, world, _toolControls);
+            _toolWheel.Show(texts, _toolControls, _tools.Clearing, _buildBar, _tooltips);
             _dayBoard.Show(world.Clock, texts, _tooltips);
             _stockPennants.Show(world, catalog, texts, _tooltips);
             _placeSheet.Show(world, texts);
             _tipBoard.Show(world, texts, _portrait);
             var hud = new HudArea(document);
             _cameraControls.Bind(hud);
-            _placementControls.Bind(_placementTool, hud);
-            _chooseTool = new ChooseTool(_cameraRig.Camera, _structureViews);
-            _chooseTool.Touched += _placeSheet.Touch;
+            _placementControls.Bind(_tools.Placement, hud);
+            _tools.Choose.Touched += _placeSheet.Touch;
             _selectionFrame = new SelectionFrame(document);
-            _clearingControls.Bind(_clearingTool, _selectionFrame, hud);
-            _chooseControls.Bind(_chooseTool, _hand, hud);
+            _clearingControls.Bind(_tools.Clearing, _selectionFrame, hud);
+            _chooseControls.Bind(_tools.Choose, _tools.Hand, hud);
             _toolControls.Bind(_toolWheel, _buildBar);
-            _escapeControls.Bind(_placeSheet, _toolWheel, _buildBar, _placementTool, _clearingTool);
+            _escapeControls.Bind(_placeSheet, _toolWheel, _buildBar, _tools.Placement, _tools.Clearing);
         }
     }
 }
