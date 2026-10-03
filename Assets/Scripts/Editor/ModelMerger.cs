@@ -53,10 +53,9 @@ namespace Diciela.EditorTools
             }
 
             Mesh merged = Merge(name, parts);
-            GameObject prefab = SavePrefab(name, merged, materials);
             report = pieces.Count + " pièces fusionnées en un maillage de " + merged.vertexCount + " sommets, " +
                      Triangles(merged) + " triangles, " + materials.Count + " matériau" + (materials.Count > 1 ? "x" : "");
-            return prefab;
+            return SavePrefab(name, merged, materials);
         }
 
         private static long Triangles(Mesh mesh)
@@ -98,7 +97,19 @@ namespace Diciela.EditorTools
             EditorAssets.EnsureFolder(Folder);
             string meshPath = Folder + "/" + name + "_Maillage.asset";
             string prefabPath = Folder + "/" + name + ".prefab";
-            AssetDatabase.CreateAsset(merged, meshPath);
+            // Un maillage déjà là garde son objet, dont on remplace le contenu : le recréer détruirait celui que le modèle
+            // chargé montre encore, et ce modèle resterait sans maillage jusqu'à sa réimportation (SAVOIR, 3).
+            var existing = AssetDatabase.LoadAssetAtPath<Mesh>(meshPath);
+            if (existing == null)
+            {
+                AssetDatabase.CreateAsset(merged, meshPath);
+            }
+            else
+            {
+                EditorUtility.CopySerialized(merged, existing);
+                EditorUtility.SetDirty(existing);
+                Object.DestroyImmediate(merged);
+            }
 
             Scene scene = EditorSceneManager.NewPreviewScene();
             try

@@ -5,9 +5,10 @@ using NUnit.Framework;
 namespace Diciela.Tests.EditMode
 {
     /// <summary>
-    /// La Place du projet (GDD, sections 6, 9 et 11 ; décision 192), lue sans rien écrire : un sol qu'on traverse, où
-    /// arriveront les visiteurs, unique, sans porte, que la Chimère sait bâtir en arrivant, et qui a un modèle ; le stock
-    /// de départ suffit à la Place et à deux cabanes. La Place et la cabane se trouvent par leur identifiant.
+    /// La Place du projet (GDD, sections 6, 9 et 11 ; décisions 192 et 193), lue sans rien écrire : un sol qu'on
+    /// traverse, où arriveront les visiteurs, unique, sans porte, que la Chimère sait bâtir en arrivant, composée d'objets
+    /// du pack ; le stock de départ suffit à la Place et à deux cabanes. La Place et la cabane se trouvent par leur
+    /// identifiant.
     /// </summary>
     public sealed class PlaceContentTests
     {
@@ -22,6 +23,7 @@ namespace Diciela.Tests.EditMode
             Assert.IsFalse(place.HasDoor, "Un sol n'a pas de porte.");
             CollectionAssert.Contains(catalog.Opening.KnownStructures, place, "La Chimère sait bâtir la Place en arrivant.");
             Assert.IsNotNull(place.Model, "La Place n'a pas de modèle : on ne la verrait pas.");
+            Assert.IsNotNull(place.SourceModel, "La Place est composée d'objets du pack (DICIELA/Contenu/Composer les modèles).");
         }
 
         [Test]

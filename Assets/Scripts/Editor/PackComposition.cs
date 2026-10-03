@@ -3,29 +3,58 @@ using UnityEngine;
 namespace Diciela.EditorTools
 {
     /// <summary>
-    /// Un modèle fait d'objets du pack tels quels (SAVOIR, 2.9 ; décisions 170 et 172) : son nom, la fiche de la
-    /// construction dont il devient le modèle source, ses objets, chacun à sa place, et, s'il en a une, sa couche (un
-    /// repère « Couche » : les pieds de qui dort, son avant vers la tête). Celui du jeu : le campement, qui fait tout au
-    /// départ (un foyer, une couche où dort la Chimère, un coffre, un sac, une marmite, et son stock : une pile de bûches
-    /// et un tas de pierres, au fond, près du coffre ; deux pierres plates sous un objet « Door » font son entrée). Les
-    /// rochers du pack sont à l'échelle du paysage : le foyer et le tas de pierres en sont des réductions.
+    /// Un modèle fait d'objets du pack tels quels (SAVOIR, 2.9 ; décisions 170, 172 et 193) : son nom, la fiche de la
+    /// construction dont il devient le modèle source, ses objets, chacun à sa place, s'il en a un son dallage (un sol
+    /// vêtu d'une matière du pack, FloorMesh), et, s'il en a une, sa couche (un repère « Couche » : les pieds de qui dort,
+    /// son avant vers la tête). Ceux du jeu : le campement, qui fait tout au départ (un foyer, une couche où dort la
+    /// Chimère, un coffre, un sac, une marmite, et son stock : une pile de bûches et un tas de pierres, au fond, près du
+    /// coffre ; deux pierres plates sous un objet « Door » font son entrée) ; la Place, un dallage de pierre beige bordé
+    /// de petits cailloux (PlaceBorder). Les rochers du pack sont à l'échelle du paysage : le foyer, le tas de pierres et
+    /// les cailloux en sont des réductions.
     /// </summary>
     internal sealed class PackComposition
     {
         private const string Pack = "Assets/Synty/PolygonFantasyVillage/Prefabs/";
+        private const string BeigeTiles = "Assets/Synty/PolygonFantasyVillage/Materials/Buildings/Floor_Tiles_02.mat";
 
-        private PackComposition(string name, string structurePath, Spot? couch, params Piece[] pieces)
+        private PackComposition(string name, string structurePath, Spot? couch, Floor floor, params Piece[] pieces)
         {
             Name = name;
             StructurePath = structurePath;
             Couch = couch;
+            Paving = floor;
             Pieces = pieces;
         }
 
         public string Name { get; }
         public string StructurePath { get; }
         public Spot? Couch { get; }
+        public Floor Paving { get; }
         public Piece[] Pieces { get; }
+
+        /// <summary>
+        /// Un dallage (FloorMesh) : la matière du pack qui le couvre, sa largeur et sa profondeur, la hauteur de son
+        /// dessus, la profondeur de sa jupe sous le sol et la taille d'un motif de sa texture, en mètres.
+        /// </summary>
+        public sealed class Floor
+        {
+            public Floor(string materialPath, float width, float depth, float top, float skirt, float pattern)
+            {
+                MaterialPath = materialPath;
+                Width = width;
+                Depth = depth;
+                Top = top;
+                Skirt = skirt;
+                Pattern = pattern;
+            }
+
+            public string MaterialPath { get; }
+            public float Width { get; }
+            public float Depth { get; }
+            public float Top { get; }
+            public float Skirt { get; }
+            public float Pattern { get; }
+        }
 
         /// <summary>Un repère : sa place (en mètres, l'entrée vers +z) et le quart de tour de son avant.</summary>
         public readonly struct Spot
@@ -42,7 +71,8 @@ namespace Diciela.EditorTools
 
         /// <summary>
         /// Un objet de la composition : son prefab du pack, sa place (en mètres, l'entrée vers +z), son quart de tour, son
-        /// inclinaison vers l'avant, son échelle, et s'il fait l'entrée.
+        /// inclinaison vers l'avant, son échelle, s'il fait l'entrée, et si sa place est celle du milieu de sa boîte
+        /// plutôt que celle de son origine (une rangée de pierres du pack a son origine à un bout).
         /// </summary>
         public readonly struct Piece
         {
@@ -52,9 +82,10 @@ namespace Diciela.EditorTools
             public readonly float Pitch;
             public readonly float Scale;
             public readonly bool AtTheDoor;
+            public readonly bool Centered;
 
             public Piece(string path, float x, float z, float yaw = 0f, float y = 0f, float scale = 1f,
-                float pitch = 0f, bool atTheDoor = false)
+                float pitch = 0f, bool atTheDoor = false, bool centered = false)
             {
                 Path = Pack + path + ".prefab";
                 Place = new Vector3(x, y, z);
@@ -62,6 +93,7 @@ namespace Diciela.EditorTools
                 Pitch = pitch;
                 Scale = scale;
                 AtTheDoor = atTheDoor;
+                Centered = centered;
             }
         }
 
@@ -71,7 +103,7 @@ namespace Diciela.EditorTools
             // effet de particules dans ces modèles fait planter Unity après une campagne PlayMode (SAVOIR, 2.9). Sur le
             // tapis (2,59 m de long), la Chimère dort les pieds vers l'entrée, la tête sur le coussin, au sud. Le stock,
             // une pile de bûches et un tas de pierres, est au fond, du côté du coffre.
-            new PackComposition("Campement", ContentBuilder.CampPath, new Spot(-1.75f, 0.2f, 0.65f, 180f),
+            new PackComposition("Campement", ContentBuilder.CampPath, new Spot(-1.75f, 0.2f, 0.65f, 180f), null,
                 new Piece("Environment/SM_Env_Stone_Ring_01", 0f, 0.1f, scale: 0.25f),
                 new Piece("Props/SM_Prop_Picnic_Rug_01", -1.75f, -0.1f),
                 new Piece("Props/SM_Prop_Pillow_01", -1.75f, -0.95f, y: 0.05f),
@@ -81,7 +113,12 @@ namespace Diciela.EditorTools
                 new Piece("Environment/SM_Env_Stepping_Stone_01", -0.35f, 1.75f, atTheDoor: true),
                 new Piece("Environment/SM_Env_Stepping_Stone_02", 0.35f, 1.8f, 15f, atTheDoor: true),
                 new Piece("Props/SM_Prop_Wood_Pile_02", 0.9f, -1.75f),
-                new Piece("Environment/SM_Env_Rock_Pile_05", 2.25f, -1.95f, 25f, scale: 0.22f))
+                new Piece("Environment/SM_Env_Rock_Pile_05", 2.25f, -1.95f, 25f, scale: 0.22f)),
+            // La Place (décision 193) : 11,6 × 11,6 m de dalles beiges du pack (un motif de 4 × 4 dalles tous les 3 m : des
+            // dalles de 75 cm), le dessus à 3 cm du sol, la jupe à 15 cm dessous ; ses petits cailloux à cheval sur son
+            // bord, qui portent l'empreinte à 12 × 12 m.
+            new PackComposition("Place", ContentBuilder.PlacePath, null,
+                new Floor(BeigeTiles, 11.6f, 11.6f, 0.03f, 0.15f, 3f), PlaceBorder.For(12f))
         };
     }
 }
