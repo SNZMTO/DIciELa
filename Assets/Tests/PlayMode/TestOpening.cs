@@ -44,5 +44,18 @@ namespace Diciela.Tests.PlayMode
             }
             Assert.Fail("L'écran de création de la scène de test ne s'est pas ouvert.");
         }
+
+        /// <summary>Le premier composant de ce type dans une scène chargée, même sur un objet inactif.</summary>
+        public static T FindIn<T>(string scenePath) where T : Component
+        {
+            foreach (GameObject root in SceneManager.GetSceneByPath(scenePath).GetRootGameObjects())
+            {
+                var found = root.GetComponentInChildren<T>(true);
+                if (found != null)
+                    return found;
+            }
+            Assert.Fail("La scène « " + scenePath + " » n'a pas de " + typeof(T).Name + ".");
+            return null;
+        }
     }
 }
