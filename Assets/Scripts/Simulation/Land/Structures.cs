@@ -9,15 +9,15 @@ namespace Diciela.Simulation.Land
     /// Les constructions posées sur la carte (ARCHITECTURE, section 4) : la vérité, dont le maillage et les devants de
     /// porte sont déduits et tenus à jour ici. Une pose passe par les règles de pose, qu'elles créent et qui les lisent ;
     /// refusée, elle ne change rien et dit pourquoi. Une construction posée en fantôme devient bâtie quand son chantier
-    /// est fini. Les événements d'un pas attendent la fin de leur couche, dans une seule file, dans l'ordre où ils sont
-    /// arrivés (ARCHITECTURE, section 5).
+    /// est fini ; elle se déplace par une opération à part entière (StructureMoves). Les événements d'un pas attendent la
+    /// fin de leur couche, dans une seule file, dans l'ordre où ils sont arrivés (ARCHITECTURE, section 5).
     /// </summary>
     public sealed class Structures
     {
         private readonly List<Structure> _all = new List<Structure>();
-        private readonly List<Happening> _happened = new List<Happening>();
-        private readonly NavGrid _grid;
+        private readonly List<StructureHappening> _happened = new List<StructureHappening>();
         private readonly PlacementRules _rules;
+        private readonly StructureGround _ground;
         private int _nextId = 1;
 
         public Structures(NavGrid grid, Relief relief, SimulationSettings settings, Knowledge knowledge)
@@ -25,9 +25,10 @@ namespace Diciela.Simulation.Land
             if (ReferenceEquals(grid, null))
                 throw new ArgumentNullException(nameof(grid));
 
-            _grid = grid;
             Doorways = new Doorways(grid);
             _rules = new PlacementRules(grid, relief, settings, this, knowledge);
+            _ground = new StructureGround(grid, Doorways, _rules);
+            Moves = new StructureMoves(this, _ground, _rules);
         }
 
         /// <summary>Levé quand une construction est posée.</summary>
@@ -39,6 +40,12 @@ namespace Diciela.Simulation.Land
         /// <summary>Levé quand le chantier d'une construction est fini : elle est bâtie, elle sert.</summary>
         public event Action<Structure> StructureBuilt;
 
+        /// <summary>Levé quand une construction change de place.</summary>
+        public event Action<Structure> StructureMoved;
+
+        /// <summary>Levé quand un déplacement est refusé, avec la construction, la place demandée et la raison.</summary>
+        public event Action<Structure, Placement, PlacementResult> MoveRefused;
+
         public IReadOnlyList<Structure> All => _all;
 
         /// <summary>Les devants de porte des constructions posées, où rien ne se pose (sauf un sol).</summary>
@@ -46,6 +53,9 @@ namespace Diciela.Simulation.Land
 
         /// <summary>Les règles de pose, que le monde montre au-dessus de lui (World.PlacementRules).</summary>
         internal PlacementRules Rules => _rules;
+
+        /// <summary>Le déplacement des constructions : seuls les ordres s'en servent.</summary>
+        internal StructureMoves Moves { get; }
 
         /// <summary>
         /// Le logis de la Chimère : la construction bâtie que sa fiche dit être son logis (le campement, puis sa maison) ;
@@ -96,16 +106,14 @@ namespace Diciela.Simulation.Land
             PlacementResult result = _rules.Check(definition, placement);
             if (result != PlacementResult.Ok)
             {
-                _happened.Add(Happening.Refused(definition, placement, result));
+                _happened.Add(StructureHappening.Refused(definition, placement, result));
                 return null;
             }
 
             var structure = new Structure(_nextId++, definition, placement);
             _all.Add(structure);
-            _grid.SetOccupant(PlacementRules.Footprint(definition, placement), structure.Id, definition.IsWalkable);
-            if (definition.HasDoor)
-                Doorways.Add(_rules.Doorway(definition, placement));
-            _happened.Add(Happening.Of(HappeningKind.Placed, structure));
+            _ground.Take(structure, placement);
+            _happened.Add(StructureHappening.Of(StructureHappening.Kinds.Placed, structure));
             return structure;
         }
 
@@ -121,7 +129,13 @@ namespace Diciela.Simulation.Land
                 throw new InvalidOperationException("La construction n° " + structure.Id + " n'attend pas d'être bâtie.");
 
             structure.BecomeBuilt();
-            _happened.Add(Happening.Of(HappeningKind.Built, structure));
+            _happened.Add(StructureHappening.Of(StructureHappening.Kinds.Built, structure));
+        }
+
+        /// <summary>Met dans la file ce qui est arrivé à une construction : le déplacement l'y met aussi.</summary>
+        internal void Record(StructureHappening happening)
+        {
+            _happened.Add(happening);
         }
 
         /// <summary>Livre les événements du pas, dans leur ordre, puis vide la file. Seul le monde l'appelle.</summary>
@@ -130,21 +144,7 @@ namespace Diciela.Simulation.Land
             try
             {
                 for (int i = 0; i < _happened.Count; i++)
-                {
-                    Happening happening = _happened[i];
-                    switch (happening.Kind)
-                    {
-                        case HappeningKind.Placed:
-                            StructurePlaced?.Invoke(happening.Structure);
-                            break;
-                        case HappeningKind.Built:
-                            StructureBuilt?.Invoke(happening.Structure);
-                            break;
-                        default:
-                            PlacementRefused?.Invoke(happening.Definition, happening.Placement, happening.Result);
-                            break;
-                    }
-                }
+                    Deliver(_happened[i]);
             }
             finally
             {
@@ -152,40 +152,25 @@ namespace Diciela.Simulation.Land
             }
         }
 
-        private enum HappeningKind
+        private void Deliver(StructureHappening happening)
         {
-            Placed,
-            Refused,
-            Built
-        }
-
-        /// <summary>Ce qui est arrivé à une construction, en attendant d'être annoncé : posée, refusée ou bâtie.</summary>
-        private readonly struct Happening
-        {
-            private Happening(HappeningKind kind, Structure structure, StructureDefinition definition,
-                Placement placement, PlacementResult result)
+            switch (happening.Kind)
             {
-                Kind = kind;
-                Structure = structure;
-                Definition = definition;
-                Placement = placement;
-                Result = result;
-            }
-
-            public HappeningKind Kind { get; }
-            public Structure Structure { get; }
-            public StructureDefinition Definition { get; }
-            public Placement Placement { get; }
-            public PlacementResult Result { get; }
-
-            public static Happening Of(HappeningKind kind, Structure structure)
-            {
-                return new Happening(kind, structure, structure.Definition, structure.Placement, PlacementResult.Ok);
-            }
-
-            public static Happening Refused(StructureDefinition definition, Placement placement, PlacementResult result)
-            {
-                return new Happening(HappeningKind.Refused, null, definition, placement, result);
+                case StructureHappening.Kinds.Placed:
+                    StructurePlaced?.Invoke(happening.Structure);
+                    break;
+                case StructureHappening.Kinds.Built:
+                    StructureBuilt?.Invoke(happening.Structure);
+                    break;
+                case StructureHappening.Kinds.Moved:
+                    StructureMoved?.Invoke(happening.Structure);
+                    break;
+                case StructureHappening.Kinds.MoveRefused:
+                    MoveRefused?.Invoke(happening.Structure, happening.Placement, happening.Result);
+                    break;
+                default:
+                    PlacementRefused?.Invoke(happening.Definition, happening.Placement, happening.Result);
+                    break;
             }
         }
     }

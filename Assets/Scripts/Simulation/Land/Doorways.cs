@@ -30,6 +30,12 @@ namespace Diciela.Simulation.Land
             return _count[_grid.IndexOf(cell)] > 0;
         }
 
+        /// <summary>Combien de portes demandent que cette maille reste dégagée.</summary>
+        public int CountAt(Vector2Int cell)
+        {
+            return _count[_grid.IndexOf(cell)];
+        }
+
         /// <summary>Compte une porte de plus devant chaque maille du rectangle. Seules les constructions l'appellent.</summary>
         internal void Add(RotatedRect rect)
         {
@@ -38,6 +44,20 @@ namespace Diciela.Simulation.Land
                 int index = _grid.IndexOf(cell);
                 if (_count[index] < byte.MaxValue)
                     _count[index]++;
+            }
+        }
+
+        /// <summary>
+        /// Compte une porte de moins devant chaque maille du rectangle : sa construction a changé de place. Seules les
+        /// constructions l'appellent.
+        /// </summary>
+        internal void Remove(RotatedRect rect)
+        {
+            foreach (Vector2Int cell in _grid.CellsCoveredBy(rect))
+            {
+                int index = _grid.IndexOf(cell);
+                if (_count[index] > 0)
+                    _count[index]--;
             }
         }
     }

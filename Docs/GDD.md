@@ -403,10 +403,16 @@
   dans l'ordre où le joueur les a marqués (voir 2).
 - **À toi.** Planter un arbre passe-t-il par la file des chantiers ? Ma reco : non, c'est une tâche des paysagistes,
   dans l'ordre où le joueur les a posés.
-- **Règle.** Ranger ou déplacer un bâtiment est un tout petit chantier : il se déconstruit en quelques secondes et se
-  reconstruit de même, sans nouveaux matériaux. Pendant un déplacement, ses travailleurs gardent leur poste et
-  attendent.
-- **À toi.** Les petits stocks d'un bâtiment déplacé voyagent-ils avec lui ? Ma reco : oui.
+- **Règle.** On déplace une construction avec l'outil Déplacer : on la clique, son fantôme suit le pointeur comme à la
+  pose (on le tourne de même), un clic la pose à sa nouvelle place ; clic droit ou Échap annule, et l'outil reste en
+  main. La nouvelle place suit les règles de pose, la construction elle-même ne comptant pas : on peut la décaler d'un
+  mètre ou la tourner sur place.
+- **Règle.** Ranger ou déplacer un bâtiment est un tout petit chantier, sans nouveaux matériaux : il sert jusqu'à ce
+  qu'un ouvrier vienne le défaire, en quelques secondes, puis il se remonte de même à sa nouvelle place. Entre les deux,
+  ses travailleurs gardent leur poste et attendent, et ses stocks voyagent avec lui : on n'y prend ni n'y dépose rien.
+  Un chantier pas encore bâti n'est qu'un plan : il saute tout de suite à sa nouvelle place, avec ce qui lui a été
+  livré. Qui sert une construction qui change de place (un porteur, un ouvrier) la suit.
+- **Défaut.** Défaire un bâtiment demande 0,1 h de travail à un débutant (3 s), le remonter autant.
 - **À toi.** Peut-on ranger le dernier lieu qui ouvre des postes de bâtisseurs ? Ma reco : non, le jeu dit pourquoi ;
   sinon plus personne ne pourrait le reposer.
 - **Règle.** On ne démolit pas, on range. La réserve n'a pas de limite. Ranger un bâtiment rend au stock ce que
@@ -664,12 +670,12 @@
   relâchant ; relâcher sans avoir bougé ne choisit rien, même près d'un bord, où la roue s'écarte du pointeur pour
   rester dans l'écran. Cliquer l'icône des outils l'ouvre aussi, et l'on clique l'outil ; un appui à côté la referme,
   sans rien faire dans la ville. Chaque outil y a sa
-  place fixe, toujours la même (Construire en haut, Retirer en bas), et sa touche, écrite sur lui ; la bulle du
+  place fixe, toujours la même (Construire en haut, Retirer en bas, Déplacer à droite), et sa touche, écrite sur lui ; la bulle du
   milieu dit le nom et l'usage de l'outil visé, qui grossit. Un outil actif y reste enfoncé. La roue est un plateau de
   bois à huit côtés, une place d'outil par côté ; elle garde 24 px du bord de l'écran, comme les blocs du HUD. Choisir Retirer prend l'outil en main,
-  ou le lâche s'il l'était ; choisir Construire ouvre le panneau Construire, ou le ferme. Les outils à venir (déplacer,
-  chemins, décorer, planter) y prendront leur place.
-- **Défaut.** La roue : Tab, tenu ; Construire : B ; Retirer : X. Les touches se changeront dans les réglages, quand le
+  ou le lâche s'il l'était, de même Déplacer ; choisir Construire ouvre le panneau Construire, ou le ferme. Les outils
+  à venir (chemins, décorer, planter) y prendront leur place.
+- **Défaut.** La roue : Tab, tenu ; Construire : B ; Retirer : X ; Déplacer : M. Les touches se changeront dans les réglages, quand le
   menu viendra.
 - **Règle.** On choisit quoi construire dans le panneau Construire, en bas au centre : les familles en onglets,
   chacune de son pastel avec son icône (une famille qui ne propose rien ne paraît pas), et au-dessus de l'onglet

@@ -7,18 +7,29 @@ namespace Diciela.Simulation.Society
     /// <summary>
     /// Là où mène une tâche : ce qu'on vient servir (une construction, un arbre ou un rocher), par son empreinte et ce
     /// qu'il porte sur le maillage, et l'on se tient à ses abords ; ou une maille précise (devant une place de charrette).
+    /// Une construction se lit là où elle est maintenant : déplacée, la tâche la suit (décision 199).
     /// </summary>
     internal readonly struct ChoreGoal
     {
-        private ChoreGoal(RotatedRect footprint, int occupant, Vector2Int cell, bool isCell)
+        private readonly RotatedRect _footprint;
+
+        private ChoreGoal(Structure structure, RotatedRect footprint, int occupant, Vector2Int cell, bool isCell)
         {
-            Footprint = footprint;
+            Structure = structure;
+            _footprint = footprint;
             Occupant = occupant;
             Cell = cell;
             IsCell = isCell;
         }
 
-        public RotatedRect Footprint { get; }
+        /// <summary>La construction qu'on vient servir, s'il y en a une.</summary>
+        public Structure Structure { get; }
+
+        /// <summary>L'empreinte de ce qu'on vient servir, là où il est maintenant.</summary>
+        public RotatedRect Footprint => Structure != null
+            ? PlacementRules.Footprint(Structure.Definition, Structure.Placement)
+            : _footprint;
+
         public int Occupant { get; }
 
         /// <summary>La maille où aller, si l'on va à une maille précise.</summary>
@@ -29,18 +40,17 @@ namespace Diciela.Simulation.Society
 
         public static ChoreGoal Of(Structure structure)
         {
-            return new ChoreGoal(PlacementRules.Footprint(structure.Definition, structure.Placement), structure.Id,
-                default, false);
+            return new ChoreGoal(structure, default, structure.Id, default, false);
         }
 
         public static ChoreGoal Of(NatureItem item)
         {
-            return new ChoreGoal(item.Footprint, item.Occupant, default, false);
+            return new ChoreGoal(null, item.Footprint, item.Occupant, default, false);
         }
 
         public static ChoreGoal At(Vector2Int cell)
         {
-            return new ChoreGoal(default, 0, cell, true);
+            return new ChoreGoal(null, default, 0, cell, true);
         }
     }
 }
