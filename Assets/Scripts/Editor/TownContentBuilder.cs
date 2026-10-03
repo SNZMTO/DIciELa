@@ -23,6 +23,7 @@ namespace Diciela.EditorTools
             public WorkSlotDefinition OddJobs;
             public TaskKindDefinition Carry;
             public TaskKindDefinition Drive;
+            public TaskKindDefinition Stock;
             public TaskKindDefinition Build;
             public NatureDefinition[] Nature;
             public List<StatisticDefinition> Statistics;
@@ -54,23 +55,24 @@ namespace Diciela.EditorTools
 
             TaskKindDefinition carry = Task("Tache_Porter", "porter", TaskWork.Carry, subStatistics["transport"]);
             TaskKindDefinition drive = Task("Tache_Conduire", "conduire", TaskWork.Drive, subStatistics["transport"]);
+            TaskKindDefinition stock = Task("Tache_Garnir", "garnir", TaskWork.Stock, subStatistics["transport"]);
             TaskKindDefinition build = Task("Tache_Batir", "batir", TaskWork.Build, subStatistics["construction"]);
             TaskKindDefinition clear = Task("Tache_Defricher", "defricher", TaskWork.Clear, subStatistics["paysage"]);
-            // Conduire suit porter (décision 197) ; récolter s'ajoutera avec les champs sauvages, entre bâtir et défricher
-            // (décision 139).
+            // Conduire suit porter (décision 197), garnir suit bâtir (décision 202) ; récolter s'ajoutera avec les champs
+            // sauvages, entre bâtir et défricher (décision 139).
             WorkSlotDefinition oddJobs = EditorAssets.CreateIfMissing<WorkSlotDefinition>(
                 WorkFolder + "/Poste_AToutFaire.asset", fiche =>
                 {
                     EditorAssets.Property(fiche, "_id").stringValue = "a_tout_faire";
                     EditorAssets.Property(fiche, "_nameKey").stringValue = "poste.a_tout_faire";
-                    EditorAssets.SetList(EditorAssets.Property(fiche, "_tasks"), new[] { carry, drive, build, clear });
+                    EditorAssets.SetList(EditorAssets.Property(fiche, "_tasks"), new[] { carry, drive, build, stock, clear });
                 });
             // Un arbre rend 3 Bois pour 30 min de travail, un rocher 2 Pierre pour 45 min (décision 160).
             NatureDefinition tree = Nature("Arbre", "arbre", 1f, wood, 3, 0.5f);
             NatureDefinition rock = Nature("Rocher", "rocher", 1.5f, stone, 2, 0.75f);
             return new Made
             {
-                Wood = wood, Stone = stone, OddJobs = oddJobs, Carry = carry, Drive = drive, Build = build,
+                Wood = wood, Stone = stone, OddJobs = oddJobs, Carry = carry, Drive = drive, Stock = stock, Build = build,
                 Nature = new[] { tree, rock }, Statistics = statistics
             };
         }

@@ -28,7 +28,7 @@ namespace Diciela.EditorTools
         public static Made CreateMissing(TownContentBuilder.Made town)
         {
             WorkSlotDefinition worker = Post("Poste_Ouvrier", "ouvrier", town.Build);
-            WorkSlotDefinition carter = Post("Poste_Charretier", "charretier", town.Carry, town.Drive);
+            WorkSlotDefinition carter = Post("Poste_Charretier", "charretier", town.Carry, town.Drive, town.Stock);
             StructureDefinition lodge = Building("Loge", "loge", 5f, 4f, 15, 10, worker, 0, town);
             StructureDefinition warehouse = Building("Entrepot", "entrepot", 6f, 5f, 20, 10, carter, 200, town);
             StructureFamilyDefinition family = EditorAssets.CreateIfMissing<StructureFamilyDefinition>(FamilyPath,

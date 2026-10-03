@@ -52,8 +52,7 @@ namespace Diciela.Simulation.Economy
                 if (cart == null)
                     return false;
                 _carts.Call(spot, cart);
-                Vector2 stand = spot.Position + Heading.Direction(spot.HeadingDegrees) * cart.Definition.PullMeters;
-                drive = new Drive(cart, spot, _grid.CellOf(stand));
+                drive = new Drive(cart, spot, _grid.CellOf(spot.StandAt(cart.Definition.PullMeters)));
                 return true;
             }
             return false;

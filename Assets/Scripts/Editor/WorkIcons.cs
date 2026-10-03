@@ -32,6 +32,15 @@ namespace Diciela.EditorTools
                 F(Ink, 12f, 14f, 10.8f, 16.8f, 8f, 18f, 5.2f, 16.8f, 4f, 14f, 5.2f, 11.2f, 8f, 10f, 10.8f, 11.2f),
                 Faded(0.45f, 3f, 6f, 13f, 6f, 13f, 7f, 3f, 7f), Faded(0.6f, 7f, 13f, 9f, 13f, 9f, 15f, 7f, 15f)
             });
+            // Garnir : un panier, son anse et son osier.
+            yield return new InterfaceIcons.Icon("garnir", Size, new[]
+            {
+                F(Ink, 5f, 9f, 6.6f, 9f, 7.2f, 5.2f, 10f, 3.4f, 12.8f, 5.2f, 13.4f, 9f, 15f, 9f, 14.4f, 4.2f, 10f, 1.6f,
+                    5.6f, 4.2f),
+                F(Ink, 2f, 8f, 18f, 8f, 18f, 10.2f, 2f, 10.2f), F(Ink, 3.2f, 10.2f, 16.8f, 10.2f, 15f, 18f, 5f, 18f),
+                Faded(0.45f, 5.5f, 12f, 14.5f, 12f, 14.2f, 13f, 5.8f, 13f),
+                Faded(0.45f, 6.2f, 15f, 13.8f, 15f, 13.5f, 16f, 6.5f, 16f)
+            });
             // Déplacer : quatre flèches qui partent du milieu.
             yield return new InterfaceIcons.Icon("deplacer", Size, new[]
             {
