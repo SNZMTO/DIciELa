@@ -83,7 +83,9 @@ la société, qui voit tout ce qui est en dessous.
   lisent comme le panneau Construire, et plus tard les recettes et les décos (décision 185).
 - **Le terrain.** La carte reçue au lancement (section 10) et son état : arbres et rochers retirés, champs sauvages
   (désigné, récolté, minuterie de repousse). Les emprises peintes (section 8). Les constructions : bâtiments, décos,
-  la Place, la réserve ; les devants de porte, déduits des constructions, que lisent les règles de pose. Le maillage
+  la Place, la réserve ; les devants de porte, déduits des constructions, que lisent les règles de pose ; le sol que
+  tient chaque construction (`StructureGround`), pris à la pose, rendu et repris quand elle change de place
+  (`StructureMoves`, l'ordre « déplacer », vérifié par les mêmes règles, la construction déplacée ne comptant pas). Le maillage
   (SAVOIR 2.1), avec ses îlots, son A*, la ligne tendue qu'on tire d'un trajet, la sortie d'une construction posée sur
   un piéton et ses distances par la route, écrits pour lui ; il dit seul où l'on marche (sur un sol qu'on traverse,
   comme la Place, aussi). L'eau :
@@ -216,7 +218,7 @@ sauvegardé.
 - La journée d'un habitant (travail, soirée, nuit) est une petite machine à états au-dessus de ses tâches : son travail
   (`Job` : le poste tenu, le choix de la tâche dans l'ordre du poste, la flânerie près du poste) et sa tâche en cours
   (`Chore` : marcher jusqu'au but de son geste, y faire ce qu'il dit, travailler sur place ; chaque marche a son issue
-  d'échec). La sorte de tâche dit, par une valeur fixe de sa fiche, quel geste le code joue (`TaskWork`) ; chaque geste
+  d'échec ; une construction servie qui change de place, il la suit : le but d'une tâche se lit là où elle est). La sorte de tâche dit, par une valeur fixe de sa fiche, quel geste le code joue (`TaskWork`) ; chaque geste
   (`Gesture` : porter, bâtir, défricher, conduire) est le seul à parler à l'économie ; il peut ralentir la marche (une
   charrette tirée) et suit chacun de ses pas. Ce qu'une tâche réserve vit dans l'économie (`Delivery`, `BuildShift`,
   `Clearing`, `Drive`), jusqu'à la place retenue dans un entrepôt pour ce qu'on y
@@ -329,6 +331,7 @@ code.
 | devants de porte | `Doorways` | épouser le relief (un sol) | `FloorDrape` | dallage (d'une composition) | `FloorMesh`, `PackComposition.Floor` |
 | bordure de la Place | `PlaceBorder` | poser par le milieu de sa boîte | `Piece.Centered` | encombrement ; places libres ; ce qui tient encore | `GoodDefinition.Space` ; `FreeSpace` ; `RoomFor` |
 | charrettes de l'étal ; à conduire ; vues | `Carts` ; `CartOffers` ; `CartViews` | conduire ; atteler ; tirer ; garer | `Drive` ; `Hitch` ; `Pull` ; `Park` | cap (au sol) ; où se garent les charrettes | `Heading` ; `CartSpotLayout` |
+| déplacer (une construction) ; son sol | `MoveStructureCommand`, `StructureMoves` ; `StructureGround` | déplacée ; déplacement refusé | `StructureMoved` ; `MoveRefused` |
 
 ## 10. La carte, les scènes et la sauvegarde
 

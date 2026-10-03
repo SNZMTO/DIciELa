@@ -8,7 +8,8 @@ namespace Diciela.Simulation.Land
     /// <summary>
     /// Les règles de pose (GDD, sections 2, 9 et 13) : une construction que la ville sait bâtir, et unique, pas encore
     /// posée ; dans la carte, sur un sol assez plat, sans rien recouvrir, sans se poser devant une porte, et la sienne
-    /// dégagée. Un sol qu'on traverse (la Place ; décision 192) s'étend devant une porte sans la boucher, et une
+    /// dégagée. Les mêmes pour un déplacement, la construction déplacée ne comptant pas : ni son sol, ni sa porte, ni
+    /// elle-même, déjà posée. Un sol qu'on traverse (la Place ; décision 192) s'étend devant une porte sans la boucher, et une
     /// porte s'ouvre sur lui. Une seule fonction répond, pour l'aperçu comme pour l'ordre. Les règles disent aussi quel
     /// sol une construction occupe (son empreinte) et lequel elle garde libre (le devant de sa porte). Elles lisent le
     /// maillage, le relief, les constructions posées et le savoir de la ville, sans rien changer ; les constructions les
@@ -58,9 +59,24 @@ namespace Diciela.Simulation.Land
         public PlacementResult Check(StructureDefinition definition, Placement placement)
         {
             PlacementResult availability = AvailabilityOf(definition);
-            if (availability != PlacementResult.Ok)
-                return availability;
+            return availability != PlacementResult.Ok ? availability : CheckGround(definition, placement, null);
+        }
 
+        /// <summary>
+        /// Peut-on déplacer cette construction à cette place ? Comme pour une pose, sans compter le sol qu'elle occupe, le
+        /// devant de sa porte, ni elle-même, déjà posée (GDD, section 9). La même réponse pour l'aperçu et pour l'ordre.
+        /// </summary>
+        public PlacementResult CheckMove(Structure moved, Placement placement)
+        {
+            if (ReferenceEquals(moved, null))
+                throw new ArgumentNullException(nameof(moved));
+            return CheckGround(moved.Definition, placement, moved);
+        }
+
+        // Le sol de la place : la carte, la pente, ce qui l'occupe et le devant des portes ; ce qui appartient à la
+        // construction déplacée, s'il y en a une, ne compte pas.
+        private PlacementResult CheckGround(StructureDefinition definition, Placement placement, Structure moved)
+        {
             RotatedRect footprint = Footprint(definition, placement);
             if (!IsInsideMap(footprint))
                 return PlacementResult.OutsideMap;
@@ -69,10 +85,10 @@ namespace Diciela.Simulation.Land
             if (IsTooSteep(footprint))
                 return PlacementResult.TooSteep;
 
-            PlacementResult onTheGround = CheckFootprintCells(definition, footprint);
+            PlacementResult onTheGround = CheckFootprintCells(definition, footprint, moved);
             if (onTheGround != PlacementResult.Ok)
                 return onTheGround;
-            if (definition.HasDoor && !IsWalkable(Doorway(definition, placement)))
+            if (definition.HasDoor && !IsWalkable(Doorway(definition, placement), moved))
                 return PlacementResult.DoorBlocked;
             return PlacementResult.Ok;
         }
@@ -131,20 +147,28 @@ namespace Diciela.Simulation.Land
         /// <summary>
         /// L'empreinte de cette construction ne recouvre ni une autre construction (un sol compris), ni un arbre ou un
         /// rocher, ni le devant d'une porte, sauf si elle est un sol qu'on traverse. Une construction dessous l'emporte :
-        /// retirer l'arbre n'y changerait rien.
+        /// retirer l'arbre n'y changerait rien. La construction déplacée ne gêne pas : ni son sol, ni le devant de sa porte.
         /// </summary>
-        private PlacementResult CheckFootprintCells(StructureDefinition definition, RotatedRect footprint)
+        private PlacementResult CheckFootprintCells(StructureDefinition definition, RotatedRect footprint,
+            Structure moved)
         {
             bool natureInTheWay = false;
             bool blocksADoor = false;
+            int self = moved == null ? 0 : moved.Id;
+            bool ownDoor = moved != null && moved.Definition.HasDoor;
+            RotatedRect door = ownDoor ? Doorway(moved.Definition, moved.Placement) : default;
+            float halfCell = _grid.Metrics.CellSize * 0.5f;
             foreach (Vector2Int cell in _grid.CellsCoveredBy(footprint))
             {
                 int occupant = _grid.OccupantAt(cell);
-                if (occupant > 0)
+                if (occupant > 0 && occupant != self)
                     return PlacementResult.Overlaps;
                 if (occupant < 0)
                     natureInTheWay = true;
-                if (!definition.IsWalkable && _structures.Doorways.Covers(cell))
+                int doors = _structures.Doorways.CountAt(cell);
+                if (ownDoor && door.Overlaps(_grid.CellCenter(cell), halfCell))
+                    doors--;
+                if (!definition.IsWalkable && doors > 0)
                     blocksADoor = true;
             }
             if (natureInTheWay)
@@ -152,12 +176,16 @@ namespace Diciela.Simulation.Land
             return blocksADoor ? PlacementResult.BlocksADoor : PlacementResult.Ok;
         }
 
-        /// <summary>Vrai si l'on traverse tout ce rectangle : le devant d'une porte, sur le sol libre ou sur un sol.</summary>
-        private bool IsWalkable(RotatedRect rect)
+        /// <summary>
+        /// Vrai si l'on traverse tout ce rectangle : le devant d'une porte, sur le sol libre ou sur un sol ; le sol que
+        /// quitte la construction déplacée compte comme libre.
+        /// </summary>
+        private bool IsWalkable(RotatedRect rect, Structure moved)
         {
+            int self = moved == null ? 0 : moved.Id;
             foreach (Vector2Int cell in _grid.CellsCoveredBy(rect))
             {
-                if (!_grid.IsWalkable(cell))
+                if (!_grid.IsWalkable(cell) && (self == 0 || _grid.OccupantAt(cell) != self))
                     return false;
             }
             return true;

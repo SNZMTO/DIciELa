@@ -5,8 +5,8 @@ using UnityEngine;
 namespace Diciela.Tests.EditMode
 {
     /// <summary>
-    /// La fabrique de fiches des tests, suite : la charrette de l'étal, et ce qu'une construction en garde ou en appelle.
-    /// Même règle : en mémoire, remplies par SerializedObject.
+    /// La fabrique de fiches des tests, suite : la charrette de l'étal ; ce qu'une construction en garde ou en appelle,
+    /// ce qu'elle tient, si elle est unique ou dressée dès la pose. Même règle : en mémoire, remplies par SerializedObject.
     /// </summary>
     internal static partial class TestData
     {
@@ -52,6 +52,14 @@ namespace Diciela.Tests.EditMode
         {
             var serialized = new SerializedObject(catalog);
             Property(serialized, "_cart").objectReferenceValue = cart;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        /// <summary>Fait de cette construction une construction unique : une seule dans la ville.</summary>
+        public static void Unique(StructureDefinition structure)
+        {
+            var serialized = new SerializedObject(structure);
+            Property(serialized, "_unique").boolValue = true;
             serialized.ApplyModifiedPropertiesWithoutUndo();
         }
 
