@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Collections.Generic;
+using Diciela.Controls;
 using Diciela.Data;
 using Diciela.UI;
 using NUnit.Framework;
@@ -11,8 +13,8 @@ namespace Diciela.Tests.PlayMode
     /// <summary>
     /// La vue de la roue des outils (décision 168), dans un HUD de test, montrée, cachée, puis montrée de nouveau, comme à
     /// une deuxième partie : elle ne s'est branchée qu'une fois, si bien qu'un clic sur l'icône ouvre la roue ; cachée,
-    /// l'icône n'a plus d'infobulle. Les clics et les survols sont des événements de la souris envoyés au panneau, au
-    /// milieu de l'élément, dans le repère du panneau.
+    /// l'icône n'a plus d'infobulle ; ouverte, chaque outil montre son image. Les clics et les survols sont des événements
+    /// de la souris envoyés au panneau, au milieu de l'élément, dans le repère du panneau.
     /// </summary>
     public sealed class ToolWheelTests
     {
@@ -25,6 +27,8 @@ namespace Diciela.Tests.PlayMode
                                      "outils.infobulle.suite,Ou tiens {touche}\n";
         private const string ClosedClass = "roue-fermee";
         private const string HiddenClass = "bloc-cache";
+        private const string ToolClass = "roue-outil";
+        private const string PictureClass = "roue-icone";
         private const int SettleFrames = 3;
 
         [UnityTest]
@@ -86,6 +90,43 @@ namespace Diciela.Tests.PlayMode
                 TestHud.Send(icon,
                     PointerEnterEvent.GetPooled(TestHud.MouseAt(icon.worldBound.center, EventType.MouseMove)));
                 Assert.IsTrue(bubble.ClassListContains(HiddenClass), "Cachée, elle n'en a plus.");
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator OpenedEachToolShowsItsPicture()
+        {
+            using (var test = new TestWorld())
+            {
+                UIDocument document = TestHud.WithWheel(test);
+                yield return null;
+                var wheel = document.GetComponent<ToolWheel>();
+                wheel.Show(TextTable.Parse(Texts, "fr"), new FixedToolKeys(), test.Clearing, new NotedBuildMenu(),
+                    test.Mover, new Tooltips(document));
+                for (int frame = 0; frame < SettleFrames; frame++)
+                    yield return null;
+                VisualElement root = document.rootVisualElement;
+                try
+                {
+                    TestHud.Click(root.Q("outils"));
+                    for (int frame = 0; frame < SettleFrames; frame++)
+                        yield return null;
+                    List<VisualElement> tools = root.Q("roue").Query(className: ToolClass).ToList();
+                    Assert.AreEqual(System.Enum.GetValues(typeof(ToolChoice)).Length, tools.Count,
+                        "La roue offre chaque outil.");
+                    foreach (VisualElement tool in tools)
+                    {
+                        // Les icônes de l'interface sont des images vectorielles (InterfaceIcons) : une texture serait celle
+                        // qu'Unity montre à la place d'une image introuvable.
+                        Background picture = tool.Q(className: PictureClass).resolvedStyle.backgroundImage;
+                        Assert.IsNotNull(picture.vectorImage,
+                            "L'outil « " + tool.name + " » montre son icône (son url dans Hud.uss mène à elle).");
+                    }
+                }
+                finally
+                {
+                    wheel.Hide();
+                }
             }
         }
     }

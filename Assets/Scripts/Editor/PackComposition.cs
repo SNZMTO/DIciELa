@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 namespace Diciela.EditorTools
@@ -35,11 +36,14 @@ namespace Diciela.EditorTools
 
         /// <summary>
         /// Un dallage rond (FloorMesh) : sa matière, une copie de celle-ci du pack (son shader et ses réglages) portant
-        /// cette texture et ces reliefs du pack ; son diamètre, la hauteur de son dessus, la profondeur de sa jupe sous le
-        /// sol et la taille d'un motif de sa texture, en mètres.
+        /// cette texture et ces reliefs du pack (aucun : une surface lisse) ; son diamètre, la hauteur de son dessus, la
+        /// profondeur de sa jupe sous le sol et la taille d'un motif de sa texture, en mètres.
         /// </summary>
         public sealed class Floor
         {
+            private const string AlbedoMap = "_Albedo_Map";
+            private const string NormalMap = "_Normal_Map";
+
             public Floor(string templatePath, string texturePath, string normalsPath, float diameter, float top,
                 float skirt, float pattern)
             {
@@ -59,6 +63,20 @@ namespace Diciela.EditorTools
             public float Top { get; }
             public float Skirt { get; }
             public float Pattern { get; }
+
+            /// <summary>Sa matière, neuve, hors de tout fichier ; null s'il manque au pack la matière ou une texture.</summary>
+            public Material Dressed(string name)
+            {
+                var template = AssetDatabase.LoadAssetAtPath<Material>(TemplatePath);
+                var texture = AssetDatabase.LoadAssetAtPath<Texture2D>(TexturePath);
+                Texture2D normals = NormalsPath != null ? AssetDatabase.LoadAssetAtPath<Texture2D>(NormalsPath) : null;
+                if (template == null || texture == null || (NormalsPath != null && normals == null))
+                    return null;
+                var material = new Material(template) { name = name };
+                material.SetTexture(AlbedoMap, texture);
+                material.SetTexture(NormalMap, normals);
+                return material;
+            }
         }
 
         /// <summary>Un repère : sa place (en mètres, l'entrée vers +z) et le quart de tour de son avant.</summary>
@@ -100,6 +118,23 @@ namespace Diciela.EditorTools
                 AtTheDoor = atTheDoor;
                 Centered = centered;
             }
+
+            /// <summary>
+            /// Pose une instance de son prefab à sa place, sous ce parent ; box, la boîte de ses maillages mesurée sur le
+            /// prefab (PackMeasures), sert à la poser par son milieu.
+            /// </summary>
+            public void Pose(Transform instance, Transform parent, Bounds box)
+            {
+                instance.SetParent(parent, false);
+                instance.localPosition = Place;
+                instance.localRotation = Quaternion.Euler(Pitch, Yaw, 0f);
+                instance.localScale = Vector3.one * Scale;
+                if (!Centered)
+                    return;
+                // Posé par le milieu de sa boîte : son origine recule d'autant, tournée avec lui, au sol.
+                Vector3 middle = instance.localRotation * (box.center * Scale);
+                instance.localPosition -= new Vector3(middle.x, 0f, middle.z);
+            }
         }
 
         public static readonly PackComposition[] All =
@@ -119,13 +154,13 @@ namespace Diciela.EditorTools
                 new Piece("Environment/SM_Env_Stepping_Stone_02", 0.35f, 1.8f, 15f, atTheDoor: true),
                 new Piece("Props/SM_Prop_Wood_Pile_02", 0.9f, -1.75f),
                 new Piece("Environment/SM_Env_Rock_Pile_05", 2.25f, -1.95f, 25f, scale: 0.22f)),
-            // La Place ronde (décisions 193 et 196) : un disque de 11,6 m de galets de rivière du pack sur la terre (sa
+            // La Place ronde (décisions 193, 196 et 203) : un disque de 23,6 m de galets de rivière du pack sur la terre (sa
             // texture tous les 3 m), le dessus à 3 cm du sol, la jupe à 15 cm dessous ; ses petits cailloux à cheval sur
-            // son bord, qui portent son diamètre à 12 m.
+            // son bord, qui portent son diamètre à 24 m.
             new PackComposition("Place", ContentBuilder.PlacePath, null,
                 new Floor(PackMaterials + "Buildings/Floor_Tiles_02.mat", PackTextures + "Terrain/River_Rocks_02.png",
-                    PackTextures + "Normals/River_Rocks_02_Normals.png", 11.6f, 0.03f, 0.15f, 3f),
-                PlaceBorder.For(12f))
+                    PackTextures + "Normals/River_Rocks_02_Normals.png", 23.6f, 0.03f, 0.15f, 3f),
+                PlaceBorder.For(24f))
         };
     }
 }

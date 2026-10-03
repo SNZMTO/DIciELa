@@ -603,8 +603,11 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   l'élément dans le repère du panneau (origine en haut, sans conversion). Un toucher (`GetPooled(Touch)`) n'a pas
   déclenché le `Clickable` d'un bouton. Un survol : `PointerEnterEvent.GetPooled(Event)`.
 - **Une feuille de style qui nomme une icône pas encore générée** garde une référence vide (« Invalid asset path » dans le
-  journal) et affiche le triangle jaune d'Unity, même une fois l'icône créée : générer l'icône d'abord, ou réimporter la
-  feuille (`set_selection --paths '["…uss"]'`, puis le menu `Assets/Reimport`).
+  journal, à son import) et affiche le triangle jaune d'Unity, même une fois l'icône créée. La réimporter (la retoucher,
+  ou `set_selection --paths '["…uss"]'` puis le menu `Assets/Reimport`) ne suffit pas tout de suite : l'éditeur garde
+  l'image invalide en mémoire (« Invalid image specified ») jusqu'au prochain rechargement du domaine. Générer les
+  images avant d'écrire la feuille, sinon réimporter puis recompiler avant de juger. `ToolWheelTests` vérifie que
+  chaque outil de la roue montre son icône vectorielle.
 - **UI Toolkit en Unity 6.6** (essai de l'étape 14) : une police `.ttf` se donne telle quelle
   (`-unity-font-definition: url("….ttf")`) et reste nette à toute taille ; chaque graisse est un fichier, et le style
   reste `normal`, sinon Unity épaissit par-dessus. `-unity-slice-scale` règle aussi le pas de la répétition
@@ -617,9 +620,6 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 - **Un texte qui revient à la ligne dans un bloc qui rétrécit** (`flex-shrink` dans une rangée, sous un `max-width`)
   est mesuré à sa largeur d'avant : sa dernière ligne sort du cadre (l'astuce, étape 15). Donner au bloc une largeur
   fixe et au texte `flex-grow: 1; flex-basis: 0`.
-- **Une feuille USS importée avant l'asset qu'elle cite** (une icône pas encore générée) affiche le triangle jaune
-  d'Unity, et l'éditeur garde cette image invalide en mémoire jusqu'au prochain rechargement du domaine, même après
-  avoir réimporté la feuille : générer les images avant d'écrire la feuille, sinon recompiler avant de juger.
 - **Un filtre USS sur un grand bloc se rend en basse résolution** : une ombre portée (`filter: drop-shadow(…)`) sur
   un panneau de 416 × 500 rendait flous, en 4K, son texte et ses boutons. Aucun filtre sur ce qui contient du texte :
   une ombre dure se dessine, une ombre floue se génère en image.

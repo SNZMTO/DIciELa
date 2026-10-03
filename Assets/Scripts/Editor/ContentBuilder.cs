@@ -65,15 +65,15 @@ namespace Diciela.EditorTools
                 EditorAssets.Property(fiche, "_workHours").floatValue = 2f;
                 EditorAssets.Property(fiche, "_beds").intValue = 2;
             });
-            // La Place (décisions 192 et 194) : 12 × 12 m, unique, sans porte, un sol qu'on traverse ; 5 Bois et 10 Pierre,
-            // 2 h de travail à un débutant ; deux places de charrette. Elle se voit en sol plat à sa taille tant que sa
-            // composition n'est pas faite.
+            // La Place (décisions 192, 194 et 203) : 24 × 24 m, unique, sans porte, un sol qu'on traverse ; 5 Bois et
+            // 10 Pierre, 2 h de travail à un débutant ; deux places de charrette. Elle se voit en sol plat à sa taille tant
+            // que sa composition n'est pas faite.
             StructureDefinition place = EditorAssets.CreateIfMissing<StructureDefinition>(PlacePath, fiche =>
             {
                 EditorAssets.Property(fiche, "_id").stringValue = "place";
                 EditorAssets.Property(fiche, "_nameKey").stringValue = "construction.place";
-                EditorAssets.Property(fiche, "_widthMeters").floatValue = 12f;
-                EditorAssets.Property(fiche, "_depthMeters").floatValue = 12f;
+                EditorAssets.Property(fiche, "_widthMeters").floatValue = 24f;
+                EditorAssets.Property(fiche, "_depthMeters").floatValue = 24f;
                 EditorAssets.Property(fiche, "_hasDoor").boolValue = false;
                 EditorAssets.Property(fiche, "_unique").boolValue = true;
                 EditorAssets.Property(fiche, "_walkable").boolValue = true;
