@@ -14,7 +14,8 @@ namespace Diciela.UI
         public static readonly IReadOnlyList<WheelTool> All = new[]
         {
             new WheelTool("roue-construire", TextKeys.BuildTool, TextKeys.BuildToolDetail),
-            new WheelTool("roue-retirer", TextKeys.ClearingTool, TextKeys.ClearingToolDetail)
+            new WheelTool("roue-retirer", TextKeys.ClearingTool, TextKeys.ClearingToolDetail),
+            new WheelTool("roue-deplacer", TextKeys.MoveTool, TextKeys.MoveToolDetail)
         };
 
         public readonly string ElementName;

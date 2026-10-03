@@ -32,7 +32,8 @@ namespace Diciela.UI
         }
 
         /// <summary>Montre l'icône des outils, la roue fermée ; appelé par le démarrage quand la ville s'ouvre.</summary>
-        public void Show(TextTable texts, IToolKeys keys, ClearingTool clearing, IBuildMenu build, Tooltips tooltips)
+        public void Show(TextTable texts, IToolKeys keys, ClearingTool clearing, IBuildMenu build, MoveTool move,
+            Tooltips tooltips)
         {
             Hide();
             ToolWheelElements elements = ToolWheelElements.Find(_document.rootVisualElement);
@@ -47,7 +48,7 @@ namespace Diciela.UI
             _elements.Icon.Clicked += OnIconClicked;
             _iconTooltip = tooltips.Attach(_elements.Icon,
                 () => _presenter != null ? _presenter.IconTooltip() : ("", ""), true);
-            _presenter = new ToolWheelPresenter(this, texts, keys, clearing, build);
+            _presenter = new ToolWheelPresenter(this, texts, keys, clearing, build, move);
             _elements.Icon.RemoveFromClassList(StyleClasses.Hidden);
         }
 

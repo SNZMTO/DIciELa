@@ -159,20 +159,20 @@ namespace Diciela.Game
             var document = _buildBar.GetComponent<UnityEngine.UIElements.UIDocument>();
             _tooltips = new Tooltips(document);
             _buildBar.Show(catalog, texts, _tools.Placement, world, _toolControls);
-            _toolWheel.Show(texts, _toolControls, _tools.Clearing, _buildBar, _tooltips);
+            _toolWheel.Show(texts, _toolControls, _tools.Clearing, _buildBar, _tools.Move, _tooltips);
             _dayBoard.Show(world.Clock, texts, _tooltips);
             _stockPennants.Show(world, catalog, texts, _tooltips);
             _placeSheet.Show(world, texts);
             _tipBoard.Show(world, texts, _portrait);
             var hud = new HudArea(document);
             _cameraControls.Bind(hud);
-            _placementControls.Bind(_tools.Placement, hud);
+            _placementControls.Bind(_tools.Placement, hud, _tools.Move);
             _tools.Choose.Touched += _placeSheet.Touch;
             _selectionFrame = new SelectionFrame(document);
             _clearingControls.Bind(_tools.Clearing, _selectionFrame, hud);
             _chooseControls.Bind(_tools.Choose, _tools.Hand, hud);
             _toolControls.Bind(_toolWheel, _buildBar);
-            _escapeControls.Bind(_placeSheet, _toolWheel, _buildBar, _tools.Placement, _tools.Clearing);
+            _escapeControls.Bind(_placeSheet, _toolWheel, _buildBar, _tools.Placement, _tools.Clearing, _tools.Move);
         }
     }
 }

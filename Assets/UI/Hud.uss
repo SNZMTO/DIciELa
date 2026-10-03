@@ -448,6 +448,11 @@
     top: 132px;
 }
 
+.roue-droite {
+    left: 132px;
+    top: 0;
+}
+
 .roue-icone {
     width: 46px;
     height: 46px;
@@ -461,6 +466,11 @@
 
 .hache {
     background-image: url("Icones/defricher.asset");
+}
+
+/* Quatre flèches qui partent du milieu : déplacer. */
+.fleches {
+    background-image: url("Icones/deplacer.asset");
 }
 
 .roue-bulle {

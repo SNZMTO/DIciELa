@@ -84,7 +84,7 @@ namespace Diciela.Tests.PlayMode
                             var tooltips = new Tooltips(document);
                             bar.Show(catalog, texts, world.Tool, world.World, new FixedToolKeys());
                             bar.Open();
-                            wheel.Show(texts, new FixedToolKeys(), world.Clearing, bar, tooltips);
+                            wheel.Show(texts, new FixedToolKeys(), world.Clearing, bar, world.Mover, tooltips);
                             day.Show(world.World.Clock, texts, tooltips);
                             town.InstallTheCamp();
                             stock.Show(town.World, town.Catalog, texts, tooltips);
@@ -172,7 +172,7 @@ namespace Diciela.Tests.PlayMode
         private static void CheckWheel(VisualElement root, Vector2Int screen, List<string> faults)
         {
             Rect room = root.panel.visualTree.layout;
-            foreach (string name in new[] { "roue-plateau", "roue-construire", "roue-retirer" })
+            foreach (string name in new[] { "roue-plateau", "roue-construire", "roue-retirer", "roue-deplacer" })
             {
                 Rect tool = root.Q(name).worldBound;
                 if (tool.xMin < 0f || tool.yMin < 0f || tool.xMax > room.width || tool.yMax > room.height)

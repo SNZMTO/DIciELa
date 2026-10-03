@@ -1,6 +1,6 @@
 # DICIELA — état actuel
 
-**Branches** : `main` : l'étape 36. De `etape-37-travail` à `etape-48-deplacer`, chacune partie de la précédente,
+**Branches** : `main` : l'étape 36. De `etape-37-travail` à `etape-49-outil-deplacer`, chacune partie de la précédente,
 pas encore vues rendues : elles se fusionnent dans l'ordre après un Play et l'album (un Play n'avance que si Unity a le
 focus ; je ne le prends jamais : laisse-le au premier plan, ou dis-moi quand tu cliques dedans).
 
@@ -10,12 +10,12 @@ focus ; je ne le prends jamais : laisse-le au premier plan, ou dis-moi quand tu 
 compris, a sa charrette, l'une des quatre du pack au hasard ; un charretier la tire jusqu'à la Place bâtie et la gare le
 long d'un cercle, où elle glisse en douceur ; 48, déplacer (199, 200), dans la simulation : l'ordre « déplacer », vérifié
 par les règles de pose sans compter la construction elle-même ; un chantier saute aussitôt ; un bâtiment retient sa
-place, un ouvrier le défait, il saute, on le remonte ; qui le sert le suit. **EditMode 238/238, PlayMode 194/194.**
+place, un ouvrier le défait, il saute, on le remonte ; qui le sert le suit ; 49, l'outil Déplacer (201) : à droite dans la
+roue (M), on touche une construction, son fantôme suit le pointeur, un clic l'envoie. **EditMode 238/238, PlayMode 200/200.**
 
 **À vérifier par toi, à la souris** : la Chimère réveillée en chemin flâne devant sa porte ; un Tab bref ne choisit
 rien ; un clic à côté de la roue la ferme ; la Place devant une porte, sur une pente.
-**Prochaine étape** : 49, l'outil Déplacer dans la roue (M) et sa vue (le fantôme qui suit le pointeur, la place
-retenue, le bâtiment qu'on défait et remonte) ; puis remplir les charrettes, les niveaux de la Place (découper avant `GameStage`, `Villager`, `Villagers`,
+**Prochaine étape** : un Play avec toi (Unity au premier plan) pour voir les charrettes et Déplacer, et l'album ; puis remplir les charrettes, les niveaux de la Place (découper avant `GameStage`, `Villager`, `Villagers`,
 `WorkSlots`, tous près de 200 lignes).
 **À toi** : peindre la carte, ranger tes modèles (`Assets/Data/Nature`) ; retoucher la composition de la
 Place (`Assets/Art/Compositions/Place.prefab`, puis « Préparer les modèles ») ; les modèles de la loge et de l'entrepôt

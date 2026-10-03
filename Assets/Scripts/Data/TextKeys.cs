@@ -37,6 +37,8 @@ namespace Diciela.Data
         public const string BuildToolDetail = "outil.construire.suite";
         public const string ClearingTool = "outil.retirer";
         public const string ClearingToolDetail = "outil.retirer.suite";
+        public const string MoveTool = "outil.deplacer";
+        public const string MoveToolDetail = "outil.deplacer.suite";
         public const string ToolsTooltip = "outils.infobulle";
         public const string ToolsTooltipDetail = "outils.infobulle.suite";
         public const string KeyParameter = "{touche}";

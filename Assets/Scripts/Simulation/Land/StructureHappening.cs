@@ -4,8 +4,8 @@ namespace Diciela.Simulation.Land
 {
     /// <summary>
     /// Ce qui est arrivé aux constructions pendant un pas, en attendant d'être annoncé à la fin de la couche
-    /// (ARCHITECTURE, section 5) : une construction posée, bâtie, déplacée, ou dont un déplacement commence ; une pose ou
-    /// un déplacement refusés.
+    /// (ARCHITECTURE, section 5) : une construction posée, bâtie, déplacée, dont un déplacement commence, ou qu'on
+    /// commence à défaire ; une pose ou un déplacement refusés.
     /// </summary>
     internal readonly struct StructureHappening
     {
@@ -16,7 +16,8 @@ namespace Diciela.Simulation.Land
             Built,
             Moved,
             MoveRefused,
-            MoveStarted
+            MoveStarted,
+            TakenDown
         }
 
         private StructureHappening(Kinds kind, Structure structure, StructureDefinition definition, Placement placement,

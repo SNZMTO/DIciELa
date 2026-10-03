@@ -32,7 +32,7 @@ namespace Diciela.Tests.PlayMode
             _view = new NotedToolWheelView();
             _build = new NotedBuildMenu();
             _presenter = new ToolWheelPresenter(_view, TextTable.Parse(Texts, "fr"), new FixedToolKeys(), _test.Clearing,
-                _build);
+                _build, _test.Mover);
         }
 
         [TearDown]
@@ -76,6 +76,22 @@ namespace Diciela.Tests.PlayMode
             _view.Choose(ToolChoice.Clear);
             Assert.IsFalse(_test.Clearing.IsActive, "Un second choix le lâche.");
             Assert.IsFalse(_view.Active.Contains(ToolChoice.Clear));
+        }
+
+        [Test]
+        public void MoveTakesItsToolAndASecondMoveDropsIt()
+        {
+            _view.Choose(ToolChoice.Clear);
+
+            _view.Choose(ToolChoice.Move);
+            Assert.IsTrue(_test.Mover.IsActive, "Déplacer prend son outil en main.");
+            Assert.IsFalse(_test.Clearing.IsActive, "Et pose la hache.");
+            Assert.IsTrue(_view.Active.Contains(ToolChoice.Move), "En main, Déplacer reste enfoncé.");
+            Assert.AreEqual("M", _view.ToolKeys[ToolChoice.Move]);
+
+            _view.Choose(ToolChoice.Move);
+            Assert.IsFalse(_test.Mover.IsActive, "Un second choix le lâche.");
+            Assert.IsFalse(_view.Active.Contains(ToolChoice.Move));
         }
 
         [Test]

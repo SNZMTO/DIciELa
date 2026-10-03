@@ -807,6 +807,16 @@
                     "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
+                },
+                {
+                    "name": "Move",
+                    "type": "Button",
+                    "id": "ee14037b-06dd-40fa-8c54-9752228150df",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -950,6 +960,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Card9",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9ac1111e-b406-42a4-8ec8-5d28353a20b2",
+                    "path": "<Keyboard>/#(m)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

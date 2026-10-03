@@ -172,5 +172,7 @@ outil.construire,Construire,Build
 outil.construire.suite,"Choisis une construction, puis pose‑la dans la ville.","Pick a building, then place it in the town."
 outil.retirer,Retirer,Remove
 outil.retirer.suite,"Clique sur un arbre ou un rocher pour le marquer à retirer, ou le démarquer ; glisse pour en marquer plusieurs.","Click a tree or a rock to mark it for removal, or unmark it; drag to mark several."
+outil.deplacer,Déplacer,Move
+outil.deplacer.suite,"Clique sur une construction, puis pose‑la ailleurs ; R la tourne, clic droit la repose.","Click a building, then place it elsewhere; R turns it, right click puts it back."
 outils.infobulle,Outils,Tools
 outils.infobulle.suite,"Ou tiens {touche} : la roue s'ouvre sous le pointeur.","Or hold {touche}: the wheel opens under the pointer."

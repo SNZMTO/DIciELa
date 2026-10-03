@@ -13,7 +13,8 @@ namespace Diciela.Controls
         public static readonly IReadOnlyList<ToolAction> All = new[]
         {
             new ToolAction(ToolChoice.Build, "Build", "<Keyboard>/#(b)"),
-            new ToolAction(ToolChoice.Clear, "Clear", "<Keyboard>/#(x)")
+            new ToolAction(ToolChoice.Clear, "Clear", "<Keyboard>/#(x)"),
+            new ToolAction(ToolChoice.Move, "Move", "<Keyboard>/#(m)")
         };
 
         public readonly ToolChoice Choice;
