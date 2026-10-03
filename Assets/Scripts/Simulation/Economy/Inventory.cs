@@ -5,10 +5,11 @@ using Diciela.Data;
 namespace Diciela.Simulation.Economy
 {
     /// <summary>
-    /// Un stock (ARCHITECTURE, section 3) : ce que tient un entrepôt, un tas au sol, la charge d'un porteur. Son contenu,
-    /// une ligne par marchandise dans l'ordre où elle est entrée, et sa place. Il garde aussi ses réservations, jamais
-    /// sauvegardées : ce qui est promis à un porteur n'est plus disponible pour un autre, et la place retenue pour ce
-    /// qu'on lui apporte n'est plus libre pour autre chose (ARCHITECTURE, section 7).
+    /// Un stock (ARCHITECTURE, section 3) : ce que tient un entrepôt, un tas au sol, la charge d'un porteur, une charrette.
+    /// Son contenu, une ligne par marchandise dans l'ordre où elle est entrée, et sa place, qui se compte en places :
+    /// chaque marchandise en prend autant que dit son encombrement (GDD, section 8 ; décision 194). Il garde aussi ses
+    /// réservations, jamais sauvegardées : ce qui est promis à un porteur n'est plus disponible pour un autre, et la place
+    /// retenue pour ce qu'on lui apporte n'est plus libre pour autre chose (ARCHITECTURE, section 7).
     /// </summary>
     public sealed class Inventory
     {
@@ -19,22 +20,25 @@ namespace Diciela.Simulation.Economy
         public Inventory(int capacity)
         {
             if (capacity < 1)
-                throw new ArgumentOutOfRangeException(nameof(capacity), "Un stock tient au moins une marchandise.");
+                throw new ArgumentOutOfRangeException(nameof(capacity), "Un stock a au moins une place.");
 
             Capacity = capacity;
         }
 
-        /// <summary>Le nombre de marchandises qu'il peut tenir.</summary>
+        /// <summary>Le nombre de places qu'il a.</summary>
         public int Capacity { get; }
 
         /// <summary>Le nombre de marchandises qu'il tient.</summary>
         public int Total { get; private set; }
 
-        /// <summary>La place retenue pour ce qu'on lui apporte : elle n'est plus libre.</summary>
+        /// <summary>Les places que prennent les marchandises qu'il tient.</summary>
+        public int Used { get; private set; }
+
+        /// <summary>Les places retenues pour ce qu'on lui apporte : elles ne sont plus libres.</summary>
         public int SpaceReserved { get; private set; }
 
-        /// <summary>La place qui reste, sans celle qui est retenue.</summary>
-        public int FreeSpace => Capacity - Total - SpaceReserved;
+        /// <summary>Les places qui restent, sans celles qui sont retenues.</summary>
+        public int FreeSpace => Capacity - Used - SpaceReserved;
 
         /// <summary>Le nombre de lignes : les marchandises qu'il a tenues, dans l'ordre où elles sont entrées.</summary>
         public int LineCount => _goods.Count;
@@ -63,10 +67,18 @@ namespace Diciela.Simulation.Economy
             return line < 0 ? 0 : _counts[line] - _reserved[line];
         }
 
+        /// <summary>Combien de cette marchandise tiendraient encore dans les places libres.</summary>
+        public int RoomFor(GoodDefinition good)
+        {
+            if (ReferenceEquals(good, null))
+                throw new ArgumentNullException(nameof(good));
+            return FreeSpace / good.Space;
+        }
+
         internal void Add(GoodDefinition good, int amount)
         {
             CheckAmount(amount);
-            if (amount > FreeSpace)
+            if (amount > RoomFor(good))
                 throw new InvalidOperationException("Le stock n'a pas la place de " + amount + " de plus.");
             int line = LineOf(good);
             if (line < 0)
@@ -78,6 +90,7 @@ namespace Diciela.Simulation.Economy
             }
             _counts[line] += amount;
             Total += amount;
+            Used += amount * good.Space;
         }
 
         /// <summary>Retire des marchandises, prises d'abord sur celles qu'on a promises si <paramref name="reserved"/>.</summary>
@@ -91,6 +104,7 @@ namespace Diciela.Simulation.Economy
             if (reserved)
                 _reserved[line] -= amount;
             Total -= amount;
+            Used -= amount * good.Space;
         }
 
         /// <summary>Promet des marchandises disponibles : elles restent là, mais personne d'autre ne les prend.</summary>
@@ -102,22 +116,23 @@ namespace Diciela.Simulation.Economy
             _reserved[LineOf(good)] += amount;
         }
 
-        /// <summary>Retient de la place pour ce qu'on lui apportera : personne d'autre ne la prend.</summary>
-        internal void ReserveSpace(int amount)
+        /// <summary>Retient la place de tant de cette marchandise, qu'on lui apportera : personne d'autre ne la prend.</summary>
+        internal void ReserveSpace(GoodDefinition good, int amount)
         {
             CheckAmount(amount);
-            if (amount > FreeSpace)
+            if (amount > RoomFor(good))
                 throw new InvalidOperationException("Le stock n'a pas la place de retenir " + amount + " de plus.");
-            SpaceReserved += amount;
+            SpaceReserved += amount * good.Space;
         }
 
-        /// <summary>Rend de la place retenue : elle redevient libre.</summary>
-        internal void ReleaseSpace(int amount)
+        /// <summary>Rend la place retenue pour tant de cette marchandise : elle redevient libre.</summary>
+        internal void ReleaseSpace(GoodDefinition good, int amount)
         {
             CheckAmount(amount);
-            if (amount > SpaceReserved)
+            int places = amount * good.Space;
+            if (places > SpaceReserved)
                 throw new InvalidOperationException("Le stock n'a pas retenu la place de " + amount + ".");
-            SpaceReserved -= amount;
+            SpaceReserved -= places;
         }
 
         /// <summary>Rend une promesse : les marchandises redeviennent disponibles.</summary>

@@ -51,9 +51,9 @@ namespace Diciela.Tests.EditMode
             {
                 Assert.IsTrue(Contains(catalog.Goods, goods.Good), "Le stock de départ a une marchandise hors du catalogue.");
                 Assert.GreaterOrEqual(goods.Amount, 1, "Le stock de départ a une ligne vide.");
-                total += goods.Amount;
+                total += goods.Amount * goods.Good.Space;
             }
-            Assert.LessOrEqual(total, camp.StorageCapacity, "Le campement ne tient pas le stock de départ.");
+            Assert.LessOrEqual(total, camp.StorageCapacity, "Le campement n'a pas les places du stock de départ.");
         }
 
         [Test]

@@ -89,7 +89,7 @@ la société, qui voit tout ce qui est en dessous.
   comme la Place, aussi). L'eau :
   canaux, relief creusé, zones irriguées. La force : réseaux et budget, un moulin bâti consommant qu'il travaille ou
   non.
-- **L'économie.** Les stocks : portes des bâtiments, entrepôts, étagères de l'étal, charge d'un porteur, panier d'un
+- **L'économie.** Les stocks : portes des bâtiments, entrepôts, charrettes de l'étal, charge d'un porteur, panier d'un
   visiteur, tas au sol ; chacun a son contenu et sa consigne. Une seule fonction crée ou détruit une marchandise, avec
   sa cause ; une seule fonction « rend à la ville », toujours à une place retenue (une charge en route garde la sienne
   à son départ, décision 178). Les réservations. Les ateliers (recette, avancement). La culture
@@ -278,7 +278,7 @@ code.
 | habitant | `Villager` | stock | `Inventory` | emprise peinte | `Stroke` |
 | Chimère | `Chimera` | entrepôt | `Warehouse` | plantation | `Planting` |
 | maître | `Master` | tas au sol | `GroundPile` | champ (sauvage) | `Field` (`WildField`) |
-| lieu de travail | `Workplace` | étal, étagère | `Stall`, `Shelf` | construction | `Structure` |
+| lieu de travail | `Workplace` | étal ; charrette ; place de charrette | `Stall` ; `Cart` ; `CartSpot` | construction | `Structure` |
 | poste | `WorkSlot` | visiteur | `Visitor` | chantier, file | `ConstructionSite`, `ConstructionQueue` |
 | tâche, à prendre | `Task`, `TaskOffer` | marchandise | `Good` | réserve | `Reserve` |
 | sorte de tâche | `TaskKind` | recette, atelier | `Recipe`, `Workshop` | maillage | `NavGrid` |
@@ -322,7 +322,7 @@ code.
 | apprendre (une idée) ; appris | `Knowledge.Learn` ; `Learned` | lieu de travail (d'un premier habitant) | `Workplace` | les onglets du panneau | `BuildBarTabs` |
 | fermer un poste | `WorkSlots.Close` | s'installer à son lieu de travail | `Opening.Settle` | un sol qu'on traverse (la Place) | `IsWalkable` |
 | devants de porte | `Doorways` | épouser le relief (un sol) | `FloorDrape` | dallage (d'une composition) | `FloorMesh`, `PackComposition.Floor` |
-| bordure de la Place | `PlaceBorder` | poser par le milieu de sa boîte | `Piece.Centered` | | |
+| bordure de la Place | `PlaceBorder` | poser par le milieu de sa boîte | `Piece.Centered` | encombrement ; places libres ; ce qui tient encore | `GoodDefinition.Space` ; `FreeSpace` ; `RoomFor` |
 
 ## 10. La carte, les scènes et la sauvegarde
 

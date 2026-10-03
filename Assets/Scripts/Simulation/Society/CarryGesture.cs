@@ -21,7 +21,7 @@ namespace Diciela.Simulation.Society
 
         public override bool TryTake(int island, Vector2 position)
         {
-            if (!_offers.TryTakeDelivery(island, position, _load.Capacity, out _delivery))
+            if (!_offers.TryTakeDelivery(island, position, _load, out _delivery))
                 return false;
             Goal = ChoreGoal.Of(_delivery.Source);
             return true;

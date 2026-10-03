@@ -8,8 +8,8 @@ namespace Diciela.Tests.EditMode
 {
     /// <summary>
     /// Les arbres et les rochers du contenu, lus dans le projet sans rien écrire (GDD, section 2 ; décisions 157 à 160) :
-    /// chaque sorte rend une marchandise du catalogue, que la Chimère porte en un voyage, et demande du travail ; le
-    /// campement a, en plus de son stock de départ, la place de ce que rend chacune ; le poste « à tout faire » défriche,
+    /// chaque sorte rend une marchandise du catalogue, que la Chimère porte en un voyage (selon son encombrement), et
+    /// demande du travail ; le campement a, en plus de son stock de départ, la place de ce que rend chacune ; le poste « à tout faire » défriche,
     /// en dernier ; un modèle rangé ne l'est que dans une sorte, et chaque modèle peint sur le Terrain d'une carte est rangé dans une
     /// sorte : sinon, le jeu ne saurait pas ce qu'il est.
     /// </summary>
@@ -28,7 +28,7 @@ namespace Diciela.Tests.EditMode
                 GoodAmount yield = nature.Yield;
                 if (!Contains(catalog.Goods, yield.Good))
                     faults.Add(nature.Id + " rend une marchandise hors du catalogue.");
-                if (yield.Amount < 1 || yield.Amount > catalog.ChimeraKind.CarryCapacity)
+                if (yield.Amount < 1 || (yield.Good != null && yield.Amount * yield.Good.Space > catalog.ChimeraKind.CarryCapacity))
                     faults.Add(nature.Id + " rend " + yield.Amount + " : la Chimère doit le porter en un voyage.");
                 if (nature.WorkHours <= 0f)
                     faults.Add(nature.Id + " ne demande aucun travail.");
@@ -42,10 +42,10 @@ namespace Diciela.Tests.EditMode
             Catalog catalog = ProjectContent.LoadSingle<Catalog>();
             int starting = 0;
             foreach (GoodAmount goods in catalog.Opening.StartingGoods)
-                starting += goods.Amount;
+                starting += goods.Amount * goods.Good.Space;
             int room = ProjectContent.CampOf(catalog).StorageCapacity - starting;
             foreach (NatureDefinition nature in catalog.Nature)
-                Assert.GreaterOrEqual(room, nature.Yield.Amount, "Plein dès le départ, le campement n'aurait pas la place " +
+                Assert.GreaterOrEqual(room, nature.Yield.Amount * nature.Yield.Good.Space, "Plein dès le départ, le campement n'aurait pas la place " +
                                                                    "de ce que rend " + nature.Id + " : rien ne se défricherait.");
         }
 

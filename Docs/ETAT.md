@@ -1,6 +1,6 @@
 # DICIELA — état actuel
 
-**Branches** : `main` : l'étape 36. De `etape-37-travail` à `etape-43-place-bout-en-bout`, chacune partie de la
+**Branches** : `main` : l'étape 36. De `etape-37-travail` à `etape-44-encombrement`, chacune partie de la
 précédente, pas encore vues rendues : elles se fusionnent dans l'ordre après un Play et l'album (un Play n'avance que
 si Unity a le focus ; je ne le prends jamais : laisse-le au premier plan, ou dis-moi quand tu cliques dedans).
 
@@ -8,17 +8,16 @@ si Unity a le focus ; je ne le prends jamais : laisse-le au premier plan, ou dis
 leur lieu bâti (191) ; 40, la Place, un sol qu'on traverse (192) ; 41, son art (193) : un dallage de pierre beige du
 pack entouré de petits cailloux, qui épouse le relief ; un modèle préparé deux fois ne perd plus son maillage ; 42, le
 ménage de la société ; 43, la Place de bout en bout (un test avec le vrai contenu) et sa mise en scène d'album
-(`DICIELA/Album/Poser la Place près du campement`). **EditMode 214/214, PlayMode 192/192.**
+(`DICIELA/Album/Poser la Place près du campement`) ; 44, l'encombrement (194) : la place d'un stock se compte en
+places, chaque marchandise en prend selon sa fiche. **EditMode 216/216, PlayMode 192/192.**
 
 **À vérifier par toi, à la souris** : la Chimère réveillée en chemin flâne devant sa porte ; un Tab bref ne choisit
 rien ; un clic à côté de la roue la ferme ; la Place devant une porte, sur une pente.
-**Tes idées à trancher, les charrettes-étals** (mes recos entre parenthèses) : a) le joueur charge une charrette et
-l'envoie (la fiche de la Place, une liste par place de charrette ; un charretier l'amène, la gare au hasard et la
-remplit) ; b) les étagères « habitants » et « troc » deviennent deux sortes de charrettes (oui) ; c) la place d'une
-marchandise compte partout ou dans les charrettes seules (partout, comme les piles de Satisfactory) ; d) combien de
-charrettes (2, puis +1 par niveau, 5 au plus) ; e) d'où elles viennent (une par entrepôt, le campement compris).
+**Tes réponses du 03/10** : les charrettes-étals selon mes recos (194) ; les animaux à 83 % pour passer les portes
+comme les humains ; la Place ronde, en galets gris arrondis.
 
-**Prochaine étape** : les charrettes-étals, après tes réponses (découper avant `Villager`, `Villagers`, `WorkSlots`).
+**Prochaine étape** : 45, les animaux à 83 % ; 46, la Place ronde ; puis les charrettes qui accourent, les remplir,
+les niveaux (découper avant `Villager`, `Villagers`, `WorkSlots`).
 
 **À toi** : peindre la carte, ranger tes modèles (`Assets/Data/Nature`) ; retoucher la composition de la Place
 (`Assets/Art/Compositions/Place.prefab`, puis « Préparer les modèles ») ; la famille de la Place (ma reco appliquée :

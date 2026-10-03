@@ -42,10 +42,10 @@ namespace Diciela.Simulation.Economy
         }
 
         /// <summary>
-        /// Prend un arbre ou un rocher pour un défricheur sur cet îlot, qui a encore cette place dans sa charge. Faux s'il
-        /// n'y a rien à retirer qu'il puisse rejoindre, ou pas de place où ranger ce que cela rend.
+        /// Prend un arbre ou un rocher pour un défricheur sur cet îlot, dont la charge a la place de ce qu'il rend. Faux
+        /// s'il n'y a rien à retirer qu'il puisse rejoindre, ou pas de place où ranger ce que cela rend.
         /// </summary>
-        internal bool TryTakeClearing(int island, int freeSpace, out Clearing clearing)
+        internal bool TryTakeClearing(int island, Inventory load, out Clearing clearing)
         {
             clearing = null;
             IReadOnlyList<NatureItem> marked = _nature.Marked;
@@ -54,16 +54,17 @@ namespace Diciela.Simulation.Economy
                 NatureItem item = marked[i];
                 GoodAmount yield = item.Definition.Yield;
                 bool yields = !ReferenceEquals(yield.Good, null) && yield.Amount > 0;
-                if (_taken.Contains(item) || (yields && yield.Amount > freeSpace) ||
+                if (_taken.Contains(item) || (yields && yield.Amount > load.RoomFor(yield.Good)) ||
                     !_reach.IsReachable(item.Footprint, item.Occupant, island))
                     continue;
                 Structure warehouse = null;
                 if (yields)
                 {
-                    warehouse = _reach.NearestWithRoom(_warehouses, yield.Amount, island, item.Placement.Center);
+                    warehouse = _reach.NearestWithRoom(_warehouses, yield.Good, yield.Amount, island,
+                        item.Placement.Center);
                     if (warehouse == null)
                         continue;
-                    _warehouses.ReserveSpace(warehouse, yield.Amount);
+                    _warehouses.ReserveSpace(warehouse, yield.Good, yield.Amount);
                 }
                 _taken.Add(item);
                 clearing = yields
@@ -124,7 +125,7 @@ namespace Diciela.Simulation.Economy
                 return;
             }
             if (clearing.Amount > 0)
-                _warehouses.ReleaseSpace(clearing.Warehouse, clearing.Amount);
+                _warehouses.ReleaseSpace(clearing.Warehouse, clearing.Good, clearing.Amount);
             _taken.Remove(clearing.Item);
         }
     }
