@@ -25,9 +25,9 @@ namespace Diciela.EditorTools
         private const string OpeningPath = "Assets/Data/Depart.asset";
         private const string CartPath = "Assets/Data/Charrette.asset";
 
-        // Le modèle du pack de la charrette de l'étal (décision 197) : la charrette ouverte, à l'auvent.
-        private const string CartModelPath =
-            "Assets/Synty/PolygonFantasyVillage/Prefabs/Vehicles/SM_Veh_Cart_03.prefab";
+        // Les modèles du pack des charrettes de l'étal (décision 198) : les quatre ; chaque charrette en tire un.
+        private const string CartModelsPath = "Assets/Synty/PolygonFantasyVillage/Prefabs/Vehicles/SM_Veh_Cart_0";
+        private const int CartModelCount = 4;
 
         // Le modèle du pack de la cabane (décision 75).
         private const string CabinSourcePath =
@@ -81,10 +81,13 @@ namespace Diciela.EditorTools
                 EditorAssets.Property(fiche, "_workHours").floatValue = 2f;
                 EditorAssets.Property(fiche, "_cartSpots").intValue = 2;
             });
-            // La charrette de l'étal (décision 194) : 20 places ; ses autres réglages, ceux de sa fiche par défaut.
-            CartDefinition cart = EditorAssets.CreateIfMissing<CartDefinition>(CartPath,
-                fiche => EditorAssets.Property(fiche, "_id").stringValue = "charrette");
-            EditorAssets.AssignIfMissing(cart, "_model", EditorAssets.Load<GameObject>(CartModelPath));
+            // La charrette de l'étal (décisions 194 et 198) : 20 places, les quatre charrettes du pack ; ses autres
+            // réglages, ceux de sa fiche par défaut.
+            CartDefinition cart = EditorAssets.CreateIfMissing<CartDefinition>(CartPath, fiche =>
+            {
+                EditorAssets.Property(fiche, "_id").stringValue = "charrette";
+                EditorAssets.SetList(EditorAssets.Property(fiche, "_models"), CartModels());
+            });
             // Les modèles se font ici une fois ; ensuite, par le menu DICIELA/Contenu/Préparer les modèles.
             EditorAssets.AssignIfMissing(cabin, "_sourceModel", EditorAssets.Load<GameObject>(CabinSourcePath));
             if (camp.Model == null)
@@ -141,6 +144,14 @@ namespace Diciela.EditorTools
             EditorAssets.AssignIfMissing(catalog, "_villagerKind", villagers.Kind);
             EditorAssets.AssignIfMissing(catalog, "_cart", cart);
             AppearanceBuilder.CreateMissing(catalog);
+        }
+
+        private static GameObject[] CartModels()
+        {
+            var models = new GameObject[CartModelCount];
+            for (int i = 0; i < models.Length; i++)
+                models[i] = EditorAssets.Load<GameObject>(CartModelsPath + (i + 1) + ".prefab");
+            return models;
         }
 
         private static void SetList(SerializedProperty list, params Object[] items)
