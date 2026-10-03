@@ -96,6 +96,8 @@ namespace Diciela.EditorTools
             {
                 EditorAssets.Property(fiche, "_id").stringValue = "chimere";
                 EditorAssets.Property(fiche, "_nameKey").stringValue = "habitant.chimere";
+                // Un animal, réduit pour passer les portes comme les humains (décision 195).
+                EditorAssets.Property(fiche, "_modelScale").floatValue = 0.83f;
             });
 
             // Le déroulé du départ (décisions 172, 185, 187 et 192) : la Chimère sait déjà bâtir le campement, la Place et
