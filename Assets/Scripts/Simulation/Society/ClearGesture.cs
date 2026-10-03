@@ -21,7 +21,7 @@ namespace Diciela.Simulation.Society
 
         public override bool TryTake(int island, Vector2 position)
         {
-            if (!_clearings.TryTakeClearing(island, _load.FreeSpace, out _clearing))
+            if (!_clearings.TryTakeClearing(island, _load, out _clearing))
                 return false;
             Goal = ChoreGoal.Of(_clearing.Item);
             return true;

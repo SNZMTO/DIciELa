@@ -76,28 +76,28 @@ namespace Diciela.Simulation.Economy
         /// </summary>
         public Structure NearestWithGood(Warehouses warehouses, GoodDefinition good, int island, Vector2 from)
         {
-            return Nearest(warehouses, good, 1, island, from);
+            return Nearest(warehouses, good, 1, false, island, from);
         }
 
         /// <summary>
         /// L'entrepôt le plus proche de ce point, à vol d'oiseau, joignable depuis cet îlot, qui a la place de tant de
-        /// marchandises ; null s'il n'y en a pas.
+        /// cette marchandise, selon son encombrement ; null s'il n'y en a pas.
         /// </summary>
-        public Structure NearestWithRoom(Warehouses warehouses, int amount, int island, Vector2 from)
+        public Structure NearestWithRoom(Warehouses warehouses, GoodDefinition good, int amount, int island, Vector2 from)
         {
-            return Nearest(warehouses, null, amount, island, from);
+            return Nearest(warehouses, good, amount, true, island, from);
         }
 
-        // Le seul parcours des entrepôts par la distance : avec tant de cette marchandise à donner, ou, sans marchandise,
-        // la place de tant.
-        private Structure Nearest(Warehouses warehouses, GoodDefinition good, int amount, int island, Vector2 from)
+        // Le seul parcours des entrepôts par la distance : avec tant de cette marchandise à donner, ou la place de tant.
+        private Structure Nearest(Warehouses warehouses, GoodDefinition good, int amount, bool room, int island,
+            Vector2 from)
         {
             Structure nearest = null;
             float best = float.MaxValue;
             for (int i = 0; i < warehouses.Count; i++)
             {
                 Inventory stock = warehouses.StockAt(i);
-                if ((good != null ? stock.AvailableOf(good) : stock.FreeSpace) < amount)
+                if ((room ? stock.RoomFor(good) : stock.AvailableOf(good)) < amount)
                     continue;
                 Structure warehouse = warehouses.StructureAt(i);
                 float distance = Vector2.Distance(warehouse.Placement.Center, from);

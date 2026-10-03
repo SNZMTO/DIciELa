@@ -244,10 +244,10 @@
 - **Règle.** Le joueur touche le campement : sa fiche s'ouvre sur le côté, avec « Y mettre la Chimère » ou « Retirer
   la Chimère », et « Aller dormir » ou « Réveiller ». Tant que la carte n'a ni arbres ni champs sauvages à traiter, le
   poste ne fait que porter et bâtir.
-- **Défaut.** Le campement tient 100 marchandises : 30 Bois et 20 Pierre au départ, et la place de ce que rendent les
+- **Défaut.** Le campement a 100 places : 30 Bois et 20 Pierre au départ, et la place de ce que rendent les
   premiers arbres et rochers. La Place, la cabane et les premiers bâtiments ne demandent que du
   Bois et de la Pierre ; le stock de départ suffit à la Place et à deux cabanes. La Place coûte 5 Bois et 10 Pierre,
-  une cabane 10 Bois et 5 Pierre ; chacune demande 2 h de travail à un débutant ; à pied, on porte 5 marchandises par
+  une cabane 10 Bois et 5 Pierre ; chacune demande 2 h de travail à un débutant ; à pied, on porte 5 places par
   voyage.
 - **Règle.** Les premiers habitants arrivent vite, un par un, à mesure que les lits le permettent. Chacun est fort dans
   une discipline, apporte l'idée de son lieu de travail et le bâtit avec la Chimère, avant même la loge. Ils restent en
@@ -295,7 +295,7 @@
 - **Règle.** Des bâtiments de service ouvrent les postes des métiers qui ne produisent rien : la loge des bâtisseurs
   (les ouvriers : chantiers, canaux, décos), l'entrepôt (les charretiers), la cabane du paysagiste (les paysagistes).
 - **Défaut.** La loge des bâtisseurs : 5 × 4 m, 15 Bois et 10 Pierre, 3 h de travail, deux postes d'ouvrier (bâtir).
-  L'entrepôt : 6 × 5 m, 20 Bois et 10 Pierre, 3 h, 200 marchandises (voir 8), deux postes de charretier (porter). Le
+  L'entrepôt : 6 × 5 m, 20 Bois et 10 Pierre, 3 h, 200 places (voir 8), deux postes de charretier (porter). Le
   stock de départ n'y suffit pas : il faut d'abord défricher.
 - **À toi.** Un habitant en pleine tâche est-il interrompu par une tâche plus urgente ? Ma reco : non, il va au bout,
   comme dans Oxygen Not Included.
@@ -350,7 +350,11 @@
   place.
 - **Règle.** Une liaison prioritaire, tirée par le joueur entre deux bâtiments, livre directement de l'un à l'autre sans
   passer par l'entrepôt : c'est l'outil pour optimiser.
-- **Défaut.** Chacun des deux petits stocks d'un bâtiment tient 10 marchandises ; un entrepôt en tient 200.
+- **Règle.** Chaque marchandise prend des places dans un stock, son encombrement, comme les tailles de pile de
+  Satisfactory : la place d'un entrepôt, de la charge d'un porteur ou d'une charrette se compte en places, et un
+  porteur prend autant d'une marchandise que sa charge en tient.
+- **Défaut.** Le Bois et la Pierre prennent 1 place. Chacun des deux petits stocks d'un bâtiment a 10 places ; un
+  entrepôt en a 200.
 - **À toi.** Où vont les marchandises rendues au stock quand les entrepôts sont pleins (les graines d'un champ
   effacé) ? Une charge rendue n'en est pas : sa place l'attend. Ma reco : en tas au sol, sur place, avec une pastille ;
   les charretiers les reprennent dès qu'il y a de la place.
@@ -456,17 +460,24 @@
   que se tient l'étal, et là que se jouera la run. Elle a des niveaux qui la rendent plus cozy, chacun par un petit
   chantier.
 - **Règle.** Une route qui rejoint la Place enlève les cailloux du bord là où elle la touche (avec les routes).
-- **Défaut.** Elle fait 12 × 12 m, sans porte (son coût : voir 6). Trois niveaux ; chacun ajoute un poste de marchand,
+- **Défaut.** Elle fait 12 × 12 m, sans porte (son coût : voir 6). Trois niveaux ; chacun ajoute une place de charrette,
   du charme et un visiteur par jour.
-- **Règle.** Les postes de l'étal sont ceux des marchands, dont la sous-statistique troc règle la cadence (combien de
-  visiteurs ils servent).
-- **Règle.** L'étal a deux étagères, « habitants » et « troc », que le joueur garnit : une quantité, ou « garder au
-  moins N » au stock. Les charretiers les remplissent depuis les entrepôts.
+- **Règle.** L'étal, ce sont des charrettes, comme les étals qui s'installent sur la place du marché de Manor Lords.
+  Chaque entrepôt, le campement compris, a sa charrette. La Place a des places de charrette ; chacune appelle la
+  charrette d'un entrepôt, qu'un charretier y conduit et gare au hasard sur la Place, où elle sert d'étal. Chaque place
+  de charrette sert les habitants ou le troc, au choix du joueur.
+- **Défaut.** Deux places de charrette, une pour les habitants et une pour le troc, et une de plus par niveau : cinq au
+  plus. Une charrette tient 20 places (voir 8 : chaque marchandise en prend plus ou moins).
+- **Règle.** Le joueur garnit chaque charrette dans la fiche de la Place : une liste de marchandises, chacune une
+  quantité, ou « garder au moins N » au stock, dans la limite de ses places. Les charretiers la remplissent depuis les
+  entrepôts.
+- **Règle.** Une charrette de troc demande un marchand : la Place ouvre un poste de marchand par charrette de troc. La
+  sous-statistique troc d'un marchand règle sa cadence (combien de visiteurs il sert).
 - **Règle.** Les visiteurs viennent le jour, par la route du bord de la carte, avec un panier, parfois un objet rare. Le
-  marchand échange tout seul ce qui est sur l'étagère du troc contre ce qui est sur la liste de souhaits du joueur ; un
+  marchand échange tout seul ce qui est sur sa charrette de troc contre ce qui est sur la liste de souhaits du joueur ; un
   visiteur qui n'a rien de souhaité repart sans échanger, sans effet sur la réputation.
 - **Défaut.** La liste de souhaits commence avec tout ce que la ville ne sait pas faire. Le marchand paie avec ce que
-  l'étagère du troc a en plus grande quantité.
+  sa charrette a en plus grande quantité.
 - **Règle.** Chaque marchandise a un taux de base, déduit de sa valeur (voir 3). Pour chaque marchandise, le joueur
   règle ce qu'il en demande par rapport à ce taux : plus, la ville est radine ; moins, elle est généreuse.
 - **Défaut.** De 20 % en dessous à 20 % au-dessus du taux de base.
@@ -482,12 +493,12 @@
 - **Règle.** Les visiteurs apportent un peu de ressources étrangères, de quoi essayer une idée, et racontent d'où elles
   viennent ; les expéditions en rapportent en quantité (voir 14). Au premier jouable, leurs paniers portent ce que la
   ville ne fait pas encore : fruits, légumes, graines, décos.
-- **Règle.** Les habitants se servent sur l'étagère « habitants », qui ne porte jamais ce qui se mange (fruits,
+- **Règle.** Les habitants se servent sur les charrettes des habitants, qui ne portent jamais ce qui se mange (fruits,
   légumes, blé) : ils mangent la nourriture de la ville. Chaque objet obtenu les rend plus heureux, d'autant plus qu'il
   a de la valeur ; ne rien obtenir n'a pas de conséquence grave, seulement pas de bonus. L'étal est le lieu où la ville
   choisit comment partager, entre ses habitants et les visiteurs.
 - **Règle.** Un habitant revient prendre un objet le soir, quand l'effet du précédent s'est estompé. Sans marchand, les
-  habitants se servent encore : leur étagère est en libre-service ; seul le troc s'arrête.
+  habitants se servent encore : leurs charrettes sont en libre-service ; seul le troc s'arrête.
 - **Défaut.** L'effet d'un objet dure trois jours.
 
 ## 12. La déco et le charme

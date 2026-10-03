@@ -37,11 +37,12 @@ namespace Diciela.Simulation.Economy
         }
 
         /// <summary>
-        /// Prend une livraison pour un porteur sur cet îlot, près de ce point, qui porte au plus tant : le premier
-        /// chantier de la file à qui il manque une marchandise, depuis l'entrepôt le plus proche qui en a. Une seule
-        /// marchandise par voyage. Faux s'il n'y a rien à porter qu'il puisse rejoindre.
+        /// Prend une livraison pour un porteur sur cet îlot, près de ce point, avec cette charge : le premier chantier de
+        /// la file à qui il manque une marchandise, depuis l'entrepôt le plus proche qui en a, autant que la charge en
+        /// tient (selon l'encombrement). Une seule marchandise par voyage. Faux s'il n'y a rien à porter qu'il puisse
+        /// rejoindre.
         /// </summary>
-        internal bool TryTakeDelivery(int island, Vector2 from, int capacity, out Delivery delivery)
+        internal bool TryTakeDelivery(int island, Vector2 from, Inventory load, out Delivery delivery)
         {
             delivery = null;
             IReadOnlyList<ConstructionSite> queue = _sites.Queue;
@@ -63,10 +64,13 @@ namespace Diciela.Simulation.Economy
                     if (!reachable)
                         break;
                     GoodDefinition good = site.GoodAt(line);
+                    if (load.RoomFor(good) < 1)
+                        continue;
                     Structure source = _reach.NearestWithGood(_warehouses, good, island, from);
                     if (source == null)
                         continue;
-                    int amount = Math.Min(Math.Min(capacity, missing), _warehouses.StockOf(source).AvailableOf(good));
+                    int amount = Math.Min(Math.Min(load.RoomFor(good), missing),
+                        _warehouses.StockOf(source).AvailableOf(good));
                     _warehouses.Reserve(source, good, amount);
                     site.Promise(good, amount);
                     delivery = new Delivery(source, site, good, amount);
@@ -113,7 +117,7 @@ namespace Diciela.Simulation.Economy
             delivery.MarkOver();
             load.Remove(delivery.Good, delivery.Amount, false);
             _sites.Receive(delivery.Site, delivery.Good, delivery.Amount);
-            _warehouses.ReleaseSpace(delivery.Source, delivery.Amount);
+            _warehouses.ReleaseSpace(delivery.Source, delivery.Good, delivery.Amount);
         }
 
         /// <summary>
