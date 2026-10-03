@@ -8,14 +8,15 @@ namespace Diciela.EditorTools
     /// vêtu d'une matière du pack, FloorMesh), et, s'il en a une, sa couche (un repère « Couche » : les pieds de qui dort,
     /// son avant vers la tête). Ceux du jeu : le campement, qui fait tout au départ (un foyer, une couche où dort la
     /// Chimère, un coffre, un sac, une marmite, et son stock : une pile de bûches et un tas de pierres, au fond, près du
-    /// coffre ; deux pierres plates sous un objet « Door » font son entrée) ; la Place, un dallage de pierre beige bordé
-    /// de petits cailloux (PlaceBorder). Les rochers du pack sont à l'échelle du paysage : le foyer, le tas de pierres et
+    /// coffre ; deux pierres plates sous un objet « Door » font son entrée) ; la Place, un disque de galets de rivière
+    /// entouré de petits cailloux (PlaceBorder). Les rochers du pack sont à l'échelle du paysage : le foyer, le tas de pierres et
     /// les cailloux en sont des réductions.
     /// </summary>
     internal sealed class PackComposition
     {
         private const string Pack = "Assets/Synty/PolygonFantasyVillage/Prefabs/";
-        private const string BeigeTiles = "Assets/Synty/PolygonFantasyVillage/Materials/Buildings/Floor_Tiles_02.mat";
+        private const string PackMaterials = "Assets/Synty/PolygonFantasyVillage/Materials/";
+        private const string PackTextures = "Assets/Synty/PolygonFantasyVillage/Textures/";
 
         private PackComposition(string name, string structurePath, Spot? couch, Floor floor, params Piece[] pieces)
         {
@@ -33,24 +34,28 @@ namespace Diciela.EditorTools
         public Piece[] Pieces { get; }
 
         /// <summary>
-        /// Un dallage (FloorMesh) : la matière du pack qui le couvre, sa largeur et sa profondeur, la hauteur de son
-        /// dessus, la profondeur de sa jupe sous le sol et la taille d'un motif de sa texture, en mètres.
+        /// Un dallage rond (FloorMesh) : sa matière, une copie de celle-ci du pack (son shader et ses réglages) portant
+        /// cette texture et ces reliefs du pack ; son diamètre, la hauteur de son dessus, la profondeur de sa jupe sous le
+        /// sol et la taille d'un motif de sa texture, en mètres.
         /// </summary>
         public sealed class Floor
         {
-            public Floor(string materialPath, float width, float depth, float top, float skirt, float pattern)
+            public Floor(string templatePath, string texturePath, string normalsPath, float diameter, float top,
+                float skirt, float pattern)
             {
-                MaterialPath = materialPath;
-                Width = width;
-                Depth = depth;
+                TemplatePath = templatePath;
+                TexturePath = texturePath;
+                NormalsPath = normalsPath;
+                Diameter = diameter;
                 Top = top;
                 Skirt = skirt;
                 Pattern = pattern;
             }
 
-            public string MaterialPath { get; }
-            public float Width { get; }
-            public float Depth { get; }
+            public string TemplatePath { get; }
+            public string TexturePath { get; }
+            public string NormalsPath { get; }
+            public float Diameter { get; }
             public float Top { get; }
             public float Skirt { get; }
             public float Pattern { get; }
@@ -114,11 +119,13 @@ namespace Diciela.EditorTools
                 new Piece("Environment/SM_Env_Stepping_Stone_02", 0.35f, 1.8f, 15f, atTheDoor: true),
                 new Piece("Props/SM_Prop_Wood_Pile_02", 0.9f, -1.75f),
                 new Piece("Environment/SM_Env_Rock_Pile_05", 2.25f, -1.95f, 25f, scale: 0.22f)),
-            // La Place (décision 193) : 11,6 × 11,6 m de dalles beiges du pack (un motif de 4 × 4 dalles tous les 3 m : des
-            // dalles de 75 cm), le dessus à 3 cm du sol, la jupe à 15 cm dessous ; ses petits cailloux à cheval sur son
-            // bord, qui portent l'empreinte à 12 × 12 m.
+            // La Place ronde (décisions 193 et 196) : un disque de 11,6 m de galets de rivière du pack sur la terre (sa
+            // texture tous les 3 m), le dessus à 3 cm du sol, la jupe à 15 cm dessous ; ses petits cailloux à cheval sur
+            // son bord, qui portent son diamètre à 12 m.
             new PackComposition("Place", ContentBuilder.PlacePath, null,
-                new Floor(BeigeTiles, 11.6f, 11.6f, 0.03f, 0.15f, 3f), PlaceBorder.For(12f))
+                new Floor(PackMaterials + "Buildings/Floor_Tiles_02.mat", PackTextures + "Terrain/River_Rocks_02.png",
+                    PackTextures + "Normals/River_Rocks_02_Normals.png", 11.6f, 0.03f, 0.15f, 3f),
+                PlaceBorder.For(12f))
         };
     }
 }

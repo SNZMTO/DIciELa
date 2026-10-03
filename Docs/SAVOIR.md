@@ -314,13 +314,14 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   du pack (`SM_Bld_Stone_Edge`) a son origine à un bout : elle se pose par le milieu de sa boîte, mesurée sur le pack
   (`Piece.Centered`), sinon elle déborde de l'empreinte. Une planche de fichiers (`DICIELA/Album/Planche des pièces de
   la Place`) montre les pièces candidates et dit leur taille et le milieu de leur boîte.
-- **Un sol qu'on traverse épouse le relief** (la Place) : son modèle est tramé (`FloorMesh`, des mailles d'un
-  demi-mètre au plus), et la vue fait monter ou descendre chacun de ses sommets de l'écart du relief entre sa place et
+- **Un sol qu'on traverse épouse le relief** (la Place) : son modèle est tramé (`FloorMesh`, un disque en anneaux d'un
+  demi-mètre), et la vue fait monter ou descendre chacun de ses sommets de l'écart du relief entre sa place et
   le centre (`FloorDrape`), sur une copie de chaque maillage lisible, détruite avec la vue ; le fantôme du chantier est
   la copie du modèle posé. Qui y marche, à la hauteur du relief, garde les pieds sur ses dalles (leur dessus à 3 cm).
   Une jupe descend sous le sol tout autour, contre un relief inégal entre deux sommets.
-- **Une texture qui se répète en grille** (les dalles du pack, 4 × 4 par motif) : tourner ses UV d'un quart de tour
-  tiré au hasard par bloc d'un motif casse la grille, et les joints des dalles restent alignés.
+- **Une texture de dalles carrées fait un damier** (les dalles du pack, 4 × 4 par motif), même ses blocs tournés d'un
+  quart de tour au hasard : le développeur l'a refusée. Une texture irrégulière (galets, pavés ronds) posée à plat, ses
+  UV en mètres, se raccorde d'elle-même, sans joint ni grille.
 - **Sans modèle du pack, une boîte fusionnée de même** (`PlaceholderBuilder`) : le corps laisse devant lui l'épaisseur
   de la porte, qui affleure la façade, pour que la boîte remplisse l'empreinte sans la dépasser (le test de contenu
   la mesure comme un modèle préparé). Une porte posée devant une boîte pleine dépasserait de son épaisseur ; une porte
@@ -499,8 +500,11 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 - **`AssetDatabase.CreateAsset` sur un chemin déjà pris détruit l'ancien objet** : un prefab chargé qui le montrait
   garde une référence morte. Un modèle préparé une seconde fois dans la même session s'affichait ainsi sans maillage
   (sa vignette vide, invisible en jeu) jusqu'à sa réimportation (`set_selection`, puis le menu `Assets/Reimport`). Pour
-  refaire un asset en place, en remplacer le contenu (`EditorUtility.CopySerialized`) : l'objet reste, ce qui le montre
-  aussi (`ModelMerger`).
+  refaire un maillage en place, le réécrire par l'API des maillages (`Clear`, puis ses sommets, normales, couleurs, UV
+  et triangles) : l'objet reste, ce qui le montre aussi (`ModelMerger`). `EditorUtility.CopySerialized` ne suffit pas :
+  les données changent, mais pas ce que dessine la carte graphique (la Place restait carrée à l'écran, ronde en
+  mémoire). Recopier les UV avec leur nombre de composantes : en `Vector4`, le maillage de la cabane passait de 5,7 à
+  8,2 Mo.
 - **En EditMode, `Awake` et `OnEnable` ne se déclenchent pas** : un composant créé dans un test n'est pas abonné. La
   logique va dans des classes C# pures, testables sans scène.
 - **Démarrage rapide du Play** (Enter Play Mode Options, actif dans ce projet : ni le domaine ni la scène ne sont

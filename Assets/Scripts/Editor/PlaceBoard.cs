@@ -69,8 +69,8 @@ namespace Diciela.EditorTools
         }
 
         /// <summary>
-        /// La Place préparée (son modèle, tel que le jeu le pose), en fichier : de trois quarts, d'en haut, puis un coin et
-        /// le milieu d'un bord de près.
+        /// La Place préparée (son modèle, tel que le jeu le pose), en fichier : de trois quarts, d'en haut, puis deux bouts de
+        /// son bord de près.
         /// </summary>
         [MenuItem("DICIELA/Album/Planche de la Place préparée (fichier)")]
         private static void WritePrepared()
