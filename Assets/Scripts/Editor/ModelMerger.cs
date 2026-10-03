@@ -97,8 +97,8 @@ namespace Diciela.EditorTools
             EditorAssets.EnsureFolder(Folder);
             string meshPath = Folder + "/" + name + "_Maillage.asset";
             string prefabPath = Folder + "/" + name + ".prefab";
-            // Un maillage déjà là garde son objet, dont on remplace le contenu : le recréer détruirait celui que le modèle
-            // chargé montre encore, et ce modèle resterait sans maillage jusqu'à sa réimportation (SAVOIR, 3).
+            // Un maillage déjà là garde son objet, qu'on réécrit : le recréer détruirait celui que le modèle chargé montre
+            // encore, et ce modèle resterait sans maillage jusqu'à sa réimportation (SAVOIR, 3).
             var existing = AssetDatabase.LoadAssetAtPath<Mesh>(meshPath);
             if (existing == null)
             {
@@ -106,8 +106,7 @@ namespace Diciela.EditorTools
             }
             else
             {
-                EditorUtility.CopySerialized(merged, existing);
-                EditorUtility.SetDirty(existing);
+                Rewrite(existing, merged);
                 Object.DestroyImmediate(merged);
             }
 
@@ -123,6 +122,59 @@ namespace Diciela.EditorTools
             finally
             {
                 EditorSceneManager.ClosePreviewScene(scene);
+            }
+        }
+
+        // Réécrit ce maillage avec le contenu de l'autre, par l'API des maillages : l'objet reste, et ses données changent
+        // partout, jusqu'à ce que dessine la carte graphique (une copie de ses données enregistrées ne la rafraîchit pas).
+        private static void Rewrite(Mesh target, Mesh source)
+        {
+            target.Clear();
+            target.indexFormat = source.indexFormat;
+            target.SetVertices(source.vertices);
+            if (source.HasVertexAttribute(VertexAttribute.Normal))
+                target.SetNormals(source.normals);
+            if (source.HasVertexAttribute(VertexAttribute.Tangent))
+                target.SetTangents(source.tangents);
+            if (source.HasVertexAttribute(VertexAttribute.Color))
+            {
+                if (source.GetVertexAttributeFormat(VertexAttribute.Color) == VertexAttributeFormat.UNorm8)
+                    target.SetColors(source.colors32);
+                else
+                    target.SetColors(source.colors);
+            }
+            for (int channel = 0; channel < 8; channel++)
+                CopyUVs(source, target, channel);
+            target.subMeshCount = source.subMeshCount;
+            for (int sub = 0; sub < source.subMeshCount; sub++)
+                target.SetTriangles(source.GetTriangles(sub), sub);
+            target.RecalculateBounds();
+            EditorUtility.SetDirty(target);
+        }
+
+        // Un canal de coordonnées de texture, recopié avec son nombre de composantes : deux le plus souvent.
+        private static void CopyUVs(Mesh source, Mesh target, int channel)
+        {
+            VertexAttribute attribute = VertexAttribute.TexCoord0 + channel;
+            if (!source.HasVertexAttribute(attribute))
+                return;
+            switch (source.GetVertexAttributeDimension(attribute))
+            {
+                case 2:
+                    var flat = new List<Vector2>();
+                    source.GetUVs(channel, flat);
+                    target.SetUVs(channel, flat);
+                    break;
+                case 3:
+                    var deep = new List<Vector3>();
+                    source.GetUVs(channel, deep);
+                    target.SetUVs(channel, deep);
+                    break;
+                default:
+                    var full = new List<Vector4>();
+                    source.GetUVs(channel, full);
+                    target.SetUVs(channel, full);
+                    break;
             }
         }
     }

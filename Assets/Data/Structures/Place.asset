@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Diciela.Data::Diciela.Data.StructureDefinition
   _id: place
   _nameKey: construction.place
-  _widthMeters: 11.94
-  _depthMeters: 11.96
+  _widthMeters: 11.95
+  _depthMeters: 11.92
   _hasDoor: 0
   _doorOffsetMeters: 0
   _doorWidthMeters: 1.5
@@ -35,6 +35,6 @@ MonoBehaviour:
   _workSlots: []
   _storageCapacity: 0
   _beds: 0
-  _sourceModel: {fileID: 6056224186274789036, guid: 2e6ae1de30f7d9d4183d4e076dd5773a, type: 3}
+  _sourceModel: {fileID: 6316477538248796652, guid: 2e6ae1de30f7d9d4183d4e076dd5773a, type: 3}
   _model: {fileID: 7951676779053614994, guid: 4f076a2bf0b9b174c9dffaa882a6a22a, type: 3}
   _picture: {fileID: 2800000, guid: 2e4dce3a5ea1b3447bd3a4285eb50f55, type: 3}
