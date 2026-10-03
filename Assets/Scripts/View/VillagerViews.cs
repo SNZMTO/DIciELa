@@ -8,7 +8,8 @@ using UnityEngine;
 namespace Diciela.View
 {
     /// <summary>
-    /// Les habitants, vus (ARCHITECTURE, section 11) : chacun habillé de son apparence (Dresser). À l'ouverture, ceux
+    /// Les habitants, vus (ARCHITECTURE, section 11) : chacun habillé de son apparence (Dresser), à l'échelle de sa sorte
+    /// (les animaux réduits pour passer les portes comme les humains ; décision 195). À l'ouverture, ceux
     /// qui sont déjà là ; ensuite, chaque arrivée, par l'événement de la simulation. À chaque image, le
     /// démarrage donne la fraction du pas en cours : chaque personnage se montre à cette fraction du chemin entre sa
     /// place au pas d'avant et celle du dernier pas (SAVOIR, 2.2), posé sur le sol, et se tourne vers où il va, sans
@@ -100,6 +101,8 @@ namespace Diciela.View
             }
 
             view.name = villager.Kind.Id + " n° " + villager.Id;
+            // Les animaux sont réduits pour passer les portes comme les humains (décision 195).
+            view.transform.localScale = Vector3.one * villager.Kind.ModelScale;
             var shown = new Shown { Villager = villager, Transform = view.transform };
             _shown.Add(shown);
             ShowSleep(shown);

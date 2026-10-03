@@ -22,6 +22,7 @@ namespace Diciela.Tests.PlayMode
         private readonly List<Object> _created = new List<Object>();
         private World _world;
         private VillagerViews _views;
+        private VillagerKindDefinition _kind;
         private StructureDefinition _house;
         private GameObject _cube;
 
@@ -29,7 +30,7 @@ namespace Diciela.Tests.PlayMode
         public void CreateWorld()
         {
             var settings = Keep(ScriptableObject.CreateInstance<SimulationSettings>());
-            var kind = Keep(ScriptableObject.CreateInstance<VillagerKindDefinition>());
+            _kind = Keep(ScriptableObject.CreateInstance<VillagerKindDefinition>());
             var character = Keep(ScriptableObject.CreateInstance<CharacterDefinition>());
             var first = Keep(ScriptableObject.CreateInstance<FirstVillagerDefinition>());
             var opening = Keep(ScriptableObject.CreateInstance<OpeningDefinition>());
@@ -37,8 +38,8 @@ namespace Diciela.Tests.PlayMode
             _house = Keep(ScriptableObject.CreateInstance<StructureDefinition>());
             _cube = Keep(GameObject.CreatePrimitive(PrimitiveType.Cube));
 #if UNITY_EDITOR
-            TestWorld.Fill(kind, "_id", "habitant");
-            TestWorld.Fill(kind, "_sleepsAtNight", true);
+            TestWorld.Fill(_kind, "_id", "habitant");
+            TestWorld.Fill(_kind, "_sleepsAtNight", true);
             TestWorld.Fill(character, "_model", _cube);
             TestWorld.Fill(first, "_character", character);
             TestWorld.Fill(_house, "_builtWhenPlaced", true);
@@ -46,7 +47,7 @@ namespace Diciela.Tests.PlayMode
             TestWorld.FillList(opening, "_knownStructures", _house);
             TestWorld.FillList(opening, "_firstVillagers", first);
             TestWorld.Fill(catalog, "_opening", opening);
-            TestWorld.Fill(catalog, "_villagerKind", kind);
+            TestWorld.Fill(catalog, "_villagerKind", _kind);
 #endif
             var map = new MapDescription(new Relief(100f, 100f, 2, 2, new[] { 10f, 10f, 10f, 10f }));
             _world = new World(settings, map, catalog);
@@ -89,6 +90,19 @@ namespace Diciela.Tests.PlayMode
             for (int step = 0; step < MaxSteps && _world.Clock.Phase != DayPhase.Work; step++)
                 _world.Step();
             Assert.IsTrue(shown.gameObject.activeSelf, "Au matin, il sort.");
+        }
+
+        [Test]
+        public void HisKindScalesHisModel()
+        {
+#if UNITY_EDITOR
+            TestWorld.Fill(_kind, "_modelScale", 0.83f);
+#endif
+            _world.Submit(new PlaceStructureCommand(_house, new Placement(new Vector2(60f, 50f), 0f)));
+            _world.Step();
+
+            Assert.AreEqual(Vector3.one * 0.83f, _views.transform.GetChild(0).localScale,
+                "Un animal est réduit à l'échelle de sa sorte, pour passer les portes comme les humains.");
         }
     }
 }

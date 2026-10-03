@@ -24,3 +24,4 @@ MonoBehaviour:
   _startingStatisticMax: 10
   _sleepsAtNight: 0
   _carryCapacity: 5
+  _modelScale: 0.83
