@@ -13,11 +13,12 @@ namespace Diciela.Simulation.Economy
     /// </summary>
     public sealed class Cart
     {
-        internal Cart(int id, Structure home, CartDefinition definition)
+        internal Cart(int id, Structure home, CartDefinition definition, int modelIndex)
         {
             Id = id;
             Home = home;
             Definition = definition;
+            ModelIndex = modelIndex;
             Position = home.Placement.Center;
             PreviousPosition = Position;
         }
@@ -28,6 +29,9 @@ namespace Diciela.Simulation.Economy
         public Structure Home { get; }
 
         public CartDefinition Definition { get; }
+
+        /// <summary>Lequel des modèles de sa fiche on voit : tiré au hasard à sa naissance, toujours le même.</summary>
+        public int ModelIndex { get; }
 
         public CartState State { get; private set; }
 

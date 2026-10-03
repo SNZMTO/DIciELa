@@ -12,8 +12,8 @@ namespace Diciela.Game
     /// Ce que le démarrage montre d'un monde et relie aux gestes (ARCHITECTURE, section 11), dans l'ordre d'une partie
     /// neuve (GDD, section 6) : l'écran de création dans l'atelier, la Chimère à venir sur son socle, qu'on fait
     /// tourner ; puis, l'ordre de la créer parti, la ville (caméra, HUD, outils, gestes), la caméra tout près de la
-    /// Chimère qui naît au point d'arrivée, puis reculée à sa distance de départ. Les constructions et les habitants sont
-    /// vus dès l'ouverture. Toucher un lieu ouvre sa fiche ; Échap ferme la fiche, puis la roue des outils, puis le
+    /// Chimère qui naît au point d'arrivée, puis reculée à sa distance de départ. Le monde (constructions, habitants,
+    /// arbres, charrettes) est vu dès l'ouverture (WorldViews). Toucher un lieu ouvre sa fiche ; Échap ferme la fiche, puis la roue des outils, puis le
     /// panneau Construire, puis lâche l'outil en main. Il délie et cache tout à la sortie.
     /// </summary>
     public sealed class GameStage : MonoBehaviour
@@ -51,6 +51,7 @@ namespace Diciela.Game
         private SelectionFrame _selectionFrame;
         private Texture2D _portrait;
         private Tooltips _tooltips;
+        private WorldViews _worldViews;
 
         /// <summary>Vrai si la scène a toutes ses vues et tous ses gestes.</summary>
         public bool IsComplete => _cameraRig != null && _cameraControls != null && _structureViews != null &&
@@ -71,9 +72,8 @@ namespace Diciela.Game
         internal void Open(World world, Catalog catalog, TextTable texts, PlacementSettings placement, MapScene map,
             Action started, Action failed)
         {
-            _structureViews.Show(world.Structures, world.ConstructionSites, world.Map.Relief);
-            _villagerViews.Show(world.Villagers, world.Map.Relief);
-            _natureViews.Show(world.Nature, map.Terrain, map.NatureInstances, world.Map.Relief);
+            _worldViews = new WorldViews(_structureViews, _villagerViews, _natureViews, transform);
+            _worldViews.Show(world, map);
             _atelier.Show();
             _appearancePreview.Stand(_atelier.Spot);
             _creationScreen.Show(catalog, texts, _appearancePreview, world, () =>
@@ -87,10 +87,10 @@ namespace Diciela.Game
             _confirmControls.Bind(_creationScreen.Confirm);
         }
 
-        /// <summary>Donne aux habitants vus et à la journée la fraction du pas en cours.</summary>
+        /// <summary>Donne aux habitants et aux charrettes vus, et à la journée, la fraction du pas en cours.</summary>
         public void Follow(float stepFraction, float deltaSeconds)
         {
-            _villagerViews.Follow(stepFraction, deltaSeconds);
+            _worldViews?.Follow(stepFraction, deltaSeconds);
             _dayBoard.Follow(stepFraction);
         }
 
@@ -134,9 +134,8 @@ namespace Diciela.Game
             }
             _placementTool = null;
             _cameraRig.Hide();
-            _structureViews.Hide();
-            _villagerViews.Hide();
-            _natureViews.Hide();
+            _worldViews?.Hide();
+            _worldViews = null;
         }
 
         // La Chimère naît au point d'arrivée, tournée vers le nord : la caméra se tourne pour la voir de face, part tout

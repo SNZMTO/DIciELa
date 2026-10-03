@@ -328,7 +328,7 @@ code.
 | fermer un poste | `WorkSlots.Close` | s'installer à son lieu de travail | `Opening.Settle` | un sol qu'on traverse (la Place) | `IsWalkable` |
 | devants de porte | `Doorways` | épouser le relief (un sol) | `FloorDrape` | dallage (d'une composition) | `FloorMesh`, `PackComposition.Floor` |
 | bordure de la Place | `PlaceBorder` | poser par le milieu de sa boîte | `Piece.Centered` | encombrement ; places libres ; ce qui tient encore | `GoodDefinition.Space` ; `FreeSpace` ; `RoomFor` |
-| charrettes de l'étal ; à conduire | `Carts` ; `CartOffers` | conduire ; atteler ; tirer ; garer | `Drive` ; `Hitch` ; `Pull` ; `Park` | cap (au sol) ; où se garent les charrettes | `Heading` ; `CartSpotLayout` |
+| charrettes de l'étal ; à conduire ; vues | `Carts` ; `CartOffers` ; `CartViews` | conduire ; atteler ; tirer ; garer | `Drive` ; `Hitch` ; `Pull` ; `Park` | cap (au sol) ; où se garent les charrettes | `Heading` ; `CartSpotLayout` |
 
 ## 10. La carte, les scènes et la sauvegarde
 
@@ -370,8 +370,11 @@ code.
 
 - **La vue** écoute les événements et ne photographie jamais : elle se construit à partir de l'état au chargement,
   puis suit les événements, par la même routine de pose (SAVOIR 2.9). Chaque abonnement est défait dans `OnDestroy`.
-  Ce qui bouge se lit à chaque image : le démarrage donne aux habitants vus la fraction du pas en cours, et chacun se
-  montre entre sa position du pas d'avant et celle du dernier (SAVOIR 2.2). Endormie, la Chimère reste pour la
+  Ce qui bouge se lit à chaque image : le démarrage donne aux habitants et aux charrettes vus la fraction du pas en
+  cours, et chacun se montre entre sa position du pas d'avant et celle du dernier (SAVOIR 2.2) ; une charrette garée
+  glisse en douceur jusqu'à sa place. Les vues du monde (constructions, habitants, nature, charrettes) se montrent,
+  se suivent et se cachent ensemble (`WorldViews`) ; celle des charrettes (`CartViews`) naît au démarrage, hors de la
+  scène. Endormie, la Chimère reste pour la
   simulation devant la porte de son logis ; la vue la montre couchée sur sa couche, si la fiche du logis en a une (le
   campement), sinon elle la cache (elle est entrée). Un point du modèle posé se calcule par la même routine de pose
   (`ModelPose`).

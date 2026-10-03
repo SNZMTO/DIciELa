@@ -54,6 +54,10 @@ namespace Diciela.Tests.EditMode
                 Assert.AreEqual(i, spots[i].Index);
                 Assert.AreEqual(6f * 0.55f, Vector2.Distance(spots[i].Position, place.Placement.Center), 1e-3f,
                     "Sur un cercle autour du milieu, à 55 % du demi-côté.");
+                float along = Heading.Of(spots[i].Position - place.Placement.Center) + 90f;
+                float off = Mathf.Abs(Mathf.DeltaAngle(spots[i].HeadingDegrees, along));
+                Assert.LessOrEqual(Mathf.Min(off, 180f - off), 10f + 1e-3f,
+                    "Garée le long du cercle, dans un sens ou dans l'autre, de travers de 10° au plus.");
                 Vector2 stand = spots[i].Position + Heading.Direction(spots[i].HeadingDegrees) * 2.2f;
                 Assert.Less(Vector2.Distance(stand, place.Placement.Center), 6f - 0.3f,
                     "Le charretier la gare en se tenant sur la Place.");
