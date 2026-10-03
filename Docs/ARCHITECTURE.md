@@ -97,8 +97,9 @@ la société, qui voit tout ce qui est en dessous.
   La production comptée par marchandise. La valeur des marchandises. La publication des tâches à prendre.
 - **La société.** Les habitants (ordinaires, maîtres, la Chimère : trois sortes décrites par leurs fiches, jamais un
   cas particulier par nom) et leur journée (travail, soirée, nuit). Leur marche, le long de la ligne tendue d'un
-  trajet, et la sortie d'une construction posée sur eux ; la flânerie de qui n'a pas de poste ; le sommeil de la
-  Chimère, devant la porte de son logis, sur ordre. La table des postes.
+  trajet, et la sortie d'une construction qu'on ne traverse pas, posée sur eux ; la flânerie de qui n'a pas de poste ;
+  le sommeil de la Chimère, devant la porte de son logis, sur ordre. La table des postes, qui ouvre aussi le poste « à
+  tout faire » d'un premier habitant et le ferme quand son lieu de travail est bâti.
   Les arrivées : une seule fonction (`Villagers.Arrive`), la Chimère comprise ; c'est leur source qui en dit les
   conditions (le déroulé du départ : un lit libre ; plus tard, les arrivées ordinaires : un lit, un poste, de quoi
   manger ; les maîtres : un lit, de quoi manger). Les logements (`Housing` : qui a son lit où ; les lits libres, déduits
@@ -110,12 +111,12 @@ la société, qui voit tout ce qui est en dessous.
   sa classe : le traitement des ordres ; les déclencheurs (une condition mène à une récompense : idée, réplique,
   tenue) ;
   le déroulé du départ (le stock de départ à la mise en service du campement ; les premières arrivées, à la fin du
-  pas) ; les opérations qui touchent plusieurs couches, faites par des appels vers le bas dans un ordre
+  pas, chacune avec son idée ; leur installation à leur lieu de travail, quand il est mis en service) ; les opérations qui touchent plusieurs couches, faites par des appels vers le bas dans un ordre
   écrit (poser : le terrain, puis l'économie ouvre un chantier, ou la construction, dressée dès la pose, est mise en
   service ; mettre en service, une seule opération, à la pose ou à la fin du pas où un chantier finit : l'économie
   ouvre un stock, la société des postes, puis le déroulé du départ la regarde, décisions 179 et 191 : le stock de
-  départ pour le premier logis de la Chimère, et le premier habitant dont c'est le lieu de travail y prend un poste ; plus tard, la maison de
-  la Chimère qui remplace le campement) ; la capture et la restauration. Le monde reçoit les réglages, la carte et le
+  départ pour le premier logis de la Chimère, et le premier habitant dont c'est le lieu de travail y prend un poste ;
+  plus tard, la maison de la Chimère qui remplace le campement) ; la capture et la restauration. Le monde reçoit les réglages, la carte et le
   catalogue, d'où il tire le déroulé du départ et les statistiques.
 
 ## 4. Qui possède quoi

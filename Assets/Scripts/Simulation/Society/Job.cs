@@ -10,10 +10,10 @@ namespace Diciela.Simulation.Society
 {
     /// <summary>
     /// Le travail d'un habitant (GDD, section 7) : le poste qu'il tient. Aux heures de travail, il prend la première
-    /// tâche que son poste permet, dans l'ordre du poste (le poste « à tout faire » : porter, puis bâtir) ; sans rien à
-    /// faire, et hors des heures de travail, il flâne près de son poste. Après une tâche qui échoue, il flâne une pause
-    /// avant d'en reprendre une : il ne reprend pas en boucle celle qui vient d'échouer. La flânerie est celle de
-    /// l'habitant.
+    /// tâche que son poste permet, dans l'ordre du poste (le poste « à tout faire » : porter, bâtir, puis défricher) ;
+    /// sans rien à faire, et hors des heures de travail, il flâne près de son poste. Après une tâche qui échoue, il flâne
+    /// une pause avant d'en reprendre une : il ne reprend pas en boucle celle qui vient d'échouer. La flânerie est celle
+    /// de l'habitant.
     /// </summary>
     internal sealed class Job
     {

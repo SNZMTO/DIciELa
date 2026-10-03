@@ -12,9 +12,9 @@ namespace Diciela.Simulation.Society
     /// qu'il fait. Sa place est sa position, en mètres sur le plan XZ ; il garde aussi celle du pas d'avant, pour que la
     /// vue le montre entre les deux. Avec un poste, il y travaille ; sans poste, il flâne ; parti dormir, il laisse sa
     /// tâche (il garde son poste), va à son lit, s'y couche et n'en bouge plus jusqu'à ce qu'on le réveille. Une
-    /// construction posée sur lui ne l'arrête pas : il laisse sa tâche, en sort à pied, puis reprend sa marche vers son lit
-    /// ou son travail. Chaque pas tire son hasard de son numéro et du numéro du pas : les mêmes ordres rejouent la même
-    /// partie.
+    /// construction qu'on ne traverse pas, posée sur lui, ne l'arrête pas : il laisse sa tâche, en sort à pied, puis
+    /// reprend sa marche vers son lit ou son travail ; un sol qu'on traverse (la Place) ne le dérange pas. Chaque pas
+    /// tire son hasard de son numéro et du numéro du pas : les mêmes ordres rejouent la même partie.
     /// </summary>
     public sealed class Villager
     {
@@ -135,7 +135,7 @@ namespace Diciela.Simulation.Society
         /// </summary>
         internal bool TryGoToBed(Vector2Int bed)
         {
-            // Une maille prise est sur l'îlot 0 : sur un sol couvert, rien ne se rejoint.
+            // Une maille où l'on ne marche pas est sur l'îlot 0 : de là, rien ne se rejoint.
             int island = _services.Islands.IslandOf(_services.Grid.CellOf(Position));
             if (island == 0 || _services.Islands.IslandOf(bed) != island)
                 return false;

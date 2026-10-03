@@ -16,7 +16,7 @@ namespace Diciela.Simulation.Society
         private readonly List<WorkSlot> _all = new List<WorkSlot>();
         private readonly List<SlotHappening> _happened = new List<SlotHappening>();
 
-        /// <summary>Levé quand un habitant prend un poste, par l'ordre « affecter ».</summary>
+        /// <summary>Levé quand un habitant prend un poste.</summary>
         public event Action<Villager, WorkSlot> VillagerAssigned;
 
         /// <summary>Levé quand un habitant quitte son poste : retiré, ou affecté ailleurs.</summary>
@@ -71,7 +71,8 @@ namespace Diciela.Simulation.Society
         /// <summary>
         /// Met cet habitant au premier poste libre de ce lieu ; s'il en tenait un ailleurs, il le quitte d'abord.
         /// Refusé (rien ne change, et <see cref="AssignmentRefused"/> le dira) sans habitant, sans poste à ce lieu, sans
-        /// poste libre, ou s'il y est déjà. Seul l'ordre « affecter » l'appelle.
+        /// poste libre, ou s'il y est déjà. L'ordre « affecter » l'appelle, et le déroulé du départ quand le lieu de
+        /// travail d'un premier habitant est bâti.
         /// </summary>
         internal void Assign(Villager villager, Structure workplace)
         {
@@ -122,7 +123,8 @@ namespace Diciela.Simulation.Society
 
         /// <summary>
         /// Retire cet habitant de son poste : il redevient libre. Refusé sans habitant, ou s'il ne tient aucun poste.
-        /// Seul l'ordre « retirer » l'appelle.
+        /// L'ordre « retirer » l'appelle, et le déroulé du départ quand le lieu d'un premier habitant n'a pas de poste
+        /// libre.
         /// </summary>
         internal void Unassign(Villager villager)
         {
