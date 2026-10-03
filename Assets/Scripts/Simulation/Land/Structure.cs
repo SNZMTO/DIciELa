@@ -22,10 +22,16 @@ namespace Diciela.Simulation.Land
 
         public StructureDefinition Definition { get; }
 
-        /// <summary>Sa place et son angle.</summary>
-        public Placement Placement { get; }
+        /// <summary>Sa place et son angle ; ils changent quand on la déplace.</summary>
+        public Placement Placement { get; private set; }
 
         public StructureState State { get; private set; }
+
+        /// <summary>Elle change de place. Seules les constructions l'appellent, avec son maillage.</summary>
+        internal void MoveTo(Placement placement)
+        {
+            Placement = placement;
+        }
 
         /// <summary>Son chantier est fini : elle sert. Seules les constructions l'appellent.</summary>
         internal void BecomeBuilt()
