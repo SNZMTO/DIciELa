@@ -44,7 +44,7 @@ namespace Diciela.Simulation
             Clearings = new ClearingOffers(Nature, Warehouses, reach);
             WorkSlots = new WorkSlots();
             Housing = new Housing(Structures, Structures.Rules);
-            Villagers = new Villagers(Grid, Islands, PathFinder, Clock, surroundings, offers, Clearings, WorkSlots,
+            Villagers = new Villagers(Grid, Islands, PathFinder, Clock, surroundings, offers, Clearings,
                 new StatisticTable(catalog.Statistics, settings), settings, Structures, Housing);
             _opening = new Opening(catalog.Opening, catalog.VillagerKind);
             _commissioning = new Commissioning(this, _opening);
@@ -56,7 +56,7 @@ namespace Diciela.Simulation
         /// <summary>La carte reçue au lancement : elle ne change pas pendant la partie.</summary>
         public MapDescription Map { get; }
 
-        /// <summary>Le maillage : ce qui occupe le sol, déduit des constructions.</summary>
+        /// <summary>Le maillage : ce qui occupe le sol, et où l'on marche, déduit des constructions.</summary>
         public NavGrid Grid { get; }
 
         /// <summary>Les îlots du maillage : qui peut rejoindre qui à pied, su sans rien fouiller.</summary>
