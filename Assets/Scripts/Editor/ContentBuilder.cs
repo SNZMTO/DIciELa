@@ -26,7 +26,8 @@ namespace Diciela.EditorTools
         private const string CartPath = "Assets/Data/Charrette.asset";
 
         // Le modèle du pack de la charrette de l'étal (décision 197) : la charrette ouverte, à l'auvent.
-        private const string CartModelPath = "Assets/Synty/PolygonFantasyVillage/Prefabs/Vehicles/SM_Veh_Cart_03.prefab";
+        private const string CartModelPath =
+            "Assets/Synty/PolygonFantasyVillage/Prefabs/Vehicles/SM_Veh_Cart_03.prefab";
 
         // Le modèle du pack de la cabane (décision 75).
         private const string CabinSourcePath =

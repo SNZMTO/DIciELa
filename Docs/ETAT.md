@@ -24,6 +24,7 @@ Place (`Assets/Art/Compositions/Place.prefab`, puis « Préparer les modèles »
 de la roue ; le bandeau de brique ; la voix de la Chimère ; les noms ; GDD 8.
 **Dette** : `Fusion.uss` répète `:root` ; trois cartes chevaucheront l'astuce en 720 p ; des réglages de l'interface
 restent dans le code ; « Monter les scènes » à repasser ; `EQUILIBRAGE.md` sans menu ; la charrette va partout au pas
-de l'herbe tant qu'il n'y a pas de routes.
+de l'herbe tant qu'il n'y a pas de routes ; les places de charrette se tirent selon leur nombre du moment : les
+niveaux devront les tirer pour le plus grand nombre, sinon les charrettes déjà garées bougent.
 **Prompt de la session suivante**
 > Lis CLAUDE.md et Docs/ETAT.md. Mes réponses : …
