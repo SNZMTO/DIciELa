@@ -27,7 +27,7 @@ namespace Diciela.Simulation.Society
             return true;
         }
 
-        public override GestureStep Arrive(bool workTime)
+        public override GestureStep Arrive(Vector2 position, bool workTime)
         {
             if (_delivery.IsPickedUp)
             {
