@@ -47,9 +47,10 @@ namespace Diciela.Simulation
             Stalls = new Stalls(Warehouses);
             WorkSlots = new WorkSlots();
             Housing = new Housing(Structures, Structures.Rules);
-            Villagers = new Villagers(Grid, Islands, PathFinder, Clock, surroundings, offers, Clearings,
+            var services = new VillagerServices(Clock, Grid, Islands, PathFinder, surroundings, offers, Clearings,
                 new CartOffers(Carts, reach, Grid), new StallOffers(Carts, Stalls, Warehouses, reach, Grid),
-                new StatisticTable(catalog.Statistics, settings), settings, Structures, Housing);
+                new StatisticTable(catalog.Statistics, settings), settings);
+            Villagers = new Villagers(services, Structures, Housing);
             _opening = new Opening(catalog.Opening, catalog.VillagerKind);
             _commissioning = new Commissioning(this, _opening);
             Placing = new Placing(this, _commissioning);

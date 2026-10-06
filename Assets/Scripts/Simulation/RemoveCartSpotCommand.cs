@@ -5,9 +5,10 @@ namespace Diciela.Simulation
 {
     /// <summary>
     /// L'ordre « retirer une place de charrette » (décisions 204 et 205) : sa marque s'en va de la Place, avec sa
-    /// consigne. Sa charrette rangée n'est plus appelée, garée et vide elle retourne chez elle ; mais une charrette en
-    /// route, ou qui porte encore des marchandises, ou vers qui l'on en porte, garde sa place : on la vide d'abord
-    /// (« Sa charrette arrive, ou porte encore des marchandises »). Le refus passe par la Place, comme les autres.
+    /// consigne ; si elle avait appelé une charrette, garée et vide, celle-ci retourne chez elle. Mais une charrette
+    /// appelée qu'on vient chercher, ou en route, ou qui porte encore des marchandises, ou vers qui l'on en porte, garde
+    /// sa place : on la vide d'abord (« Sa charrette arrive, ou porte encore des marchandises »). Le refus passe par la
+    /// Place, comme les autres.
     /// </summary>
     public sealed class RemoveCartSpotCommand : Command
     {

@@ -186,7 +186,7 @@ namespace Diciela.Simulation.Economy
         // La maille devant la charrette garée, au bout de son timon.
         private Vector2Int CellOf(CartSpot spot, Cart cart)
         {
-            return _grid.CellOf(spot.StandAt(cart.Definition.PullMeters));
+            return _grid.CellOf(spot.StandFor(cart));
         }
     }
 }
