@@ -15,6 +15,25 @@
 
 ## Les captures
 
+### 06/10/2026 — étapes 52 à 55 : la Place qu'on trace
+
+La vue témoin ne change pas. La Place n'est plus une construction : c'est une zone qu'on trace à côté du campement,
+à l'outil de la Place (menu d'album, par les mêmes appels que la souris). Un disque, un rectangle qui le touche, un coup
+de pinceau, puis deux places de charrette côte à côte, en cadres blancs dont la pointe montre l'avant de la charrette.
+La zone se voit en mode construction : un voile clair sur l'herbe et son contour, qui suit les mailles d'un demi-mètre
+en escalier. En bas, la barre de l'outil : ses cinq modes et leurs touches, 231 / 450 m², 2 / 2 places de charrette,
+le pinceau de 4 m de diamètre, dont l'aperçu vert attend au bord. Un disque de 14 m de rayon passerait la superficie :
+son aperçu est rouge, le sol du campement y reste un trou, et la bulle dit pourquoi. Sur cette capture, la fin de la
+raison déborde de la bulle ; elle passe désormais à la ligne (un test de mise en page le tient), à reprendre en
+capture. Ce qu'une capture ne montre pas : les touches 1 à 5, la taille du pinceau à Ctrl + molette, R qui tourne une
+place, un clic qui la retire.
+
+![La vue témoin](Album/2026-10-06_etape-53_vue-temoin.jpg)
+
+![La Place tracée et ses deux places de charrette](Album/2026-10-06_etape-53_place-tracee.jpg)
+
+![Un disque trop grand, en rouge, et sa raison](Album/2026-10-06_etape-53_disque-trop-grand.jpg)
+
 ### 03/10/2026 — étapes 37 à 50 : la Place, ses charrettes, déplacer
 
 La vue témoin ne change pas. La Place ronde de 12 m (elle passe à 24 m à l'étape 51) : son chantier en fantôme près
