@@ -32,8 +32,7 @@ namespace Diciela.EditorTools
             Camera camera = _preview.camera;
             camera.fieldOfView = FieldOfView;
             camera.nearClipPlane = 0.05f;
-            // Assez loin pour une Place entière, et l'herbe derrière elle.
-            camera.farClipPlane = 300f;
+            camera.farClipPlane = 60f;
             camera.clearFlags = CameraClearFlags.SolidColor;
             camera.backgroundColor = background;
             _preview.lights[0].intensity = 1.3f;

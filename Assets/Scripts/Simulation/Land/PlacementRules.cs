@@ -145,9 +145,9 @@ namespace Diciela.Simulation.Land
         }
 
         /// <summary>
-        /// L'empreinte de cette construction ne recouvre ni une autre construction (un sol compris), ni un arbre ou un
-        /// rocher, ni le devant d'une porte, sauf si elle est un sol qu'on traverse. Une construction dessous l'emporte :
-        /// retirer l'arbre n'y changerait rien. La construction déplacée ne gêne pas : ni son sol, ni le devant de sa porte.
+        /// L'empreinte de cette construction ne recouvre ni une autre construction, ni la Place (on ne bâtit pas sur
+        /// elle), ni un arbre ou un rocher, ni le devant d'une porte. Une construction dessous l'emporte : retirer l'arbre
+        /// n'y changerait rien. La construction déplacée ne gêne pas : ni son sol, ni le devant de sa porte.
         /// </summary>
         private PlacementResult CheckFootprintCells(StructureDefinition definition, RotatedRect footprint,
             Structure moved)
@@ -161,6 +161,8 @@ namespace Diciela.Simulation.Land
             foreach (Vector2Int cell in _grid.CellsCoveredBy(footprint))
             {
                 int occupant = _grid.OccupantAt(cell);
+                if (occupant == PlaceZone.Occupant)
+                    return PlacementResult.OnThePlace;
                 if (occupant > 0 && occupant != self)
                     return PlacementResult.Overlaps;
                 if (occupant < 0)
@@ -168,7 +170,7 @@ namespace Diciela.Simulation.Land
                 int doors = _structures.Doorways.CountAt(cell);
                 if (ownDoor && door.Overlaps(_grid.CellCenter(cell), halfCell))
                     doors--;
-                if (!definition.IsWalkable && doors > 0)
+                if (doors > 0)
                     blocksADoor = true;
             }
             if (natureInTheWay)
@@ -177,7 +179,7 @@ namespace Diciela.Simulation.Land
         }
 
         /// <summary>
-        /// Vrai si l'on traverse tout ce rectangle : le devant d'une porte, sur le sol libre ou sur un sol ; le sol que
+        /// Vrai si l'on traverse tout ce rectangle : le devant d'une porte, sur le sol libre ou sur la Place ; le sol que
         /// quitte la construction déplacée compte comme libre.
         /// </summary>
         private bool IsWalkable(RotatedRect rect, Structure moved)

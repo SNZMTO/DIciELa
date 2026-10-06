@@ -25,7 +25,6 @@ MonoBehaviour:
   _unique: 0
   _chimeraHome: 0
   _builtWhenPlaced: 0
-  _walkable: 0
   _cost:
   - _good: {fileID: 11400000, guid: 66ef54aedacec184faa974adebaddff0, type: 2}
     _amount: 20
@@ -38,7 +37,6 @@ MonoBehaviour:
   _storageCapacity: 200
   _beds: 0
   _carts: 1
-  _cartSpots: 0
   _sourceModel: {fileID: 0}
   _model: {fileID: 2878258042761602162, guid: 5c87c216d65897847902a6fa7799cf56, type: 3}
   _picture: {fileID: 2800000, guid: 037c2941410795f478da1de2c93e520d, type: 3}

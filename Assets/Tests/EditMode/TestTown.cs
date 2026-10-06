@@ -55,7 +55,9 @@ namespace Diciela.Tests.EditMode
             Opening = Keep(TestData.Opening(new GoodAmount(Wood, 30), new GoodAmount(Stone, 20)));
             TestData.Knows(Opening, Camp, Cabin);
             Cart = Keep(TestData.Cart(20, 0.5f, 2.2f));
+            Square = Keep(TestData.Place(450f, 2));
             Catalog = Keep(TestData.TownCatalog(Opening, new[] { Wood, Stone }, new[] { building, trade, land }, Cart));
+            TestData.UsePlace(Catalog, Square);
         }
 
         public SimulationSettings Settings { get; }
@@ -73,6 +75,9 @@ namespace Diciela.Tests.EditMode
         public NatureDefinition Rock { get; }
         public OpeningDefinition Opening { get; }
         public CartDefinition Cart { get; }
+
+        /// <summary>La Place de la ville : au départ, 450 m² et deux places de charrette (décision 204).</summary>
+        public PlaceDefinition Square { get; }
         public Catalog Catalog { get; }
 
         /// <summary>

@@ -4,11 +4,10 @@ using UnityEngine;
 namespace Diciela.Data
 {
     /// <summary>
-    /// La fiche d'une construction : bâtiment, déco, la Place. Son modèle du pack (la source) et le modèle préparé
-    /// depuis lui ; son empreinte au sol, sa porte et sa couche, mesurées sur le modèle par le menu DICIELA/Contenu/
-    /// Préparer les modèles (SAVOIR, 2.9). Sans modèle du pack, le même menu lui fait une boîte à la taille de sa fiche,
-    /// sa porte marquée, ou un sol plat si on la traverse (GDD, section 16). À l'angle 0, la construction regarde vers le
-    /// nord (+z), où s'ouvre sa porte.
+    /// La fiche d'une construction : bâtiment, déco. Son modèle du pack (la source) et le modèle préparé depuis lui ; son
+    /// empreinte au sol, sa porte et sa couche, mesurées sur le modèle par le menu DICIELA/Contenu/Préparer les modèles
+    /// (SAVOIR, 2.9). Sans modèle du pack, le même menu lui fait une boîte à la taille de sa fiche, sa porte marquée (GDD,
+    /// section 16). À l'angle 0, la construction regarde vers le nord (+z), où s'ouvre sa porte.
     /// </summary>
     [CreateAssetMenu(menuName = "DICIELA/Construction", fileName = "Construction")]
     public sealed class StructureDefinition : ScriptableObject
@@ -45,8 +44,7 @@ namespace Diciela.Data
         [Tooltip("Vers où va sa tête, depuis ses pieds, en degrés depuis le nord vers l'est, à l'angle 0.")]
         [SerializeField] private float _couchHeadingDegrees;
 
-        [Tooltip("Une seule dans la ville : le campement puis la maison de la Chimère, la Place, les grands projets (GDD, " +
-                 "section 9).")]
+        [Tooltip("Une seule dans la ville : le campement puis la maison de la Chimère, les grands projets (GDD, section 9).")]
         [SerializeField] private bool _unique;
 
         [Tooltip("Le logis de la Chimère : elle y dort quand le joueur l'y envoie, depuis sa fiche (GDD, section 6). Le " +
@@ -55,11 +53,6 @@ namespace Diciela.Data
 
         [Tooltip("Dressée dès qu'on la pose, sans chantier : le campement, que la Chimère installe d'un coup (GDD, section 9).")]
         [SerializeField] private bool _builtWhenPlaced;
-
-        [Tooltip("Un sol qu'on traverse, comme la Place (GDD, sections 9 et 11) : on y marche dès sa pose, fantôme ou " +
-                 "bâti, et personne n'en est chassé ; rien ne le chevauche, mais il s'étend devant une porte, et une " +
-                 "porte s'ouvre sur lui. Il se voit en sol plat tant que son modèle n'est pas choisi.")]
-        [SerializeField] private bool _walkable;
 
         [Tooltip("Ce que son chantier demande en matériaux (GDD, section 9) ; vide pour ce qui se dresse dès la pose.")]
         [SerializeField] private List<GoodAmount> _cost = new List<GoodAmount>();
@@ -80,10 +73,6 @@ namespace Diciela.Data
 
         [Tooltip("Les charrettes de l'étal qu'elle garde, bâtie (un entrepôt, le campement : une ; GDD, section 11).")]
         [SerializeField, Min(0)] private int _carts;
-
-        [Tooltip("Les places de charrette qu'elle offre, bâtie : les charrettes de l'étal s'y garent (la Place ; GDD, " +
-                 "section 11).")]
-        [SerializeField, Min(0)] private int _cartSpots;
 
         [Tooltip("Le modèle du pack, tel quel : la source que le menu DICIELA/Contenu/Préparer les modèles mesure et " +
                  "fusionne. Vide tant que le modèle n'est pas choisi : le menu fait alors une boîte à la taille de la fiche.")]
@@ -110,14 +99,12 @@ namespace Diciela.Data
         public bool IsUnique => _unique;
         public bool IsChimeraHome => _chimeraHome;
         public bool BuiltWhenPlaced => _builtWhenPlaced;
-        public bool IsWalkable => _walkable;
         public IReadOnlyList<GoodAmount> Cost => _cost;
         public float WorkHours => _workHours;
         public IReadOnlyList<WorkSlotDefinition> WorkSlots => _workSlots;
         public int StorageCapacity => _storageCapacity;
         public int Beds => _beds;
         public int Carts => _carts;
-        public int CartSpots => _cartSpots;
         public GameObject SourceModel => _sourceModel;
         public GameObject Model => _model;
         public Texture2D Picture => _picture;

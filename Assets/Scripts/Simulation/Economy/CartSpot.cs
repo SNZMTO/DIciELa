@@ -7,34 +7,31 @@ using UnityEngine;
 namespace Diciela.Simulation.Economy
 {
     /// <summary>
-    /// Une place de charrette de la Place (GDD, section 11) : là où se gare la charrette qu'elle appelle, et son cap, tirés
-    /// au hasard quand la Place est bâtie (CartSpotLayout), et qui la suivent quand on la déplace. Quelle charrette elle a
-    /// appelée, la charrette le dit (<see cref="Cart.Spot"/>). Sa consigne dit ce qu'on porte à la charrette qui y est
-    /// garée (décision 202) ; seuls les étals la changent (Stalls).
+    /// Une place de charrette de la Place (GDD, section 11 ; décision 204) : la marque que le joueur y a posée
+    /// (<see cref="PlaceMark"/>), là où se gare la charrette qu'elle appelle, et son cap. Quelle charrette elle a appelée,
+    /// la charrette le dit (<see cref="Cart.Spot"/>). Sa consigne dit ce qu'on porte à la charrette qui y est garée
+    /// (décision 202) ; seuls les étals la changent (Stalls).
     /// </summary>
     public sealed class CartSpot
     {
         private readonly List<ConsigneLine> _consigne = new List<ConsigneLine>();
 
-        internal CartSpot(Structure place, int index, Vector2 position, float headingDegrees)
+        internal CartSpot(PlaceMark mark)
         {
-            Place = place;
-            Index = index;
-            Position = position;
-            HeadingDegrees = headingDegrees;
+            Mark = mark;
         }
 
-        /// <summary>La Place qui l'offre.</summary>
-        public Structure Place { get; }
+        /// <summary>La marque de la Place qu'elle est.</summary>
+        public PlaceMark Mark { get; }
 
-        /// <summary>Son rang sur la Place, à partir de 0.</summary>
-        public int Index { get; }
+        /// <summary>Son numéro : celui de sa marque, celui des ordres.</summary>
+        public int Id => Mark.Id;
 
         /// <summary>Le milieu de la charrette garée, au sol, en mètres.</summary>
-        public Vector2 Position { get; private set; }
+        public Vector2 Position => Mark.Position;
 
         /// <summary>Vers où pointe l'avant de la charrette garée, son timon, en degrés depuis le nord vers l'est.</summary>
-        public float HeadingDegrees { get; private set; }
+        public float HeadingDegrees => Mark.HeadingDegrees;
 
         /// <summary>Sa consigne : ses lignes, dans l'ordre où elles se servent.</summary>
         public IReadOnlyList<ConsigneLine> Consigne => _consigne;
@@ -88,13 +85,6 @@ namespace Diciela.Simulation.Economy
                 }
             }
             return false;
-        }
-
-        /// <summary>Sa Place a changé de place : elle suit.</summary>
-        internal void MoveTo(Vector2 position, float headingDegrees)
-        {
-            Position = position;
-            HeadingDegrees = headingDegrees;
         }
     }
 }

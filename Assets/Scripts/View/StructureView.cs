@@ -9,8 +9,8 @@ namespace Diciela.View
     /// La vue d'une construction (ARCHITECTURE, section 11 ; décisions 166 et 201) : son modèle à sa place, tel quel quand
     /// elle sert ; un chantier dont la ligne monte avec le travail fait, quand elle attend d'être bâtie ou qu'on la remonte
     /// à sa nouvelle place ; un chantier dont la ligne descend, pendant qu'on la défait. Pendant un déplacement, jusqu'à
-    /// ce qu'elle saute, le fantôme de sa nouvelle place, qu'on ne touche pas. Un sol qu'on traverse épouse le relief, là
-    /// où il est. La vue se refait à chaque moment d'un déplacement, d'après l'état de la construction.
+    /// ce qu'elle saute, le fantôme de sa nouvelle place, qu'on ne touche pas. La vue se refait à chaque moment d'un
+    /// déplacement, d'après l'état de la construction.
     /// </summary>
     internal sealed class StructureView
     {
@@ -20,10 +20,8 @@ namespace Diciela.View
         private readonly SiteGhosts _ghosts;
         private readonly ConstructionSites _sites;
         private GameObject _model;
-        private Mesh[] _modelDraped;
         private SiteFill _fill;
         private GameObject _target;
-        private Mesh[] _targetDraped;
         private SiteFill _targetFill;
 
         public StructureView(Structure structure, Transform parent, Relief relief, SiteMaterials materials,
@@ -51,12 +49,12 @@ namespace Diciela.View
         {
             Forget(true);
             bool site = Structure.State != StructureState.Built;
-            _model = Make(Structure.Placement, out _modelDraped);
+            _model = Make(Structure.Placement);
             _fill = site ? new SiteFill(_model, _materials, _ghosts) : null;
             ModelPose.TryLocalBox(_model, out Bounds box);
             LocalBox = box;
             bool aiming = Structure.MovingTo.HasValue && !IsAt(Structure.MovingTo.Value);
-            _target = aiming ? Make(Structure.MovingTo.Value, out _targetDraped) : null;
+            _target = aiming ? Make(Structure.MovingTo.Value) : null;
             _targetFill = aiming ? new SiteFill(_target, _materials, _ghosts) : null;
         }
 
@@ -67,7 +65,7 @@ namespace Diciela.View
             _targetFill?.Show(0d);
         }
 
-        /// <summary>Retire ses modèles, et les maillages copiés pour eux.</summary>
+        /// <summary>Retire ses modèles.</summary>
         public void Forget()
         {
             Forget(false);
@@ -77,13 +75,11 @@ namespace Diciela.View
         // l'image ; retirée avec elles, elle part avec elles.
         private void Forget(bool detach)
         {
-            Destroy(_model, _modelDraped, detach);
-            Destroy(_target, _targetDraped, detach);
+            Destroy(_model, detach);
+            Destroy(_target, detach);
             _model = null;
-            _modelDraped = null;
             _fill = null;
             _target = null;
-            _targetDraped = null;
             _targetFill = null;
         }
 
@@ -100,12 +96,11 @@ namespace Diciela.View
             return Mathf.Clamp01((float)((site.WorkDone - site.TakeDownHours) / (site.WorkNeeded - site.TakeDownHours)));
         }
 
-        private GameObject Make(Placement placement, out Mesh[] draped)
+        private GameObject Make(Placement placement)
         {
             StructureDefinition definition = Structure.Definition;
             GameObject view = ModelPose.Instantiate(definition.Model, _parent, definition.Id + " n° " + Structure.Id);
             ModelPose.Place(view.transform, placement, _relief);
-            draped = definition.IsWalkable ? FloorDrape.Apply(view, _relief) : null;
             return view;
         }
 
@@ -115,24 +110,16 @@ namespace Diciela.View
                    Structure.Placement.RotationDegrees == placement.RotationDegrees;
         }
 
-        private static void Destroy(GameObject view, Mesh[] draped, bool detach)
+        private static void Destroy(GameObject view, bool detach)
         {
-            if (view != null)
-            {
-                if (detach)
-                {
-                    view.SetActive(false);
-                    view.transform.SetParent(null, false);
-                }
-                Object.Destroy(view);
-            }
-            if (draped == null)
+            if (view == null)
                 return;
-            foreach (Mesh mesh in draped)
+            if (detach)
             {
-                if (mesh != null)
-                    Object.Destroy(mesh);
+                view.SetActive(false);
+                view.transform.SetParent(null, false);
             }
+            Object.Destroy(view);
         }
     }
 }

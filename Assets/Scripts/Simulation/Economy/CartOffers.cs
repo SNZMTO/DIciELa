@@ -8,11 +8,11 @@ namespace Diciela.Simulation.Economy
 {
     /// <summary>
     /// Les charrettes à conduire, comme tâches à prendre (GDD, section 11 ; ARCHITECTURE, section 7) : la première place
-    /// de charrette libre, d'une Place que le charretier peut rejoindre, appelle la charrette rangée de l'entrepôt le plus
-    /// proche de cette Place qu'il peut rejoindre. Prendre est un appel unique qui lie l'une à l'autre : deux charretiers
-    /// ne prennent jamais la même. Il va la prendre à son entrepôt, l'attelle, la tire jusqu'à sa place et l'y gare.
-    /// Rendue en chemin, elle retourne à son entrepôt, comme une charge à la place qu'elle gardait (décision 178). Une
-    /// Place qu'on déplace n'appelle pas, la charrette d'un entrepôt qu'on déplace ne répond pas (décision 200).
+    /// de charrette libre devant laquelle le charretier peut se tenir appelle la charrette rangée de l'entrepôt le plus
+    /// proche d'elle qu'il peut rejoindre. Prendre est un appel unique qui lie l'une à l'autre : deux charretiers ne
+    /// prennent jamais la même. Il va la prendre à son entrepôt, l'attelle, la tire jusqu'à sa place et l'y gare. Rendue
+    /// en chemin, elle retourne à son entrepôt, comme une charge à la place qu'elle gardait (décision 178). La charrette
+    /// d'un entrepôt qu'on déplace ne répond pas (décision 200).
     /// </summary>
     public sealed class CartOffers
     {
@@ -45,14 +45,16 @@ namespace Diciela.Simulation.Economy
             for (int i = 0; i < spots.Count; i++)
             {
                 CartSpot spot = spots[i];
-                if (_carts.CartAt(spot) != null || spot.Place.State != StructureState.Built ||
-                    !_reach.IsReachable(spot.Place, island))
+                if (_carts.CartAt(spot) != null)
                     continue;
-                Cart cart = NearestAtHome(spot.Place.Placement.Center, island);
+                Cart cart = NearestAtHome(spot.Position, island);
                 if (cart == null)
                     return false;
+                Vector2Int stand = _grid.CellOf(spot.StandAt(cart.Definition.PullMeters));
+                if (!_reach.IsReachable(stand, island))
+                    continue;
                 _carts.Call(spot, cart);
-                drive = new Drive(cart, spot, _grid.CellOf(spot.StandAt(cart.Definition.PullMeters)));
+                drive = new Drive(cart, spot, stand);
                 return true;
             }
             return false;

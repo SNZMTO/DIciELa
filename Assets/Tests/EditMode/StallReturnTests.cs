@@ -32,12 +32,12 @@ namespace Diciela.Tests.EditMode
         [Test]
         public void LoweringALineSendsTheSurplusBack()
         {
-            World world = TestStalls.ParkedWorld(_town, out Structure place, out Cart cart);
+            World world = TestStalls.ParkedWorld(_town, out CartSpot spot, out Cart cart);
             Inventory camp = world.Warehouses.StockOf(TestTown.CampOf(world));
-            TestStalls.Ask(world, place, _town.Wood, ConsigneMode.Amount, 6);
+            TestStalls.Ask(world, spot, _town.Wood, ConsigneMode.Amount, 6);
             TestGrids.StepUntil(world, () => cart.Stock.CountOf(_town.Wood) == 6, 4000, "six Bois sur la charrette");
 
-            TestStalls.Ask(world, place, _town.Wood, ConsigneMode.Amount, 2);
+            TestStalls.Ask(world, spot, _town.Wood, ConsigneMode.Amount, 2);
             TestGrids.StepUntil(world, () =>
             {
                 Assert.AreEqual(30, TestTown.EverywhereOf(world, _town.Wood), "Rien ne se perd en route.");
@@ -51,12 +51,12 @@ namespace Diciela.Tests.EditMode
         [Test]
         public void RemovingALineSendsAllOfItBack()
         {
-            World world = TestStalls.ParkedWorld(_town, out Structure place, out Cart cart);
+            World world = TestStalls.ParkedWorld(_town, out CartSpot spot, out Cart cart);
             Inventory camp = world.Warehouses.StockOf(TestTown.CampOf(world));
-            TestStalls.Ask(world, place, _town.Stone, ConsigneMode.KeepAtLeast, 15);
+            TestStalls.Ask(world, spot, _town.Stone, ConsigneMode.KeepAtLeast, 15);
             TestGrids.StepUntil(world, () => cart.Stock.CountOf(_town.Stone) == 5, 4000, "cinq Pierre sur la charrette");
 
-            TestTown.Send(world, new RemoveConsigneCommand(place.Id, 0, _town.Stone));
+            TestTown.Send(world, new RemoveConsigneCommand(spot.Id, _town.Stone));
             TestGrids.StepUntil(world, () => camp.CountOf(_town.Stone) == 20, 4000, "la Pierre rentrée");
             Assert.AreEqual(0, cart.Stock.Total, "La charrette est vide.");
         }
@@ -67,8 +67,8 @@ namespace Diciela.Tests.EditMode
             // « Garder au moins 20 » : la charrette prend 10 Bois ; puis une cabane en consomme 10 au campement, qui tombe
             // sous 20 : la charrette garde les siens, pendant le chantier et bien après, quand la Chimère est revenue à
             // garnir (bâtir passe avant dans son poste).
-            World world = TestStalls.ParkedWorld(_town, out Structure place, out Cart cart);
-            TestStalls.Ask(world, place, _town.Wood, ConsigneMode.KeepAtLeast, 20);
+            World world = TestStalls.ParkedWorld(_town, out CartSpot spot, out Cart cart);
+            TestStalls.Ask(world, spot, _town.Wood, ConsigneMode.KeepAtLeast, 20);
             TestGrids.StepUntil(world, () => cart.Stock.CountOf(_town.Wood) == 10, 4000, "dix Bois sur la charrette");
 
             Structure cabin = TestTown.Place(world, _town.Cabin, 8f, 24f);
@@ -90,10 +90,10 @@ namespace Diciela.Tests.EditMode
         [Test]
         public void AnInterruptedTripGivesBackItsLoadAndPromises()
         {
-            World world = TestStalls.ParkedWorld(_town, out Structure place, out Cart cart);
+            World world = TestStalls.ParkedWorld(_town, out CartSpot spot, out Cart cart);
             Villager chimera = world.Villagers.Chimera;
             Inventory camp = world.Warehouses.StockOf(TestTown.CampOf(world));
-            TestStalls.Ask(world, place, _town.Wood, ConsigneMode.Amount, 6);
+            TestStalls.Ask(world, spot, _town.Wood, ConsigneMode.Amount, 6);
             TestGrids.StepUntil(world, () => chimera.Load.CountOf(_town.Wood) > 0, 4000, "la Chimère chargée de Bois");
 
             TestTown.Send(world, new UnassignVillagerCommand(chimera.Id));

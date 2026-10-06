@@ -98,28 +98,6 @@ namespace Diciela.Tests.EditMode
             Assert.AreEqual(new Vector2(28f, 24f), shed.MovingTo.Value.Center, "Elle va toujours à la première place.");
         }
 
-        [Test]
-        public void AMovedPlaceTakesItsSpotsAndItsParkedCartAlong()
-        {
-            TestData.Carts(_town.Camp, 1, 0);
-            StructureDefinition plan = _town.KeepKnown(TestData.Floor("place", 12f, 12f));
-            TestData.Carts(plan, 0, 2);
-            TestData.BuiltWhenPlaced(plan);
-            World world = _town.WorkingWorld();
-            Structure place = TestTown.Place(world, plan, 20f, 26f);
-            Cart cart = world.Carts.All[0];
-            TestGrids.StepUntil(world, () => cart.State == CartState.Parked, 3000, "la charrette garée");
-
-            Vector2 target = new Vector2(27f, 27f);
-            TestTown.Send(world, new MoveStructureCommand(place.Id, new Placement(target, 0f)));
-            TestGrids.StepUntil(world, () => place.Placement.Center == target, 4000, "la Place défaite");
-            foreach (CartSpot spot in world.Carts.Spots)
-                Assert.AreEqual(6f * 0.55f, Vector2.Distance(spot.Position, target), 1e-3f, "Ses places l'ont suivie.");
-            Assert.AreEqual(CartState.Parked, cart.State, "La charrette garée y reste garée…");
-            Assert.AreEqual(cart.Spot.Position, cart.Position, "… à sa place, là où est la Place maintenant.");
-            TestGrids.StepUntil(world, () => place.State == StructureState.Built, 4000, "la Place remontée");
-        }
-
         private static int OccupantAt(World world, Vector2 point)
         {
             return world.Grid.OccupantAt(world.Grid.CellOf(point));

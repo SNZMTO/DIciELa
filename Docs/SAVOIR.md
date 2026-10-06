@@ -48,10 +48,10 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 
 - **Le maillage** : un quadrillage invisible, plus fin que le mètre (4 mailles par mètre), où tout ce qui se pose
   s'inscrit. Une maille porte au plus un objet : c'est la vérité pour « rien ne se chevauche » et pour le passage.
-  Un sol qu'on traverse (la Place) garde ses mailles comme un autre objet, pour que rien ne le chevauche, et la maille
-  dit en plus qu'on y marche : une seule question, « se traverse-t-elle ? », répond pour le A\*, les îlots, la sortie
-  et la flânerie. Les abords d'un objet (où l'on se tient pour le servir) sont hors de ses mailles : un sol se bâtit
-  depuis son bord. Les devants de porte sont à part, déduits des constructions : seules les règles de pose les lisent.
+  La Place garde ses mailles comme un autre objet, pour que rien ne la chevauche, et la maille dit en plus qu'on y
+  marche : une seule question, « se traverse-t-elle ? », répond pour le A\*, les îlots, la sortie et la flânerie. Les
+  abords d'un objet (où l'on se tient pour le servir) sont hors de ses mailles. Les devants de porte sont à part,
+  déduits des constructions : seules les règles de pose les lisent.
   C# pur. Une maille a un coût d'entrée par façon de se déplacer, en entiers, lu dans les fiches : un piéton paie le
   même prix partout où l'on passe ; une charrette paie plus cher l'herbe que la terre, et la terre que les pavés
   (GDD, section 9). Une maille peut être bloquée. Un objet posé s'y **trame** : son empreinte (un rectangle tourné)
@@ -312,13 +312,11 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   6,2 m, les tas de rochers 4,8 à 9,9 m, les rochers 2,3 m et plus, la pile de bois 2,2 m, la hache tient debout) :
   les rochers sont à l'échelle du paysage, une réduction en fait un foyer ou un tas de pierres. Une rangée de pierres
   du pack (`SM_Bld_Stone_Edge`) a son origine à un bout : elle se pose par le milieu de sa boîte, mesurée sur le pack
-  (`Piece.Centered`), sinon elle déborde de l'empreinte. Une planche de fichiers (`DICIELA/Album/Planche des pièces de
-  la Place`) montre les pièces candidates et dit leur taille et le milieu de leur boîte.
-- **Un sol qu'on traverse épouse le relief** (la Place) : son modèle est tramé (`FloorMesh`, un disque en anneaux d'un
-  demi-mètre), et la vue fait monter ou descendre chacun de ses sommets de l'écart du relief entre sa place et
-  le centre (`FloorDrape`), sur une copie de chaque maillage lisible, détruite avec la vue ; le fantôme du chantier est
-  la copie du modèle posé. Qui y marche, à la hauteur du relief, garde les pieds sur ses dalles (leur dessus à 3 cm).
-  Une jupe descend sous le sol tout autour, contre un relief inégal entre deux sommets.
+  (`Piece.Centered`), sinon elle déborde de l'empreinte.
+- **Une place de charrette et sa charrette** : la vue pose l'avant du modèle au bout du timon, devant le point de la
+  charrette, et les modèles du pack n'ont pas la même longueur. La marque garde le rectangle que voit le joueur (celui
+  de la plus grande charrette) et le point où se gare la charrette s'en déduit : son avant au bord avant de la marque
+  (`PlaceMark.Position`). Chaque modèle tient alors dans la marque, quel qu'il soit.
 - **Une texture de dalles carrées fait un damier** (les dalles du pack, 4 × 4 par motif), même ses blocs tournés d'un
   quart de tour au hasard : le développeur l'a refusée. Une texture irrégulière (galets, pavés ronds) posée à plat, ses
   UV en mètres, se raccorde d'elle-même, sans joint ni grille.

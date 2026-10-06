@@ -477,9 +477,10 @@
 - **Défaut.** Sa superficie est au plus de 450 m² au départ, et de 150 m² de plus par niveau. Trois niveaux ; chacun
   ajoute une place de charrette, du charme et un visiteur par jour. Au départ, une seule zone, d'un seul tenant ;
   plusieurs, plus tard, avec les niveaux.
-- **À toi.** Ce qu'est la forme guidée ; combien de zones à quel niveau ; peut-on bâtir sur la Place (ma reco : non,
-  seulement la paver et la décorer) ; la taille d'une marque de charrette et si elle se tourne (ma reco : la plus
-  grande charrette du pack, 5,8 × 2,8 m, tout entière dans la zone ; R la tourne, comme à la pose).
+- **Règle.** On ne bâtit pas sur la Place : on la pave et on la décore. Ce qui se tient là quand on la peint (une
+  construction, un arbre, un rocher) y fait un trou, qui reste quand on l'enlève. Une forme qui la ferait dépasser sa
+  superficie, ou la couperait en morceaux, ne se trace pas du tout ; la gomme ne passe pas sous une place de charrette.
+- **À toi.** Ce qu'est la forme guidée ; combien de zones à quel niveau.
 - **Règle.** L'étal, ce sont des charrettes, comme les étals qui s'installent sur la place du marché de Manor Lords.
   Chaque entrepôt, le campement compris, a sa charrette. La Place a des places de charrette : des marques que le joueur
   pose en mode construction, dans la zone, comme le point d'attelage des caravanes de RimWorld ; chacune appelle la
@@ -494,7 +495,11 @@
 - **Règle.** Chaque charrette prend au hasard l'une des quatre charrettes du pack, toujours la même ; l'avant de la
   charrette est à qui la tire. Garée, elle glisse et se tourne en douceur jusqu'à sa marque ; elle se penche comme le
   sol sous ses roues.
-- **Défaut.** Un timon de 2,2 m.
+- **Défaut.** Une place de charrette a la taille de la plus grande charrette du pack (5,8 × 2,8 m) et tient tout
+  entière dans la Place, sans en chevaucher une autre ; on la tourne comme une construction à la pose (R). La charrette
+  s'y gare l'avant au bord avant de la marque. Un timon de 2,2 m.
+- **Règle.** Retirer une place de charrette emporte sa consigne ; sa charrette, garée et vide, rentre chez elle. Une
+  charrette en route, ou qui porte des marchandises, garde sa place : on la vide d'abord.
 - **Défaut.** Deux places de charrette, une pour les habitants et une pour le troc, et une de plus par niveau : cinq au
   plus. Une charrette tient 20 places (voir 8 : chaque marchandise en prend plus ou moins).
 - **Règle.** Le joueur garnit chaque charrette dans la fiche de la Place : la consigne de sa place de charrette, une
@@ -748,10 +753,9 @@
 - **À toi.** La voix de la Chimère (ses répliques), avec son histoire.
 - **Règle.** Chaque famille reçoit un pastel libre, dans l'ordre : le Logement le rose, les Métiers la pêche. Aucun
   pastel ne reste libre.
-- **À toi.** D'où l'on prend les outils de la Place. Ma reco : la première carte des Métiers, où travailleront ses
-  marchands, comme aujourd'hui ; la prendre met en main les outils de la zone. L'onglet des Métiers paraît donc dès le
-  campement installé, et les idées des premiers habitants y ajoutent leurs cartes. Une famille à elle demanderait un
-  pastel de plus.
+- **Règle.** Les outils de la Place se prennent à sa carte, la première des Métiers, où travailleront ses marchands :
+  la prendre met en main les outils de la zone et de ses places de charrette. L'onglet des Métiers paraît donc dès le
+  campement installé, et les idées des premiers habitants y ajoutent leurs cartes.
 - **À toi.** L'icône des Métiers : en attendant, celle de « bâtir ». Les autres questions ouvertes du HUD. Ma reco :
   le bandeau de brique montre les animaux du pack.
 

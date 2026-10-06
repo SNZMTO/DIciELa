@@ -8,11 +8,10 @@ using UnityEngine.SceneManagement;
 namespace Diciela.EditorTools
 {
     /// <summary>
-    /// Compose les modèles faits d'objets du pack (PackComposition ; décisions 170, 172 et 193) : chacun devient un prefab
-    /// de Assets/Art/Compositions, en instances des prefabs du pack (chacune garde son nom), et son dallage s'il en a un
-    /// (son maillage et sa matière, faits une fois à côté de lui), créé s'il manque ; un repère de couche qui
-    /// lui manque y est ajouté ; il devient le modèle source de sa construction si elle n'en a pas, et la construction
-    /// est préparée. Ensuite chaque composition est au développeur : il la retouche dans Unity, puis relance ce menu ou
+    /// Compose les modèles faits d'objets du pack (PackComposition ; décisions 170 et 172) : chacun devient un prefab de
+    /// Assets/Art/Compositions, en instances des prefabs du pack (chacune garde son nom), créé s'il manque ; un repère de
+    /// couche qui lui manque y est ajouté ; il devient le modèle source de sa construction si elle n'en a pas, et la
+    /// construction est préparée. Ensuite chaque composition est au développeur : il la retouche dans Unity, puis relance ce menu ou
     /// « Préparer les modèles ». Il dit la taille de chaque objet, mesurée, pour aider à retoucher.
     /// </summary>
     internal static class CompositionBuilder
@@ -44,8 +43,6 @@ namespace Diciela.EditorTools
             {
                 var root = new GameObject(composition.Name);
                 SceneManager.MoveGameObjectToScene(root, scene);
-                if (composition.Paving != null && !AddPaving(composition, root.transform))
-                    return false;
                 Transform door = null;
                 var sizes = new StringBuilder();
                 foreach (PackComposition.Piece piece in composition.Pieces)
@@ -83,45 +80,6 @@ namespace Diciela.EditorTools
             {
                 EditorSceneManager.ClosePreviewScene(scene);
             }
-        }
-
-        // Le dallage d'une composition : son maillage et sa matière, faits une fois à côté d'elle (FloorMesh, et une copie
-        // de la matière du pack portant sa texture), puis gardés tels quels : le développeur peut les retoucher.
-        private static bool AddPaving(PackComposition composition, Transform root)
-        {
-            PackComposition.Floor floor = composition.Paving;
-            Material material = PavingMaterial(composition.Name, floor);
-            if (material == null)
-                return false;
-            string meshPath = Folder + "/" + composition.Name + "_Dallage.asset";
-            var mesh = AssetDatabase.LoadAssetAtPath<Mesh>(meshPath);
-            if (mesh == null)
-            {
-                mesh = FloorMesh.Create(composition.Name + "_Dallage", floor.Diameter, floor.Top, floor.Skirt, floor.Pattern);
-                AssetDatabase.CreateAsset(mesh, meshPath);
-            }
-            var paving = new GameObject("Dallage", typeof(MeshFilter), typeof(MeshRenderer));
-            paving.transform.SetParent(root, false);
-            paving.GetComponent<MeshFilter>().sharedMesh = mesh;
-            paving.GetComponent<MeshRenderer>().sharedMaterial = material;
-            return true;
-        }
-
-        // La matière du dallage : celle déjà faite, sinon une copie de la matière du pack portant sa texture et ses reliefs.
-        private static Material PavingMaterial(string name, PackComposition.Floor floor)
-        {
-            string path = Folder + "/" + name + "_Dallage.mat";
-            var made = AssetDatabase.LoadAssetAtPath<Material>(path);
-            if (made != null)
-                return made;
-            Material material = floor.Dressed(name + "_Dallage");
-            if (material == null)
-            {
-                Debug.LogError("DICIELA : " + name + " ne trouve pas la matière ou les textures de son dallage dans le pack.");
-                return null;
-            }
-            AssetDatabase.CreateAsset(material, path);
-            return AssetDatabase.LoadAssetAtPath<Material>(path);
         }
 
         // Une composition déjà faite (retouchée, peut-être, par le développeur) reçoit le repère de sa couche s'il lui manque.

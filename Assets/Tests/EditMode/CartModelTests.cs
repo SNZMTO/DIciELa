@@ -26,10 +26,10 @@ namespace Diciela.Tests.EditMode
             for (int i = 0; i < models.Length; i++)
                 models[i] = _town.Keep(EditorUtility.CreateGameObjectWithHideFlags("modèle " + i, HideFlags.HideAndDontSave));
             TestData.UseCart(_town.Catalog, _town.Keep(TestData.Cart(20, 0.5f, 2.2f, models)));
-            TestData.Carts(_town.Camp, 1, 0);
+            TestData.Carts(_town.Camp, 1);
             _depot = _town.KeepKnown(TestData.Structure("depot", 4f, 4f));
             TestData.BuiltWhenPlaced(_depot);
-            TestData.Carts(_depot, 7, 0);
+            TestData.Carts(_depot, 7);
         }
 
         [TearDown]
