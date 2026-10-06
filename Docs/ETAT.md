@@ -5,12 +5,10 @@
 puis `etape-55-menage-societe`. Une fois 53 vue : `git fetch . etape-55-menage-societe:main` (porte 52 à 55),
 `git push origin main`.
 
-**Fait** : 23 à 53 ; 53 (206) : les outils de la Place, la carte « Place », la barre en bas et ses cinq modes (touches 1
-à 5), une forme qui part au relâchement, les places de charrette posées, tournées, retirées d'un clic. 54 (207) : le
-ménage des gestes. 55 (208) : le ménage de la société et de l'étal : la porte du logis et la place devant une charrette
-lues chacune en un seul endroit, le monde assemble ce que consulte chaque habitant, une charrette qu'on vient chercher
-garde sa place (testé) ; les quatre gros fichiers ne sont pas découpés (chacun le sera à la couture que sa prochaine
-étape apporte). **EditMode 257/257, PlayMode 211/211.**
+**Fait** : 23 à 53 ; 53 (206) : les outils de la Place (la carte, la barre et ses cinq modes, touches 1 à 5, les places
+de charrette). 54 (207) : le ménage des gestes. 55 (208) : le ménage de la société et de l'étal : deux calculs en double
+réunis, le monde assemble ce que consulte chaque habitant, une charrette qu'on vient chercher garde sa place (testé) ;
+pas de découpage à la taille seule (chacun à la couture de sa prochaine étape). **EditMode 257/257, PlayMode 211/211.**
 
 **D'abord, Unity devant** : le Play ; `DICIELA/Album/Installer le campement…`, `Tracer la Place…`, `Tirer un disque
 trop grand…` ; captures, album, puis la fusion des quatre branches.
