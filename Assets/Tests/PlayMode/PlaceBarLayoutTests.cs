@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Diciela.Data;
+using Diciela.Simulation.Land;
 using Diciela.UI;
 using NUnit.Framework;
 using UnityEngine;
@@ -12,8 +13,10 @@ namespace Diciela.Tests.PlayMode
     /// <summary>
     /// La barre de la Place à toutes les tailles d'écran (décision 206), rendue hors écran de 1280 × 720 à la 4K, l'outil
     /// de la Place en main : elle tient au milieu du bas, à 24 px, dans l'écran, sans chevaucher l'astuce (en bas à
-    /// gauche) ni l'icône des outils (en bas à droite). C'est le vrai HUD (sa mise en page, la feuille du jeu, sa taille),
-    /// avec les textes du projet, le petit monde des tests pour la Place et celui du campement pour l'astuce.
+    /// gauche) ni l'icône des outils (en bas à droite). Au-dessus d'elle, la bulle des raisons dit la plus longue (« La
+    /// Place dépasserait sa superficie… ») : plus large que la bulle, elle passe à la ligne au lieu d'en déborder. C'est le
+    /// vrai HUD (sa mise en page, la feuille du jeu, sa taille), avec les textes du projet, le petit monde des tests pour
+    /// la Place et celui du campement pour l'astuce.
     /// </summary>
     public sealed class PlaceBarLayoutTests
     {
@@ -77,6 +80,7 @@ namespace Diciela.Tests.PlayMode
                             bar = new PlaceBar(document, tooltips, new ReasonBubble(document));
                             bar.Show(texts, world.Place, world.World, new FixedToolKeys());
                             world.Place.Take();
+                            bar.ShowReason(texts.Get(TextKeys.PlaceRefusal(PlaceResult.TooLarge.ToString())));
                         }
                         for (int frame = 0; frame < SettleFrames; frame++)
                             yield return null;
@@ -122,6 +126,17 @@ namespace Diciela.Tests.PlayMode
                 faults.Add(at + "la barre de la Place chevauche l'astuce (" + bar + ", " + tip + ").");
             if (bar.Overlaps(tools))
                 faults.Add(at + "la barre de la Place chevauche l'icône des outils (" + bar + ", " + tools + ").");
+
+            Rect bubble = root.Q("reason").worldBound;
+            var reason = root.Q<Label>("reason-text");
+            // La raison tenue sur une seule ligne : plus large que la place qu'elle a dans la bulle, elle doit passer à la ligne.
+            Vector2 line = reason.MeasureTextSize(reason.text, 0f, VisualElement.MeasureMode.Undefined, 0f,
+                VisualElement.MeasureMode.Undefined);
+            if (bubble.width <= 0f || bubble.yMax > bar.yMin + Tolerance)
+                faults.Add(at + "la bulle des raisons doit se voir au-dessus de la barre (" + bubble + ", " + bar + ").");
+            else if (line.x > reason.contentRect.width + Tolerance && reason.contentRect.height < line.y * 1.5f)
+                faults.Add(at + "la raison déborde de sa bulle : " + line.x + " px sur une ligne pour " +
+                           reason.contentRect.width + " px de place, sans passer à la ligne.");
         }
     }
 }

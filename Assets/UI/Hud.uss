@@ -71,6 +71,12 @@
     max-width: 416px;
 }
 
+/* Une raison plus large que la bulle passe à la ligne, centrée, au lieu d'en déborder. */
+.raison .libelle {
+    white-space: normal;
+    -unity-text-align: upper-center;
+}
+
 .barre-contenu {
     align-items: center;
     padding: 21px 18px;
