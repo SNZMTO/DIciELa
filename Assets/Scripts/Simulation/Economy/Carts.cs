@@ -177,8 +177,8 @@ namespace Diciela.Simulation.Economy
             _spots.Add(new CartSpot(mark));
         }
 
-        // Une marque retirée : sa charrette, que le monde n'a laissé retirer que rangée, ou garée et vide, retourne chez
-        // elle ; la place s'en va avec sa consigne.
+        // Une marque retirée : la charrette qu'elle avait appelée, que le monde ne laisse partir que garée et vide,
+        // retourne chez elle ; la place s'en va avec sa consigne.
         private void OnMarkRemoved(PlaceMark mark)
         {
             CartSpot spot = FindSpot(mark.Id);

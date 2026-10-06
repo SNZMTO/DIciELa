@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Diciela.Data;
-using Diciela.Simulation.Core;
-using Diciela.Simulation.Economy;
 using Diciela.Simulation.Land;
 using UnityEngine;
 
@@ -26,20 +24,17 @@ namespace Diciela.Simulation.Society
         private int _nextId = 1;
 
         /// <summary>
-        /// Les habitants de ce monde : ils vivent sur ce maillage, à cette horloge, prennent leurs tâches ici, leurs
-        /// statistiques suivent celles-ci, et leurs bornes, ces réglages ; ils dorment dans les constructions de la ville,
-        /// la Chimère dans son logis, les autres là où ils ont leur lit.
+        /// Les habitants de ce monde : chacun vit et travaille avec ce que la ville lui offre (le maillage, l'horloge, les
+        /// tâches à prendre, les statistiques, les réglages) ; ils dorment dans les constructions de la ville, la Chimère
+        /// dans son logis, les autres là où ils ont leur lit. Seul le monde les crée.
         /// </summary>
-        public Villagers(NavGrid grid, Islands islands, PathFinder finder, Clock clock, Surroundings surroundings,
-            TaskOffers offers, ClearingOffers clearings, CartOffers carts, StallOffers stalls,
-            StatisticTable statistics, SimulationSettings settings, Structures structures, Housing housing)
+        internal Villagers(VillagerServices services, Structures structures, Housing housing)
         {
-            _services = new VillagerServices(clock, grid, islands, finder, surroundings, offers, clearings, carts,
-                stalls, statistics, settings);
-            _grid = grid;
+            _services = services ?? throw new ArgumentNullException(nameof(services));
+            _grid = services.Grid;
             _structures = structures ?? throw new ArgumentNullException(nameof(structures));
             _housing = housing ?? throw new ArgumentNullException(nameof(housing));
-            Bedtimes = new Bedtimes(grid, clock.Phase, _happened, DoorOf);
+            Bedtimes = new Bedtimes(_grid, services.Clock.Phase, _happened, DoorOf);
         }
 
         /// <summary>Levé quand un habitant arrive en ville : la Chimère à sa création, puis chaque arrivant.</summary>

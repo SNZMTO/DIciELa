@@ -37,11 +37,11 @@ namespace Diciela.Simulation.Economy
         public IReadOnlyList<ConsigneLine> Consigne => _consigne;
 
         /// <summary>
-        /// Là où se tient qui gare ou garnit la charrette : devant elle, au bout de son timon de tant de mètres.
+        /// Là où se tient qui gare ou garnit cette charrette, garée ici : devant elle, au bout de son timon.
         /// </summary>
-        public Vector2 StandAt(float pullMeters)
+        public Vector2 StandFor(Cart cart)
         {
-            return Position + Heading.Direction(HeadingDegrees) * pullMeters;
+            return Position + Heading.Direction(HeadingDegrees) * cart.Definition.PullMeters;
         }
 
         /// <summary>La ligne de cette marchandise ; faux si la consigne n'en a pas.</summary>

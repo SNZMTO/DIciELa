@@ -32,19 +32,23 @@ namespace Diciela.Simulation.Society
         }
 
         /// <summary>
-        /// Envoie la Chimère dormir : elle marche jusqu'à ce point, devant la porte de son logis (null : elle n'a pas de
-        /// logis). Refusé si elle n'existe pas, dort déjà ou y va, ou ne peut pas rejoindre ce point ; rien ne change
-        /// alors, et les habitants le diront (SleepRefused). Seul l'ordre « dormir » l'appelle.
+        /// Envoie la Chimère dormir : elle marche jusqu'au point devant la porte de son logis. Refusé si elle n'existe pas,
+        /// n'a pas de logis, dort déjà ou y va, ou ne peut pas rejoindre sa porte ; rien ne change alors, et les habitants
+        /// le diront (SleepRefused). Seul l'ordre « dormir » l'appelle.
         /// </summary>
-        public void SendChimeraToBed(Villager chimera, Vector2? bed)
+        public void SendChimeraToBed(Villager chimera)
         {
             if (chimera == null)
+            {
                 Refuse(SleepRefusal.NoChimera);
-            else if (!bed.HasValue)
+                return;
+            }
+            Vector2? door = _doorOf(chimera);
+            if (!door.HasValue)
                 Refuse(SleepRefusal.NoHome);
             else if (chimera.IsAsleep || chimera.IsGoingToBed)
                 Refuse(SleepRefusal.AlreadyInBed);
-            else if (!chimera.TryGoToBed(_grid.CellOf(bed.Value)))
+            else if (!chimera.TryGoToBed(_grid.CellOf(door.Value)))
                 Refuse(SleepRefusal.Unreachable);
             else
                 _happened.Add(VillagerHappening.Of(VillagerHappening.Kinds.WentToBed, chimera));

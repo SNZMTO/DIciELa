@@ -1,6 +1,3 @@
-using Diciela.Simulation.Land;
-using UnityEngine;
-
 namespace Diciela.Simulation
 {
     /// <summary>
@@ -13,11 +10,7 @@ namespace Diciela.Simulation
     {
         internal override void Execute(World world)
         {
-            Structure home = world.Villagers.HomeOf(world.Villagers.Chimera);
-            Vector2? bed = null;
-            if (home != null)
-                bed = world.Housing.DoorOf(home);
-            world.Villagers.Bedtimes.SendChimeraToBed(world.Villagers.Chimera, bed);
+            world.Villagers.Bedtimes.SendChimeraToBed(world.Villagers.Chimera);
         }
     }
 }

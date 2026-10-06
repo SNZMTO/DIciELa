@@ -494,7 +494,7 @@
   charrette sert les habitants ou le troc, au choix du joueur. Les marques ne se voient qu'en mode construction, comme
   les fantômes ; aucune décoration ne couvre une marque.
 - **Règle.** Une charrette rangée à son entrepôt ne se voit pas. Chaque marque, dans l'ordre où elle a été posée,
-  appelle la charrette rangée de l'entrepôt le plus proche de la Place ; un charretier va la prendre, l'attelle, la
+  appelle la charrette rangée de l'entrepôt le plus proche d'elle ; un charretier va la prendre, l'attelle, la
   tire au bout de son timon jusque devant sa marque, au pas d'une charrette (voir 9), et l'y gare. Laissée en chemin,
   elle retourne aussitôt à son entrepôt, et sa marque en appelle une autre ; la journée finie, il finit de la garer. On
   passe à travers une charrette.
@@ -507,7 +507,8 @@
 - **Règle.** L'outil de la Place en mode « place de charrette » : un cadre blanc suit le pointeur, sa pointe vers
   l'avant de la charrette ; un clic le pose ; un clic sur une place posée la retire (la bulle le dit au survol).
 - **Règle.** Retirer une place de charrette emporte sa consigne ; sa charrette, garée et vide, rentre chez elle. Une
-  charrette en route, ou qui porte des marchandises, garde sa place : on la vide d'abord.
+  charrette qu'un charretier vient chercher, en route, qui porte des marchandises, ou vers qui l'on en porte, garde sa
+  place : on la vide d'abord.
 - **Défaut.** Deux places de charrette, une pour les habitants et une pour le troc, et une de plus par niveau : cinq au
   plus. Une charrette tient 20 places (voir 8 : chaque marchandise en prend plus ou moins).
 - **Règle.** Le joueur garnit chaque charrette dans la fiche de la Place : la consigne de sa place de charrette, une
