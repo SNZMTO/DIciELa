@@ -245,10 +245,9 @@
   la Chimère », et « Aller dormir » ou « Réveiller ». Tant que la carte n'a ni arbres ni champs sauvages à traiter, le
   poste ne fait que porter et bâtir.
 - **Défaut.** Le campement a 100 places : 30 Bois et 20 Pierre au départ, et la place de ce que rendent les
-  premiers arbres et rochers. La Place, la cabane et les premiers bâtiments ne demandent que du
-  Bois et de la Pierre ; le stock de départ suffit à la Place et à deux cabanes. La Place coûte 5 Bois et 10 Pierre,
-  une cabane 10 Bois et 5 Pierre ; chacune demande 2 h de travail à un débutant ; à pied, on porte 5 places par
-  voyage.
+  premiers arbres et rochers. La cabane et les premiers bâtiments ne demandent que du Bois et de la Pierre ; le stock
+  de départ suffit à deux cabanes. Une cabane coûte 10 Bois et 5 Pierre et demande 2 h de travail à un débutant ; la
+  Place se trace sans rien coûter (voir 11) ; à pied, on porte 5 places par voyage.
 - **Règle.** Les premiers habitants arrivent vite, un par un, à mesure que les lits le permettent. Chacun est fort dans
   une discipline, apporte l'idée de son lieu de travail et le bâtit avec la Chimère, avant même la loge. Ils restent en
   ville comme habitants ordinaires ; ce ne sont pas des maîtres.
@@ -262,8 +261,8 @@
   menuisier ».
 - **Défaut.** Le déroulé :
   1. La Chimère installe son campement, d'un coup ; le joueur choisit l'endroit. Elle connaît déjà le campement, la
-     Place, la cabane, le chemin de terre, le pont, le bûcheron et la carrière.
-  2. Elle bâtit la Place et deux cabanes, et récolte un champ sauvage de lin.
+     cabane, le chemin de terre, le pont, le bûcheron et la carrière.
+  2. Le joueur trace la Place ; elle bâtit deux cabanes, et récolte un champ sauvage de lin.
   3. Un premier habitant par statistique arrive, chacun avec son idée : le bâtisseur (la loge des bâtisseurs), la
      fermière (les champs : elle sème le premier, en lin), la charretière (l'entrepôt), le menuisier (la scierie).
   4. Quand la nourriture retient les arrivées, le tutoriel fait récolter un deuxième champ sauvage, agrandir le champ
@@ -379,8 +378,8 @@
   sont pris dans la construction. Un habitant qu'une construction posée sur lui pousse dehors laisse sa tâche, comme
   pour aller dormir (voir 6), et en reprend une une fois sorti.
 - **Règle.** Pose libre : aucune case pour le joueur, on parle en mètres. La porte d'un bâtiment reste dégagée : rien ne
-  se pose devant, sauf un sol qu'on traverse, comme la Place, qui la laisse ouverte ; une porte peut aussi s'ouvrir sur
-  un tel sol. Un bâtiment qu'on ne peut plus atteindre le montre.
+  se pose devant ; la Place peut s'y étendre, et la laisse ouverte puisqu'on y marche ; une porte peut aussi s'ouvrir
+  sur la Place. Un bâtiment qu'on ne peut plus atteindre le montre.
 - **Règle.** Rien ne se chevauche, même de quelques centimètres, et on ne se glisse pas entre deux constructions plus
   serrées que 25 cm (une maille du maillage) : deux constructions se collent à 25 cm près.
 - **Défaut.** Devant une porte, 1,5 m restent libres, sur la largeur de la porte.
@@ -398,8 +397,6 @@
   son trajet coupé en cherche un autre ; qui se trouve dessous en sort à pied, tout droit, par le sol libre qui la
   borde, jamais celui qu'une autre construction cache : du côté où il est le plus vaste (jamais une poche qu'elle vient
   de fermer), au plus près.
-- **Règle.** Seule exception, un sol qu'on traverse, comme la Place : on y marche dès sa pose, fantôme comme bâti, et
-  personne n'en est chassé. Rien ne le chevauche, et il ne chevauche rien ; on le bâtit depuis son bord, jamais dessus.
 - **Règle.** Retirer un arbre ou un rocher ne passe pas par la file des chantiers : c'est une tâche des défricheurs,
   dans l'ordre où le joueur les a marqués (voir 2).
 - **À toi.** Planter un arbre passe-t-il par la file des chantiers ? Ma reco : non, c'est une tâche des paysagistes,
@@ -417,21 +414,20 @@
   Un chantier pas encore bâti n'est qu'un plan : il saute tout de suite à sa nouvelle place, avec ce qui lui a été
   livré. Qui sert une construction qui change de place (un porteur, un ouvrier) la suit.
 - **Règle.** Le temps d'un déplacement, le bâtiment ne sert pas : ses lits libres ne s'offrent plus (chacun garde le
-  sien), son stock ne promet rien de neuf (ce qui était déjà promis s'y prend encore), une Place n'appelle pas de
-  charrette et la charrette d'un entrepôt qu'on déplace ne répond pas ; ce que ses travailleurs font sur place s'arrête,
-  mais les tâches de la ville continuent : celui qui bâtit peut défaire et remonter son propre lieu de travail. Le logis
-  de la Chimère reste son logis. La journée finie, le déplacement attend le matin. On ne déplace pas une construction
-  qui se déplace déjà. Une Place déplacée emmène ses places de charrette, et les charrettes qui y sont garées.
+  sien), son stock ne promet rien de neuf (ce qui était déjà promis s'y prend encore), la charrette d'un entrepôt qu'on
+  déplace ne répond pas ; ce que ses travailleurs font sur place s'arrête, mais les tâches de la ville continuent :
+  celui qui bâtit peut défaire et remonter son propre lieu de travail. Le logis de la Chimère reste son logis. La
+  journée finie, le déplacement attend le matin. On ne déplace pas une construction qui se déplace déjà.
 - **Défaut.** Défaire un bâtiment demande 0,1 h de travail à un débutant (3 s), le remonter autant.
 - **À toi.** Peut-on ranger le dernier lieu qui ouvre des postes de bâtisseurs ? Ma reco : non, le jeu dit pourquoi ;
   sinon plus personne ne pourrait le reposer.
 - **Règle.** On ne démolit pas, on range. La réserve n'a pas de limite. Ranger un bâtiment rend au stock ce que
   gardaient ses petits stocks ; un entrepôt rangé garde ses marchandises jusqu'à ce qu'on le repose.
-- **Règle.** Les bâtiments uniques sont le campement puis la maison de la Chimère, la Place et les grands projets : un seul
-  de chacun dans la ville. Posé, un bâtiment unique quitte le panneau Construire, et une seconde pose est refusée
+- **Règle.** Les bâtiments uniques sont le campement puis la maison de la Chimère, et les grands projets : un seul de
+  chacun dans la ville. Posé, un bâtiment unique quitte le panneau Construire, et une seconde pose est refusée
   (« Déjà posée »). Ils se rangent aussi, et le jeu dit ce qui s'arrête tant qu'ils ne sont pas reposés : une
-  pastille sur le bouton de la réserve et une ligne dans la réserve (la Place : plus de visiteurs). Pour la maison de
-  la Chimère, une bulle avec son portrait : « Je vais quand même pas dormir dehors… ».
+  pastille sur le bouton de la réserve et une ligne dans la réserve. Pour la maison de la Chimère, une bulle avec son
+  portrait : « Je vais quand même pas dormir dehors… ».
 - **Règle.** Un chemin de terre ne coûte aucun matériau (c'est un chantier quand même) ; une route pavée demande des
   Pavés, faits par l'atelier de pierre. Un pont est un bout de route posé sur l'eau. Routes et ponts ne se rangent pas :
   ils s'effacent, par un petit chantier qui rend leurs matériaux.
@@ -472,32 +468,33 @@
 ## 11. L'étal, le troc et la réputation
 
 - **Règle.** Aucune monnaie en ville : tout se paie en marchandises.
-- **Règle.** La Place est un disque pavé, entouré de petits cailloux, posé comme un bâtiment, et l'on y marche (voir
-  9) : des charrettes y roulent. Elle épouse le relief : qui y marche garde les pieds sur ses pavés. C'est là
-  qu'arrivent les visiteurs et que se tient l'étal, et là que se jouera la run. Elle a des niveaux qui la rendent plus
-  cozy, chacun par un petit chantier.
-- **À toi.** Le pavé de la Place, parmi ceux du pack (`DICIELA/Album/Planche des pavés de la Place (fichier)`) ; en
-  attendant, elle garde ses galets de rivière. Ma reco : les pavés moussus, la texture du chemin du pack.
-- **Règle.** Une route qui rejoint la Place enlève les cailloux du bord là où elle la touche (avec les routes).
-- **Défaut.** Elle fait 24 m de diamètre, sans porte (son coût : voir 6) ; son empreinte, la boîte de son modèle,
-  24 × 24 m. Trois niveaux ; chacun ajoute une place de charrette,
-  du charme et un visiteur par jour.
+- **Règle.** La Place est une zone que le joueur trace sur le sol, de la forme qu'il veut, sans rien coûter et tout de
+  suite ; on y marche (voir 9). Il la décore comme le reste de la ville : il la pave, il y pose des décorations. C'est
+  là qu'arrivent les visiteurs et que se tient l'étal, et là que se jouera la run. Elle a des niveaux qui la rendent
+  plus cozy, chacun par un petit chantier. La zone ne se voit qu'en mode construction, comme les fantômes.
+- **Règle.** La Place se trace avec des outils : à main levée, guidée, des formes toutes faites, et d'autres qui la
+  retouchent (arrondir les angles…), comme le marché de Manor Lords se trace et comme Planet Zoo façonne ses formes.
+- **Défaut.** Sa superficie est au plus de 450 m² au départ, et de 150 m² de plus par niveau. Trois niveaux ; chacun
+  ajoute une place de charrette, du charme et un visiteur par jour. Au départ, une seule zone, d'un seul tenant ;
+  plusieurs, plus tard, avec les niveaux.
+- **À toi.** Ce qu'est la forme guidée ; combien de zones à quel niveau ; peut-on bâtir sur la Place (ma reco : non,
+  seulement la paver et la décorer) ; la taille d'une marque de charrette et si elle se tourne (ma reco : la plus
+  grande charrette du pack, 5,8 × 2,8 m, tout entière dans la zone ; R la tourne, comme à la pose).
 - **Règle.** L'étal, ce sont des charrettes, comme les étals qui s'installent sur la place du marché de Manor Lords.
-  Chaque entrepôt, le campement compris, a sa charrette. La Place a des places de charrette ; chacune appelle la
-  charrette d'un entrepôt, qu'un charretier y conduit et gare au hasard sur la Place, où elle sert d'étal. Chaque place
-  de charrette sert les habitants ou le troc, au choix du joueur.
-- **Règle.** Une charrette rangée à son entrepôt ne se voit pas. Quand la Place est bâtie, chaque place de charrette,
-  dans l'ordre, appelle la charrette rangée de l'entrepôt le plus proche de la Place ; un charretier va la prendre,
-  l'attelle, la tire au bout de son timon jusque devant sa place, au pas d'une charrette (voir 9), et l'y gare. Laissée
-  en chemin, elle retourne aussitôt à son entrepôt, et sa place en appelle une autre ; la journée finie, il finit de
-  la garer. On passe à travers une charrette.
+  Chaque entrepôt, le campement compris, a sa charrette. La Place a des places de charrette : des marques que le joueur
+  pose en mode construction, dans la zone, comme le point d'attelage des caravanes de RimWorld ; chacune appelle la
+  charrette d'un entrepôt, qu'un charretier y conduit et gare sur la marque, où elle sert d'étal. Chaque place de
+  charrette sert les habitants ou le troc, au choix du joueur. Les marques ne se voient qu'en mode construction, comme
+  les fantômes ; aucune décoration ne couvre une marque.
+- **Règle.** Une charrette rangée à son entrepôt ne se voit pas. Chaque marque, dans l'ordre où elle a été posée,
+  appelle la charrette rangée de l'entrepôt le plus proche de la Place ; un charretier va la prendre, l'attelle, la
+  tire au bout de son timon jusque devant sa marque, au pas d'une charrette (voir 9), et l'y gare. Laissée en chemin,
+  elle retourne aussitôt à son entrepôt, et sa marque en appelle une autre ; la journée finie, il finit de la garer. On
+  passe à travers une charrette.
 - **Règle.** Chaque charrette prend au hasard l'une des quatre charrettes du pack, toujours la même ; l'avant de la
-  charrette est à qui la tire. Garée, elle glisse et se tourne en douceur jusqu'à sa place ; elle se penche comme le sol
-  sous ses roues.
-- **Défaut.** Les places de charrette se tirent au hasard quand la Place est bâtie : sur un cercle autour de son
-  milieu, à 47 % de son demi-côté, à intervalles égaux depuis un angle tiré ; chaque charrette garée le long du cercle,
-  dans un sens ou dans l'autre, de travers de 10° au plus : la plus grande charrette du pack (5,8 × 2,8 m) tient ainsi
-  sur la Place. Le milieu reste libre. Un timon de 2,2 m.
+  charrette est à qui la tire. Garée, elle glisse et se tourne en douceur jusqu'à sa marque ; elle se penche comme le
+  sol sous ses roues.
+- **Défaut.** Un timon de 2,2 m.
 - **Défaut.** Deux places de charrette, une pour les habitants et une pour le troc, et une de plus par niveau : cinq au
   plus. Une charrette tient 20 places (voir 8 : chaque marchandise en prend plus ou moins).
 - **Règle.** Le joueur garnit chaque charrette dans la fiche de la Place : la consigne de sa place de charrette, une
@@ -507,7 +504,7 @@
   ce que la ville peut donner, et ne fait que remplir : la charrette ne rend jamais ce qu'elle a pris. Seul le joueur
   fait du surplus, en baissant une quantité ou en retirant une ligne : les charretiers le rapportent à l'entrepôt le
   plus proche qui a la place, avant de garnir. Ce qui est sur une charrette n'est plus au stock de la ville. On ne
-  garnit qu'une charrette garée, sur une Place bâtie.
+  garnit qu'une charrette garée sur sa marque.
 - **Règle.** Une charrette de troc demande un marchand : la Place ouvre un poste de marchand par charrette de troc. La
   sous-statistique troc d'un marchand règle sa cadence (combien de visiteurs il sert).
 - **Règle.** Les visiteurs viennent le jour, par la route du bord de la carte, avec un panier, parfois un objet rare. Le
@@ -547,8 +544,8 @@
 - **Défaut.** Une lanterne donne deux heures de plus, à moins de 10 m.
 - **À toi.** La lanterne compte-t-elle la place du poste ou celle où l'on travaille (un ouvrier de la loge sur un
   chantier) ? Ma reco : là où l'on travaille.
-- **À toi.** La Place donne du charme (voir 11) alors que le charme est « la somme des décos ». Ma reco : toute
-  construction dont la fiche porte du charme compte, la Place comprise.
+- **À toi.** Les niveaux de la Place donnent du charme (voir 11) alors que le charme est « la somme des décos ». Ma
+  reco : toute construction dont la fiche porte du charme compte, et les niveaux de la Place aussi.
 - **Règle.** Le joueur pose le fantôme d'un banc ou d'une lanterne ; un ouvrier de la loge vient l'installer avec les
   matériaux (sous-statistique aménagement).
 - **Règle.** Arbres et buissons se posent une fois la cabane du paysagiste bâtie ; les paysagistes les plantent. Ils ne
@@ -712,7 +709,7 @@
 - **Règle.** Sans rien en main, un clic gauche touche la construction qu'on voit sous le pointeur : on vise son modèle,
   pas le sol derrière lui.
 - **Règle.** Tant que le modèle d'une construction n'est pas choisi, elle se voit en boîte à sa taille, sa porte
-  marquée ; un sol qu'on traverse, comme la Place, en sol plat à sa taille.
+  marquée.
 - **Règle.** La cabane a le modèle `Bld_Preset_Shed_02` du pack ; `House_03` est pressentie pour la maison.
 - **Règle.** Les maisons sont à la taille de leurs habitants : un animal (la Chimère, les maîtres) passe une porte comme
   un humain.
@@ -724,10 +721,8 @@
   pierres du pack, réduit au quart), une couche à gauche (un tapis et un coussin, où la Chimère dort), un coffre, un
   sac, une marmite, et son stock : une pile de bûches et un tas de pierres du pack (réduit au cinquième) ; deux pierres
   plates font son entrée. Sa taille et son entrée sont la boîte de sa composition, qui est au développeur.
-- **Règle.** La Place est faite de pièces et de textures du pack : un disque qui porte une texture du pack posée à plat
-  (son pavé : voir 11) ; tout autour, à cheval sur son bord, des rangées de petits cailloux gris (les rangées de pierres
-  du pack, réduites), tangentes au cercle, en tronçons d'environ 1,6 m, et des galets semés en dedans, un tous les 3 m
-  du tour environ. Sa taille est la boîte de sa composition, qui est au développeur.
+- **Règle.** La Place n'a pas de modèle : c'est la zone que le joueur trace ; son sol et ses décorations sont ceux
+  qu'il y pose (le pinceau de sol, la pose libre des décorations).
 - **À toi.** Le reste du plan de l'interface ; le son et la musique. Ma reco : chaque panneau naît avec son système
   (la liste des habitants avec eux, l'étal avec le troc), sur le côté, la ville visible derrière, comme dans
   Timberborn ; le son et la musique après le premier jouable, avec un pack acheté, comme l'art.
@@ -753,9 +748,10 @@
 - **À toi.** La voix de la Chimère (ses répliques), avec son histoire.
 - **Règle.** Chaque famille reçoit un pastel libre, dans l'ordre : le Logement le rose, les Métiers la pêche. Aucun
   pastel ne reste libre.
-- **À toi.** La famille de la Place. Ma reco, appliquée : la première carte des Métiers, où travailleront ses
-  marchands ; l'onglet des Métiers paraît donc dès le campement installé, et les idées des premiers habitants y
-  ajoutent leurs cartes. Une famille à elle demanderait un pastel de plus.
+- **À toi.** D'où l'on prend les outils de la Place. Ma reco : la première carte des Métiers, où travailleront ses
+  marchands, comme aujourd'hui ; la prendre met en main les outils de la zone. L'onglet des Métiers paraît donc dès le
+  campement installé, et les idées des premiers habitants y ajoutent leurs cartes. Une famille à elle demanderait un
+  pastel de plus.
 - **À toi.** L'icône des Métiers : en attendant, celle de « bâtir ». Les autres questions ouvertes du HUD. Ma reco :
   le bandeau de brique montre les animaux du pack.
 
