@@ -43,7 +43,7 @@ namespace Diciela.Tests.PlayMode
             TestWorld.Fill(_controls, "_gestures", gestures);
 #endif
             holder.SetActive(true);
-            _test.World.Submit(new CreateChimeraCommand(kind, TestWorld.PlainAppearance(o => _test.Keep(o))));
+            _test.World.Submit(new CreateChimeraCommand(kind, TestAppearance.Plain(o => _test.Keep(o))));
             _test.World.Submit(new PlaceStructureCommand(_test.Camp, new Placement(new Vector2(50f, 45f), 0f)));
             _test.World.Step();
             var bar = new TestInterface(new Rect(0f, 0f, Screen.width, Screen.height * 0.2f));

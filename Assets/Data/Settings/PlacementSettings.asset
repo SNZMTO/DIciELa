@@ -27,3 +27,11 @@ MonoBehaviour:
   _siteSoftness: 0.25
   _markedColor: {r: 0.9, g: 0.35, b: 0.3, a: 0.85}
   _markHeightMeters: 1.8
+  _brushRadiusMeters: 2
+  _brushRadiusRangeMeters: {x: 0.5, y: 6}
+  _brushRadiusStepMeters: 0.5
+  _strokeSpacingMeters: 0.3
+  _placeVeilColor: {r: 1, g: 0.97, b: 0.9, a: 0.22}
+  _placeLineColor: {r: 1, g: 1, b: 1, a: 0.85}
+  _placeLineWidthMeters: 0.12
+  _placeLiftMeters: 0.05

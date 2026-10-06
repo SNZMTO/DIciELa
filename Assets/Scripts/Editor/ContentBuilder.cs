@@ -68,6 +68,10 @@ namespace Diciela.EditorTools
             // La Place (décision 204) : une zone que le joueur trace ; sa fiche dit ce que permet chacun de ses niveaux,
             // ses réglages, ceux de la fiche par défaut.
             PlaceDefinition place = EditorAssets.CreateIfMissing<PlaceDefinition>(PlacePath, fiche => { });
+            // Sa carte, la première des Métiers (GDD, section 16), et son icône faute de modèle (décision 206).
+            EditorAssets.AssignIfMissing(place, "_family", trades.Family);
+            EditorAssets.AssignIfMissing(place, "_icon",
+                EditorAssets.Load<UnityEngine.UIElements.VectorImage>(InterfaceIconBuilder.Folder + "/place.asset"));
             // La charrette de l'étal (décisions 194 et 198) : 20 places, les quatre charrettes du pack ; ses autres
             // réglages, ceux de sa fiche par défaut.
             CartDefinition cart = EditorAssets.CreateIfMissing<CartDefinition>(CartPath, fiche =>

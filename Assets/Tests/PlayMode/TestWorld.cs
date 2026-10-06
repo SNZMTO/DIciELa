@@ -4,7 +4,6 @@ using Diciela.Controls;
 using Diciela.Data;
 using Diciela.Simulation;
 using Diciela.Simulation.Land;
-using Diciela.Simulation.Society;
 using Diciela.View;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -15,7 +14,9 @@ namespace Diciela.Tests.PlayMode
     /// Un petit monde monté en mémoire pour les tests de la pose : 100 × 100 m, plat à 10 m de haut (ou sur le relief
     /// qu'on lui donne) ; la caméra de gestion qui le montre ; l'aperçu, les constructions vues, une cabane de 4 × 4 m
     /// (un cube d'un mètre pour modèle), un campement de 3 × 3 m (unique, logis de la Chimère, dressé dès la pose ; une
-    /// boîte de 3 × 2,5 × 3 m pour modèle), l'outil de pose et l'outil « Retirer » (sans arbre vu : la carte n'en a pas).
+    /// boîte de 3 × 2,5 × 3 m pour modèle), l'outil de pose, l'outil « Retirer » (sans arbre vu : la carte n'en a pas),
+    /// l'outil Déplacer et l'outil de la Place, avec son aperçu ; la Place n'a sa fiche (100 m² au plus, deux places de
+    /// charrette) et la charrette la sienne que si on la demande.
     /// Les fiches ont leurs valeurs par défaut, remplies par SerializedObject, le chemin de l'Inspector.
     /// </summary>
     internal sealed class TestWorld : IDisposable
@@ -24,7 +25,7 @@ namespace Diciela.Tests.PlayMode
 
         private readonly List<Object> _created = new List<Object>();
 
-        public TestWorld(Relief relief = null)
+        public TestWorld(Relief relief = null, bool withPlace = false)
         {
             var simulation = Keep(ScriptableObject.CreateInstance<SimulationSettings>());
             Settings = Keep(ScriptableObject.CreateInstance<PlacementSettings>());
@@ -41,11 +42,22 @@ namespace Diciela.Tests.PlayMode
             Cabin = Keep(ScriptableObject.CreateInstance<StructureDefinition>());
             Camp = Keep(ScriptableObject.CreateInstance<StructureDefinition>());
             var map = new MapDescription(relief ?? new Relief(100f, 100f, 2, 2, new[] { 10f, 10f, 10f, 10f }));
-            World = new World(simulation, map, Keep(ScriptableObject.CreateInstance<Catalog>()));
+            var catalog = Keep(ScriptableObject.CreateInstance<Catalog>());
+#if UNITY_EDITOR
+            if (withPlace)
+            {
+                var place = Keep(ScriptableObject.CreateInstance<PlaceDefinition>());
+                Fill(place, "_startAreaSquareMeters", 100f);
+                Fill(catalog, "_place", place);
+                Fill(catalog, "_cart", Keep(ScriptableObject.CreateInstance<CartDefinition>()));
+            }
+#endif
+            World = new World(simulation, map, catalog);
 
             var rig = Keep(new GameObject("Caméra de test", typeof(Camera))).AddComponent<CameraRig>();
             Preview = Keep(new GameObject("Aperçu de test")).AddComponent<PlacementPreview>();
             Views = Keep(new GameObject("Constructions de test")).AddComponent<StructureViews>();
+            PlacePreview = Keep(new GameObject("Aperçu de la Place de test")).AddComponent<PlaceToolPreview>();
 #if UNITY_EDITOR
             Fill(Settings, "_translucentMaterial", translucent);
             Fill(Settings, "_siteMaterial", site);
@@ -65,6 +77,7 @@ namespace Diciela.Tests.PlayMode
             Fill(rig, "_settings", cameraSettings);
             Fill(Preview, "_settings", Settings);
             Fill(Views, "_settings", Settings);
+            Fill(PlacePreview, "_settings", Settings);
 #endif
             rig.Show(map);
             Camera = rig.Camera;
@@ -72,6 +85,7 @@ namespace Diciela.Tests.PlayMode
             Tool = new PlacementTool(World, Camera, Preview, Settings);
             Clearing = new ClearingTool(World, Camera, Keep(new GameObject("Arbres de test")).AddComponent<NatureViews>());
             Mover = new MoveTool(World, Camera, Views, Preview, Settings);
+            Place = new PlaceTool(World, Camera, PlacePreview, Settings);
         }
 
         public World World { get; }
@@ -84,6 +98,8 @@ namespace Diciela.Tests.PlayMode
         public PlacementTool Tool { get; }
         public ClearingTool Clearing { get; }
         public MoveTool Mover { get; }
+        public PlaceToolPreview PlacePreview { get; }
+        public PlaceTool Place { get; }
 
         /// <summary>Le point de l'écran où l'on voit ce point du sol.</summary>
         public Vector2 OnScreen(Vector3 ground)
@@ -122,25 +138,11 @@ namespace Diciela.Tests.PlayMode
         {
             Tool.Dispose();
             Mover.Dispose();
+            Place.Dispose();
             Views.Hide();
             foreach (Object created in _created)
                 Object.Destroy(created);
             _created.Clear();
-        }
-
-        /// <summary>
-        /// Une apparence sans pièce ni modèle, pour un monde que personne ne regarde : une tête et un corps d'une couleur
-        /// sans matériau ; ses fiches sont confiées à keep, pour être détruites avec le test.
-        /// </summary>
-        public static Appearance PlainAppearance(Action<Object> keep)
-        {
-            var palette = ScriptableObject.CreateInstance<PaletteDefinition>();
-            var head = ScriptableObject.CreateInstance<HeadDefinition>();
-            var body = ScriptableObject.CreateInstance<BodyDefinition>();
-            keep(palette);
-            keep(head);
-            keep(body);
-            return new Appearance(head, palette, body, palette, Array.Empty<WornAttachment>());
         }
 
 #if UNITY_EDITOR

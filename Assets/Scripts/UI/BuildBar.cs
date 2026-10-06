@@ -11,7 +11,7 @@ namespace Diciela.UI
     /// <summary>
     /// Le panneau Construire, en bas au centre de l'écran (GDD, section 16) : un cadre de bois, les familles en onglets de
     /// feutre, au-dessus les constructions de la famille ouverte en cartes ; au-dessus du cadre, la raison d'un refus de
-    /// pose, dans une bulle, qui reste quand le panneau est fermé. L'onglet ouvert et la carte en main restent enfoncés.
+    /// pose, dans la bulle des raisons (ReasonBubble), qui reste quand le panneau est fermé. L'onglet ouvert et la carte en main restent enfoncés.
     /// La roue des outils l'ouvre et le ferme ; Échap le ferme ; ouvert, les touches 1 à 9 prennent ses cartes. C'est la
     /// vue (le bloc « bar » de Hud.uxml) ; son présentateur décide.
     /// </summary>
@@ -21,15 +21,12 @@ namespace Diciela.UI
         private const string BarName = "bar";
         private const string FamiliesName = "families";
         private const string StructuresName = "structures";
-        private const string ReasonName = "reason";
-        private const string ReasonTextName = "reason-text";
 
         private UIDocument _document;
         private VisualElement _bar;
         private VisualElement _families;
         private VisualElement _structures;
-        private VisualElement _reason;
-        private Label _reasonText;
+        private ReasonBubble _reasons;
         private BuildBarPresenter _presenter;
 
         public event Action<int> FamilyChosen;
@@ -45,7 +42,8 @@ namespace Diciela.UI
         }
 
         /// <summary>Remplit le panneau, fermé, par son présentateur ; appelé par le démarrage quand la ville s'ouvre.</summary>
-        public void Show(Catalog catalog, TextTable texts, PlacementTool placement, World world, IToolKeys keys)
+        public void Show(Catalog catalog, TextTable texts, PlacementTool placement, PlaceTool place, World world,
+            IToolKeys keys, ReasonBubble reasons)
         {
             Hide();
             VisualElement root = _document.rootVisualElement;
@@ -53,17 +51,14 @@ namespace Diciela.UI
             VisualElement bar = root.Q(BarName);
             VisualElement families = root.Q(FamiliesName);
             VisualElement structures = root.Q(StructuresName);
-            VisualElement reason = root.Q(ReasonName);
-            var reasonText = root.Q<Label>(ReasonTextName);
-            if (bar == null || families == null || structures == null || reason == null || reasonText == null)
+            if (bar == null || families == null || structures == null || reasons == null)
                 throw new InvalidOperationException("Le panneau Construire ne trouve pas ses éléments (UXML).");
 
             _bar = bar;
             _families = families;
             _structures = structures;
-            _reason = reason;
-            _reasonText = reasonText;
-            _presenter = new BuildBarPresenter(this, catalog, texts, placement, world, keys);
+            _reasons = reasons;
+            _presenter = new BuildBarPresenter(this, catalog, texts, placement, place, world, keys);
         }
 
         /// <summary>Cache le panneau et oublie le monde.</summary>
@@ -140,8 +135,7 @@ namespace Diciela.UI
 
         public void ShowReason(string text)
         {
-            _reasonText.text = text;
-            _reason.EnableInClassList(StyleClasses.Hidden, string.IsNullOrEmpty(text));
+            _reasons?.Say(this, text);
         }
     }
 }

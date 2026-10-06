@@ -5,6 +5,7 @@
         "Diciela.Data",
         "Diciela.View",
         "Unity.InputSystem",
+        "Diciela.Simulation.Core",
         "Diciela.Simulation.Land",
         "Diciela.Simulation",
         "Diciela.Simulation.Society"

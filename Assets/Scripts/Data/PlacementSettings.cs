@@ -4,8 +4,9 @@ namespace Diciela.Data
 {
     /// <summary>
     /// Les réglages de la pose (GDD, sections 2 et 9) : tourner, les couleurs de l'aperçu et du fantôme, le fanion des
-    /// arbres et des rochers marqués à retirer, et le chantier qui monte (décision 166 : ses deux matériaux, sa ligne qui
-    /// ondule). Les valeurs écrites ici ne servent qu'à une fiche neuve : la fiche fait foi.
+    /// arbres et des rochers marqués à retirer, le chantier qui monte (décision 166 : ses deux matériaux, sa ligne qui
+    /// ondule), et l'outil de la Place (décision 206 : son pinceau, son voile, ses lignes). Les valeurs écrites ici ne
+    /// servent qu'à une fiche neuve : la fiche fait foi.
     /// </summary>
     [CreateAssetMenu(menuName = "DICIELA/Réglages de la pose", fileName = "PlacementSettings")]
     public sealed class PlacementSettings : ScriptableObject
@@ -59,6 +60,31 @@ namespace Diciela.Data
         [Tooltip("La hauteur du fanion, en mètres, planté au pied de l'arbre ou du rocher marqué.")]
         [SerializeField, Range(0.5f, 5f)] private float _markHeightMeters = 1.8f;
 
+        [Header("La Place (décision 206)")]
+        [Tooltip("Le rayon du pinceau et de la gomme quand on prend l'outil de la Place, en mètres.")]
+        [SerializeField, Range(0.25f, 10f)] private float _brushRadiusMeters = 2f;
+
+        [Tooltip("Le plus petit et le plus grand rayon du pinceau, en mètres.")]
+        [SerializeField] private Vector2 _brushRadiusRangeMeters = new Vector2(0.5f, 6f);
+
+        [Tooltip("Ce que change un cran de Ctrl + molette au rayon du pinceau, en mètres.")]
+        [SerializeField, Range(0.05f, 2f)] private float _brushRadiusStepMeters = 0.5f;
+
+        [Tooltip("L'écart entre deux points d'un trait de pinceau, en mètres (SAVOIR, 2.6 : quelques décimètres).")]
+        [SerializeField, Range(0.05f, 2f)] private float _strokeSpacingMeters = 0.3f;
+
+        [Tooltip("Le voile de la Place sur le sol, en mode construction, du matériau translucide.")]
+        [SerializeField] private Color _placeVeilColor = new Color(1f, 0.97f, 0.9f, 0.22f);
+
+        [Tooltip("Le contour de la Place et ses places de charrette, comme les fantômes.")]
+        [SerializeField] private Color _placeLineColor = new Color(1f, 1f, 1f, 0.85f);
+
+        [Tooltip("La largeur du contour et du cadre d'une place de charrette, en mètres.")]
+        [SerializeField, Range(0.02f, 0.5f)] private float _placeLineWidthMeters = 0.12f;
+
+        [Tooltip("La hauteur du voile et des lignes au-dessus du relief, en mètres : assez pour ne pas se mêler au sol.")]
+        [SerializeField, Range(0f, 0.3f)] private float _placeLiftMeters = 0.05f;
+
         public float RotationStepDegrees => _rotationStepDegrees;
         public float RotationDegreesPerPixel => _rotationDegreesPerPixel;
         public Material TranslucentMaterial => _translucentMaterial;
@@ -74,5 +100,13 @@ namespace Diciela.Data
         public float SiteSoftness => _siteSoftness;
         public Color MarkedColor => _markedColor;
         public float MarkHeightMeters => _markHeightMeters;
+        public float BrushRadiusMeters => _brushRadiusMeters;
+        public Vector2 BrushRadiusRangeMeters => _brushRadiusRangeMeters;
+        public float BrushRadiusStepMeters => _brushRadiusStepMeters;
+        public float StrokeSpacingMeters => _strokeSpacingMeters;
+        public Color PlaceVeilColor => _placeVeilColor;
+        public Color PlaceLineColor => _placeLineColor;
+        public float PlaceLineWidthMeters => _placeLineWidthMeters;
+        public float PlaceLiftMeters => _placeLiftMeters;
     }
 }

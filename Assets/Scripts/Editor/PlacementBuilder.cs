@@ -9,8 +9,9 @@ namespace Diciela.EditorTools
 {
     /// <summary>
     /// Installe la pose dans une scène racine : les constructions vues (« Constructions »), les arbres et rochers vus
-    /// (« Nature »), l'aperçu et les gestes de la pose (« Pose »), les gestes de l'outil « Retirer » (« Retirer »), le geste « toucher » (« Choisir »), reliés à leurs fiches, à l'asset d'actions, au
-    /// démarrage et à sa scène. Réexécutable : ce qui est déjà réglé n'est pas touché.
+    /// (« Nature »), l'aperçu et les gestes de la pose (« Pose »), les gestes de l'outil « Retirer » (« Retirer »), le
+    /// geste « toucher » (« Choisir »), la Place vue, l'aperçu et les gestes de son outil (« Place »), reliés à leurs
+    /// fiches, à l'asset d'actions, au démarrage et à sa scène. Réexécutable : ce qui est déjà réglé n'est pas touché.
     /// </summary>
     internal static class PlacementBuilder
     {
@@ -19,6 +20,7 @@ namespace Diciela.EditorTools
         private const string ClearingObjectName = "Retirer";
         private const string PlacementObjectName = "Pose";
         private const string ChooseObjectName = "Choisir";
+        private const string PlaceObjectName = "Place";
 
         public static void EnsureIn(Scene scene, GameRunner runner, GameStage stage)
         {
@@ -48,6 +50,16 @@ namespace Diciela.EditorTools
             EditorAssets.AssignIfMissing(choose, "_actions", actions);
             EditorAssets.AssignIfMissing(choose, "_gestures", gestures);
 
+            // La Place (décision 206) : sa zone vue, l'aperçu et les gestes de son outil, sur un même objet.
+            PlaceZoneView zone = EditorAssets.FindOrCreate<PlaceZoneView>(scene, PlaceObjectName);
+            EditorAssets.AssignIfMissing(zone, "_settings", settings);
+            PlaceToolPreview placePreview = EditorAssets.GetOrAdd<PlaceToolPreview>(zone.gameObject);
+            EditorAssets.AssignIfMissing(placePreview, "_settings", settings);
+            PlaceControls place = EditorAssets.GetOrAdd<PlaceControls>(zone.gameObject);
+            EditorAssets.AssignIfMissing(place, "_actions", actions);
+            EditorAssets.AssignIfMissing(place, "_settings", settings);
+            EditorAssets.AssignIfMissing(place, "_gestures", gestures);
+
             EditorAssets.AssignIfMissing(runner, "_placementSettings", settings);
             EditorAssets.AssignIfMissing(stage, "_structureViews", views);
             EditorAssets.AssignIfMissing(stage, "_natureViews", nature);
@@ -55,6 +67,9 @@ namespace Diciela.EditorTools
             EditorAssets.AssignIfMissing(stage, "_placementControls", controls);
             EditorAssets.AssignIfMissing(stage, "_chooseControls", choose);
             EditorAssets.AssignIfMissing(stage, "_clearingControls", clearing);
+            EditorAssets.AssignIfMissing(stage, "_placeZoneView", zone);
+            EditorAssets.AssignIfMissing(stage, "_placeToolPreview", placePreview);
+            EditorAssets.AssignIfMissing(stage, "_placeControls", place);
         }
     }
 }
