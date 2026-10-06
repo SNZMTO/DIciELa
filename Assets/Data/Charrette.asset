@@ -16,8 +16,8 @@ MonoBehaviour:
   _capacity: 20
   _speedFactor: 0.5
   _pullMeters: 2.2
-  _parkRadius: 0.47
-  _parkTurnDegrees: 10
+  _spotLengthMeters: 5.8
+  _spotWidthMeters: 2.8
   _models:
   - {fileID: 1326200321975397654, guid: 62148b1d19035244a99ce2c20c6a23ab, type: 3}
   - {fileID: 3564645674989258486, guid: 97439727a5db29949b543767c603543e, type: 3}

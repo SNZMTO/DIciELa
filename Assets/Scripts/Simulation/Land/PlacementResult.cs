@@ -32,6 +32,9 @@ namespace Diciela.Simulation.Land
         Unknown = 8,
 
         /// <summary>Elle se déplace déjà : on la déplace de nouveau une fois remontée (décision 200).</summary>
-        Moving = 9
+        Moving = 9,
+
+        /// <summary>L'empreinte recouvre la Place : on ne bâtit pas sur elle, on la pave et la décore (décision 205).</summary>
+        OnThePlace = 10
     }
 }

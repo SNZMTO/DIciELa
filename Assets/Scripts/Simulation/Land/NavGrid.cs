@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Diciela.Simulation.Core;
 using UnityEngine;
 
@@ -6,14 +7,14 @@ namespace Diciela.Simulation.Land
 {
     /// <summary>
     /// Le maillage : un quadrillage invisible, plus fin que le mètre, qui dit ce qui occupe chaque maille (SAVOIR, 2.1).
-    /// Il est déduit des constructions et des arbres et rochers, jamais sauvegardé : chaque maille garde l'identifiant de
-    /// ce qui la couvre (0 : libre ; négatif : un arbre ou un rocher), et si on le traverse (un sol, comme la Place).
+    /// Il est déduit des constructions, des arbres et rochers et de la Place, jamais sauvegardé : chaque maille garde
+    /// l'identifiant de ce qui la couvre (0 : libre ; négatif : un arbre ou un rocher), et si on le traverse (la Place).
     /// Une maille se désigne par un Vector2Int : en x sa colonne, en y sa rangée sur l'axe z du monde.
     /// </summary>
     public sealed class NavGrid
     {
         private readonly int[] _occupant;
-        // Par maille, vrai si ce qui la couvre se traverse : un sol (décision 192).
+        // Par maille, vrai si ce qui la couvre se traverse : la Place (décision 204).
         private readonly bool[] _floor;
         // Par rangée, la version du maillage où l'une de ses mailles a changé pour la dernière fois.
         private readonly int[] _rowVersion;
@@ -57,10 +58,8 @@ namespace Diciela.Simulation.Land
         }
 
         /// <summary>
-        /// Vrai si un piéton peut entrer dans cette maille : elle est libre, ou ce qui la couvre est un sol qu'on traverse
-        /// (la Place), fantôme ou bâti. Un autre fantôme la prend dès sa pose, comme un bâtiment ; le devant d'une porte
-        /// reste libre, les règles de pose y refusent tout sauf un sol (Doorways). La seule réponse à « se
-        /// traverse-t-elle ? ».
+        /// Vrai si un piéton peut entrer dans cette maille : elle est libre, ou c'est la Place. Un fantôme la prend dès sa
+        /// pose, comme un bâtiment. La seule réponse à « se traverse-t-elle ? ».
         /// </summary>
         public bool IsWalkable(Vector2Int cell)
         {
@@ -116,18 +115,29 @@ namespace Diciela.Simulation.Land
             return new CoveredCells(this, rect);
         }
 
-        /// <summary>
-        /// Donne à chaque maille du rectangle cet occupant ; s'il se traverse (un sol), elles restent ouvertes aux piétons.
-        /// </summary>
-        internal void SetOccupant(RotatedRect rect, int occupant, bool walkable)
+        /// <summary>Donne à chaque maille du rectangle cet occupant, qu'on ne traverse pas : une construction.</summary>
+        internal void SetOccupant(RotatedRect rect, int occupant)
         {
             Version++;
             foreach (Vector2Int cell in CellsCoveredBy(rect))
             {
                 int index = IndexOf(cell);
                 _occupant[index] = occupant;
-                _floor[index] = walkable;
+                _floor[index] = false;
                 _rowVersion[cell.y] = Version;
+            }
+        }
+
+        /// <summary>Donne à ces mailles (leurs places dans les tableaux) cet occupant, qu'on traverse ou non ; 0 les libère.</summary>
+        internal void SetCells(List<int> indices, int occupant, bool walkable)
+        {
+            Version++;
+            for (int i = 0; i < indices.Count; i++)
+            {
+                int index = indices[i];
+                _occupant[index] = occupant;
+                _floor[index] = walkable;
+                _rowVersion[index / Width] = Version;
             }
         }
 

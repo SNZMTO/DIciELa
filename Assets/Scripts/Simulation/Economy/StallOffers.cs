@@ -8,9 +8,9 @@ namespace Diciela.Simulation.Economy
 {
     /// <summary>
     /// Garnir les charrettes de l'étal, comme tâches à prendre (GDD, section 11 ; ARCHITECTURE, section 7 ; décision 202) :
-    /// pour une charrette garée sur une Place bâtie que le porteur peut rejoindre, son surplus d'abord, vers l'entrepôt le
-    /// plus proche qui a la place, puis ce qui manque à sa consigne, ligne après ligne, depuis l'entrepôt le plus proche qui
-    /// en a, dans la limite de ses places libres et de sa charge. Prendre réserve des deux côtés ; comme une livraison
+    /// pour une charrette garée sur sa place, devant laquelle le porteur peut se tenir, son surplus d'abord, vers
+    /// l'entrepôt le plus proche qui a la place, puis ce qui manque à sa consigne, ligne après ligne, depuis l'entrepôt
+    /// le plus proche qui en a, dans la limite de ses places libres et de sa charge. Prendre réserve des deux côtés ; comme une livraison
     /// (décision 178), la place qu'une charge quitte reste retenue tant qu'on la porte, et une charge rendue y revient.
     /// Seule fonction qui change le contenu d'une charrette.
     /// </summary>
@@ -128,12 +128,11 @@ namespace Diciela.Simulation.Economy
             stock.Add(delivery.Good, delivery.Amount);
         }
 
-        // La charrette garée à cette place, sur une Place bâtie qu'on peut rejoindre depuis cet îlot ; null sinon.
+        // La charrette garée à cette place, devant laquelle on peut se tenir depuis cet îlot ; null sinon.
         private Cart ParkedAt(CartSpot spot, int island)
         {
             Cart cart = _carts.CartAt(spot);
-            if (cart == null || cart.State != CartState.Parked || spot.Place.State != StructureState.Built ||
-                !_reach.IsReachable(spot.Place, island))
+            if (cart == null || cart.State != CartState.Parked || !_reach.IsReachable(CellOf(spot, cart), island))
                 return null;
             return cart;
         }

@@ -41,7 +41,7 @@ namespace Diciela.Simulation.Land
             {
                 var item = new NatureItem(i + 1, spots[i]);
                 _all.Add(item);
-                grid.SetOccupant(item.Footprint, item.Occupant, walkable: false);
+                grid.SetOccupant(item.Footprint, item.Occupant);
             }
         }
 

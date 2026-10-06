@@ -54,7 +54,7 @@ namespace Diciela.Simulation.Land
 
         public IReadOnlyList<Structure> All => _all;
 
-        /// <summary>Les devants de porte des constructions posées, où rien ne se pose (sauf un sol).</summary>
+        /// <summary>Les devants de porte des constructions posées, où rien ne se pose (la Place peut s'y étendre).</summary>
         public Doorways Doorways { get; }
 
         /// <summary>Les règles de pose, que le monde montre au-dessus de lui (World.PlacementRules).</summary>

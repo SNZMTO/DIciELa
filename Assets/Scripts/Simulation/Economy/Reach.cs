@@ -46,6 +46,12 @@ namespace Diciela.Simulation.Economy
             return IsReachable(PlacementRules.Footprint(structure.Definition, structure.Placement), structure.Id, island);
         }
 
+        /// <summary>Vrai si l'on peut se tenir sur cette maille depuis cet îlot : elle est sur lui (une place de charrette).</summary>
+        public bool IsReachable(Vector2Int cell, int island)
+        {
+            return island != 0 && _grid.Contains(cell) && _islands.IslandOf(cell) == island;
+        }
+
         /// <summary>Vrai si l'un des abords de ce qu'occupe cet occupant, sous cette empreinte, est sur cet îlot.</summary>
         public bool IsReachable(RotatedRect footprint, int occupant, int island)
         {

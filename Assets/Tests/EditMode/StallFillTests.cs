@@ -31,10 +31,10 @@ namespace Diciela.Tests.EditMode
         [Test]
         public void TheChimeraBringsWhatTheConsigneAsks()
         {
-            World world = TestStalls.ParkedWorld(_town, out Structure place, out Cart cart);
+            World world = TestStalls.ParkedWorld(_town, out CartSpot spot, out Cart cart);
             Inventory camp = world.Warehouses.StockOf(TestTown.CampOf(world));
 
-            TestStalls.Ask(world, place, _town.Wood, ConsigneMode.Amount, 6);
+            TestStalls.Ask(world, spot, _town.Wood, ConsigneMode.Amount, 6);
             TestGrids.StepUntil(world, () =>
             {
                 Assert.AreEqual(30, TestTown.EverywhereOf(world, _town.Wood), "Rien ne se perd en route.");
@@ -51,10 +51,10 @@ namespace Diciela.Tests.EditMode
         [Test]
         public void KeepAtLeastTakesWhatIsAboveIt()
         {
-            World world = TestStalls.ParkedWorld(_town, out Structure place, out Cart cart);
+            World world = TestStalls.ParkedWorld(_town, out CartSpot spot, out Cart cart);
             Inventory camp = world.Warehouses.StockOf(TestTown.CampOf(world));
 
-            TestStalls.Ask(world, place, _town.Stone, ConsigneMode.KeepAtLeast, 15);
+            TestStalls.Ask(world, spot, _town.Stone, ConsigneMode.KeepAtLeast, 15);
             TestGrids.StepUntil(world, () => cart.Stock.CountOf(_town.Stone) == 5, 4000, "cinq Pierre sur la charrette");
             for (int i = 0; i < 600; i++)
                 world.Step();
@@ -66,9 +66,9 @@ namespace Diciela.Tests.EditMode
         public void TheLinesShareTheCartsPlacesInOrder()
         {
             // 15 Bois puis 15 Pierre : la charrette tient 20 places ; le Bois, d'abord, en prend 15, la Pierre le reste.
-            World world = TestStalls.ParkedWorld(_town, out Structure place, out Cart cart);
-            TestStalls.Ask(world, place, _town.Wood, ConsigneMode.Amount, 15);
-            TestStalls.Ask(world, place, _town.Stone, ConsigneMode.Amount, 15);
+            World world = TestStalls.ParkedWorld(_town, out CartSpot spot, out Cart cart);
+            TestStalls.Ask(world, spot, _town.Wood, ConsigneMode.Amount, 15);
+            TestStalls.Ask(world, spot, _town.Stone, ConsigneMode.Amount, 15);
 
             TestGrids.StepUntil(world, () => cart.Stock.Used == 20, 6000, "la charrette pleine");
             Assert.AreEqual(15, cart.Stock.CountOf(_town.Wood), "La première ligne est servie d'abord.");
@@ -81,9 +81,9 @@ namespace Diciela.Tests.EditMode
             // Des meubles, deux places chacun : sur 20 places, dix meubles au plus.
             GoodDefinition furniture = _town.Keep(TestData.Good("meuble", 2));
             TestData.StartingGoods(_town.Opening, new GoodAmount(_town.Wood, 30), new GoodAmount(furniture, 15));
-            World world = TestStalls.ParkedWorld(_town, out Structure place, out Cart cart);
+            World world = TestStalls.ParkedWorld(_town, out CartSpot spot, out Cart cart);
 
-            TestStalls.Ask(world, place, furniture, ConsigneMode.Amount, 15);
+            TestStalls.Ask(world, spot, furniture, ConsigneMode.Amount, 15);
             TestGrids.StepUntil(world, () => cart.Stock.Used == 20, 6000, "la charrette pleine");
             Assert.AreEqual(10, cart.Stock.CountOf(furniture), "Dix meubles remplissent ses vingt places.");
         }
@@ -91,15 +91,10 @@ namespace Diciela.Tests.EditMode
         [Test]
         public void NothingIsBroughtToACartOnItsWay()
         {
-            // La consigne réglée dès la pose de la Place : rien ne part tant que la charrette n'est pas garée.
-            TestData.Carts(_town.Camp, 1, 0);
-            StructureDefinition plan = _town.KeepKnown(TestData.Floor("place", 12f, 12f));
-            TestData.Carts(plan, 0, 2);
-            TestData.BuiltWhenPlaced(plan);
-            World world = _town.WorkingWorld();
-            Structure place = TestTown.Place(world, plan, 20f, 26f);
+            // La consigne réglée dès la pose de la place de charrette : rien ne part tant que la charrette n'est pas garée.
+            World world = TestStalls.PlacedWorld(_town, out CartSpot spot);
             Cart cart = world.Carts.All[0];
-            TestStalls.Ask(world, place, _town.Wood, ConsigneMode.Amount, 6);
+            TestStalls.Ask(world, spot, _town.Wood, ConsigneMode.Amount, 6);
 
             TestGrids.StepUntil(world, () =>
             {

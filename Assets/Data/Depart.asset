@@ -15,7 +15,6 @@ MonoBehaviour:
   _knownStructures:
   - {fileID: 11400000, guid: 0aaaa8b2248418642adb7291a95ac7c0, type: 2}
   - {fileID: 11400000, guid: 537be42656ca96547902b7f4b6707d68, type: 2}
-  - {fileID: 11400000, guid: 6d7e922ae6a948a4aa7323b41fb35ac4, type: 2}
   _startingGoods:
   - _good: {fileID: 11400000, guid: 66ef54aedacec184faa974adebaddff0, type: 2}
     _amount: 30

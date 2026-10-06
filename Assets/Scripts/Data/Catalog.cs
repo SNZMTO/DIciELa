@@ -29,6 +29,10 @@ namespace Diciela.Data
         [Tooltip("La charrette de l'étal, celle de chaque entrepôt (GDD, section 11 ; décision 194).")]
         [SerializeField] private CartDefinition _cart;
 
+        [Tooltip("La Place, la zone que le joueur trace, et ce que permet chacun de ses niveaux (GDD, section 11 ; " +
+                 "décision 204).")]
+        [SerializeField] private PlaceDefinition _place;
+
         [Tooltip("Les sortes d'arbres et de rochers que le développeur peint sur la carte (GDD, section 2).")]
         [SerializeField] private List<NatureDefinition> _nature = new List<NatureDefinition>();
 
@@ -58,6 +62,7 @@ namespace Diciela.Data
         public VillagerKindDefinition VillagerKind => _villagerKind;
         public OpeningDefinition Opening => _opening;
         public CartDefinition Cart => _cart;
+        public PlaceDefinition Place => _place;
         public IReadOnlyList<NatureDefinition> Nature => _nature;
         public IReadOnlyList<GoodDefinition> Goods => _goods;
         public IReadOnlyList<StatisticDefinition> Statistics => _statistics;
