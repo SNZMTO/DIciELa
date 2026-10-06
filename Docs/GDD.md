@@ -431,6 +431,18 @@
 - **Règle.** Un chemin de terre ne coûte aucun matériau (c'est un chantier quand même) ; une route pavée demande des
   Pavés, faits par l'atelier de pierre. Un pont est un bout de route posé sur l'eau. Routes et ponts ne se rangent pas :
   ils s'effacent, par un petit chantier qui rend leurs matériaux.
+- **Règle.** On trace les chemins à l'outil Chemins, comme la Place (voir 11) : le pinceau à main levée, la gomme, le
+  cercle, le rectangle ; une forme part au relâchement, son aperçu vert ou rouge, et la raison s'écrit. Sa sorte se
+  choisit parmi celles que la ville sait faire : le chemin de terre dès le départ, la route pavée avec son idée. On
+  trace partout où l'on marche, la Place comprise : paver la Place, c'est y tracer. Ce qui se tient là (une
+  construction, un arbre, un rocher, l'eau) y fait un trou ; tracer où passe déjà un chemin de la même sorte n'ajoute
+  rien.
+- **Règle.** Une forme tracée est un chantier dans la file : un fantôme au sol, que les ouvriers bâtissent à ses
+  abords, d'un coup, quand son travail est fait ; un chemin pas encore bâti n'accélère personne. La gomme efface un
+  fantôme tout de suite ; un chemin bâti s'efface par un petit chantier. Un bâtiment ne se pose pas sur un chemin, ni
+  sur son fantôme : on l'efface d'abord (« Sur un chemin : efface-le d'abord »).
+- **Défaut.** Tracer : 0,01 h de travail d'un débutant par m² (un chemin de 2 × 15 m : 0,3 h, 9 s) ; effacer : la
+  moitié. Le pinceau : 1 m de rayon au départ (un chemin de 2 m de large), de 0,5 à 6 m.
 - **Défaut.** Un pont coûte du Bois.
 - **Règle.** Les piétons marchent partout où rien n'est posé, et sur la Place, par le trajet le plus court ; les charrettes vont
   lentement dans l'herbe, plus vite sur la terre, encore plus vite sur les pavés. Une route est un investissement,
@@ -469,8 +481,9 @@
 
 - **Règle.** Aucune monnaie en ville : tout se paie en marchandises.
 - **Règle.** La Place est une zone que le joueur trace sur le sol, de la forme qu'il veut, sans rien coûter et tout de
-  suite ; on y marche (voir 9). Il la décore comme le reste de la ville : il la pave, il y pose des décorations. C'est
-  là qu'arrivent les visiteurs et que se tient l'étal, et là que se jouera la run. Elle a des niveaux qui la rendent
+  suite ; on y marche (voir 9). Il la décore comme le reste de la ville : il la pave (il y trace des chemins, voir 9),
+  il y pose des décorations. C'est là qu'arrivent les visiteurs et que se tient l'étal, et là que se jouera la run.
+  Elle a des niveaux qui la rendent
   plus cozy, chacun par un petit chantier. La zone ne se voit qu'en mode construction, comme les fantômes.
 - **Règle.** La Place se trace avec des outils : à main levée, guidée, des formes toutes faites, et d'autres qui la
   retouchent (arrondir les angles…), comme le marché de Manor Lords se trace et comme Planet Zoo façonne ses formes.
@@ -698,12 +711,12 @@
   relâchant ; relâcher sans avoir bougé ne choisit rien, même près d'un bord, où la roue s'écarte du pointeur pour
   rester dans l'écran. Cliquer l'icône des outils l'ouvre aussi, et l'on clique l'outil ; un appui à côté la referme,
   sans rien faire dans la ville. Chaque outil y a sa
-  place fixe, toujours la même (Construire en haut, Retirer en bas, Déplacer à droite), et sa touche, écrite sur lui ; la bulle du
+  place fixe, toujours la même (Construire en haut, Retirer en bas, Déplacer à droite, Chemins à gauche), et sa touche, écrite sur lui ; la bulle du
   milieu dit le nom et l'usage de l'outil visé, qui grossit. Un outil actif y reste enfoncé. La roue est un plateau de
   bois à huit côtés, une place d'outil par côté ; elle garde 24 px du bord de l'écran, comme les blocs du HUD. Choisir Retirer prend l'outil en main,
-  ou le lâche s'il l'était, de même Déplacer ; choisir Construire ouvre le panneau Construire, ou le ferme. Les outils
-  à venir (chemins, décorer, planter) y prendront leur place.
-- **Défaut.** La roue : Tab, tenu ; Construire : B ; Retirer : X ; Déplacer : M. Les touches se changeront dans les réglages, quand le
+  ou le lâche s'il l'était, de même Déplacer et Chemins ; choisir Construire ouvre le panneau Construire, ou le ferme.
+  Les outils à venir (décorer, planter) y prendront leur place.
+- **Défaut.** La roue : Tab, tenu ; Construire : B ; Retirer : X ; Déplacer : M ; Chemins : C. Les touches se changeront dans les réglages, quand le
   menu viendra.
 - **Règle.** On choisit quoi construire dans le panneau Construire, en bas au centre : les familles en onglets,
   chacune de son pastel avec son icône (une famille qui ne propose rien ne paraît pas), et au-dessus de l'onglet
@@ -774,8 +787,14 @@
   l'icône des outils dès 1280 × 720.
 - **Défaut.** Les modes de l'outil de la Place : les touches 1 à 5, dans l'ordre de la barre. La taille du pinceau :
   Ctrl + molette (la molette seule zoome).
+- **Règle.** L'outil Chemins en main, la même barre s'ouvre : devant ses modes (pinceau, gomme, cercle, rectangle), les
+  sortes de sol que la ville sait faire, chacune sa vignette, celle qui est prise enfoncée ; dessous, la taille du
+  pinceau. Un chemin se voit toujours, comme le sol qu'il est : la terre et les pavés du pack peints sur la carte ; son
+  fantôme, un voile au sol, de la couleur des fantômes.
+- **Défaut.** Les modes de l'outil Chemins : les touches 1 à 4. La terre : le calque `Village_Dirt_01` du pack ; les
+  pavés : `Path_01`, les pavés moussus du chemin du pack.
 - **Règle.** La zone de la Place et ses places de charrette se voient en mode construction : le panneau Construire
-  ouvert, ou en main une construction, l'outil de la Place ou Déplacer. La zone : un voile léger sur le sol et son
+  ouvert, ou en main une construction, l'outil de la Place, Chemins ou Déplacer. La zone : un voile léger sur le sol et son
   contour ; une place de charrette : un cadre blanc, une pointe vers l'avant de la charrette.
 - **À toi.** Les icônes de la Place (sa carte, ses cinq modes), pour l'instant des remplaçants simples.
 - **À toi.** L'icône des Métiers : en attendant, celle de « bâtir ». Les autres questions ouvertes du HUD. Ma reco :
