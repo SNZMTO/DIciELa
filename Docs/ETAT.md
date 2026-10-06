@@ -17,8 +17,8 @@ supprimée (fiche, composition, bordure, planches, sol qu'on traverse, cercle de
 - la zone et les marques ne se voient qu'outil de construction en main : un voile léger sur le sol, son contour, et
   les marques en rectangles blancs, comme les fantômes ; R tourne la marque ;
 - un test de bout en bout par les gestes, une capture pour l'album, puis la fusion de 52 et 53.
-Ensuite : le pinceau de sol (paver), puis les décorations ; et le ménage (découper `StallOffers`, `PlacementTool`,
-`Villager`, `Villagers`, `WorkSlots`, `Carts`, `PlaceZone`, `NavGrid`, tous près de 200 lignes).
+Après 53, la session de ménage, due (six étapes depuis) : découper `StallOffers`, `Villager`, `Villagers`, `WorkSlots`
+(53 découpe ce qu'elle touche : `PlacementTool`, `PlaceZone`, `NavGrid`, `Carts`) ; puis paver, puis les décorations.
 **À toi** : la barre d'outils (plus haut) ; la forme guidée ; combien de zones à quel niveau ; la fiche de la Place
 (les consignes) ; « Run In Background » ; peindre la carte ; les modèles de la loge et de l'entrepôt ; les icônes des
 Métiers, de « conduire », « garnir », « déplacer » ; le fanion des arbres ; le bandeau ; la voix de la Chimère ; les noms.
