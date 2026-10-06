@@ -8,8 +8,9 @@ namespace Diciela.Tests.EditMode
 {
     /// <summary>
     /// Retirer une place de charrette (décisions 204 et 205), par l'ordre du joueur : sa marque s'en va de la Place, avec
-    /// sa consigne ; garée et vide, sa charrette retourne chez elle. Mais une charrette en route, ou qui porte des
-    /// marchandises, garde sa place : « Sa charrette arrive, ou porte encore des marchandises ». Le banc de l'étal
+    /// sa consigne ; garée et vide, sa charrette retourne chez elle. Mais une charrette appelée qu'on vient chercher, en
+    /// route, ou qui porte des marchandises, garde sa place : « Sa charrette arrive, ou porte encore des marchandises ».
+    /// Sans quoi une conduite en cours garerait une charrette sans place (décision 205). Le banc de l'étal
     /// (TestStalls) : une place de charrette au milieu de la Place, la charrette du campement.
     /// </summary>
     public sealed class CartSpotRemovalTests
@@ -38,6 +39,22 @@ namespace Diciela.Tests.EditMode
             Assert.IsEmpty(world.Place.Marks, "Et sa marque avec elle.");
             Assert.AreEqual(CartState.AtHome, cart.State, "Sa charrette est rentrée au campement.");
             Assert.IsNull(cart.Spot, "Plus rien ne l'appelle.");
+        }
+
+        [Test]
+        public void ACalledCartKeepsItsPlaceWhileSomeoneFetchesIt()
+        {
+            World world = TestStalls.PlacedWorld(_town, out CartSpot spot);
+            Cart cart = world.Carts.All[0];
+            TestGrids.StepUntil(world, () => cart.Spot != null, 3000, "la charrette appelée");
+            Assert.AreEqual(CartState.AtHome, cart.State, "On vient la chercher : elle est encore rangée.");
+            var refused = new List<PlaceResult>();
+            world.Place.PlaceRefused += refused.Add;
+
+            TestTown.Send(world, new RemoveCartSpotCommand(spot.Id));
+            CollectionAssert.AreEqual(new[] { PlaceResult.CartBusy }, refused, "Sa charrette arrive.");
+            Assert.AreSame(spot, world.Carts.Spots[0], "Elle garde sa place.");
+            TestGrids.StepUntil(world, () => cart.State == CartState.Parked, 3000, "la charrette garée");
         }
 
         [Test]

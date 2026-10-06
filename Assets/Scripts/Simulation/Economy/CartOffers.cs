@@ -50,7 +50,7 @@ namespace Diciela.Simulation.Economy
                 Cart cart = NearestAtHome(spot.Position, island);
                 if (cart == null)
                     return false;
-                Vector2Int stand = _grid.CellOf(spot.StandAt(cart.Definition.PullMeters));
+                Vector2Int stand = _grid.CellOf(spot.StandFor(cart));
                 if (!_reach.IsReachable(stand, island))
                     continue;
                 _carts.Call(spot, cart);
