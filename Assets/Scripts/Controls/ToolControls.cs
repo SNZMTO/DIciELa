@@ -8,9 +8,9 @@ namespace Diciela.Controls
     /// Les gestes des outils (GDD, section 16 ; décisions 168 et 184) : tenir la touche de la roue l'ouvre autour du
     /// pointeur et la fait suivre où il vise, image après image ; la relâcher choisit. La touche d'un outil le choisit
     /// tout droit : chacun a la sienne, dans la table des outils (ToolAction). Les touches 1 à 9 prennent les cartes du
-    /// panneau Construire ouvert. Les touches se lisent sur l'asset d'actions, d'où la roue et les cartes tirent aussi
-    /// leurs noms. Il lit les actions et parle à la roue et aux cartes, rien d'autre ; il passe après la caméra (ordre
-    /// 100), comme les autres gestes.
+    /// panneau Construire ouvert, ou les modes de l'outil de la Place en main (décision 206 : l'interface aiguille). Les
+    /// touches se lisent sur l'asset d'actions, d'où la roue et les cartes tirent aussi leurs noms. Il lit les actions et
+    /// parle à la roue et aux cartes, rien d'autre ; il passe après la caméra (ordre 100), comme les autres gestes.
     /// </summary>
     [DefaultExecutionOrder(100)]
     public sealed class ToolControls : MonoBehaviour, IToolKeys

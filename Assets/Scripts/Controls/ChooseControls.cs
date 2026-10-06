@@ -8,7 +8,8 @@ namespace Diciela.Controls
     /// Le geste « toucher » (ARCHITECTURE, section 11) : un clic gauche sur la ville, quand aucun outil n'est en main,
     /// touche ce qu'on voit sous le pointeur. Un clic qui commence sur l'interface lui appartient, et un glisser n'est pas
     /// un clic (SAVOIR, 2.8). Il lit les actions et appelle l'outil « choisir », rien d'autre ; un outil en main (poser,
-    /// retirer : la main le dit), le clic gauche est à lui. Il passe après la caméra (ordre 100) : il vise avec la vue de l'image qu'on va voir.
+    /// retirer, déplacer, tracer la Place : la main le dit), le clic gauche est à lui. Il passe après la caméra (ordre
+    /// 100) : il vise avec la vue de l'image qu'on va voir.
     /// </summary>
     [DefaultExecutionOrder(100)]
     public sealed class ChooseControls : MonoBehaviour

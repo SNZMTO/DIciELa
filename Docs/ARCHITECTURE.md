@@ -346,6 +346,7 @@ code.
 | outil Déplacer ; outil qui vise | `MoveTool` ; `IAimingTool` | lâcher (un outil) | `PutDown` | défaite ; en déplacement | `StructureTakenDown` ; `StructureState.Moving` |
 | les places de charrette de la Place | `PlaceMarks` | outil de la Place ; ses modes ; sa surface ; son geste | `PlaceTool` ; `PlaceToolMode` ; `PlaceCanvas` ; `PlaceDrawing` | la bulle des raisons ; les touches des cartes | `ReasonBubble` ; `CardKeys` |
 | la touche qui tourne | `RotateKey` | un calque posé sur le sol ; son maillage | `GroundOverlay` ; `DrapedMesh` | la Place en ville (sa barre, ses gestes, sa zone) | `TownPlace` |
+| viser le sol ; le fantôme qui suit le pointeur | `GroundAim` ; `GhostAim` | | | | |
 
 ## 10. La carte, les scènes et la sauvegarde
 
@@ -406,11 +407,13 @@ code.
   ce qui l'a reçu disparaît aussitôt (la roue qu'on congédie), et à l'outil qui était en main à l'enfoncement : l'outil
   pris pendant l'appui n'en fait rien ; clic ou glisser se décide au relâchement (SAVOIR 2.8). Sans outil en main, un clic gauche touche la construction dont le
   modèle est sous le pointeur : la vue dit laquelle (SAVOIR 2.7), l'outil « choisir » en fait un ordre. Un outil en
-  main (`IHeldTool` : poser, retirer, déplacer) prend le clic gauche ; un seul à la fois : la main (`Hand`) lâche tout à
-  fait les autres (`PutDown`) quand on en prend un, par n'importe quel chemin, et le geste « toucher » y lit si un outil
-  est en main. Les outils qui visent le sol et se posent d'un clic (`IAimingTool` : poser, déplacer) sont pilotés par les
-  mêmes gestes (`PlacementControls`) ; l'outil Déplacer (`MoveTool`) touche une construction par la même visée que
-  « choisir », puis son fantôme suit le pointeur dans l'aperçu de la pose. La roue des
+  main (`IHeldTool` : poser, retirer, déplacer, tracer la Place) prend le clic gauche ; un seul à la fois : la main
+  (`Hand`) lâche tout à fait les autres (`PutDown`) quand on en prend un, par n'importe quel chemin, et le geste
+  « toucher » y lit si un outil est en main. Les outils qui visent le sol et se posent d'un clic (`IAimingTool` : poser,
+  déplacer) sont pilotés par les mêmes gestes (`PlacementControls`) et partagent le fantôme qui suit le pointeur
+  (`GhostAim`) ; l'outil Déplacer (`MoveTool`) touche une construction par la même visée que « choisir », puis son
+  fantôme suit le pointeur dans l'aperçu de la pose. Viser le sol est une seule fonction (`GroundAim`), pour la pose,
+  Déplacer et la Place. La roue des
   outils les prend : Retirer en main, ou Construire, qui ouvre le panneau Construire, dont une carte met la
   construction en main ; ses gestes (`ToolControls` : la touche de la roue tenue, celle de chaque outil) ne la
   connaissent que par `IToolWheel`, et elle lit leurs touches par `IToolKeys`. Ses outils sont décrits par deux
