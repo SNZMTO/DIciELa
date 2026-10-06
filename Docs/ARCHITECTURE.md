@@ -240,7 +240,8 @@ sauvegardé.
   transmission, plantations. Un seul système de pinceau (SAVOIR 2.6) : on garde le trait découpé, jamais le geste. Une
   forme peinte (`GroundShape` : un trait, un disque, un rectangle) couvre les mailles dont le milieu est en elle.
 - La Place, la première (décisions 204 et 205) : ses mailles sont sa vérité ; ses règles, une seule fonction par ordre,
-  lue par l'ordre et par l'aperçu (`PlaceChecks`).
+  lue par l'ordre et par l'aperçu (`PlaceChecks`), qui y lit aussi les mailles qu'une forme changerait ; ses places de
+  charrette, les marques qu'elle tient (`PlaceMarks`).
 - Une emprise a une sorte (une fiche), une forme et un état (en chantier, bâti) ; une route pas encore bâtie
   n'accélère personne. On ne pose ni ne trace rien sur une plantation : on l'efface d'abord.
 - Les champs se déduisent des plantations qui se touchent ; un champ prend l'identité de sa plus ancienne plantation.
@@ -343,6 +344,8 @@ code.
 | déplacer (une construction) ; son sol | `MoveStructureCommand`, `StructureMoves` ; `StructureGround` | déplacée ; déplacement refusé | `StructureMoved` ; `MoveRefused` |
 | consigne (d'une place de charrette) ; sa ligne | `Consigne` ; `ConsigneLine`, `ConsigneMode` | garnir ; l'étal | `TaskWork.Stock`, `StockGesture` ; `Stalls`, `StallOffers` | ce qu'on porte pour l'étal | `StallDelivery` |
 | outil Déplacer ; outil qui vise | `MoveTool` ; `IAimingTool` | lâcher (un outil) | `PutDown` | défaite ; en déplacement | `StructureTakenDown` ; `StructureState.Moving` |
+| les places de charrette de la Place | `PlaceMarks` | outil de la Place ; ses modes ; sa surface ; son geste | `PlaceTool` ; `PlaceToolMode` ; `PlaceCanvas` ; `PlaceDrawing` | la bulle des raisons ; les touches des cartes | `ReasonBubble` ; `CardKeys` |
+| la touche qui tourne | `RotateKey` | un calque posé sur le sol ; son maillage | `GroundOverlay` ; `DrapedMesh` | la Place en ville (sa barre, ses gestes, sa zone) | `TownPlace` |
 
 ## 10. La carte, les scènes et la sauvegarde
 
@@ -417,6 +420,19 @@ code.
   vise un arbre par la boîte de son modèle et marque ce que contient le cadre qu'on tire, que l'interface dessine
   (`ISelectionFrame`). Un panneau ouvert rend la ville muette ; les conteneurs plein écran de l'interface ne captent pas le pointeur. Les gestes ne
   connaissent pas l'interface : elle leur dit seulement où elle est (`IInterfaceArea`), et `Game` les relie.
+- **L'outil de la Place** (décision 206) est un outil en main de plus (`PlaceTool`), pris à la carte de la Place, que
+  le panneau Construire met en tête de la famille que nomme la fiche de la Place (`BuildBarCards`). Il tient son mode
+  (`PlaceToolMode`), la taille de son pinceau et le cap d'une place de charrette ; il travaille sur sa surface
+  (`PlaceCanvas`) : le geste en cours (`PlaceDrawing` : un trait, un disque, un rectangle), ce que la Place répond à ce
+  qu'il vise, par la même fonction que l'ordre, montré par l'aperçu (`PlaceAim`), et les ordres qui en partent
+  (`PlaceOrders`). Ses gestes (`PlaceControls`, leur carte d'actions) glissent, cliquent, tournent par la touche de la
+  pose (`RotateKey`, que la pose partage) et changent la taille du pinceau à Ctrl + molette, que la caméra laisse alors.
+  Les touches des cartes passent par un aiguillage (`CardKeys`) : le panneau ouvert, ses cartes ; sinon, les modes de
+  l'outil de la Place. La vue montre la zone (`PlaceZoneView`) et l'aperçu de l'outil (`PlaceToolPreview`) en calques
+  posés sur le relief (`GroundOverlay`, `DrapedMesh` : un seul maillage par calque, refait quand la Place change) ;
+  l'interface, sa barre (`PlaceBar`, `PlaceBarPresenter`) ; la raison d'un refus, de la pose comme de la Place, passe
+  par une seule bulle (`ReasonBubble`), où parle le dernier qui a quelque chose à dire. `Game` relie la barre, les
+  gestes et la zone, qui ne se voit qu'en mode construction (`TownPlace`).
 - **L'ouverture d'une partie** : la scène du démarrage (`GameStage`) montre le monde (constructions, habitants) et ouvre
   l'écran de création dans l'atelier (`Atelier` : un décor généré loin de la carte, sa lumière, sa caméra) ; l'aperçu
   (`AppearancePreview`) s'y tient sur le socle, et les gestes de l'atelier (`PreviewControls`, leur propre carte

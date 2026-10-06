@@ -474,6 +474,12 @@
   plus cozy, chacun par un petit chantier. La zone ne se voit qu'en mode construction, comme les fantômes.
 - **Règle.** La Place se trace avec des outils : à main levée, guidée, des formes toutes faites, et d'autres qui la
   retouchent (arrondir les angles…), comme le marché de Manor Lords se trace et comme Planet Zoo façonne ses formes.
+  Aujourd'hui : le pinceau (à main levée ; un clic, un rond), la gomme, le cercle (appui au milieu, on tire le rayon),
+  le rectangle (d'un coin à l'autre, ses côtés tournés comme la caméra, au cran de rotation), et la place de charrette.
+- **Règle.** Une forme se trace d'un geste et part au relâchement. Pendant le geste, son aperçu montre ce qu'elle
+  ajouterait ou retirerait, vert si elle se trace, rouge sinon, et la raison s'écrit, comme à la pose ; une forme rouge
+  ne part pas. Un clic droit ou Échap abandonnent le geste en cours ; sans geste, ils lâchent l'outil.
+- **Défaut.** Le pinceau et la gomme : 2 m de rayon au départ, de 0,5 à 6 m, par crans de 0,5 (Ctrl + molette).
 - **Défaut.** Sa superficie est au plus de 450 m² au départ, et de 150 m² de plus par niveau. Trois niveaux ; chacun
   ajoute une place de charrette, du charme et un visiteur par jour. Au départ, une seule zone, d'un seul tenant ;
   plusieurs, plus tard, avec les niveaux.
@@ -498,6 +504,8 @@
 - **Défaut.** Une place de charrette a la taille de la plus grande charrette du pack (5,8 × 2,8 m) et tient tout
   entière dans la Place, sans en chevaucher une autre ; on la tourne comme une construction à la pose (R). La charrette
   s'y gare l'avant au bord avant de la marque. Un timon de 2,2 m.
+- **Règle.** L'outil de la Place en mode « place de charrette » : un cadre blanc suit le pointeur, sa pointe vers
+  l'avant de la charrette ; un clic le pose ; un clic sur une place posée la retire (la bulle le dit au survol).
 - **Règle.** Retirer une place de charrette emporte sa consigne ; sa charrette, garée et vide, rentre chez elle. Une
   charrette en route, ou qui porte des marchandises, garde sa place : on la vide d'abord.
 - **Défaut.** Deux places de charrette, une pour les habitants et une pour le troc, et une de plus par niveau : cinq au
@@ -755,7 +763,20 @@
   pastel ne reste libre.
 - **Règle.** Les outils de la Place se prennent à sa carte, la première des Métiers, où travailleront ses marchands :
   la prendre met en main les outils de la zone et de ses places de charrette. L'onglet des Métiers paraît donc dès le
-  campement installé, et les idées des premiers habitants y ajoutent leurs cartes.
+  campement installé, et les idées des premiers habitants y ajoutent leurs cartes. Faute de modèle, sa carte montre
+  une icône.
+- **Règle.** L'outil de la Place en main, une barre étroite s'ouvre en bas au centre, à la place du panneau
+  Construire : ses modes (pinceau, gomme, cercle, rectangle, place de charrette), chacun son icône et sa touche, celui
+  qui est pris enfoncé, son nom et son usage au survol ; dessous, dans des creux de lin, la superficie de la Place sur
+  celle de son niveau (« 312 / 450 m² »), ses places de charrette posées sur celles qu'elle permet, et la taille du
+  pinceau. Les touches des cartes prennent les modes tant que le panneau est fermé. Elle tient entre l'astuce et
+  l'icône des outils dès 1280 × 720.
+- **Défaut.** Les modes de l'outil de la Place : les touches 1 à 5, dans l'ordre de la barre. La taille du pinceau :
+  Ctrl + molette (la molette seule zoome).
+- **Règle.** La zone de la Place et ses places de charrette se voient en mode construction : le panneau Construire
+  ouvert, ou en main une construction, l'outil de la Place ou Déplacer. La zone : un voile léger sur le sol et son
+  contour ; une place de charrette : un cadre blanc, une pointe vers l'avant de la charrette.
+- **À toi.** Les icônes de la Place (sa carte, ses cinq modes), pour l'instant des remplaçants simples.
 - **À toi.** L'icône des Métiers : en attendant, celle de « bâtir ». Les autres questions ouvertes du HUD. Ma reco :
   le bandeau de brique montre les animaux du pack.
 

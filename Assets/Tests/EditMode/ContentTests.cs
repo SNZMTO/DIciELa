@@ -87,7 +87,8 @@ namespace Diciela.Tests.EditMode
                 TextKeys.SheetFreeSlot, TextKeys.SheetSleep, TextKeys.SheetWake,
                 TextKeys.StockTooltip, TextKeys.TipCamp, TextKeys.TipPost, TextKeys.TipCabin, TextKeys.BuildTool,
                 TextKeys.BuildToolDetail, TextKeys.ClearingTool, TextKeys.ClearingToolDetail, TextKeys.ToolsTooltip,
-                TextKeys.ToolsTooltipDetail, TextKeys.CardBeds
+                TextKeys.ToolsTooltipDetail, TextKeys.CardBeds, TextKeys.PlaceArea, TextKeys.PlaceMarks,
+                TextKeys.PlaceBrushSize, TextKeys.PlaceRemoveMark, catalog.Place.NameKey
             });
             foreach (DayPhase phase in Enum.GetValues(typeof(DayPhase)))
             {
@@ -99,6 +100,11 @@ namespace Diciela.Tests.EditMode
             {
                 if (result != PlacementResult.Ok)
                     keys.Add(TextKeys.PlacementRefusal(result.ToString()));
+            }
+            foreach (PlaceResult result in Enum.GetValues(typeof(PlaceResult)))
+            {
+                if (result != PlaceResult.Ok)
+                    keys.Add(TextKeys.PlaceRefusal(result.ToString()));
             }
 
             var faults = new List<string>();

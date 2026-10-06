@@ -37,9 +37,8 @@ namespace Diciela.Controls
         private InputAction _secondary;
         private InputAction _pointer;
         private InputAction _look;
-        private CursorGrip _rotateGrip;
+        private RotateKey _rotateKey;
         private DragGesture _placeGesture;
-        private DragGesture _rotateGesture;
         private DragGesture _secondaryGesture;
 
         /// <summary>L'outil de pose que ces gestes pilotent ; null tant qu'aucun monde n'est né.</summary>
@@ -103,9 +102,8 @@ namespace Diciela.Controls
             if (held == null)
             {
                 // Un appui commencé avant de prendre une carte ne la pose pas, même relâché la carte en main.
-                _rotateGrip.Release();
+                _rotateKey.Reset(_rotate.IsPressed());
                 _placeGesture = DragGesture.HeldElsewhere(_place.IsPressed());
-                _rotateGesture = DragGesture.HeldElsewhere(_rotate.IsPressed());
                 _secondaryGesture = DragGesture.HeldElsewhere(_secondary.IsPressed());
                 return;
             }
@@ -114,24 +112,14 @@ namespace Diciela.Controls
             float threshold = _gestures.DragThresholdPixels;
             bool onInterface = _interfaceArea != null && _interfaceArea.Contains(pointer);
 
-            // R : bref, un cran au relâchement ; tenu en bougeant la souris, au degré, le curseur tenu et la visée attendant.
-            bool gripWasHeld = _rotateGrip.IsHeld;
-            bool rotateStarts = _rotateGesture.Update(_rotate.IsPressed(), pointer, threshold, false);
-            if (_rotateGesture.IsDragging)
-            {
-                float turn = rotateStarts ? _rotateGesture.Delta.x : _look.ReadValue<Vector2>().x;
-                _rotateGrip.Hold(_rotateGesture.Start);
-                held.RotateBy(turn * _settings.RotationDegreesPerPixel);
-            }
-            else
-            {
-                _rotateGrip.Release();
-                if (_rotateGesture.Clicked)
-                    held.RotateStep();
-            }
-            // Le curseur rendu n'est à sa place qu'à l'image suivante : on ne vise pas avec l'ancienne position.
-            bool justReleased = gripWasHeld && !_rotateGrip.IsHeld;
-            if (!_rotate.IsPressed() && !justReleased)
+            // R : bref, un cran ; tenu en bougeant la souris, au degré, la visée attendant (RotateKey).
+            bool canAim = _rotateKey.Update(_rotate.IsPressed(), pointer, _look.ReadValue<Vector2>(), threshold,
+                out float turnPixels, out bool step);
+            if (turnPixels != 0f)
+                held.RotateBy(turnPixels * _settings.RotationDegreesPerPixel);
+            if (step)
+                held.RotateStep();
+            if (canAim)
             {
                 if (onInterface)
                     held.LoseAim();
@@ -150,9 +138,8 @@ namespace Diciela.Controls
 
         private void ResetGestures()
         {
-            _rotateGrip.Release();
+            _rotateKey.Reset(false);
             _placeGesture = default;
-            _rotateGesture = default;
             _secondaryGesture = default;
         }
     }

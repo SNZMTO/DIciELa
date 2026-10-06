@@ -7,6 +7,9 @@ namespace Diciela.Data
     public static class TextKeys
     {
         private const string PlacementRefusalPrefix = "pose.refus.";
+        private const string PlaceRefusalPrefix = "place.refus.";
+        private const string PlaceModePrefix = "place.outil.";
+        private const string PlaceModeDetailPrefix = "place.outil.suite.";
         private const string DayPhasePrefix = "journee.";
         private const string DayNextPrefix = "journee.suite.";
         private const string DayNotePrefix = "journee.note.";
@@ -54,6 +57,35 @@ namespace Diciela.Data
         // La journée, en haut à gauche (GDD, section 16) : son numéro ({jour} y est remplacé).
         public const string DayNumber = "journee.jour";
         public const string DayNumberParameter = "{jour}";
+
+        // L'outil de la Place (décision 206) : ce que sa barre écrit ({superficie}, {max}, {marques}, {taille} y sont
+        // remplacés), et ce que dit la bulle quand un clic retirerait une place de charrette.
+        public const string PlaceArea = "place.superficie";
+        public const string AreaParameter = "{superficie}";
+        public const string MaxParameter = "{max}";
+        public const string PlaceMarks = "place.marques";
+        public const string MarksParameter = "{marques}";
+        public const string PlaceBrushSize = "place.taille";
+        public const string SizeParameter = "{taille}";
+        public const string PlaceRemoveMark = "place.retirer_marque";
+
+        /// <summary>La clé du nom d'un mode de l'outil de la Place, d'après son nom (Brush → place.outil.Brush).</summary>
+        public static string PlaceMode(string modeName)
+        {
+            return PlaceModePrefix + modeName;
+        }
+
+        /// <summary>La clé de l'usage d'un mode de l'outil de la Place (Brush → place.outil.suite.Brush).</summary>
+        public static string PlaceModeDetail(string modeName)
+        {
+            return PlaceModeDetailPrefix + modeName;
+        }
+
+        /// <summary>La clé de la raison d'un refus sur la Place, d'après son nom (TooLarge → place.refus.TooLarge).</summary>
+        public static string PlaceRefusal(string reasonName)
+        {
+            return PlaceRefusalPrefix + reasonName;
+        }
 
         /// <summary>La clé de la raison d'un refus de pose, d'après son nom (OutsideMap → pose.refus.OutsideMap).</summary>
         public static string PlacementRefusal(string reasonName)

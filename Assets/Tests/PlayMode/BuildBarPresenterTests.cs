@@ -8,7 +8,8 @@ namespace Diciela.Tests.PlayMode
     /// <summary>
     /// Le présentateur du panneau Construire, sur le petit monde des tests et une vue qui note ce qu'on lui montre et joue
     /// les choix du joueur. Un catalogue de deux familles (Logement : la cabane, qui offre deux lits ; Décor : un banc),
-    /// une table des textes écrite ici. Le panneau s'ouvre à la demande et se ferme quand on prend une carte (décision 168).
+    /// une table des textes écrite ici. Ce qu'il montre et ce qu'une carte met en main ; qu'il s'ouvre et se ferme, et ses
+    /// touches : BuildBarPanelTests.
     /// </summary>
     public sealed class BuildBarPresenterTests
     {
@@ -44,8 +45,8 @@ namespace Diciela.Tests.PlayMode
             TestWorld.FillList(catalog, "_families", housing, decor);
 #endif
             _view = new NotedBuildBarView();
-            _presenter = new BuildBarPresenter(_view, catalog, TextTable.Parse(Texts, "fr"), _test.Tool, _test.World,
-                new FixedToolKeys());
+            _presenter = new BuildBarPresenter(_view, catalog, TextTable.Parse(Texts, "fr"), _test.Tool, _test.Place,
+                _test.World, new FixedToolKeys());
         }
 
         [TearDown]
@@ -122,41 +123,6 @@ namespace Diciela.Tests.PlayMode
         }
 
         [Test]
-        public void ThePanelStartsClosedAndOpensOnDemand()
-        {
-            Assert.IsFalse(_presenter.IsOpen);
-            Assert.IsFalse(_view.IsShownOpen, "Au repos, le panneau est fermé : le bas de l'écran reste à la ville.");
-
-            _presenter.Open();
-            Assert.IsTrue(_view.IsShownOpen);
-
-            _presenter.Close();
-            Assert.IsFalse(_view.IsShownOpen);
-        }
-
-        [Test]
-        public void TakingACardClosesThePanel()
-        {
-            _presenter.Open();
-
-            _view.Choose(0);
-
-            Assert.AreSame(_test.Cabin, _test.Tool.Current, "La carte prise est en main.");
-            Assert.IsFalse(_view.IsShownOpen, "Le panneau se ferme pour dégager la vue pendant la pose.");
-        }
-
-        [Test]
-        public void EscapeClosesThePanelOnlyWhenItIsOpen()
-        {
-            Assert.IsFalse(_presenter.Escape(), "Fermé, le panneau laisse Échap au cran suivant.");
-
-            _presenter.Open();
-
-            Assert.IsTrue(_presenter.Escape());
-            Assert.IsFalse(_view.IsShownOpen);
-        }
-
-        [Test]
         public void EachCardCarriesItsKey()
         {
             Assert.AreEqual(new[] { "1" }, _view.Keys, "La cabane, première carte du Logement : la touche 1.");
@@ -172,21 +138,6 @@ namespace Diciela.Tests.PlayMode
 
             _view.Open(1);
             Assert.AreEqual(new[] { "" }, _view.Beds, "Le banc n'en offre pas : sa carte n'en dit rien.");
-        }
-
-        [Test]
-        public void AKeyTakesItsCardOnlyWhenThePanelIsOpen()
-        {
-            _presenter.TakeCard(0);
-            Assert.IsNull(_test.Tool.Current, "Panneau fermé, la touche ne prend rien.");
-
-            _presenter.Open();
-            _presenter.TakeCard(1);
-            Assert.IsNull(_test.Tool.Current, "Pas de deuxième carte au Logement.");
-
-            _presenter.TakeCard(0);
-            Assert.AreSame(_test.Cabin, _test.Tool.Current, "La touche 1 prend la cabane, comme un clic.");
-            Assert.IsFalse(_view.IsShownOpen, "Et le panneau se ferme.");
         }
 
         [Test]

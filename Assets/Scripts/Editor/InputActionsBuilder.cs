@@ -1,19 +1,19 @@
-using System;
 using System.IO;
 using Diciela.Controls;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static Diciela.EditorTools.InputActionAdds;
 using Object = UnityEngine.Object;
 
 namespace Diciela.EditorTools
 {
     /// <summary>
     /// L'asset d'actions du jeu (ARCHITECTURE, section 11) : il le crée s'il manque, lui ajoute les actions qui lui
-    /// manquent, et retire celui du modèle Unity, qu'il remplace. Une action qui existe n'est pas touchée (ses liaisons
-    /// se règlent dans la fenêtre de l'Input System), sauf la position du pointeur, lue telle quelle (voir plus bas).
-    /// Les touches sont liées à leur position sur un clavier
-    /// QWERTY : ZQSD tombe juste en AZERTY, et la rotation (Q/E en QWERTY) tombe sur A/E.
+    /// manquent (InputActionAdds), et retire celui du modèle Unity, qu'il remplace. Une action qui existe n'est pas
+    /// touchée (ses liaisons se règlent dans la fenêtre de l'Input System), sauf la position du pointeur, lue telle
+    /// quelle. Les touches sont liées à leur position sur un clavier QWERTY : ZQSD tombe juste en AZERTY, et la rotation
+    /// (Q/E en QWERTY) tombe sur A/E.
     /// </summary>
     internal static class InputActionsBuilder
     {
@@ -38,70 +38,71 @@ namespace Diciela.EditorTools
             InputActionAsset asset = exists
                 ? InputActionAsset.FromJson(File.ReadAllText(ActionsPath))
                 : ScriptableObject.CreateInstance<InputActionAsset>();
-            InputActionMap camera = asset.FindActionMap(CameraControls.MapName) ??
-                                    asset.AddActionMap(CameraControls.MapName);
-            int added = AddIfMissing(camera, CameraControls.MoveAction, AddMove) +
-                        AddIfMissing(camera, CameraControls.RotateAction, m => AddTurn(m, CameraControls.RotateAction)) +
-                        AddIfMissing(camera, CameraControls.ZoomAction, AddZoom) +
-                        AddButtonIfMissing(camera, CameraControls.DragAction, "<Mouse>/rightButton") +
-                        AddButtonIfMissing(camera, CameraControls.OrbitAction, "<Mouse>/middleButton") +
-                        AddPointerIfMissing(camera, CameraControls.PointerAction) +
-                        AddLookIfMissing(camera, CameraControls.LookAction);
+
+            // La caméra ; Ctrl tenu, la molette est à l'outil en main (décision 206).
+            InputActionMap camera = Map(asset, CameraControls.MapName);
+            int added = Move(camera) + Turn(camera, CameraControls.RotateAction) +
+                        Scroll(camera, CameraControls.ZoomAction) +
+                        Button(camera, CameraControls.DragAction, "<Mouse>/rightButton") +
+                        Button(camera, CameraControls.OrbitAction, "<Mouse>/middleButton") +
+                        Pointer(camera, CameraControls.PointerAction) + Look(camera, CameraControls.LookAction) +
+                        Button(camera, CameraControls.ToolModifierAction, "<Keyboard>/ctrl");
 
             // La pose : R, un raccourci mnémonique, se lie au caractère (SAVOIR, section 3).
-            InputActionMap placement = asset.FindActionMap(PlacementControls.MapName) ??
-                                       asset.AddActionMap(PlacementControls.MapName);
-            added += AddButtonIfMissing(placement, PlacementControls.PlaceAction, "<Mouse>/leftButton") +
-                     AddButtonIfMissing(placement, PlacementControls.RotateAction, "<Keyboard>/#(r)") +
-                     AddButtonIfMissing(placement, PlacementControls.SecondaryAction, "<Mouse>/rightButton") +
-                     AddPointerIfMissing(placement, PlacementControls.PointerAction) +
-                     AddLookIfMissing(placement, PlacementControls.LookAction);
+            InputActionMap placement = Map(asset, PlacementControls.MapName);
+            added += Button(placement, PlacementControls.PlaceAction, "<Mouse>/leftButton") +
+                     Button(placement, PlacementControls.RotateAction, "<Keyboard>/#(r)") +
+                     Button(placement, PlacementControls.SecondaryAction, "<Mouse>/rightButton") +
+                     Pointer(placement, PlacementControls.PointerAction) +
+                     Look(placement, PlacementControls.LookAction);
+
+            // L'outil de la Place (décision 206) : tracer au clic gauche, glissé ; R comme à la pose ; Ctrl + molette, la
+            // taille du pinceau ; le clic droit bref abandonne le geste ou pose l'outil de côté.
+            InputActionMap place = Map(asset, PlaceControls.MapName);
+            added += Button(place, PlaceControls.PaintAction, "<Mouse>/leftButton") +
+                     Button(place, PlaceControls.RotateAction, "<Keyboard>/#(r)") +
+                     CtrlScroll(place, PlaceControls.SizeAction) +
+                     Button(place, PlaceControls.SecondaryAction, "<Mouse>/rightButton") +
+                     Pointer(place, PlaceControls.PointerAction) + Look(place, PlaceControls.LookAction);
 
             // Échap a son geste à lui, une pile (décision 152).
-            InputActionMap escape = asset.FindActionMap(EscapeControls.MapName) ??
-                                    asset.AddActionMap(EscapeControls.MapName);
-            added += AddButtonIfMissing(escape, EscapeControls.BackAction, "<Keyboard>/escape");
+            added += Button(Map(asset, EscapeControls.MapName), EscapeControls.BackAction, "<Keyboard>/escape");
 
             // Toucher ce qu'on voit : le clic gauche, quand aucun outil n'est en main.
-            InputActionMap choose = asset.FindActionMap(ChooseControls.MapName) ??
-                                    asset.AddActionMap(ChooseControls.MapName);
-            added += AddButtonIfMissing(choose, ChooseControls.TouchAction, "<Mouse>/leftButton") +
-                     AddPointerIfMissing(choose, ChooseControls.PointerAction);
+            InputActionMap choose = Map(asset, ChooseControls.MapName);
+            added += Button(choose, ChooseControls.TouchAction, "<Mouse>/leftButton") +
+                     Pointer(choose, ChooseControls.PointerAction);
 
             // Marquer des arbres, l'outil « Retirer » en main : le clic gauche, le glisser et le pointeur ; le clic droit
             // bref le pose de côté.
-            InputActionMap clearing = asset.FindActionMap(ClearingControls.MapName) ??
-                                      asset.AddActionMap(ClearingControls.MapName);
-            added += AddButtonIfMissing(clearing, ClearingControls.MarkAction, "<Mouse>/leftButton") +
-                     AddButtonIfMissing(clearing, ClearingControls.SecondaryAction, "<Mouse>/rightButton") +
-                     AddPointerIfMissing(clearing, ClearingControls.PointerAction);
+            InputActionMap clearing = Map(asset, ClearingControls.MapName);
+            added += Button(clearing, ClearingControls.MarkAction, "<Mouse>/leftButton") +
+                     Button(clearing, ClearingControls.SecondaryAction, "<Mouse>/rightButton") +
+                     Pointer(clearing, ClearingControls.PointerAction);
 
             // Les outils (décision 168) : la roue, touche tenue (Tab, comme les roues d'armes sur PC) ; un raccourci
             // mnémonique par outil, lié au caractère (SAVOIR, section 3), lu dans la table des outils.
-            InputActionMap tools = asset.FindActionMap(ToolControls.MapName) ??
-                                   asset.AddActionMap(ToolControls.MapName);
-            added += AddButtonIfMissing(tools, ToolControls.WheelAction, "<Keyboard>/tab");
+            InputActionMap tools = Map(asset, ToolControls.MapName);
+            added += Button(tools, ToolControls.WheelAction, "<Keyboard>/tab");
             foreach (ToolAction tool in ToolAction.All)
-                added += AddButtonIfMissing(tools, tool.Name, tool.DefaultBinding);
-            // Les cartes du panneau Construire ouvert (décision 184) : les touches 1 à 9, liées à leur place sur la rangée
-            // des chiffres, qu'on atteint sans Maj en AZERTY aussi.
+                added += Button(tools, tool.Name, tool.DefaultBinding);
+            // Les cartes du panneau Construire ouvert (décision 184), et les modes de l'outil de la Place en main
+            // (décision 206) : les touches 1 à 9, liées à leur place sur la rangée des chiffres, qu'on atteint sans Maj
+            // en AZERTY aussi.
             for (int i = 0; i < ToolControls.CardKeys; i++)
-                added += AddButtonIfMissing(tools, ToolControls.CardAction(i), "<Keyboard>/" + (i + 1));
-            added += AddPointerIfMissing(tools, ToolControls.PointerAction);
+                added += Button(tools, ToolControls.CardAction(i), "<Keyboard>/" + (i + 1));
+            added += Pointer(tools, ToolControls.PointerAction);
 
             // Valider ce que l'interface propose : Entrée, celle du pavé numérique comprise.
-            InputActionMap confirm = asset.FindActionMap(ConfirmControls.MapName) ??
-                                     asset.AddActionMap(ConfirmControls.MapName);
-            added += AddIfMissing(confirm, ConfirmControls.ConfirmAction, m =>
+            added += IfMissing(Map(asset, ConfirmControls.MapName), ConfirmControls.ConfirmAction, m =>
                 m.AddAction(ConfirmControls.ConfirmAction, InputActionType.Button, "<Keyboard>/enter")
                     .AddBinding("<Keyboard>/numpadEnter"));
 
             // Faire tourner la Chimère à l'atelier : les touches qui tournent la caméra en ville, le clic gauche glissé.
-            InputActionMap preview = asset.FindActionMap(PreviewControls.MapName) ??
-                                     asset.AddActionMap(PreviewControls.MapName);
-            added += AddIfMissing(preview, PreviewControls.TurnAction, m => AddTurn(m, PreviewControls.TurnAction)) +
-                     AddButtonIfMissing(preview, PreviewControls.GrabAction, "<Mouse>/leftButton") +
-                     AddPointerIfMissing(preview, PreviewControls.PointerAction);
+            InputActionMap preview = Map(asset, PreviewControls.MapName);
+            added += Turn(preview, PreviewControls.TurnAction) +
+                     Button(preview, PreviewControls.GrabAction, "<Mouse>/leftButton") +
+                     Pointer(preview, PreviewControls.PointerAction);
 
             if (added > 0)
             {
@@ -111,67 +112,6 @@ namespace Diciela.EditorTools
                 Debug.Log("DICIELA : " + added + " action(s) ajoutée(s) ou mise(s) à jour dans " + ActionsPath + ".");
             }
             Object.DestroyImmediate(asset);
-        }
-
-        private static int AddIfMissing(InputActionMap map, string actionName, Action<InputActionMap> add)
-        {
-            if (map.FindAction(actionName) != null)
-                return 0;
-            add(map);
-            return 1;
-        }
-
-        private static void AddMove(InputActionMap map)
-        {
-            InputAction move = map.AddAction(CameraControls.MoveAction, InputActionType.Value);
-            move.expectedControlType = "Vector2";
-            move.AddCompositeBinding("2DVector")
-                .With("Up", "<Keyboard>/w").With("Down", "<Keyboard>/s")
-                .With("Left", "<Keyboard>/a").With("Right", "<Keyboard>/d");
-            move.AddCompositeBinding("2DVector")
-                .With("Up", "<Keyboard>/upArrow").With("Down", "<Keyboard>/downArrow")
-                .With("Left", "<Keyboard>/leftArrow").With("Right", "<Keyboard>/rightArrow");
-        }
-
-        // Un axe sur les touches Q et E, liées à leur position : A et E en AZERTY (SAVOIR, section 3).
-        private static void AddTurn(InputActionMap map, string actionName)
-        {
-            InputAction rotate = map.AddAction(actionName, InputActionType.Value);
-            rotate.expectedControlType = "Axis";
-            rotate.AddCompositeBinding("1DAxis").With("Negative", "<Keyboard>/q").With("Positive", "<Keyboard>/e");
-        }
-
-        private static void AddZoom(InputActionMap map)
-        {
-            InputAction zoom = map.AddAction(CameraControls.ZoomAction, InputActionType.Value, "<Mouse>/scroll/y");
-            zoom.expectedControlType = "Axis";
-        }
-
-        private static int AddButtonIfMissing(InputActionMap map, string actionName, string binding)
-        {
-            return AddIfMissing(map, actionName, m => m.AddAction(actionName, InputActionType.Button, binding));
-        }
-
-        /// <summary>
-        /// La position du pointeur ; chaque carte a la sienne, pour vivre sans les autres. Elle se lit telle quelle
-        /// (PassThrough) : une action « Value » départagerait la souris, le stylet et le doigt par leur grandeur, et
-        /// pourrait rester sur la dernière position d'un doigt. Une ancienne action « Value » est remplacée.
-        /// </summary>
-        private static int AddPointerIfMissing(InputActionMap map, string actionName)
-        {
-            InputAction existing = map.FindAction(actionName);
-            if (existing != null && existing.type == InputActionType.PassThrough)
-                return 0;
-            existing?.RemoveAction();
-            map.AddAction(actionName, InputActionType.PassThrough, "<Pointer>/position").expectedControlType = "Vector2";
-            return 1;
-        }
-
-        /// <summary>Le déplacement du pointeur à chaque image, qui continue quand le curseur est tenu (CursorGrip).</summary>
-        private static int AddLookIfMissing(InputActionMap map, string actionName)
-        {
-            return AddIfMissing(map, actionName, m =>
-                m.AddAction(actionName, InputActionType.PassThrough, "<Pointer>/delta").expectedControlType = "Vector2");
         }
 
         private static void RemoveTemplateActions()

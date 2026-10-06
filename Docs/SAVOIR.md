@@ -215,7 +215,11 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   ce qu'il recouvre entièrement ; un coup qui n'ajoute rien ne s'ajoute pas ; une gomme ne se garde que là où elle
   efface encore. Gribouiller au même endroit ne fait pas grossir la sauvegarde.
 - **L'index est par segment**, pas par coup : le sol interroge le champ des centaines de milliers de fois.
-- **La gomme efface au fil du geste**, morceau par morceau, jamais tout le trait à chaque image.
+- **La gomme efface au fil du geste**, morceau par morceau, jamais tout le trait à chaque image. Sauf pour une forme
+  qui se refuse en entier (la Place, décision 205) : là, une forme est un ordre, envoyé au relâchement, et l'aperçu
+  revérifie toute la forme pendant le geste, seulement quand elle change (un point de plus, une demi-maille de plus).
+- **Un trait cherche ses mailles segment par segment**, chacun dans sa boîte, une maille comptée une fois : la boîte de
+  tout le trait, parcourue pour chaque segment, coûte des millions de calculs à un trait sinueux de quelques mètres.
 
 ### 2.7 La visée
 
@@ -274,6 +278,11 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   en main se posait). L'interface retient donc l'image où un de ses éléments a pris un appui (`HudArea`, à l'écoute de
   sa racine en descendant) et dit cet appui à elle, même l'élément disparu. Les gestes lus en `Update` (la caméra)
   passent avant la distribution, et voient encore l'élément.
+- **La molette a deux maîtres** : seule, elle zoome ; Ctrl tenu, elle va à l'outil en main (la taille du pinceau). La
+  caméra lit Ctrl par une action à elle et laisse alors la molette ; l'outil lit une liaison « OneModifier » (Ctrl +
+  molette). Les crochets de Planet Zoo demandent AltGr en AZERTY.
+- **En bas au centre, à 1280 × 720, il reste environ 400 px** entre l'astuce (416 px, en bas à gauche) et l'icône des
+  outils : une barre qui s'y ouvre se mesure par un test à toutes les tailles d'écran (`PlaceBarLayoutTests`).
 - **Au lancement, le pointeur vaut (0 ; 0) tant qu'il n'est pas entré dans la vue** : un coin, et le défilement au
   bord ferait filer la vue toute seule. Il ne s'arme qu'une fois le pointeur passé loin des bords ; perdre le focus
   le désarme (`EdgeScroll`).

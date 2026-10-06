@@ -177,3 +177,28 @@ outil.deplacer,Déplacer,Move
 outil.deplacer.suite,"Clique sur une construction, puis pose‑la ailleurs ; R la tourne, clic droit la repose.","Click a building, then place it elsewhere; R turns it, right click puts it back."
 outils.infobulle,Outils,Tools
 outils.infobulle.suite,"Ou tiens {touche} : la roue s'ouvre sous le pointeur.","Or hold {touche}: the wheel opens under the pointer."
+place.nom,Place,Square
+place.outil.Brush,Pinceau,Brush
+place.outil.Eraser,Gomme,Eraser
+place.outil.Disc,Cercle,Circle
+place.outil.Box,Rectangle,Rectangle
+place.outil.CartSpot,Place de charrette,Cart spot
+place.outil.suite.Brush,"Glisse pour peindre la Place ; Ctrl + molette change la taille.","Drag to paint the Square; Ctrl + wheel changes the size."
+place.outil.suite.Eraser,"Glisse pour gommer la Place ; Ctrl + molette change la taille.","Drag to erase the Square; Ctrl + wheel changes the size."
+place.outil.suite.Disc,"Appuie au centre, puis glisse jusqu'au bord.","Press at the center, then drag to the edge."
+place.outil.suite.Box,Glisse d'un coin à l'autre.,Drag from one corner to the other.
+place.outil.suite.CartSpot,"Clique pour poser une place de charrette, R la tourne ; clique une place pour la retirer.","Click to place a cart spot, R turns it; click a spot to remove it."
+place.superficie,{superficie} / {max} m²,{superficie} / {max} m²
+place.marques,{marques} / {max},{marques} / {max}
+place.taille,Ø {taille} m,Ø {taille} m
+place.retirer_marque,Clique pour retirer cette place de charrette,Click to remove this cart spot
+place.refus.Nothing,Rien ne change ici,Nothing changes here
+place.refus.TooLarge,"La Place dépasserait sa superficie : gomme ailleurs d'abord","The Square would exceed its area: erase elsewhere first"
+place.refus.NotOnePiece,La Place doit rester d'un seul tenant,The Square must stay in one piece
+place.refus.MarkInTheWay,"Une place de charrette est dessous : retire-la d'abord","A cart spot is underneath: remove it first"
+place.refus.OutsideThePlace,La place de charrette doit tenir dans la Place,The cart spot must fit inside the Square
+place.refus.MarksOverlap,Elle chevauche une autre place de charrette,It overlaps another cart spot
+place.refus.TooManyMarks,Toutes les places de charrette sont posées,All cart spots are placed
+place.refus.NoRoomToPark,"Devant elle, on ne peut pas se tenir pour la garer",There is no room in front of it to park
+place.refus.UnknownMark,Cette place de charrette n'existe plus,This cart spot no longer exists
+place.refus.CartBusy,"Sa charrette arrive, ou porte encore des marchandises","Its cart is coming, or still carries goods"
