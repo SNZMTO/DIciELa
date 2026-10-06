@@ -15,30 +15,32 @@ namespace Diciela.Simulation.Economy
     /// </summary>
     public sealed class Stalls
     {
-        private readonly Carts _carts;
         private readonly Warehouses _warehouses;
         private readonly Dictionary<(Cart, GoodDefinition), int> _incoming = new Dictionary<(Cart, GoodDefinition), int>();
         private readonly List<CartSpot> _changed = new List<CartSpot>();
 
-        public Stalls(Carts carts, Warehouses warehouses)
+        public Stalls(Warehouses warehouses)
         {
-            _carts = carts ?? throw new ArgumentNullException(nameof(carts));
             _warehouses = warehouses ?? throw new ArgumentNullException(nameof(warehouses));
         }
 
         /// <summary>Levé quand la consigne d'une place de charrette change ; une fois par pas au plus.</summary>
         public event Action<CartSpot> ConsigneChanged;
 
-        /// <summary>La place de charrette de ce rang sur la Place de ce numéro ; null s'il n'y en a pas.</summary>
-        public CartSpot SpotOf(int placeId, int index)
+        /// <summary>
+        /// Vrai si cette charrette porte des marchandises, ou si l'on en porte vers elle ou depuis elle : on ne retire pas
+        /// sa place de charrette avant qu'elle soit vide et que plus rien ne soit en route (décision 205).
+        /// </summary>
+        public bool IsBusy(Cart cart)
         {
-            IReadOnlyList<CartSpot> spots = _carts.Spots;
-            for (int i = 0; i < spots.Count; i++)
+            if (cart.Stock.Total > 0 || cart.Stock.SpaceReserved > 0)
+                return true;
+            foreach ((Cart Cart, GoodDefinition Good) key in _incoming.Keys)
             {
-                if (spots[i].Place.Id == placeId && spots[i].Index == index)
-                    return spots[i];
+                if (ReferenceEquals(key.Cart, cart))
+                    return true;
             }
-            return null;
+            return false;
         }
 
         /// <summary>Ce qu'on apporte déjà de cette marchandise à cette charrette.</summary>

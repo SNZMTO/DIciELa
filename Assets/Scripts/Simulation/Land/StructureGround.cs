@@ -23,8 +23,7 @@ namespace Diciela.Simulation.Land
         /// <summary>La construction prend son sol à cette place : ses mailles, et le devant de sa porte.</summary>
         public void Take(Structure structure, Placement placement)
         {
-            _grid.SetOccupant(PlacementRules.Footprint(structure.Definition, placement), structure.Id,
-                structure.Definition.IsWalkable);
+            _grid.SetOccupant(PlacementRules.Footprint(structure.Definition, placement), structure.Id);
             if (structure.Definition.HasDoor)
                 _doorways.Add(_rules.Doorway(structure.Definition, placement));
         }
@@ -35,8 +34,7 @@ namespace Diciela.Simulation.Land
         /// </summary>
         public void Cover(Structure structure, Placement placement)
         {
-            _grid.SetOccupant(PlacementRules.Footprint(structure.Definition, placement), structure.Id,
-                structure.Definition.IsWalkable);
+            _grid.SetOccupant(PlacementRules.Footprint(structure.Definition, placement), structure.Id);
         }
 
         /// <summary>La construction rend son sol à cette place : les mailles qu'elle y tient, et le devant de sa porte.</summary>

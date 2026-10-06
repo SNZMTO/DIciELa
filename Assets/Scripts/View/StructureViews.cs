@@ -13,8 +13,8 @@ namespace Diciela.View
     /// d'être bâtie, une construction est un chantier qui monte (GDD, section 9 ; décision 166) : sa vraie matière sous
     /// une ligne qui suit le travail fait, son fantôme au-dessus ; bâtie, le modèle tel quel. Déplacée, elle montre sa
     /// nouvelle place en fantôme, se défait, saute, puis se remonte (décision 201) : chaque moment refait sa vue
-    /// (StructureView). Un sol qu'on traverse, comme la Place, épouse le relief (FloorDrape). On touche une construction
-    /// en visant son modèle, pas le sol : vu de biais, le toit d'une maison cache le sol derrière elle.
+    /// (StructureView). On touche une construction en visant son modèle, pas le sol : vu de biais, le toit d'une maison
+    /// cache le sol derrière elle.
     /// </summary>
     public sealed class StructureViews : MonoBehaviour
     {

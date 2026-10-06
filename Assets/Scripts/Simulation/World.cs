@@ -31,6 +31,7 @@ namespace Diciela.Simulation
             Map = map;
             Grid = new NavGrid(map.Relief, new GridMetrics(settings.CellsPerMeter));
             Nature = new Nature(Grid, map.Nature);
+            Place = new PlaceZone(Grid, catalog.Place, catalog.Cart);
             Islands = new Islands(Grid);
             PathFinder = new PathFinder(Grid, Islands);
             Knowledge = new Knowledge(catalog.Opening);
@@ -42,8 +43,8 @@ namespace Diciela.Simulation
             var reach = new Reach(Grid, Islands, surroundings);
             var offers = new TaskOffers(Warehouses, ConstructionSites, reach, settings);
             Clearings = new ClearingOffers(Nature, Warehouses, reach);
-            Carts = new Carts(catalog.Cart, Structures);
-            Stalls = new Stalls(Carts, Warehouses);
+            Carts = new Carts(catalog.Cart, Place);
+            Stalls = new Stalls(Warehouses);
             WorkSlots = new WorkSlots();
             Housing = new Housing(Structures, Structures.Rules);
             Villagers = new Villagers(Grid, Islands, PathFinder, Clock, surroundings, offers, Clearings,
@@ -79,6 +80,9 @@ namespace Diciela.Simulation
         /// <summary>Les arbres et les rochers de la carte : ceux qui restent, ceux que le joueur a marqués.</summary>
         public Nature Nature { get; }
 
+        /// <summary>La Place : la zone que le joueur trace, et les places de charrette qu'il y pose.</summary>
+        public PlaceZone Place { get; }
+
         /// <summary>Les arbres et les rochers à retirer, comme tâches à prendre, et le travail déjà fait sur eux.</summary>
         public ClearingOffers Clearings { get; }
 
@@ -88,7 +92,7 @@ namespace Diciela.Simulation
         /// <summary>Ce qui tient les marchandises de la ville : le campement, puis les entrepôts.</summary>
         public Warehouses Warehouses { get; }
 
-        /// <summary>Les charrettes de l'étal, et les places de la Place qui les appellent.</summary>
+        /// <summary>Les charrettes de l'étal, et les places de charrette de la Place qui les appellent.</summary>
         public Carts Carts { get; }
 
         /// <summary>L'étal : la consigne de chaque place de charrette, et ce qu'elle demande à sa charrette.</summary>
@@ -161,6 +165,7 @@ namespace Diciela.Simulation
             Knowledge.DeliverEvents();
             Structures.DeliverEvents();
             Nature.DeliverEvents();
+            Place.DeliverEvents();
             Warehouses.DeliverEvents();
             Carts.DeliverEvents();
             Stalls.DeliverEvents();

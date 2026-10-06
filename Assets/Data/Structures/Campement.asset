@@ -25,7 +25,6 @@ MonoBehaviour:
   _unique: 1
   _chimeraHome: 1
   _builtWhenPlaced: 1
-  _walkable: 0
   _cost: []
   _workHours: 0
   _workSlots:
@@ -33,7 +32,6 @@ MonoBehaviour:
   _storageCapacity: 100
   _beds: 0
   _carts: 1
-  _cartSpots: 0
   _sourceModel: {fileID: 9071609515276711932, guid: 5d4eb190ab7f5e74cad04a93f40dbf4b, type: 3}
   _model: {fileID: 7260408593367818035, guid: 34c8205f80806744b96df438f24efd48, type: 3}
   _picture: {fileID: 2800000, guid: 809a7121aa89d9a4b812edef696900c3, type: 3}

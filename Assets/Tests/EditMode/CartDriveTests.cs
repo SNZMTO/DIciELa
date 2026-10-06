@@ -11,24 +11,21 @@ using UnityEngine;
 namespace Diciela.Tests.EditMode
 {
     /// <summary>
-    /// Les charrettes qui accourent (GDD, section 11 ; décisions 194 et 197), par le chemin du joueur : le campement garde
-    /// sa charrette ; la Place, posée en (20 ; 26), 12 × 12 m, dressée dès la pose, a deux places de charrette ; la
-    /// Chimère, au poste « à tout faire » (porter, conduire, bâtir, défricher), va prendre la charrette au campement,
-    /// l'attelle, la tire au bout de son timon de 2,2 m, moitié moins vite qu'à pied, et la gare à la première place.
+    /// Les charrettes qui accourent (GDD, section 11 ; décisions 194, 197 et 204), par le chemin du joueur : le campement
+    /// garde sa charrette ; la Place, un disque de 7 m de rayon tracé en (20 ; 26), a deux places de charrette, deux
+    /// marques côte à côte, l'avant au nord ; la Chimère, au poste « à tout faire » (porter, conduire, bâtir, défricher), va
+    /// prendre la charrette au campement, l'attelle, la tire au bout de son timon de 2,2 m, moitié moins vite qu'à pied, et
+    /// la gare à la première place.
     /// </summary>
     public sealed class CartDriveTests
     {
         private TestTown _town;
-        private StructureDefinition _place;
 
         [SetUp]
         public void CreateTown()
         {
             _town = new TestTown();
-            TestData.Carts(_town.Camp, 1, 0);
-            _place = _town.KeepKnown(TestData.Floor("place", 12f, 12f));
-            TestData.Carts(_place, 0, 2);
-            TestData.BuiltWhenPlaced(_place);
+            TestData.Carts(_town.Camp, 1);
         }
 
         [TearDown]
@@ -49,7 +46,7 @@ namespace Diciela.Tests.EditMode
             Assert.AreSame(TestTown.CampOf(world), added[0].Home);
             Assert.AreEqual(CartState.AtHome, added[0].State, "Rangée chez elle : on ne la voit pas.");
             Assert.IsNull(added[0].Spot, "Aucune place ne l'appelle.");
-            Assert.IsEmpty(world.Carts.Spots, "Sans Place, pas de place de charrette.");
+            Assert.IsEmpty(world.Carts.Spots, "Sans marque sur la Place, pas de place de charrette.");
         }
 
         [Test]
@@ -58,8 +55,8 @@ namespace Diciela.Tests.EditMode
             World world = _town.WorkingWorld();
             var changes = new List<CartState>();
             world.Carts.CartChanged += cart => changes.Add(cart.State);
-            Structure place = TestTown.Place(world, _place, 20f, 26f);
-            Assert.AreEqual(2, world.Carts.Spots.Count, "La Place offre deux places de charrette.");
+            TraceThePlace(world);
+            Assert.AreEqual(2, world.Carts.Spots.Count, "Deux marques, deux places de charrette.");
             Cart cart = world.Carts.All[0];
 
             TestGrids.StepUntil(world, () => cart.State == CartState.Parked, 3000, "la charrette garée");
@@ -69,7 +66,7 @@ namespace Diciela.Tests.EditMode
             Assert.IsNull(world.Carts.CartAt(world.Carts.Spots[1]), "Une seule charrette : la seconde place attend.");
             Assert.AreEqual(spot.Position, cart.Position, "Garée à sa place.");
             Assert.AreEqual(spot.HeadingDegrees, cart.HeadingDegrees, 1e-3f, "Tournée comme le dit sa place.");
-            Assert.Less(Vector2.Distance(cart.Position, place.Placement.Center), 6f, "Sur la Place.");
+            Assert.IsTrue(world.Place.Contains(world.Grid.CellOf(cart.Position)), "Sur la Place.");
             CollectionAssert.AreEqual(new[] { CartState.Pulled, CartState.Parked }, changes,
                 "Attelée, puis garée : la vue l'apprend par ses événements.");
         }
@@ -78,7 +75,7 @@ namespace Diciela.Tests.EditMode
         public void TheCartFollowsItsCarterAtTheEndOfItsShaft()
         {
             World world = _town.WorkingWorld();
-            TestTown.Place(world, _place, 20f, 26f);
+            TraceThePlace(world);
             Cart cart = world.Carts.All[0];
             Villager chimera = world.Villagers.Chimera;
 
@@ -105,7 +102,7 @@ namespace Diciela.Tests.EditMode
         public void PullingACartHalvesTheCartersPace()
         {
             World world = _town.WorkingWorld();
-            TestTown.Place(world, _place, 20f, 26f);
+            TraceThePlace(world);
             Cart cart = world.Carts.All[0];
             Villager chimera = world.Villagers.Chimera;
 
@@ -129,7 +126,7 @@ namespace Diciela.Tests.EditMode
         public void StoppedOnTheWayTheCartGoesHomeAndItsSpotCallsItAgain()
         {
             World world = _town.WorkingWorld();
-            TestTown.Place(world, _place, 20f, 26f);
+            TraceThePlace(world);
             Cart cart = world.Carts.All[0];
             Villager chimera = world.Villagers.Chimera;
             Structure camp = TestTown.CampOf(world);
@@ -146,6 +143,14 @@ namespace Diciela.Tests.EditMode
             TestTown.Send(world, new AssignVillagerCommand(chimera.Id, camp.Id));
             TestGrids.StepUntil(world, () => cart.State == CartState.Parked, 3000, "la charrette garée");
             Assert.AreSame(world.Carts.Spots[0], cart.Spot, "Sa place l'a rappelée, et elle y est garée.");
+        }
+
+        // La Place, un disque de 7 m de rayon en (20 ; 26), et ses deux places de charrette, côte à côte, l'avant au nord.
+        private static void TraceThePlace(World world)
+        {
+            TestTown.Send(world, new PaintPlaceCommand(new GroundDisc(new Vector2(20f, 26f), 7f)));
+            TestTown.Send(world, new AddCartSpotCommand(new Vector2(18f, 26f), 0f));
+            TestTown.Send(world, new AddCartSpotCommand(new Vector2(23f, 26f), 0f));
         }
     }
 }

@@ -1,13 +1,15 @@
 using System.Collections.Generic;
 using Diciela.Data;
 using NUnit.Framework;
+using UnityEngine;
 
 namespace Diciela.Tests.EditMode
 {
     /// <summary>
-    /// Les charrettes de l'étal du projet (GDD, sections 7 et 11 ; décisions 194 et 197), lues sans rien écrire : la
-    /// charrette du catalogue, ses modèles du pack ; chaque construction qui tient des marchandises garde la sienne, et la
-    /// Place a des places de charrette ; dans chaque poste, conduire vient juste après porter.
+    /// Les charrettes de l'étal du projet (GDD, sections 7 et 11 ; décisions 194, 197 et 204), lues sans rien écrire : la
+    /// charrette du catalogue, ses modèles du pack, qui tiennent chacun dans une place de charrette, la plus grande la
+    /// remplissant ; chaque construction qui tient des marchandises garde la sienne, et la Place a des places de
+    /// charrette ; dans chaque poste, conduire vient juste après porter.
     /// </summary>
     public sealed class CartContentTests
     {
@@ -21,17 +23,45 @@ namespace Diciela.Tests.EditMode
             CollectionAssert.AllItemsAreUnique(catalog.Cart.Models, "Un modèle de la charrette y est deux fois.");
 
             var faults = new List<string>();
-            int spots = 0;
             foreach (StructureDefinition structure in catalog.AllStructures())
             {
                 int expected = structure.StorageCapacity > 0 ? 1 : 0;
                 if (structure.Carts != expected)
                     faults.Add(structure.Id + " garde " + structure.Carts + " charrette(s) ; chaque entrepôt, le campement " +
                                "compris, a la sienne, et rien d'autre.");
-                spots += structure.CartSpots;
             }
             Assert.IsEmpty(faults, string.Join("\n", faults));
-            Assert.Greater(spots, 0, "Aucune construction n'a de place de charrette : la Place doit en avoir.");
+            Assert.IsNotNull(catalog.Place, "Le catalogue n'a pas de Place.");
+            Assert.Greater(catalog.Place.CartSpotsAt(0), 0, "La Place n'a pas de place de charrette au départ.");
+        }
+
+        [Test]
+        public void EachCartModelFitsInACartSpotAndTheLargestFillsIt()
+        {
+            // Le modèle tel que le pack le pose, l'avant vers +z : sa longueur en z, sa largeur en x.
+            CartDefinition cart = ProjectContent.LoadSingle<Catalog>().Cart;
+            float longest = 0f, widest = 0f;
+            foreach (GameObject model in cart.Models)
+            {
+                GameObject shown = Object.Instantiate(model);
+                try
+                {
+                    Renderer[] renderers = shown.GetComponentsInChildren<Renderer>();
+                    Bounds box = renderers[0].bounds;
+                    for (int i = 1; i < renderers.Length; i++)
+                        box.Encapsulate(renderers[i].bounds);
+                    Assert.LessOrEqual(box.size.z, cart.SpotLengthMeters + 0.05f, model.name + " déborde de sa place.");
+                    Assert.LessOrEqual(box.size.x, cart.SpotWidthMeters + 0.05f, model.name + " déborde de sa place.");
+                    longest = Mathf.Max(longest, box.size.z);
+                    widest = Mathf.Max(widest, box.size.x);
+                }
+                finally
+                {
+                    Object.DestroyImmediate(shown);
+                }
+            }
+            Assert.Greater(longest, cart.SpotLengthMeters - 0.2f, "La place a la longueur de la plus grande charrette.");
+            Assert.Greater(widest, cart.SpotWidthMeters - 0.2f, "La place a la largeur de la plus grande charrette.");
         }
 
         [Test]

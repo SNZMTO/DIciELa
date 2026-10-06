@@ -3,7 +3,6 @@ famille.logement,Logement,Housing
 construction.campement,Campement,Camp
 construction.cabane,Cabane,Cabin
 famille.metiers,Métiers,Trades
-construction.place,Place,Square
 construction.loge,Loge des bâtisseurs,Builders' lodge
 construction.entrepot,Entrepôt,Warehouse
 pose.refus.OutsideMap,Hors de la carte,Outside the map
@@ -15,6 +14,7 @@ pose.refus.AlreadyPlaced,Déjà posée : une seule par ville,Already placed: one
 pose.refus.NatureInTheWay,Un arbre ou un rocher est dans le chemin : retire-le d'abord,A tree or a rock is in the way: clear it first
 pose.refus.Unknown,Pas encore d'idée pour la bâtir,No idea how to build it yet
 pose.refus.Moving,"Elle se déplace déjà : attends qu'elle soit remontée",It is already moving: wait until it is back up
+pose.refus.OnThePlace,"Sur la Place, on ne bâtit pas : on la pave et on la décore","Nothing is built on the Square: pave it and decorate it"
 corps.chat_a,Chat A,Cat A
 corps.chat_b,Chat B,Cat B
 corps.cochon_a,Cochon A,Pig A

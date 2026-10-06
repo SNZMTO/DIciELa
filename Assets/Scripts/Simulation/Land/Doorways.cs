@@ -7,8 +7,8 @@ namespace Diciela.Simulation.Land
     /// <summary>
     /// Les devants de porte (GDD, section 9) : pour chaque maille du maillage, combien de portes demandent qu'elle reste
     /// dégagée. Ils sont déduits des constructions posées, jamais sauvegardés : les constructions les tiennent à jour, les
-    /// règles de pose les lisent, et n'y posent rien, sauf un sol qu'on traverse (la Place ; décision 192). On y marche
-    /// comme ailleurs : seul le maillage dit où l'on passe.
+    /// règles de pose les lisent, et n'y posent rien ; la Place peut s'y étendre (décision 204). On y marche comme
+    /// ailleurs : seul le maillage dit où l'on passe.
     /// </summary>
     public sealed class Doorways
     {

@@ -25,7 +25,6 @@ MonoBehaviour:
   _unique: 0
   _chimeraHome: 0
   _builtWhenPlaced: 0
-  _walkable: 0
   _cost:
   - _good: {fileID: 11400000, guid: 66ef54aedacec184faa974adebaddff0, type: 2}
     _amount: 10

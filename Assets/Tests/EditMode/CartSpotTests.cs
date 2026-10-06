@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Diciela.Data;
 using Diciela.Simulation;
-using Diciela.Simulation.Core;
 using Diciela.Simulation.Economy;
 using Diciela.Simulation.Land;
 using NUnit.Framework;
@@ -10,24 +9,22 @@ using UnityEngine;
 namespace Diciela.Tests.EditMode
 {
     /// <summary>
-    /// Les places de charrette de la Place (GDD, section 11 ; décisions 194 et 197), par le chemin du joueur : elles
-    /// naissent quand la Place est bâtie, sur un cercle à mi-chemin de son milieu et de son bord ; chacune appelle la
-    /// charrette d'un entrepôt, la plus proche de la Place d'abord. Le banc de CartDriveTests : le campement garde sa
-    /// charrette, la Place de 12 × 12 m se pose en (20 ; 26).
+    /// Les places de charrette (GDD, section 11 ; décisions 197 et 204), par le chemin du joueur : des marques qu'il pose
+    /// sur la Place, à la taille de la plus grande charrette (2,8 × 5,8 m par défaut), tout entières dans la zone, sans se
+    /// chevaucher, deux au plus au départ ; la charrette s'y gare l'avant au bord avant de la marque, son timon (2,2 m)
+    /// tenu au bout. Chacune appelle, dans l'ordre où elle a été posée, la charrette rangée la plus proche. La Place, un
+    /// disque de 7 m de rayon en (20 ; 26) ; le campement, en (20 ; 14), garde sa charrette.
     /// </summary>
     public sealed class CartSpotTests
     {
+        private static readonly Vector2 Center = new Vector2(20f, 26f);
         private TestTown _town;
-        private StructureDefinition _place;
 
         [SetUp]
         public void CreateTown()
         {
             _town = new TestTown();
-            TestData.Carts(_town.Camp, 1, 0);
-            _place = _town.KeepKnown(TestData.Floor("place", 12f, 12f));
-            TestData.Carts(_place, 0, 2);
-            TestData.BuiltWhenPlaced(_place);
+            TestData.Carts(_town.Camp, 1);
         }
 
         [TearDown]
@@ -37,51 +34,57 @@ namespace Diciela.Tests.EditMode
         }
 
         [Test]
-        public void TheSpotsLieAroundTheMiddleOfThePlaceWithoutTouching()
+        public void ASpotIsWhereTheCartWillParkItsFrontAtTheFrontOfTheMark()
         {
-            // Cinq places, le plus qu'aura la Place à son dernier niveau (GDD, section 11). La charrette du pack, 1,6 ×
-            // 3,2 m, tient dans un cercle de 1,8 m de rayon : deux garées à plus de 3,6 m l'une de l'autre ne se touchent
-            // pas, quel que soit leur cap.
-            TestData.Carts(_place, 0, 5);
             World world = _town.WorkingWorld();
-            Structure place = TestTown.Place(world, _place, 20f, 26f);
-            IReadOnlyList<CartSpot> spots = world.Carts.Spots;
+            TestTown.Send(world, new PaintPlaceCommand(new GroundDisc(Center, 7f)));
+            TestTown.Send(world, new AddCartSpotCommand(Center, 0f));
 
-            Assert.AreEqual(5, spots.Count);
-            for (int i = 0; i < spots.Count; i++)
+            Assert.AreEqual(1, world.Carts.Spots.Count, "La marque est une place de charrette.");
+            CartSpot spot = world.Carts.Spots[0];
+            Assert.AreEqual(Center, spot.Mark.Footprint.Center, "La marque est là où le joueur l'a posée.");
+            // L'avant de la charrette au bord avant de la marque (26 + 2,9), son timon de 2,2 m tenu au bout.
+            Assert.AreEqual(20f, spot.Position.x, 1e-4f);
+            Assert.AreEqual(26.7f, spot.Position.y, 1e-4f, "Elle se gare à 0,7 m devant le milieu de la marque.");
+            Assert.AreEqual(0f, spot.HeadingDegrees, 1e-4f, "L'avant au nord, comme la marque.");
+
+            Cart cart = world.Carts.All[0];
+            TestGrids.StepUntil(world, () => cart.State == CartState.Parked, 3000, "la charrette garée");
+            Assert.AreEqual(spot.Position, cart.Position, "Garée à sa place.");
+        }
+
+        [Test]
+        public void ASpotStaysWithinThePlaceAloneAndTwoAtMostAtTheStart()
+        {
+            World world = _town.World();
+            var refused = new List<PlaceResult>();
+            world.Place.PlaceRefused += refused.Add;
+            TestTown.Send(world, new AddCartSpotCommand(Center, 0f));
+            TestTown.Send(world, new PaintPlaceCommand(new GroundDisc(Center, 7f)));
+            // Au nord, elle va jusqu'à 34,4 m : le disque s'arrête à 33 m.
+            TestTown.Send(world, new AddCartSpotCommand(new Vector2(20f, 31.5f), 0f));
+            TestTown.Send(world, new AddCartSpotCommand(new Vector2(18f, 26f), 0f));
+            TestTown.Send(world, new AddCartSpotCommand(new Vector2(19f, 26f), 0f));
+            TestTown.Send(world, new AddCartSpotCommand(new Vector2(23f, 26f), 0f));
+            TestTown.Send(world, new AddCartSpotCommand(new Vector2(20f, 21f), 90f));
+
+            CollectionAssert.AreEqual(new[]
             {
-                Assert.AreSame(place, spots[i].Place);
-                Assert.AreEqual(i, spots[i].Index);
-                Assert.AreEqual(6f * 0.55f, Vector2.Distance(spots[i].Position, place.Placement.Center), 1e-3f,
-                    "Sur un cercle autour du milieu, à 55 % du demi-côté.");
-                float along = Heading.Of(spots[i].Position - place.Placement.Center) + 90f;
-                float off = Mathf.Abs(Mathf.DeltaAngle(spots[i].HeadingDegrees, along));
-                Assert.LessOrEqual(Mathf.Min(off, 180f - off), 10f + 1e-3f,
-                    "Garée le long du cercle, dans un sens ou dans l'autre, de travers de 10° au plus.");
-                Vector2 stand = spots[i].Position + Heading.Direction(spots[i].HeadingDegrees) * 2.2f;
-                Assert.Less(Vector2.Distance(stand, place.Placement.Center), 6f - 0.3f,
-                    "Le charretier la gare en se tenant sur la Place.");
-                for (int j = i + 1; j < spots.Count; j++)
-                {
-                    Assert.Greater(Vector2.Distance(spots[i].Position, spots[j].Position), 3.6f,
-                        "Deux charrettes garées ne se touchent pas.");
-                }
-            }
+                PlaceResult.OutsideThePlace, PlaceResult.OutsideThePlace, PlaceResult.MarksOverlap,
+                PlaceResult.TooManyMarks
+            }, refused, "Sans Place, hors de la Place, sur une autre marque, puis une de trop.");
+            Assert.AreEqual(2, world.Carts.Spots.Count, "Deux places de charrette au départ.");
         }
 
         [Test]
         public void ASecondWarehouseSendsItsCartToTheSecondSpot()
         {
             World world = _town.WorkingWorld();
-            TestTown.Place(world, _place, 20f, 26f);
+            TraceThePlace(world);
             Cart first = world.Carts.All[0];
             TestGrids.StepUntil(world, () => first.State == CartState.Parked, 3000, "la charrette du campement garée");
 
-            StructureDefinition warehouse = _town.KeepKnown(TestData.Structure("entrepot", 6f, 5f));
-            TestData.BuiltWhenPlaced(warehouse);
-            TestData.Storage(warehouse, 200);
-            TestData.Carts(warehouse, 1, 0);
-            Structure built = TestTown.Place(world, warehouse, 8f, 14f);
+            Structure built = TestTown.Place(world, Warehouse(6f, 5f), 8f, 14f);
             Assert.AreEqual(2, world.Carts.All.Count, "L'entrepôt a sa charrette.");
             Cart second = world.Carts.All[1];
             Assert.AreSame(built, second.Home);
@@ -93,17 +96,14 @@ namespace Diciela.Tests.EditMode
         }
 
         [Test]
-        public void TheNearestCartToThePlaceAnswersFirst()
+        public void TheNearestCartToASpotAnswersFirst()
         {
-            // L'entrepôt, en (10 ; 26), est plus près de la Place que le campement, en (20 ; 14) : sa charrette répond à
-            // la première place, celle du campement à la seconde.
-            StructureDefinition warehouse = _town.KeepKnown(TestData.Structure("entrepot", 4f, 4f));
-            TestData.BuiltWhenPlaced(warehouse);
-            TestData.Storage(warehouse, 200);
-            TestData.Carts(warehouse, 1, 0);
+            // L'entrepôt, en (8 ; 26), est plus près des places que le campement, en (20 ; 14) : sa charrette répond à la
+            // première place, celle du campement à la seconde.
+            StructureDefinition warehouse = Warehouse(4f, 4f);
             World world = _town.WorkingWorld();
-            Structure near = TestTown.Place(world, warehouse, 10f, 26f);
-            TestTown.Place(world, _place, 20f, 26f);
+            Structure near = TestTown.Place(world, warehouse, 8f, 26f);
+            TraceThePlace(world);
 
             TestGrids.StepUntil(world, () => world.Carts.All[0].State == CartState.Parked &&
                                              world.Carts.All[1].State == CartState.Parked, 6000, "les deux charrettes garées");
@@ -111,21 +111,22 @@ namespace Diciela.Tests.EditMode
             Assert.AreSame(TestTown.CampOf(world), world.Carts.CartAt(world.Carts.Spots[1]).Home);
         }
 
-        [Test]
-        public void ThePlaceCallsACartOnceItsSiteIsBuilt()
+        // La Place, un disque de 7 m de rayon en (20 ; 26), et ses deux places de charrette, côte à côte, l'avant au nord.
+        private static void TraceThePlace(World world)
         {
-            // Une Place qui demande 5 Bois et 30 min de travail : la Chimère porte, bâtit, puis va chercher la charrette.
-            StructureDefinition plan = _town.KeepKnown(TestData.Floor("place_a_batir", 12f, 12f));
-            TestData.Carts(plan, 0, 2);
-            TestData.Cost(plan, 0.5f, new GoodAmount(_town.Wood, 5));
-            World world = _town.WorkingWorld();
-            Structure site = TestTown.Place(world, plan, 20f, 26f);
-            Assert.IsEmpty(world.Carts.Spots, "Un chantier n'appelle pas de charrette.");
-            Cart cart = world.Carts.All[0];
+            TestTown.Send(world, new PaintPlaceCommand(new GroundDisc(Center, 7f)));
+            TestTown.Send(world, new AddCartSpotCommand(new Vector2(18f, 26f), 0f));
+            TestTown.Send(world, new AddCartSpotCommand(new Vector2(23f, 26f), 0f));
+        }
 
-            TestGrids.StepUntil(world, () => cart.State == CartState.Parked, 6000, "la charrette garée");
-            Assert.AreEqual(StructureState.Built, site.State);
-            Assert.AreSame(world.Carts.Spots[0], cart.Spot);
+        // Un entrepôt de cette taille, dressé dès la pose, qui garde une charrette.
+        private StructureDefinition Warehouse(float width, float depth)
+        {
+            StructureDefinition warehouse = _town.KeepKnown(TestData.Structure("entrepot", width, depth));
+            TestData.BuiltWhenPlaced(warehouse);
+            TestData.Storage(warehouse, 200);
+            TestData.Carts(warehouse, 1);
+            return warehouse;
         }
     }
 }

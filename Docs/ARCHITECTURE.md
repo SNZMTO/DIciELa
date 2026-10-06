@@ -82,13 +82,12 @@ la société, qui voit tout ce qui est en dessous.
   sait bâtir : au départ, ce que dit le déroulé du départ ; puis les idées), au socle parce que les règles de pose le
   lisent comme le panneau Construire, et plus tard les recettes et les décos (décision 185).
 - **Le terrain.** La carte reçue au lancement (section 10) et son état : arbres et rochers retirés, champs sauvages
-  (désigné, récolté, minuterie de repousse). Les emprises peintes (section 8). Les constructions : bâtiments, décos,
-  la Place, la réserve ; les devants de porte, déduits des constructions, que lisent les règles de pose ; le sol que
+  (désigné, récolté, minuterie de repousse). Les emprises peintes (section 8), la Place la première. Les
+  constructions : bâtiments, décos, la réserve ; les devants de porte, déduits des constructions, que lisent les règles de pose ; le sol que
   tient chaque construction (`StructureGround`), pris à la pose, rendu et repris quand elle change de place
   (`StructureMoves`, l'ordre « déplacer », vérifié par les mêmes règles, la construction déplacée ne comptant pas). Le maillage
   (SAVOIR 2.1), avec ses îlots, son A*, la ligne tendue qu'on tire d'un trajet, la sortie d'une construction posée sur
-  un piéton et ses distances par la route, écrits pour lui ; il dit seul où l'on marche (sur un sol qu'on traverse,
-  comme la Place, aussi). L'eau :
+  un piéton et ses distances par la route, écrits pour lui ; il dit seul où l'on marche (sur la Place aussi). L'eau :
   canaux, relief creusé, zones irriguées. La force : réseaux et budget, un moulin bâti consommant qu'il travaille ou
   non.
 - **L'économie.** Les stocks : portes des bâtiments, entrepôts, charrettes de l'étal, charge d'un porteur, panier d'un
@@ -97,11 +96,11 @@ la société, qui voit tout ce qui est en dessous.
   à son départ, décision 178). Les réservations. Les ateliers (recette, avancement). La culture
   des plantations (semis, pousse, graines gardées, récolte). Les chantiers (rang dans la file, livraisons, avancement),
   et le petit chantier d'un bâtiment qu'on déplace : son premier travail le défait (`StructureState.Moving` : il ne sert
-  plus), défait il saute à la place qu'il retenait, remonté il sert de nouveau, sans nouvelle mise en service ; les
-  charrettes suivent une Place déplacée (`Carts` écoute `StructureMoved`, pour ses places de charrette).
+  plus), défait il saute à la place qu'il retenait, remonté il sert de nouveau, sans nouvelle mise en service.
   La production comptée par marchandise. La valeur des marchandises. La publication des tâches à prendre (porter,
-  bâtir, retirer un arbre, conduire une charrette). Les charrettes de l'étal et les places de charrette de la Place
-  (`Carts`, la seule fonction qui change une charrette ; `CartOffers`, les charrettes à conduire). L'étal (`Stalls`) :
+  bâtir, retirer un arbre, conduire une charrette). Les charrettes de l'étal et les places de charrette, une par
+  marque de la Place (`Carts`, la seule fonction qui change une charrette, écoute les marques posées et retirées ;
+  `CartOffers`, les charrettes à conduire). L'étal (`Stalls`) :
   la consigne de chaque place de charrette, ce qu'elle demande à sa charrette, ce qu'on lui apporte déjà ; garnir les
   charrettes garées et en rapporter le surplus, comme tâches à prendre (`StallOffers`, la seule fonction qui change le
   contenu d'une charrette, avec les réservations des deux côtés, comme une livraison).
@@ -124,7 +123,7 @@ la société, qui voit tout ce qui est en dessous.
   pas, chacune avec son idée ; leur installation à leur lieu de travail, quand il est mis en service) ; les opérations qui touchent plusieurs couches, faites par des appels vers le bas dans un ordre
   écrit (poser : le terrain, puis l'économie ouvre un chantier, ou la construction, dressée dès la pose, est mise en
   service ; mettre en service, une seule opération, à la pose ou à la fin du pas où un chantier finit : l'économie
-  ouvre un stock, la société des postes, l'économie des charrettes ou des places de charrette (décision 197), puis le
+  ouvre un stock, la société des postes, l'économie des charrettes (décision 197), puis le
   déroulé du départ la regarde, décisions 179 et 191 : le stock de
   départ pour le premier logis de la Chimère, et le premier habitant dont c'est le lieu de travail y prend un poste ;
   plus tard, la maison de la Chimère qui remplace le campement) ; la capture et la restauration. Le monde reçoit les réglages, la carte et le
@@ -141,7 +140,8 @@ sauvegardé.
 | la carte peinte | reçue au lancement ; seule son empreinte est sauvegardée | le relief creusé, l'eau |
 | arbres et rochers : marqués (dans l'ordre des marques), retirés ; champ sauvage : désigné, récolté, minuterie | le terrain | le maillage |
 | le travail déjà fait sur un arbre ou un rocher marqué ; qui l'a pris | l'économie | — |
-| une charrette de l'étal : son entrepôt, la place qui l'appelle, garée ou non, ce qu'elle porte ; les places de charrette d'une Place, tirées à sa mise en service, et leur consigne | l'économie (`Carts`, `Stalls`) | ce qui manque à une charrette, son surplus |
+| une charrette de l'étal : son entrepôt, la place qui l'appelle, garée ou non, ce qu'elle porte ; la consigne de chaque place de charrette | l'économie (`Carts`, `Stalls`) | ce qui manque à une charrette, son surplus |
+| la Place : ses mailles (ce qui a été peint, découpé sur ce qui l'arrêtait), ses marques (où, à quel cap, dans quel ordre), son niveau | le terrain (`PlaceZone`) | le maillage (ses mailles, qu'on traverse, où rien ne se bâtit) ; les places de charrette |
 | tracés et plantations : forme, sorte, état (en chantier, bâti) | le terrain | les coûts du maillage ; les champs, leur surface, leurs postes |
 | une construction : sorte, place, angle, niveau, état (fantôme, bâtie, en déplacement avec sa place visée, rangée) | le terrain | le maillage et ses îlots ; les devants de porte ; la réserve ; le logis de la Chimère (la construction bâtie que sa fiche dit être son logis) |
 | un chantier : rang dans la file, livraisons déposées, avancement | l'économie | — |
@@ -236,8 +236,11 @@ sauvegardé.
 
 ## 8. Les emprises peintes : tracés et plantations
 
-- Tout ce qui se peint au sol est une emprise du terrain : chemins, routes, ponts, canaux, arbres de transmission,
-  plantations. Un seul système de pinceau (SAVOIR 2.6) : on garde le trait découpé, jamais le geste.
+- Tout ce qui se peint au sol est une emprise du terrain : la Place, chemins, routes, ponts, canaux, arbres de
+  transmission, plantations. Un seul système de pinceau (SAVOIR 2.6) : on garde le trait découpé, jamais le geste. Une
+  forme peinte (`GroundShape` : un trait, un disque, un rectangle) couvre les mailles dont le milieu est en elle.
+- La Place, la première (décisions 204 et 205) : ses mailles sont sa vérité ; ses règles, une seule fonction par ordre,
+  lue par l'ordre et par l'aperçu (`PlaceChecks`).
 - Une emprise a une sorte (une fiche), une forme et un état (en chantier, bâti) ; une route pas encore bâtie
   n'accélère personne. On ne pose ni ne trace rien sur une plantation : on l'efface d'abord.
 - Les champs se déduisent des plantations qui se touchent ; un champ prend l'identité de sa plus ancienne plantation.
@@ -333,10 +336,10 @@ code.
 | premier habitant | `FirstVillagerDefinition` | personnage du pack (tel quel) | `CharacterDefinition` | sorte des habitants ordinaires | `Catalog.VillagerKind` |
 | le nom d'un habitant (sa clé) | `NameKey` | ouvrir un poste pour lui | `WorkSlots.OpenFor` | un poste sur la fiche d'un lieu | `PlaceSheetSlot` |
 | apprendre (une idée) ; appris | `Knowledge.Learn` ; `Learned` | lieu de travail (d'un premier habitant) | `Workplace` | les onglets du panneau | `BuildBarTabs` |
-| fermer un poste | `WorkSlots.Close` | s'installer à son lieu de travail | `Opening.Settle` | un sol qu'on traverse (la Place) | `IsWalkable` |
-| devants de porte | `Doorways` | épouser le relief (un sol) | `FloorDrape` | dallage (d'une composition) | `FloorMesh`, `PackComposition.Floor` |
-| bordure de la Place | `PlaceBorder` | poser par le milieu de sa boîte | `Piece.Centered` | encombrement ; places libres ; ce qui tient encore | `GoodDefinition.Space` ; `FreeSpace` ; `RoomFor` |
-| charrettes de l'étal ; à conduire ; vues | `Carts` ; `CartOffers` ; `CartViews` | conduire ; atteler ; tirer ; garer | `Drive` ; `Hitch` ; `Pull` ; `Park` | cap (au sol) ; où se garent les charrettes | `Heading` ; `CartSpotLayout` |
+| fermer un poste | `WorkSlots.Close` | s'installer à son lieu de travail | `Opening.Settle` | la Place (la zone) ; ses règles | `PlaceZone` ; `PlaceChecks` |
+| devants de porte | `Doorways` | une forme peinte (trait, disque, rectangle) | `GroundShape` (`GroundStroke`, `GroundDisc`, `GroundBox`) | une marque (place de charrette) | `PlaceMark` |
+| peindre ; gommer la Place | `PaintPlaceCommand` ; `ErasePlaceCommand` | poser par le milieu de sa boîte | `Piece.Centered` | encombrement ; places libres ; ce qui tient encore | `GoodDefinition.Space` ; `FreeSpace` ; `RoomFor` |
+| charrettes de l'étal ; à conduire ; vues | `Carts` ; `CartOffers` ; `CartViews` | conduire ; atteler ; tirer ; garer | `Drive` ; `Hitch` ; `Pull` ; `Park` | cap (au sol) ; poser, retirer une place de charrette | `Heading` ; `AddCartSpotCommand`, `RemoveCartSpotCommand` |
 | déplacer (une construction) ; son sol | `MoveStructureCommand`, `StructureMoves` ; `StructureGround` | déplacée ; déplacement refusé | `StructureMoved` ; `MoveRefused` |
 | consigne (d'une place de charrette) ; sa ligne | `Consigne` ; `ConsigneLine`, `ConsigneMode` | garnir ; l'étal | `TaskWork.Stock`, `StockGesture` ; `Stalls`, `StallOffers` | ce qu'on porte pour l'étal | `StallDelivery` |
 | outil Déplacer ; outil qui vise | `MoveTool` ; `IAimingTool` | lâcher (un outil) | `PutDown` | défaite ; en déplacement | `StructureTakenDown` ; `StructureState.Moving` |

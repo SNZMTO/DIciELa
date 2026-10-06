@@ -87,11 +87,11 @@ jamais un bâtiment ni un décor de sa propre initiative ; les choix d'art sont 
   bâchée (toit vert), la 4 a un toit bleu en tonneau ; la 2 (bleue, auvent rouge, la plus grande) et la 3 (ouverte, sous
   un auvent rouge) ont tout d'un étal de marché.
 - **Sols et bordures** : aucun modèle de dallage ; des matières sans modèle, `Floor_Tiles_02` (des dalles beiges,
-  4 × 4 par motif : la Place) et `Floor_Tiles_01` (octogonales, sur le sanctuaire) ; les calques du Terrain (chemin,
-  galets de rivière…). Les dalles posées `SM_Env_Stone_Slab_01` à `05` et les galets `SM_Env_Stepping_Stone_01` à `05`
-  (gris, gris, gris, rouge, beige) font 0,5 à 2,2 m ; les rangées de pierres `SM_Bld_Stone_Edge_01`, `02` et `Half_01`
-  (2,67 m, 2,84 m, 1,35 m) ont leur **origine à un bout**, pas au milieu. La planche
-  `DICIELA/Album/Planche des pièces de la Place` les montre, avec leurs tailles.
+  4 × 4 par motif) et `Floor_Tiles_01` (octogonales, sur le sanctuaire) ; des textures de pavés (`Terrain/Path_01`,
+  bruns ; `Path_02`, moussus, celle du calque du chemin ; `Buildings/Stone_01`, gris) ; les calques du Terrain
+  (chemin, galets de rivière…). Les dalles posées `SM_Env_Stone_Slab_01` à `05` et les galets
+  `SM_Env_Stepping_Stone_01` à `05` (gris, gris, gris, rouge, beige) font 0,5 à 2,2 m ; les rangées de pierres
+  `SM_Bld_Stone_Edge_01`, `02` et `Half_01` (2,67 m, 2,84 m, 1,35 m) ont leur **origine à un bout**, pas au milieu.
 - **Pas de modèle tout fait** pour la tente (le campement est composé d'objets du pack), l'étal, la scierie, le moulin à eau (seulement sa roue), l'atelier de tissu
   (ni métier à tisser ni rouet), la carrière, les échafaudages : le développeur les compose, sinon un remplaçant simple.
 - **Cultures** : des plants de citrouilles (`SM_Env_Pumpkin_Leaves_01`, `02`), des feuillages

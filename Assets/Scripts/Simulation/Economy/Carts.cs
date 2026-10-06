@@ -8,10 +8,11 @@ using UnityEngine;
 namespace Diciela.Simulation.Economy
 {
     /// <summary>
-    /// Les charrettes de l'étal et les places qui les appellent (GDD, section 11 ; décision 194) : chaque construction
-    /// bâtie dont la fiche le dit garde ses charrettes (un entrepôt, le campement : une) ; la Place offre ses places de
-    /// charrette. Chaque charrette prend au hasard l'un des modèles de sa fiche (décision 198). Seule fonction qui change
-    /// une charrette : l'appeler, l'atteler, la tirer, la garer, la renvoyer chez elle. Les événements d'un pas attendent la fin de leur couche (ARCHITECTURE, section 5).
+    /// Les charrettes de l'étal et les places qui les appellent (GDD, section 11 ; décisions 194 et 204) : chaque
+    /// construction bâtie dont la fiche le dit garde ses charrettes (un entrepôt, le campement : une) ; chaque marque que
+    /// le joueur pose sur la Place est une place de charrette. Chaque charrette prend au hasard l'un des modèles de sa
+    /// fiche (décision 198). Seule fonction qui change une charrette : l'appeler, l'atteler, la tirer, la garer, la
+    /// renvoyer chez elle. Les événements d'un pas attendent la fin de leur couche (ARCHITECTURE, section 5).
     /// </summary>
     public sealed class Carts
     {
@@ -27,16 +28,17 @@ namespace Diciela.Simulation.Economy
         private int _nextId = 1;
 
         /// <summary>
-        /// Les charrettes de cette fiche ; sans fiche, aucune construction ne peut en garder ni en appeler. Elles suivent ces
-        /// constructions : une Place déplacée emmène ses places de charrette, et les charrettes qui y sont garées.
+        /// Les charrettes de cette fiche ; sans fiche, aucune construction ne peut en garder. Les places de charrette
+        /// naissent et s'en vont avec les marques de cette Place.
         /// </summary>
-        public Carts(CartDefinition definition, Structures structures)
+        public Carts(CartDefinition definition, PlaceZone place)
         {
-            if (ReferenceEquals(structures, null))
-                throw new ArgumentNullException(nameof(structures));
+            if (ReferenceEquals(place, null))
+                throw new ArgumentNullException(nameof(place));
 
             _definition = definition;
-            structures.StructureMoved += OnStructureMoved;
+            place.MarkPlaced += OnMarkPlaced;
+            place.MarkRemoved += OnMarkRemoved;
         }
 
         /// <summary>Levé quand une charrette naît, rangée à son entrepôt.</summary>
@@ -48,8 +50,19 @@ namespace Diciela.Simulation.Economy
         /// <summary>Les charrettes, dans l'ordre de leur naissance.</summary>
         public IReadOnlyList<Cart> All => _all;
 
-        /// <summary>Les places de charrette, dans l'ordre où elles sont nées, Place par Place.</summary>
+        /// <summary>Les places de charrette, dans l'ordre où leurs marques ont été posées : celui où elles appellent.</summary>
         public IReadOnlyList<CartSpot> Spots => _spots;
+
+        /// <summary>La place de charrette de ce numéro ; null s'il n'y en a pas.</summary>
+        public CartSpot FindSpot(int id)
+        {
+            for (int i = 0; i < _spots.Count; i++)
+            {
+                if (_spots[i].Id == id)
+                    return _spots[i];
+            }
+            return null;
+        }
 
         /// <summary>La charrette qu'a appelée cette place ; null si elle n'en a appelé aucune.</summary>
         public Cart CartAt(CartSpot spot)
@@ -63,18 +76,17 @@ namespace Diciela.Simulation.Economy
         }
 
         /// <summary>
-        /// Une construction est mise en service : bâtie, elle reçoit les charrettes et les places de charrette que dit sa
-        /// fiche. Seule la mise en service du monde l'appelle (Commissioning).
+        /// Une construction est mise en service : bâtie, elle reçoit les charrettes que dit sa fiche. Seule la mise en
+        /// service du monde l'appelle (Commissioning).
         /// </summary>
         internal void Track(Structure structure)
         {
             StructureDefinition definition = structure.Definition;
-            if (structure.State != StructureState.Built || (definition.Carts < 1 && definition.CartSpots < 1) ||
-                _tracked.Contains(structure))
+            if (structure.State != StructureState.Built || definition.Carts < 1 || _tracked.Contains(structure))
                 return;
             if (ReferenceEquals(_definition, null))
                 throw new InvalidOperationException("Le catalogue n'a pas de charrette, et " + definition.Id +
-                                                    " en garde ou en appelle.");
+                                                    " en garde.");
             _tracked.Add(structure);
             for (int i = 0; i < definition.Carts; i++)
             {
@@ -85,8 +97,6 @@ namespace Diciela.Simulation.Economy
                 _all.Add(cart);
                 _added.Add(cart);
             }
-            if (definition.CartSpots > 0)
-                CartSpotLayout.Lay(structure, _definition, _spots);
         }
 
         /// <summary>Le début d'un pas : chaque charrette garde où elle en est, d'où la vue la fera glisser.</summary>
@@ -161,21 +171,21 @@ namespace Diciela.Simulation.Economy
             }
         }
 
-        // Une Place déplacée emmène ses places de charrette, et les charrettes qui y sont garées (décision 200).
-        private void OnStructureMoved(Structure moved)
+        // Une marque posée sur la Place : une place de charrette, qui appellera une charrette (CartOffers).
+        private void OnMarkPlaced(PlaceMark mark)
         {
-            if (moved.Definition.CartSpots < 1 || !_tracked.Contains(moved))
-                return;
-            CartSpotLayout.Relay(moved, _definition, _spots);
-            for (int i = 0; i < _all.Count; i++)
-            {
-                Cart cart = _all[i];
-                if (cart.State == CartState.Parked && ReferenceEquals(cart.Spot.Place, moved))
-                {
-                    cart.Park();
-                    Changed(cart);
-                }
-            }
+            _spots.Add(new CartSpot(mark));
+        }
+
+        // Une marque retirée : sa charrette, que le monde n'a laissé retirer que rangée, ou garée et vide, retourne chez
+        // elle ; la place s'en va avec sa consigne.
+        private void OnMarkRemoved(PlaceMark mark)
+        {
+            CartSpot spot = FindSpot(mark.Id);
+            Cart cart = spot == null ? null : CartAt(spot);
+            if (cart != null)
+                SendHome(cart);
+            _spots.Remove(spot);
         }
 
         private void Changed(Cart cart)
