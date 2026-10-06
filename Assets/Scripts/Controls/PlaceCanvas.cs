@@ -146,10 +146,7 @@ namespace Diciela.Controls
 
         private bool TryGround(Vector2 screenPoint, out Vector2 ground)
         {
-            Ray ray = _camera.ScreenPointToRay(screenPoint);
-            bool hit = _world.Map.Relief.TryRaycast(ray.origin, ray.direction, _camera.farClipPlane, out Vector3 point);
-            ground = new Vector2(point.x, point.z);
-            return hit;
+            return GroundAim.TryGround(_camera, _world.Map.Relief, screenPoint, out ground);
         }
     }
 }

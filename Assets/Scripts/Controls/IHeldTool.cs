@@ -3,9 +3,9 @@ using System;
 namespace Diciela.Controls
 {
     /// <summary>
-    /// Un outil qu'on a en main (poser, retirer, déplacer) : tant qu'il l'est, le clic gauche sur la ville est à lui, pas
-    /// au geste « toucher ». Échap le lâche, ou défait d'abord ce qu'il tient (déplacer) ; la main (Hand) le lâche tout à
-    /// fait quand on en prend un autre.
+    /// Un outil qu'on a en main (poser, retirer, déplacer, tracer la Place) : tant qu'il l'est, le clic gauche sur la
+    /// ville est à lui, pas au geste « toucher ». Échap le lâche, ou défait d'abord ce qu'il tient (le fantôme qu'on
+    /// déplace, le geste en cours de la Place) ; la main (Hand) le lâche tout à fait quand on en prend un autre.
     /// </summary>
     public interface IHeldTool : IEscapable
     {
