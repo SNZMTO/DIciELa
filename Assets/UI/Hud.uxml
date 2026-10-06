@@ -59,6 +59,24 @@
                     <ui:VisualElement name="families" class="onglets" />
                 </ui:VisualElement>
             </Diciela.UI.WoodFrame>
+            <Diciela.UI.WoodFrame name="place-barre" class="barre bloc-cache">
+                <ui:VisualElement class="barre-contenu">
+                    <ui:VisualElement name="place-modes" class="place-modes" />
+                    <ui:VisualElement class="place-valeurs" picking-mode="Ignore">
+                        <Diciela.UI.Facet class="creux pan-4 place-valeur" picking-mode="Ignore">
+                            <ui:VisualElement class="place-valeur-icone place-icone-superficie" picking-mode="Ignore" />
+                            <ui:Label name="place-superficie" class="libelle" picking-mode="Ignore" />
+                        </Diciela.UI.Facet>
+                        <Diciela.UI.Facet class="creux pan-4 place-valeur" picking-mode="Ignore">
+                            <ui:VisualElement class="place-valeur-icone place-icone-cartspot" picking-mode="Ignore" />
+                            <ui:Label name="place-marques" class="libelle" picking-mode="Ignore" />
+                        </Diciela.UI.Facet>
+                        <Diciela.UI.Facet name="place-taille-creux" class="creux pan-4 place-valeur" picking-mode="Ignore">
+                            <ui:Label name="place-taille" class="libelle" picking-mode="Ignore" />
+                        </Diciela.UI.Facet>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </Diciela.UI.WoodFrame>
         </ui:VisualElement>
         <Diciela.UI.FeltButton name="outils" class="feutre sable pan-10 outils bloc-cache">
             <ui:VisualElement class="outils-icone" picking-mode="Ignore" />

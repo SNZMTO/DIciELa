@@ -152,6 +152,76 @@
     -unity-background-scale-mode: scale-and-crop;
 }
 
+/* Une carte sans modèle à photographier (la Place) : son icône, entière, au milieu de la vignette. */
+.carte-vignette-icone {
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+/* La barre de la Place (décision 206), à la place du panneau Construire fermé : ses modes en feutres, chacun son icône
+   et sa touche, son nom et son usage dans l'infobulle ; dessous, la superficie, les places de charrette et la taille du
+   pinceau dans des creux de lin. Étroite et basse, elle tient entre l'astuce et l'icône des outils dès 1280 × 720. */
+.place-modes {
+    flex-direction: row;
+    justify-content: center;
+}
+
+.place-mode {
+    width: 56px;
+    height: 56px;
+    margin: 0 5px;
+    align-items: center;
+    justify-content: center;
+}
+
+.place-mode-icone {
+    width: 32px;
+    height: 32px;
+}
+
+.place-valeurs {
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 12px;
+}
+
+.place-icone-brush {
+    background-image: url("Icones/pinceau.asset");
+}
+
+.place-icone-eraser {
+    background-image: url("Icones/gomme.asset");
+}
+
+.place-icone-disc {
+    background-image: url("Icones/cercle.asset");
+}
+
+.place-icone-box {
+    background-image: url("Icones/rectangle.asset");
+}
+
+.place-icone-cartspot {
+    background-image: url("Icones/place-charrette.asset");
+}
+
+.place-icone-superficie {
+    background-image: url("Icones/place.asset");
+}
+
+.place-valeur {
+    flex-direction: row;
+    align-items: center;
+    height: 40px;
+    margin: 0 4px;
+    padding: 0 8px;
+}
+
+.place-valeur-icone {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+}
+
 .onglet {
     min-width: 188px;
     height: 56px;

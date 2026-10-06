@@ -20,6 +20,7 @@ namespace Diciela.UI
         private const string TabIconClass = "onglet-icone";
         private const string TabNameClass = "action";
         private const string CardPictureClass = "carte-vignette";
+        private const string CardIconClass = "carte-vignette-icone";
         private const string CardTitleClass = "carte-titre";
         private static readonly string[] CardNameClasses = { "t2", "carte-nom" };
         private const string CardBedsClass = "carte-lits";
@@ -49,10 +50,14 @@ namespace Diciela.UI
         public static FeltButton Card(BuildBarCard card, Action clicked)
         {
             FeltButton button = Button(CardClasses, Pastels.ClassOf(card.Pastel) + PaleSuffix, clicked);
-            if (card.Picture != null)
+            // Sa vignette, la photo de son modèle ; sans modèle (la Place), son icône.
+            if (card.Picture != null || card.Icon != null)
             {
                 var picture = Styled.With(new VisualElement { pickingMode = PickingMode.Ignore }, CardPictureClass);
-                picture.style.backgroundImage = new StyleBackground(card.Picture);
+                picture.style.backgroundImage = card.Picture != null
+                    ? new StyleBackground(card.Picture)
+                    : new StyleBackground(Background.FromVectorImage(card.Icon));
+                picture.EnableInClassList(CardIconClass, card.Picture == null);
                 button.Add(picture);
             }
             button.Add(Title(card));

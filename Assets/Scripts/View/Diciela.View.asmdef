@@ -3,9 +3,11 @@
     "rootNamespace": "Diciela.View",
     "references": [
         "Diciela.Data",
+        "Diciela.Simulation.Core",
         "Diciela.Simulation.Land",
         "Diciela.Simulation.Economy",
         "Diciela.Simulation.Society",
+        "Diciela.Simulation",
         "Unity.RenderPipelines.Core.Runtime",
         "Unity.RenderPipelines.Universal.Runtime"
     ],

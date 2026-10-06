@@ -7,9 +7,10 @@ namespace Diciela.Controls
 {
     /// <summary>
     /// Les gestes de la caméra (GDD, section 16) : se déplacer (clavier, bords de l'écran, clic droit glissé qui tire le
-    /// sol), tourner (clavier, ou bouton du milieu glissé, qui incline aussi), zoomer à la molette vers le pointeur. Il lit les actions et
-    /// appelle la caméra ; les touches sont liées à leur position sur le clavier, pour que ZQSD tombe juste en AZERTY
-    /// (SAVOIR, section 3).
+    /// sol), tourner (clavier, ou bouton du milieu glissé, qui incline aussi), zoomer à la molette vers le pointeur,
+    /// sauf Ctrl tenu : la molette est alors à l'outil en main (la taille du pinceau de la Place, décision 206). Il lit
+    /// les actions et appelle la caméra ; les touches sont liées à leur position sur le clavier, pour que ZQSD tombe
+    /// juste en AZERTY (SAVOIR, section 3).
     /// </summary>
     public sealed class CameraControls : MonoBehaviour
     {
@@ -21,6 +22,7 @@ namespace Diciela.Controls
         public const string OrbitAction = "Orbit";
         public const string PointerAction = "Pointer";
         public const string LookAction = "Look";
+        public const string ToolModifierAction = "ToolModifier";
 
         [Tooltip("L'asset d'actions du jeu (Assets/Input).")]
         [SerializeField] private InputActionAsset _actions;
@@ -42,6 +44,7 @@ namespace Diciela.Controls
         private InputAction _orbit;
         private InputAction _pointer;
         private InputAction _look;
+        private InputAction _toolModifier;
         private DragGesture _dragGesture;
         private DragGesture _orbitGesture;
         private CursorGrip _orbitGrip;
@@ -72,6 +75,7 @@ namespace Diciela.Controls
             _orbit = _map.FindAction(OrbitAction, true);
             _pointer = _map.FindAction(PointerAction, true);
             _look = _map.FindAction(LookAction, true);
+            _toolModifier = _map.FindAction(ToolModifierAction, true);
             _map.Enable();
         }
 
@@ -108,7 +112,7 @@ namespace Diciela.Controls
                 _rig.Rotate(rotate * _settings.RotateDegreesPerSecond * deltaSeconds);
 
             float scroll = _zoom.ReadValue<float>();
-            if (scroll != 0f && !onInterface)
+            if (scroll != 0f && !onInterface && !_toolModifier.IsPressed())
                 _rig.Zoom(scroll / _settings.ScrollPerNotch, pointer);
 
             // Clic droit glissé : on saisit le sol là où l'on a appuyé, et on le tire jusqu'au pointeur.

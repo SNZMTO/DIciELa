@@ -92,7 +92,7 @@ namespace Diciela.Tests.PlayMode
         /// <summary>Crée la Chimère par son ordre, au centre de la carte.</summary>
         public void CreateTheChimera()
         {
-            World.Submit(new CreateChimeraCommand(_kind, TestWorld.PlainAppearance(o => Keep(o))));
+            World.Submit(new CreateChimeraCommand(_kind, TestAppearance.Plain(o => Keep(o))));
             World.Step();
         }
 

@@ -693,6 +693,81 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &931853428
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 931853432}
+  - component: {fileID: 931853431}
+  - component: {fileID: 931853430}
+  - component: {fileID: 931853429}
+  m_Layer: 0
+  m_Name: Place
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &931853429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 931853428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e55ebfdce620154e8c13e50c4d468dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Diciela.Controls::Diciela.Controls.PlaceControls
+  _actions: {fileID: -944628639613478452, guid: ce45850f9084e5e49a79d052550d59e4, type: 3}
+  _settings: {fileID: 11400000, guid: 204ab065def165f4086048326d8c8426, type: 2}
+  _gestures: {fileID: 11400000, guid: 9e430839a075b79499fb905491d5c58f, type: 2}
+--- !u!114 &931853430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 931853428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a371d7cb9809d549886d412ae6306a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Diciela.View::Diciela.View.PlaceToolPreview
+  _settings: {fileID: 11400000, guid: 204ab065def165f4086048326d8c8426, type: 2}
+--- !u!114 &931853431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 931853428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d5e0b05e81fc074f9343f188e7c94b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Diciela.View::Diciela.View.PlaceZoneView
+  _settings: {fileID: 11400000, guid: 204ab065def165f4086048326d8c8426, type: 2}
+--- !u!4 &931853432
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 931853428}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1057168150
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -979,6 +1054,9 @@ MonoBehaviour:
   _previewControls: {fileID: 61688054}
   _toolWheel: {fileID: 250348218}
   _toolControls: {fileID: 472345068}
+  _placeControls: {fileID: 931853429}
+  _placeZoneView: {fileID: 931853431}
+  _placeToolPreview: {fileID: 931853430}
 --- !u!1 &1823210985
 GameObject:
   m_ObjectHideFlags: 0
@@ -1203,3 +1281,4 @@ SceneRoots:
   - {fileID: 1874915668}
   - {fileID: 1823210987}
   - {fileID: 472345069}
+  - {fileID: 931853432}
