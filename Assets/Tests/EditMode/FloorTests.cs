@@ -1,24 +1,21 @@
 using System.Collections.Generic;
-using Diciela.Data;
 using Diciela.Simulation;
-using Diciela.Simulation.Core;
 using Diciela.Simulation.Economy;
 using Diciela.Simulation.Land;
 using NUnit.Framework;
 using UnityEngine;
+using static Diciela.Tests.EditMode.TestFloors;
 
 namespace Diciela.Tests.EditMode
 {
     /// <summary>
-    /// Tracer et gommer un sol (GDD, sections 9 et 11 ; décisions 209 et 210), par les ordres du joueur, sur le monde plat
-    /// de 40 m aux mailles de 50 cm : une forme tracée couvre les mailles où l'on marche dont le milieu est en elle, en
-    /// fantôme, et ouvre un chantier ; ce qui s'y tient et un sol déjà posé y font un trou ; l'outil de la Place s'arrête
-    /// au bord de sa zone, et la zone et le sol sont deux choses ; la gomme retire un fantôme tout de suite ; un bâtiment
-    /// ne se pose pas sur un sol. Un ordre refusé ne change rien, et les sols disent pourquoi.
+    /// Tracer un sol (GDD, sections 9 et 11 ; décisions 209 et 210), par les ordres du joueur, sur le monde plat de 40 m
+    /// aux mailles de 50 cm : une forme tracée couvre les mailles où l'on marche dont le milieu est en elle, en fantôme, et
+    /// ouvre un chantier ; ce qui s'y tient et un sol déjà posé y font un trou ; un sol que la ville ne sait pas faire est
+    /// refusé ; un bâtiment ne se pose pas sur un sol. Un ordre refusé ne change rien, et les sols disent pourquoi.
     /// </summary>
     public sealed class FloorTests
     {
-        private static readonly Vector2 Middle = new Vector2(20f, 20f);
         private TestTown _town;
         private List<FloorResult> _refused;
 
@@ -38,7 +35,7 @@ namespace Diciela.Tests.EditMode
         [Test]
         public void ATracedShapeIsAGhostThatWaitsInTheQueue()
         {
-            World world = World();
+            World world = Noting(_town, _refused);
             int version = world.Grid.Version;
             Trace(world, new GroundDisc(Middle, 2f), _town.Dirt);
 
@@ -86,35 +83,9 @@ namespace Diciela.Tests.EditMode
         }
 
         [Test]
-        public void ThePlaceToolStopsAtTheEdgeOfTheZone()
-        {
-            World world = World();
-            TestTown.Send(world, new PaintPlaceCommand(new GroundDisc(Middle, 3f)));
-            Trace(world, new GroundDisc(Middle, 5f), _town.Dirt, FloorScope.Place);
-            Assert.AreEqual(FloorState.Planned, StateAt(world, Middle));
-            Assert.AreEqual(FloorState.None, StateAt(world, Middle + new Vector2(4f, 0f)), "Hors de la zone : rien.");
-
-            Trace(world, new GroundDisc(Middle, 5f), _town.Dirt);
-            Assert.AreEqual(FloorState.Planned, StateAt(world, Middle + new Vector2(4f, 0f)), "Les Chemins vont partout.");
-
-            // Gommer un bout de la zone n'efface pas son sol : la zone et le sol sont deux choses.
-            var bitten = new Vector2(22.75f, 20.25f);
-            TestTown.Send(world, new ErasePlaceCommand(new GroundDisc(new Vector2(23f, 20f), 1f)));
-            Assert.IsFalse(world.Place.Contains(world.Grid.CellOf(bitten)));
-            Assert.AreEqual(FloorState.Planned, StateAt(world, bitten));
-
-            // La gomme de la Place ne passe que dans la zone.
-            TestTown.Send(world, new EraseFloorCommand(new GroundDisc(Middle, 5f), FloorScope.Place));
-            Assert.AreEqual(FloorState.None, StateAt(world, Middle));
-            Assert.AreEqual(FloorState.Planned, StateAt(world, bitten));
-            Assert.AreEqual(FloorState.Planned, StateAt(world, Middle + new Vector2(4f, 0f)));
-            Assert.IsEmpty(_refused);
-        }
-
-        [Test]
         public void AFloorTheTownDoesNotKnowIsRefused()
         {
-            World world = World();
+            World world = Noting(_town, _refused);
             Trace(world, new GroundDisc(Middle, 2f), _town.Paving);
 
             CollectionAssert.AreEqual(new[] { FloorResult.Unknown }, _refused);
@@ -123,34 +94,9 @@ namespace Diciela.Tests.EditMode
         }
 
         [Test]
-        public void TheEraserRemovesAGhostAtOnce()
-        {
-            World world = World();
-            Trace(world, Stroke(10f, 30f, 20f), _town.Dirt);
-            ConstructionSite site = OnlySite(world);
-            double workBefore = site.WorkNeeded;
-
-            TestTown.Send(world, new EraseFloorCommand(Box(26f, 20f, 12f, 4f), FloorScope.Anywhere));
-            Assert.AreEqual(FloorState.None, StateAt(world, new Vector2(25f, 20f)), "Effacé tout de suite.");
-            Assert.AreEqual(FloorState.Planned, StateAt(world, new Vector2(15f, 20f)));
-            Assert.AreSame(site, OnlySite(world), "Le chantier reste, plus petit.");
-            Assert.AreEqual(PlannedCells(world) * 0.25f, site.Floor.AreaSquareMeters, 0.001f);
-            Assert.Less(site.WorkNeeded, workBefore);
-
-            TestTown.Send(world, new EraseFloorCommand(Box(20f, 20f, 30f, 4f), FloorScope.Anywhere));
-            Assert.AreEqual(0, PlannedCells(world));
-            Assert.IsEmpty(world.ConstructionSites.Queue, "Vidé, il quitte la file.");
-            Assert.IsTrue(site.IsFinished && site.Floor.IsOver);
-            Assert.IsEmpty(_refused);
-
-            TestTown.Send(world, new EraseFloorCommand(Box(20f, 20f, 30f, 4f), FloorScope.Anywhere));
-            CollectionAssert.AreEqual(new[] { FloorResult.Nothing }, _refused, "Plus rien à gommer.");
-        }
-
-        [Test]
         public void NothingIsBuiltOnAFloorOrItsGhost()
         {
-            World world = World();
+            World world = Noting(_town, _refused);
             var refusals = new List<PlacementResult>();
             world.Structures.PlacementRefused += (definition, placement, reason) => refusals.Add(reason);
             Structure camp = TestTown.Place(world, _town.Camp, 20f, 10f);
@@ -163,55 +109,6 @@ namespace Diciela.Tests.EditMode
                 world.PlacementRules.CheckMove(camp, new Placement(new Vector2(30f, 30f), 0f)), "Ni déplacé dessus.");
             Assert.AreEqual(PlacementResult.Ok,
                 world.PlacementRules.Check(_town.Cabin, new Placement(new Vector2(30f, 20f), 0f)), "À côté, oui.");
-        }
-
-        private World World()
-        {
-            World world = _town.World();
-            world.Floors.FloorRefused += _refused.Add;
-            return world;
-        }
-
-        private static void Trace(World world, GroundShape shape, FloorDefinition floor,
-            FloorScope scope = FloorScope.Anywhere)
-        {
-            TestTown.Send(world, new TraceFloorCommand(shape, floor, scope));
-        }
-
-        private static GroundStroke Stroke(float fromX, float toX, float z)
-        {
-            return new GroundStroke(new[] { new Vector2(fromX, z), new Vector2(toX, z) }, 1f);
-        }
-
-        private static GroundBox Box(float x, float z, float width, float depth)
-        {
-            return new GroundBox(new RotatedRect(new Vector2(x, z), new Vector2(width, depth), 0f));
-        }
-
-        private static FloorState StateAt(World world, Vector2 point)
-        {
-            return world.Floors.StateAt(world.Grid.CellOf(point));
-        }
-
-        private static ConstructionSite OnlySite(World world)
-        {
-            Assert.AreEqual(1, world.ConstructionSites.Queue.Count, "Un seul chantier dans la file.");
-            return world.ConstructionSites.Queue[0];
-        }
-
-        // Les mailles en fantôme de toute la carte, comptées une à une : l'oracle de la surface d'un sol.
-        private static int PlannedCells(World world)
-        {
-            int count = 0;
-            for (int x = 0; x < world.Grid.Width; x++)
-            {
-                for (int y = 0; y < world.Grid.Depth; y++)
-                {
-                    if (world.Floors.StateAt(new Vector2Int(x, y)) == FloorState.Planned)
-                        count++;
-                }
-            }
-            return count;
         }
     }
 }

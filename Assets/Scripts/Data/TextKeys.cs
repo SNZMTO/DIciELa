@@ -7,10 +7,10 @@ namespace Diciela.Data
     public static class TextKeys
     {
         private const string PlacementRefusalPrefix = "pose.refus.";
-        private const string PlaceRefusalPrefix = "place.refus.";
+        private const string PlazaRefusalPrefix = "place.refus.";
         private const string FloorRefusalPrefix = "sol.refus.";
-        private const string PlaceModePrefix = "place.outil.";
-        private const string PlaceModeDetailPrefix = "place.outil.suite.";
+        private const string PaintModePrefix = "place.outil.";
+        private const string PaintModeDetailPrefix = "place.outil.suite.";
         private const string DayPhasePrefix = "journee.";
         private const string DayNextPrefix = "journee.suite.";
         private const string DayNotePrefix = "journee.note.";
@@ -63,34 +63,34 @@ namespace Diciela.Data
 
         // L'outil de la Place (décision 206) : ce que sa barre écrit ({superficie}, {max}, {marques}, {taille} y sont
         // remplacés), et ce que dit la bulle quand un clic retirerait une place de charrette.
-        public const string PlaceArea = "place.superficie";
+        public const string PlazaArea = "place.superficie";
         public const string AreaParameter = "{superficie}";
         public const string MaxParameter = "{max}";
-        public const string PlaceMarks = "place.marques";
+        public const string PlazaMarks = "place.marques";
         public const string MarksParameter = "{marques}";
-        public const string PlaceBrushSize = "place.taille";
+        public const string PaintBrushSize = "place.taille";
         public const string SizeParameter = "{taille}";
-        public const string PlaceRemoveMark = "place.retirer_marque";
-        public const string PlaceZoneInk = "place.zone";
-        public const string PlaceZoneInkDetail = "place.zone.suite";
+        public const string PlazaRemoveMark = "place.retirer_marque";
+        public const string PlazaZoneInk = "place.zone";
+        public const string PlazaZoneInkDetail = "place.zone.suite";
         public const string FloorInkDetail = "sol.suite";
 
         /// <summary>La clé du nom d'un mode de l'outil de la Place, d'après son nom (Brush → place.outil.Brush).</summary>
-        public static string PlaceMode(string modeName)
+        public static string PaintMode(string modeName)
         {
-            return PlaceModePrefix + modeName;
+            return PaintModePrefix + modeName;
         }
 
         /// <summary>La clé de l'usage d'un mode de l'outil de la Place (Brush → place.outil.suite.Brush).</summary>
-        public static string PlaceModeDetail(string modeName)
+        public static string PaintModeDetail(string modeName)
         {
-            return PlaceModeDetailPrefix + modeName;
+            return PaintModeDetailPrefix + modeName;
         }
 
         /// <summary>La clé de la raison d'un refus sur la Place, d'après son nom (TooLarge → place.refus.TooLarge).</summary>
-        public static string PlaceRefusal(string reasonName)
+        public static string PlazaRefusal(string reasonName)
         {
-            return PlaceRefusalPrefix + reasonName;
+            return PlazaRefusalPrefix + reasonName;
         }
 
         /// <summary>La clé de la raison d'un refus sur les sols, d'après son nom (Unknown → sol.refus.Unknown).</summary>

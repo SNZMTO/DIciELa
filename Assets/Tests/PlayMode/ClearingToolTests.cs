@@ -86,17 +86,17 @@ namespace Diciela.Tests.PlayMode
         }
 
         [Test]
-        public void EscapeDropsTheTool()
+        public void ARightClickDropsTheTool()
         {
             int changes = 0;
             _tool.HeldChanged += () => changes++;
             _tool.Take();
             Assert.IsTrue(_tool.IsActive);
 
-            Assert.IsTrue(_tool.Escape());
+            _tool.Cancel();
             Assert.IsFalse(_tool.IsActive);
-            Assert.IsFalse(_tool.Escape(), "Déjà lâché : Échap passe au cran suivant.");
-            Assert.AreEqual(2, changes);
+            _tool.Cancel();
+            Assert.AreEqual(2, changes, "Déjà lâché : un second clic droit ne change rien.");
         }
     }
 }

@@ -33,8 +33,8 @@ namespace Diciela.EditorTools
             EditorAssets.AssignIfMissing(stage, "_buildBar", bar);
             DayBoard day = EditorAssets.GetOrAdd<DayBoard>(bar.gameObject);
             EditorAssets.AssignIfMissing(stage, "_dayBoard", day);
-            PlaceSheet sheet = EditorAssets.GetOrAdd<PlaceSheet>(bar.gameObject);
-            EditorAssets.AssignIfMissing(stage, "_placeSheet", sheet);
+            LocationSheet sheet = EditorAssets.GetOrAdd<LocationSheet>(bar.gameObject);
+            EditorAssets.AssignIfMissing(stage, "_locationSheet", sheet);
             StockPennants stock = EditorAssets.GetOrAdd<StockPennants>(bar.gameObject);
             EditorAssets.AssignIfMissing(stage, "_stockPennants", stock);
             TipBoard tip = EditorAssets.GetOrAdd<TipBoard>(bar.gameObject);

@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 29e0f833a1d6b3b4a9619b4415508b54, type: 3}
   m_Name: Place
-  m_EditorClassIdentifier: Diciela.Data::Diciela.Data.PlaceDefinition
+  m_EditorClassIdentifier: Diciela.Data::Diciela.Data.PlazaDefinition
   _startAreaSquareMeters: 450
   _areaPerLevelSquareMeters: 150
   _startCartSpots: 2

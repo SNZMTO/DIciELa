@@ -60,9 +60,9 @@ namespace Diciela.Tests.EditMode
             Paving = Keep(TestData.Floor("paves", 1.5f));
             TestData.KnowsFloors(Opening, Dirt);
             Cart = Keep(TestData.Cart(20, 0.5f, 2.2f));
-            Square = Keep(TestData.Place(450f, 2));
+            Plaza = Keep(TestData.Plaza(450f, 2));
             Catalog = Keep(TestData.TownCatalog(Opening, new[] { Wood, Stone }, new[] { building, trade, land }, Cart));
-            TestData.UsePlace(Catalog, Square);
+            TestData.UsePlaza(Catalog, Plaza);
         }
 
         public SimulationSettings Settings { get; }
@@ -88,7 +88,7 @@ namespace Diciela.Tests.EditMode
         public CartDefinition Cart { get; }
 
         /// <summary>La Place de la ville : au départ, 450 m² et deux places de charrette (décision 204).</summary>
-        public PlaceDefinition Square { get; }
+        public PlazaDefinition Plaza { get; }
         public Catalog Catalog { get; }
 
         /// <summary>

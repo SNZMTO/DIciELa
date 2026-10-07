@@ -26,7 +26,7 @@ namespace Diciela.Tests.PlayMode
 
         private readonly List<Object> _created = new List<Object>();
 
-        public TestWorld(Relief relief = null, bool withPlace = false, bool withFloor = false)
+        public TestWorld(Relief relief = null, bool withPlaza = false, bool withFloor = false)
         {
             var simulation = Keep(ScriptableObject.CreateInstance<SimulationSettings>());
             Settings = Keep(ScriptableObject.CreateInstance<PlacementSettings>());
@@ -51,11 +51,11 @@ namespace Diciela.Tests.PlayMode
                 Fill(Floor, "_id", "terre");
                 FillList(catalog, "_floors", Floor);
             }
-            if (withPlace)
+            if (withPlaza)
             {
-                var place = Keep(ScriptableObject.CreateInstance<PlaceDefinition>());
-                Fill(place, "_startAreaSquareMeters", 100f);
-                Fill(catalog, "_place", place);
+                var plaza = Keep(ScriptableObject.CreateInstance<PlazaDefinition>());
+                Fill(plaza, "_startAreaSquareMeters", 100f);
+                Fill(catalog, "_plaza", plaza);
                 Fill(catalog, "_cart", Keep(ScriptableObject.CreateInstance<CartDefinition>()));
             }
 #endif
@@ -64,7 +64,7 @@ namespace Diciela.Tests.PlayMode
             var rig = Keep(new GameObject("Caméra de test", typeof(Camera))).AddComponent<CameraRig>();
             Preview = Keep(new GameObject("Aperçu de test")).AddComponent<PlacementPreview>();
             Views = Keep(new GameObject("Constructions de test")).AddComponent<StructureViews>();
-            PlacePreview = Keep(new GameObject("Aperçu de la Place de test")).AddComponent<PlaceToolPreview>();
+            PaintPreview = Keep(new GameObject("Aperçu de la Place de test")).AddComponent<PaintToolPreview>();
 #if UNITY_EDITOR
             Fill(Settings, "_translucentMaterial", translucent);
             Fill(Settings, "_siteMaterial", site);
@@ -84,7 +84,7 @@ namespace Diciela.Tests.PlayMode
             Fill(rig, "_settings", cameraSettings);
             Fill(Preview, "_settings", Settings);
             Fill(Views, "_settings", Settings);
-            Fill(PlacePreview, "_settings", Settings);
+            Fill(PaintPreview, "_settings", Settings);
 #endif
             rig.Show(map);
             Camera = rig.Camera;
@@ -92,8 +92,8 @@ namespace Diciela.Tests.PlayMode
             Tool = new PlacementTool(World, Camera, Preview, Settings);
             Clearing = new ClearingTool(World, Camera, Keep(new GameObject("Arbres de test")).AddComponent<NatureViews>());
             Mover = new MoveTool(World, Camera, Views, Preview, Settings);
-            Place = new PlaceTool(World, Camera, PlacePreview, Settings, PaintEntry.Place, catalog.Floors);
-            Paths = new PlaceTool(World, Camera, PlacePreview, Settings, PaintEntry.Paths, catalog.Floors);
+            Plaza = new PaintTool(World, Camera, PaintPreview, Settings, PaintEntry.Plaza, catalog.Floors);
+            Paths = new PaintTool(World, Camera, PaintPreview, Settings, PaintEntry.Paths, catalog.Floors);
         }
 
         public World World { get; }
@@ -106,14 +106,14 @@ namespace Diciela.Tests.PlayMode
         public PlacementTool Tool { get; }
         public ClearingTool Clearing { get; }
         public MoveTool Mover { get; }
-        public PlaceToolPreview PlacePreview { get; }
-        public PlaceTool Place { get; }
+        public PaintToolPreview PaintPreview { get; }
+        public PaintTool Plaza { get; }
 
         /// <summary>Le sol du catalogue, la terre ; null si le test ne l'a pas demandé.</summary>
         public FloorDefinition Floor { get; }
 
         /// <summary>L'outil Chemins : sans sol au catalogue, il ne trace rien, mais se prend et se lâche.</summary>
-        public PlaceTool Paths { get; }
+        public PaintTool Paths { get; }
 
         /// <summary>Le point de l'écran où l'on voit ce point du sol.</summary>
         public Vector2 OnScreen(Vector3 ground)
@@ -152,7 +152,7 @@ namespace Diciela.Tests.PlayMode
         {
             Tool.Dispose();
             Mover.Dispose();
-            Place.Dispose();
+            Plaza.Dispose();
             Views.Hide();
             foreach (Object created in _created)
                 Object.Destroy(created);

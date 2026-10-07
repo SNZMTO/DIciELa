@@ -110,7 +110,7 @@ namespace Diciela.Controls
                 Tool.TouchAt(pointer);
             _secondaryGesture.Update(_secondary.IsPressed(), pointer, _gestures.DragThresholdPixels, onInterface);
             if (_secondaryGesture.Clicked)
-                Tool.Escape();
+                Tool.Cancel();
         }
 
         private void StopFraming()

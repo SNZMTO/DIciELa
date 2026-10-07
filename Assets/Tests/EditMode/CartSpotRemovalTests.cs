@@ -36,7 +36,7 @@ namespace Diciela.Tests.EditMode
             TestTown.Send(world, new RemoveCartSpotCommand(spot.Id));
 
             Assert.IsEmpty(world.Carts.Spots, "La place de charrette s'en est allée.");
-            Assert.IsEmpty(world.Place.Marks, "Et sa marque avec elle.");
+            Assert.IsEmpty(world.Plaza.Marks, "Et sa marque avec elle.");
             Assert.AreEqual(CartState.AtHome, cart.State, "Sa charrette est rentrée au campement.");
             Assert.IsNull(cart.Spot, "Plus rien ne l'appelle.");
         }
@@ -48,11 +48,11 @@ namespace Diciela.Tests.EditMode
             Cart cart = world.Carts.All[0];
             TestGrids.StepUntil(world, () => cart.Spot != null, 3000, "la charrette appelée");
             Assert.AreEqual(CartState.AtHome, cart.State, "On vient la chercher : elle est encore rangée.");
-            var refused = new List<PlaceResult>();
-            world.Place.PlaceRefused += refused.Add;
+            var refused = new List<PlazaResult>();
+            world.Plaza.PlazaRefused += refused.Add;
 
             TestTown.Send(world, new RemoveCartSpotCommand(spot.Id));
-            CollectionAssert.AreEqual(new[] { PlaceResult.CartBusy }, refused, "Sa charrette arrive.");
+            CollectionAssert.AreEqual(new[] { PlazaResult.CartBusy }, refused, "Sa charrette arrive.");
             Assert.AreSame(spot, world.Carts.Spots[0], "Elle garde sa place.");
             TestGrids.StepUntil(world, () => cart.State == CartState.Parked, 3000, "la charrette garée");
         }
@@ -63,11 +63,11 @@ namespace Diciela.Tests.EditMode
             World world = TestStalls.PlacedWorld(_town, out CartSpot spot);
             Cart cart = world.Carts.All[0];
             TestGrids.StepUntil(world, () => cart.State == CartState.Pulled, 3000, "la charrette attelée");
-            var refused = new List<PlaceResult>();
-            world.Place.PlaceRefused += refused.Add;
+            var refused = new List<PlazaResult>();
+            world.Plaza.PlazaRefused += refused.Add;
 
             TestTown.Send(world, new RemoveCartSpotCommand(spot.Id));
-            CollectionAssert.AreEqual(new[] { PlaceResult.CartBusy }, refused, "Sa charrette arrive.");
+            CollectionAssert.AreEqual(new[] { PlazaResult.CartBusy }, refused, "Sa charrette arrive.");
             Assert.AreSame(spot, world.Carts.Spots[0], "Elle garde sa place.");
             TestGrids.StepUntil(world, () => cart.State == CartState.Parked, 3000, "la charrette garée");
         }
@@ -78,11 +78,11 @@ namespace Diciela.Tests.EditMode
             World world = TestStalls.ParkedWorld(_town, out CartSpot spot, out Cart cart);
             TestStalls.Ask(world, spot, _town.Wood, ConsigneMode.Amount, 6);
             TestGrids.StepUntil(world, () => cart.Stock.CountOf(_town.Wood) == 6, 4000, "six Bois sur la charrette");
-            var refused = new List<PlaceResult>();
-            world.Place.PlaceRefused += refused.Add;
+            var refused = new List<PlazaResult>();
+            world.Plaza.PlazaRefused += refused.Add;
 
             TestTown.Send(world, new RemoveCartSpotCommand(spot.Id));
-            CollectionAssert.AreEqual(new[] { PlaceResult.CartBusy }, refused, "Elle porte encore des marchandises.");
+            CollectionAssert.AreEqual(new[] { PlazaResult.CartBusy }, refused, "Elle porte encore des marchandises.");
             Assert.AreEqual(CartState.Parked, cart.State);
 
             TestTown.Send(world, new RemoveConsigneCommand(spot.Id, _town.Wood));
@@ -97,10 +97,10 @@ namespace Diciela.Tests.EditMode
         public void ANumberWithoutAPlaceIsRefused()
         {
             World world = TestStalls.ParkedWorld(_town, out CartSpot spot, out Cart _);
-            var refused = new List<PlaceResult>();
-            world.Place.PlaceRefused += refused.Add;
+            var refused = new List<PlazaResult>();
+            world.Plaza.PlazaRefused += refused.Add;
             TestTown.Send(world, new RemoveCartSpotCommand(spot.Id + 1));
-            CollectionAssert.AreEqual(new[] { PlaceResult.UnknownMark }, refused);
+            CollectionAssert.AreEqual(new[] { PlazaResult.UnknownMark }, refused);
             Assert.AreEqual(1, world.Carts.Spots.Count);
         }
     }

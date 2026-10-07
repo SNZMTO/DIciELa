@@ -30,11 +30,11 @@ namespace Diciela.Controls
         public string ReasonKey { get; }
 
         /// <summary>La réponse de la Place.</summary>
-        public static PaintAnswer Of(PlaceResult result)
+        public static PaintAnswer Of(PlazaResult result)
         {
-            return result == PlaceResult.Ok
+            return result == PlazaResult.Ok
                 ? Ok
-                : new PaintAnswer(false, result == PlaceResult.Nothing, TextKeys.PlaceRefusal(result.ToString()));
+                : new PaintAnswer(false, result == PlazaResult.Nothing, TextKeys.PlazaRefusal(result.ToString()));
         }
 
         /// <summary>La réponse des sols.</summary>

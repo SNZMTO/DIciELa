@@ -24,18 +24,16 @@ namespace Diciela.Controls
             _entry = entry ?? throw new ArgumentNullException(nameof(entry));
             _knowledge = knowledge ?? throw new ArgumentNullException(nameof(knowledge));
             _floors = floors ?? Array.Empty<FloorDefinition>();
+            Chosen = entry.LaysTheZone ? PaintInk.Zone : PaintInk.None;
         }
 
         /// <summary>Les sols que la ville sait faire, dans l'ordre du catalogue, tels qu'au dernier Refresh.</summary>
         public IReadOnlyList<FloorDefinition> Known => _known;
 
-        /// <summary>Le sol choisi ; null : la zone (l'outil de la Place), ou rien (l'outil Chemins sans sol connu).</summary>
-        public FloorDefinition Floor { get; private set; }
+        /// <summary>Ce que l'outil pose maintenant.</summary>
+        public PaintInk Chosen { get; private set; }
 
-        /// <summary>Vrai si l'outil pose la zone de la Place.</summary>
-        public bool LaysTheZone => Floor == null && _entry.LaysTheZone;
-
-        /// <summary>Relit les sols que la ville sait faire ; l'outil Chemins sans sol choisi prend le premier.</summary>
+        /// <summary>Relit les sols que la ville sait faire ; l'outil Chemins qui ne pose rien prend le premier.</summary>
         internal void Refresh()
         {
             _known.Clear();
@@ -44,21 +42,20 @@ namespace Diciela.Controls
                 if (_floors[i] != null && _knowledge.Knows(_floors[i]))
                     _known.Add(_floors[i]);
             }
-            if (Floor == null && !_entry.LaysTheZone && _known.Count > 0)
-                Floor = _known[0];
+            if (Chosen.IsNone && _known.Count > 0)
+                Chosen = PaintInk.Of(_known[0]);
         }
 
         /// <summary>
-        /// Choisit ce sol (null : la zone, si l'entrée la pose) ; vrai si ce que pose l'outil change, faux s'il ne peut pas
-        /// le poser ou le posait déjà.
+        /// Choisit cette encre : la zone, si l'entrée la pose, ou un sol connu ; vrai si ce que pose l'outil change, faux
+        /// s'il ne peut pas la poser ou la posait déjà.
         /// </summary>
-        internal bool Choose(FloorDefinition floor)
+        internal bool Choose(PaintInk ink)
         {
-            if (floor == null ? !_entry.LaysTheZone : !_known.Contains(floor))
+            bool allowed = ink.IsZone ? _entry.LaysTheZone : ink.Floor != null && _known.Contains(ink.Floor);
+            if (!allowed || ink.Equals(Chosen))
                 return false;
-            if (ReferenceEquals(floor, Floor))
-                return false;
-            Floor = floor;
+            Chosen = ink;
             return true;
         }
     }

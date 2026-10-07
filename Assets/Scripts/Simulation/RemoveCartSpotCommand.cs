@@ -25,10 +25,10 @@ namespace Diciela.Simulation
             Cart cart = spot == null ? null : world.Carts.CartAt(spot);
             if (cart != null && (cart.State != CartState.Parked || world.Stalls.IsBusy(cart)))
             {
-                world.Place.Refuse(PlaceResult.CartBusy);
+                world.Plaza.Refuse(PlazaResult.CartBusy);
                 return;
             }
-            world.Place.RemoveMark(SpotId);
+            world.Plaza.RemoveMark(SpotId);
         }
     }
 }

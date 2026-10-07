@@ -42,7 +42,7 @@ namespace Diciela.UI
         }
 
         /// <summary>Remplit le panneau, fermé, par son présentateur ; appelé par le démarrage quand la ville s'ouvre.</summary>
-        public void Show(Catalog catalog, TextTable texts, PlacementTool placement, PlaceTool place, World world,
+        public void Show(Catalog catalog, TextTable texts, PlacementTool placement, PaintTool plaza, World world,
             IToolKeys keys, ReasonBubble reasons)
         {
             Hide();
@@ -58,7 +58,7 @@ namespace Diciela.UI
             _families = families;
             _structures = structures;
             _reasons = reasons;
-            _presenter = new BuildBarPresenter(this, catalog, texts, placement, place, world, keys);
+            _presenter = new BuildBarPresenter(this, catalog, texts, placement, plaza, world, keys);
         }
 
         /// <summary>Cache le panneau et oublie le monde.</summary>

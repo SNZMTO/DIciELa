@@ -8,7 +8,7 @@ namespace Diciela.Simulation.Economy
 {
     /// <summary>
     /// Une place de charrette de la Place (GDD, section 11 ; décision 204) : la marque que le joueur y a posée
-    /// (<see cref="PlaceMark"/>), là où se gare la charrette qu'elle appelle, et son cap. Quelle charrette elle a appelée,
+    /// (<see cref="PlazaMark"/>), là où se gare la charrette qu'elle appelle, et son cap. Quelle charrette elle a appelée,
     /// la charrette le dit (<see cref="Cart.Spot"/>). Sa consigne dit ce qu'on porte à la charrette qui y est garée
     /// (décision 202) ; seuls les étals la changent (Stalls).
     /// </summary>
@@ -16,13 +16,13 @@ namespace Diciela.Simulation.Economy
     {
         private readonly List<ConsigneLine> _consigne = new List<ConsigneLine>();
 
-        internal CartSpot(PlaceMark mark)
+        internal CartSpot(PlazaMark mark)
         {
             Mark = mark;
         }
 
         /// <summary>La marque de la Place qu'elle est.</summary>
-        public PlaceMark Mark { get; }
+        public PlazaMark Mark { get; }
 
         /// <summary>Son numéro : celui de sa marque, celui des ordres.</summary>
         public int Id => Mark.Id;

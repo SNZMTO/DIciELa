@@ -58,12 +58,12 @@ namespace Diciela.EditorTools
 
             // L'outil de la Place (décision 206) : tracer au clic gauche, glissé ; R comme à la pose ; Ctrl + molette, la
             // taille du pinceau ; le clic droit bref abandonne le geste ou pose l'outil de côté.
-            InputActionMap place = Map(asset, PlaceControls.MapName);
-            added += Button(place, PlaceControls.PaintAction, "<Mouse>/leftButton") +
-                     Button(place, PlaceControls.RotateAction, "<Keyboard>/#(r)") +
-                     CtrlScroll(place, PlaceControls.SizeAction) +
-                     Button(place, PlaceControls.SecondaryAction, "<Mouse>/rightButton") +
-                     Pointer(place, PlaceControls.PointerAction) + Look(place, PlaceControls.LookAction);
+            InputActionMap paint = Map(asset, PaintControls.MapName);
+            added += Button(paint, PaintControls.PaintAction, "<Mouse>/leftButton") +
+                     Button(paint, PaintControls.RotateAction, "<Keyboard>/#(r)") +
+                     CtrlScroll(paint, PaintControls.SizeAction) +
+                     Button(paint, PaintControls.SecondaryAction, "<Mouse>/rightButton") +
+                     Pointer(paint, PaintControls.PointerAction) + Look(paint, PaintControls.LookAction);
 
             // Échap a son geste à lui, une pile (décision 152).
             added += Button(Map(asset, EscapeControls.MapName), EscapeControls.BackAction, "<Keyboard>/escape");

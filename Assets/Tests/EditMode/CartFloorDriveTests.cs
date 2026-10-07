@@ -43,7 +43,7 @@ namespace Diciela.Tests.EditMode
             Trace(world, 18.25f, _town.Dirt);
             Trace(world, 21.25f, _town.Paving);
             TestGrids.StepUntil(world, () => world.ConstructionSites.Queue.Count == 0, 3000, "les bandes bâties");
-            TestTown.Send(world, new PaintPlaceCommand(new GroundDisc(new Vector2(20f, 26f), 7f)));
+            TestTown.Send(world, new PaintPlazaCommand(new GroundDisc(new Vector2(20f, 26f), 7f)));
             TestTown.Send(world, new AddCartSpotCommand(new Vector2(18f, 26f), 0f));
             TestTown.Send(world, new AddCartSpotCommand(new Vector2(23f, 26f), 0f));
             Cart cart = world.Carts.All[0];

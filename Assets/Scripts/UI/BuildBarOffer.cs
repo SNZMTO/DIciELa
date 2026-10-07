@@ -13,13 +13,13 @@ namespace Diciela.UI
     internal sealed class BuildBarOffer
     {
         private readonly World _world;
-        private readonly PlaceDefinition _place;
+        private readonly PlazaDefinition _plaza;
         private readonly bool _catalogHasAHome;
 
         public BuildBarOffer(Catalog catalog, World world)
         {
             _world = world;
-            _place = catalog.Place;
+            _plaza = catalog.Plaza;
             _catalogHasAHome = HasAHome(catalog);
         }
 
@@ -35,15 +35,15 @@ namespace Diciela.UI
         /// Vrai si le panneau propose la carte de la Place dans cette famille, maintenant : dès le campement posé, en tête
         /// de la famille que nomme sa fiche.
         /// </summary>
-        public bool OffersPlaceIn(StructureFamilyDefinition family)
+        public bool OffersPlazaIn(StructureFamilyDefinition family)
         {
-            return _place != null && family != null && ReferenceEquals(family, _place.Family) && HomeIsPlaced;
+            return _plaza != null && family != null && ReferenceEquals(family, _plaza.Family) && HomeIsPlaced;
         }
 
         /// <summary>Vrai si le panneau propose une carte de cette famille ; sinon, son onglet ne paraît pas.</summary>
         public bool Offers(StructureFamilyDefinition family)
         {
-            if (OffersPlaceIn(family))
+            if (OffersPlazaIn(family))
                 return true;
             IReadOnlyList<StructureDefinition> structures = family.Structures;
             for (int i = 0; i < structures.Count; i++)

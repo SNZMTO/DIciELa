@@ -132,14 +132,6 @@ namespace Diciela.Controls
                 PutDown();
         }
 
-        public bool Escape()
-        {
-            if (!IsActive)
-                return false;
-            Cancel();
-            return true;
-        }
-
         public void PutDown()
         {
             if (!IsActive)

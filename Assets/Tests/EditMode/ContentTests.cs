@@ -87,9 +87,9 @@ namespace Diciela.Tests.EditMode
                 TextKeys.SheetFreeSlot, TextKeys.SheetSleep, TextKeys.SheetWake,
                 TextKeys.StockTooltip, TextKeys.TipCamp, TextKeys.TipPost, TextKeys.TipCabin, TextKeys.BuildTool,
                 TextKeys.BuildToolDetail, TextKeys.ClearingTool, TextKeys.ClearingToolDetail, TextKeys.ToolsTooltip,
-                TextKeys.ToolsTooltipDetail, TextKeys.CardBeds, TextKeys.PlaceArea, TextKeys.PlaceMarks,
-                TextKeys.PathsTool, TextKeys.PathsToolDetail, TextKeys.PlaceBrushSize, TextKeys.PlaceRemoveMark,
-                TextKeys.PlaceZoneInk, TextKeys.PlaceZoneInkDetail, TextKeys.FloorInkDetail, catalog.Place.NameKey
+                TextKeys.ToolsTooltipDetail, TextKeys.CardBeds, TextKeys.PlazaArea, TextKeys.PlazaMarks,
+                TextKeys.PathsTool, TextKeys.PathsToolDetail, TextKeys.PaintBrushSize, TextKeys.PlazaRemoveMark,
+                TextKeys.PlazaZoneInk, TextKeys.PlazaZoneInkDetail, TextKeys.FloorInkDetail, catalog.Plaza.NameKey
             });
             foreach (DayPhase phase in Enum.GetValues(typeof(DayPhase)))
             {
@@ -102,10 +102,10 @@ namespace Diciela.Tests.EditMode
                 if (result != PlacementResult.Ok)
                     keys.Add(TextKeys.PlacementRefusal(result.ToString()));
             }
-            foreach (PlaceResult result in Enum.GetValues(typeof(PlaceResult)))
+            foreach (PlazaResult result in Enum.GetValues(typeof(PlazaResult)))
             {
-                if (result != PlaceResult.Ok)
-                    keys.Add(TextKeys.PlaceRefusal(result.ToString()));
+                if (result != PlazaResult.Ok)
+                    keys.Add(TextKeys.PlazaRefusal(result.ToString()));
             }
             foreach (FloorResult result in Enum.GetValues(typeof(FloorResult)))
             {

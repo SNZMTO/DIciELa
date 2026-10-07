@@ -67,9 +67,20 @@ namespace Diciela.Tests.PlayMode
             Assert.IsFalse(_hand.IsHolding);
 
             _test.Clearing.Take();
-            _test.Clearing.Escape();
+            _test.Clearing.PutDown();
 
             Assert.IsFalse(_hand.IsHolding);
+        }
+
+        [Test]
+        public void EscapeGoesToTheToolInHand()
+        {
+            Assert.IsFalse(_hand.Escape(), "La main vide laisse Échap au cran suivant.");
+
+            _test.Tool.Begin(_test.Cabin);
+            Assert.IsTrue(_hand.Escape(), "La construction en main…");
+            Assert.IsFalse(_test.Tool.IsActive, "… se pose de côté.");
+            Assert.IsFalse(_hand.Escape(), "Puis la main est vide.");
         }
 
         [Test]

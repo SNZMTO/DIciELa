@@ -31,10 +31,10 @@ namespace Diciela.Simulation
             Map = map;
             Grid = new NavGrid(map.Relief, new GridMetrics(settings.CellsPerMeter));
             Nature = new Nature(Grid, map.Nature);
-            Place = new PlaceZone(Grid, catalog.Place, catalog.Cart);
+            Plaza = new PlazaZone(Grid, catalog.Plaza, catalog.Cart);
             Islands = new Islands(Grid);
             Knowledge = new Knowledge(catalog.Opening);
-            Floors = new Floors(Grid, Place, Knowledge);
+            Floors = new Floors(Grid, Plaza, Knowledge);
             CartPace = new CartPace(Grid, Floors, catalog.Cart);
             PathFinder = new PathFinder(Grid, Islands, CartPace);
             Structures = new Structures(Grid, map.Relief, settings, Knowledge, Floors);
@@ -45,7 +45,7 @@ namespace Diciela.Simulation
             var reach = new Reach(Grid, Islands, surroundings);
             var offers = new TaskOffers(Warehouses, ConstructionSites, reach, settings);
             Clearings = new ClearingOffers(Nature, Warehouses, reach);
-            Carts = new Carts(catalog.Cart, Place);
+            Carts = new Carts(catalog.Cart, Plaza);
             Stalls = new Stalls(Warehouses);
             WorkSlots = new WorkSlots();
             Housing = new Housing(Structures, Structures.Rules);
@@ -85,7 +85,7 @@ namespace Diciela.Simulation
         public Nature Nature { get; }
 
         /// <summary>La Place : la zone que le joueur trace, et les places de charrette qu'il y pose.</summary>
-        public PlaceZone Place { get; }
+        public PlazaZone Plaza { get; }
 
         /// <summary>Les sols : chemins, routes et sols de la Place, tracés à leurs outils, en chantier ou bâtis.</summary>
         public Floors Floors { get; }
@@ -175,7 +175,7 @@ namespace Diciela.Simulation
             Knowledge.DeliverEvents();
             Structures.DeliverEvents();
             Nature.DeliverEvents();
-            Place.DeliverEvents();
+            Plaza.DeliverEvents();
             Floors.DeliverEvents();
             Warehouses.DeliverEvents();
             Carts.DeliverEvents();

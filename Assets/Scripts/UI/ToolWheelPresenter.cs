@@ -19,7 +19,7 @@ namespace Diciela.UI
         private readonly ClearingTool _clearing;
         private readonly IBuildMenu _build;
         private readonly MoveTool _move;
-        private readonly PlaceTool _paths;
+        private readonly PaintTool _paths;
         private readonly Switch[] _switches;
 
         /// <summary>Ce qu'un outil allume et éteint, et s'il est allumé.</summary>
@@ -38,7 +38,7 @@ namespace Diciela.UI
         }
 
         public ToolWheelPresenter(IToolWheelView view, TextTable texts, IToolKeys keys, ClearingTool clearing,
-            IBuildMenu build, MoveTool move, PlaceTool paths)
+            IBuildMenu build, MoveTool move, PaintTool paths)
         {
             if (view == null || ReferenceEquals(texts, null) || keys == null || ReferenceEquals(clearing, null) ||
                 build == null || ReferenceEquals(move, null) || ReferenceEquals(paths, null))
@@ -56,7 +56,7 @@ namespace Diciela.UI
             _switches = new[]
             {
                 new Switch(() => _build.IsOpen, _build.Open, _build.Close),
-                new Switch(() => _clearing.IsActive, _clearing.Take, () => _clearing.Escape()),
+                new Switch(() => _clearing.IsActive, _clearing.Take, _clearing.PutDown),
                 new Switch(() => _move.IsActive, _move.Take, _move.PutDown),
                 new Switch(() => _paths.IsActive, _paths.Take, _paths.PutDown)
             };

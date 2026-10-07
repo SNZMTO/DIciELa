@@ -37,7 +37,7 @@ namespace Diciela.Tests.EditMode
         public void ASpotIsWhereTheCartWillParkItsFrontAtTheFrontOfTheMark()
         {
             World world = _town.WorkingWorld();
-            TestTown.Send(world, new PaintPlaceCommand(new GroundDisc(Center, 7f)));
+            TestTown.Send(world, new PaintPlazaCommand(new GroundDisc(Center, 7f)));
             TestTown.Send(world, new AddCartSpotCommand(Center, 0f));
 
             Assert.AreEqual(1, world.Carts.Spots.Count, "La marque est une place de charrette.");
@@ -54,13 +54,13 @@ namespace Diciela.Tests.EditMode
         }
 
         [Test]
-        public void ASpotStaysWithinThePlaceAloneAndTwoAtMostAtTheStart()
+        public void ASpotStaysWithinThePlazaAloneAndTwoAtMostAtTheStart()
         {
             World world = _town.World();
-            var refused = new List<PlaceResult>();
-            world.Place.PlaceRefused += refused.Add;
+            var refused = new List<PlazaResult>();
+            world.Plaza.PlazaRefused += refused.Add;
             TestTown.Send(world, new AddCartSpotCommand(Center, 0f));
-            TestTown.Send(world, new PaintPlaceCommand(new GroundDisc(Center, 7f)));
+            TestTown.Send(world, new PaintPlazaCommand(new GroundDisc(Center, 7f)));
             // Au nord, elle va jusqu'à 34,4 m : le disque s'arrête à 33 m.
             TestTown.Send(world, new AddCartSpotCommand(new Vector2(20f, 31.5f), 0f));
             TestTown.Send(world, new AddCartSpotCommand(new Vector2(18f, 26f), 0f));
@@ -70,8 +70,8 @@ namespace Diciela.Tests.EditMode
 
             CollectionAssert.AreEqual(new[]
             {
-                PlaceResult.OutsideThePlace, PlaceResult.OutsideThePlace, PlaceResult.MarksOverlap,
-                PlaceResult.TooManyMarks
+                PlazaResult.OutsideThePlaza, PlazaResult.OutsideThePlaza, PlazaResult.MarksOverlap,
+                PlazaResult.TooManyMarks
             }, refused, "Sans Place, hors de la Place, sur une autre marque, puis une de trop.");
             Assert.AreEqual(2, world.Carts.Spots.Count, "Deux places de charrette au départ.");
         }
@@ -80,7 +80,7 @@ namespace Diciela.Tests.EditMode
         public void ASecondWarehouseSendsItsCartToTheSecondSpot()
         {
             World world = _town.WorkingWorld();
-            TraceThePlace(world);
+            TraceThePlaza(world);
             Cart first = world.Carts.All[0];
             TestGrids.StepUntil(world, () => first.State == CartState.Parked, 3000, "la charrette du campement garée");
 
@@ -103,7 +103,7 @@ namespace Diciela.Tests.EditMode
             StructureDefinition warehouse = Warehouse(4f, 4f);
             World world = _town.WorkingWorld();
             Structure near = TestTown.Place(world, warehouse, 8f, 26f);
-            TraceThePlace(world);
+            TraceThePlaza(world);
 
             TestGrids.StepUntil(world, () => world.Carts.All[0].State == CartState.Parked &&
                                              world.Carts.All[1].State == CartState.Parked, 6000, "les deux charrettes garées");
@@ -112,9 +112,9 @@ namespace Diciela.Tests.EditMode
         }
 
         // La Place, un disque de 7 m de rayon en (20 ; 26), et ses deux places de charrette, côte à côte, l'avant au nord.
-        private static void TraceThePlace(World world)
+        private static void TraceThePlaza(World world)
         {
-            TestTown.Send(world, new PaintPlaceCommand(new GroundDisc(Center, 7f)));
+            TestTown.Send(world, new PaintPlazaCommand(new GroundDisc(Center, 7f)));
             TestTown.Send(world, new AddCartSpotCommand(new Vector2(18f, 26f), 0f));
             TestTown.Send(world, new AddCartSpotCommand(new Vector2(23f, 26f), 0f));
         }

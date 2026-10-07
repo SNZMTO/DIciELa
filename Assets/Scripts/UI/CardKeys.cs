@@ -12,9 +12,9 @@ namespace Diciela.UI
     {
         private readonly IBuildMenu _menu;
         private readonly ICardPicker _cards;
-        private readonly PlaceTool[] _tools;
+        private readonly PaintTool[] _tools;
 
-        public CardKeys(IBuildMenu menu, ICardPicker cards, params PlaceTool[] tools)
+        public CardKeys(IBuildMenu menu, ICardPicker cards, params PaintTool[] tools)
         {
             if (menu == null || cards == null || tools == null || Array.IndexOf(tools, null) >= 0)
                 throw new ArgumentException("Les touches des cartes ont besoin du panneau Construire et des outils de sol.");
@@ -30,7 +30,7 @@ namespace Diciela.UI
                 _cards.TakeCard(index);
                 return;
             }
-            foreach (PlaceTool tool in _tools)
+            foreach (PaintTool tool in _tools)
             {
                 if (tool.IsActive && index >= 0 && index < tool.Entry.Modes.Count)
                     tool.Choose(tool.Entry.Modes[index]);

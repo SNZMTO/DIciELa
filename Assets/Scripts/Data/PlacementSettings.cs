@@ -78,16 +78,16 @@ namespace Diciela.Data
         [SerializeField, Range(0.05f, 2f)] private float _strokeSpacingMeters = 0.3f;
 
         [Tooltip("Le voile de la Place sur le sol, en mode construction, du matériau translucide.")]
-        [SerializeField] private Color _placeVeilColor = new Color(1f, 0.97f, 0.9f, 0.22f);
+        [SerializeField] private Color _zoneVeilColor = new Color(1f, 0.97f, 0.9f, 0.22f);
 
         [Tooltip("Le contour de la Place et ses places de charrette, comme les fantômes.")]
-        [SerializeField] private Color _placeLineColor = new Color(1f, 1f, 1f, 0.85f);
+        [SerializeField] private Color _outlineColor = new Color(1f, 1f, 1f, 0.85f);
 
         [Tooltip("La largeur du contour et du cadre d'une place de charrette, en mètres.")]
-        [SerializeField, Range(0.02f, 0.5f)] private float _placeLineWidthMeters = 0.12f;
+        [SerializeField, Range(0.02f, 0.5f)] private float _outlineWidthMeters = 0.12f;
 
         [Tooltip("La hauteur du voile et des lignes au-dessus du relief, en mètres : assez pour ne pas se mêler au sol.")]
-        [SerializeField, Range(0f, 0.3f)] private float _placeLiftMeters = 0.05f;
+        [SerializeField, Range(0f, 0.3f)] private float _overlayLiftMeters = 0.05f;
 
         public float RotationStepDegrees => _rotationStepDegrees;
         public float RotationDegreesPerPixel => _rotationDegreesPerPixel;
@@ -109,9 +109,9 @@ namespace Diciela.Data
         public Vector2 BrushRadiusRangeMeters => _brushRadiusRangeMeters;
         public float BrushRadiusStepMeters => _brushRadiusStepMeters;
         public float StrokeSpacingMeters => _strokeSpacingMeters;
-        public Color PlaceVeilColor => _placeVeilColor;
-        public Color PlaceLineColor => _placeLineColor;
-        public float PlaceLineWidthMeters => _placeLineWidthMeters;
-        public float PlaceLiftMeters => _placeLiftMeters;
+        public Color ZoneVeilColor => _zoneVeilColor;
+        public Color OutlineColor => _outlineColor;
+        public float OutlineWidthMeters => _outlineWidthMeters;
+        public float OverlayLiftMeters => _overlayLiftMeters;
     }
 }

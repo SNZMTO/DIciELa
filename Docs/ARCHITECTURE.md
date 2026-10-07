@@ -144,7 +144,7 @@ sauvegardé.
 | arbres et rochers : marqués (dans l'ordre des marques), retirés ; champ sauvage : désigné, récolté, minuterie | le terrain | le maillage |
 | le travail déjà fait sur un arbre ou un rocher marqué ; qui l'a pris | l'économie | — |
 | une charrette de l'étal : son entrepôt, la place qui l'appelle, garée ou non, ce qu'elle porte ; la consigne de chaque place de charrette | l'économie (`Carts`, `Stalls`) | ce qui manque à une charrette, son surplus |
-| la Place : ses mailles (ce qui a été peint, découpé sur ce qui l'arrêtait), ses marques (où, à quel cap, dans quel ordre), son niveau | le terrain (`PlaceZone`) | le maillage (ses mailles, qu'on traverse, où rien ne se bâtit) ; les places de charrette |
+| la Place : ses mailles (ce qui a été peint, découpé sur ce qui l'arrêtait), ses marques (où, à quel cap, dans quel ordre), son niveau | le terrain (`PlazaZone`) | le maillage (ses mailles, qu'on traverse, où rien ne se bâtit) ; les places de charrette |
 | les sols : la sorte et l'état (fantôme, bâti, qu'on efface) de chaque maille ; les sols en chantier et leurs mailles | le terrain (`Floors`) | le pas d'une charrette et son prix par maille (`CartPace`) ; les refus de pose sur un chemin |
 | plantations : forme, sorte, état (en chantier, bâti) | le terrain | les champs, leur surface, leurs postes |
 | une construction : sorte, place, angle, niveau, état (fantôme, bâtie, en déplacement avec sa place visée, rangée) | le terrain | le maillage et ses îlots ; les devants de porte ; la réserve ; le logis de la Chimère (la construction bâtie que sa fiche dit être son logis) |
@@ -228,7 +228,10 @@ sauvegardé.
 - La journée d'un habitant (travail, soirée, nuit) est une petite machine à états au-dessus de ses tâches : son travail
   (`Job` : le poste tenu, le choix de la tâche dans l'ordre du poste, la flânerie près du poste) et sa tâche en cours
   (`Chore` : marcher jusqu'au but de son geste, y faire ce qu'il dit, travailler sur place ; chaque marche a son issue
-  d'échec ; une construction servie qui change de place, il la suit : le but d'une tâche se lit là où elle est). La sorte de tâche dit, par une valeur fixe de sa fiche, quel geste le code joue (`TaskWork`) ; chaque geste
+  d'échec ; une construction servie qui change de place, il la suit : le but d'une tâche se lit là où elle est). Ce but
+  (`ChoreGoal`) dit sa sorte (`ChoreGoalKind` : une construction, un arbre ou un rocher, aux abords desquels on se
+  tient ; un sol en chantier, sur lequel on se tient ; une maille précise). La sorte de tâche dit, par une valeur fixe
+  de sa fiche, quel geste le code joue (`TaskWork`) ; chaque geste
   (`Gesture` : porter, bâtir, défricher, conduire, garnir) est le seul à parler à l'économie ; il peut ralentir la marche (une
   charrette tirée) et suit chacun de ses pas. Ce qu'une tâche réserve vit dans l'économie (`Delivery`, `BuildShift`,
   `Clearing`, `Drive`, `StallDelivery`), jusqu'à la place retenue dans un entrepôt pour ce qu'on y
@@ -245,8 +248,8 @@ sauvegardé.
   l'arrête, jamais le geste. Une
   forme peinte (`GroundShape` : un trait, un disque, un rectangle) couvre les mailles dont le milieu est en elle.
 - La Place, la première (décisions 204 et 205) : ses mailles sont sa vérité ; ses règles, une seule fonction par ordre,
-  lue par l'ordre et par l'aperçu (`PlaceChecks`), qui y lit aussi les mailles qu'une forme changerait ; ses places de
-  charrette, les marques qu'elle tient (`PlaceMarks`).
+  lue par l'ordre et par l'aperçu (`PlazaChecks`), qui y lit aussi les mailles qu'une forme changerait ; ses places de
+  charrette, les marques qu'elle tient (`PlazaMarks`).
 - Les sols (décisions 209, 210 et 213) : une couche à côté du maillage (`Floors`), qui ne change ni où l'on marche ni
   la version du maillage ; la sorte et l'état de chaque maille sont la vérité (`FloorCells`) ; leurs règles, une seule
   fonction par ordre (`FloorChecks`), à deux entrées (`FloorScope` : partout, ou dans la zone de la Place). Un tracé ou
@@ -301,7 +304,9 @@ sauvegardé.
   fiche (`ReferenceEquals`), ni `AnimationCurve` ni `Gradient`, et aucun cache rangé dans une fiche.
 
 **Le lexique.** Le code est en anglais, les commentaires et les documents en français ; un mot du jeu a un seul nom de
-code.
+code, et un nom de code un seul sens (décision 215) : la Place du village est `Plaza` (`Square` est déjà le carré des
+mètres carrés), `Place` ne veut dire que poser, la fiche d'un lieu est `LocationSheet`, et les outils de sol sont les
+`Paint…`.
 
 | Jeu | Code | Jeu | Code | Jeu | Code |
 |---|---|---|---|---|---|
@@ -333,7 +338,7 @@ code.
 | pose (d'une pièce) ; paire, moitié ; obligatoire | `PiecePlacement` ; `Pairs`, `EarHalves` ; `Required` | rotation ; réglage (par tête, par corps) | `Rotation` ; `WearerAdjustment` | tête de référence ; se poser par sa base | `Reference` ; `Contact.TryRest` |
 | abords (d'une construction) | `Surroundings` | livraison ; place d'ouvrier | `Delivery` ; `BuildShift` | bilan des marchandises ; cause | `GoodsLedger` ; `GoodsCause` |
 | entrepôts (ce qui tient les marchandises de la ville) | `Warehouses` | poser (l'opération du monde) | `Placing` | travail ; tâche en cours | `Job` ; `Chore` |
-| fiche (d'un lieu) | `PlaceSheet` | Échap ; ce qu'il referme | `EscapeControls` ; `IEscapable` | là où est le HUD | `HudArea` |
+| fiche (d'un lieu) | `LocationSheet` | Échap ; ce qu'il referme | `EscapeControls` ; `IEscapable` | là où est le HUD | `HudArea` |
 | statistique, sous-statistique | `StatisticDefinition`, `SubStatisticDefinition` | table des statistiques ; celles d'un habitant | `StatisticTable` ; `VillagerStatistics` | ce que consulte un habitant | `VillagerServices` |
 | arbre ou rocher (de la carte) ; sa sorte ; ceux de la carte | `NatureItem` ; `NatureDefinition` ; `Nature` | marquer, démarquer (à retirer) ; défricher | `Mark`, `Unmark` ; `Clear`, `Clearing` | geste (d'une sorte de tâche) ; but d'une tâche | `Gesture` ; `ChoreGoal` |
 | place retenue (dans un stock) | `SpaceReserved` | ce qu'on peut rejoindre à pied | `Reach` | anneau carré (de mailles) | `SquareRing` |
@@ -341,24 +346,24 @@ code.
 | arbres vus ; leurs boîtes | `NatureViews` ; `NatureBoxes` | fanion (d'un arbre marqué) | `Mark`, `MarkMesh` | copie du sol | `MapScene` |
 | onglet, carte (du panneau Construire) | `Tab`, `Card` (`BuildBarElements`) | roue des outils ; son anneau | `ToolWheel` ; `WheelRing` | infobulle | `Tooltips` |
 | gestes des outils ; outil choisi | `ToolControls` ; `ToolChoice` | touches des outils | `IToolKeys` | ouvrir, fermer (un panneau) | `Open`, `Close` (`IBuildMenu`) |
-| la main (un seul outil) | `Hand` | outil de la roue (ses gestes ; son allure) | `ToolAction` ; `WheelTool` | boutons de la fiche | `PlaceSheetActions`, `PlaceSheetAction` |
+| la main (un seul outil) | `Hand` | outil de la roue (ses gestes ; son allure) | `ToolAction` ; `WheelTool` | boutons de la fiche | `LocationSheetActions`, `LocationSheetAction` |
 | couche (où la Chimère dort) | `HasCouch`, `CouchFeet` | stock de départ | `StartingGoods` ; `GoodsCause.StartingStock` | classes de style posées par le code | `StyleClasses` |
 | mettre en service (l'opération du monde) | `Commissioning` | chantiers finis (à mettre en service) | `ConstructionSites.Finished` | reprendre ses mailles (un pied debout) | `NavGrid.Reclaim` |
 | tronçons (d'une rangée du maillage) | `FreeRuns` | ligne du chantier (côté rendu) | `SiteLine` | stock de la ville changé | `CityStockChanged` |
 | lits (qu'offre une maison) | `Beds` | ce que le panneau propose | `BuildBarOffer` | logements | `Housing` |
 | arriver (la seule arrivée) | `Arrive` | point fort (d'un arrivant) | `Strength` | coucher et lever | `Bedtimes` |
 | premier habitant | `FirstVillagerDefinition` | personnage du pack (tel quel) | `CharacterDefinition` | sorte des habitants ordinaires | `Catalog.VillagerKind` |
-| le nom d'un habitant (sa clé) | `NameKey` | ouvrir un poste pour lui | `WorkSlots.OpenFor` | un poste sur la fiche d'un lieu | `PlaceSheetSlot` |
+| le nom d'un habitant (sa clé) | `NameKey` | ouvrir un poste pour lui | `WorkSlots.OpenFor` | un poste sur la fiche d'un lieu | `LocationSheetSlot` |
 | apprendre (une idée) ; appris | `Knowledge.Learn` ; `Learned` | lieu de travail (d'un premier habitant) | `Workplace` | les onglets du panneau | `BuildBarTabs` |
-| fermer un poste | `WorkSlots.Close` | s'installer à son lieu de travail | `Opening.Settle` | la Place (la zone) ; ses règles | `PlaceZone` ; `PlaceChecks` |
-| devants de porte | `Doorways` | une forme peinte (trait, disque, rectangle) | `GroundShape` (`GroundStroke`, `GroundDisc`, `GroundBox`) | une marque (place de charrette) | `PlaceMark` |
-| peindre ; gommer la Place | `PaintPlaceCommand` ; `ErasePlaceCommand` | poser par le milieu de sa boîte | `Piece.Centered` | encombrement ; places libres ; ce qui tient encore | `GoodDefinition.Space` ; `FreeSpace` ; `RoomFor` |
+| fermer un poste | `WorkSlots.Close` | s'installer à son lieu de travail | `Opening.Settle` | la Place (la zone) ; ses règles | `PlazaZone` ; `PlazaChecks` |
+| devants de porte | `Doorways` | une forme peinte (trait, disque, rectangle) | `GroundShape` (`GroundStroke`, `GroundDisc`, `GroundBox`) | une marque (place de charrette) | `PlazaMark` |
+| peindre ; gommer la Place | `PaintPlazaCommand` ; `ErasePlazaCommand` | poser par le milieu de sa boîte | `Piece.Centered` | encombrement ; places libres ; ce qui tient encore | `GoodDefinition.Space` ; `FreeSpace` ; `RoomFor` |
 | charrettes de l'étal ; à conduire ; vues | `Carts` ; `CartOffers` ; `CartViews` | conduire ; atteler ; tirer ; garer | `Drive` ; `Hitch` ; `Pull` ; `Park` | cap (au sol) ; poser, retirer une place de charrette | `Heading` ; `AddCartSpotCommand`, `RemoveCartSpotCommand` |
 | déplacer (une construction) ; son sol | `MoveStructureCommand`, `StructureMoves` ; `StructureGround` | déplacée ; déplacement refusé | `StructureMoved` ; `MoveRefused` |
 | consigne (d'une place de charrette) ; sa ligne | `Consigne` ; `ConsigneLine`, `ConsigneMode` | garnir ; l'étal | `TaskWork.Stock`, `StockGesture` ; `Stalls`, `StallOffers` | ce qu'on porte pour l'étal | `StallDelivery` |
 | outil Déplacer ; outil qui vise | `MoveTool` ; `IAimingTool` | lâcher (un outil) | `PutDown` | défaite ; en déplacement | `StructureTakenDown` ; `StructureState.Moving` |
-| les places de charrette de la Place | `PlaceMarks` | outil de la Place ; ses modes ; sa surface ; son geste | `PlaceTool` ; `PlaceToolMode` ; `PlaceCanvas` ; `PlaceDrawing` | la bulle des raisons ; les touches des cartes | `ReasonBubble` ; `CardKeys` |
-| la touche qui tourne | `RotateKey` | un calque posé sur le sol ; son maillage | `GroundOverlay` ; `DrapedMesh` | la Place en ville (sa barre, ses gestes, sa zone) | `TownPlace` |
+| les places de charrette de la Place | `PlazaMarks` | outil de la Place ; ses modes ; sa surface ; son geste | `PaintTool` ; `PaintToolMode` ; `PaintCanvas` ; `PaintDrawing` | la bulle des raisons ; les touches des cartes | `ReasonBubble` ; `CardKeys` |
+| la touche qui tourne | `RotateKey` | un calque posé sur le sol ; son maillage | `GroundOverlay` ; `DrapedMesh` | la Place en ville (sa barre, ses gestes, sa zone) | `TownPlaza` |
 | viser le sol ; le fantôme qui suit le pointeur | `GroundAim` ; `GhostAim` | | | | |
 
 ## 10. La carte, les scènes et la sauvegarde
@@ -421,9 +426,10 @@ code.
   ce qui l'a reçu disparaît aussitôt (la roue qu'on congédie), et à l'outil qui était en main à l'enfoncement : l'outil
   pris pendant l'appui n'en fait rien ; clic ou glisser se décide au relâchement (SAVOIR 2.8). Sans outil en main, un clic gauche touche la construction dont le
   modèle est sous le pointeur : la vue dit laquelle (SAVOIR 2.7), l'outil « choisir » en fait un ordre. Un outil en
-  main (`IHeldTool` : poser, retirer, déplacer, tracer la Place) prend le clic gauche ; un seul à la fois : la main
-  (`Hand`) lâche tout à fait les autres (`PutDown`) quand on en prend un, par n'importe quel chemin, et le geste
-  « toucher » y lit si un outil est en main. Les outils qui visent le sol et se posent d'un clic (`IAimingTool` : poser,
+  main (`IHeldTool` : poser, retirer, déplacer, les outils de sol) prend le clic gauche ; son clic droit (`Cancel`)
+  défait ce qu'il tient, sinon le lâche. Un seul à la fois : la main (`Hand`) lâche tout à fait les autres (`PutDown`)
+  quand on en prend un, par n'importe quel chemin ; le geste « toucher » y lit si un outil est en main, et Échap passe
+  par elle (décision 215). Les outils qui visent le sol et se posent d'un clic (`IAimingTool` : poser,
   déplacer) sont pilotés par les mêmes gestes (`PlacementControls`) et partagent le fantôme qui suit le pointeur
   (`GhostAim`) ; l'outil Déplacer (`MoveTool`) touche une construction par la même visée que « choisir », puis son
   fantôme suit le pointeur dans l'aperçu de la pose. Viser le sol est une seule fonction (`GroundAim`), pour la pose,
@@ -437,23 +443,23 @@ code.
   vise un arbre par la boîte de son modèle et marque ce que contient le cadre qu'on tire, que l'interface dessine
   (`ISelectionFrame`). Un panneau ouvert rend la ville muette ; les conteneurs plein écran de l'interface ne captent pas le pointeur. Les gestes ne
   connaissent pas l'interface : elle leur dit seulement où elle est (`IInterfaceArea`), et `Game` les relie.
-- **Les outils de sol** (décisions 206, 210 et 214) : un seul outil en main (`PlaceTool`) à deux entrées (`PaintEntry`),
+- **Les outils de sol** (décisions 206, 210 et 214) : un seul outil en main (`PaintTool`) à deux entrées (`PaintEntry`),
   l'outil de la Place, pris à la carte de la Place, que le panneau Construire met en tête de la famille que nomme sa
   fiche (`BuildBarCards`), et l'outil Chemins, pris à la roue. L'entrée dit ses modes, s'il pose la zone, où vont ses
-  sols et son pinceau de départ. L'outil tient son mode (`PlaceToolMode`), son encre (`PaintInks` : la zone, ou l'un
-  des sols que la ville sait faire), la taille de son pinceau et le cap d'une place de charrette ; il travaille sur sa
-  surface (`PlaceCanvas`) : le geste en cours (`PlaceDrawing` : un trait, un disque, un rectangle), ce que la Place ou
+  sols et son pinceau de départ. L'outil tient son mode (`PaintToolMode`), son encre (`PaintInks` : la zone, ou l'un
+  des sols que la ville sait faire, dite en toutes lettres par `PaintInk` : la zone, un sol, ou rien), la taille de son pinceau et le cap d'une place de charrette ; il travaille sur sa
+  surface (`PaintCanvas`) : le geste en cours (`PaintDrawing` : un trait, un disque, un rectangle), ce que la Place ou
   les sols répondent à ce qu'il vise, par la même fonction que l'ordre, traduit en une seule réponse (`PaintAnswer`) et
-  montré par l'aperçu (`PlaceAim`), et les ordres qui en partent (`PlaceOrders`). Ses gestes (`PlaceControls`, leur
+  montré par l'aperçu (`PaintAim`), et les ordres qui en partent (`PaintOrders`). Ses gestes (`PaintControls`, leur
   carte d'actions), pour celui des deux qui est en main, glissent, cliquent, tournent par la touche de la pose
   (`RotateKey`, que la pose partage) et changent la taille du pinceau à Ctrl + molette, que la caméra laisse alors. Les
   touches des cartes passent par un aiguillage (`CardKeys`) : le panneau ouvert, ses cartes ; sinon, les modes de
-  l'outil de sol en main. La vue montre la zone (`PlaceZoneView`) et l'aperçu de l'outil (`PlaceToolPreview`) en
+  l'outil de sol en main. La vue montre la zone (`PlazaZoneView`) et l'aperçu de l'outil (`PaintToolPreview`) en
   calques posés sur le relief (`GroundOverlay`, `DrapedMesh` : un seul maillage par calque, refait quand la Place
-  change) ; l'interface, une seule barre pour les deux outils (`PlaceBar`, `PlaceBarPresenter`, ce qu'elle montre de
-  l'outil en main : `PlaceBarContent`) ; la raison d'un refus, de la pose, de la Place ou des sols, passe par une seule
+  change) ; l'interface, une seule barre pour les deux outils (`PaintBar`, `PaintBarPresenter`, ce qu'elle montre de
+  l'outil en main : `PaintBarContent`) ; la raison d'un refus, de la pose, de la Place ou des sols, passe par une seule
   bulle (`ReasonBubble`), où parle le dernier qui a quelque chose à dire. `Game` relie la barre, les gestes et la
-  zone, qui ne se voit qu'en mode construction (`TownPlace`).
+  zone, qui ne se voit qu'en mode construction (`TownPlaza`).
 - **Les sols vus** (décision 214) : un sol qui sert se peint dans le sol de la carte, du calque de sa fiche
   (`FloorPainting` : sur la copie du Terrain, par lot, à la fin de l'image ; la peinture d'origine relue sur
   l'original) ; un sol en chantier se voit en voile, de la couleur des fantômes (`FloorViews`, né avec les vues du
@@ -482,13 +488,13 @@ code.
   bloc a sa vue, qui cherche son sous-arbre par son nom, et son présentateur (le panneau Construire, `BuildBar`,
   ouvert à la demande par `IBuildMenu`, dont les onglets et les cartes se font dans `BuildBarElements` ; la roue des
   outils, `ToolWheel`, ses éléments `ToolWheelElements`, son anneau `WheelRing` et ses mesures `WheelGeometry` ;
-  la journée, `DayBoard` ; la fiche du lieu touché, `PlaceSheet` ; le stock en fanions, `StockPennants` ; l'astuce,
+  la journée, `DayBoard` ; la fiche du lieu touché, `LocationSheet` ; le stock en fanions, `StockPennants` ; l'astuce,
   `TipBoard`, dont le portrait est pris à l'atelier par la vue, `Portrait`) ; une seule bulle sert d'infobulle à tous
   (`Tooltips`), chaque vue dit ce qu'elle montre au survol. Une vue se branche quand la ville s'ouvre (`Show`) et se
   débranche quand elle se ferme (`Hide`) : ses boutons, ses rappels, ses infobulles (une infobulle donnée se retire). Le démarrage donne à la journée, à chaque image, la
   fraction du pas en cours. Tout le HUD dit aux gestes où il est (`HudArea`) ; l'outil « choisir » dit ce qu'on a
-  touché, et le démarrage le relie à la fiche. Échap est une pile (`EscapeControls`) : la fiche, la roue, le panneau Construire, puis l'outil
-  en main.
+  touché, et le démarrage le relie à la fiche. Échap est une pile (`EscapeControls`) : la fiche, la roue, le panneau Construire, puis la main
+  (`Hand`), dont l'outil défait ce qu'il tient ou se lâche.
 - **Aucun état statique modifiable** dans la simulation : le registre, le catalogue et les textes sont des objets
   créés par `Game`. Le Play de ce projet ne recharge ni le code ni la scène : `Game` crée le monde, la table des textes
   et l'outil de pose, et les libère à la sortie (les outils de l'éditeur lisent le monde en cours par

@@ -24,12 +24,6 @@ namespace Diciela.Simulation.Land
             _count = new byte[grid.Width * grid.Depth];
         }
 
-        /// <summary>Vrai si cette maille doit rester dégagée devant une porte.</summary>
-        public bool Covers(Vector2Int cell)
-        {
-            return _count[_grid.IndexOf(cell)] > 0;
-        }
-
         /// <summary>Combien de portes demandent que cette maille reste dégagée.</summary>
         public int CountAt(Vector2Int cell)
         {

@@ -14,7 +14,7 @@ pose.refus.AlreadyPlaced,Déjà posée : une seule par ville,Already placed: one
 pose.refus.NatureInTheWay,Un arbre ou un rocher est dans le chemin : retire-le d'abord,A tree or a rock is in the way: clear it first
 pose.refus.Unknown,Pas encore d'idée pour la bâtir,No idea how to build it yet
 pose.refus.Moving,"Elle se déplace déjà : attends qu'elle soit remontée",It is already moving: wait until it is back up
-pose.refus.OnThePlace,"Sur la Place, on ne bâtit pas : on la pave et on la décore","Nothing is built on the Square: pave it and decorate it"
+pose.refus.OnThePlaza,"Sur la Place, on ne bâtit pas : on la pave et on la décore","Nothing is built on the Square: pave it and decorate it"
 pose.refus.OnAFloor,Sur un chemin : efface-le d'abord,On a path: erase it first
 corps.chat_a,Chat A,Cat A
 corps.chat_b,Chat B,Cat B
@@ -187,8 +187,8 @@ place.outil.Eraser,Gomme,Eraser
 place.outil.Disc,Cercle,Circle
 place.outil.Box,Rectangle,Rectangle
 place.outil.CartSpot,Place de charrette,Cart spot
-place.outil.suite.Brush,"Glisse pour peindre la Place ; Ctrl + molette change la taille.","Drag to paint the Square; Ctrl + wheel changes the size."
-place.outil.suite.Eraser,"Glisse pour gommer la Place ; Ctrl + molette change la taille.","Drag to erase the Square; Ctrl + wheel changes the size."
+place.outil.suite.Brush,"Glisse pour peindre ; Ctrl + molette change la taille.","Drag to paint; Ctrl + wheel changes the size."
+place.outil.suite.Eraser,"Glisse pour gommer ; Ctrl + molette change la taille.","Drag to erase; Ctrl + wheel changes the size."
 place.outil.suite.Disc,"Appuie au centre, puis glisse jusqu'au bord.","Press at the center, then drag to the edge."
 place.outil.suite.Box,Glisse d'un coin à l'autre.,Drag from one corner to the other.
 place.outil.suite.CartSpot,"Clique pour poser une place de charrette, R la tourne ; clique une place pour la retirer.","Click to place a cart spot, R turns it; click a spot to remove it."
@@ -200,7 +200,7 @@ place.refus.Nothing,Rien ne change ici,Nothing changes here
 place.refus.TooLarge,"La Place dépasserait sa superficie : gomme ailleurs d'abord","The Square would exceed its area: erase elsewhere first"
 place.refus.NotOnePiece,La Place doit rester d'un seul tenant,The Square must stay in one piece
 place.refus.MarkInTheWay,"Une place de charrette est dessous : retire-la d'abord","A cart spot is underneath: remove it first"
-place.refus.OutsideThePlace,La place de charrette doit tenir dans la Place,The cart spot must fit inside the Square
+place.refus.OutsideThePlaza,La place de charrette doit tenir dans la Place,The cart spot must fit inside the Square
 place.refus.MarksOverlap,Elle chevauche une autre place de charrette,It overlaps another cart spot
 place.refus.TooManyMarks,Toutes les places de charrette sont posées,All cart spots are placed
 place.refus.NoRoomToPark,"Devant elle, on ne peut pas se tenir pour la garer",There is no room in front of it to park

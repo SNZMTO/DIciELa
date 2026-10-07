@@ -20,7 +20,7 @@ namespace Diciela.EditorTools
         private const string ClearingObjectName = "Retirer";
         private const string PlacementObjectName = "Pose";
         private const string ChooseObjectName = "Choisir";
-        private const string PlaceObjectName = "Place";
+        private const string PlazaObjectName = "Place";
 
         public static void EnsureIn(Scene scene, GameRunner runner, GameStage stage)
         {
@@ -51,14 +51,14 @@ namespace Diciela.EditorTools
             EditorAssets.AssignIfMissing(choose, "_gestures", gestures);
 
             // La Place (décision 206) : sa zone vue, l'aperçu et les gestes de son outil, sur un même objet.
-            PlaceZoneView zone = EditorAssets.FindOrCreate<PlaceZoneView>(scene, PlaceObjectName);
+            PlazaZoneView zone = EditorAssets.FindOrCreate<PlazaZoneView>(scene, PlazaObjectName);
             EditorAssets.AssignIfMissing(zone, "_settings", settings);
-            PlaceToolPreview placePreview = EditorAssets.GetOrAdd<PlaceToolPreview>(zone.gameObject);
-            EditorAssets.AssignIfMissing(placePreview, "_settings", settings);
-            PlaceControls place = EditorAssets.GetOrAdd<PlaceControls>(zone.gameObject);
-            EditorAssets.AssignIfMissing(place, "_actions", actions);
-            EditorAssets.AssignIfMissing(place, "_settings", settings);
-            EditorAssets.AssignIfMissing(place, "_gestures", gestures);
+            PaintToolPreview paintPreview = EditorAssets.GetOrAdd<PaintToolPreview>(zone.gameObject);
+            EditorAssets.AssignIfMissing(paintPreview, "_settings", settings);
+            PaintControls paint = EditorAssets.GetOrAdd<PaintControls>(zone.gameObject);
+            EditorAssets.AssignIfMissing(paint, "_actions", actions);
+            EditorAssets.AssignIfMissing(paint, "_settings", settings);
+            EditorAssets.AssignIfMissing(paint, "_gestures", gestures);
 
             EditorAssets.AssignIfMissing(runner, "_placementSettings", settings);
             EditorAssets.AssignIfMissing(stage, "_structureViews", views);
@@ -67,9 +67,9 @@ namespace Diciela.EditorTools
             EditorAssets.AssignIfMissing(stage, "_placementControls", controls);
             EditorAssets.AssignIfMissing(stage, "_chooseControls", choose);
             EditorAssets.AssignIfMissing(stage, "_clearingControls", clearing);
-            EditorAssets.AssignIfMissing(stage, "_placeZoneView", zone);
-            EditorAssets.AssignIfMissing(stage, "_placeToolPreview", placePreview);
-            EditorAssets.AssignIfMissing(stage, "_placeControls", place);
+            EditorAssets.AssignIfMissing(stage, "_plazaZoneView", zone);
+            EditorAssets.AssignIfMissing(stage, "_paintToolPreview", paintPreview);
+            EditorAssets.AssignIfMissing(stage, "_paintControls", paint);
         }
     }
 }

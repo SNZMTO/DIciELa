@@ -40,7 +40,7 @@ namespace Diciela.Tests.EditMode
                 Assert.IsFalse(grid.Contains(cell));
                 Assert.Throws<ArgumentOutOfRangeException>(() => grid.OccupantAt(cell));
                 Assert.Throws<ArgumentOutOfRangeException>(() => grid.IsWalkable(cell));
-                Assert.Throws<ArgumentOutOfRangeException>(() => world.Structures.Doorways.Covers(cell));
+                Assert.Throws<ArgumentOutOfRangeException>(() => world.Structures.Doorways.CountAt(cell));
             }
         }
     }

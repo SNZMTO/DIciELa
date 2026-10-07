@@ -2,11 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using Diciela.Simulation;
-using Diciela.Simulation.Core;
-using Diciela.Simulation.Economy;
-using Diciela.Simulation.Land;
-using Diciela.Simulation.Society;
+using AssembliesType = UnityEditor.Compilation.AssembliesType;
+using CompilationPipeline = UnityEditor.Compilation.CompilationPipeline;
+using CompiledAssembly = UnityEditor.Compilation.Assembly;
 using NUnit.Framework;
 
 namespace Diciela.Tests.EditMode.Architecture
@@ -21,155 +19,11 @@ namespace Diciela.Tests.EditMode.Architecture
     {
         private const string SimulationPrefix = "Diciela.Simulation";
 
-        /// <summary>Ce qui change l'état de la simulation ; une méthode de ce genre qui naît s'ajoute ici.</summary>
-        private static readonly (Type Owner, string Method)[] Mutators =
-        {
-            (typeof(Clock), "Advance"),
-            (typeof(NavGrid), "SetOccupant"),
-            (typeof(Doorways), "Add"),
-            (typeof(NavGrid), "ReleaseOccupant"),
-            (typeof(NavGrid), "Reclaim"),
-            (typeof(Nature), "Mark"),
-            (typeof(Nature), "Unmark"),
-            (typeof(Nature), "Remove"),
-            (typeof(Nature), "DeliverEvents"),
-            (typeof(NatureItem), "SetMarked"),
-            (typeof(NatureItem), "BecomeRemoved"),
-            (typeof(Structures), "Place"),
-            (typeof(Structures), "Finish"),
-            (typeof(Structures), "Record"),
-            (typeof(Structure), "MoveTo"),
-            (typeof(Structure), "StartMove"),
-            (typeof(Structure), "TakeDown"),
-            (typeof(Structure), "EndMove"),
-            (typeof(ConstructionSites), "TrackMove"),
-            (typeof(ConstructionSites), "TrackFloor"),
-            (typeof(ConstructionSites), "Drop"),
-            (typeof(SiteWork), "Progress"),
-            (typeof(SiteWork), "Finish"),
-            (typeof(Floors), "Trace"),
-            (typeof(Floors), "Erase"),
-            (typeof(Floors), "Finish"),
-            (typeof(Floors), "DeliverEvents"),
-            (typeof(FloorPatch), "Add"),
-            (typeof(FloorPatch), "Forget"),
-            (typeof(FloorPatch), "End"),
-            (typeof(NavGrid), "SetCells"),
-            (typeof(PlaceZone), "Paint"),
-            (typeof(PlaceZone), "Erase"),
-            (typeof(PlaceZone), "AddMark"),
-            (typeof(PlaceZone), "RemoveMark"),
-            (typeof(PlaceZone), "Refuse"),
-            (typeof(PlaceZone), "DeliverEvents"),
-            (typeof(CartSpot), "SetLine"),
-            (typeof(CartSpot), "RemoveLine"),
-            (typeof(Stalls), "SetLine"),
-            (typeof(Stalls), "RemoveLine"),
-            (typeof(Stalls), "Promise"),
-            (typeof(Stalls), "Unpromise"),
-            (typeof(Stalls), "DeliverEvents"),
-            (typeof(StallOffers), "TryTakeStock"),
-            (typeof(StallOffers), "PickUp"),
-            (typeof(StallOffers), "DropOff"),
-            (typeof(StallOffers), "Cancel"),
-            (typeof(StallDelivery), "MarkPickedUp"),
-            (typeof(StallDelivery), "MarkOver"),
-            (typeof(Doorways), "Remove"),
-            (typeof(Structure), "BecomeBuilt"),
-            (typeof(Structures), "DeliverEvents"),
-            (typeof(Villagers), "CreateChimera"),
-            (typeof(Villagers), "Arrive"),
-            (typeof(Housing), "Lodge"),
-            (typeof(WorkSlots), "OpenFor"),
-            (typeof(WorkSlots), "Close"),
-            (typeof(Knowledge), "Learn"),
-            (typeof(Knowledge), "DeliverEvents"),
-            (typeof(Villagers), "Step"),
-            (typeof(Villagers), "DeliverEvents"),
-            (typeof(Villager), "Step"),
-            (typeof(Villager), "TryGoToBed"),
-            (typeof(Villager), "WakeUp"),
-            (typeof(Command), "Execute"),
-            (typeof(Inventory), "Add"),
-            (typeof(Inventory), "Remove"),
-            (typeof(Inventory), "Reserve"),
-            (typeof(Inventory), "Release"),
-            (typeof(Inventory), "ReserveSpace"),
-            (typeof(Inventory), "ReleaseSpace"),
-            (typeof(GoodsLedger), "Created"),
-            (typeof(GoodsLedger), "Destroyed"),
-            (typeof(Warehouses), "Track"),
-            (typeof(Warehouses), "Create"),
-            (typeof(Warehouses), "Reserve"),
-            (typeof(Warehouses), "Release"),
-            (typeof(Warehouses), "Take"),
-            (typeof(Warehouses), "ReserveSpace"),
-            (typeof(Warehouses), "ReleaseSpace"),
-            (typeof(Warehouses), "Store"),
-            (typeof(Warehouses), "DeliverEvents"),
-            (typeof(ConstructionSite), "Promise"),
-            (typeof(ConstructionSite), "Unpromise"),
-            (typeof(ConstructionSite), "Receive"),
-            (typeof(ConstructionSite), "AddBuilder"),
-            (typeof(ConstructionSite), "RemoveBuilder"),
-            (typeof(ConstructionSite), "AddWork"),
-            (typeof(ConstructionSite), "MarkFinished"),
-            (typeof(ConstructionSites), "Track"),
-            (typeof(ConstructionSites), "Receive"),
-            (typeof(ConstructionSites), "Work"),
-            (typeof(ConstructionSites), "ForgetFinished"),
-            (typeof(ConstructionSites), "DeliverEvents"),
-            (typeof(Delivery), "MarkPickedUp"),
-            (typeof(Delivery), "MarkOver"),
-            (typeof(BuildShift), "MarkOver"),
-            (typeof(TaskOffers), "TryTakeDelivery"),
-            (typeof(TaskOffers), "TryTakeBuilding"),
-            (typeof(TaskOffers), "PickUp"),
-            (typeof(TaskOffers), "DropOff"),
-            (typeof(TaskOffers), "Cancel"),
-            (typeof(TaskOffers), "Work"),
-            (typeof(TaskOffers), "Leave"),
-            (typeof(Clearing), "MarkFelled"),
-            (typeof(Clearing), "MarkOver"),
-            (typeof(ClearingOffers), "TryTakeClearing"),
-            (typeof(ClearingOffers), "Work"),
-            (typeof(ClearingOffers), "Store"),
-            (typeof(ClearingOffers), "Cancel"),
-            (typeof(Carts), "Track"),
-            (typeof(Carts), "BeginStep"),
-            (typeof(Carts), "Call"),
-            (typeof(Carts), "Hitch"),
-            (typeof(Carts), "Pull"),
-            (typeof(Carts), "Park"),
-            (typeof(Carts), "SendHome"),
-            (typeof(Carts), "DeliverEvents"),
-            (typeof(Cart), "BeginStep"),
-            (typeof(Cart), "Answer"),
-            (typeof(Cart), "Hitch"),
-            (typeof(Cart), "MoveTo"),
-            (typeof(Cart), "Park"),
-            (typeof(Cart), "ReturnHome"),
-            (typeof(Drive), "MarkHitched"),
-            (typeof(Drive), "MarkOver"),
-            (typeof(CartOffers), "TryTakeDrive"),
-            (typeof(CartOffers), "Hitch"),
-            (typeof(CartOffers), "Pull"),
-            (typeof(CartOffers), "Park"),
-            (typeof(CartOffers), "Cancel"),
-            (typeof(WorkSlot), "SetHolder"),
-            (typeof(WorkSlots), "Track"),
-            (typeof(WorkSlots), "Assign"),
-            (typeof(WorkSlots), "Unassign"),
-            (typeof(WorkSlots), "DeliverEvents"),
-            (typeof(Villager), "TakeSlot"),
-            (typeof(Villager), "LeaveSlot"),
-        };
-
         [Test]
         public void WhatChangesTheSimulationStaysInternal()
         {
             var faults = new List<string>();
-            foreach ((Type owner, string name) in Mutators)
+            foreach ((Type owner, string name) in SimulationMutators.All)
             {
                 // Toutes les formes d'une fonction : une seconde forme publique ouvrirait la même porte.
                 int found = 0;
@@ -194,11 +48,13 @@ namespace Diciela.Tests.EditMode.Architecture
         {
             var declarations = new List<string>();
             var faults = new List<string>();
-            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+            // Les assemblages qu'Unity compile pour l'éditeur, ceux du jeu compris : AppDomain en garderait de déchargés.
+            foreach (CompiledAssembly compiled in CompilationPipeline.GetAssemblies(AssembliesType.Editor))
             {
-                string name = assembly.GetName().Name;
+                string name = compiled.name;
                 if (!name.StartsWith("Diciela."))
                     continue;
+                Assembly assembly = Assembly.Load(name);
                 foreach (var opening in assembly.GetCustomAttributes<InternalsVisibleToAttribute>())
                 {
                     // Le nom de l'assemblage ouvert, sans sa clé publique s'il en a une.
