@@ -204,12 +204,17 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
+}
+
+/* L'écart va aux rangées qui se voient : une rangée d'options vide (toutes cachées) ne prend aucune place. */
+.place-options > * {
     margin-top: 10px;
 }
 
 .place-formes {
     flex-direction: row;
-    margin: 0 6px;
+    margin-left: 6px;
+    margin-right: 6px;
 }
 
 .place-option {
@@ -295,7 +300,8 @@
     flex-direction: row;
     align-items: center;
     height: 40px;
-    margin: 0 4px;
+    margin-left: 4px;
+    margin-right: 4px;
     padding: 0 8px;
 }
 

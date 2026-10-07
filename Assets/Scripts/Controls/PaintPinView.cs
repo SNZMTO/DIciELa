@@ -18,7 +18,7 @@ namespace Diciela.Controls
             PaintSymmetry symmetry = options.Symmetry;
             int count = symmetry == PaintSymmetry.Mirror ? 1
                 : symmetry == PaintSymmetry.DoubleMirror ? 2
-                : symmetry == PaintSymmetry.Star ? options.StarCopies
+                : symmetry == PaintSymmetry.Star ? options.StarBranches
                 : 0;
             float share = symmetry == PaintSymmetry.Star ? 360f / count : 90f;
             for (int i = 0; i < count; i++)

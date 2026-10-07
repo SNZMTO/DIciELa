@@ -36,8 +36,8 @@ MonoBehaviour:
   _handlePickPixels: 14
   _handleRadiusMeters: 0.35
   _curveStepMeters: 0.25
-  _startStarCopies: 4
-  _starCopiesRange: {x: 3, y: 8}
+  _startStarBranches: 4
+  _starBranchesRange: {x: 3, y: 8}
   _pinAxisMeters: 3
   _zoneVeilColor: {r: 1, g: 0.97, b: 0.9, a: 0.22}
   _outlineColor: {r: 1, g: 1, b: 1, a: 0.85}

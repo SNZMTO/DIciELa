@@ -29,8 +29,8 @@ namespace Diciela.Controls
                     copies.Add(GroundCopy.Turned(center, 180f));
                     break;
                 case PaintSymmetry.Star:
-                    for (int i = 1; i < options.StarCopies; i++)
-                        copies.Add(GroundCopy.Turned(center, 360f * i / options.StarCopies));
+                    for (int i = 1; i < options.StarBranches; i++)
+                        copies.Add(GroundCopy.Turned(center, 360f * i / options.StarBranches));
                     break;
             }
         }

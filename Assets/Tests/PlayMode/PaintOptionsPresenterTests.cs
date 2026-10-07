@@ -28,7 +28,7 @@ namespace Diciela.Tests.PlayMode
                                      "place.style.Curved,Courbe\n" +
                                      "place.symetrie.None,Sans symétrie\n" +
                                      "place.symetrie.Star,Étoile\n" +
-                                     "place.etoile.suite,{copies} copies\n" +
+                                     "place.etoile.suite,{branches} branches\n" +
                                      "place.outil.CartSpot,Place de charrette\n" +
                                      "place.superficie,{superficie} / {max} m²\n" +
                                      "place.marques,{marques} / {max}\n" +
@@ -102,9 +102,9 @@ namespace Diciela.Tests.PlayMode
             Assert.AreEqual(PaintSymmetry.Star, _view.Options.SelectedSymmetry, "… et l'enfonce.");
             Assert.AreEqual("3", _view.Options.Stars[0].Name, "L'étoile montre ses nombres, de 3…");
             Assert.AreEqual("8", _view.Options.Stars[_view.Options.Stars.Count - 1].Name, "… à 8.");
-            Assert.AreEqual("6 copies", _view.Options.Stars[3].Detail);
+            Assert.AreEqual("6 branches", _view.Options.Stars[3].Detail);
             _view.Options.ChooseStar(6);
-            Assert.AreEqual(6, _test.Plaza.Options.StarCopies);
+            Assert.AreEqual(6, _test.Plaza.Options.StarBranches);
             Assert.AreEqual(6, _view.Options.SelectedStar);
             _view.Choose(PaintToolMode.CartSpot);
             Assert.AreEqual(4, _view.Options.Symmetries.Count, "Les places de charrette aussi.");

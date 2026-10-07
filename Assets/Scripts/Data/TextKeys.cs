@@ -73,9 +73,9 @@ namespace Diciela.Data
         public const string AreaParameter = "{superficie}";
         public const string MaxParameter = "{max}";
 
-        /// <summary>L'usage d'un nombre de copies de l'étoile ({copies} y est remplacé).</summary>
+        /// <summary>L'usage d'un nombre de branches de l'étoile ({branches} y est remplacé).</summary>
         public const string PaintStarDetail = "place.etoile.suite";
-        public const string CopiesParameter = "{copies}";
+        public const string BranchesParameter = "{branches}";
         public const string PlazaMarks = "place.marques";
         public const string MarksParameter = "{marques}";
         public const string PaintBrushSize = "place.taille";
