@@ -460,10 +460,12 @@ mètres carrés), `Place` ne veut dire que poser, la fiche d'un lieu est `Locati
   l'outil en main : `PaintBarContent`) ; la raison d'un refus, de la pose, de la Place ou des sols, passe par une seule
   bulle (`ReasonBubble`), où parle le dernier qui a quelque chose à dire. `Game` relie la barre, les gestes et la
   zone, qui ne se voit qu'en mode construction (`TownPlaza`).
-- **Les sols vus** (décision 214) : un sol qui sert se peint dans le sol de la carte, du calque de sa fiche
-  (`FloorPainting` : sur la copie du Terrain, par lot, à la fin de l'image ; la peinture d'origine relue sur
-  l'original) ; un sol en chantier se voit en voile, de la couleur des fantômes (`FloorViews`, né avec les vues du
-  monde, `WorldViews`).
+- **Les sols vus** (décisions 214 et 216) : un sol qui sert (bâti, ou qu'on efface) se peint dans le sol de la carte, du
+  calque de sa fiche (`FloorPainting` : sur la copie du Terrain, par lot, à la fin de l'image ; la peinture d'origine
+  relue sur l'original) ; un sol en chantier se voit en fantôme, à la texture de son calque (`FloorGhosts` : un calque
+  par sorte de sol, sa copie du matériau du shader `Diciela/SolFantome`, la tuile posée comme sur le Terrain, depuis son
+  origine, mêlée à la teinte des fantômes) ; un sol qu'on efface, en voile de la couleur des fantômes (`FloorViews`, né
+  avec les vues du monde, `WorldViews`).
 - **L'ouverture d'une partie** : la scène du démarrage (`GameStage`) montre le monde (constructions, habitants) et ouvre
   l'écran de création dans l'atelier (`Atelier` : un décor généré loin de la carte, sa lumière, sa caméra) ; l'aperçu
   (`AppearancePreview`) s'y tient sur le socle, et les gestes de l'atelier (`PreviewControls`, leur propre carte

@@ -6,15 +6,17 @@ using UnityEngine;
 namespace Diciela.Tests.EditMode
 {
     /// <summary>
-    /// Les shaders du chantier (décision 181) : le SRP Batcher d'URP les regroupe, comme le dit l'Inspector d'un shader.
-    /// Leurs propriétés sont toutes dans le tampon par matériau ; la ligne de chaque chantier passe par la valeur propre
-    /// de chaque rendu, ses réglages par des variables globales, jamais par un bloc de propriétés. Unity ne publie pas
-    /// cette réponse : le test la lit là où l'Inspector la lit, et dit clairement si Unity l'a déplacée.
+    /// Les shaders du chantier (décision 181) et du fantôme d'un sol (décision 216) : le SRP Batcher d'URP les regroupe,
+    /// comme le dit l'Inspector d'un shader. Leurs propriétés sont toutes dans le tampon par matériau ; la ligne de
+    /// chaque chantier passe par la valeur propre de chaque rendu, ses réglages par des variables globales, jamais par un
+    /// bloc de propriétés. Unity ne publie pas cette réponse : le test la lit là où l'Inspector la lit, et dit clairement
+    /// si Unity l'a déplacée.
     /// </summary>
     public sealed class SiteShadersTests
     {
         [TestCase("Diciela/Chantier")]
         [TestCase("Diciela/ChantierFantome")]
+        [TestCase("Diciela/SolFantome")]
         public void TheSrpBatcherGroupsTheSiteShader(string name)
         {
             const BindingFlags Hidden = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;

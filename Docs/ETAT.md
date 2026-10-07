@@ -1,6 +1,7 @@
 # DICIELA — état actuel
 
-**Branches** : `main` : l'étape 59 ; la suivante s'ouvre de `main`.
+**Branches** : `main` : l'étape 59. Les étapes visibles s'empilent sans fusion, chacune ouverte de la précédente, tant
+que tu ne les as pas vues : `etape-60-fantome-sols` (le fantôme d'un sol à sa texture, décision 216).
 
 **Fait** : 23 à 59 ; 52 à 57 (205 à 214) : la Place, les sols (simulation et carte), le pas des charrettes, l'outil
 Chemins et l'outil de sol à deux entrées ; 58 : `Tools/compile.sh` ; 59 (215) : un mot, un sens dans le code (`Plaza`,
