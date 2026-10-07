@@ -7,13 +7,13 @@ namespace Diciela.Simulation.Land
 {
     /// <summary>
     /// Les règles de pose (GDD, sections 2, 9 et 13) : une construction que la ville sait bâtir, et unique, pas encore
-    /// posée ; dans la carte, sur un sol assez plat, sans rien recouvrir (FootprintChecks : ni construction, ni Place, ni
-    /// chemin, ni arbre), sans se poser devant une porte, et la sienne dégagée. Les mêmes pour un déplacement, la construction déplacée ne comptant pas : ni son sol, ni sa porte, ni
-    /// elle-même, déjà posée. Un sol qu'on traverse (la Place ; décision 192) s'étend devant une porte sans la boucher, et une
-    /// porte s'ouvre sur lui. Une seule fonction répond, pour l'aperçu comme pour l'ordre. Les règles disent aussi quel
-    /// sol une construction occupe (son empreinte) et lequel elle garde libre (le devant de sa porte). Elles lisent le
-    /// maillage, le relief, les constructions posées et le savoir de la ville, sans rien changer ; les constructions les
-    /// créent.
+    /// posée ; dans la carte, sur un sol assez plat, sans rien recouvrir (FootprintChecks : ni construction, ni Place,
+    /// ni chemin, ni arbre), sans se poser devant une porte, et la sienne dégagée. Les mêmes pour un déplacement, la
+    /// construction déplacée ne comptant pas : ni son sol, ni sa porte, ni elle-même, déjà posée. Un sol qu'on traverse
+    /// (la Place ; décision 192) s'étend devant une porte sans la boucher, et une porte s'ouvre sur lui. Une seule
+    /// fonction répond, pour l'aperçu comme pour l'ordre. Les règles disent aussi quel sol une construction occupe (son
+    /// empreinte) et lequel elle garde libre (le devant de sa porte). Elles lisent le maillage, le relief, les
+    /// constructions posées et le savoir de la ville, sans rien changer ; les constructions les créent.
     /// </summary>
     public sealed class PlacementRules
     {
