@@ -179,6 +179,14 @@ outil.deplacer,Déplacer,Move
 outil.deplacer.suite,"Clique sur une construction, puis pose‑la ailleurs ; R la tourne, clic droit la repose.","Click a building, then place it elsewhere; R turns it, right click puts it back."
 outil.chemins,Chemins,Paths
 outil.chemins.suite,"Trace des chemins partout où l'on marche ; les charrettes y vont plus vite.","Lay paths wherever people walk; carts go faster on them."
+outil.place,La Place,The Plaza
+outil.place.suite,"Trace la Place, pave-la, et poses-y les places de charrette.","Lay out the Plaza, pave it, and set its cart spots."
+roue.outils,Outils,Tools
+roue.outils.suite,Retourne la roue sur les outils.,Turns the wheel back to the tools.
+roue.symetrie,Symétrie,Symmetry
+roue.symetrie.suite,"Ce que tu traces se recopie autour de l'épingle ; pousse plus loin pour choisir.","What you draw is copied around the pin; push further to choose."
+roue.sol,Sol,Ground
+roue.sol.suite,"Ce que tu poses ; pousse plus loin pour choisir.","What you lay; push further to choose."
 outils.infobulle,Outils,Tools
 outils.infobulle.suite,"Ou tiens {touche} : la roue s'ouvre sous le pointeur.","Or hold {touche}: the wheel opens under the pointer."
 place.nom,Place,Square

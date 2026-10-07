@@ -168,7 +168,8 @@ namespace Diciela.Game
             _tooltips = new Tooltips(document);
             var reasons = new ReasonBubble(document);
             _buildBar.Show(catalog, texts, _tools.Placement, _tools.Plaza, world, _toolControls, reasons);
-            _toolWheel.Show(texts, _toolControls, _tools.Clearing, _buildBar, _tools.Move, _tools.Paths, _tooltips);
+            _toolWheel.Show(texts, _toolControls, _tools.Clearing, _buildBar, _tools.Move, _tools.Paths, _tools.Plaza,
+                _tooltips);
             _dayBoard.Show(world.Clock, texts, _tooltips);
             _stockPennants.Show(world, catalog, texts, _tooltips);
             _locationSheet.Show(world, texts);
@@ -182,7 +183,7 @@ namespace Diciela.Game
             _chooseControls.Bind(_tools.Choose, _tools.Hand, hud);
             _plaza = new TownPlaza(world, texts, _tools, _buildBar, _plazaZoneView, _paintControls,
                 new PaintBar(document, _tooltips, reasons), _toolControls, hud);
-            _toolControls.Bind(_toolWheel, new CardKeys(_buildBar, _buildBar, _tools.Plaza, _tools.Paths));
+            _toolControls.Bind(_toolWheel, new CardKeys(_buildBar, _buildBar, _toolWheel));
             _escapeControls.Bind(_locationSheet, _toolWheel, _buildBar, _tools.Hand);
         }
     }

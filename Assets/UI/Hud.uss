@@ -550,11 +550,12 @@
     justify-content: center;
 }
 
-/* La roue des outils : un fond plein écran qui prend le pointeur tant qu'elle est ouverte ; autour du point où elle
-   s'ouvre, un plateau octogonal (huit côtés, huit places d'outils), chaque outil à sa place fixe (Construire en haut,
-   Retirer en bas), la bulle de l'outil visé au milieu ; l'outil visé grossit.
-   Fermée, elle reste en page, invisible : elle se mesure avant de s'ouvrir, pour tenir dans l'écran. Les outils se
-   placent par leurs marges, pas par translate, que le feutre garde pour se soulever. */
+/* La roue (décision 221) : un fond plein écran qui prend le pointeur tant qu'elle est ouverte ; autour du point où elle
+   s'ouvre, un plateau octogonal (huit côtés, huit cases), chaque case à sa place fixe, sur un cercle de --rayon px, la
+   bulle de ce qu'on vise au milieu ; la case visée grossit et déplie ses options en jetons, sur un cercle de
+   --rayon-eventail px, écartés de --ecart degrés. Fermée, elle reste en page, invisible : elle se mesure avant de
+   s'ouvrir, pour tenir dans l'écran. Les cases se placent par left et top, pas par translate, que le feutre garde pour
+   se soulever. */
 .roue {
     position: absolute;
     left: 0;
@@ -562,6 +563,9 @@
     right: 0;
     bottom: 0;
     --marge: 24;
+    --rayon: 132;
+    --rayon-eventail: 226;
+    --ecart: 30;
 }
 
 .roue-fermee {
@@ -597,24 +601,49 @@
     scale: 1.15 1.15;
 }
 
-.roue-haut {
+.roue-boite {
+    position: absolute;
     left: 0;
-    top: -132px;
-}
-
-.roue-bas {
-    left: 0;
-    top: 132px;
-}
-
-.roue-droite {
-    left: 132px;
     top: 0;
+    width: 0;
+    height: 0;
 }
 
-.roue-gauche {
-    left: -132px;
-    top: 0;
+/* Une option d'une case : un jeton de feutre de son éventail, au-delà du plateau ; sa pastille dit un nombre. */
+.roue-jeton {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    margin-left: -30px;
+    margin-top: -30px;
+    padding-bottom: 3px;
+    align-items: center;
+    justify-content: center;
+}
+
+.roue-jeton.vise {
+    scale: 1.18 1.18;
+}
+
+.roue-jeton-icone {
+    width: 34px;
+    height: 34px;
+}
+
+.roue-vignette {
+    border-radius: 6px;
+    -unity-background-scale-mode: scale-and-crop;
+}
+
+.roue-pastille {
+    position: absolute;
+    right: -8px;
+    top: -8px;
+    min-width: 26px;
+    height: 26px;
+    padding: 0 5px;
+    align-items: center;
+    justify-content: center;
 }
 
 .roue-icone {
@@ -640,6 +669,16 @@
 /* Un chemin qui serpente, en pointillés : l'outil Chemins, à gauche de la roue (un remplaçant simple). */
 .chemins {
     background-image: url("Icones/chemins.asset");
+}
+
+/* La Place, en haut à gauche de la roue des outils : la carte de sa zone et de deux places de charrette. */
+.roue-place {
+    background-image: url("Icones/place.asset");
+}
+
+/* La case Outils, en bas à gauche de la roue d'un outil : elle retourne la roue sur les outils. */
+.roue-retour {
+    background-image: url("Icones/outils.asset");
 }
 
 .roue-bulle {

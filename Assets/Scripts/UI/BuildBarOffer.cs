@@ -37,8 +37,11 @@ namespace Diciela.UI
         /// </summary>
         public bool OffersPlazaIn(StructureFamilyDefinition family)
         {
-            return _plaza != null && family != null && ReferenceEquals(family, _plaza.Family) && HomeIsPlaced;
+            return OffersPlaza && family != null && ReferenceEquals(family, _plaza.Family);
         }
+
+        /// <summary>Vrai si la ville propose la Place, maintenant : dès le campement posé.</summary>
+        public bool OffersPlaza => _plaza != null && HomeIsPlaced;
 
         /// <summary>Vrai si le panneau propose une carte de cette famille ; sinon, son onglet ne paraît pas.</summary>
         public bool Offers(StructureFamilyDefinition family)
