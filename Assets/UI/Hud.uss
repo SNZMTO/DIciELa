@@ -163,10 +163,11 @@
     -unity-background-scale-mode: scale-to-fit;
 }
 
-/* La barre des outils de sol (décisions 206, 210 et 214), la Place et Chemins, à la place du panneau Construire fermé :
-   au-dessus, ce que l'outil pose (la zone, les sols, chacun sa vignette) ; puis ses modes, en feutres, chacun son icône
-   et sa touche, son nom et son usage dans l'infobulle ; dessous, la superficie, les places de charrette et la taille du
-   pinceau dans des creux de lin. Étroite, elle tient entre l'astuce et l'icône des outils dès 1280 × 720. */
+/* La barre des outils de sol (décisions 206, 210, 214 et 216), la Place et Chemins, à la place du panneau Construire
+   fermé : au-dessus, ce que l'outil pose (la zone, les sols, chacun sa vignette) ; puis ses modes en familles, en
+   feutres, chacun son icône et sa touche, son nom et son usage dans l'infobulle ; dessous, les options du mode pris (les
+   formes du mode Forme en petits feutres, la taille du pinceau) ; puis la superficie et les places de charrette dans des
+   creux de lin. Étroite, elle tient entre l'astuce et l'icône des outils dès 1280 × 720. */
 .place-encres {
     flex-direction: row;
     justify-content: center;
@@ -199,10 +200,29 @@
     height: 32px;
 }
 
+.place-options {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.place-formes {
+    flex-direction: row;
+}
+
+.place-option {
+    width: 44px;
+    height: 44px;
+    margin: 0 4px;
+    align-items: center;
+    justify-content: center;
+}
+
 .place-valeurs {
     flex-direction: row;
     justify-content: center;
-    margin-top: 12px;
+    margin-top: 8px;
 }
 
 .place-icone-brush {
@@ -213,11 +233,19 @@
     background-image: url("Icones/gomme.asset");
 }
 
-.place-icone-disc {
+.place-icone-trace {
+    background-image: url("Icones/trace.asset");
+}
+
+.place-icone-shape {
+    background-image: url("Icones/forme.asset");
+}
+
+.place-forme-disc {
     background-image: url("Icones/cercle.asset");
 }
 
-.place-icone-box {
+.place-forme-box {
     background-image: url("Icones/rectangle.asset");
 }
 

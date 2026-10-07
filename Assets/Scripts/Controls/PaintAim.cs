@@ -59,13 +59,13 @@ namespace Diciela.Controls
         public void Show(PaintTool tool, Vector2 aim, PaintDrawing drawing)
         {
             PaintToolMode mode = tool.Mode;
-            float radius = tool.BrushRadius;
+            float radius = tool.Options.BrushRadius;
             if (mode == PaintToolMode.CartSpot)
             {
-                ShowMark(aim, tool.HeadingDegrees);
+                ShowMark(aim, tool.Options.HeadingDegrees);
                 return;
             }
-            if (!drawing.IsDrawing && (mode == PaintToolMode.Disc || mode == PaintToolMode.Box))
+            if (!drawing.IsDrawing && mode == PaintToolMode.Shape)
             {
                 Hide();
                 return;
@@ -150,19 +150,17 @@ namespace Diciela.Controls
             _cellsShown = _cells.Count > 0;
         }
 
-        // Le tour : le cercle du pinceau sous le pointeur, ou la forme qu'on tire.
+        // Le tour : le cercle du pinceau sous le pointeur (le pinceau, la gomme, le tracé), ou la forme qu'on tire.
         private static PaintOutline Outline(PaintToolMode mode, Vector2 aim, float radius, PaintDrawing drawing)
         {
             switch (drawing.Shape)
             {
-                case GroundDisc disc when mode == PaintToolMode.Disc:
+                case GroundDisc disc when mode == PaintToolMode.Shape:
                     return PaintOutline.Circle(disc.Center, disc.Radius);
-                case GroundBox box when mode == PaintToolMode.Box:
+                case GroundBox box when mode == PaintToolMode.Shape:
                     return PaintOutline.Box(box.Rect);
             }
-            return mode == PaintToolMode.Brush || mode == PaintToolMode.Eraser
-                ? PaintOutline.Circle(aim, radius)
-                : PaintOutline.None;
+            return mode == PaintToolMode.Shape ? PaintOutline.None : PaintOutline.Circle(aim, radius);
         }
     }
 }

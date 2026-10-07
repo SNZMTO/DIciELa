@@ -41,10 +41,13 @@ namespace Diciela.EditorTools
                 return;
             AlbumMenu.After(CameraSeconds, () =>
             {
-                Draw(tool, world, camera, PaintToolMode.Disc, frame.At(Vector2.zero), frame.At(new Vector2(DiscRadius, 0f)));
+                tool.Choose(PaintShape.Disc);
+                Draw(tool, world, camera, PaintToolMode.Shape, frame.At(Vector2.zero),
+                    frame.At(new Vector2(DiscRadius, 0f)));
                 AlbumMenu.After(OrderSeconds, () =>
                 {
-                    Draw(tool, world, camera, PaintToolMode.Box, frame.At(BoxFrom), frame.At(BoxTo));
+                    tool.Choose(PaintShape.Box);
+                    Draw(tool, world, camera, PaintToolMode.Shape, frame.At(BoxFrom), frame.At(BoxTo));
                     AlbumMenu.After(OrderSeconds, () =>
                     {
                         Draw(tool, world, camera, PaintToolMode.Brush, frame.At(Stroke[0]), frame.At(Stroke[1]),
@@ -62,7 +65,8 @@ namespace Diciela.EditorTools
                 return;
             AlbumMenu.After(CameraSeconds, () =>
             {
-                tool.Choose(PaintToolMode.Disc);
+                tool.Choose(PaintToolMode.Shape);
+                tool.Choose(PaintShape.Disc);
                 tool.BeginDrawing(OnScreen(world, camera, frame.At(Vector2.zero)));
                 tool.AimAt(OnScreen(world, camera, frame.At(new Vector2(DiscRadius * 2f, 0f))));
                 Debug.Log("DICIELA : mise en scène de l'album : un disque de " + DiscRadius * 2f + " m, " + tool.Answer + ".");
@@ -72,7 +76,7 @@ namespace Diciela.EditorTools
         private static void PlaceTheMarks(PaintTool tool, World world, Camera camera, Frame frame)
         {
             tool.Choose(PaintToolMode.CartSpot);
-            tool.RotateBy(Mathf.DeltaAngle(tool.HeadingDegrees, Heading.Of(frame.Right)));
+            tool.RotateBy(Mathf.DeltaAngle(tool.Options.HeadingDegrees, Heading.Of(frame.Right)));
             tool.AimAt(OnScreen(world, camera, frame.At(new Vector2(0f, MarkSpacing))));
             tool.Click();
             AlbumMenu.After(OrderSeconds, () =>

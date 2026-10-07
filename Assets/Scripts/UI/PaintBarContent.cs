@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Diciela.Controls;
@@ -8,24 +9,38 @@ using UnityEngine;
 namespace Diciela.UI
 {
     /// <summary>
-    /// Ce que la barre montre d'un outil de sol (décisions 206 et 210), traduit : ses modes, dans l'ordre de son entrée,
-    /// chacun son nom, son usage et sa touche ; ce qu'il peut poser, la zone d'abord (l'outil de la Place), puis les sols
-    /// que la ville sait faire, chacun la texture de son calque pour vignette ; ses valeurs : pour l'outil de la Place, la
-    /// superficie et les places de charrette, et pour les deux la taille du pinceau, qu'au pinceau et à la gomme.
+    /// Ce que la barre montre d'un outil de sol (décisions 206, 210 et 216), traduit : ses modes, dans l'ordre de son
+    /// entrée, chacun son nom, son usage et sa touche ; les formes de son mode Forme ; ce qu'il peut poser, la zone d'abord
+    /// (l'outil de la Place), puis les sols que la ville sait faire, chacun la texture de son calque pour vignette ; ses
+    /// valeurs : pour l'outil de la Place, la superficie et les places de charrette, et pour les deux la taille du
+    /// pinceau, au pinceau, à la gomme et au tracé.
     /// </summary>
     internal static class PaintBarContent
     {
-        public static List<PaintBarMode> Modes(PaintTool tool, TextTable texts, IToolKeys keys)
+        public static List<PaintBarChoice<PaintToolMode>> Modes(PaintTool tool, TextTable texts, IToolKeys keys)
         {
-            var modes = new List<PaintBarMode>();
+            var modes = new List<PaintBarChoice<PaintToolMode>>();
             IReadOnlyList<PaintToolMode> entry = tool.Entry.Modes;
             for (int i = 0; i < entry.Count; i++)
             {
                 string name = entry[i].ToString();
-                modes.Add(new PaintBarMode(entry[i], texts.Get(TextKeys.PaintMode(name)),
+                modes.Add(new PaintBarChoice<PaintToolMode>(entry[i], texts.Get(TextKeys.PaintMode(name)),
                     texts.Get(TextKeys.PaintModeDetail(name)), keys.KeyOfCard(i)));
             }
             return modes;
+        }
+
+        /// <summary>Les formes du mode Forme, dans leur ordre, chacune son nom et son usage ; sans touche.</summary>
+        public static List<PaintBarChoice<PaintShape>> Shapes(TextTable texts)
+        {
+            var shapes = new List<PaintBarChoice<PaintShape>>();
+            foreach (PaintShape shape in (PaintShape[])Enum.GetValues(typeof(PaintShape)))
+            {
+                string name = shape.ToString();
+                shapes.Add(new PaintBarChoice<PaintShape>(shape, texts.Get(TextKeys.PaintShape(name)),
+                    texts.Get(TextKeys.PaintShapeDetail(name)), ""));
+            }
+            return shapes;
         }
 
         public static List<PaintBarInk> Inks(PaintTool tool, TextTable texts)
@@ -58,10 +73,11 @@ namespace Diciela.UI
                     .Replace(TextKeys.MarksParameter, plaza.Marks.Count.ToString(CultureInfo.InvariantCulture))
                     .Replace(TextKeys.MaxParameter, plaza.MaxMarks.ToString(CultureInfo.InvariantCulture))
                 : "";
-            bool brush = tool.Mode == PaintToolMode.Brush || tool.Mode == PaintToolMode.Eraser;
+            PaintToolMode mode = tool.Mode;
+            bool brush = mode == PaintToolMode.Brush || mode == PaintToolMode.Eraser || mode == PaintToolMode.Trace;
             string size = brush
                 ? texts.Get(TextKeys.PaintBrushSize).Replace(TextKeys.SizeParameter,
-                    (tool.BrushRadius * 2f).ToString("0.#", CultureInfo.InvariantCulture))
+                    (tool.Options.BrushRadius * 2f).ToString("0.#", CultureInfo.InvariantCulture))
                 : "";
             return (area, marks, size);
         }

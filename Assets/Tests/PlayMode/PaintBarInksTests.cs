@@ -66,8 +66,8 @@ namespace Diciela.Tests.PlayMode
         public void ThePathsToolShowsItsFourModesItsFloorsAndItsBrush()
         {
             _test.Paths.Take();
-            Assert.AreEqual(4, _view.Modes.Count, "Pinceau, gomme, cercle, rectangle.");
-            Assert.AreEqual(PaintToolMode.Box, _view.Modes[3].Mode);
+            Assert.AreEqual(4, _view.Modes.Count, "Pinceau, gomme, tracé, forme.");
+            Assert.AreEqual(PaintToolMode.Shape, _view.Modes[3].Value);
             Assert.AreEqual(1, _view.Inks.Count, "La terre seule : pas de zone aux Chemins.");
             Assert.AreSame(_test.Floor, _view.SelectedInk.Floor);
             Assert.AreEqual("", _view.Area, "Ni superficie…");
