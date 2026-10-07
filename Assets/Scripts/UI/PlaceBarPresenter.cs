@@ -1,83 +1,145 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using Diciela.Controls;
 using Diciela.Data;
 using Diciela.Simulation;
 using Diciela.Simulation.Land;
-using UnityEngine;
 
 namespace Diciela.UI
 {
     /// <summary>
-    /// Le présentateur de la barre de la Place (décision 206) : la barre se montre tant que l'outil de la Place est en
-    /// main ; elle montre ses modes (cliquer l'un d'eux le prend, comme sa touche ; son usage au survol), celui qui est
-    /// pris, la superficie de la Place sur celle de son niveau (« 312 / 450 m² »), ses places de charrette posées sur
-    /// celles qu'elle permet, la taille du pinceau, et, dans la bulle des raisons, pourquoi le geste est refusé ou ce
-    /// qu'un clic retirerait ; un ordre que l'aperçu laissait passer mais que la Place refuse en le jouant (« Sa
-    /// charrette arrive… ») le dit aussi, jusqu'à ce que la visée change. Il écoute l'outil et la Place : la barre ne
-    /// photographie jamais.
+    /// Le présentateur de la barre des outils de sol (décisions 206 et 210) : une seule barre pour l'outil de la Place et
+    /// l'outil Chemins, montrée tant que l'un d'eux est en main, pour celui-là. Devant ses modes, ce qu'il peut poser (la
+    /// zone, les sols que la ville sait faire ; cliquer l'un d'eux le prend) ; ses modes (cliquer l'un d'eux le prend,
+    /// comme sa touche ; son usage au survol) ; dessous, pour l'outil de la Place, la superficie sur celle de son niveau
+    /// (« 312 / 450 m² ») et ses places de charrette sur celles qu'elle permet, et pour les deux la taille du pinceau ;
+    /// dans la bulle des raisons, pourquoi le geste est refusé ou ce qu'un clic retirerait ; un ordre que l'aperçu
+    /// laissait passer mais que le monde refuse en le jouant le dit aussi, jusqu'à ce que la visée change. Il écoute les
+    /// outils, la Place et les sols : la barre ne photographie jamais.
     /// </summary>
     public sealed class PlaceBarPresenter : IDisposable
     {
         private readonly IPlaceBarView _view;
         private readonly TextTable _texts;
-        private readonly PlaceTool _tool;
+        private readonly IToolKeys _keys;
+        private readonly PlaceTool[] _tools;
         private readonly PlaceZone _place;
+        private readonly Floors _floors;
+        private readonly List<FloorDefinition> _shownFloors = new List<FloorDefinition>();
+        private PlaceTool _shown;
+        private bool _inksShown;
 
-        public PlaceBarPresenter(IPlaceBarView view, TextTable texts, PlaceTool tool, World world, IToolKeys keys)
+        public PlaceBarPresenter(IPlaceBarView view, TextTable texts, PlaceTool place, PlaceTool paths, World world,
+            IToolKeys keys)
         {
-            if (view == null || ReferenceEquals(texts, null) || ReferenceEquals(tool, null) ||
-                ReferenceEquals(world, null) || keys == null)
-                throw new ArgumentException("La barre de la Place a besoin de sa vue, des textes, de l'outil, du monde " +
-                                            "et des touches.");
+            if (view == null || ReferenceEquals(texts, null) || ReferenceEquals(place, null) ||
+                ReferenceEquals(paths, null) || ReferenceEquals(world, null) || keys == null)
+                throw new ArgumentException("La barre des outils de sol a besoin de sa vue, des textes, des deux outils, " +
+                                            "du monde et des touches.");
 
             _view = view;
             _texts = texts;
-            _tool = tool;
+            _keys = keys;
+            _tools = new[] { place, paths };
             _place = world.Place;
-            var modes = new List<PlaceBarMode>();
-            foreach (PlaceToolMode mode in Enum.GetValues(typeof(PlaceToolMode)))
-            {
-                string name = mode.ToString();
-                modes.Add(new PlaceBarMode(mode, texts.Get(TextKeys.PlaceMode(name)),
-                    texts.Get(TextKeys.PlaceModeDetail(name)), keys.KeyOfCard((int)mode)));
-            }
-            _view.ShowModes(modes);
+            _floors = world.Floors;
             _view.ModeChosen += OnModeChosen;
-            _tool.HeldChanged += OnHeldChanged;
-            _tool.ResultChanged += OnResultChanged;
+            _view.InkChosen += OnInkChosen;
+            foreach (PlaceTool tool in _tools)
+            {
+                tool.HeldChanged += OnHeldChanged;
+                tool.ResultChanged += OnResultChanged;
+            }
             _place.PlaceChanged += ShowValues;
             _place.MarkPlaced += OnMarksChanged;
             _place.MarkRemoved += OnMarksChanged;
             _place.PlaceRefused += OnRefused;
+            _floors.FloorRefused += OnFloorRefused;
             OnHeldChanged();
-            OnResultChanged();
         }
 
         public void Dispose()
         {
             _view.ModeChosen -= OnModeChosen;
-            _tool.HeldChanged -= OnHeldChanged;
-            _tool.ResultChanged -= OnResultChanged;
+            _view.InkChosen -= OnInkChosen;
+            foreach (PlaceTool tool in _tools)
+            {
+                tool.HeldChanged -= OnHeldChanged;
+                tool.ResultChanged -= OnResultChanged;
+            }
             _place.PlaceChanged -= ShowValues;
             _place.MarkPlaced -= OnMarksChanged;
             _place.MarkRemoved -= OnMarksChanged;
             _place.PlaceRefused -= OnRefused;
+            _floors.FloorRefused -= OnFloorRefused;
             _view.ShowReason("");
             _view.ShowShown(false);
         }
 
-        private void OnModeChosen(PlaceToolMode mode)
+        // L'outil de sol en main ; null si aucun ne l'est.
+        private PlaceTool Held
         {
-            _tool.Choose(mode);
+            get
+            {
+                foreach (PlaceTool tool in _tools)
+                {
+                    if (tool.IsActive)
+                        return tool;
+                }
+                return null;
+            }
         }
 
+        private void OnModeChosen(PlaceToolMode mode)
+        {
+            Held?.Choose(mode);
+        }
+
+        private void OnInkChosen(FloorDefinition floor)
+        {
+            Held?.ChooseFloor(floor);
+        }
+
+        // Un outil pris, lâché, ou qui change : la barre montre celui qui est en main, ses modes et ses encres refaits
+        // seulement quand ils changent.
         private void OnHeldChanged()
         {
-            _view.ShowShown(_tool.IsActive);
-            _view.SelectMode(_tool.Mode);
+            PlaceTool held = Held;
+            _view.ShowShown(held != null);
+            if (held == null)
+            {
+                _view.ShowReason("");
+                return;
+            }
+            if (!ReferenceEquals(held, _shown))
+            {
+                _shown = held;
+                _view.ShowModes(PlaceBarContent.Modes(held, _texts, _keys));
+                _inksShown = false;
+            }
+            if (!_inksShown || !SameFloors(held.Inks.Known))
+            {
+                _inksShown = true;
+                _shownFloors.Clear();
+                _shownFloors.AddRange(held.Inks.Known);
+                _view.ShowInks(PlaceBarContent.Inks(held, _texts));
+            }
+            _view.SelectMode(held.Mode);
+            _view.SelectInk(held.Inks.Floor);
             ShowValues();
+            OnResultChanged();
+        }
+
+        private bool SameFloors(IReadOnlyList<FloorDefinition> known)
+        {
+            if (known.Count != _shownFloors.Count)
+                return false;
+            for (int i = 0; i < known.Count; i++)
+            {
+                if (!ReferenceEquals(known[i], _shownFloors[i]))
+                    return false;
+            }
+            return true;
         }
 
         private void OnMarksChanged(PlaceMark mark)
@@ -87,44 +149,42 @@ namespace Diciela.UI
 
         private void ShowValues()
         {
-            string area = _texts.Get(TextKeys.PlaceArea)
-                .Replace(TextKeys.AreaParameter, Whole(_place.AreaSquareMeters))
-                .Replace(TextKeys.MaxParameter, Whole(_place.MaxAreaSquareMeters));
-            string marks = _texts.Get(TextKeys.PlaceMarks)
-                .Replace(TextKeys.MarksParameter, _place.Marks.Count.ToString(CultureInfo.InvariantCulture))
-                .Replace(TextKeys.MaxParameter, _place.MaxMarks.ToString(CultureInfo.InvariantCulture));
-            bool brush = _tool.Mode == PlaceToolMode.Brush || _tool.Mode == PlaceToolMode.Eraser;
-            string size = brush
-                ? _texts.Get(TextKeys.PlaceBrushSize).Replace(TextKeys.SizeParameter,
-                    (_tool.BrushRadius * 2f).ToString("0.#", CultureInfo.InvariantCulture))
-                : "";
+            PlaceTool held = Held;
+            if (held == null)
+                return;
+            (string area, string marks, string size) = PlaceBarContent.Values(held, _place, _texts);
             _view.ShowValues(area, marks, size);
         }
 
         // Une place de charrette sous le pointeur dit qu'un clic la retire ; un refus dit sa raison ; « rien ne change »
-        // (le pinceau sur la Place déjà peinte) ne dit rien.
+        // ne dit rien.
         private void OnResultChanged()
         {
-            PaintAnswer answer = _tool.Answer;
-            if (!_tool.IsActive)
+            PlaceTool held = Held;
+            if (held == null)
                 _view.ShowReason("");
-            else if (_tool.HoveredMark != null)
+            else if (held.HoveredMark != null)
                 _view.ShowReason(_texts.Get(TextKeys.PlaceRemoveMark));
-            else if (!answer.IsOk && !answer.ChangesNothing)
-                _view.ShowReason(_texts.Get(answer.ReasonKey));
+            else if (!held.Answer.IsOk && !held.Answer.ChangesNothing)
+                _view.ShowReason(_texts.Get(held.Answer.ReasonKey));
             else
                 _view.ShowReason("");
         }
 
         private void OnRefused(PlaceResult reason)
         {
-            if (_tool.IsActive && reason != PlaceResult.Nothing)
-                _view.ShowReason(_texts.Get(TextKeys.PlaceRefusal(reason.ToString())));
+            Say(PaintAnswer.Of(reason));
         }
 
-        private static string Whole(float squareMeters)
+        private void OnFloorRefused(FloorResult reason)
         {
-            return Mathf.RoundToInt(squareMeters).ToString(CultureInfo.InvariantCulture);
+            Say(PaintAnswer.Of(reason));
+        }
+
+        private void Say(PaintAnswer refusal)
+        {
+            if (Held != null && !refusal.ChangesNothing)
+                _view.ShowReason(_texts.Get(refusal.ReasonKey));
         }
     }
 }

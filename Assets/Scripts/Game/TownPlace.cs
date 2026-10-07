@@ -29,7 +29,7 @@ namespace Diciela.Game
             _controls = controls;
             _bar = bar;
             _zone.Show(world);
-            _bar.Show(texts, tools.Place, world, keys);
+            _bar.Show(texts, tools.Place, tools.Paths, world, keys);
             _controls.Bind(hud, tools.Place, tools.Paths);
             _menu.OpenChanged += ShowZone;
             _tools.Placement.HeldChanged += ShowZone;
