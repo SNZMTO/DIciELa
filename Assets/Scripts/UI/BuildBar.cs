@@ -36,6 +36,9 @@ namespace Diciela.UI
         /// <summary>Vrai tant que le panneau est ouvert.</summary>
         public bool IsOpen => _presenter != null && _presenter.IsOpen;
 
+        /// <summary>Vrai si la ville propose la Place : dès le campement posé.</summary>
+        public bool OffersPlaza => _presenter != null && _presenter.OffersPlaza;
+
         private void Awake()
         {
             _document = GetComponent<UIDocument>();

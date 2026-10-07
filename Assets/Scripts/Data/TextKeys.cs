@@ -51,9 +51,19 @@ namespace Diciela.Data
         public const string MoveToolDetail = "outil.deplacer.suite";
         public const string PathsTool = "outil.chemins";
         public const string PathsToolDetail = "outil.chemins.suite";
+        public const string PlazaTool = "outil.place";
+        public const string PlazaToolDetail = "outil.place.suite";
         public const string ToolsTooltip = "outils.infobulle";
         public const string ToolsTooltipDetail = "outils.infobulle.suite";
         public const string KeyParameter = "{touche}";
+
+        /// <summary>Les cases de la roue d'un outil de sol qui ne sont pas des modes (décision 221).</summary>
+        public const string WheelBack = "roue.outils";
+        public const string WheelBackDetail = "roue.outils.suite";
+        public const string WheelSymmetry = "roue.symetrie";
+        public const string WheelSymmetryDetail = "roue.symetrie.suite";
+        public const string WheelInk = "roue.sol";
+        public const string WheelInkDetail = "roue.sol.suite";
 
         // Les fanions du stock (GDD, section 16) : l'infobulle d'un fanion ({marchandise} y est remplacé).
         public const string StockTooltip = "fanion.infobulle";

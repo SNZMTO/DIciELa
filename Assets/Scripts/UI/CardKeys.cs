@@ -4,37 +4,30 @@ using Diciela.Controls;
 namespace Diciela.UI
 {
     /// <summary>
-    /// Les touches 1 à 9 (décisions 184, 206 et 210) : le panneau Construire ouvert, elles prennent ses cartes ; sinon,
-    /// un outil de sol en main (la Place, ou Chemins), les premières prennent ses modes, dans l'ordre de sa barre. Un seul
-    /// aiguillage : une touche ne fait jamais les deux.
+    /// Les chiffres (décisions 184 et 221) : le panneau Construire ouvert, ils prennent ses cartes ; sinon, les cases de
+    /// la roue de l'outil en main (IRingKeys). Un seul aiguillage : une touche ne fait jamais les deux.
     /// </summary>
     public sealed class CardKeys : ICardPicker
     {
         private readonly IBuildMenu _menu;
         private readonly ICardPicker _cards;
-        private readonly PaintTool[] _tools;
+        private readonly IRingKeys _ring;
 
-        public CardKeys(IBuildMenu menu, ICardPicker cards, params PaintTool[] tools)
+        public CardKeys(IBuildMenu menu, ICardPicker cards, IRingKeys ring)
         {
-            if (menu == null || cards == null || tools == null || Array.IndexOf(tools, null) >= 0)
-                throw new ArgumentException("Les touches des cartes ont besoin du panneau Construire et des outils de sol.");
+            if (menu == null || cards == null || ring == null)
+                throw new ArgumentException("Les chiffres ont besoin du panneau Construire et de la roue.");
             _menu = menu;
             _cards = cards;
-            _tools = tools;
+            _ring = ring;
         }
 
         public void TakeCard(int index)
         {
             if (_menu.IsOpen)
-            {
                 _cards.TakeCard(index);
-                return;
-            }
-            foreach (PaintTool tool in _tools)
-            {
-                if (tool.IsActive && index >= 0 && index < tool.Entry.Modes.Count)
-                    tool.Choose(tool.Entry.Modes[index]);
-            }
+            else
+                _ring.TakeSlot(index);
         }
     }
 }

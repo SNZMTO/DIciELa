@@ -1,26 +1,33 @@
 using System;
+using System.Collections.Generic;
 using Diciela.Controls;
 using Diciela.Data;
 
 namespace Diciela.UI
 {
     /// <summary>
-    /// Le présentateur de la roue des outils (GDD, section 16 ; décision 168). Choisir un outil l'allume, en éteignant
-    /// les autres, ou l'éteint s'il l'était : Construire ouvre ou ferme le panneau Construire, Retirer, Déplacer et
-    /// Chemins prennent ou lâchent leur outil. Ce que fait chaque outil n'est écrit qu'ici, dans sa table ; le reste se lit
-    /// dans la table des outils (WheelTool). La bulle du milieu dit le nom et l'usage de l'outil visé ; un outil actif
-    /// reste enfoncé. Les touches se lisent sur les liaisons, l'icône dit celle de la roue dans son infobulle.
+    /// Le présentateur de la roue (GDD, section 16 ; décisions 168 et 221). Elle s'ouvre là où l'on en est : un outil de
+    /// sol en main, sur sa roue (PaintRing), dont la case Outils la retourne sur les outils ; sinon, sur les outils, chacun
+    /// à sa place (WheelTool), la Place seulement une fois le campement posé. Choisir un outil l'allume, en éteignant les
+    /// autres, ou l'éteint s'il l'était : Construire ouvre ou ferme le panneau Construire, les autres prennent ou lâchent
+    /// leur outil. La bulle du milieu dit le nom et l'usage de ce qu'on vise ; la molette règle la case visée ; les
+    /// chiffres prennent les cases de l'outil de sol en main.
     /// </summary>
-    public sealed class ToolWheelPresenter : IDisposable
+    public sealed class ToolWheelPresenter
     {
         private readonly IToolWheelView _view;
         private readonly TextTable _texts;
         private readonly IToolKeys _keys;
-        private readonly ClearingTool _clearing;
         private readonly IBuildMenu _build;
-        private readonly MoveTool _move;
         private readonly PaintTool _paths;
+        private readonly PaintTool _plaza;
         private readonly Switch[] _switches;
+        private readonly PaintRing _paintRing;
+        private readonly List<ToolChoice> _toolsShown = new List<ToolChoice>();
+        private List<WheelSlot> _slots = new List<WheelSlot>();
+        private PaintTool _ringTool;
+        private int _aimedSlot = -1;
+        private int _aimedOption = -1;
 
         /// <summary>Ce qu'un outil allume et éteint, et s'il est allumé.</summary>
         private readonly struct Switch
@@ -38,49 +45,30 @@ namespace Diciela.UI
         }
 
         public ToolWheelPresenter(IToolWheelView view, TextTable texts, IToolKeys keys, ClearingTool clearing,
-            IBuildMenu build, MoveTool move, PaintTool paths)
+            IBuildMenu build, MoveTool move, PaintTool paths, PaintTool plaza)
         {
             if (view == null || ReferenceEquals(texts, null) || keys == null || ReferenceEquals(clearing, null) ||
-                build == null || ReferenceEquals(move, null) || ReferenceEquals(paths, null))
-                throw new ArgumentException("La roue des outils a besoin de sa vue, des textes, des touches, des " +
-                                            "outils « Retirer », « Déplacer » et « Chemins » et du panneau Construire.");
-
+                build == null || ReferenceEquals(move, null) || ReferenceEquals(paths, null) || ReferenceEquals(plaza, null))
+                throw new ArgumentException("La roue a besoin de sa vue, des textes, des touches, du panneau Construire " +
+                                            "et des outils « Retirer », « Déplacer », « Chemins » et de la Place.");
             _view = view;
             _texts = texts;
             _keys = keys;
-            _clearing = clearing;
             _build = build;
-            _move = move;
             _paths = paths;
+            _plaza = plaza;
+            _paintRing = new PaintRing(texts, keys);
             // Au rang du choix de chaque outil (ToolChoice).
             _switches = new[]
             {
-                new Switch(() => _build.IsOpen, _build.Open, _build.Close),
-                new Switch(() => _clearing.IsActive, _clearing.Take, _clearing.PutDown),
-                new Switch(() => _move.IsActive, _move.Take, _move.PutDown),
-                new Switch(() => _paths.IsActive, _paths.Take, _paths.PutDown)
+                new Switch(() => build.IsOpen, build.Open, build.Close),
+                new Switch(() => clearing.IsActive, clearing.Take, clearing.PutDown),
+                new Switch(() => move.IsActive, move.Take, move.PutDown),
+                new Switch(() => paths.IsActive, paths.Take, paths.PutDown),
+                new Switch(() => plaza.IsActive, plaza.Take, plaza.PutDown)
             };
-            _view.Chosen += OnChosen;
-            _view.Pointed += OnPointed;
-            _clearing.HeldChanged += ShowActive;
-            _move.HeldChanged += ShowActive;
-            _paths.HeldChanged += ShowActive;
-            _build.OpenChanged += ShowActive;
             _view.ShowWheelKey(keys.WheelKey);
-            for (int i = 0; i < _switches.Length; i++)
-                _view.ShowToolKey((ToolChoice)i, keys.KeyOf((ToolChoice)i));
             _view.ShowLabel("", "");
-            ShowActive();
-        }
-
-        public void Dispose()
-        {
-            _view.Chosen -= OnChosen;
-            _view.Pointed -= OnPointed;
-            _clearing.HeldChanged -= ShowActive;
-            _move.HeldChanged -= ShowActive;
-            _paths.HeldChanged -= ShowActive;
-            _build.OpenChanged -= ShowActive;
         }
 
         /// <summary>L'infobulle de l'icône des outils : son nom, et la touche qui ouvre la roue sous le pointeur.</summary>
@@ -90,8 +78,62 @@ namespace Diciela.UI
                 _texts.Get(TextKeys.ToolsTooltipDetail).Replace(TextKeys.KeyParameter, _keys.WheelKey));
         }
 
-        private void OnChosen(ToolChoice choice)
+        /// <summary>La roue s'ouvre : sur les outils, ou là où l'on en est (la roue de l'outil de sol en main).</summary>
+        public void Open(bool onTools)
         {
+            _ringTool = onTools ? null : HeldPaint();
+            ShowRing();
+            Aim(-1, -1);
+        }
+
+        /// <summary>Prend cette case (option -1) ou cette option : vrai si la roue reste ouverte, retournée sur les outils.</summary>
+        public bool Pick(int slot, int option)
+        {
+            if (slot < 0 || slot >= _slots.Count)
+                return false;
+            if (_ringTool == null)
+            {
+                Choose(_toolsShown[slot]);
+                return false;
+            }
+            if (_paintRing.Pick(_ringTool, _slots[slot].Place, option))
+                return false;
+            Open(true);
+            return true;
+        }
+
+        /// <summary>Le joueur vise cette case et cette option (-1 : aucune) : la bulle les nomme.</summary>
+        public void Aim(int slot, int option)
+        {
+            _aimedSlot = slot;
+            _aimedOption = option;
+            if (slot < 0 || slot >= _slots.Count)
+                _view.ShowLabel("", "");
+            else if (option >= 0 && option < _slots[slot].Options.Count)
+                _view.ShowLabel(_slots[slot].Options[option].Name, _slots[slot].Options[option].Detail);
+            else
+                _view.ShowLabel(_slots[slot].Name, _slots[slot].Detail);
+        }
+
+        /// <summary>La molette sur la roue ouverte : elle règle la case visée (la taille, les branches de l'étoile).</summary>
+        public void Scroll(int notches)
+        {
+            if (_ringTool == null || _aimedSlot < 0 || _aimedSlot >= _slots.Count)
+                return;
+            if (!_paintRing.Scroll(_ringTool, _slots[_aimedSlot].Place, _aimedOption, notches))
+                return;
+            ShowRing();
+            Aim(_aimedSlot, _aimedOption);
+        }
+
+        /// <summary>
+        /// La touche d'un outil, ou son choix dans la roue : l'allume en éteignant les autres, ou l'éteint s'il l'était.
+        /// La Place n'y répond qu'une fois le campement posé.
+        /// </summary>
+        public void Choose(ToolChoice choice)
+        {
+            if (choice == ToolChoice.Plaza && !_build.OffersPlaza)
+                return;
             Switch chosen = _switches[(int)choice];
             if (chosen.IsOn())
             {
@@ -106,21 +148,41 @@ namespace Diciela.UI
             chosen.On();
         }
 
-        private void OnPointed(ToolChoice? choice)
+        /// <summary>
+        /// Le chiffre d'une case de l'outil de sol en main (0 : la première) : vrai s'il demande la roue des outils.
+        /// </summary>
+        public bool TakeSlot(int index)
         {
-            if (!choice.HasValue)
-            {
-                _view.ShowLabel("", "");
-                return;
-            }
-            WheelTool tool = WheelTool.Of(choice.Value);
-            _view.ShowLabel(_texts.Get(tool.NameKey), _texts.Get(tool.DetailKey));
+            PaintTool tool = HeldPaint();
+            return tool != null && !_paintRing.Key(tool, index);
         }
 
-        private void ShowActive()
+        private void ShowRing()
         {
-            for (int i = 0; i < _switches.Length; i++)
-                _view.ShowActive((ToolChoice)i, _switches[i].IsOn());
+            _slots = _ringTool != null
+                ? _paintRing.Slots(_ringTool, WheelTool.Of(_ringTool == _plaza ? ToolChoice.Plaza : ToolChoice.Paths).Pastel)
+                : ToolSlots();
+            _view.ShowRing(_slots);
+        }
+
+        private List<WheelSlot> ToolSlots()
+        {
+            _toolsShown.Clear();
+            var slots = new List<WheelSlot>();
+            foreach (WheelTool tool in WheelTool.All)
+            {
+                if (tool.Choice == ToolChoice.Plaza && !_build.OffersPlaza)
+                    continue;
+                _toolsShown.Add(tool.Choice);
+                slots.Add(new WheelSlot(tool.Place, tool.Icon, null, tool.Pastel, _keys.KeyOf(tool.Choice),
+                    _texts.Get(tool.NameKey), _texts.Get(tool.DetailKey), _switches[(int)tool.Choice].IsOn()));
+            }
+            return slots;
+        }
+
+        private PaintTool HeldPaint()
+        {
+            return _plaza.IsActive ? _plaza : _paths.IsActive ? _paths : null;
         }
     }
 }

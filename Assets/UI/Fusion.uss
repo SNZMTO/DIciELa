@@ -197,6 +197,22 @@
 .feutre.rose-pale:hover { --face: #FBE6EB; }
 .feutre.rose-pale:active, .feutre.rose-pale.ouvert { --face: #EFC7D1; }
 
+.feutre.ciel { --face: #B7D9EE; --levre: #8DB8D3; --fil: #5B88A6; }
+.feutre.ciel:hover, .feutre.ciel.vise { --face: #C6E1F2; }
+.feutre.ciel:active, .feutre.ciel.ouvert { --face: #A6C9DE; }
+
+.feutre.beurre { --face: #F8DE95; --levre: #D8BB69; --fil: #A6883A; }
+.feutre.beurre:hover, .feutre.beurre.vise { --face: #FAE6AD; }
+.feutre.beurre:active, .feutre.beurre.ouvert { --face: #E8CE86; }
+
+.feutre.peche { --face: #F9C7A5; --levre: #DCA27C; --fil: #AF754F; }
+.feutre.peche:hover, .feutre.peche.vise { --face: #FBD4B9; }
+.feutre.peche:active, .feutre.peche.ouvert { --face: #E9B794; }
+
+.feutre.lin { --face: #FBF3E4; --levre: #E0C7A2; --fil: #B39470; }
+.feutre.lin:hover, .feutre.lin.vise { --face: #FFF8EC; }
+.feutre.lin:active, .feutre.lin.ouvert { --face: #F0E4CC; }
+
 /* Le stock : la tringle de bois, ses pommeaux, les fanions de lin à bande de brique (Pennant) ; un fanion à zéro
    reste, en douce. */
 .tringle-clair { height: 4px; background-color: #DDAA72; }
