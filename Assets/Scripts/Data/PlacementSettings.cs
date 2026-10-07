@@ -64,6 +64,10 @@ namespace Diciela.Data
         [Tooltip("Le rayon du pinceau et de la gomme quand on prend l'outil de la Place, en mètres.")]
         [SerializeField, Range(0.25f, 10f)] private float _brushRadiusMeters = 2f;
 
+        [Tooltip("Le rayon du pinceau et de la gomme quand on prend l'outil Chemins, en mètres : un chemin de 2 m de " +
+                 "large (GDD, section 9).")]
+        [SerializeField, Range(0.25f, 10f)] private float _pathBrushRadiusMeters = 1f;
+
         [Tooltip("Le plus petit et le plus grand rayon du pinceau, en mètres.")]
         [SerializeField] private Vector2 _brushRadiusRangeMeters = new Vector2(0.5f, 6f);
 
@@ -101,6 +105,7 @@ namespace Diciela.Data
         public Color MarkedColor => _markedColor;
         public float MarkHeightMeters => _markHeightMeters;
         public float BrushRadiusMeters => _brushRadiusMeters;
+        public float PathBrushRadiusMeters => _pathBrushRadiusMeters;
         public Vector2 BrushRadiusRangeMeters => _brushRadiusRangeMeters;
         public float BrushRadiusStepMeters => _brushRadiusStepMeters;
         public float StrokeSpacingMeters => _strokeSpacingMeters;

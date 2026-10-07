@@ -205,6 +205,9 @@ place.refus.MarksOverlap,Elle chevauche une autre place de charrette,It overlaps
 place.refus.TooManyMarks,Toutes les places de charrette sont posées,All cart spots are placed
 place.refus.NoRoomToPark,"Devant elle, on ne peut pas se tenir pour la garer",There is no room in front of it to park
 place.refus.UnknownMark,Cette place de charrette n'existe plus,This cart spot no longer exists
+place.zone,La zone,The zone
+place.zone.suite,"Trace la zone de la Place, où l'on marche et où se tient l'étal.","Lay out the Square, where people walk and the stalls stand."
+sol.suite,"Un chantier : les ouvriers le bâtissent, et les charrettes y vont plus vite.","A building site: workers lay it, and carts go faster on it."
 sol.refus.Nothing,Rien ne change ici,Nothing changes here
 sol.refus.Unknown,Pas encore d'idée pour ce sol,No idea for this ground yet
 place.refus.CartBusy,"Sa charrette arrive, ou porte encore des marchandises","Its cart is coming, or still carries goods"
