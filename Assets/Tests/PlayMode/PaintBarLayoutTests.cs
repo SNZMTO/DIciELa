@@ -118,16 +118,21 @@ namespace Diciela.Tests.PlayMode
 #endif
         }
 
-        // Une rangée d'options dont tout est caché ne prend aucune place, ni hauteur ni marge : la barre n'a pas de trou.
+        // Une rangée d'options dont tout est caché ne prend aucune place, ni hauteur ni marge : la barre n'a pas de trou ;
+        // celle qui se voit (les symétries) garde son écart sous ce qui la précède.
         private static void CheckEmptyRows(VisualElement root, List<string> faults)
         {
             int empty = 0;
+            int spaced = 0;
             root.Q("place-barre").Query(className: "place-options").ForEach(row =>
             {
                 foreach (VisualElement child in row.Children())
                 {
-                    if (child.resolvedStyle.display != DisplayStyle.None)
-                        return;
+                    if (child.resolvedStyle.display == DisplayStyle.None)
+                        continue;
+                    if (child.resolvedStyle.marginTop > Tolerance)
+                        spaced++;
+                    return;
                 }
                 empty++;
                 if (row.layout.height > Tolerance || row.resolvedStyle.marginTop > Tolerance)
@@ -136,6 +141,8 @@ namespace Diciela.Tests.PlayMode
             });
             if (empty == 0)
                 faults.Add("Au mode Place de charrette, aucune rangée d'options n'est vide : le test ne vérifie rien.");
+            if (spaced == 0)
+                faults.Add("Au mode Place de charrette, la rangée des symétries n'a pas son écart sous les modes.");
         }
 
         private static void Check(VisualElement root, Vector2Int screen, List<string> faults)
