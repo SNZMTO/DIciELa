@@ -85,7 +85,7 @@ namespace Diciela.Tests.PlayMode
                             bar.Show(catalog, texts, world.Tool, world.Place, world.World, new FixedToolKeys(),
                                 new ReasonBubble(document));
                             bar.Open();
-                            wheel.Show(texts, new FixedToolKeys(), world.Clearing, bar, world.Mover, tooltips);
+                            wheel.Show(texts, new FixedToolKeys(), world.Clearing, bar, world.Mover, world.Paths, tooltips);
                             day.Show(world.World.Clock, texts, tooltips);
                             town.InstallTheCamp();
                             stock.Show(town.World, town.Catalog, texts, tooltips);

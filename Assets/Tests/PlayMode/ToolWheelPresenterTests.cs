@@ -32,7 +32,7 @@ namespace Diciela.Tests.PlayMode
             _view = new NotedToolWheelView();
             _build = new NotedBuildMenu();
             _presenter = new ToolWheelPresenter(_view, TextTable.Parse(Texts, "fr"), new FixedToolKeys(), _test.Clearing,
-                _build, _test.Mover);
+                _build, _test.Mover, _test.Paths);
         }
 
         [TearDown]

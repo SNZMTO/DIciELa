@@ -15,6 +15,8 @@ namespace Diciela.Tests.PlayMode
                     return "B";
                 case ToolChoice.Clear:
                     return "X";
+                case ToolChoice.Paths:
+                    return "C";
                 default:
                     return "M";
             }

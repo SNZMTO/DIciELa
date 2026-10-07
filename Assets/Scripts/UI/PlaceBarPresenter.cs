@@ -105,13 +105,13 @@ namespace Diciela.UI
         // (le pinceau sur la Place déjà peinte) ne dit rien.
         private void OnResultChanged()
         {
-            PlaceResult result = _tool.Result;
+            PaintAnswer answer = _tool.Answer;
             if (!_tool.IsActive)
                 _view.ShowReason("");
             else if (_tool.HoveredMark != null)
                 _view.ShowReason(_texts.Get(TextKeys.PlaceRemoveMark));
-            else if (result != PlaceResult.Ok && result != PlaceResult.Nothing)
-                _view.ShowReason(_texts.Get(TextKeys.PlaceRefusal(result.ToString())));
+            else if (!answer.IsOk && !answer.ChangesNothing)
+                _view.ShowReason(_texts.Get(answer.ReasonKey));
             else
                 _view.ShowReason("");
         }
