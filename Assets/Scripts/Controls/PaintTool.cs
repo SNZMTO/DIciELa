@@ -9,13 +9,14 @@ using UnityEngine;
 namespace Diciela.Controls
 {
     /// <summary>
-    /// Un outil de sol (GDD, sections 9 et 11 ; décisions 206 et 210) : un seul outil, deux entrées (PaintEntry), l'outil
-    /// de la Place, pris à sa carte, et l'outil Chemins, pris à la roue. Peindre et gommer au pinceau, tracer un disque ou
-    /// un rectangle, poser ou retirer une place de charrette (PaintToolMode) ; ce qu'il pose, la zone ou un sol, est son
-    /// encre (PaintInks). Il tient son mode, son encre, la taille de son pinceau et le cap de la place de charrette ; il
-    /// travaille sur sa surface (PaintCanvas) : un geste glissé est une forme, et une forme est un ordre, envoyé au
-    /// relâchement ; pendant le geste, l'aperçu montre ce qu'elle changerait, par la même fonction que l'ordre, et une
-    /// forme refusée ne part pas. Les gestes et les tests l'appellent par les mêmes méthodes. Celui qui le crée le libère.
+    /// Un outil de sol (GDD, sections 9 et 11 ; décisions 206, 210 et 216) : un seul outil, deux entrées (PaintEntry),
+    /// l'outil de la Place, pris à sa carte, et l'outil Chemins, pris à la roue. Ses modes, en familles (PaintToolMode) :
+    /// peindre et gommer au pinceau, tracer point par point, tracer une forme, poser ou retirer une place de charrette ;
+    /// ce qu'il pose, la zone ou un sol, est son encre (PaintInks) ; ses réglages sans geste, ses options (PaintOptions).
+    /// Il travaille sur sa surface (PaintCanvas) : une forme est un ordre, envoyé au relâchement d'un geste glissé, ou au
+    /// clic sur le dernier point d'un tracé ; pendant le geste, l'aperçu montre ce qu'elle changerait, par la même
+    /// fonction que l'ordre, et une forme refusée ne part pas. Les gestes et les tests l'appellent par les mêmes méthodes.
+    /// Celui qui le crée le libère.
     /// </summary>
     public sealed class PaintTool : IDisposable, IHeldTool
     {
@@ -35,9 +36,8 @@ namespace Diciela.Controls
             Entry = entry ?? throw new ArgumentNullException(nameof(entry));
             Mode = entry.Modes[0];
             Inks = new PaintInks(entry, world.Knowledge, floors);
+            Options = new PaintOptions(settings, entry.StartBrushRadius(settings));
             _canvas = new PaintCanvas(this, world, camera, preview, settings);
-            Vector2 range = settings.BrushRadiusRangeMeters;
-            BrushRadius = Mathf.Clamp(entry.StartBrushRadius(settings), range.x, range.y);
         }
 
         public void Dispose()
@@ -58,17 +58,14 @@ namespace Diciela.Controls
         public bool IsActive { get; private set; }
         public PaintToolMode Mode { get; private set; }
 
-        /// <summary>Le rayon du pinceau et de la gomme, en mètres.</summary>
-        public float BrushRadius { get; private set; }
-
-        /// <summary>Le cap de la place de charrette en main, comme une construction à la pose.</summary>
-        public float HeadingDegrees { get; private set; }
-
         /// <summary>Son entrée : l'outil de la Place, ou l'outil Chemins.</summary>
         public PaintEntry Entry { get; }
 
         /// <summary>Ce qu'il pose : la zone ou un sol, et les sols que la ville sait faire.</summary>
         public PaintInks Inks { get; }
+
+        /// <summary>Ses options : la forme, la taille du pinceau, le cap de la place de charrette.</summary>
+        public PaintOptions Options { get; }
 
         /// <summary>La réponse de la Place ou des sols à ce qu'il vise ; Ok quand rien n'est visé.</summary>
         public PaintAnswer Answer => _canvas.Answer;
@@ -108,14 +105,20 @@ namespace Diciela.Controls
             HeldChanged?.Invoke();
         }
 
+        /// <summary>Change la forme du mode Forme ; le geste en cours est abandonné.</summary>
+        public void Choose(PaintShape shape)
+        {
+            if (!IsActive || !Options.Choose(shape))
+                return;
+            _canvas.Abandon(false);
+            HeldChanged?.Invoke();
+        }
+
         /// <summary>Grandit (positif) ou rapetisse le pinceau d'autant de crans, dans ses bornes.</summary>
         public void ResizeBrush(int notches)
         {
-            Vector2 range = _settings.BrushRadiusRangeMeters;
-            float radius = Mathf.Clamp(BrushRadius + notches * _settings.BrushRadiusStepMeters, range.x, range.y);
-            if (!IsActive || Mathf.Approximately(radius, BrushRadius))
+            if (!IsActive || !Options.Resize(notches))
                 return;
-            BrushRadius = radius;
             _canvas.ForgetDot();
             HeldChanged?.Invoke();
         }
@@ -162,7 +165,7 @@ namespace Diciela.Controls
         /// <summary>Tourne la place de charrette de cet angle, en degrés ; positif, vers l'est.</summary>
         public void RotateBy(float degrees)
         {
-            HeadingDegrees = Mathf.Repeat(HeadingDegrees + degrees, 360f);
+            Options.Rotate(degrees);
             if (IsActive && Mode == PaintToolMode.CartSpot)
                 _canvas.Refresh(true);
         }
