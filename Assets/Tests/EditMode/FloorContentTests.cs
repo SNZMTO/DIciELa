@@ -5,14 +5,14 @@ using NUnit.Framework;
 namespace Diciela.Tests.EditMode
 {
     /// <summary>
-    /// Les sols du projet (GDD, section 9 ; décisions 209 et 210), lus sans rien écrire : chacun a son identifiant, une
-    /// seule fois ; la ville sait tracer au départ un sol du catalogue, et rien hors de lui ; sur un sol, une charrette ne
-    /// va jamais moins vite que dans l'herbe.
+    /// Les sols du projet (GDD, sections 9 et 16 ; décisions 209 et 210), lus sans rien écrire : chacun a son identifiant,
+    /// une seule fois, et son calque, celui où il se peint ; la ville sait tracer au départ un sol du catalogue, et rien
+    /// hors de lui ; sur un sol, une charrette ne va jamais moins vite que dans l'herbe.
     /// </summary>
     public sealed class FloorContentTests
     {
         [Test]
-        public void EachFloorHasItsOwnId()
+        public void EachFloorHasItsOwnIdAndItsLayer()
         {
             Catalog catalog = ProjectContent.LoadSingle<Catalog>();
             var ids = new HashSet<string>();
@@ -21,6 +21,7 @@ namespace Diciela.Tests.EditMode
                 Assert.IsNotNull(floor, "Une case vide dans la liste des sols du catalogue.");
                 Assert.IsNotEmpty(floor.Id, floor.name + " n'a pas d'identifiant.");
                 Assert.IsTrue(ids.Add(floor.Id), "Deux sols portent l'identifiant " + floor.Id + ".");
+                Assert.IsNotNull(floor.Layer, floor.name + " n'a pas de calque : il ne se verrait pas.");
             }
         }
 

@@ -37,6 +37,9 @@ namespace Diciela.Game
         /// <summary>Le Terrain de la carte, qui porte la copie du sol ; null tant que la carte n'est pas lue.</summary>
         public Terrain Terrain { get; private set; }
 
+        /// <summary>Le sol de la carte tel que le développeur l'a peint, jamais touché : la peinture d'origine.</summary>
+        public TerrainData OriginalGround { get; private set; }
+
         /// <summary>Pour chaque arbre ou rocher de la description, dans son ordre, le numéro de son instance sur le Terrain.</summary>
         public IReadOnlyList<int> NatureInstances => _natureInstances;
 
@@ -70,7 +73,8 @@ namespace Diciela.Game
             }
 
             Terrain = root.Terrain;
-            _ground = Object.Instantiate(Terrain.terrainData);
+            OriginalGround = Terrain.terrainData;
+            _ground = Object.Instantiate(OriginalGround);
             Terrain.terrainData = _ground;
             var collider = root.GetComponent<TerrainCollider>();
             if (collider != null)
@@ -115,6 +119,7 @@ namespace Diciela.Game
             _ground = null;
             _natureInstances.Clear();
             Terrain = null;
+            OriginalGround = null;
             Description = null;
         }
     }

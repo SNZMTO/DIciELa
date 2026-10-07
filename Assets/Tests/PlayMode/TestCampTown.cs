@@ -11,7 +11,8 @@ namespace Diciela.Tests.PlayMode
     /// <summary>
     /// Le petit monde des tests de l'interface du campement : plat, 40 × 40 m (ou la carte donnée), la Chimère née au
     /// centre (sauf si le test la crée lui-même) ; le Bois et la Pierre ; un campement de 3 × 3 m qui tient 100
-    /// marchandises et ouvre le poste « à tout faire » (porter, puis défricher) ; le déroulé du départ, qui lui donne
+    /// marchandises et ouvre le poste « à tout faire » (porter, puis défricher ; bâtir entre les deux si le test le
+    /// demande) ; le déroulé du départ, qui lui donne
     /// 30 Bois et 20 Pierre quand on l'installe, qui sait bâtir le campement et ce que le test y ajoute, et fait arriver
     /// un premier habitant, le bâtisseur, dès qu'une maison a un lit (aucune n'en a, sauf celle que le test demande).
     /// Les fiches sont remplies par SerializedObject, le chemin de l'Inspector, et détruites avec lui.
@@ -22,7 +23,7 @@ namespace Diciela.Tests.PlayMode
         private readonly VillagerKindDefinition _kind;
         private readonly OpeningDefinition _opening;
 
-        public TestCampTown(bool withChimera = true, MapDescription map = null)
+        public TestCampTown(bool withChimera = true, MapDescription map = null, bool builds = false)
         {
             _opening = Keep(ScriptableObject.CreateInstance<OpeningDefinition>());
 #if UNITY_EDITOR
@@ -42,7 +43,13 @@ namespace Diciela.Tests.PlayMode
             TestWorld.Fill(clear, "_subStatistic", landscape);
             var slot = Keep(ScriptableObject.CreateInstance<WorkSlotDefinition>());
             TestWorld.Fill(slot, "_nameKey", "poste.a_tout_faire");
-            TestWorld.FillList(slot, "_tasks", carry, clear);
+            var build = Keep(ScriptableObject.CreateInstance<TaskKindDefinition>());
+            TestWorld.Fill(build, "_work", (int)TaskWork.Build);
+            TestWorld.Fill(build, "_subStatistic", transport);
+            if (builds)
+                TestWorld.FillList(slot, "_tasks", carry, build, clear);
+            else
+                TestWorld.FillList(slot, "_tasks", carry, clear);
             FillGoods(_opening, "_startingGoods", new GoodAmount(Wood, 30), new GoodAmount(Stone, 20));
             Catalog = Keep(ScriptableObject.CreateInstance<Catalog>());
             TestWorld.Fill(Catalog, "_opening", _opening);
@@ -76,6 +83,14 @@ namespace Diciela.Tests.PlayMode
 #endif
             if (withChimera)
                 CreateTheChimera();
+        }
+
+        /// <summary>La ville sait tracer ces sols dès le départ, d'après le déroulé du départ.</summary>
+        public void KnowsFloors(params FloorDefinition[] floors)
+        {
+#if UNITY_EDITOR
+            TestWorld.FillList(_opening, "_knownFloors", floors);
+#endif
         }
 
         /// <summary>Une maison d'un lit, dressée dès la pose, que la ville sait bâtir : posée, le bâtisseur arrive.</summary>
