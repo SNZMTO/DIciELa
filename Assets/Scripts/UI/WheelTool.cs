@@ -5,27 +5,35 @@ using Diciela.Data;
 namespace Diciela.UI
 {
     /// <summary>
-    /// Un outil de la roue pour l'interface (décision 168) : le nom de son élément dans Hud.uxml (sa touche s'écrit dans
-    /// l'élément du même nom suivi de « -touche »), et les clés de son nom et de son usage, que dit la bulle du milieu. La
-    /// table est ici, au rang du choix de chaque outil (ToolChoice) ; celle des gestes est ToolAction.
+    /// Un outil de la roue des outils pour l'interface (décisions 168 et 221) : sa place sur le plateau (0 en haut, puis
+    /// dans le sens des aiguilles d'une montre), son icône et sa couleur (des classes de la feuille de style), et les clés
+    /// de son nom et de son usage, que dit la bulle du milieu. La table est ici, au rang du choix de chaque outil
+    /// (ToolChoice) ; celle des gestes est ToolAction.
     /// </summary>
     internal readonly struct WheelTool
     {
         public static readonly IReadOnlyList<WheelTool> All = new[]
         {
-            new WheelTool("roue-construire", TextKeys.BuildTool, TextKeys.BuildToolDetail),
-            new WheelTool("roue-retirer", TextKeys.ClearingTool, TextKeys.ClearingToolDetail),
-            new WheelTool("roue-deplacer", TextKeys.MoveTool, TextKeys.MoveToolDetail),
-            new WheelTool("roue-chemins", TextKeys.PathsTool, TextKeys.PathsToolDetail)
+            new WheelTool(ToolChoice.Build, 0, "marteau", "beurre", TextKeys.BuildTool, TextKeys.BuildToolDetail),
+            new WheelTool(ToolChoice.Clear, 4, "hache", "menthe", TextKeys.ClearingTool, TextKeys.ClearingToolDetail),
+            new WheelTool(ToolChoice.Move, 2, "fleches", "ciel", TextKeys.MoveTool, TextKeys.MoveToolDetail),
+            new WheelTool(ToolChoice.Paths, 6, "chemins", "sable", TextKeys.PathsTool, TextKeys.PathsToolDetail),
+            new WheelTool(ToolChoice.Plaza, 7, "roue-place", "peche", TextKeys.PlazaTool, TextKeys.PlazaToolDetail)
         };
 
-        public readonly string ElementName;
+        public readonly ToolChoice Choice;
+        public readonly int Place;
+        public readonly string Icon;
+        public readonly string Pastel;
         public readonly string NameKey;
         public readonly string DetailKey;
 
-        private WheelTool(string elementName, string nameKey, string detailKey)
+        private WheelTool(ToolChoice choice, int place, string icon, string pastel, string nameKey, string detailKey)
         {
-            ElementName = elementName;
+            Choice = choice;
+            Place = place;
+            Icon = icon;
+            Pastel = pastel;
             NameKey = nameKey;
             DetailKey = detailKey;
         }

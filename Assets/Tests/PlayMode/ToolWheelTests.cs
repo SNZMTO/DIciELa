@@ -11,7 +11,7 @@ using UnityEngine.UIElements;
 namespace Diciela.Tests.PlayMode
 {
     /// <summary>
-    /// La vue de la roue des outils (décision 168), dans un HUD de test, montrée, cachée, puis montrée de nouveau, comme à
+    /// La vue de la roue (décisions 168 et 221), dans un HUD de test, montrée, cachée, puis montrée de nouveau, comme à
     /// une deuxième partie : elle ne s'est branchée qu'une fois, si bien qu'un clic sur l'icône ouvre la roue ; cachée,
     /// l'icône n'a plus d'infobulle ; ouverte, chaque outil montre son image. Les clics et les survols sont des événements
     /// de la souris envoyés au panneau, au milieu de l'élément, dans le repère du panneau.
@@ -41,9 +41,11 @@ namespace Diciela.Tests.PlayMode
                 var wheel = document.GetComponent<ToolWheel>();
                 TextTable texts = TextTable.Parse(Texts, "fr");
                 var build = new NotedBuildMenu();
-                wheel.Show(texts, new FixedToolKeys(), test.Clearing, build, test.Mover, test.Paths, new Tooltips(document));
+                wheel.Show(texts, new FixedToolKeys(), test.Clearing, build, test.Mover, test.Paths, test.Plaza,
+                    new Tooltips(document));
                 wheel.Hide();
-                wheel.Show(texts, new FixedToolKeys(), test.Clearing, build, test.Mover, test.Paths, new Tooltips(document));
+                wheel.Show(texts, new FixedToolKeys(), test.Clearing, build, test.Mover, test.Paths, test.Plaza,
+                    new Tooltips(document));
                 for (int frame = 0; frame < SettleFrames; frame++)
                     yield return null;
                 VisualElement root = document.rootVisualElement;
@@ -73,7 +75,7 @@ namespace Diciela.Tests.PlayMode
                 var wheel = document.GetComponent<ToolWheel>();
                 var tooltips = new Tooltips(document);
                 wheel.Show(TextTable.Parse(Texts, "fr"), new FixedToolKeys(), test.Clearing, new NotedBuildMenu(),
-                    test.Mover, test.Paths, tooltips);
+                    test.Mover, test.Paths, test.Plaza, tooltips);
                 for (int frame = 0; frame < SettleFrames; frame++)
                     yield return null;
                 VisualElement root = document.rootVisualElement;
@@ -102,7 +104,8 @@ namespace Diciela.Tests.PlayMode
                 yield return null;
                 var wheel = document.GetComponent<ToolWheel>();
                 wheel.Show(TextTable.Parse(Texts, "fr"), new FixedToolKeys(), test.Clearing, new NotedBuildMenu(),
-                    test.Mover, test.Paths, new Tooltips(document));
+                    test.Mover, test.Paths, test.Plaza,
+                    new Tooltips(document));
                 for (int frame = 0; frame < SettleFrames; frame++)
                     yield return null;
                 VisualElement root = document.rootVisualElement;

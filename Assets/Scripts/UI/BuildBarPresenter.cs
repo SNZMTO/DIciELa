@@ -28,6 +28,7 @@ namespace Diciela.UI
         private readonly World _world;
         private readonly BuildBarTabs _tabs;
         private readonly BuildBarCards _cards;
+        private readonly BuildBarOffer _offer;
         private readonly List<BuildBarFamily> _families = new List<BuildBarFamily>();
 
         public BuildBarPresenter(IBuildBarView view, Catalog catalog, TextTable texts, PlacementTool placement,
@@ -43,9 +44,9 @@ namespace Diciela.UI
             _placement = placement;
             _plaza = plaza;
             _world = world;
-            var offer = new BuildBarOffer(catalog, world);
-            _tabs = new BuildBarTabs(catalog, offer);
-            _cards = new BuildBarCards(texts, catalog.Plaza, offer, keys);
+            _offer = new BuildBarOffer(catalog, world);
+            _tabs = new BuildBarTabs(catalog, _offer);
+            _cards = new BuildBarCards(texts, catalog.Plaza, _offer, keys);
             _view.FamilyChosen += OnFamilyChosen;
             _view.StructureChosen += OnStructureChosen;
             _placement.HeldChanged += OnHeldChanged;
@@ -58,6 +59,9 @@ namespace Diciela.UI
             OnResultChanged();
             _view.ShowOpen(false);
         }
+
+        /// <summary>Vrai si la ville propose la Place, maintenant : dès le campement posé.</summary>
+        public bool OffersPlaza => _offer.OffersPlaza;
 
         /// <summary>Vrai tant que le panneau est ouvert.</summary>
         public bool IsOpen { get; private set; }

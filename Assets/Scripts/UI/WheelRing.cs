@@ -6,88 +6,109 @@ using UnityEngine.UIElements;
 namespace Diciela.UI
 {
     /// <summary>
-    /// L'anneau de la roue des outils (décisions 168 et 176) : son plateau et les outils autour d'un centre, à la place que
-    /// leur donne la feuille de style, et le fond plein écran qui prend le pointeur tant que l'anneau est ouvert. Il
-    /// s'ouvre en un point du panneau, ramené pour tenir dans l'écran, à la marge des blocs du HUD ; touche tenue, on y
-    /// vise par la direction où l'on bouge le pointeur depuis ce point, au clic par le survol, et on clique un outil ; un
-    /// appui sur le fond le congédie. Fermé, il reste en page, invisible et sans prise : il se mesure avant de s'ouvrir.
-    /// Il se branche sur ses éléments à sa naissance et s'en débranche quand on le libère (Dispose).
+    /// L'anneau de la roue (décisions 168, 176 et 221) : ses cases autour d'un centre (WheelSlots), l'éventail de la case
+    /// visée (WheelFan), à leurs mesures (WheelMeasures), et le fond plein écran qui prend le pointeur, ouvert. Il s'ouvre en
+    /// un point du panneau, ramené pour tenir dans l'écran, éventails compris. Touche tenue, on vise une case par la
+    /// direction où l'on bouge le pointeur depuis ce point, une option en poussant jusqu'à l'éventail ; au clic, par le
+    /// survol. Un appui sur le fond le congédie ; la molette, sur lui, se dit. Fermé, il reste en page, invisible.
     /// </summary>
     internal sealed class WheelRing : IDisposable
     {
         private const string ClosedClass = "roue-fermee";
-        private const string AimedClass = "vise";
-        // L'écart que la roue garde avec le bord de l'écran, comme les blocs du HUD (Hud.uss).
-        private static readonly CustomStyleProperty<float> EdgeMargin = new CustomStyleProperty<float>("--marge");
 
         private readonly VisualElement _wheel;
         private readonly VisualElement _center;
-        private readonly VisualElement _plate;
-        private readonly FeltButton[] _tools;
-        private readonly List<Vector2> _toolCenters = new List<Vector2>();
+        private readonly WheelSlots _felts;
+        private readonly WheelFan _fan;
+        private readonly WheelMeasures _measures;
+        private readonly List<Vector2> _slotCenters = new List<Vector2>();
         private readonly EventCallback<PointerDownEvent> _onBackground;
-        private readonly EventCallback<PointerEnterEvent>[] _onEnter;
-        private readonly EventCallback<PointerLeaveEvent>[] _onLeave;
-        private readonly Action[] _onClicked;
+        private readonly EventCallback<WheelEvent> _onScroll;
+        private IReadOnlyList<WheelSlot> _slots = Array.Empty<WheelSlot>();
         private Vector2 _openedAt;
         private Vector2 _centerPoint;
+        private int _fanSlot = -1;
 
-        public WheelRing(VisualElement wheel, VisualElement center, VisualElement plate, FeltButton[] tools)
+        public WheelRing(VisualElement wheel, VisualElement center, VisualElement slots, VisualElement fan)
         {
             _wheel = wheel;
             _center = center;
-            _plate = plate;
-            _tools = tools;
+            _measures = new WheelMeasures(wheel);
+            _felts = new WheelSlots(slots);
+            _felts.Hovered += slot => AimByHover(slot, -1);
+            _felts.Clicked += slot => Picked?.Invoke(slot, -1);
+            _fan = new WheelFan(fan);
+            _fan.Hovered += option => AimByHover(_fanSlot, option);
+            _fan.Clicked += option => Picked?.Invoke(_fanSlot, option);
             _onBackground = e =>
             {
                 if (e.target == _wheel)
                     Dismissed?.Invoke();
             };
-            _wheel.RegisterCallback(_onBackground);
-            _onEnter = new EventCallback<PointerEnterEvent>[_tools.Length];
-            _onLeave = new EventCallback<PointerLeaveEvent>[_tools.Length];
-            _onClicked = new Action[_tools.Length];
-            for (int i = 0; i < _tools.Length; i++)
+            _onScroll = e =>
             {
-                int tool = i;
-                _onEnter[i] = _ => AimByHover(tool);
-                _onLeave[i] = _ => AimByHover(-1);
-                _onClicked[i] = () => Picked?.Invoke(tool);
-                _tools[i].RegisterCallback(_onEnter[i]);
-                _tools[i].RegisterCallback(_onLeave[i]);
-                _tools[i].Clicked += _onClicked[i];
-            }
+                if (IsOpen && Mathf.Abs(e.delta.y) > 0f)
+                    Scrolled?.Invoke(e.delta.y < 0f ? 1 : -1);
+                e.StopPropagation();
+            };
+            _wheel.RegisterCallback(_onBackground);
+            _wheel.RegisterCallback(_onScroll);
         }
 
-        /// <summary>Levé quand l'outil visé change : son rang, ou -1.</summary>
-        public event Action<int> AimChanged;
+        /// <summary>Levé quand la case visée ou l'option visée change : leurs rangs, -1 pour aucune.</summary>
+        public event Action<int, int> AimChanged;
 
-        /// <summary>Levé quand on appuie sur le fond, à côté des outils.</summary>
+        /// <summary>Levé quand on clique une case (option -1) ou un jeton : leurs rangs.</summary>
+        public event Action<int, int> Picked;
+
+        /// <summary>Levé quand on tourne la molette sur la roue ouverte : +1 vers le haut, -1 vers le bas.</summary>
+        public event Action<int> Scrolled;
+
+        /// <summary>Levé quand on appuie sur le fond, à côté des cases.</summary>
         public event Action Dismissed;
-
-        /// <summary>Levé quand on clique un outil : son rang.</summary>
-        public event Action<int> Picked;
 
         public bool IsOpen { get; private set; }
 
-        /// <summary>Vrai si l'anneau s'est ouvert par la touche tenue : on y vise par la direction du pointeur.</summary>
-        public bool IsHeld { get; private set; }
+        /// <summary>
+        /// Vrai si l'anneau s'est ouvert par la touche tenue : on y vise par la direction du pointeur ; faux, on y clique
+        /// (aussi après la case Outils, qui le garde ouvert).
+        /// </summary>
+        public bool IsHeld { get; set; }
+
+        public int AimedSlot { get; private set; } = -1;
+        public int AimedOption { get; private set; } = -1;
+
+        /// <summary>Montre ces cases : refaites si leurs places changent, sinon mises à jour sur place, la visée gardée.</summary>
+        public void Show(IReadOnlyList<WheelSlot> slots)
+        {
+            _slots = slots;
+            if (_felts.Show(slots, _measures.SlotRadius))
+            {
+                _fanSlot = -1;
+                _fan.Clear();
+                Aim(-1, -1);
+            }
+            else if (_fanSlot >= 0)
+                ShowFan(_fanSlot);
+            _felts.SetPickable(IsOpen);
+        }
 
         /// <summary>Ouvre l'anneau autour de ce point du panneau, ramené pour qu'il tienne dans l'écran.</summary>
         public void Open(Vector2 at, bool held)
         {
             Rect room = _wheel.worldBound;
-            float margin = _wheel.customStyle.TryGetValue(EdgeMargin, out float value) ? value : 0f;
+            float margin = _measures.Margin;
             var inside = Rect.MinMaxRect(room.xMin + margin, room.yMin + margin, room.xMax - margin, room.yMax - margin);
+            float reach = _measures.Reach(_slots);
             _openedAt = at;
-            _centerPoint = WheelGeometry.Clamped(at, Extent(), inside);
+            _centerPoint = WheelGeometry.Clamped(at, new Rect(-reach, -reach, reach * 2f, reach * 2f), inside);
             _center.style.left = _centerPoint.x - room.xMin;
             _center.style.top = _centerPoint.y - room.yMin;
             IsOpen = true;
             IsHeld = held;
             _wheel.RemoveFromClassList(ClosedClass);
             SetPickable(true);
-            Aim(-1);
+            Aim(-1, -1);
         }
 
         public void Close()
@@ -96,7 +117,7 @@ namespace Diciela.UI
             IsHeld = false;
             _wheel.AddToClassList(ClosedClass);
             SetPickable(false);
-            Aim(-1);
+            Aim(-1, -1);
         }
 
         /// <summary>Ferme l'anneau et le débranche de ses éléments.</summary>
@@ -104,62 +125,74 @@ namespace Diciela.UI
         {
             Close();
             _wheel.UnregisterCallback(_onBackground);
-            for (int i = 0; i < _tools.Length; i++)
-            {
-                _tools[i].UnregisterCallback(_onEnter[i]);
-                _tools[i].UnregisterCallback(_onLeave[i]);
-                _tools[i].Clicked -= _onClicked[i];
-            }
+            _wheel.UnregisterCallback(_onScroll);
         }
 
         /// <summary>
-        /// Le rang de l'outil qu'on vise en amenant le pointeur en ce point du panneau ; -1 tant qu'il reste près de là
-        /// où l'anneau s'est ouvert.
+        /// Touche tenue, le pointeur en ce point du panneau : l'option de l'éventail ouvert s'il y pousse, sinon la case
+        /// dans sa direction depuis le point d'ouverture ; rien tant qu'il reste près de ce point.
         /// </summary>
-        public int ToolAt(Vector2 pointer)
+        public void AimAt(Vector2 pointer)
         {
-            _toolCenters.Clear();
-            foreach (FeltButton tool in _tools)
-                _toolCenters.Add(_centerPoint + tool.layout.center);
-            return WheelGeometry.Aimed(_openedAt, _centerPoint, _toolCenters, pointer);
-        }
-
-        /// <summary>Marque l'outil visé (-1 : aucun) et le dit s'il change.</summary>
-        public void Aim(int tool)
-        {
-            bool changed = false;
-            for (int i = 0; i < _tools.Length; i++)
+            if (_fanSlot >= 0)
             {
-                changed |= _tools[i].ClassListContains(AimedClass) != (i == tool);
-                _tools[i].EnableInClassList(AimedClass, i == tool);
+                int option = WheelGeometry.AimedOption(_centerPoint, _slots[_fanSlot].Place * 45f,
+                    _slots[_fanSlot].Options.Count, _measures.FanStep, _measures.FanThreshold, pointer);
+                if (option >= 0)
+                {
+                    Aim(_fanSlot, option);
+                    return;
+                }
             }
-            if (changed)
-                AimChanged?.Invoke(tool);
+            _slotCenters.Clear();
+            foreach (WheelSlot slot in _slots)
+                _slotCenters.Add(_centerPoint + WheelGeometry.OnCircle(slot.Place * 45f, _measures.SlotRadius));
+            Aim(WheelGeometry.Aimed(_openedAt, _centerPoint, _slotCenters, pointer), -1);
         }
 
-        private void AimByHover(int tool)
+        private void AimByHover(int slot, int option)
         {
-            if (IsOpen && !IsHeld)
-                Aim(tool);
+            if (IsOpen && !IsHeld && slot >= 0)
+                Aim(slot, option);
         }
 
-        // La boîte de l'anneau autour de son centre : son plateau et ses outils, qui l'agrandissent quand on les vise. Une
-        // mesure qui manque encore (avant la première mise en page) ne ramène rien.
-        private Rect Extent()
+        // Marque la case et l'option visées, ouvre l'éventail de la case si elle a des options, et le dit si ça change.
+        private void Aim(int slot, int option)
         {
-            Rect extent = _plate.layout;
-            foreach (FeltButton tool in _tools)
-                extent = Rect.MinMaxRect(Mathf.Min(extent.xMin, tool.layout.xMin), Mathf.Min(extent.yMin, tool.layout.yMin),
-                    Mathf.Max(extent.xMax, tool.layout.xMax), Mathf.Max(extent.yMax, tool.layout.yMax));
-            return float.IsNaN(extent.width) || float.IsNaN(extent.height) ? Rect.zero : extent;
+            if (slot >= _slots.Count)
+                slot = -1;
+            if (slot != _fanSlot)
+            {
+                if (slot >= 0 && _slots[slot].Options.Count > 0)
+                    ShowFan(slot);
+                else
+                {
+                    _fanSlot = -1;
+                    _fan.Clear();
+                }
+            }
+            _fan.Aim(slot == _fanSlot ? option : -1);
+            _felts.Aim(slot);
+            if (slot == AimedSlot && option == AimedOption)
+                return;
+            AimedSlot = slot;
+            AimedOption = option;
+            AimChanged?.Invoke(slot, option);
+        }
+
+        private void ShowFan(int slot)
+        {
+            _fanSlot = slot;
+            _fan.Show(_slots[slot].Options, _slots[slot].Place * 45f, _measures.FanRadius, _measures.FanStep,
+                _slots[slot].Pastel);
+            _fan.SetPickable(IsOpen);
         }
 
         private void SetPickable(bool pickable)
         {
-            PickingMode mode = pickable ? PickingMode.Position : PickingMode.Ignore;
-            _wheel.pickingMode = mode;
-            foreach (FeltButton tool in _tools)
-                tool.pickingMode = mode;
+            _wheel.pickingMode = pickable ? PickingMode.Position : PickingMode.Ignore;
+            _felts.SetPickable(pickable);
+            _fan.SetPickable(pickable);
         }
     }
 }

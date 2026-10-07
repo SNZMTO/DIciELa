@@ -848,6 +848,16 @@
                     "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
+                },
+                {
+                    "name": "Plaza",
+                    "type": "Button",
+                    "id": "6c4328e9-d385-4fba-a966-84d9dd7e4104",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -1013,6 +1023,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Paths",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6de7b638-f083-4b6b-babe-c9e6f251348a",
+                    "path": "<Keyboard>/#(p)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Plaza",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

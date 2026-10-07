@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace Diciela.Controls
 {
     /// <summary>
-    /// Un outil de la roue pour ses gestes (décision 168) : son choix, le nom de son action dans la carte « Tools » de
+    /// Un outil de la roue pour ses gestes (décisions 168 et 221) : son choix, le nom de son action dans la carte « Tools » de
     /// l'asset d'actions, et la touche qui la lie d'origine, au caractère (SAVOIR, section 3). La table des outils est ici,
     /// au rang de leur choix : les gestes la parcourent, et le monteur des actions aussi. Un outil de plus est une ligne
     /// de plus, ici et dans la table de l'interface (WheelTool).
@@ -15,7 +15,8 @@ namespace Diciela.Controls
             new ToolAction(ToolChoice.Build, "Build", "<Keyboard>/#(b)"),
             new ToolAction(ToolChoice.Clear, "Clear", "<Keyboard>/#(x)"),
             new ToolAction(ToolChoice.Move, "Move", "<Keyboard>/#(m)"),
-            new ToolAction(ToolChoice.Paths, "Paths", "<Keyboard>/#(c)")
+            new ToolAction(ToolChoice.Paths, "Paths", "<Keyboard>/#(c)"),
+            new ToolAction(ToolChoice.Plaza, "Plaza", "<Keyboard>/#(p)")
         };
 
         public readonly ToolChoice Choice;

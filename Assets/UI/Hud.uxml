@@ -98,34 +98,12 @@
         <ui:VisualElement name="roue" class="roue roue-fermee" picking-mode="Ignore">
             <ui:VisualElement name="roue-centre" class="roue-centre" picking-mode="Ignore">
                 <Diciela.UI.Facet name="roue-plateau" class="plateau roue-plateau" picking-mode="Ignore" />
+                <ui:VisualElement name="roue-cases" class="roue-boite" picking-mode="Ignore" />
+                <ui:VisualElement name="roue-eventail" class="roue-boite" picking-mode="Ignore" />
                 <Diciela.UI.Facet name="roue-bulle" class="bulle roue-bulle bloc-cache" picking-mode="Ignore">
                     <ui:Label name="roue-nom" class="libelle roue-texte" picking-mode="Ignore" />
                     <ui:Label name="roue-suite" class="sous-titre roue-texte" picking-mode="Ignore" />
                 </Diciela.UI.Facet>
-                <Diciela.UI.FeltButton name="roue-construire" class="feutre sable pan-10 roue-outil roue-haut" picking-mode="Ignore">
-                    <ui:VisualElement class="roue-icone marteau" picking-mode="Ignore" />
-                    <Diciela.UI.Facet class="creux pan-4 touche" picking-mode="Ignore">
-                        <ui:Label name="roue-construire-touche" class="touche-texte" picking-mode="Ignore" />
-                    </Diciela.UI.Facet>
-                </Diciela.UI.FeltButton>
-                <Diciela.UI.FeltButton name="roue-retirer" class="feutre sable pan-10 roue-outil roue-bas" picking-mode="Ignore">
-                    <ui:VisualElement class="roue-icone hache" picking-mode="Ignore" />
-                    <Diciela.UI.Facet class="creux pan-4 touche" picking-mode="Ignore">
-                        <ui:Label name="roue-retirer-touche" class="touche-texte" picking-mode="Ignore" />
-                    </Diciela.UI.Facet>
-                </Diciela.UI.FeltButton>
-                <Diciela.UI.FeltButton name="roue-deplacer" class="feutre sable pan-10 roue-outil roue-droite" picking-mode="Ignore">
-                    <ui:VisualElement class="roue-icone fleches" picking-mode="Ignore" />
-                    <Diciela.UI.Facet class="creux pan-4 touche" picking-mode="Ignore">
-                        <ui:Label name="roue-deplacer-touche" class="touche-texte" picking-mode="Ignore" />
-                    </Diciela.UI.Facet>
-                </Diciela.UI.FeltButton>
-                <Diciela.UI.FeltButton name="roue-chemins" class="feutre sable pan-10 roue-outil roue-gauche" picking-mode="Ignore">
-                    <ui:VisualElement class="roue-icone chemins" picking-mode="Ignore" />
-                    <Diciela.UI.Facet class="creux pan-4 touche" picking-mode="Ignore">
-                        <ui:Label name="roue-chemins-touche" class="touche-texte" picking-mode="Ignore" />
-                    </Diciela.UI.Facet>
-                </Diciela.UI.FeltButton>
             </ui:VisualElement>
         </ui:VisualElement>
         <Diciela.UI.Facet name="infobulle" class="bulle infobulle bloc-cache" picking-mode="Ignore">

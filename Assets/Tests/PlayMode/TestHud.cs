@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Diciela.UI;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -61,6 +62,37 @@ namespace Diciela.Tests.PlayMode
         {
             Vector2 origin = RuntimePanelUtils.ScreenToPanel(panel, Vector2.zero);
             Vector2 unit = RuntimePanelUtils.ScreenToPanel(panel, Vector2.one) - origin;
+            var fromTop = new Vector2((panelPoint.x - origin.x) / unit.x, (panelPoint.y - origin.y) / unit.y);
+            return new Vector2(fromTop.x, Screen.height - fromTop.y);
+        }
+
+        /// <summary>
+        /// Ajoute aux fautes ce qui sort de l'écran de la roue ouverte : son plateau, ses cases et les jetons de son
+        /// éventail.
+        /// </summary>
+        public static void CheckWheel(VisualElement root, Vector2Int screen, List<string> faults)
+        {
+            Rect room = root.panel.visualTree.layout;
+            var parts = new List<VisualElement> { root.Q("roue-plateau") };
+            parts.AddRange(root.Q("roue").Query(className: "roue-outil").ToList());
+            parts.AddRange(root.Q("roue").Query(className: "roue-jeton").ToList());
+            foreach (VisualElement part in parts)
+            {
+                Rect box = part.worldBound;
+                if (box.xMin < 0f || box.yMin < 0f || box.xMax > room.width || box.yMax > room.height)
+                    faults.Add(screen.x + " × " + screen.y + " : la roue ouverte au coin sort de l'écran (" +
+                               string.Join(" ", part.GetClasses()) + " " + box + " dans " + room + ").");
+            }
+        }
+
+        /// <summary>
+        /// Le point de l'écran (origine en bas) où le panneau voit ce point : la conversion d'HudArea, inversée par deux
+        /// points connus.
+        /// </summary>
+        public static Vector2 OnScreen(VisualElement root, Vector2 panelPoint)
+        {
+            Vector2 origin = HudArea.ToPanel(root.panel, new Vector2(0f, Screen.height));
+            Vector2 unit = HudArea.ToPanel(root.panel, new Vector2(1f, Screen.height - 1f)) - origin;
             var fromTop = new Vector2((panelPoint.x - origin.x) / unit.x, (panelPoint.y - origin.y) / unit.y);
             return new Vector2(fromTop.x, Screen.height - fromTop.y);
         }

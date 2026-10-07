@@ -36,7 +36,7 @@ namespace Diciela.Tests.PlayMode
                 yield return null;
                 var wheel = document.GetComponent<ToolWheel>();
                 wheel.Show(TextTable.Parse(Texts, "fr"), new FixedToolKeys(), test.Clearing, new NotedBuildMenu(),
-                    test.Mover, test.Paths, new Tooltips(document));
+                    test.Mover, test.Paths, test.Plaza, new Tooltips(document));
                 var area = new HudArea(document);
                 for (int frame = 0; frame < SettleFrames; frame++)
                     yield return null;

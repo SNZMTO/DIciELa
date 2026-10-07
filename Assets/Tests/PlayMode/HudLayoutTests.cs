@@ -13,10 +13,11 @@ namespace Diciela.Tests.PlayMode
     /// Le HUD à toutes les tailles d'écran (GDD, section 16 ; décision 144), rendu hors écran de 1280 × 720 à la 4K,
     /// écrans larges compris : la journée tient au coin haut-gauche, à 24 px du bord et 20 du haut ; la fiche du
     /// campement, ouverte, au coin haut-droit ; le stock en fanions au milieu du haut, à 24 px ; le panneau Construire,
-    /// ouvert, au milieu du bas, à 24 px ; l'icône des outils au coin bas-droit, à 24 px ; tout reste dans l'écran, sans que deux
-    /// blocs se chevauchent. La roue des outils, ouverte sur leur icône, est ramenée dans l'écran. C'est le vrai HUD (sa mise en page, la feuille du jeu,
-    /// ses vues, ses présentateurs, sa taille), avec le catalogue et les textes du projet pour la barre et la journée, et
-    /// le petit monde du campement pour la fiche et les fanions. Les marges attendues sont celles du GDD.
+    /// ouvert, au milieu du bas, à 24 px ; l'icône des outils au coin bas-droit, à 24 px ; tout reste dans l'écran,
+    /// sans que deux blocs se chevauchent. La roue tient dans l'écran, ouverte au coin sur l'icône des outils, puis, la
+    /// Place en main, son éventail des formes déplié vers ce coin. C'est le vrai HUD (sa mise en page, la feuille du
+    /// jeu, ses vues, ses présentateurs, sa taille), avec le catalogue et les textes du projet pour la barre et la
+    /// journée, et le petit monde du campement pour la fiche et les fanions. Les marges attendues sont celles du GDD.
     /// </summary>
     public sealed class HudLayoutTests
     {
@@ -85,7 +86,8 @@ namespace Diciela.Tests.PlayMode
                             bar.Show(catalog, texts, world.Tool, world.Plaza, world.World, new FixedToolKeys(),
                                 new ReasonBubble(document));
                             bar.Open();
-                            wheel.Show(texts, new FixedToolKeys(), world.Clearing, bar, world.Mover, world.Paths, tooltips);
+                            wheel.Show(texts, new FixedToolKeys(), world.Clearing, bar, world.Mover, world.Paths,
+                                world.Plaza, tooltips);
                             day.Show(world.World.Clock, texts, tooltips);
                             town.InstallTheCamp();
                             stock.Show(town.World, town.Catalog, texts, tooltips);
@@ -96,12 +98,23 @@ namespace Diciela.Tests.PlayMode
                         for (int frame = 0; frame < SettleFrames; frame++)
                             yield return null;
                         Check(document.rootVisualElement, screen, faults);
-                        wheel.OpenAt(OnScreen(document.rootVisualElement,
-                            document.rootVisualElement.Q("outils").worldBound.center));
+                        Vector2 icon = document.rootVisualElement.Q("outils").worldBound.center;
+                        wheel.OpenAt(TestHud.OnScreen(document.rootVisualElement, icon));
                         for (int frame = 0; frame < SettleFrames; frame++)
                             yield return null;
-                        CheckWheel(document.rootVisualElement, screen, faults);
+                        TestHud.CheckWheel(document.rootVisualElement, screen, faults);
                         wheel.Escape();
+                        // La Place en main, sa roue ouverte au coin, l'éventail des formes déplié vers ce coin.
+                        world.Plaza.Take();
+                        wheel.OpenAt(TestHud.OnScreen(document.rootVisualElement, icon));
+                        wheel.PointAt(TestHud.OnScreen(document.rootVisualElement, icon + new Vector2(212f, 212f)));
+                        for (int frame = 0; frame < SettleFrames; frame++)
+                            yield return null;
+                        if (document.rootVisualElement.Query(className: "roue-jeton").ToList().Count == 0)
+                            faults.Add(screen.x + " × " + screen.y + " : l'éventail des formes ne s'est pas déplié.");
+                        TestHud.CheckWheel(document.rootVisualElement, screen, faults);
+                        wheel.Escape();
+                        world.Plaza.PutDown();
                     }
                 }
                 finally
@@ -168,30 +181,6 @@ namespace Diciela.Tests.PlayMode
                         faults.Add(at + "deux blocs se chevauchent (" + blocks[i] + ", " + blocks[j] + ").");
                 }
             }
-        }
-
-        private static void CheckWheel(VisualElement root, Vector2Int screen, List<string> faults)
-        {
-            Rect room = root.panel.visualTree.layout;
-            foreach (string name in new[] { "roue-plateau", "roue-construire", "roue-retirer", "roue-deplacer" })
-            {
-                Rect tool = root.Q(name).worldBound;
-                if (tool.xMin < 0f || tool.yMin < 0f || tool.xMax > room.width || tool.yMax > room.height)
-                    faults.Add(screen.x + " × " + screen.y + " : la roue ouverte sur l'icône sort de l'écran (" + name +
-                               " " + tool + " dans " + room + ").");
-            }
-        }
-
-        /// <summary>
-        /// Le point de l'écran (origine en bas) où le panneau voit ce point : la conversion d'HudArea, inversée par deux
-        /// points connus.
-        /// </summary>
-        private static Vector2 OnScreen(VisualElement root, Vector2 panelPoint)
-        {
-            Vector2 origin = HudArea.ToPanel(root.panel, new Vector2(0f, Screen.height));
-            Vector2 unit = HudArea.ToPanel(root.panel, new Vector2(1f, Screen.height - 1f)) - origin;
-            var fromTop = new Vector2((panelPoint.x - origin.x) / unit.x, (panelPoint.y - origin.y) / unit.y);
-            return new Vector2(fromTop.x, Screen.height - fromTop.y);
         }
     }
 }

@@ -1,31 +1,35 @@
 using System;
 using System.Collections.Generic;
-using Diciela.Controls;
 using Diciela.UI;
 
 namespace Diciela.Tests.PlayMode
 {
     /// <summary>
-    /// Une vue de la roue des outils qui note ce que le présentateur lui montre, et joue ce que le joueur vise et choisit.
+    /// Une vue de la roue qui note ce que le présentateur lui montre : la touche de la roue, les cases de la roue ouverte,
+    /// la bulle. Ce que le joueur vise et prend, les tests le disent au présentateur, comme la vraie vue.
     /// </summary>
     internal sealed class NotedToolWheelView : IToolWheelView
     {
-        public event Action<ToolChoice> Chosen;
-        public event Action<ToolChoice?> Pointed;
-
         public string WheelKey { get; private set; }
-        public Dictionary<ToolChoice, string> ToolKeys { get; } = new Dictionary<ToolChoice, string>();
+        public IReadOnlyList<WheelSlot> Ring { get; private set; } = Array.Empty<WheelSlot>();
         public (string Name, string Detail) Label { get; private set; }
-        public HashSet<ToolChoice> Active { get; } = new HashSet<ToolChoice>();
 
-        public void Choose(ToolChoice choice)
+        /// <summary>Le rang, dans la roue montrée, de la case à cette place ; -1 si elle n'y est pas.</summary>
+        public int IndexAt(int place)
         {
-            Chosen?.Invoke(choice);
+            for (int i = 0; i < Ring.Count; i++)
+            {
+                if (Ring[i].Place == place)
+                    return i;
+            }
+            return -1;
         }
 
-        public void Point(ToolChoice? choice)
+        /// <summary>La case à cette place dans la roue montrée ; null si elle n'y est pas.</summary>
+        public WheelSlot At(int place)
         {
-            Pointed?.Invoke(choice);
+            int index = IndexAt(place);
+            return index >= 0 ? Ring[index] : null;
         }
 
         public void ShowWheelKey(string key)
@@ -33,22 +37,14 @@ namespace Diciela.Tests.PlayMode
             WheelKey = key;
         }
 
-        public void ShowToolKey(ToolChoice tool, string key)
+        public void ShowRing(IReadOnlyList<WheelSlot> slots)
         {
-            ToolKeys[tool] = key;
+            Ring = slots;
         }
 
         public void ShowLabel(string name, string detail)
         {
             Label = (name, detail);
-        }
-
-        public void ShowActive(ToolChoice tool, bool active)
-        {
-            if (active)
-                Active.Add(tool);
-            else
-                Active.Remove(tool);
         }
     }
 }

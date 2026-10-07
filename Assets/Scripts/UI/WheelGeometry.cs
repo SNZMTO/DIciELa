@@ -48,6 +48,48 @@ namespace Diciela.UI
         }
 
         /// <summary>
+        /// Le point de ce cercle à ce cap, en degrés depuis le haut dans le sens des aiguilles d'une montre (y vers le
+        /// bas, comme le panneau).
+        /// </summary>
+        public static Vector2 OnCircle(float degrees, float radius)
+        {
+            float radians = degrees * Mathf.Deg2Rad;
+            return new Vector2(Mathf.Sin(radians) * radius, -Mathf.Cos(radians) * radius);
+        }
+
+        /// <summary>Le cap de l'option de ce rang dans l'éventail d'une case à ce cap, les options écartées de step degrés.</summary>
+        public static float OptionDegrees(float slotDegrees, int index, int count, float stepDegrees)
+        {
+            return slotDegrees + (index - (count - 1) * 0.5f) * stepDegrees;
+        }
+
+        /// <summary>
+        /// L'option visée dans l'éventail d'une case à ce cap (décision 221) : la plus proche par la direction du pointeur
+        /// depuis le centre, si le pointeur est au-delà du seuil et dans l'éventail (à trois quarts d'écart près de son
+        /// option) ; -1 sinon. Le seuil oblige à pousser jusqu'à l'éventail : en deçà, on vise la case.
+        /// </summary>
+        public static int AimedOption(Vector2 center, float slotDegrees, int count, float stepDegrees, float threshold,
+            Vector2 pointer)
+        {
+            Vector2 toPointer = pointer - center;
+            if (count <= 0 || toPointer.magnitude < threshold)
+                return -1;
+            float heading = Mathf.Atan2(toPointer.x, -toPointer.y) * Mathf.Rad2Deg;
+            int aimed = -1;
+            float smallest = stepDegrees * 0.75f;
+            for (int i = 0; i < count; i++)
+            {
+                float gap = Mathf.Abs(Mathf.DeltaAngle(heading, OptionDegrees(slotDegrees, i, count, stepDegrees)));
+                if (gap < smallest)
+                {
+                    smallest = gap;
+                    aimed = i;
+                }
+            }
+            return aimed;
+        }
+
+        /// <summary>
         /// Le centre déplacé au plus court pour que la boîte de la roue tienne dans l'écran ; extent est cette boîte
         /// autour du centre, room l'écran.
         /// </summary>
