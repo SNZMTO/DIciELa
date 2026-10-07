@@ -89,11 +89,11 @@ namespace Diciela.View
             ConstructionSite site = _sites.SiteOf(Structure);
             if (site == null)
                 return 0d;
-            if (!site.IsMove)
+            if (!(site.Work is MoveWork move))
                 return site.Progress;
-            if (!site.HasLanded)
-                return 1d - Mathf.Clamp01((float)(site.WorkDone / site.TakeDownHours));
-            return Mathf.Clamp01((float)((site.WorkDone - site.TakeDownHours) / (site.WorkNeeded - site.TakeDownHours)));
+            if (!move.HasLanded)
+                return 1d - Mathf.Clamp01((float)(site.WorkDone / move.TakeDownHours));
+            return Mathf.Clamp01((float)((site.WorkDone - move.TakeDownHours) / (site.WorkNeeded - move.TakeDownHours)));
         }
 
         private GameObject Make(Placement placement)

@@ -35,11 +35,12 @@ namespace Diciela.Simulation
             Islands = new Islands(Grid);
             PathFinder = new PathFinder(Grid, Islands);
             Knowledge = new Knowledge(catalog.Opening);
-            Structures = new Structures(Grid, map.Relief, settings, Knowledge);
+            Floors = new Floors(Grid, Place, Knowledge);
+            Structures = new Structures(Grid, map.Relief, settings, Knowledge, Floors);
             var surroundings = new Surroundings(Grid);
             Ledger = new GoodsLedger();
             Warehouses = new Warehouses(Ledger);
-            ConstructionSites = new ConstructionSites(Structures, Ledger, settings);
+            ConstructionSites = new ConstructionSites(Structures, Floors, Ledger, settings);
             var reach = new Reach(Grid, Islands, surroundings);
             var offers = new TaskOffers(Warehouses, ConstructionSites, reach, settings);
             Clearings = new ClearingOffers(Nature, Warehouses, reach);
@@ -83,6 +84,9 @@ namespace Diciela.Simulation
 
         /// <summary>La Place : la zone que le joueur trace, et les places de charrette qu'il y pose.</summary>
         public PlaceZone Place { get; }
+
+        /// <summary>Les sols : chemins, routes et sols de la Place, tracés à leurs outils, en chantier ou bâtis.</summary>
+        public Floors Floors { get; }
 
         /// <summary>Les arbres et les rochers à retirer, comme tâches à prendre, et le travail déjà fait sur eux.</summary>
         public ClearingOffers Clearings { get; }
@@ -167,6 +171,7 @@ namespace Diciela.Simulation
             Structures.DeliverEvents();
             Nature.DeliverEvents();
             Place.DeliverEvents();
+            Floors.DeliverEvents();
             Warehouses.DeliverEvents();
             Carts.DeliverEvents();
             Stalls.DeliverEvents();

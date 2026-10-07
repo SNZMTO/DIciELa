@@ -9,9 +9,10 @@ namespace Diciela.Simulation.Economy
 {
     /// <summary>
     /// Ce qu'un habitant peut rejoindre à pied (ARCHITECTURE, section 7) : une construction, un arbre ou un rocher dont
-    /// l'un des abords est sur son îlot. On n'offre que cela. Les îlots que touchent les abords d'un occupant se gardent
-    /// avec la version du maillage d'où ils viennent : un habitant qui cherche une tâche à chaque pas ne refait pas les
-    /// abords de chaque chantier et de chaque arbre marqué, tant que rien ne s'est posé ni retiré. Une seule instance par
+    /// l'un des abords est sur son îlot ; un sol en chantier dont l'une des mailles y est (on s'y tient pour le bâtir,
+    /// puisqu'on y marche). On n'offre que cela. Les îlots que touchent les abords d'un occupant, ou les mailles d'un
+    /// sol, se gardent avec la version du maillage d'où ils viennent (un sol, aussi avec sa révision) : un habitant qui
+    /// cherche une tâche à chaque pas ne les refait pas, tant que rien ne s'est posé ni retiré. Une seule instance par
     /// monde, pour toutes les tâches ; rien n'est alloué une fois les listes à leur taille.
     /// </summary>
     internal sealed class Reach
@@ -23,6 +24,9 @@ namespace Diciela.Simulation.Economy
 
         // Par occupant déjà demandé : où commencent, et combien sont, les îlots de ses abords dans _around.
         private readonly Dictionary<int, (int Start, int Count)> _spans = new Dictionary<int, (int, int)>();
+        // Par sol en chantier déjà demandé : sa révision, et où sont les îlots de ses mailles dans _around.
+        private readonly Dictionary<int, (int Revision, int Start, int Count)> _floorSpans =
+            new Dictionary<int, (int, int, int)>();
         private readonly List<int> _around = new List<int>();
         private int _version = -1;
 
@@ -38,6 +42,28 @@ namespace Diciela.Simulation.Economy
             _grid = grid;
             _islands = islands;
             _surroundings = surroundings;
+        }
+
+        /// <summary>Vrai si l'on peut servir ce chantier depuis cet îlot : ce qu'il bâtit se rejoint.</summary>
+        public bool IsReachable(ConstructionSite site, int island)
+        {
+            return site.Structure != null ? IsReachable(site.Structure, island) : IsReachable(site.Floor, island);
+        }
+
+        /// <summary>Vrai si l'une des mailles de ce sol en chantier est sur cet îlot.</summary>
+        public bool IsReachable(FloorPatch patch, int island)
+        {
+            if (island == 0)
+                return false;
+            Refresh();
+            if (!_floorSpans.TryGetValue(patch.Id, out (int Revision, int Start, int Count) span) ||
+                span.Revision != patch.Revision)
+            {
+                (int start, int count) = Gather(patch);
+                span = (patch.Revision, start, count);
+                _floorSpans[patch.Id] = span;
+            }
+            return Holds(span.Start, span.Count, island);
         }
 
         /// <summary>Vrai si l'un des abords de cette construction est sur cet îlot.</summary>
@@ -57,23 +83,13 @@ namespace Diciela.Simulation.Economy
         {
             if (island == 0)
                 return false;
-            if (_version != _grid.Version)
-            {
-                _spans.Clear();
-                _around.Clear();
-                _version = _grid.Version;
-            }
+            Refresh();
             if (!_spans.TryGetValue(occupant, out (int Start, int Count) span))
             {
                 span = Gather(footprint, occupant);
                 _spans.Add(occupant, span);
             }
-            for (int i = span.Start; i < span.Start + span.Count; i++)
-            {
-                if (_around[i] == island)
-                    return true;
-            }
-            return false;
+            return Holds(span.Start, span.Count, island);
         }
 
         /// <summary>
@@ -119,14 +135,47 @@ namespace Diciela.Simulation.Economy
             return nearest;
         }
 
+        // Ce qu'on a gardé vient d'une version du maillage passée : on l'oublie.
+        private void Refresh()
+        {
+            if (_version == _grid.Version)
+                return;
+            _spans.Clear();
+            _floorSpans.Clear();
+            _around.Clear();
+            _version = _grid.Version;
+        }
+
+        private bool Holds(int start, int count, int island)
+        {
+            for (int i = start; i < start + count; i++)
+            {
+                if (_around[i] == island)
+                    return true;
+            }
+            return false;
+        }
+
         // Les îlots, sans doublon, que touchent les abords de cet occupant, rangés au bout de _around.
         private (int Start, int Count) Gather(RotatedRect footprint, int occupant)
         {
-            int start = _around.Count;
             _surroundings.Collect(footprint, occupant, _cells);
-            for (int i = 0; i < _cells.Count; i++)
+            return GatherIslands(_cells);
+        }
+
+        // Les îlots, sans doublon, des mailles de ce sol, rangés au bout de _around.
+        private (int Start, int Count) Gather(FloorPatch patch)
+        {
+            patch.CopyCells(_cells);
+            return GatherIslands(_cells);
+        }
+
+        private (int Start, int Count) GatherIslands(List<Vector2Int> cells)
+        {
+            int start = _around.Count;
+            for (int i = 0; i < cells.Count; i++)
             {
-                int island = _islands.IslandOf(_cells[i]);
+                int island = _islands.IslandOf(cells[i]);
                 if (island != 0 && _around.IndexOf(island, start) < 0)
                     _around.Add(island);
             }

@@ -23,9 +23,7 @@ namespace Diciela.EditorTools
         public static void LookAtTheFirstSite()
         {
             World world = AlbumWorld.Running();
-            ConstructionSite site = world != null && world.ConstructionSites.Queue.Count > 0
-                ? world.ConstructionSites.Queue[0]
-                : null;
+            ConstructionSite site = world != null ? FirstBuildingSite(world) : null;
             var rig = Object.FindAnyObjectByType<CameraRig>();
             if (site == null || rig == null)
             {
@@ -41,6 +39,17 @@ namespace Diciela.EditorTools
                 rig.DragTo(middle);
             rig.ZoomTo(FramingMeters);
             Debug.Log("DICIELA : la vue se rapproche du chantier de la construction n° " + site.Structure.Id + ".");
+        }
+
+        // Le premier chantier de la file qui bâtit ou déplace une construction ; un sol n'a pas de cabane à cadrer.
+        private static ConstructionSite FirstBuildingSite(World world)
+        {
+            foreach (ConstructionSite site in world.ConstructionSites.Queue)
+            {
+                if (site.Structure != null)
+                    return site;
+            }
+            return null;
         }
     }
 }
