@@ -2,11 +2,11 @@
 
 **Branches** : `main` : l'étape 58 ; la suivante s'ouvre de `main`.
 
-**Fait** : 23 à 57 ; 52 à 55 (205 à 208) : la Place tracée et vue, puis le ménage ; 56 (209 à 213) : les sols dans la
+**Fait** : 23 à 58 ; 52 à 55 (205 à 208) : la Place tracée et vue, puis le ménage ; 56 (209 à 213) : les sols dans la
 simulation, leur chantier, le pas des charrettes et son estimation (100 m en 4,5 ms) ; 57 (214) : les sols peints sur
 la carte et leurs fantômes en voile, l'outil Chemins (roue à gauche, touche C), un seul outil à deux entrées avec la
-Place, la barre partagée (ce qu'on pose au-dessus des modes) ; 58 : le script de recompilation dans `Tools/`. **EditMode 275/275, PlayMode 217/217.** Aucune capture
-(Unity n'était pas devant) : l'album attend.
+Place, la barre partagée (ce qu'on pose au-dessus des modes) ; 58 : le script de recompilation dans `Tools/`.
+**EditMode 275/275, PlayMode 217/217.** Aucune capture (Unity n'était pas devant) : l'album attend.
 
 **Prochaine étape : à choisir.** Le pont (211) attend l'eau, qui n'est pas dans la simulation, et la carte à peindre
 (à toi) : en parler d'abord. Sinon, un ménage (ETAT, « Dette ») ou les captures de l'album des étapes 56 et 57.
