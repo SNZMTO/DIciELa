@@ -8,10 +8,11 @@ using UnityEngine;
 namespace Diciela.Controls
 {
     /// <summary>
-    /// Ce que vise un outil de sol, et ce qu'en disent la Place ou les sols, selon son encre (décisions 206 et 210) : la
-    /// réponse de la même fonction que l'ordre, les mailles que le geste changerait, la place de charrette qu'un clic
-    /// retirerait ; il le montre par l'aperçu. La vérification ne se refait que si quelque chose a changé (la forme, la maille visée, la Place, le
-    /// mode) : le rond du pinceau au repos se refait quand le pointeur change de maille, pas à chaque image.
+    /// Ce que vise un outil de sol, et ce qu'en disent la Place ou les sols, selon son encre (décisions 206 et 210) :
+    /// la réponse de la même fonction que l'ordre, les mailles que le geste changerait, la place de charrette qu'un
+    /// clic retirerait ; il le montre par l'aperçu. La vérification ne se refait que si quelque chose a changé (la
+    /// forme, la maille visée, la Place, le mode) : le rond du pinceau au repos se refait quand le pointeur change de
+    /// maille, pas à chaque image.
     /// </summary>
     internal sealed class PlaceAim
     {
@@ -52,7 +53,9 @@ namespace Diciela.Controls
             IsStale = true;
         }
 
-        /// <summary>Montre ce que donnerait cet outil, dans son mode et avec son encre, visant ce point, avec ce geste.</summary>
+        /// <summary>
+        /// Montre ce que donnerait cet outil, dans son mode et avec son encre, visant ce point, avec ce geste.
+        /// </summary>
         public void Show(PlaceTool tool, Vector2 aim, PlaceDrawing drawing)
         {
             PlaceToolMode mode = tool.Mode;

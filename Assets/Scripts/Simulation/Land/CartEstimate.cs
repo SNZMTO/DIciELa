@@ -34,7 +34,9 @@ namespace Diciela.Simulation.Land
             _distance = new int[_blocks.Columns * _blocks.Rows];
         }
 
-        /// <summary>Une recherche commence vers ces arrivées : les prix d'aujourd'hui, et la distance d'elles aux sols.</summary>
+        /// <summary>
+        /// Une recherche commence vers ces arrivées : les prix d'aujourd'hui, et la distance d'elles aux sols.
+        /// </summary>
         public void Begin(NavGrid grid, IReadOnlyList<Vector2Int> goals)
         {
             _grass = _pace.GrassCost;

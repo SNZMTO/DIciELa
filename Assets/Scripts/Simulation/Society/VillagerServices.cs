@@ -8,8 +8,9 @@ namespace Diciela.Simulation.Society
 {
     /// <summary>
     /// Ce que chaque habitant consulte de la ville pour vivre et travailler : le temps, le maillage, ses îlots et ses
-    /// trajets, le pas des charrettes sur les sols, les abords des constructions, les tâches à prendre (dont les arbres à retirer, les charrettes à conduire
-    /// et à garnir), les statistiques et les réglages de la simulation. Un seul paquet, fait par les habitants, donné à chacun.
+    /// trajets, le pas des charrettes sur les sols, les abords des constructions, les tâches à prendre (dont les arbres
+    /// à retirer, les charrettes à conduire et à garnir), les statistiques et les réglages de la simulation. Un seul
+    /// paquet, fait par les habitants, donné à chacun.
     /// </summary>
     internal sealed class VillagerServices
     {

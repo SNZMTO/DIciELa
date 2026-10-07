@@ -45,7 +45,9 @@ namespace Diciela.Simulation.Land
         /// <summary>Ses mailles, à leur place dans les tableaux du maillage.</summary>
         internal IReadOnlyList<int> Cells => _cells;
 
-        /// <summary>Met dans cette liste ses mailles, dans l'ordre où elles ont été tracées ; la liste est vidée d'abord.</summary>
+        /// <summary>
+        /// Met dans cette liste ses mailles, dans l'ordre où elles ont été tracées ; la liste est vidée d'abord.
+        /// </summary>
         public void CopyCells(List<Vector2Int> cells)
         {
             if (cells == null)

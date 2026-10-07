@@ -12,17 +12,18 @@ namespace Diciela.Tests.EditMode
 {
     /// <summary>
     /// Le banc de la ville au travail : les réglages du banc de la Chimère (un pas de 0,1 s, 300 pas par heure de jeu,
-    /// deux mailles par mètre sauf si le test en veut d'autres, 1 m libre devant une porte), ou une journée plus courte ; trois statistiques de deux
-    /// sous-statistiques (Bâtisse : construction, terrassement ; Échange : transport, troc ; Terre : paysage, coupe) ;
-    /// le Bois et la Pierre ; porter, conduire et garnir (transport), bâtir (construction) et défricher (paysage) ; le
-    /// poste « à tout faire » (porter, conduire, bâtir, garnir, puis défricher) ; le campement de 3 × 3 m, qui tient
-    /// 100 places et ouvre ce poste, et reçoit 30 Bois et 20 Pierre quand on l'installe ; la charrette de l'étal (20
-    /// places, moitié moins vite, timon de 2,2 m), qu'aucune construction ne garde tant que le test ne le dit pas ; une
-    /// cabane de 4 × 4 m qui coûte 10 Bois et 5 Pierre et 2 h de travail ; un arbre (pied de 1 m, 3 Bois, 30 min) et un
-    /// rocher (pied de 1,5 m, 2 Pierre, 45 min) ; la terre (le pas de qui tire une charrette), que la ville sait tracer
-    /// au départ, et les pavés (une fois et demie plus vite), qu'elle ne sait pas tracer. La Chimère commence à 10
-    /// partout et porte 5 places ; elle sait bâtir en arrivant le campement, la cabane et ce que le test y ajoute. Ses mondes sont plats, 40 × 40 m, nus ou avec
-    /// les arbres et rochers qu'on leur donne ; les fiches qu'il crée sont détruites avec lui.
+    /// deux mailles par mètre sauf si le test en veut d'autres, 1 m libre devant une porte), ou une journée plus
+    /// courte ; trois statistiques de deux sous-statistiques (Bâtisse : construction, terrassement ; Échange :
+    /// transport, troc ; Terre : paysage, coupe) ; le Bois et la Pierre ; porter, conduire et garnir (transport), bâtir
+    /// (construction) et défricher (paysage) ; le poste « à tout faire » (porter, conduire, bâtir, garnir, puis
+    /// défricher) ; le campement de 3 × 3 m, qui tient 100 places et ouvre ce poste, et reçoit 30 Bois et 20 Pierre
+    /// quand on l'installe ; la charrette de l'étal (20 places, moitié moins vite, timon de 2,2 m), qu'aucune
+    /// construction ne garde tant que le test ne le dit pas ; une cabane de 4 × 4 m qui coûte 10 Bois et 5 Pierre et
+    /// 2 h de travail ; un arbre (pied de 1 m, 3 Bois, 30 min) et un rocher (pied de 1,5 m, 2 Pierre, 45 min) ; la terre
+    /// (le pas de qui tire une charrette), que la ville sait tracer au départ, et les pavés (une fois et demie plus
+    /// vite), qu'elle ne sait pas tracer. La Chimère commence à 10 partout et porte 5 places ; elle sait bâtir en
+    /// arrivant le campement, la cabane et ce que le test y ajoute. Ses mondes sont plats, 40 × 40 m, nus ou avec les
+    /// arbres et rochers qu'on leur donne ; les fiches qu'il crée sont détruites avec lui.
     /// </summary>
     internal sealed class TestTown : IDisposable
     {
