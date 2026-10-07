@@ -261,7 +261,7 @@
   menuisier ».
 - **Défaut.** Le déroulé :
   1. La Chimère installe son campement, d'un coup ; le joueur choisit l'endroit. Elle connaît déjà le campement, la
-     cabane, le chemin de terre, le pont, le bûcheron et la carrière.
+     cabane, le chemin de terre, le bûcheron et la carrière.
   2. Le joueur trace la Place ; elle bâtit deux cabanes, et récolte un champ sauvage de lin.
   3. Un premier habitant par statistique arrive, chacun avec son idée : le bâtisseur (la loge des bâtisseurs), la
      fermière (les champs : elle sème le premier, en lin), la charretière (l'entrepôt), le menuisier (la scierie).
@@ -429,26 +429,32 @@
   pastille sur le bouton de la réserve et une ligne dans la réserve. Pour la maison de la Chimère, une bulle avec son
   portrait : « Je vais quand même pas dormir dehors… ».
 - **Règle.** Un chemin de terre ne coûte aucun matériau (c'est un chantier quand même) ; une route pavée demande des
-  Pavés, faits par l'atelier de pierre. Un pont est un bout de route posé sur l'eau. Routes et ponts ne se rangent pas :
-  ils s'effacent, par un petit chantier qui rend leurs matériaux.
+  Pavés, faits par l'atelier de pierre. Un pont est un bout de route posé sur l'eau, d'une rive à l'autre, en ligne
+  droite, une fois son idée venue (voir 13) : au mode « Pont » de l'outil Chemins, on appuie sur une rive et l'on tire
+  jusqu'à l'autre. Routes et ponts ne se rangent pas : ils s'effacent, par un petit chantier qui rend leurs matériaux.
 - **Règle.** On trace les chemins à l'outil Chemins, comme la Place (voir 11) : le pinceau à main levée, la gomme, le
   cercle, le rectangle ; une forme part au relâchement, son aperçu vert ou rouge, et la raison s'écrit. Sa sorte se
-  choisit parmi celles que la ville sait faire : le chemin de terre dès le départ, la route pavée avec son idée. On
-  trace partout où l'on marche, la Place comprise : paver la Place, c'est y tracer. Ce qui se tient là (une
-  construction, un arbre, un rocher, l'eau) y fait un trou ; tracer où passe déjà un chemin de la même sorte n'ajoute
-  rien.
+  choisit parmi les sols que la ville sait faire, les mêmes que pour la Place (voir 11) : chacun a sa fiche, son
+  aspect, son prix, l'idée qui l'apporte et le pas des charrettes. La terre, gratuite, dès le départ ; les pavés avec
+  leur idée ; puis, chacun avec la sienne, les dalles, les carreaux, les briques et la pierre, payés en Pavés, et les
+  planchers, en Planches. On trace partout où l'on marche, la Place comprise. Ce qui se tient là (une construction, un
+  arbre, un rocher, l'eau) y fait un trou, qui reste quand on l'enlève, comme sur la Place ; un sol déjà posé, bâti ou
+  en fantôme, de n'importe quelle sorte, aussi : pour changer un sol, on l'efface d'abord.
 - **Règle.** Une forme tracée est un chantier dans la file : un fantôme au sol, que les ouvriers bâtissent à ses
   abords, d'un coup, quand son travail est fait ; un chemin pas encore bâti n'accélère personne. La gomme efface un
-  fantôme tout de suite ; un chemin bâti s'efface par un petit chantier. Un bâtiment ne se pose pas sur un chemin, ni
-  sur son fantôme : on l'efface d'abord (« Sur un chemin : efface-le d'abord »).
+  fantôme tout de suite ; un chemin bâti s'efface par un petit chantier, et sert jusqu'à sa fin. Un bâtiment ne se pose
+  pas sur un chemin, ni sur son fantôme : on l'efface d'abord (« Sur un chemin : efface-le d'abord »).
 - **Défaut.** Tracer : 0,01 h de travail d'un débutant par m² (un chemin de 2 × 15 m : 0,3 h, 9 s) ; effacer : la
   moitié. Le pinceau : 1 m de rayon au départ (un chemin de 2 m de large), de 0,5 à 6 m.
 - **Défaut.** Un pont coûte du Bois.
+- **À toi.** Le déclencheur de l'idée de chaque sol après les pavés. Ma reco : des Pavés taillés pour les sols de
+  pierre (50 pour les dalles, 100 pour les carreaux, les briques et la pierre), 50 Planches sciées pour les planchers.
 - **Règle.** Les piétons marchent partout où rien n'est posé, et sur la Place, par le trajet le plus court ; les charrettes vont
-  lentement dans l'herbe, plus vite sur la terre, encore plus vite sur les pavés. Une route est un investissement,
-  jamais une obligation.
+  lentement dans l'herbe, plus vite sur la terre, encore plus vite sur un sol dur (les pavés, et tous les sols après
+  eux), et qui en tire une prend le trajet le plus rapide pour elle. Une route est un investissement, jamais une
+  obligation.
 - **Défaut.** Charrettes : moitié moins vite dans l'herbe, vitesse normale sur la terre, une fois et demie plus vite sur
-  les pavés. Les piétons vont à la même vitesse partout.
+  un sol dur. Les piétons vont à la même vitesse partout.
 
 ## 10. L'eau
 
@@ -481,14 +487,17 @@
 
 - **Règle.** Aucune monnaie en ville : tout se paie en marchandises.
 - **Règle.** La Place est une zone que le joueur trace sur le sol, de la forme qu'il veut, sans rien coûter et tout de
-  suite ; on y marche (voir 9). Il la décore comme le reste de la ville : il la pave (il y trace des chemins, voir 9),
-  il y pose des décorations. C'est là qu'arrivent les visiteurs et que se tient l'étal, et là que se jouera la run.
-  Elle a des niveaux qui la rendent
+  suite ; on y marche (voir 9). Il la décore comme le reste de la ville : il la pave, il y pose des décorations. C'est
+  là qu'arrivent les visiteurs et que se tient l'étal, et là que se jouera la run. Elle a des niveaux qui la rendent
   plus cozy, chacun par un petit chantier. La zone ne se voit qu'en mode construction, comme les fantômes.
 - **Règle.** La Place se trace avec des outils : à main levée, guidée, des formes toutes faites, et d'autres qui la
   retouchent (arrondir les angles…), comme le marché de Manor Lords se trace et comme Planet Zoo façonne ses formes.
   Aujourd'hui : le pinceau (à main levée ; un clic, un rond), la gomme, le cercle (appui au milieu, on tire le rayon),
   le rectangle (d'un coin à l'autre, ses côtés tournés comme la caméra, au cran de rotation), et la place de charrette.
+- **Règle.** On pave la Place à son outil : il y trace la zone, ou y pose un sol, au choix. Ses sols sont ceux des
+  chemins (voir 9), posés seulement dans la zone, chacun un chantier ; un sol choisi, la gomme efface le sol, la zone
+  choisie, elle gomme la zone. La zone et son sol sont deux choses : tracer, agrandir ou gommer la zone ne pose ni
+  n'efface aucun sol, et un sol laissé hors d'une Place réduite reste un sol.
 - **Règle.** Une forme se trace d'un geste et part au relâchement. Pendant le geste, son aperçu montre ce qu'elle
   ajouterait ou retirerait, vert si elle se trace, rouge sinon, et la raison s'écrit, comme à la pose ; une forme rouge
   ne part pas. Un clic droit ou Échap abandonnent le geste en cours ; sans geste, ils lâchent l'outil.
@@ -593,8 +602,14 @@
 - **Règle.** Une idée a un déclencheur : une chose faite (« après 50 Planches, le menuisier imagine la table ») ou un
   métier exercé (la Chimère a travaillé à la scierie : elle imagine le moulin à eau). Pour l'histoire, elle revient à
   l'habitant qui y a le plus contribué, ou à la Chimère.
-- **Règle.** Une idée sert tout de suite, sans coût, comme un plan d'Animal Crossing. Celle d'un premier habitant
-  arrive avec lui (voir 6).
+- **Règle.** Une idée se montre : celui qui l'a laisse son travail et va se tenir devant ce qui l'inspire (la rivière
+  pour le pont), un point d'interrogation au-dessus de la tête, qui garde sa taille à l'écran pour se voir de loin. Il
+  y reste jusqu'à ce que le joueur le clique, sauf le soir, où il va dormir, pour y revenir le matin. Le clic ouvre un
+  petit dialogue ; à sa fin, la ville connaît l'idée. Toutes les idées viennent à peu près ainsi ; celle d'un premier
+  habitant arrive avec lui (voir 6).
+- **Règle.** Une idée sert tout de suite, sans coût, comme un plan d'Animal Crossing.
+- **À toi.** Les répliques des idées : pour l'instant une phrase neutre, un remplaçant (le pont : « J'ai une idée : un
+  pont, pour passer la rivière. »).
 - **Règle.** Le carnet d'idées montre des pistes floues (« le menuisier rêve de quelque chose avec du tissu… ») : le
   joueur sait vers quoi pousser, sans liste de courses.
 - **Règle.** Les grands projets, rares, donnent un but lointain ; une idée les débloque.
@@ -609,6 +624,7 @@
 | la maison | la ville compte huit habitants |
 | l'atelier de pierre | 50 Pierres extraites |
 | la route pavée | 20 Pavés taillés |
+| le pont | 10 heures de travail sur les chantiers |
 | l'atelier de tissu | 20 Lin récoltés |
 | la cabane du paysagiste | trois champs sauvages récoltés |
 | le banc | 30 Planches sciées |
@@ -780,23 +796,26 @@
   campement installé, et les idées des premiers habitants y ajoutent leurs cartes. Faute de modèle, sa carte montre
   une icône.
 - **Règle.** L'outil de la Place en main, une barre étroite s'ouvre en bas au centre, à la place du panneau
-  Construire : ses modes (pinceau, gomme, cercle, rectangle, place de charrette), chacun son icône et sa touche, celui
-  qui est pris enfoncé, son nom et son usage au survol ; dessous, dans des creux de lin, la superficie de la Place sur
-  celle de son niveau (« 312 / 450 m² »), ses places de charrette posées sur celles qu'elle permet, et la taille du
-  pinceau. Les touches des cartes prennent les modes tant que le panneau est fermé. Elle tient entre l'astuce et
-  l'icône des outils dès 1280 × 720.
+  Construire : devant ses modes, ce qu'il pose, la zone ou l'un des sols que la ville sait faire, chacun sa vignette,
+  celui qui est pris enfoncé ; ses modes (pinceau, gomme, cercle, rectangle, place de charrette), chacun son icône et
+  sa touche, celui qui est pris enfoncé, son nom et son usage au survol ; dessous, dans des creux de lin, la superficie
+  de la Place sur celle de son niveau (« 312 / 450 m² »), ses places de charrette posées sur celles qu'elle permet, et
+  la taille du pinceau. Les touches des cartes prennent les modes tant que le panneau est fermé. Elle tient entre
+  l'astuce et l'icône des outils dès 1280 × 720.
 - **Défaut.** Les modes de l'outil de la Place : les touches 1 à 5, dans l'ordre de la barre. La taille du pinceau :
   Ctrl + molette (la molette seule zoome).
-- **Règle.** L'outil Chemins en main, la même barre s'ouvre : devant ses modes (pinceau, gomme, cercle, rectangle), les
-  sortes de sol que la ville sait faire, chacune sa vignette, celle qui est prise enfoncée ; dessous, la taille du
-  pinceau. Un chemin se voit toujours, comme le sol qu'il est : la terre et les pavés du pack peints sur la carte ; son
-  fantôme, un voile au sol, de la couleur des fantômes.
-- **Défaut.** Les modes de l'outil Chemins : les touches 1 à 4. La terre : le calque `Village_Dirt_01` du pack ; les
-  pavés : `Path_01`, les pavés moussus du chemin du pack.
+- **Règle.** L'outil Chemins en main, la même barre s'ouvre : devant ses modes (pinceau, gomme, cercle, rectangle, et
+  le pont une fois son idée venue), les sortes de sol que la ville sait faire, chacune sa vignette, celle qui est prise
+  enfoncée ; dessous, la taille du pinceau. Un chemin se voit toujours, comme le sol qu'il est : la terre et les pavés
+  du pack peints sur la carte ; son fantôme, un voile au sol, de la couleur des fantômes.
+- **Défaut.** Les modes de l'outil Chemins : les touches 1 à 5, dans l'ordre de la barre. La terre : le calque
+  `Village_Dirt_01` du pack ; les pavés : `Path_01`, les pavés moussus du chemin du pack. Les autres sols : des calques
+  faits des images du pack (pavés bruns, dalles, carreaux, briques, pierre grise, planchers), rangés hors du pack.
 - **Règle.** La zone de la Place et ses places de charrette se voient en mode construction : le panneau Construire
   ouvert, ou en main une construction, l'outil de la Place, Chemins ou Déplacer. La zone : un voile léger sur le sol et son
   contour ; une place de charrette : un cadre blanc, une pointe vers l'avant de la charrette.
-- **À toi.** Les icônes de la Place (sa carte, ses cinq modes), pour l'instant des remplaçants simples.
+- **À toi.** Les icônes de la Place (sa carte, ses cinq modes, la vignette de la zone), pour l'instant des remplaçants
+  simples.
 - **À toi.** L'icône des Métiers : en attendant, celle de « bâtir ». Les autres questions ouvertes du HUD. Ma reco :
   le bandeau de brique montre les animaux du pack.
 
