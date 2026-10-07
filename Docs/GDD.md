@@ -800,21 +800,25 @@
   campement installé, et les idées des premiers habitants y ajoutent leurs cartes. Faute de modèle, sa carte montre
   une icône.
 - **Règle.** L'outil de la Place en main, une barre étroite s'ouvre en bas au centre, à la place du panneau
-  Construire : devant ses modes, ce qu'il pose, la zone ou l'un des sols que la ville sait faire, chacun sa vignette,
-  celui qui est pris enfoncé ; ses modes (pinceau, gomme, cercle, rectangle, place de charrette), chacun son icône et
+  Construire : au-dessus de ses modes, ce qu'il pose, la zone (au départ) ou l'un des sols que la ville sait faire,
+  chacun sa vignette, celui qui est pris enfoncé ; ses modes (pinceau, gomme, cercle, rectangle, place de charrette), chacun son icône et
   sa touche, celui qui est pris enfoncé, son nom et son usage au survol ; dessous, dans des creux de lin, la superficie
   de la Place sur celle de son niveau (« 312 / 450 m² »), ses places de charrette posées sur celles qu'elle permet, et
   la taille du pinceau. Les touches des cartes prennent les modes tant que le panneau est fermé. Elle tient entre
   l'astuce et l'icône des outils dès 1280 × 720.
 - **Défaut.** Les modes de l'outil de la Place : les touches 1 à 5, dans l'ordre de la barre. La taille du pinceau :
   Ctrl + molette (la molette seule zoome).
-- **Règle.** L'outil Chemins en main, la même barre s'ouvre : devant ses modes (pinceau, gomme, cercle, rectangle, et
-  le pont une fois son idée venue), les sortes de sol que la ville sait faire, chacune sa vignette, celle qui est prise
-  enfoncée ; dessous, la taille du pinceau. Un chemin se voit toujours, comme le sol qu'il est : la terre et les pavés
-  du pack peints sur la carte ; son fantôme, un voile au sol, de la couleur des fantômes.
+- **Règle.** L'outil Chemins en main, la même barre s'ouvre : au-dessus de ses modes (pinceau, gomme, cercle,
+  rectangle, et le pont une fois son idée venue), les sortes de sol que la ville sait faire, chacune sa vignette, celle
+  qui est prise enfoncée (au départ, la première) ; dessous, la taille du pinceau. Sa gomme efface tous les sols. Un
+  chemin se voit toujours, comme le sol qu'il est : la terre et les pavés du pack peints sur la carte ; son fantôme, un
+  voile au sol, de la couleur des fantômes ; un chemin qu'on efface garde le sien jusqu'à la fin de son chantier.
+- **À toi.** La vignette d'un sol (pour l'instant la texture de son calque) et l'icône de Chemins dans la roue (un
+  chemin en pointillés) : des remplaçants.
 - **Défaut.** Les modes de l'outil Chemins : les touches 1 à 5, dans l'ordre de la barre. La terre : le calque
   `Village_Dirt_01` du pack ; les pavés : `Path_01`, les pavés moussus du chemin du pack. Les autres sols : des calques
-  faits des images du pack (pavés bruns, dalles, carreaux, briques, pierre grise, planchers), rangés hors du pack.
+  faits des images du pack (pavés bruns, dalles, carreaux, briques, pierre grise, planchers), rangés hors du pack, avec
+  leurs fiches.
 - **Règle.** La zone de la Place et ses places de charrette se voient en mode construction : le panneau Construire
   ouvert, ou en main une construction, l'outil de la Place, Chemins ou Déplacer. La zone : un voile léger sur le sol et son
   contour ; une place de charrette : un cadre blanc, une pointe vers l'avant de la charrette.

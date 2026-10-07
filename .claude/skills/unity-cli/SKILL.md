@@ -65,7 +65,8 @@ En cas de doute, `unity list` (les outils du paquet `com.unity.pipeline`) ou la 
   en voit, c'est ce blocage : essayer une fois une vraie recompilation (attendre `editor_status` prêt), puis une
   campagne ; encore 0 test, demander le redémarrage. Un `recompile` qui répond `up_to_date` ne lève rien : retoucher
   un fichier du code (un commentaire suffit) pour qu'il recompile vraiment (étape 17c). Il est aussi arrivé sans erreur
-  de compilation, après un Play et une retouche d'USS (étape 15) : une recompilation l'a levé, la cause reste inconnue.
+  de compilation, après un Play et une retouche d'USS (étape 15), et de nouveau après une retouche d'USS et un
+  `Assets/Refresh` (étape 57) : une recompilation vraie (un commentaire retouché dans un fichier de code) l'a levé.
 - **Un script qui enchaîne recompilation et campagne s'arrête sur une erreur** : `recompile_status` rend `completed`
   même quand la compilation échoue (`"failed":true`) ; chercher `error CS` dans le journal et ne rien lancer s'il y en a.
   Une campagne partie sur une erreur reste « running », puis rend l'ancien assemblage des tests une fois l'erreur
