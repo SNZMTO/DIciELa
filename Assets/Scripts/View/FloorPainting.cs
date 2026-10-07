@@ -27,7 +27,9 @@ namespace Diciela.View
         private RectInt _painted;
         private bool _hasPainted;
 
-        /// <summary>Peint les sols de ce monde sur ce Terrain (sa copie), dont la peinture d'origine est sur original.</summary>
+        /// <summary>
+        /// Peint les sols de ce monde sur ce Terrain (sa copie), dont la peinture d'origine est sur original.
+        /// </summary>
         public FloorPainting(Terrain terrain, TerrainData original, Floors floors, NavGrid grid)
         {
             _terrain = terrain != null ? terrain : throw new ArgumentNullException(nameof(terrain));

@@ -79,7 +79,9 @@ namespace Diciela.Simulation.Land
             return _cells.StateAt(index) != FloorState.None;
         }
 
-        /// <summary>Trace ce sol dans cette forme, en fantôme, et rend son chantier ; refusé, null, et le refus est levé.</summary>
+        /// <summary>
+        /// Trace ce sol dans cette forme, en fantôme, et rend son chantier ; refusé, null, et le refus est levé.
+        /// </summary>
         internal FloorPatch Trace(GroundShape shape, FloorDefinition floor, FloorScope scope)
         {
             if (!Accept(CheckTrace(shape, floor, scope)))
