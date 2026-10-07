@@ -8,23 +8,21 @@ using Diciela.Simulation.Land;
 namespace Diciela.UI
 {
     /// <summary>
-    /// Le présentateur du panneau Construire (ARCHITECTURE, section 11) : il le remplit depuis le catalogue et la table des
-    /// textes, met dans la main de l'outil de pose la construction choisie, ou l'outil de la Place (sa carte, en tête de
-    /// sa famille : décision 206), et dit pourquoi une pose est refusée. Le
-    /// panneau s'ouvre à la demande (la roue des outils, sa touche) et se ferme quand on prend une carte, pour dégager la
-    /// vue pendant la pose, ou par Échap (décision 168). Ce qu'il propose, BuildBarOffer le dit (ce qui se pose encore,
-    /// le campement d'abord), ses onglets, BuildBarTabs (une famille qui ne propose rien ne paraît pas), et ses cartes,
-    /// BuildBarCards (ce que chacune offre, ses lits, et ce qu'elle coûte). Panneau ouvert, les touches 1 à 9 prennent les
-    /// cartes de la famille ouverte, comme un clic, et chaque carte porte sa touche (décision 184). Il écoute l'outil, les
-    /// poses, les chantiers finis et les idées : le panneau ne photographie jamais. La raison d'un refus est l'une des
-    /// voix de la bulle des raisons.
+    /// Le présentateur du panneau Construire (ARCHITECTURE, section 11) : il le remplit depuis le catalogue et la table
+    /// des textes, met dans la main de l'outil de pose la construction choisie, et dit pourquoi une pose est refusée.
+    /// Le panneau s'ouvre à la demande (la roue des outils, sa touche) et se ferme quand on prend une carte, pour
+    /// dégager la vue pendant la pose, ou par Échap (décision 168). Ce qu'il propose, BuildBarOffer le dit (ce qui se
+    /// pose encore, le campement d'abord), ses onglets, BuildBarTabs (une famille qui ne propose rien ne paraît pas),
+    /// et ses cartes, BuildBarCards (ce que chacune offre, ses lits, et ce qu'elle coûte). Panneau ouvert, les touches
+    /// 1 à 9 prennent les cartes de la famille ouverte, comme un clic, et chaque carte porte sa touche (décision 184).
+    /// Il écoute l'outil, les poses, les chantiers finis et les idées : le panneau ne photographie jamais. La raison
+    /// d'un refus est l'une des voix de la bulle des raisons.
     /// </summary>
     public sealed class BuildBarPresenter : IDisposable
     {
         private readonly IBuildBarView _view;
         private readonly TextTable _texts;
         private readonly PlacementTool _placement;
-        private readonly PaintTool _plaza;
         private readonly World _world;
         private readonly BuildBarTabs _tabs;
         private readonly BuildBarCards _cards;
@@ -32,25 +30,23 @@ namespace Diciela.UI
         private readonly List<BuildBarFamily> _families = new List<BuildBarFamily>();
 
         public BuildBarPresenter(IBuildBarView view, Catalog catalog, TextTable texts, PlacementTool placement,
-            PaintTool plaza, World world, IToolKeys keys)
+            World world, IToolKeys keys)
         {
             if (view == null || catalog == null || ReferenceEquals(texts, null) || ReferenceEquals(placement, null) ||
-                ReferenceEquals(plaza, null) || ReferenceEquals(world, null) || keys == null)
+                ReferenceEquals(world, null) || keys == null)
                 throw new ArgumentException("Le panneau Construire a besoin de sa vue, du catalogue, des textes, " +
-                                            "de l'outil de pose, de celui de la Place, du monde et des touches.");
+                                            "de l'outil de pose, du monde et des touches.");
 
             _view = view;
             _texts = texts;
             _placement = placement;
-            _plaza = plaza;
             _world = world;
             _offer = new BuildBarOffer(catalog, world);
             _tabs = new BuildBarTabs(catalog, _offer);
-            _cards = new BuildBarCards(texts, catalog.Plaza, _offer, keys);
+            _cards = new BuildBarCards(texts, _offer, keys);
             _view.FamilyChosen += OnFamilyChosen;
             _view.StructureChosen += OnStructureChosen;
             _placement.HeldChanged += OnHeldChanged;
-            _plaza.HeldChanged += OnHeldChanged;
             _placement.ResultChanged += OnResultChanged;
             _world.Structures.StructurePlaced += OnStructuresChanged;
             _world.Structures.StructureBuilt += OnStructuresChanged;
@@ -71,7 +67,6 @@ namespace Diciela.UI
             _view.FamilyChosen -= OnFamilyChosen;
             _view.StructureChosen -= OnStructureChosen;
             _placement.HeldChanged -= OnHeldChanged;
-            _plaza.HeldChanged -= OnHeldChanged;
             _placement.ResultChanged -= OnResultChanged;
             _world.Structures.StructurePlaced -= OnStructuresChanged;
             _world.Structures.StructureBuilt -= OnStructuresChanged;
@@ -152,22 +147,19 @@ namespace Diciela.UI
             OnHeldChanged();
         }
 
-        /// <summary>Prendre une carte met en main sa construction, ou l'outil de la Place, et ferme le panneau.</summary>
+        /// <summary>Prendre une carte met en main sa construction et ferme le panneau.</summary>
         private void OnStructureChosen(int index)
         {
             StructureDefinition structure = _cards.StructureAt(index);
-            if (_cards.IsPlaza(index))
-                _plaza.Take();
-            else if (structure != null)
-                _placement.Begin(structure);
-            else
+            if (structure == null)
                 return;
+            _placement.Begin(structure);
             Close();
         }
 
         private void OnHeldChanged()
         {
-            _view.SelectStructure(_plaza.IsActive && _cards.HasPlaza ? 0 : _cards.IndexOf(_placement.Current));
+            _view.SelectStructure(_cards.IndexOf(_placement.Current));
         }
 
         private void OnResultChanged()

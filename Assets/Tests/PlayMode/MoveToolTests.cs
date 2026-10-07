@@ -31,9 +31,9 @@ namespace Diciela.Tests.PlayMode
         [Test]
         public void ACabinTouchedFollowsThePointerAndAClickMovesIt()
         {
-            Structure cabin = Place(_test.Cabin, TestWorld.Center);
+            Structure cabin = TestMove.Place(_test, _test.Cabin, TestWorld.Center);
             _test.Mover.Take();
-            Assert.IsTrue(Touch(TestWorld.Center, 0.5f), "On touche la cabane en visant son modèle.");
+            Assert.IsTrue(TestMove.Touch(_test, TestWorld.Center, 0.5f), "On touche la cabane en visant son modèle.");
             Assert.AreSame(cabin, _test.Mover.Moving);
 
             Vector3 target = TestWorld.Center + new Vector3(10f, 0f, 0f);
@@ -53,9 +53,9 @@ namespace Diciela.Tests.PlayMode
         [Test]
         public void ARightClickPutsTheGhostBackThenTheTool()
         {
-            Place(_test.Cabin, TestWorld.Center);
+            TestMove.Place(_test, _test.Cabin, TestWorld.Center);
             _test.Mover.Take();
-            Touch(TestWorld.Center, 0.5f);
+            TestMove.Touch(_test, TestWorld.Center, 0.5f);
 
             _test.Mover.Cancel();
             Assert.IsTrue(_test.Mover.IsActive, "Le fantôme reposé, l'outil reste en main.");
@@ -67,11 +67,11 @@ namespace Diciela.Tests.PlayMode
         [Test]
         public void ATakenPlaceIsRefusedAndTheGhostStays()
         {
-            Structure cabin = Place(_test.Cabin, TestWorld.Center);
+            Structure cabin = TestMove.Place(_test, _test.Cabin, TestWorld.Center);
             Vector3 other = TestWorld.Center + new Vector3(10f, 0f, 0f);
-            Place(_test.Cabin, other);
+            TestMove.Place(_test, _test.Cabin, other);
             _test.Mover.Take();
-            Touch(TestWorld.Center, 0.5f);
+            TestMove.Touch(_test, TestWorld.Center, 0.5f);
 
             _test.Mover.AimAt(_test.OnScreen(other + new Vector3(1f, 0f, 1f)));
             Assert.AreEqual(PlacementResult.Overlaps, _test.Mover.Result);
@@ -82,9 +82,9 @@ namespace Diciela.Tests.PlayMode
         [Test]
         public void ABuildingOnItsWayShowsItsNewPlaceAndIsNotTouchedAgain()
         {
-            Structure camp = Place(_test.Camp, TestWorld.Center);
+            Structure camp = TestMove.Place(_test, _test.Camp, TestWorld.Center);
             _test.Mover.Take();
-            Assert.IsTrue(Touch(TestWorld.Center, 1.25f));
+            Assert.IsTrue(TestMove.Touch(_test, TestWorld.Center, 1.25f));
             Vector3 target = TestWorld.Center + new Vector3(10f, 0f, 0f);
             _test.Mover.AimAt(_test.OnScreen(target));
             _test.Mover.Confirm();
@@ -93,43 +93,25 @@ namespace Diciela.Tests.PlayMode
             Assert.That(Vector2.Distance(new Vector2(60f, 50f), camp.MovingTo.Value.Center), Is.LessThan(0.05f),
                 "Sa nouvelle place est retenue.");
             Assert.AreEqual(2, _test.Views.transform.childCount, "Son modèle, et le fantôme de sa nouvelle place.");
-            Assert.IsFalse(Touch(target, 1.25f), "Le fantôme de sa nouvelle place ne se touche pas.");
-            Assert.IsFalse(Touch(TestWorld.Center, 1.25f), "On ne reprend pas ce qu'on déplace déjà.");
+            Assert.IsFalse(TestMove.Touch(_test, target, 1.25f), "Le fantôme de sa nouvelle place ne se touche pas.");
+            Assert.IsFalse(TestMove.Touch(_test, TestWorld.Center, 1.25f), "On ne reprend pas ce qu'on déplace déjà.");
             Assert.IsNull(_test.Mover.Moving);
         }
 
         [Test]
         public void TakingAnotherToolPutsTheMoverDownWithItsGhost()
         {
-            Place(_test.Cabin, TestWorld.Center);
+            TestMove.Place(_test, _test.Cabin, TestWorld.Center);
             using (var hand = new Hand(_test.Tool, _test.Clearing, _test.Mover))
             {
                 _test.Mover.Take();
-                Touch(TestWorld.Center, 0.5f);
+                TestMove.Touch(_test, TestWorld.Center, 0.5f);
 
                 _test.Tool.Begin(_test.Cabin);
                 Assert.IsTrue(hand.IsHolding);
                 Assert.IsFalse(_test.Mover.IsActive, "Prendre une carte lâche l'outil Déplacer…");
                 Assert.IsNull(_test.Mover.Moving, "… et son fantôme.");
             }
-        }
-
-        // Pose cette construction ici, par l'outil de pose, puis le repose ; rend ce qui est posé.
-        private Structure Place(Diciela.Data.StructureDefinition definition, Vector3 ground)
-        {
-            _test.Tool.Begin(definition);
-            _test.Tool.AimAt(_test.OnScreen(ground));
-            Assert.IsTrue(_test.Tool.Confirm(), "La place est libre.");
-            _test.World.Step();
-            _test.Tool.Cancel();
-            return _test.World.Structures.All[_test.World.Structures.All.Count - 1];
-        }
-
-        // Vise le modèle d'une construction, à cette hauteur au-dessus de ce point du sol, et clique.
-        private bool Touch(Vector3 ground, float height)
-        {
-            _test.Mover.AimAt(_test.OnScreen(ground + new Vector3(0f, height, 0f)));
-            return _test.Mover.Confirm();
         }
     }
 }

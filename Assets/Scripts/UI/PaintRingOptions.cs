@@ -3,19 +3,17 @@ using System.Collections.Generic;
 using System.Globalization;
 using Diciela.Controls;
 using Diciela.Data;
-using UnityEngine;
 
 namespace Diciela.UI
 {
     /// <summary>
-    /// Les éventails de la roue d'un outil de sol (décision 221), traduits : les styles d'un tracé, les formes du mode
-    /// Forme, les symétries (l'étoile porte le nombre de ses branches en pastille), et ce que l'outil peut poser, la zone
-    /// d'abord (l'outil de la Place), puis les sols que la ville sait faire, chacun la texture de son calque pour vignette ;
-    /// chaque option prise l'est dans l'outil.
+    /// Les éventails de la roue d'un outil de sol (décision 221), traduits, chacun ses icônes (PaintIconClasses) : les
+    /// styles d'un tracé, les formes du mode Forme, les symétries (l'étoile porte le nombre de ses branches en
+    /// pastille), et ce que l'outil peut poser, la zone d'abord (l'outil de la Place), puis les sols que la ville sait
+    /// faire, chacun sa vignette ; chaque option prise l'est dans l'outil.
     /// </summary>
     internal sealed class PaintRingOptions
     {
-        public const string ZoneIcon = "place-icone-superficie";
         public static readonly PaintTraceStyle[] Styles = (PaintTraceStyle[])Enum.GetValues(typeof(PaintTraceStyle));
         public static readonly PaintShape[] Shapes = (PaintShape[])Enum.GetValues(typeof(PaintShape));
         public static readonly PaintSymmetry[] SymmetryValues = (PaintSymmetry[])Enum.GetValues(typeof(PaintSymmetry));
@@ -35,14 +33,14 @@ namespace Diciela.UI
             if (mode == PaintToolMode.Trace)
             {
                 foreach (PaintTraceStyle style in Styles)
-                    options.Add(new WheelOption("place-style-" + style.ToString().ToLowerInvariant(), null,
+                    options.Add(new WheelOption(PaintIconClasses.Style(style), null,
                         _texts.Get(TextKeys.PaintStyle(style.ToString())),
                         _texts.Get(TextKeys.PaintStyleDetail(style.ToString())), tool.Options.Style == style));
             }
             else if (mode == PaintToolMode.Shape)
             {
                 foreach (PaintShape shape in Shapes)
-                    options.Add(new WheelOption("place-forme-" + shape.ToString().ToLowerInvariant(), null,
+                    options.Add(new WheelOption(PaintIconClasses.Shape(shape), null,
                         _texts.Get(TextKeys.PaintShape(shape.ToString())),
                         _texts.Get(TextKeys.PaintShapeDetail(shape.ToString())), tool.Options.Shape == shape));
             }
@@ -60,7 +58,7 @@ namespace Diciela.UI
                 string detail = star
                     ? _texts.Get(TextKeys.PaintStarDetail).Replace(TextKeys.BranchesParameter, branches)
                     : _texts.Get(TextKeys.PaintSymmetryDetail(symmetry.ToString()));
-                options.Add(new WheelOption(SymmetryIcon(symmetry), null,
+                options.Add(new WheelOption(PaintIconClasses.Symmetry(symmetry), null,
                     _texts.Get(TextKeys.PaintSymmetry(symmetry.ToString())), detail, tool.Options.Symmetry == symmetry,
                     star ? branches : ""));
             }
@@ -75,9 +73,9 @@ namespace Diciela.UI
             {
                 bool chosen = ink.Equals(tool.Inks.Chosen);
                 options.Add(ink.IsZone
-                    ? new WheelOption(ZoneIcon, null, _texts.Get(TextKeys.PlazaZoneInk),
+                    ? new WheelOption(PaintIconClasses.Zone, null, _texts.Get(TextKeys.PlazaZoneInk),
                         _texts.Get(TextKeys.PlazaZoneInkDetail), chosen)
-                    : new WheelOption("", Picture(ink.Floor), _texts.Get(ink.Floor.NameKey),
+                    : new WheelOption("", PaintIconClasses.Picture(ink.Floor), _texts.Get(ink.Floor.NameKey),
                         _texts.Get(TextKeys.FloorInkDetail), chosen));
             }
             return options;
@@ -92,16 +90,6 @@ namespace Diciela.UI
             foreach (FloorDefinition floor in tool.Inks.Known)
                 _inks.Add(PaintInk.Of(floor));
             return _inks;
-        }
-
-        public static string SymmetryIcon(PaintSymmetry symmetry)
-        {
-            return "place-symetrie-" + symmetry.ToString().ToLowerInvariant();
-        }
-
-        public static Texture2D Picture(FloorDefinition floor)
-        {
-            return floor.Layer != null ? floor.Layer.diffuseTexture : null;
         }
     }
 }

@@ -65,6 +65,12 @@ namespace Diciela.Data
         public const string WheelInk = "roue.sol";
         public const string WheelInkDetail = "roue.sol.suite";
 
+        // La carte de l'outil en main (décision 221) : ce qui est marqué pour être retiré ({nombre} y est remplacé), et
+        // l'étoile avec ses branches ({branches}).
+        public const string CardMarked = "carte.outil.marques";
+        public const string CountParameter = "{nombre}";
+        public const string CardStar = "carte.outil.etoile";
+
         // Les fanions du stock (GDD, section 16) : l'infobulle d'un fanion ({marchandise} y est remplacé).
         public const string StockTooltip = "fanion.infobulle";
         public const string GoodParameter = "{marchandise}";
@@ -77,8 +83,8 @@ namespace Diciela.Data
         public const string DayNumber = "journee.jour";
         public const string DayNumberParameter = "{jour}";
 
-        // L'outil de la Place (décision 206) : ce que sa barre écrit ({superficie}, {max}, {marques}, {taille} y sont
-        // remplacés), et ce que dit la bulle quand un clic retirerait une place de charrette.
+        // Les outils de sol (décisions 206 et 221) : ce que leur carte écrit ({superficie}, {max}, {marques}, {taille} y
+        // sont remplacés), et ce qu'elle dit quand un clic retirerait une place de charrette.
         public const string PlazaArea = "place.superficie";
         public const string AreaParameter = "{superficie}";
         public const string MaxParameter = "{max}";

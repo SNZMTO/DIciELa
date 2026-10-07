@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace Diciela.Data
 {
@@ -25,20 +24,6 @@ namespace Diciela.Data
 
         [Tooltip("Ses niveaux, au-delà du départ ; chacun par un petit chantier (GDD, section 11).")]
         [SerializeField, Min(0)] private int _levels = 3;
-
-        [Header("Sa carte (GDD, section 16)")]
-        [Tooltip("La famille du panneau Construire dont elle est la première carte : son onglet paraît avec elle.")]
-        [SerializeField] private StructureFamilyDefinition _family;
-
-        [Tooltip("La clé de son nom dans la table des textes (Assets/Localization/strings.csv).")]
-        [SerializeField] private string _nameKey = "place.nom";
-
-        [Tooltip("L'image de sa carte : elle n'a pas de modèle à photographier (remplaçant simple, au développeur).")]
-        [SerializeField] private VectorImage _icon;
-
-        public StructureFamilyDefinition Family => _family;
-        public string NameKey => _nameKey;
-        public VectorImage Icon => _icon;
 
         /// <summary>Sa superficie au plus à ce niveau (0 : au départ), en mètres carrés.</summary>
         public float MaxAreaAt(int level)

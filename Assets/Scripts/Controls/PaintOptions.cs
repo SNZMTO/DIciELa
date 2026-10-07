@@ -5,12 +5,12 @@ using UnityEngine;
 namespace Diciela.Controls
 {
     /// <summary>
-    /// Les réglages d'un outil de sol qui ne tiennent à aucun geste (décision 216), ceux de la rangée d'options de sa
-    /// barre : la forme du mode Forme, le style d'un tracé ou d'un polygone (droit ou en courbe), la symétrie (son
-    /// épingle, ses axes, le nombre de l'étoile), la taille du pinceau (dans ses bornes, par crans), et le cap de la place
-    /// de charrette, qu'on tourne comme une construction à la pose. Ce que la barre choisit se choisit ici, l'outil en
-    /// main ; l'outil s'y fait (il abandonne le geste, le redessine, pose l'épingle) et le dit. Le pinceau, le cap et
-    /// l'épingle, eux, ne changent que par les gestes de l'outil.
+    /// Les réglages d'un outil de sol qui ne tiennent à aucun geste (décisions 216 et 221), ceux des éventails de sa
+    /// roue : la forme du mode Forme, le style d'un tracé ou d'un polygone (droit ou en courbe), la symétrie (son
+    /// épingle, ses axes, le nombre de l'étoile), la taille du pinceau (dans ses bornes, par crans), et le cap de la
+    /// place de charrette, qu'on tourne comme une construction à la pose. Ce que la roue choisit se choisit ici,
+    /// l'outil en main ; l'outil s'y fait (il abandonne le geste, le redessine, pose l'épingle) et le dit. Le pinceau,
+    /// le cap et l'épingle, eux, ne changent que par les gestes de l'outil.
     /// </summary>
     public sealed class PaintOptions
     {

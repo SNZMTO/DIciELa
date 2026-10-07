@@ -46,18 +46,18 @@ namespace Diciela.UI
                 if (!tool.Entry.Allows(mode))
                     continue;
                 string name = mode.ToString();
-                slots.Add(new WheelSlot(place, "place-icone-" + name.ToLowerInvariant(), null, pastel, Key(place),
+                slots.Add(new WheelSlot(place, PaintIconClasses.Mode(mode), null, pastel, Key(place),
                     _texts.Get(TextKeys.PaintMode(name)), _texts.Get(TextKeys.PaintModeDetail(name)), tool.Mode == mode,
                     _options.Of(tool, mode)));
             }
             slots.Add(new WheelSlot(Back, BackIcon, null, pastel, Key(Back), _texts.Get(TextKeys.WheelBack),
                 _texts.Get(TextKeys.WheelBackDetail), false));
-            slots.Add(new WheelSlot(Symmetry, PaintRingOptions.SymmetryIcon(tool.Options.Symmetry), null, pastel,
+            slots.Add(new WheelSlot(Symmetry, PaintIconClasses.Symmetry(tool.Options.Symmetry), null, pastel,
                 Key(Symmetry), _texts.Get(TextKeys.WheelSymmetry), _texts.Get(TextKeys.WheelSymmetryDetail), false,
                 _options.Symmetries(tool)));
             PaintInk chosen = tool.Inks.Chosen;
-            slots.Add(new WheelSlot(Ink, chosen.IsZone ? PaintRingOptions.ZoneIcon : "",
-                chosen.Floor != null ? PaintRingOptions.Picture(chosen.Floor) : null, pastel, Key(Ink),
+            slots.Add(new WheelSlot(Ink, chosen.IsZone ? PaintIconClasses.Zone : "",
+                chosen.Floor != null ? PaintIconClasses.Picture(chosen.Floor) : null, pastel, Key(Ink),
                 _texts.Get(TextKeys.WheelInk), _texts.Get(TextKeys.WheelInkDetail), false, _options.Inks(tool)));
             return slots;
         }

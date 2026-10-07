@@ -8,19 +8,16 @@ using UnityEngine;
 namespace Diciela.Tests.PlayMode
 {
     /// <summary>
-    /// Le panneau Construire qui s'ouvre à la demande et se ferme quand on prend une carte (décision 168), ses touches
-    /// (décision 184) et la carte de la Place (décision 206), sur le petit monde des tests et une vue qui note ce qu'on
-    /// lui montre et joue les choix du joueur. Un catalogue de deux familles : Logement (le campement, la cabane) et
-    /// Métiers, sans construction, que la fiche de la Place nomme pour sa carte ; une table des textes écrite ici.
+    /// Le panneau Construire qui s'ouvre à la demande et se ferme quand on prend une carte (décision 168), et ses touches
+    /// (décision 184), sur le petit monde des tests et une vue qui note ce qu'on lui montre et joue les choix du joueur.
+    /// Un catalogue d'une famille, le Logement (le campement, la cabane) ; une table des textes écrite ici.
     /// </summary>
     public sealed class BuildBarPanelTests
     {
         private const string Texts = "clé,fr\n" +
                                      "famille.logement,Logement\n" +
-                                     "famille.metiers,Métiers\n" +
                                      "construction.campement,Campement\n" +
                                      "construction.cabane,Cabane\n" +
-                                     "place.nom,Place\n" +
                                      "carte.lits,{lits} lits\n";
 
         private TestWorld _test;
@@ -32,20 +29,15 @@ namespace Diciela.Tests.PlayMode
         {
             _test = new TestWorld();
             var housing = _test.Keep(ScriptableObject.CreateInstance<StructureFamilyDefinition>());
-            var trades = _test.Keep(ScriptableObject.CreateInstance<StructureFamilyDefinition>());
-            var plaza = _test.Keep(ScriptableObject.CreateInstance<PlazaDefinition>());
             var catalog = _test.Keep(ScriptableObject.CreateInstance<Catalog>());
 #if UNITY_EDITOR
             TestWorld.Fill(housing, "_nameKey", "famille.logement");
-            TestWorld.Fill(trades, "_nameKey", "famille.metiers");
             TestWorld.FillList(housing, "_structures", _test.Camp, _test.Cabin);
-            TestWorld.Fill(plaza, "_family", trades);
-            TestWorld.FillList(catalog, "_families", housing, trades);
-            TestWorld.Fill(catalog, "_plaza", plaza);
+            TestWorld.FillList(catalog, "_families", housing);
 #endif
             _view = new NotedBuildBarView();
-            _presenter = new BuildBarPresenter(_view, catalog, TextTable.Parse(Texts, "fr"), _test.Tool, _test.Plaza,
-                _test.World, new FixedToolKeys());
+            _presenter = new BuildBarPresenter(_view, catalog, TextTable.Parse(Texts, "fr"), _test.Tool, _test.World,
+                new FixedToolKeys());
         }
 
         [TearDown]
@@ -60,35 +52,6 @@ namespace Diciela.Tests.PlayMode
         {
             _test.World.Submit(new PlaceStructureCommand(_test.Camp, new Placement(new Vector2(30f, 30f), 0f)));
             _test.World.Step();
-        }
-
-        [Test]
-        public void TheTradesTabComesWithTheCampAndThePlazaLeadsIt()
-        {
-            Assert.AreEqual(new[] { "Logement" }, _view.Families, "Le campement d'abord.");
-
-            PlaceTheCamp();
-            Assert.AreEqual(new[] { "Logement", "Métiers" }, _view.Families, "Les Métiers paraissent avec la Place.");
-            _view.Open(1);
-            Assert.AreEqual(new[] { "Place" }, _view.Structures);
-            Assert.AreEqual(new[] { "1" }, _view.Keys, "Sa touche, la première.");
-            Assert.AreEqual(new[] { "" }, _view.Beds, "Elle n'offre pas de lit.");
-        }
-
-        [Test]
-        public void TakingThePlazaCardPutsItsToolInHand()
-        {
-            PlaceTheCamp();
-            _presenter.Open();
-            _view.Open(1);
-
-            _view.Choose(0);
-            Assert.IsTrue(_test.Plaza.IsActive, "La carte met l'outil de la Place en main…");
-            Assert.IsFalse(_view.IsShownOpen, "… ferme le panneau…");
-            Assert.AreEqual(0, _view.Selected, "… et reste enfoncée.");
-
-            _test.Plaza.PutDown();
-            Assert.AreEqual(-1, _view.Selected);
         }
 
         [Test]

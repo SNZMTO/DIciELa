@@ -6,10 +6,11 @@ using Diciela.Simulation.Land;
 namespace Diciela.Controls
 {
     /// <summary>
-    /// L'entrée d'un outil de sol (décisions 210 et 216) : un seul outil, deux entrées. L'outil de la Place pose la zone,
-    /// ou un sol dans la zone, et a cinq modes (pinceau, gomme, tracé, forme, place de charrette) ; l'outil Chemins pose un
-    /// sol partout où l'on marche, et a les quatre premiers. Chacune dit ses modes, dans l'ordre de la barre et des
-    /// touches, si elle pose la zone, où vont ses sols, et la taille de son pinceau au départ.
+    /// L'entrée d'un outil de sol (décisions 210 et 216) : un seul outil, deux entrées. L'outil de la Place pose la
+    /// zone, ou un sol dans la zone, et a cinq modes (pinceau, gomme, tracé, forme, place de charrette) ; l'outil
+    /// Chemins pose un sol partout où l'on marche, et a les quatre premiers. Chacune dit ses modes, dans l'ordre de
+    /// leurs cases dans la roue et de leurs chiffres, si elle pose la zone, où vont ses sols, et la taille de son
+    /// pinceau au départ.
     /// </summary>
     public sealed class PaintEntry
     {
@@ -40,7 +41,7 @@ namespace Diciela.Controls
         /// <summary>Vrai si elle pose aussi la zone de la Place.</summary>
         public bool LaysTheZone { get; }
 
-        /// <summary>Ses modes, dans l'ordre de la barre et des touches 1 à 5.</summary>
+        /// <summary>Ses modes, dans l'ordre de leurs cases dans la roue et de leurs chiffres, 1 à 5.</summary>
         public IReadOnlyList<PaintToolMode> Modes { get; }
 
         /// <summary>Le rayon du pinceau quand on prend l'outil, d'après ces réglages, en mètres.</summary>

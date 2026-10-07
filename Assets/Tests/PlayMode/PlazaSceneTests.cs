@@ -17,10 +17,10 @@ using UnityEngine.UIElements;
 namespace Diciela.Tests.PlayMode
 {
     /// <summary>
-    /// La Place dans la scène de test, de bout en bout (décision 206) : la Chimère créée et son campement posé, l'onglet
-    /// des Métiers paraît, et sa première carte est la Place ; la prendre ferme le panneau, met l'outil en main, montre sa
-    /// barre et le voile de la zone ; un mode se prend à sa barre ; un disque tracé agrandit la Place, et la barre le dit ;
-    /// une place de charrette se pose dedans ; Échap lâche l'outil, la barre et la zone se cachent. L'interface se clique
+    /// La Place dans la scène de test, de bout en bout (décisions 206 et 221) : la Chimère créée et son campement posé,
+    /// la roue des outils propose la Place ; la prendre met l'outil en main, montre sa carte et le voile de la zone ; un
+    /// clic sur la carte ouvre la roue de la Place, où un mode se prend ; un disque tracé agrandit la Place, et la carte le
+    /// dit ; une place de charrette se pose dedans ; le clic droit lâche l'outil, la carte et la zone se cachent. L'interface se clique
     /// par ses éléments (TestHud) ; dans la ville, l'outil reçoit les appels que ses gestes lui font, chacun dans la même
     /// image (les gestes, à la souris réelle, ne glissent pas pendant ce temps).
     /// </summary>
@@ -38,17 +38,14 @@ namespace Diciela.Tests.PlayMode
         }
 
         [UnityTest]
-        public IEnumerator ThePlazaIsTracedFromItsCard()
+        public IEnumerator ThePlazaIsTracedFromTheWheel()
         {
             LogAssert.Expect(LogType.Log, new Regex("^DICIELA : monde créé"));
             Catalog catalog = null;
-            TextTable texts = null;
 #if UNITY_EDITOR
             yield return UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode(ScenePaths.GameTest,
                 new LoadSceneParameters(LoadSceneMode.Additive));
             catalog = BuildBarTests.LoadSingle<Catalog>();
-            InterfaceSettings settings = BuildBarTests.LoadSingle<InterfaceSettings>();
-            texts = TextTable.Parse(settings.Texts.text, settings.Language);
 #endif
             yield return TestOpening.Confirm(MaxFrames);
             World world = Object.FindAnyObjectByType<GameRunner>().World;
@@ -59,26 +56,19 @@ namespace Diciela.Tests.PlayMode
             world.Submit(new PlaceStructureCommand(camp, FirstAllowed(world, camp, world.Map.ArrivalPoint)));
             yield return Until(() => world.Structures.ChimeraHome != null, "Le campement est posé.");
 
-            var bar = Object.FindAnyObjectByType<BuildBar>();
-            VisualElement root = bar.GetComponent<UIDocument>().rootVisualElement;
-            bar.Open();
-            yield return Until(() => root.Q("families").childCount == 2, "Le Logement, puis les Métiers.");
-            TestHud.Click(root.Q("families")[1]);
-            yield return null;
-            VisualElement cards = root.Q("structures");
-            Assert.AreEqual(texts.Get(catalog.Plaza.NameKey), cards[0].Q<Label>().text, "La Place mène les Métiers.");
-
-            TestHud.Click(cards[0]);
-            yield return null;
+            VisualElement root = Object.FindAnyObjectByType<ToolWheel>().GetComponent<UIDocument>().rootVisualElement;
+            VisualElement card = root.Q("carte-outil");
+            TestHud.Click(root.Q("outils"));
+            yield return ClickSlot(root, "roue-place");
             PaintTool tool = Object.FindAnyObjectByType<PaintControls>().Tool;
             var zone = Object.FindAnyObjectByType<PlazaZoneView>();
-            Assert.IsTrue(tool.IsActive, "La carte met l'outil de la Place en main…");
-            Assert.IsFalse(bar.IsOpen, "… ferme le panneau…");
-            Assert.IsFalse(root.Q("place-barre").ClassListContains(Hidden), "… montre sa barre…");
+            Assert.IsTrue(tool.IsActive, "La roue des outils met l'outil de la Place en main…");
+            Assert.IsFalse(card.ClassListContains(Hidden), "… montre sa carte…");
             Assert.IsTrue(zone.transform.Find("Voile de la Place").gameObject.activeSelf, "… et la zone.");
 
-            TestHud.Click(root.Q("place-modes")[(int)PaintToolMode.Shape]);
-            Assert.AreEqual(PaintToolMode.Shape, tool.Mode, "Un mode se prend à la barre (la forme : le cercle).");
+            TestHud.Click(card);
+            yield return ClickSlot(root, "place-icone-shape");
+            Assert.AreEqual(PaintToolMode.Shape, tool.Mode, "La carte ouvre la roue de la Place ; la forme s'y prend.");
             Camera camera = Object.FindAnyObjectByType<CameraRig>().Camera;
             Vector2 center = FirstClearDisc(world, world.Structures.ChimeraHome.Placement.Center);
             tool.BeginDrawing(OnScreen(camera, world, center));
@@ -88,10 +78,12 @@ namespace Diciela.Tests.PlayMode
             yield return Until(() => world.Plaza.CellCount > 0, "Le disque part au relâchement.");
             Assert.AreEqual(Mathf.PI * DiscRadius * DiscRadius, world.Plaza.AreaSquareMeters, 15f);
             yield return null;
-            StringAssert.StartsWith(Mathf.RoundToInt(world.Plaza.AreaSquareMeters) + " / ",
-                root.Q<Label>("place-superficie").text, "La barre dit la superficie.");
+            string area = Mathf.RoundToInt(world.Plaza.AreaSquareMeters) + " / ";
+            Assert.IsTrue(root.Q("carte-outil-puces").Query<Label>().ToList().Exists(chip => chip.text.StartsWith(area)),
+                "La carte dit la superficie.");
 
-            TestHud.Click(root.Q("place-modes")[(int)PaintToolMode.CartSpot]);
+            TestHud.Click(card);
+            yield return ClickSlot(root, "place-icone-cartspot");
             tool.AimAt(OnScreen(camera, world, center));
             Assert.AreEqual(PaintAnswer.Ok, tool.Answer, "Une place de charrette tient au milieu du disque.");
             tool.Click();
@@ -99,11 +91,22 @@ namespace Diciela.Tests.PlayMode
 
             tool.Cancel();
             Assert.IsFalse(tool.IsActive, "Sans geste en cours, le clic droit lâche l'outil…");
-            Assert.IsTrue(root.Q("place-barre").ClassListContains(Hidden), "… sa barre se cache…");
+            Assert.IsTrue(card.ClassListContains(Hidden), "… sa carte se cache…");
             Assert.IsFalse(zone.transform.Find("Voile de la Place").gameObject.activeSelf, "… et la zone aussi.");
 
             LogAssert.Expect(LogType.Log, new Regex("^DICIELA : monde arrêté"));
             yield return TestOpening.Leave(MaxFrames);
+        }
+
+        // Clique, une fois la roue ouverte posée, la case qui porte cette icône.
+        private static IEnumerator ClickSlot(VisualElement root, string icon)
+        {
+            yield return null;
+            yield return null;
+            VisualElement face = root.Q("roue-cases").Q(className: icon);
+            Assert.IsNotNull(face, "La roue ouverte a la case « " + icon + " ».");
+            TestHud.Click(face.parent);
+            yield return null;
         }
 
         private static IEnumerator Until(System.Func<bool> done, string what)

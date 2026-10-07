@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Diciela.Controls;
 using Diciela.Data;
+using Diciela.Simulation;
 using Diciela.UI;
 using NUnit.Framework;
 using UnityEngine;
@@ -14,19 +16,15 @@ namespace Diciela.Tests.PlayMode
     /// écrans larges compris : la journée tient au coin haut-gauche, à 24 px du bord et 20 du haut ; la fiche du
     /// campement, ouverte, au coin haut-droit ; le stock en fanions au milieu du haut, à 24 px ; le panneau Construire,
     /// ouvert, au milieu du bas, à 24 px ; l'icône des outils au coin bas-droit, à 24 px ; tout reste dans l'écran,
-    /// sans que deux blocs se chevauchent. La roue tient dans l'écran, ouverte au coin sur l'icône des outils, puis, la
-    /// Place en main, son éventail des formes déplié vers ce coin. C'est le vrai HUD (sa mise en page, la feuille du
-    /// jeu, ses vues, ses présentateurs, sa taille), avec le catalogue et les textes du projet pour la barre et la
-    /// journée, et le petit monde du campement pour la fiche et les fanions. Les marges attendues sont celles du GDD.
+    /// sans que deux blocs se chevauchent. La roue tient dans l'écran, ouverte au coin sur l'icône des outils ; la
+    /// Place en main, le panneau fermé, sa carte pleine (une étoile, une raison) tient à 24 px du bas, à côté de
+    /// l'icône, sans toucher l'astuce ni la fiche, et sa roue, son éventail des formes déplié vers le coin. C'est le
+    /// vrai HUD (sa mise en page, la feuille du jeu, ses vues, ses présentateurs, sa taille), avec le catalogue et les
+    /// textes du projet, et le petit monde du campement pour la fiche et les fanions. Les marges attendues sont celles
+    /// du GDD.
     /// </summary>
     public sealed class HudLayoutTests
     {
-        private const float Side = 24f;
-        private const float Top = 20f;
-        private const float Bottom = 24f;
-        // La tringle des fanions pend à 24 px du haut, comme dans la maquette.
-        private const float StockTop = 24f;
-        private const float Tolerance = 0.5f;
         private const int SettleFrames = 4;
 
         private static readonly Vector2Int[] Screens =
@@ -44,7 +42,7 @@ namespace Diciela.Tests.PlayMode
             var settings = BuildBarTests.LoadSingle<InterfaceSettings>();
             var catalog = BuildBarTests.LoadSingle<Catalog>();
             var faults = new List<string>();
-            using (var world = new TestWorld())
+            using (var world = new TestWorld(withPlaza: true))
             using (var town = new TestCampTown())
             {
                 var panel = world.Keep(ScriptableObject.CreateInstance<PanelSettings>());
@@ -65,6 +63,7 @@ namespace Diciela.Tests.PlayMode
                 TestWorld.Fill(scale, "_panel", panel);
                 TestWorld.Fill(scale, "_settings", settings);
                 RenderTexture target = null;
+                ToolCard card = null;
                 try
                 {
                     foreach (Vector2Int screen in Screens)
@@ -83,8 +82,10 @@ namespace Diciela.Tests.PlayMode
                             yield return null;
                             TextTable texts = TextTable.Parse(settings.Texts.text, settings.Language);
                             var tooltips = new Tooltips(document);
-                            bar.Show(catalog, texts, world.Tool, world.Plaza, world.World, new FixedToolKeys(),
+                            bar.Show(catalog, texts, world.Tool, world.World, new FixedToolKeys(),
                                 new ReasonBubble(document));
+                            card = new ToolCard(document);
+                            card.Show(texts, world.Clearing, world.Mover, world.Paths, world.Plaza, world.World);
                             bar.Open();
                             wheel.Show(texts, new FixedToolKeys(), world.Clearing, bar, world.Mover, world.Paths,
                                 world.Plaza, tooltips);
@@ -97,15 +98,22 @@ namespace Diciela.Tests.PlayMode
                         }
                         for (int frame = 0; frame < SettleFrames; frame++)
                             yield return null;
-                        Check(document.rootVisualElement, screen, faults);
+                        TestHud.CheckBlocks(document.rootVisualElement, screen, faults);
                         Vector2 icon = document.rootVisualElement.Q("outils").worldBound.center;
                         wheel.OpenAt(TestHud.OnScreen(document.rootVisualElement, icon));
                         for (int frame = 0; frame < SettleFrames; frame++)
                             yield return null;
                         TestHud.CheckWheel(document.rootVisualElement, screen, faults);
                         wheel.Escape();
-                        // La Place en main, sa roue ouverte au coin, l'éventail des formes déplié vers ce coin.
+                        // La Place en main, sa carte pleine : une étoile, et la raison d'un ordre refusé.
+                        bar.Close();
                         world.Plaza.Take();
+                        world.Plaza.Options.Choose(PaintSymmetry.Star);
+                        world.World.Submit(new RemoveCartSpotCommand(99));
+                        world.World.Step();
+                        for (int frame = 0; frame < SettleFrames; frame++)
+                            yield return null;
+                        TestHud.CheckCard(document.rootVisualElement, screen, faults);
                         wheel.OpenAt(TestHud.OnScreen(document.rootVisualElement, icon));
                         wheel.PointAt(TestHud.OnScreen(document.rootVisualElement, icon + new Vector2(212f, 212f)));
                         for (int frame = 0; frame < SettleFrames; frame++)
@@ -115,6 +123,7 @@ namespace Diciela.Tests.PlayMode
                         TestHud.CheckWheel(document.rootVisualElement, screen, faults);
                         wheel.Escape();
                         world.Plaza.PutDown();
+                        bar.Open();
                     }
                 }
                 finally
@@ -125,6 +134,7 @@ namespace Diciela.Tests.PlayMode
                         target.Release();
                         Object.Destroy(target);
                     }
+                    card?.Hide();
                     wheel.Hide();
                     bar.Hide();
                     day.Hide();
@@ -137,50 +147,6 @@ namespace Diciela.Tests.PlayMode
 #else
             yield break;
 #endif
-        }
-
-        private static void Check(VisualElement root, Vector2Int screen, List<string> faults)
-        {
-            Rect room = root.panel.visualTree.layout;
-            Rect day = root.Q("journee").worldBound;
-            Rect bar = root.Q("bar").worldBound;
-            // L'icône des outils par sa place, sans l'enfoncement de son feutre (translate), qui s'anime quand la roue
-            // se ferme.
-            Rect tools = root.Q("outils").layout;
-            Rect sheet = root.Q("fiche").worldBound;
-            Rect stock = root.Q(className: "stock-corps").worldBound;
-            Rect tip = root.Q("astuce").worldBound;
-            string at = screen.x + " × " + screen.y + " : ";
-            if (Mathf.Abs(day.xMin - Side) > Tolerance || Mathf.Abs(day.yMin - Top) > Tolerance)
-                faults.Add(at + "la journée n'est pas à 24 px du bord et 20 du haut (" + day + ").");
-            if (Mathf.Abs(room.height - bar.yMax - Bottom) > Tolerance)
-                faults.Add(at + "la barre n'est pas à 24 px du bas (" + bar + " dans " + room + ").");
-            if (Mathf.Abs(bar.center.x - room.width * 0.5f) > Tolerance)
-                faults.Add(at + "la barre n'est pas au milieu (" + bar + " dans " + room + ").");
-            if (Mathf.Abs(room.width - tools.xMax - Side) > Tolerance ||
-                Mathf.Abs(room.height - tools.yMax - Bottom) > Tolerance)
-                faults.Add(at + "l'icône des outils n'est pas à 24 px du bord et du bas (" + tools + " dans " + room +
-                           ").");
-            if (Mathf.Abs(room.width - sheet.xMax - Side) > Tolerance || Mathf.Abs(sheet.yMin - Top) > Tolerance)
-                faults.Add(at + "la fiche n'est pas à 24 px du bord et 20 du haut (" + sheet + " dans " + room + ").");
-            if (Mathf.Abs(stock.center.x - room.width * 0.5f) > Tolerance || Mathf.Abs(stock.yMin - StockTop) > Tolerance)
-                faults.Add(at + "les fanions ne sont pas au milieu, à 24 px du haut (" + stock + ").");
-            if (Mathf.Abs(tip.xMin - Side) > Tolerance || Mathf.Abs(room.height - tip.yMax - Bottom) > Tolerance)
-                faults.Add(at + "l'astuce n'est pas à 24 px du bord et du bas (" + tip + " dans " + room + ").");
-            Rect[] blocks = { day, stock, sheet, bar, tip, tools };
-            foreach (Rect block in blocks)
-            {
-                if (block.xMin < 0f || block.yMin < 0f || block.xMax > room.width || block.yMax > room.height)
-                    faults.Add(at + "un bloc sort de l'écran (" + block + " dans " + room + ").");
-            }
-            for (int i = 0; i < blocks.Length; i++)
-            {
-                for (int j = i + 1; j < blocks.Length; j++)
-                {
-                    if (blocks[i].Overlaps(blocks[j]))
-                        faults.Add(at + "deux blocs se chevauchent (" + blocks[i] + ", " + blocks[j] + ").");
-                }
-            }
         }
     }
 }

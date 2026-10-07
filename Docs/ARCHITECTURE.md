@@ -347,6 +347,8 @@ mètres carrés), `Place` ne veut dire que poser, la fiche d'un lieu est `Locati
 | onglet, carte (du panneau Construire) | `Tab`, `Card` (`BuildBarElements`) | roue des outils ; son anneau | `ToolWheel` ; `WheelRing` | infobulle | `Tooltips` |
 | gestes des outils ; outil choisi | `ToolControls` ; `ToolChoice` | touches des outils | `IToolKeys` | ouvrir, fermer (un panneau) | `Open`, `Close` (`IBuildMenu`) |
 | la main (un seul outil) | `Hand` | outil de la roue (ses gestes ; son allure) | `ToolAction` ; `WheelTool` | boutons de la fiche | `LocationSheetActions`, `LocationSheetAction` |
+| case, éventail, option (de la roue) | `WheelSlot`, `WheelFan`, `WheelOption` | portes de la roue (l'icône, la carte) | `WheelDoors` | carte de l'outil en main ; puce | `ToolCard` ; `ToolCardChip` |
+| roue d'un outil de sol ; ses éventails | `PaintRing` ; `PaintRingOptions` | icônes des outils de sol | `PaintIconClasses` | chiffre d'une case de la roue | `IRingKeys` |
 | couche (où la Chimère dort) | `HasCouch`, `CouchFeet` | stock de départ | `StartingGoods` ; `GoodsCause.StartingStock` | classes de style posées par le code | `StyleClasses` |
 | mettre en service (l'opération du monde) | `Commissioning` | chantiers finis (à mettre en service) | `ConstructionSites.Finished` | reprendre ses mailles (un pied debout) | `NavGrid.Reclaim` |
 | tronçons (d'une rangée du maillage) | `FreeRuns` | ligne du chantier (côté rendu) | `SiteLine` | stock de la ville changé | `CityStockChanged` |
@@ -422,36 +424,36 @@ mètres carrés), `Place` ne veut dire que poser, la fiche d'un lieu est `Locati
   le zoom, sur une copie en mémoire des réglages du rendu, rendue à la sortie) ; les gestes la commandent
   (`CameraControls`) ; ses chiffres sont dans une fiche. La visée de la pose passe après elle (SAVOIR 2.8).
 - **Les gestes** : un seul asset d'actions, monté par un script d'éditeur. Les raccourcis se lient au caractère, le
-  déplacement à la position (SAVOIR 3). Un geste appartient à la ville ou à l'interface dès l'enfoncement, même si
-  ce qui l'a reçu disparaît aussitôt (la roue qu'on congédie), et à l'outil qui était en main à l'enfoncement : l'outil
-  pris pendant l'appui n'en fait rien ; clic ou glisser se décide au relâchement (SAVOIR 2.8). Sans outil en main, un clic gauche touche la construction dont le
-  modèle est sous le pointeur : la vue dit laquelle (SAVOIR 2.7), l'outil « choisir » en fait un ordre. Un outil en
-  main (`IHeldTool` : poser, retirer, déplacer, les outils de sol) prend le clic gauche ; son clic droit (`Cancel`)
-  défait ce qu'il tient, sinon le lâche. Un seul à la fois : la main (`Hand`) lâche tout à fait les autres (`PutDown`)
-  quand on en prend un, par n'importe quel chemin ; le geste « toucher » y lit si un outil est en main, et Échap passe
-  par elle (décision 215). Les outils qui visent le sol et se posent d'un clic (`IAimingTool` : poser,
-  déplacer) sont pilotés par les mêmes gestes (`PlacementControls`) et partagent le fantôme qui suit le pointeur
-  (`GhostAim`) ; l'outil Déplacer (`MoveTool`) touche une construction par la même visée que « choisir », puis son
-  fantôme suit le pointeur dans l'aperçu de la pose. Viser le sol est une seule fonction (`GroundAim`), pour la pose,
-  Déplacer et la Place. La roue des
-  outils les prend : Retirer en main, ou Construire, qui ouvre le panneau Construire, dont une carte met la
-  construction en main ; ses gestes (`ToolControls` : la touche de la roue tenue, celle de chaque outil) ne la
-  connaissent que par `IToolWheel`, et elle lit leurs touches par `IToolKeys`. Ses outils sont décrits par deux
-  tables, au rang de leur choix (`ToolChoice`) : `ToolAction` pour les gestes (l'action, sa touche d'origine, que lit
-  aussi le monteur des actions), `WheelTool` pour l'interface (l'élément, le nom, l'usage) ; ce que fait chaque outil
-  n'est écrit que dans le présentateur de la roue. L'outil « Retirer »
+  déplacement à la position (SAVOIR 3). Un geste appartient à la ville ou à l'interface dès l'enfoncement, même si ce
+  qui l'a reçu disparaît aussitôt (la roue qu'on congédie), et à l'outil qui était en main à l'enfoncement : l'outil
+  pris pendant l'appui n'en fait rien ; clic ou glisser se décide au relâchement (SAVOIR 2.8). Sans outil en main, un
+  clic gauche touche la construction dont le modèle est sous le pointeur : la vue dit laquelle (SAVOIR 2.7), l'outil «
+  choisir » en fait un ordre. Un outil en main (`IHeldTool` : poser, retirer, déplacer, les outils de sol) prend le clic
+  gauche ; son clic droit (`Cancel`) défait ce qu'il tient, sinon le lâche. Un seul à la fois : la main (`Hand`) lâche
+  tout à fait les autres (`PutDown`) quand on en prend un, par n'importe quel chemin ; le geste « toucher » y lit si un
+  outil est en main, et Échap passe par elle (décision 215). Les outils qui visent le sol et se posent d'un clic
+  (`IAimingTool` : poser, déplacer) sont pilotés par les mêmes gestes (`PlacementControls`) et partagent le fantôme qui
+  suit le pointeur (`GhostAim`) ; l'outil Déplacer (`MoveTool`) touche une construction par la même visée que «
+  choisir », puis son fantôme suit le pointeur dans l'aperçu de la pose. Viser le sol est une seule fonction
+  (`GroundAim`), pour la pose, Déplacer et la Place. La roue des outils les prend (décision 221) : Retirer, Déplacer,
+  Chemins et la Place en main, ou Construire, qui ouvre le panneau Construire, dont une carte met la construction en
+  main ; ses gestes (`ToolControls` : la touche de la roue tenue, celle de chaque outil) ne la connaissent que par
+  `IToolWheel`, et elle lit leurs touches par `IToolKeys`. Ses outils sont décrits par deux tables, au rang de leur
+  choix (`ToolChoice`) : `ToolAction` pour les gestes (l'action, sa touche d'origine, que lit aussi le monteur des
+  actions), `WheelTool` pour l'interface (l'élément, le nom, l'usage) ; ce que fait chaque outil n'est écrit que dans le
+  présentateur de la roue, et ce que fait chaque case de la roue d'un outil de sol dans `PaintRing`. L'outil « Retirer »
   vise un arbre par la boîte de son modèle et marque ce que contient le cadre qu'on tire, que l'interface dessine
-  (`ISelectionFrame`). Un panneau ouvert rend la ville muette ; les conteneurs plein écran de l'interface ne captent pas le pointeur. Les gestes ne
-  connaissent pas l'interface : elle leur dit seulement où elle est (`IInterfaceArea`), et `Game` les relie.
+  (`ISelectionFrame`). Un panneau ouvert rend la ville muette ; les conteneurs plein écran de l'interface ne captent pas
+  le pointeur. Les gestes ne connaissent pas l'interface : elle leur dit seulement où elle est (`IInterfaceArea`), et
+  `Game` les relie.
 - **Les outils de sol** (décisions 206, 210, 214, 216, 219 et 220) : un seul outil en main (`PaintTool`) à deux entrées
-  (`PaintEntry`), l'outil de la Place, pris à la carte de la Place, que le panneau Construire met en tête de la famille
-  que nomme sa fiche (`BuildBarCards`), et l'outil Chemins, pris à la roue. L'entrée dit ses modes, s'il pose la zone,
-  où vont ses sols et son pinceau de départ. L'outil tient son mode, en familles (`PaintToolMode` : pinceau, gomme,
-  tracé, forme, place de charrette), son encre (`PaintInks` : la zone, ou l'un des sols que la ville sait faire, dite en
-  toutes lettres par `PaintInk` : la zone, un sol, ou rien) et ses options, ce que règle la rangée sous ses modes
+  (`PaintEntry`), l'outil de la Place et l'outil Chemins, pris à la roue. L'entrée dit ses modes, s'il pose la zone, où
+  vont ses sols et son pinceau de départ. L'outil tient son mode, en familles (`PaintToolMode` : pinceau, gomme, tracé,
+  forme, place de charrette), son encre (`PaintInks` : la zone, ou l'un des sols que la ville sait faire, dite en toutes
+  lettres par `PaintInk` : la zone, un sol, ou rien) et ses options, ce que règlent les éventails de sa roue
   (`PaintOptions` : la forme du mode Forme, `PaintShape` ; le style d'un tracé ou d'un polygone, `PaintTraceStyle` ; la
   symétrie, `PaintSymmetry`, son épingle, ses axes et les branches de l'étoile ; la taille du pinceau ; le cap d'une
-  place de charrette). Ce que la barre choisit se choisit chez les options, l'outil en main, et l'outil s'y fait
+  place de charrette). Ce que la roue choisit se choisit chez les options, l'outil en main, et l'outil s'y fait
   (`PaintOptionEffect` : abandonner le geste, le redessiner, poser l'épingle). Il travaille sur sa surface
   (`PaintCanvas`) : ce que vise son pointeur (`PaintPointer` : le sol, l'écran, et l'aimant des places de charrette, que
   Ctrl tenu coupe), le geste en cours (`PaintDrawing` : glissé, un trait de pinceau, un cercle, un rectangle, qui part
@@ -466,16 +468,12 @@ mètres carrés), `Place` ne veut dire que poser, la fiche d'un lieu est `Locati
   qu'une (`GroundUnion`), vérifiée et envoyée d'un seul ordre, chaque maille une fois ; une place de charrette et ses
   copies, chacune son ordre. Ses gestes (`PaintControls`, leur carte d'actions), pour celui des deux qui est en main,
   glissent, cliquent, tournent par la touche de la pose (`RotateKey`, que la pose partage) et changent la taille du
-  pinceau à Ctrl + molette, que la caméra laisse alors. Les touches des cartes passent par un aiguillage (`CardKeys`) :
-  le panneau ouvert, ses cartes ; sinon, les modes de l'outil de sol en main. La vue montre la zone (`PlazaZoneView`) et
-  l'aperçu de l'outil (`PaintToolPreview`) en calques posés sur le relief (`GroundOverlay`, `DrapedMesh` : un seul
-  maillage par calque, refait quand la Place change) ; l'interface, une seule barre pour les deux outils (`PaintBar`,
-  dont chaque rangée de feutres est une `FeltRow` : ce qu'il pose, ses modes ; `PaintBarPresenter`, ce qu'elle montre de
-  l'outil en main : `PaintBarContent`, chaque choix une `PaintBarChoice` ; sa rangée d'options, les formes, les styles,
-  les symétries et les branches de l'étoile, a sa vue, `PaintOptionsRow`, et son présentateur,
-  `PaintOptionsPresenter`) ; la raison d'un refus, de la pose, de la Place ou des sols, passe par une seule bulle
-  (`ReasonBubble`), où parle le dernier qui a quelque chose à dire (pour la barre, `PaintBarReasons`). `Game` relie la
-  barre, les gestes et la zone, qui ne se voit qu'en mode construction (`TownPlaza`).
+  pinceau à Ctrl + molette, que la caméra laisse alors. Les chiffres passent par un aiguillage (`CardKeys`) : le panneau
+  ouvert, ses cartes ; sinon, les cases de la roue de l'outil de sol en main (`IRingKeys`). La vue montre la zone
+  (`PlazaZoneView`) et l'aperçu de l'outil (`PaintToolPreview`) en calques posés sur le relief (`GroundOverlay`,
+  `DrapedMesh` : un seul maillage par calque, refait quand la Place change) ; l'interface, sa roue (`PaintRing` ; ses
+  éventails, `PaintRingOptions` ; leurs icônes, `PaintIconClasses`) et sa carte (`ToolCard`). `Game` relie les gestes et
+  la zone, qui ne se voit qu'en mode construction (`TownPlaza`).
 - **Les sols vus** (décisions 214 et 216) : un sol qui sert (bâti, ou qu'on efface) se peint dans le sol de la carte, du
   calque de sa fiche (`FloorPainting` : sur la copie du Terrain, par lot, à la fin de l'image ; la peinture d'origine
   relue sur l'original) ; un sol en chantier se voit en fantôme, à la texture de son calque (`FloorGhosts` : un calque
@@ -502,17 +500,23 @@ mètres carrés), `Place` ne veut dire que poser, la fiche d'un lieu est `Locati
   `InterfaceScale` lui donne son échelle d'après l'écran (ou l'image où il se rend) et le réglage. Les images,
   l'ombre et les icônes se refont par `DICIELA/Interface/Générer les images de l'interface`, les vignettes des
   constructions par `DICIELA/Interface/Photographier les constructions`.
-- **Le HUD** est un seul document (`Hud.uxml`, sa mise en page dans `Hud.uss`), sur l'objet « Interface » : chaque
-  bloc a sa vue, qui cherche son sous-arbre par son nom, et son présentateur (le panneau Construire, `BuildBar`,
-  ouvert à la demande par `IBuildMenu`, dont les onglets et les cartes se font dans `BuildBarElements` ; la roue des
-  outils, `ToolWheel`, ses éléments `ToolWheelElements`, son anneau `WheelRing` et ses mesures `WheelGeometry` ;
-  la journée, `DayBoard` ; la fiche du lieu touché, `LocationSheet` ; le stock en fanions, `StockPennants` ; l'astuce,
-  `TipBoard`, dont le portrait est pris à l'atelier par la vue, `Portrait`) ; une seule bulle sert d'infobulle à tous
-  (`Tooltips`), chaque vue dit ce qu'elle montre au survol. Une vue se branche quand la ville s'ouvre (`Show`) et se
-  débranche quand elle se ferme (`Hide`) : ses boutons, ses rappels, ses infobulles (une infobulle donnée se retire). Le démarrage donne à la journée, à chaque image, la
-  fraction du pas en cours. Tout le HUD dit aux gestes où il est (`HudArea`) ; l'outil « choisir » dit ce qu'on a
-  touché, et le démarrage le relie à la fiche. Échap est une pile (`EscapeControls`) : la fiche, la roue, le panneau Construire, puis la main
-  (`Hand`), dont l'outil défait ce qu'il tient ou se lâche.
+- **Le HUD** est un seul document (`Hud.uxml`, sa mise en page dans `Hud.uss`), sur l'objet « Interface » : chaque bloc
+  a sa vue, qui cherche son sous-arbre par son nom, et son présentateur (le panneau Construire, `BuildBar`, ouvert à la
+  demande par `IBuildMenu`, dont les onglets et les cartes se font dans `BuildBarElements` ; la roue des outils,
+  `ToolWheel`, ses éléments `ToolWheelElements`, son anneau `WheelRing` (ses cases, `WheelSlots`, chacune un
+  `WheelSlot` ; l'éventail de la case visée, `WheelFan`, chaque option une `WheelOption` ; le visage de l'une ou de
+  l'autre, `WheelPicture`), ses mesures, lues dans la feuille de style (`WheelMeasures`), sa géométrie (`WheelGeometry`)
+  et ses deux portes (`WheelDoors` : l'icône des outils, la carte) ; la carte de l'outil en main, `ToolCard` (son
+  présentateur, `ToolCardPresenter`, qui écoute les outils et le monde ; ses puces, `ToolCardContent`, chacune une
+  `ToolCardChip` ; ses raisons, `ToolCardReasons`) ; la raison d'un refus de pose, dans sa bulle (`ReasonBubble`),
+  jusqu'à ce que Construire passe à la roue ; la journée, `DayBoard` ; la fiche du lieu touché, `LocationSheet` ; le
+  stock en fanions, `StockPennants` ; l'astuce, `TipBoard`, dont le portrait est pris à l'atelier par la vue,
+  `Portrait`) ; une seule bulle sert d'infobulle à tous (`Tooltips`), chaque vue dit ce qu'elle montre au survol. Une
+  vue se branche quand la ville s'ouvre (`Show`) et se débranche quand elle se ferme (`Hide`) : ses boutons, ses
+  rappels, ses infobulles (une infobulle donnée se retire). Le démarrage donne à la journée, à chaque image, la fraction
+  du pas en cours. Tout le HUD dit aux gestes où il est (`HudArea`) ; l'outil « choisir » dit ce qu'on a touché, et le
+  démarrage le relie à la fiche. Échap est une pile (`EscapeControls`) : la fiche, la roue, le panneau Construire, puis
+  la main (`Hand`), dont l'outil défait ce qu'il tient ou se lâche.
 - **Aucun état statique modifiable** dans la simulation : le registre, le catalogue et les textes sont des objets
   créés par `Game`. Le Play de ce projet ne recharge ni le code ni la scène : `Game` crée le monde, la table des textes
   et l'outil de pose, et les libère à la sortie (les outils de l'éditeur lisent le monde en cours par
