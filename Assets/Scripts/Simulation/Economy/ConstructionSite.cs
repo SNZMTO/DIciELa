@@ -6,10 +6,10 @@ using Diciela.Simulation.Land;
 namespace Diciela.Simulation.Economy
 {
     /// <summary>
-    /// Un chantier (GDD, section 9) : une construction posée en fantôme, ses matériaux (demandés, livrés, en route) et
-    /// son travail (fait, demandé), compté en heures d'un débutant. On n'y bâtit qu'une fois tous ses matériaux livrés.
-    /// Ou le petit chantier d'un bâtiment qu'on déplace (décision 199) : sans matériaux, du travail pour le défaire, puis
-    /// pour le remonter. Ce qui est en route et les ouvriers présents sont des réservations, jamais sauvegardées.
+    /// Un chantier (GDD, section 9) : ce qu'il bâtit (SiteWork : une construction posée en fantôme, un bâtiment qu'on
+    /// déplace, un sol), ses matériaux (demandés, livrés, en route) et son travail fait, compté en heures d'un débutant.
+    /// On n'y bâtit qu'une fois tous ses matériaux livrés. Ce qui est en route et les ouvriers présents sont des
+    /// réservations, jamais sauvegardées.
     /// </summary>
     public sealed class ConstructionSite
     {
@@ -18,15 +18,11 @@ namespace Diciela.Simulation.Economy
         private readonly List<int> _delivered = new List<int>();
         private readonly List<int> _promised = new List<int>();
 
-        internal ConstructionSite(Structure structure)
+        internal ConstructionSite(SiteWork work)
         {
-            if (ReferenceEquals(structure, null))
-                throw new ArgumentNullException(nameof(structure));
-
-            Structure = structure;
-            WorkNeeded = structure.Definition.WorkHours;
+            Work = work ?? throw new ArgumentNullException(nameof(work));
             // Une marchandise citée deux fois dans le coût ne fait qu'une ligne.
-            foreach (GoodAmount cost in structure.Definition.Cost)
+            foreach (GoodAmount cost in work.Cost)
             {
                 int line = _goods.IndexOf(cost.Good);
                 if (line < 0)
@@ -41,33 +37,14 @@ namespace Diciela.Simulation.Economy
             }
         }
 
-        private ConstructionSite(Structure structure, double takeDownHours, double putBackHours)
-        {
-            Structure = structure ?? throw new ArgumentNullException(nameof(structure));
-            IsMove = true;
-            TakeDownHours = takeDownHours;
-            WorkNeeded = takeDownHours + putBackHours;
-        }
+        /// <summary>Ce qu'il bâtit : une construction posée, un bâtiment qu'on déplace, un sol.</summary>
+        public SiteWork Work { get; }
 
-        /// <summary>
-        /// Le petit chantier d'un bâtiment qu'on déplace : sans matériaux, tant d'heures pour le défaire, tant pour le
-        /// remonter.
-        /// </summary>
-        internal static ConstructionSite ForMove(Structure structure, double takeDownHours, double putBackHours)
-        {
-            return new ConstructionSite(structure, takeDownHours, putBackHours);
-        }
+        /// <summary>La construction qu'il bâtit ou qu'il déplace ; null pour un sol.</summary>
+        public Structure Structure => Work.Structure;
 
-        public Structure Structure { get; }
-
-        /// <summary>Vrai pour le petit chantier d'un bâtiment qu'on déplace.</summary>
-        public bool IsMove { get; }
-
-        /// <summary>Pour un déplacement, les heures de travail qui défont le bâtiment ; les suivantes le remontent.</summary>
-        public double TakeDownHours { get; }
-
-        /// <summary>Vrai une fois le bâtiment défait, puis sauté à sa nouvelle place.</summary>
-        public bool HasLanded { get; private set; }
+        /// <summary>Le sol qu'il trace ou qu'il efface ; null pour une construction.</summary>
+        public FloorPatch Floor => Work.Floor;
 
         /// <summary>Le nombre de lignes : une par marchandise demandée.</summary>
         public int LineCount => _goods.Count;
@@ -110,8 +87,8 @@ namespace Diciela.Simulation.Economy
         /// <summary>Le travail fait, en heures d'un débutant.</summary>
         public double WorkDone { get; private set; }
 
-        /// <summary>Le travail demandé, en heures d'un débutant.</summary>
-        public double WorkNeeded { get; }
+        /// <summary>Le travail demandé, en heures d'un débutant ; celui d'un sol suit sa surface.</summary>
+        public double WorkNeeded => Work.WorkNeeded;
 
         /// <summary>La part du travail faite, de 0 à 1 ; un chantier sans travail demandé est à 1.</summary>
         public double Progress => WorkNeeded > 0d ? System.Math.Min(1d, WorkDone / WorkNeeded) : 1d;
@@ -119,7 +96,7 @@ namespace Diciela.Simulation.Economy
         /// <summary>Le nombre d'ouvriers qui y vont ou y travaillent.</summary>
         public int Builders { get; private set; }
 
-        /// <summary>Vrai une fois bâti : il n'est plus dans la file.</summary>
+        /// <summary>Vrai une fois sorti de la file : fini, ou, pour un sol, gommé avant d'être bâti.</summary>
         public bool IsFinished { get; private set; }
 
         internal void Promise(GoodDefinition good, int amount)
@@ -161,16 +138,11 @@ namespace Diciela.Simulation.Economy
             IsFinished = true;
         }
 
-        internal void MarkLanded()
-        {
-            HasLanded = true;
-        }
-
         private int Line(GoodDefinition good)
         {
             int line = _goods.IndexOf(good);
             if (line < 0)
-                throw new InvalidOperationException("Le chantier n° " + Structure.Id + " ne demande pas " + good.Id + ".");
+                throw new InvalidOperationException("Ce chantier ne demande pas " + good.Id + ".");
             return line;
         }
     }

@@ -37,7 +37,7 @@ namespace Diciela.Simulation.Society
             if (!workTime)
                 return GestureStep.Done;
             _offers.PickUp(_delivery, _load);
-            Goal = ChoreGoal.Of(_delivery.Site.Structure);
+            Goal = ChoreGoal.Of(_delivery.Site);
             return GestureStep.Walk;
         }
 

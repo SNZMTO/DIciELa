@@ -14,6 +14,9 @@ namespace Diciela.Data
         [Tooltip("Ce que la Chimère sait bâtir en arrivant, et rien d'autre (GDD, section 6) ; les idées s'y ajouteront.")]
         [SerializeField] private List<StructureDefinition> _knownStructures = new List<StructureDefinition>();
 
+        [Tooltip("Les sols que la ville sait tracer au départ (GDD, section 9) : la terre ; les idées en apporteront d'autres.")]
+        [SerializeField] private List<FloorDefinition> _knownFloors = new List<FloorDefinition>();
+
         [Tooltip("Le stock de départ, que reçoit le premier logis de la Chimère quand on l'installe.")]
         [SerializeField] private List<GoodAmount> _startingGoods = new List<GoodAmount>();
 
@@ -31,6 +34,7 @@ namespace Diciela.Data
         [SerializeField] private WorkSlotDefinition _firstVillagersSlot;
 
         public IReadOnlyList<StructureDefinition> KnownStructures => _knownStructures;
+        public IReadOnlyList<FloorDefinition> KnownFloors => _knownFloors;
         public IReadOnlyList<GoodAmount> StartingGoods => _startingGoods;
         public IReadOnlyList<FirstVillagerDefinition> FirstVillagers => _firstVillagers;
         public float FirstVillagerStrength => _firstVillagerStrength;

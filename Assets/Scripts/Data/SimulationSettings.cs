@@ -54,6 +54,13 @@ namespace Diciela.Data
         [Tooltip("Les heures de travail d'un débutant pour le remonter à sa nouvelle place (GDD, section 9).")]
         [SerializeField, Min(0.01f)] private float _putBackHours = 0.1f;
 
+        [Tooltip("Les heures de travail d'un débutant pour tracer un mètre carré de sol (GDD, section 9) : un chemin de " +
+                 "2 × 15 m, 0,3 h.")]
+        [SerializeField, Min(0.0001f)] private float _floorHoursPerSquareMeter = 0.01f;
+
+        [Tooltip("Pour effacer un sol bâti, la part du travail qu'il a demandé à tracer (GDD, section 9).")]
+        [SerializeField, Range(0.01f, 1f)] private float _floorEraseShare = 0.5f;
+
         [Tooltip("Les essais d'un habitant qui flâne pour trouver un point libre, à chaque départ ; tous ratés, c'est " +
                  "une pause de plus (une borne de boucle, GDD, section 7).")]
         [SerializeField, Min(1)] private int _wanderDraws = 8;
@@ -72,6 +79,8 @@ namespace Diciela.Data
         public int MaxBuildersPerSite => _maxBuildersPerSite;
         public float TakeDownHours => _takeDownHours;
         public float PutBackHours => _putBackHours;
+        public float FloorHoursPerSquareMeter => _floorHoursPerSquareMeter;
+        public float FloorEraseShare => _floorEraseShare;
         public int WanderDraws => _wanderDraws;
     }
 }

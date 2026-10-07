@@ -58,7 +58,7 @@ namespace Diciela.Simulation.Economy
                         continue;
                     if (!checkedReach)
                     {
-                        reachable = _reach.IsReachable(site.Structure, island);
+                        reachable = _reach.IsReachable(site, island);
                         checkedReach = true;
                     }
                     if (!reachable)
@@ -91,7 +91,7 @@ namespace Diciela.Simulation.Economy
             for (int i = 0; i < queue.Count; i++)
             {
                 ConstructionSite site = queue[i];
-                if (!site.IsSupplied || site.Builders >= _maxBuilders || !_reach.IsReachable(site.Structure, island))
+                if (!site.IsSupplied || site.Builders >= _maxBuilders || !_reach.IsReachable(site, island))
                     continue;
                 site.AddBuilder();
                 shift = new BuildShift(site);

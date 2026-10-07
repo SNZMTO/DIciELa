@@ -7,8 +7,8 @@ namespace Diciela.Simulation.Land
 {
     /// <summary>
     /// Les règles de pose (GDD, sections 2, 9 et 13) : une construction que la ville sait bâtir, et unique, pas encore
-    /// posée ; dans la carte, sur un sol assez plat, sans rien recouvrir, sans se poser devant une porte, et la sienne
-    /// dégagée. Les mêmes pour un déplacement, la construction déplacée ne comptant pas : ni son sol, ni sa porte, ni
+    /// posée ; dans la carte, sur un sol assez plat, sans rien recouvrir (FootprintChecks : ni construction, ni Place, ni
+    /// chemin, ni arbre), sans se poser devant une porte, et la sienne dégagée. Les mêmes pour un déplacement, la construction déplacée ne comptant pas : ni son sol, ni sa porte, ni
     /// elle-même, déjà posée. Un sol qu'on traverse (la Place ; décision 192) s'étend devant une porte sans la boucher, et une
     /// porte s'ouvre sur lui. Une seule fonction répond, pour l'aperçu comme pour l'ordre. Les règles disent aussi quel
     /// sol une construction occupe (son empreinte) et lequel elle garde libre (le devant de sa porte). Elles lisent le
@@ -21,11 +21,12 @@ namespace Diciela.Simulation.Land
         private readonly Relief _relief;
         private readonly Structures _structures;
         private readonly Knowledge _knowledge;
+        private readonly FootprintChecks _footprints;
         private readonly float _maxSlopeDegrees;
         private readonly float _doorClearanceMeters;
 
         internal PlacementRules(NavGrid grid, Relief relief, SimulationSettings settings, Structures structures,
-            Knowledge knowledge)
+            Knowledge knowledge, Floors floors)
         {
             if (ReferenceEquals(grid, null))
                 throw new ArgumentNullException(nameof(grid));
@@ -42,6 +43,7 @@ namespace Diciela.Simulation.Land
             _relief = relief;
             _structures = structures;
             _knowledge = knowledge;
+            _footprints = new FootprintChecks(grid, structures.Doorways, floors);
             _maxSlopeDegrees = settings.MaxBuildSlopeDegrees;
             _doorClearanceMeters = settings.DoorClearanceMeters;
         }
@@ -85,10 +87,13 @@ namespace Diciela.Simulation.Land
             if (IsTooSteep(footprint))
                 return PlacementResult.TooSteep;
 
-            PlacementResult onTheGround = CheckFootprintCells(definition, footprint, moved);
+            RotatedRect? ownDoor = moved != null && moved.Definition.HasDoor
+                ? Doorway(moved.Definition, moved.Placement)
+                : (RotatedRect?)null;
+            PlacementResult onTheGround = _footprints.Check(footprint, moved, ownDoor);
             if (onTheGround != PlacementResult.Ok)
                 return onTheGround;
-            if (definition.HasDoor && !IsWalkable(Doorway(definition, placement), moved))
+            if (definition.HasDoor && !_footprints.IsWalkable(Doorway(definition, placement), moved))
                 return PlacementResult.DoorBlocked;
             return PlacementResult.Ok;
         }
@@ -142,55 +147,6 @@ namespace Diciela.Simulation.Land
                     return true;
             }
             return false;
-        }
-
-        /// <summary>
-        /// L'empreinte de cette construction ne recouvre ni une autre construction, ni la Place (on ne bâtit pas sur
-        /// elle), ni un arbre ou un rocher, ni le devant d'une porte. Une construction dessous l'emporte : retirer l'arbre
-        /// n'y changerait rien. La construction déplacée ne gêne pas : ni son sol, ni le devant de sa porte.
-        /// </summary>
-        private PlacementResult CheckFootprintCells(StructureDefinition definition, RotatedRect footprint,
-            Structure moved)
-        {
-            bool natureInTheWay = false;
-            bool blocksADoor = false;
-            int self = moved == null ? 0 : moved.Id;
-            bool ownDoor = moved != null && moved.Definition.HasDoor;
-            RotatedRect door = ownDoor ? Doorway(moved.Definition, moved.Placement) : default;
-            float halfCell = _grid.Metrics.CellSize * 0.5f;
-            foreach (Vector2Int cell in _grid.CellsCoveredBy(footprint))
-            {
-                int occupant = _grid.OccupantAt(cell);
-                if (occupant == PlaceZone.Occupant)
-                    return PlacementResult.OnThePlace;
-                if (occupant > 0 && occupant != self)
-                    return PlacementResult.Overlaps;
-                if (occupant < 0)
-                    natureInTheWay = true;
-                int doors = _structures.Doorways.CountAt(cell);
-                if (ownDoor && door.Overlaps(_grid.CellCenter(cell), halfCell))
-                    doors--;
-                if (doors > 0)
-                    blocksADoor = true;
-            }
-            if (natureInTheWay)
-                return PlacementResult.NatureInTheWay;
-            return blocksADoor ? PlacementResult.BlocksADoor : PlacementResult.Ok;
-        }
-
-        /// <summary>
-        /// Vrai si l'on traverse tout ce rectangle : le devant d'une porte, sur le sol libre ou sur la Place ; le sol que
-        /// quitte la construction déplacée compte comme libre.
-        /// </summary>
-        private bool IsWalkable(RotatedRect rect, Structure moved)
-        {
-            int self = moved == null ? 0 : moved.Id;
-            foreach (Vector2Int cell in _grid.CellsCoveredBy(rect))
-            {
-                if (!_grid.IsWalkable(cell) && (self == 0 || _grid.OccupantAt(cell) != self))
-                    return false;
-            }
-            return true;
         }
     }
 }
