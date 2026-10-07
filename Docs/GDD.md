@@ -224,8 +224,8 @@
 - **À toi.** Son histoire, que tu écriras.
 - **Règle.** Le campement vient en premier, la Place en deuxième. Au départ, le campement fait tout : il est le logis de
   la Chimère, le stock de départ et le poste « à tout faire ». Il s'installe d'un coup, sans chantier.
-- **Règle.** Tant que la Chimère n'a pas de logis, le panneau Construire ne propose que le campement ; installé, le
-  campement quitte le panneau (il est unique) et le reste s'ouvre. C'est une consigne du panneau : un ordre qui poserait autre
+- **Règle.** Tant que la Chimère n'a pas de logis, Construire ne propose que le campement ; installé, le campement
+  quitte Construire (il est unique) et le reste s'ouvre. C'est une consigne de Construire : un ordre qui poserait autre
   chose d'abord n'est pas refusé.
 - **Règle.** La Chimère dort quand le joueur le veut : « Aller dormir », dans la fiche de son logis (le campement, puis sa
   maison), et elle va s'y coucher : elle marche jusqu'à sa porte ; au campement, elle s'allonge sur sa couche, où on la
@@ -424,7 +424,7 @@
 - **Règle.** On ne démolit pas, on range. La réserve n'a pas de limite. Ranger un bâtiment rend au stock ce que
   gardaient ses petits stocks ; un entrepôt rangé garde ses marchandises jusqu'à ce qu'on le repose.
 - **Règle.** Les bâtiments uniques sont le campement puis la maison de la Chimère, et les grands projets : un seul de
-  chacun dans la ville. Posé, un bâtiment unique quitte le panneau Construire, et une seconde pose est refusée
+  chacun dans la ville. Posé, un bâtiment unique quitte Construire, et une seconde pose est refusée
   (« Déjà posée »). Ils se rangent aussi, et le jeu dit ce qui s'arrête tant qu'ils ne sont pas reposés : une
   pastille sur le bouton de la réserve et une ligne dans la réserve. Pour la maison de la Chimère, une bulle avec son
   portrait : « Je vais quand même pas dormir dehors… ».
@@ -616,7 +616,7 @@
 - **Règle.** À force de faire des choses et de voir la ville avancer, la Chimère ou des habitants ont des idées : des
   plans de bâtiments, de recettes, de décos.
 - **Règle.** La ville ne bâtit que ce qu'elle sait : ce que la Chimère sait en arrivant (voir 6), puis ses idées et
-  celles des habitants. Le panneau Construire ne propose que cela ; un ordre qui poserait autre chose est refusé, et
+  celles des habitants. Construire ne propose que cela ; un ordre qui poserait autre chose est refusé, et
   l'aperçu le dit (« Pas encore d'idée pour la bâtir »).
 - **Règle.** Une idée a un déclencheur : une chose faite (« après 50 Planches, le menuisier imagine la table ») ou un
   métier exercé (la Chimère a travaillé à la scierie : elle imagine le moulin à eau). Pour l'histoire, elle revient à
@@ -744,26 +744,47 @@
   demande. La journée en haut à gauche ; le stock en fanions sous une tringle, en haut au centre ; la fiche du lieu
   touché à droite ; l'icône des outils en bas à droite ; l'astuce en bas à gauche. Un bouton n'apparaît qu'avec ce
   qu'il fait : le bouton du menu arrive avec le menu (la pause, les réglages).
-- **Règle.** Les outils se prennent à la roue des outils, comme les roues d'armes des jeux d'action sur PC : tenir sa
-  touche l'ouvre autour du pointeur, on vise un outil par la direction où l'on bouge le pointeur et on le choisit en
-  relâchant ; relâcher sans avoir bougé ne choisit rien, même près d'un bord, où la roue s'écarte du pointeur pour
-  rester dans l'écran. Cliquer l'icône des outils l'ouvre aussi, et l'on clique l'outil ; un appui à côté la referme,
-  sans rien faire dans la ville. Chaque outil y a sa
-  place fixe, toujours la même (Construire en haut, Retirer en bas, Déplacer à droite, Chemins à gauche), et sa touche, écrite sur lui ; la bulle du
-  milieu dit le nom et l'usage de l'outil visé, qui grossit. Un outil actif y reste enfoncé. La roue est un plateau de
-  bois à huit côtés, une place d'outil par côté ; elle garde 24 px du bord de l'écran, comme les blocs du HUD. Choisir Retirer prend l'outil en main,
-  ou le lâche s'il l'était, de même Déplacer et Chemins ; choisir Construire ouvre le panneau Construire, ou le ferme.
-  Les outils à venir (décorer, planter) y prendront leur place.
-- **Défaut.** La roue : Tab, tenu ; Construire : B ; Retirer : X ; Déplacer : M ; Chemins : C. Les touches se changeront dans les réglages, quand le
-  menu viendra.
-- **Règle.** On choisit quoi construire dans le panneau Construire, en bas au centre : les familles en onglets,
-  chacune de son pastel avec son icône (une famille qui ne propose rien ne paraît pas), et au-dessus de l'onglet
-  ouvert, ses constructions en cartes : la vignette de
-  la construction (une photo de son modèle), son nom et à côté ce qu'elle offre (ses lits, l'icône du lit devant : « 2
-  lits »), puis ce qu'elle coûte (chaque marchandise, son icône et combien). L'onglet ouvert et la carte en main restent enfoncés. Prendre une
-  carte ferme le panneau, pour dégager la vue pendant la pose. Panneau ouvert, une touche prend sa carte dans la
-  famille ouverte, comme un clic ; chaque carte porte sa touche, écrite sur elle comme celle d'un outil de la roue.
-- **Défaut.** Les cartes : les touches 1 à 9, de gauche à droite.
+- **Règle.** Tous les outils se prennent et se règlent de la même façon (décision 221) : une roue pour choisir, un
+  curseur pour agir, une carte pour lire. La roue, comme les roues d'armes des jeux d'action sur PC et la roue des
+  outils d'Animal Crossing : tenir sa touche l'ouvre autour du pointeur, là où l'on en est. Les mains vides, sur les
+  outils ; un outil en main, sur ses réglages, avec une case « Outils », toujours en bas à gauche, qui la retourne sur
+  les outils ; un outil sans réglages (Retirer, Déplacer) l'ouvre sur les outils. On vise une case par la direction où
+  l'on bouge le pointeur et on la prend en relâchant ; on pousse plus loin dans la même direction pour déplier ses
+  options en éventail, et on relâche sur l'une ; relâcher sans avoir bougé ne prend rien, même près d'un bord, où la
+  roue s'écarte du pointeur pour rester entière dans l'écran, éventails compris. Cliquer l'icône des outils l'ouvre
+  aussi, sur les outils, et cliquer la carte, sur les réglages de l'outil en main ; on clique alors ce qu'on veut, et un
+  appui à côté la referme, sans rien faire dans la ville.
+- **Règle.** Chaque case a sa place fixe, toujours la même, et son chiffre, de 1 en haut à 8 dans le sens des aiguilles
+  d'une montre ; un outil, sa lettre. La bulle du milieu dit le nom et l'usage de ce qu'on vise, qui grossit ; ce qui
+  est pris y reste enfoncé. Dans la roue, la molette règle ce qu'on vise : la taille du pinceau, les branches de
+  l'étoile. La roue est un plateau de bois à huit côtés, une case par côté, ses options en jetons au-delà du plateau ;
+  elle garde 24 px du bord de l'écran, comme les blocs du HUD. Sur la roue des outils : Construire en haut, la Place en
+  haut à gauche, Chemins à gauche, Retirer en bas, Déplacer à droite ; les outils à venir (décorer, planter) y prendront
+  leur place. Choisir un outil le prend en main avec ses derniers réglages, ou le lâche s'il l'était.
+- **Règle.** Les lettres prennent un outil ; les chiffres, une case de l'outil en main ; le même chiffre deux fois passe
+  à l'option suivante de sa case (cercle, puis rectangle). Avec tous les outils, les mêmes gestes : clic, agir ;
+  glisser, agir sur une étendue ; R, tourner ; clic droit, défaire le geste en cours, puis lâcher l'outil ; Échap,
+  revenir en arrière.
+- **Défaut.** La roue : Tab, tenu. Construire : B ; Retirer : X ; Déplacer : M ; Chemins : C ; la Place : P. Les cases :
+  1 à 8. La taille du pinceau : Ctrl + molette (la molette seule zoome). Les touches se changeront dans les réglages,
+  quand le menu viendra.
+- **Règle.** Ce qu'on tient se voit au curseur, ce qu'il fait se lit sur la carte (décision 221). Chaque outil a son
+  curseur, sa silhouette (marteau, hache, main, pinceau, gomme, plume, viseur, place de charrette), et ses réglages s'y
+  voient en pastilles (le sol, la forme, la symétrie) ; il porte une petite croix rouge quand le geste serait refusé.
+  Les mains vides, ou au-dessus de l'interface, c'est la flèche. La carte, en bas à droite, en petit, à côté de l'icône
+  des outils, dit ce qu'on tient, ses nombres (la taille du pinceau, la superficie de la Place, ses places de charrette,
+  le coût d'une construction, les arbres marqués) et la raison d'un refus ; elle ne paraît qu'un outil en main et
+  s'efface quand la roue est ouverte. Chaque outil a sa couleur, sur sa case, son curseur et sa carte.
+- **Règle.** Les animations sont courtes (200 ms au plus) et n'arrêtent jamais un geste : la roue s'ouvre en ressort,
+  ses cases l'une après l'autre, et se retourne comme une pièce d'un étage à l'autre ; la case visée grossit et se
+  dandine ; un éventail se déplie depuis sa case ; l'icône choisie saute de la roue au curseur, qui fait un petit «
+  pop » ; un clic laisse une éclaboussure ; la carte glisse quand on prend ou lâche un outil, et ses nombres défilent.
+- **Règle.** On choisit quoi construire à la roue de Construire : ses familles autour du plateau, chacune de son pastel
+  avec son icône (une famille qui ne propose rien ne paraît pas) ; poussée plus loin, une famille déplie ses
+  constructions en éventail, chacune sa vignette (une photo de son modèle) ; la bulle du milieu dit son nom, ce qu'elle
+  offre (« 2 lits ») et ce qu'elle coûte. Relâcher la met en main ; la carte redit ce qu'on pose et son coût.
+- **Défaut.** Les familles de Construire : les chiffres, à leur place dans la roue ; le même deux fois, la construction
+  suivante de la famille.
 - **Règle.** La journée montre le jour, sa phase et une jauge : le travail, la soirée et la nuit hachurée, chacun à
   sa part de la journée ; ce qui est passé est plus sombre ; un repère marque l'heure.
 - **Règle.** L'interface se lit à toutes les tailles d'écran. Elle grossit avec la hauteur de l'écran, à partir d'une
@@ -796,7 +817,7 @@
   et qui les tient (le nom d'un poste écrit une fois pour des postes pareils, puis chacun par son nom, ou « Libre »),
   son bouton ; au logis de la Chimère, « Aller dormir » ou « Réveiller ». Une seule fiche
   à la fois : la nouvelle remplace l'ancienne ; toucher autre chose, ou le sol, la ferme, comme sa croix. Échap ferme
-  d'abord la fiche, puis la roue des outils, puis le panneau Construire, puis lâche l'outil en main ; plus tard, il
+  d'abord la fiche, puis la roue, puis défait le geste en cours, puis lâche l'outil en main ; plus tard, il
   ouvrira le menu. L'interface ne prend pas le focus du clavier.
 - **Règle.** L'outil « Retirer » en main, un clic sur un arbre ou un rocher le marque, ou le démarque ; glisser tire un
   cadre, et le relâcher marque tout ce dont le pied est dedans, du plus proche de son premier coin au plus loin. Un
@@ -813,39 +834,30 @@
 - **À toi.** La voix de la Chimère (ses répliques), avec son histoire.
 - **Règle.** Chaque famille reçoit un pastel libre, dans l'ordre : le Logement le rose, les Métiers la pêche. Aucun
   pastel ne reste libre.
-- **Règle.** Les outils de la Place se prennent à sa carte, la première des Métiers, où travailleront ses marchands :
-  la prendre met en main les outils de la zone et de ses places de charrette. L'onglet des Métiers paraît donc dès le
-  campement installé, et les idées des premiers habitants y ajoutent leurs cartes. Faute de modèle, sa carte montre
-  une icône.
-- **Règle.** L'outil de la Place en main, une barre étroite s'ouvre en bas au centre, à la place du panneau Construire :
-  au-dessus de ses modes, ce qu'il pose, la zone (au départ) ou l'un des sols que la ville sait faire, chacun sa
-  vignette, celui qui est pris enfoncé ; ses modes, en familles (pinceau, gomme, tracé, forme, place de charrette),
-  chacun son icône et sa touche, celui qui est pris enfoncé, son nom et son usage au survol ; dessous, les options du
-  mode pris (la taille du pinceau ; droit ou en courbe ; cercle, rectangle ou polygone), puis les symétries, dans tous
-  les modes, chacune son icône, et, l'étoile prise, ses branches, de 3 à 8, en petits feutres sur leur rangée ; enfin,
-  dans des creux de lin, la superficie de la Place sur celle de son niveau (« 312 / 450 m² ») et ses places de charrette
-  posées sur celles qu'elle permet. Les touches des cartes prennent les modes tant que le panneau est fermé. Elle tient
-  entre l'astuce et l'icône des outils dès 1280 × 720.
-- **Défaut.** Les modes de l'outil de la Place : les touches 1 à 5, dans l'ordre de la barre. La taille du pinceau :
-  Ctrl + molette (la molette seule zoome).
-- **Règle.** L'outil Chemins en main, la même barre s'ouvre : au-dessus de ses modes (pinceau, gomme, tracé, forme, et
-  le pont une fois son idée venue), les sortes de sol que la ville sait faire, chacune sa vignette, celle qui est prise
-  enfoncée (au départ, la première) ; dessous, les options du mode pris. Sa gomme efface tous les sols. Un chemin se
+- **Règle.** La Place se prend à la roue des outils, en haut à gauche, ou par sa touche : elle met en main les outils de
+  la zone, de ses sols et de ses places de charrette.
+- **Règle.** La roue de la Place : 1 pinceau, 2 gomme, 3 tracé (droit ou en courbe), 4 forme (cercle, rectangle,
+  polygone), 5 place de charrette, 6 outils, 7 symétrie (aucune, miroir, double miroir, étoile de 3 à 8 branches), 8
+  sol : la zone (au départ) ou l'un des sols que la ville sait faire, chacun sa vignette. Sa carte dit en plus la
+  superficie de la Place sur celle de son niveau (« 312 / 450 m² ») et ses places de charrette posées sur celles qu'elle
+  permet.
+- **Règle.** La roue de Chemins : les mêmes cases, sans la place de charrette (le 5 sera le pont, une fois son idée
+  venue), ses sols ceux que la ville sait faire (au départ, le premier). Sa gomme efface tous les sols. Un chemin se
   voit toujours, comme le sol qu'il est : la terre et les pavés du pack peints sur la carte ; son fantôme, sa texture,
-  pâle et translucide, mêlée à la teinte des fantômes ; un chemin qu'on efface garde un voile de la couleur des
-  fantômes jusqu'à la fin de son chantier. L'aperçu du geste reste vert ou rouge, sans texture.
+  pâle et translucide, mêlée à la teinte des fantômes ; un chemin qu'on efface garde un voile de la couleur des fantômes
+  jusqu'à la fin de son chantier. L'aperçu du geste reste vert ou rouge, sans texture.
 - **À toi.** La vignette d'un sol (pour l'instant la texture de son calque) et l'icône de Chemins dans la roue (un
   chemin en pointillés) : des remplaçants.
-- **Défaut.** Les modes de l'outil Chemins : les touches 1 à 5, dans l'ordre de la barre. La terre : le calque
-  `Village_Dirt_01` du pack ; les pavés : `Path_01`, les pavés moussus du chemin du pack. Les autres sols : des calques
-  faits des images du pack (pavés bruns, dalles, carreaux, briques, pierre grise, planchers), rangés hors du pack, avec
-  leurs fiches.
-- **Règle.** La zone de la Place et ses places de charrette se voient en mode construction : le panneau Construire
-  ouvert, ou en main une construction, l'outil de la Place, Chemins ou Déplacer. La zone : un voile léger sur le sol et son
+- **Défaut.** La terre : une copie du calque `Village_Dirt_01` du pack, rangée hors du pack, qui se répète tous les 5 m
+  comme l'herbe du pack, pour que ses facettes aient la taille de celles de l'herbe (décision 222) ; les pavés :
+  `Path_01`, les pavés moussus du chemin du pack. Les autres sols : des calques faits des images du pack (pavés bruns,
+  dalles, carreaux, briques, pierre grise, planchers), rangés hors du pack, avec leurs fiches.
+- **Règle.** La zone de la Place et ses places de charrette se voient en mode construction : en main une construction,
+  l'outil de la Place, Chemins ou Déplacer, ou la roue de Construire ouverte. La zone : un voile léger sur le sol et son
   contour ; une place de charrette : un cadre blanc, une pointe vers l'avant de la charrette.
-- **À toi.** Les icônes des outils de sol (la carte de la Place, leurs modes et leurs options, symétries comprises, la
-  vignette de la zone), pour l'instant des remplaçants simples. La part de texture et l'opacité du fantôme d'un sol :
-  des réglages de son matériau.
+- **À toi.** Les icônes et les curseurs des outils (leurs cases, leurs options, symétries comprises, la vignette de la
+  zone), pour l'instant des remplaçants simples. La part de texture et l'opacité du fantôme d'un sol : des réglages de
+  son matériau.
 - **À toi.** L'icône des Métiers : en attendant, celle de « bâtir ». Les autres questions ouvertes du HUD. Ma reco :
   le bandeau de brique montre les animaux du pack.
 
