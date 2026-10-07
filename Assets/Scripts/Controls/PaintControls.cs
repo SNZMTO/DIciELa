@@ -140,7 +140,9 @@ namespace Diciela.Controls
 
             if (_paintGesture.Update(_paint.IsPressed(), pointer, threshold, onInterface))
                 tool.BeginDrawing(_paintGesture.Start);
-            if (tool.IsDrawing && !_paintGesture.IsDragging)
+            // Le relâchement finit le trait en cours, et lâche ce que le glisser tenait (un point posé, l'épingle), même
+            // sans trait.
+            if (_paintGesture.Dropped || tool.IsDrawing && !_paintGesture.IsDragging)
                 tool.EndDrawing();
             if (_paintGesture.Clicked)
                 tool.Click();

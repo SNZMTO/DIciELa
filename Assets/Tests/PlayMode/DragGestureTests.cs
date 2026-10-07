@@ -60,9 +60,13 @@ namespace Diciela.Tests.PlayMode
 
             gesture.Update(true, new Vector2(100f, 100f), Threshold, false);
             gesture.Update(true, new Vector2(130f, 100f), Threshold, false);
+            Assert.IsFalse(gesture.Dropped, "Tenu, le glisser n'est pas fini.");
             gesture.Update(false, new Vector2(130f, 100f), Threshold, false);
 
             Assert.IsFalse(gesture.Clicked);
+            Assert.IsTrue(gesture.Dropped, "Relâché, il finit le glisser…");
+            gesture.Update(false, new Vector2(130f, 100f), Threshold, false);
+            Assert.IsFalse(gesture.Dropped, "… une seule fois.");
         }
 
         [Test]
