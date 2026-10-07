@@ -19,9 +19,9 @@ outils de sol, vignette d'un sol, icône de Chemins) ; l'astuce, qui ne parle pa
 Place ; « Run In Background » ; peindre la carte (et ses rivières) ; les modèles de la loge et de l'entrepôt ; les
 icônes des Métiers, de « conduire », « garnir », « déplacer » ; le fanion des arbres ; le bandeau ; la voix de la
 Chimère ; les noms.
-**À vérifier par toi, à la souris** : un sol en chantier montre sa texture, pâle ; 1 à 5 changent de mode ; un tracé
-part au clic sur son dernier point, droit ou en courbe ; un polygone se ferme sur son premier coin ; un point posé se
-glisse ; Miroir pose l'épingle au milieu de la Place, elle se glisse, R tourne son axe ; l'étoile et ses branches ; une
+**À vérifier par toi, à la souris** : un sol en chantier est pâle, à sa texture ; 1 à 5 changent de mode ; un tracé part
+au clic sur son dernier point ; un polygone se ferme sur son premier coin ; un point posé se glisse ; Miroir pose
+l'épingle au milieu de la Place ; glissée puis lâchée, elle y reste ; R tourne son axe ; l'étoile et ses branches ; une
 place de charrette et sa copie ; une place près d'une autre s'y colle, Ctrl la libère ; la barre à 1280 × 720 ; un clic
 droit abandonne le geste, un second lâche l'outil ; « Aller dormir » couche la Chimère.
 **Dette** : `Fusion.uss` répète `:root` ; trois cartes sur l'astuce en 720 p ; des réglages d'interface dans le code ;
