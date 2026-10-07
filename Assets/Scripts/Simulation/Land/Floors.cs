@@ -34,10 +34,7 @@ namespace Diciela.Simulation.Land
             _checks = new FloorChecks(grid, place, knowledge, _cells);
         }
 
-        /// <summary>
-        /// Levé quand des sols changent (tracés, bâtis, effacés), une fois par pas au plus, avec la boîte des mailles
-        /// changées : la vue ne repeint qu'elle (SAVOIR, 2.5).
-        /// </summary>
+        /// <summary>Levé quand des sols changent, une fois par pas au plus, avec la boîte des mailles changées.</summary>
         public event Action<RectInt> FloorsChanged;
 
         /// <summary>Levé quand un ordre sur les sols est refusé, avec sa raison.</summary>
@@ -72,6 +69,9 @@ namespace Diciela.Simulation.Land
         {
             return Report(_checks.Erase(shape, scope, _change), change);
         }
+
+        /// <summary>Le sol de chaque maille, que lit le pas des charrettes.</summary>
+        internal FloorCells Cells => _cells;
 
         /// <summary>Vrai si cette maille a un sol, bâti ou en fantôme : rien ne s'y bâtit.</summary>
         internal bool HasFloor(int index)

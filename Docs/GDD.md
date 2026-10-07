@@ -440,12 +440,15 @@
   Pavés, et les planchers, en Planches. On trace partout où l'on marche, la Place comprise. Ce qui se tient là (une
   construction, un arbre, un rocher, l'eau) y fait un trou, qui reste quand on l'enlève, comme sur la Place ; un sol
   déjà posé, bâti ou en fantôme, de n'importe quelle sorte, aussi : pour changer un sol, on l'efface d'abord.
-- **Règle.** Une forme tracée est un chantier dans la file : un fantôme au sol, que les ouvriers bâtissent à ses
-  abords, d'un coup, quand son travail est fait ; un chemin pas encore bâti n'accélère personne. La gomme efface un
-  fantôme tout de suite ; un chemin bâti s'efface par un petit chantier, et sert jusqu'à sa fin. Un bâtiment ne se pose
-  pas sur un chemin, ni sur son fantôme : on l'efface d'abord (« Sur un chemin : efface-le d'abord »).
+- **Règle.** Une forme tracée est un chantier dans la file : un fantôme au sol, que les ouvriers bâtissent en se tenant
+  dessus (on y marche), d'un coup, quand son travail est fait ; un chemin pas encore bâti n'accélère personne. La gomme
+  efface un fantôme tout de suite ; un chemin bâti s'efface par un petit chantier, et sert jusqu'à sa fin. Un bâtiment
+  ne se pose pas sur un chemin, ni sur son fantôme : on l'efface d'abord (« Sur un chemin : efface-le d'abord »).
 - **Défaut.** Tracer : 0,01 h de travail d'un débutant par m² (un chemin de 2 × 15 m : 0,3 h, 9 s) ; effacer : la
   moitié. Le pinceau : 1 m de rayon au départ (un chemin de 2 m de large), de 0,5 à 6 m.
+- **À toi.** Le prix d'un sol qui se paie : combien de Pavés (ou de Planches) par m² ? Ma reco : un pour 2 m², arrondi
+  au-dessus (un chemin de 2 × 15 m : 15 Pavés). Il se tranche avec les Pavés et les Planches ; d'ici là, seule la
+  terre, gratuite, se trace.
 - **Défaut.** Un pont coûte du Bois.
 - **Règle.** Les piétons marchent partout où rien n'est posé, et sur la Place, par le trajet le plus court ; les charrettes vont
   lentement dans l'herbe, plus vite sur la terre, encore plus vite sur un sol dur (les pavés, et tous les sols après
@@ -493,9 +496,9 @@
   Aujourd'hui : le pinceau (à main levée ; un clic, un rond), la gomme, le cercle (appui au milieu, on tire le rayon),
   le rectangle (d'un coin à l'autre, ses côtés tournés comme la caméra, au cran de rotation), et la place de charrette.
 - **Règle.** On pave la Place à son outil : il y trace la zone, ou y pose un sol, au choix. Ses sols sont ceux des
-  chemins (voir 9), posés seulement dans la zone, chacun un chantier ; un sol choisi, la gomme efface le sol, la zone
-  choisie, elle gomme la zone. La zone et son sol sont deux choses : tracer, agrandir ou gommer la zone ne pose ni
-  n'efface aucun sol, et un sol laissé hors d'une Place réduite reste un sol.
+  chemins (voir 9), posés seulement dans la zone, chacun un chantier ; un sol choisi, la gomme efface le sol, dans la
+  zone seulement ; la zone choisie, elle gomme la zone. La zone et son sol sont deux choses : tracer, agrandir ou gommer
+  la zone ne pose ni n'efface aucun sol, et un sol laissé hors d'une Place réduite reste un sol.
 - **Règle.** Une forme se trace d'un geste et part au relâchement. Pendant le geste, son aperçu montre ce qu'elle
   ajouterait ou retirerait, vert si elle se trace, rouge sinon, et la raison s'écrit, comme à la pose ; une forme rouge
   ne part pas. Un clic droit ou Échap abandonnent le geste en cours ; sans geste, ils lâchent l'outil.

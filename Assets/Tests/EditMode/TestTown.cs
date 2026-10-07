@@ -12,7 +12,7 @@ namespace Diciela.Tests.EditMode
 {
     /// <summary>
     /// Le banc de la ville au travail : les réglages du banc de la Chimère (un pas de 0,1 s, 300 pas par heure de jeu,
-    /// deux mailles par mètre, 1 m libre devant une porte), ou une journée plus courte ; trois statistiques de deux
+    /// deux mailles par mètre sauf si le test en veut d'autres, 1 m libre devant une porte), ou une journée plus courte ; trois statistiques de deux
     /// sous-statistiques (Bâtisse : construction, terrassement ; Échange : transport, troc ; Terre : paysage, coupe) ;
     /// le Bois et la Pierre ; porter, conduire et garnir (transport), bâtir (construction) et défricher (paysage) ; le
     /// poste « à tout faire » (porter, conduire, bâtir, garnir, puis défricher) ; le campement de 3 × 3 m, qui tient
@@ -29,10 +29,10 @@ namespace Diciela.Tests.EditMode
         private readonly List<Object> _created = new List<Object>();
         private readonly TestChimera _chimera = new TestChimera();
 
-        public TestTown(float dayLengthSeconds = 720f)
+        public TestTown(float dayLengthSeconds = 720f, int cellsPerMeter = TestChimera.CellsPerMeter)
         {
             Settings = Keep(TestData.Settings(0.1f, dayLengthSeconds, 2f / 3f, 1f / 12f,
-                cellsPerMeter: TestChimera.CellsPerMeter));
+                cellsPerMeter: cellsPerMeter));
             Wood = Keep(TestData.Good("bois"));
             Stone = Keep(TestData.Good("pierre"));
             SubStatisticDefinition construction = Keep(TestData.SubStatistic("construction"));
@@ -91,12 +91,12 @@ namespace Diciela.Tests.EditMode
         public Catalog Catalog { get; }
 
         /// <summary>
-        /// Un monde plat de 40 m où la Chimère vient de naître au centre, sans rien de posé ; avec ces arbres et rochers,
-        /// s'il y en a.
+        /// Un monde plat de 40 m (ou de size mètres) où la Chimère vient de naître au centre, sans rien de posé ; avec ces
+        /// arbres et rochers, s'il y en a.
         /// </summary>
-        public World World(Catalog catalog = null, IReadOnlyList<NatureSpot> nature = null)
+        public World World(Catalog catalog = null, IReadOnlyList<NatureSpot> nature = null, float size = 40f)
         {
-            var world = new World(Settings, TestData.FlatMap(40f, null, nature), catalog ?? Catalog);
+            var world = new World(Settings, TestData.FlatMap(size, null, nature), catalog ?? Catalog);
             world.Submit(new CreateChimeraCommand(_chimera.Kind, _chimera.Appearance));
             world.Step();
             return world;

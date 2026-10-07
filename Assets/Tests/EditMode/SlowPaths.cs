@@ -8,16 +8,19 @@ namespace Diciela.Tests.EditMode
     /// L'oracle des trajets (SAVOIR, 4) : un Dijkstra lent et sûr, sans estimation ni tas (à chaque tour, la maille
     /// ouverte la moins chère, cherchée dans tout le terrain), un juge qui vérifie un escalier pas à pas, et les îlots
     /// remplis pas à pas. Les règles de la marche y sont écrites une seconde fois, à part du code testé : huit voisines,
-    /// un pas droit coûte 10, un pas en diagonale 14, une diagonale ne coupe jamais un coin ; un départ ou une arrivée
-    /// bloqué ne compte pas.
+    /// un pas droit coûte 10, un pas en diagonale 14, fois le prix de la maille où l'on entre s'il y en a un (une
+    /// charrette ; 1 sinon), une diagonale ne coupe jamais un coin ; un départ ou une arrivée bloqué ne compte pas.
     /// </summary>
     internal static class SlowPaths
     {
         public const int NoPath = -1;
 
-        /// <summary>Le coût du trajet le moins cher d'un départ à une arrivée, ou <see cref="NoPath"/>.</summary>
+        /// <summary>
+        /// Le coût du trajet le moins cher d'un départ à une arrivée, ou <see cref="NoPath"/> ; avec un prix par maille,
+        /// s'il y en a.
+        /// </summary>
         public static int CheapestCost(bool[,] blocked, IReadOnlyList<Vector2Int> starts,
-            IReadOnlyList<Vector2Int> goals)
+            IReadOnlyList<Vector2Int> goals, int[,] prices = null)
         {
             int width = blocked.GetLength(0);
             int depth = blocked.GetLength(1);
@@ -62,8 +65,11 @@ namespace Diciela.Tests.EditMode
                     {
                         var next = new Vector2Int(best.x + dx, best.y + dy);
                         int step = StepCost(blocked, best, next);
-                        if (step != NoPath && cost[best.x, best.y] + step < cost[next.x, next.y])
-                            cost[next.x, next.y] = cost[best.x, best.y] + step;
+                        if (step == NoPath)
+                            continue;
+                        int total = cost[best.x, best.y] + step * PriceOf(prices, next);
+                        if (total < cost[next.x, next.y])
+                            cost[next.x, next.y] = total;
                     }
                 }
             }
@@ -127,10 +133,10 @@ namespace Diciela.Tests.EditMode
 
         /// <summary>
         /// Ce qui ne va pas dans ce trajet, ou null s'il est juste : il part d'un départ libre, finit sur une arrivée
-        /// libre, et chaque pas est permis. Rend aussi ce qu'il coûte.
+        /// libre, et chaque pas est permis. Rend aussi ce qu'il coûte, avec un prix par maille s'il y en a.
         /// </summary>
         public static string Judge(bool[,] blocked, IReadOnlyList<Vector2Int> starts, IReadOnlyList<Vector2Int> goals,
-            IReadOnlyList<Vector2Int> path, out int cost)
+            IReadOnlyList<Vector2Int> path, out int cost, int[,] prices = null)
         {
             cost = 0;
             if (path.Count == 0)
@@ -144,9 +150,14 @@ namespace Diciela.Tests.EditMode
                 int step = StepCost(blocked, path[i - 1], path[i]);
                 if (step == NoPath)
                     return "le pas de " + path[i - 1] + " à " + path[i] + " n'est pas permis";
-                cost += step;
+                cost += step * PriceOf(prices, path[i]);
             }
             return null;
+        }
+
+        private static int PriceOf(int[,] prices, Vector2Int cell)
+        {
+            return prices == null ? 1 : prices[cell.x, cell.y];
         }
 
         public static bool IsFree(bool[,] blocked, Vector2Int cell)

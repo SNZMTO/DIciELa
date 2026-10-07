@@ -23,6 +23,7 @@ namespace Diciela.Simulation.Society
         private int _next;
         private Vector2 _join;
         private int _checkedVersion;
+        private Mover _mover;
 
         public Walk(NavGrid grid, PathFinder finder)
         {
@@ -41,20 +42,25 @@ namespace Diciela.Simulation.Society
         /// <summary>Le trajet suivi, dont la ligne tendue ; il ne vaut que pendant la marche.</summary>
         public Path Path => _path;
 
-        /// <summary>Part de ce point vers le milieu de cette maille ; faux si elle n'est pas joignable d'ici.</summary>
-        public bool TryStart(Vector2 from, Vector2Int goal)
+        /// <summary>
+        /// Part de ce point vers le milieu de cette maille, à pied ou en tirant une charrette ; faux si elle n'est pas
+        /// joignable d'ici.
+        /// </summary>
+        public bool TryStart(Vector2 from, Vector2Int goal, Mover mover = Mover.OnFoot)
         {
+            _mover = mover;
             _goals.Clear();
             _goals.Add(goal);
             return TryResume(from);
         }
 
         /// <summary>
-        /// Part de ce point vers la plus proche de ces mailles ; faux si aucune n'est joignable d'ici. La liste est lue
-        /// tout de suite : l'appelant peut la réutiliser.
+        /// Part de ce point vers la plus proche de ces mailles, à pied ou en tirant une charrette ; faux si aucune n'est
+        /// joignable d'ici. La liste est lue tout de suite : l'appelant peut la réutiliser.
         /// </summary>
-        public bool TryStart(Vector2 from, IReadOnlyList<Vector2Int> goals)
+        public bool TryStart(Vector2 from, IReadOnlyList<Vector2Int> goals, Mover mover = Mover.OnFoot)
         {
+            _mover = mover;
             _goals.Clear();
             for (int i = 0; i < goals.Count; i++)
                 _goals.Add(goals[i]);
@@ -64,13 +70,15 @@ namespace Diciela.Simulation.Society
             return false;
         }
 
-        /// <summary>Repart de ce point vers le même but, par un nouveau trajet ; faux s'il n'est plus joignable.</summary>
+        /// <summary>
+        /// Repart de ce point vers le même but, par un nouveau trajet, de la même façon ; faux s'il n'est plus joignable.
+        /// </summary>
         public bool TryResume(Vector2 from)
         {
             _start[0] = _grid.CellOf(from);
             _checkedVersion = _grid.Version;
             _next = 0;
-            IsWalking = _finder.TryFindPath(_start, _goals, _path);
+            IsWalking = _finder.TryFindPath(_start, _goals, _path, _mover);
             if (IsWalking)
                 _join = JoinPoint(from);
             return IsWalking;

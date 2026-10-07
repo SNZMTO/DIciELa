@@ -5,13 +5,14 @@ using UnityEngine;
 namespace Diciela.Simulation.Land
 {
     /// <summary>
-    /// La recherche des trajets d'un piéton sur le maillage (SAVOIR, 2.1) : un A*, qui explore d'abord les mailles dont
-    /// le coût payé plus le coût restant estimé est le plus petit. Huit voisines : un pas droit coûte 10, un pas en
-    /// diagonale 14, et une diagonale ne coupe jamais un coin. Plusieurs départs, plusieurs arrivées, dont on ne garde
-    /// que ceux d'un même îlot ; on n'est arrivé qu'en sortant une arrivée de la file, jamais en la découvrant.
-    /// L'escalier trouvé est ensuite tendu en ligne droite. Une instance par maillage : ses tableaux, faits une fois,
-    /// servent à chaque recherche sans être vidés (un numéro de recherche dit ce qui est à jour), si bien qu'une
-    /// recherche n'alloue rien. Les mêmes entrées rendent toujours le même trajet.
+    /// La recherche des trajets sur le maillage (SAVOIR, 2.1) : un A*, qui explore d'abord les mailles dont le coût payé
+    /// plus le coût restant estimé est le plus petit. Huit voisines : un pas droit coûte 10, un pas en diagonale 14, fois
+    /// le prix de la maille où l'on entre (un piéton : 1 partout ; une charrette : CartPace, et son estimation sait où
+    /// sont les sols), et une diagonale ne coupe jamais un coin. Plusieurs départs, plusieurs arrivées, dont on ne garde
+    /// que ceux d'un même îlot ; on n'est arrivé qu'en sortant une arrivée de la file, jamais en la découvrant. L'escalier
+    /// trouvé est ensuite tendu en ligne droite. Une instance par maillage : ses tableaux, faits une fois, servent à
+    /// chaque recherche sans être vidés (un numéro de recherche dit ce qui est à jour), si bien qu'une recherche
+    /// n'alloue rien. Les mêmes entrées rendent toujours le même trajet.
     /// </summary>
     public sealed class PathFinder
     {
@@ -30,13 +31,14 @@ namespace Diciela.Simulation.Land
         private readonly PathEnds _ends;
         private readonly PathGoals _goals;
         private readonly PathTightener _tightener;
+        private readonly SearchCosts _costs;
         private readonly PathQueue _open = new PathQueue();
         private readonly int[] _cost;
         private readonly int[] _searchOf;
         private readonly byte[] _from;
         private int _search;
 
-        public PathFinder(NavGrid grid, Islands islands)
+        public PathFinder(NavGrid grid, Islands islands, CartPace pace)
         {
             if (ReferenceEquals(grid, null))
                 throw new ArgumentNullException(nameof(grid));
@@ -46,6 +48,7 @@ namespace Diciela.Simulation.Land
             _grid = grid;
             _ends = new PathEnds(grid, islands);
             _goals = new PathGoals(grid);
+            _costs = new SearchCosts(grid, _goals, pace);
             _tightener = new PathTightener(grid);
             int cells = grid.Width * grid.Depth;
             _cost = new int[cells];
@@ -54,12 +57,14 @@ namespace Diciela.Simulation.Land
         }
 
         /// <summary>
-        /// Cherche le trajet le moins cher d'un des départs à une des arrivées et le range dans path : l'escalier de
-        /// mailles, du départ à l'arrivée comprises, et la ligne tendue qu'on en tire ; faux s'il n'y en a pas, et path
-        /// reste vide. Un départ ou une arrivée sur une maille prise est ignoré ; une maille hors du maillage est une
-        /// erreur. Quand aucun départ ne partage son îlot avec une arrivée, la réponse vient sans rien fouiller.
+        /// Cherche le trajet le moins cher, pour qui se déplace ainsi, d'un des départs à une des arrivées et le range dans
+        /// path : l'escalier de mailles, du départ à l'arrivée comprises, et la ligne tendue qu'on en tire ; faux s'il n'y
+        /// en a pas, et path reste vide. Un départ ou une arrivée sur une maille prise est ignoré ; une maille hors du
+        /// maillage est une erreur. Quand aucun départ ne partage son îlot avec une arrivée, la réponse vient sans rien
+        /// fouiller.
         /// </summary>
-        public bool TryFindPath(IReadOnlyList<Vector2Int> starts, IReadOnlyList<Vector2Int> goals, Path path)
+        public bool TryFindPath(IReadOnlyList<Vector2Int> starts, IReadOnlyList<Vector2Int> goals, Path path,
+            Mover mover = Mover.OnFoot)
         {
             if (ReferenceEquals(starts, null))
                 throw new ArgumentNullException(nameof(starts));
@@ -73,6 +78,7 @@ namespace Diciela.Simulation.Land
                 return false;
 
             BeginSearch();
+            _costs.Begin(mover, _ends.Goals);
             _goals.Mark(_ends.Goals);
             PushStarts(_ends.Starts);
             bool found = Search(out int arrival);
@@ -82,7 +88,7 @@ namespace Diciela.Simulation.Land
                 throw new InvalidOperationException("Les îlots disent joignable une arrivée que la recherche n'atteint pas.");
 
             BuildPath(arrival, path);
-            _tightener.Tighten(path);
+            _tightener.Tighten(path, _costs.CartPace);
             return true;
         }
 
@@ -109,7 +115,7 @@ namespace Diciela.Simulation.Land
                 _searchOf[index] = _search;
                 _cost[index] = 0;
                 _from[index] = FromStart;
-                _open.Push(index, 0, _goals.Estimate(start));
+                _open.Push(index, 0, _costs.Estimate(start, index));
             }
         }
 
@@ -149,14 +155,14 @@ namespace Diciela.Simulation.Land
             if (diagonal && !_grid.IsCornerOpen(cell, step))
                 return;
 
-            int nextCost = cost + (diagonal ? DiagonalCost : StraightCost);
             int index = _grid.IndexOf(next);
+            int nextCost = cost + (diagonal ? DiagonalCost : StraightCost) * _costs.PriceAt(index);
             if (_searchOf[index] == _search && _cost[index] <= nextCost)
                 return;
             _searchOf[index] = _search;
             _cost[index] = nextCost;
             _from[index] = (byte)direction;
-            _open.Push(index, nextCost, nextCost + _goals.Estimate(next));
+            _open.Push(index, nextCost, nextCost + _costs.Estimate(next, index));
         }
 
         /// <summary>Remonte les pas depuis l'arrivée jusqu'à un départ, puis remet l'escalier dans le sens de la marche.</summary>

@@ -8,19 +8,25 @@ namespace Diciela.Simulation.Land
     /// touche le sont, coins compris : passer par le coin commun de quatre mailles les touche toutes les quatre, la
     /// règle même qui interdit à un pas en diagonale de couper un coin. Le calcul est exact, en entiers : on avance de
     /// maille en maille, en comparant où la ligne croise la prochaine frontière entre deux colonnes et la prochaine
-    /// entre deux rangées. Une lecture du maillage : la ligne tendue d'un trajet en est faite, et un marcheur s'en sert
-    /// pour savoir si le reste de sa ligne est encore libre.
+    /// entre deux rangées. Pour une charrette, on peut demander en plus que chaque maille traversée ne coûte pas plus
+    /// qu'un prix : la ficelle reste sur sa route, sans couper l'herbe (les coins n'ont qu'à se traverser, comme pour
+    /// le pas en diagonale de la recherche). Une lecture du maillage : la ligne tendue d'un trajet en est faite, et un
+    /// marcheur s'en sert pour savoir si le reste de sa ligne est encore libre.
     /// </summary>
     public static class StraightLine
     {
-        /// <summary>Vrai si la ligne droite du milieu de from à celui de to ne touche que des mailles libres.</summary>
-        public static bool IsClear(NavGrid grid, Vector2Int from, Vector2Int to)
+        /// <summary>
+        /// Vrai si la ligne droite du milieu de from à celui de to ne touche que des mailles libres ; avec le pas d'une
+        /// charrette, ne traverse en plus que des mailles qui ne lui coûtent pas plus que highestCost.
+        /// </summary>
+        public static bool IsClear(NavGrid grid, Vector2Int from, Vector2Int to, CartPace pace = null,
+            int highestCost = 0)
         {
             int columns = Math.Abs(to.x - from.x);
             int rows = Math.Abs(to.y - from.y);
             var step = new Vector2Int(Math.Sign(to.x - from.x), Math.Sign(to.y - from.y));
             Vector2Int cell = from;
-            if (!grid.IsWalkable(cell))
+            if (!IsOpen(grid, cell, pace, highestCost))
                 return false;
 
             // Chaque tour franchit au moins une frontière : au plus columns + rows tours.
@@ -50,10 +56,15 @@ namespace Diciela.Simulation.Land
                     cell.y += step.y;
                     crossedRows++;
                 }
-                if (!grid.IsWalkable(cell))
+                if (!IsOpen(grid, cell, pace, highestCost))
                     return false;
             }
             return true;
+        }
+
+        private static bool IsOpen(NavGrid grid, Vector2Int cell, CartPace pace, int highestCost)
+        {
+            return grid.IsWalkable(cell) && (pace == null || pace.CostAt(grid.IndexOf(cell)) <= highestCost);
         }
     }
 }

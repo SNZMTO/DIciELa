@@ -8,12 +8,13 @@ namespace Diciela.Simulation.Society
 {
     /// <summary>
     /// Ce que chaque habitant consulte de la ville pour vivre et travailler : le temps, le maillage, ses îlots et ses
-    /// trajets, les abords des constructions, les tâches à prendre (dont les arbres à retirer, les charrettes à conduire
+    /// trajets, le pas des charrettes sur les sols, les abords des constructions, les tâches à prendre (dont les arbres à retirer, les charrettes à conduire
     /// et à garnir), les statistiques et les réglages de la simulation. Un seul paquet, fait par les habitants, donné à chacun.
     /// </summary>
     internal sealed class VillagerServices
     {
-        public VillagerServices(Clock clock, NavGrid grid, Islands islands, PathFinder finder, Surroundings surroundings,
+        public VillagerServices(Clock clock, NavGrid grid, Islands islands, PathFinder finder, CartPace pace,
+            Surroundings surroundings,
             TaskOffers offers, ClearingOffers clearings, CartOffers carts, StallOffers stalls,
             StatisticTable statistics, SimulationSettings settings)
         {
@@ -21,6 +22,7 @@ namespace Diciela.Simulation.Society
             Grid = grid ?? throw new ArgumentNullException(nameof(grid));
             Islands = islands ?? throw new ArgumentNullException(nameof(islands));
             Finder = finder ?? throw new ArgumentNullException(nameof(finder));
+            Pace = pace ?? throw new ArgumentNullException(nameof(pace));
             Surroundings = surroundings ?? throw new ArgumentNullException(nameof(surroundings));
             Offers = offers ?? throw new ArgumentNullException(nameof(offers));
             Clearings = clearings ?? throw new ArgumentNullException(nameof(clearings));
@@ -34,6 +36,7 @@ namespace Diciela.Simulation.Society
         public NavGrid Grid { get; }
         public Islands Islands { get; }
         public PathFinder Finder { get; }
+        public CartPace Pace { get; }
         public Surroundings Surroundings { get; }
         public TaskOffers Offers { get; }
         public ClearingOffers Clearings { get; }

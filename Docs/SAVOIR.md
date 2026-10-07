@@ -52,9 +52,10 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   marche : une seule question, « se traverse-t-elle ? », répond pour le A\*, les îlots, la sortie et la flânerie. Les
   abords d'un objet (où l'on se tient pour le servir) sont hors de ses mailles. Les devants de porte sont à part,
   déduits des constructions : seules les règles de pose les lisent.
-  C# pur. Une maille a un coût d'entrée par façon de se déplacer, en entiers, lu dans les fiches : un piéton paie le
-  même prix partout où l'on passe ; une charrette paie plus cher l'herbe que la terre, et la terre que les pavés
-  (GDD, section 9). Une maille peut être bloquée. Un objet posé s'y **trame** : son empreinte (un rectangle tourné)
+  C# pur. Une maille a un prix d'entrée par façon de se déplacer (`Mover`), en entiers : un piéton paie le même prix
+  partout où l'on passe ; une charrette paie l'inverse de son pas, lu dans les fiches (`CartPace`) : 12 au pas de qui
+  tire, donc l'herbe 24, la terre 12, un sol dur 8 ; un sol en fantôme ne compte pas. Les sols sont une couche à côté
+  du maillage : ils ne changent ni où l'on marche, ni sa version. Une maille peut être bloquée. Un objet posé s'y **trame** : son empreinte (un rectangle tourné)
   prend toute maille qu'elle touche, même en partie (les axes séparateurs : ceux du monde et ceux du rectangle ; une
   marge d'un dixième de millimètre laisse permis deux bords communs). Une maille libre ne touche donc aucun objet : rien
   ne se chevauche, aucune fente plus étroite qu'une maille ne se traverse, et deux objets se collent à une maille près.
@@ -70,6 +71,21 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 - **À total égal, le plus avancé d'abord** (le coût payé le plus grand) : sans ce départage, sur l'herbe libre, tous
   les trajets de même coût forment une large bande (des centaines de milliers de mailles sur la carte) que la
   recherche fouille au lieu de filer droit. Il rend aussi le même trajet à chaque fois.
+- **Piège mesuré : l'estimation de la charrette au prix le plus bas.** Pour ne jamais dépasser le vrai coût, une
+  estimation naïve compte tout le reste du trajet au prix du sol le plus rapide qui sert quelque part ; dans l'herbe,
+  elle est trois fois trop basse, et la recherche fouille une large ovale au lieu de filer droit : à l'échelle du jeu,
+  une route pavée de 80 m posée, 24 ms le long de la route et 143 ms loin d'elle pour 100 m (4 et 19 ms pour 40 m),
+  contre 0,3 ms à pied.
+- **L'estimation qui sait où sont les sols** (`CartEstimate`) : un trajet qui ne prend aucun sol plus rapide paie au
+  moins l'herbe sur toute la distance ; un trajet qui en prend un paie au moins le prix le plus bas sur la distance,
+  plus la différence avec l'herbe sur ce qu'il faut pour rejoindre un sol (le pas qui y entre mis à part) et pour en
+  revenir à l'arrivée la plus proche d'un sol ; on prend la plus petite des deux. La distance au sol le plus proche se
+  lit par blocs de 1 m (`FloorBlocks`), refaite en deux passes (une depuis le sud-ouest, une depuis le nord-est, exacte
+  pour des pas de 10 et 14) quand un bloc gagne ou perd son premier sol, et comptée d'une diagonale de bloc trop courte.
+  Elle n'est pas toujours cohérente d'un pas à l'autre, mais la recherche rouvre une maille rejointe moins cher : ne
+  jamais dépasser suffit. Mesuré : 4,5 ms le long de la route et 0,3 ms loin d'elle pour 100 m, 2,8 ms pour 40 m ; la
+  distance des blocs se refait en quelques ms, une fois par sol bâti ou effacé (`CartScaleTests`). Des blocs de 2 m
+  laissaient 5,5 ms : la diagonale retranchée élargit la bande fouillée le long des routes.
 - **Un numéro de recherche** dit quelles cases des tableaux sont à jour : on ne vide jamais les 4 millions de mailles
   de la carte entre deux recherches (environ 40 Mo de tableaux, faits une fois par monde).
 - **Le vérifier** : un test lance le A* sur **400 maillages tirés au hasard** contre un Dijkstra sans heuristique ni
@@ -86,8 +102,10 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   ligne est libre), et l'on tire de chaque bout : on file tant que la ligne depuis le dernier pli reste libre ; au
   premier point caché, la ficelle plie sur le segment qui y mène, au plus loin qu'on le voit, là où il passe par un
   milieu de maille. **Tirée d'un seul bout, la ficelle longe un mur au-delà de son coin** : on la tire depuis le
-  départ, puis depuis l'arrivée, qui ramène le pli contre le coin. Pour la charrette, « libre » deviendra « au même
-  coût que le bout d'escalier remplacé » : elle reste sur sa route.
+  départ, puis depuis l'arrivée, qui ramène le pli contre le coin. **La charrette tend son escalier morceau par
+  morceau de même prix**, et sa ficelle n'y traverse que des mailles qui ne coûtent pas plus (les coins n'ont qu'à se
+  traverser, comme le pas en diagonale) : elle reste sur sa route et ne coupe pas l'herbe entre deux bouts de chemin.
+  Elle n'est jamais plus lente que l'escalier ; un juge le mesure au centimètre, sur des terrains tirés au hasard.
 - **Savoir tout de suite qu'un trajet est introuvable** : les îlots, le sol libre découpé en morceaux d'un seul
   tenant. Comme une diagonale ne coupe jamais un coin, se rejoindre en huit directions revient à se rejoindre en
   quatre : on les relève rangée par rangée, chaque tronçon de mailles libres relié à ceux qu'il touche en dessous par
@@ -98,15 +116,16 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   d'après une pose se refont en 0,5 ms au lieu de 3,9 ms (mesuré à l'étape 30) ; un arbre retiré passe par le même
   chemin. La recherche ne garde que les départs et les arrivées d'un même îlot : un départ seul sur le sien ferait
   fouiller tout l'îlot en vain. Sans les îlots, un A* vers une porte enfermée parcourt toute la carte.
-  La charrette aura les siens, si ses passages diffèrent de ceux du piéton.
+  La charrette passe où passe le piéton : les mêmes îlots.
 - **La marche** (`Walk`) : le marcheur suit la ligne tendue, et l'avancement se compte en distance, d'un coin à
   l'autre, sans allocation par pas. Il garde son trajet avec la version du maillage où il l'a vérifié ; quand elle
   change, il revérifie le reste de sa ligne (le segment en cours en entier, puis les suivants et la maille du but) et
   ne cherche un autre trajet, depuis sa maille, que si une construction la coupe : une pose loin de lui ne coûte rien.
   Ce trajet part du milieu de sa maille, qu'il a pu dépasser : il rejoint la ligne au point de son premier segment le
   plus proche de lui, sans sortir de sa maille ; sinon il recule de quelques centimètres avant de repartir.
-  Quand une grandeur changera l'allure (une lanterne, une route pour la charrette), elle se relira **à chaque mètre
-  parcouru** et à chaque coin, pas seulement aux coins : une lanterne au milieu d'un long segment doit compter.
+  Une grandeur qui change l'allure se relit **à chaque pas de la simulation**, jamais seulement aux coins : le pas
+  d'une charrette, sous les pieds de qui la tire (15 cm par pas, plus fin que le mètre) ; plus tard, une lanterne au
+  milieu d'un long segment.
 - **Sortir d'une construction posée sur soi** : tout droit, à travers elle, vers le milieu d'une maille libre qui la
   **borde** (`WayOutFinder`), jamais derrière une autre ; on laisse sa tâche en commençant à sortir, puis on reprend
   sa marche vers son lit ou son travail. Parmi ces mailles, celles

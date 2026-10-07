@@ -12,14 +12,19 @@ namespace Diciela.Simulation.Land
     /// tire la ficelle depuis le départ, puis depuis l'arrivée : de chaque bout, on file de point en point tant que la
     /// ligne droite depuis le dernier pli reste libre ; au premier point caché, la ficelle plie sur le segment qui y
     /// mène, au plus loin qu'on le voit. Tirer depuis l'arrivée ramène un pli qui dépassait un coin. Chaque segment de
-    /// la ligne tendue est libre, et elle n'est jamais plus longue que l'escalier. Les listes se gardent d'un trajet à
-    /// l'autre.
+    /// la ligne tendue est libre, et elle n'est jamais plus longue que l'escalier. Le trajet d'une charrette se tend
+    /// morceau par morceau, chacun fait des mailles qui lui coûtent le même prix, et sa ficelle n'y traverse que des
+    /// mailles qui ne coûtent pas plus : elle reste sur sa route, et ne coupe pas l'herbe entre deux bouts de chemin.
+    /// Les listes se gardent d'un trajet à l'autre.
     /// </summary>
     internal sealed class PathTightener
     {
         private readonly NavGrid _grid;
         private readonly List<Vector2Int> _points = new List<Vector2Int>();
         private readonly List<Vector2Int> _pulled = new List<Vector2Int>();
+        // Le pas de la charrette dont on tend le trajet, et le prix du morceau tendu ; sans charrette, null.
+        private CartPace _pace;
+        private int _highestCost;
 
         public PathTightener(NavGrid grid)
         {
@@ -29,10 +34,31 @@ namespace Diciela.Simulation.Land
             _grid = grid;
         }
 
-        /// <summary>Tire la ligne tendue de l'escalier du trajet et la range dans ses coins.</summary>
-        public void Tighten(Path path)
+        /// <summary>
+        /// Tire la ligne tendue de l'escalier du trajet et la range dans ses coins ; pour une charrette (son pas donné),
+        /// morceau par morceau de même prix. Un piéton n'a qu'un morceau.
+        /// </summary>
+        public void Tighten(Path path, CartPace pace)
         {
-            TurnsOf(path.Cells, _points);
+            IReadOnlyList<Vector2Int> cells = path.Cells;
+            _pace = pace;
+            // Chaque tour tend un morceau d'au moins une maille : au plus un tour par maille.
+            int first = 0;
+            while (first < cells.Count)
+            {
+                _highestCost = CostAt(cells[first]);
+                int last = first;
+                while (last + 1 < cells.Count && CostAt(cells[last + 1]) == _highestCost)
+                    last++;
+                TightenPiece(path, first, last);
+                first = last + 1;
+            }
+        }
+
+        // Tend le morceau de l'escalier de first à last et range ses coins au bout de ceux du trajet.
+        private void TightenPiece(Path path, int first, int last)
+        {
+            TurnsOf(path.Cells, first, last, _points);
             Pull(_points, _pulled);
             _pulled.Reverse();
             // Tirée depuis l'arrivée, la ficelle revient dans _points, de l'arrivée au départ.
@@ -41,18 +67,24 @@ namespace Diciela.Simulation.Land
                 path.AddCorner(_grid.CellCenter(_points[i]));
         }
 
-        /// <summary>Les deux bouts de l'escalier, et entre eux les mailles où il change de direction.</summary>
-        private static void TurnsOf(IReadOnlyList<Vector2Int> cells, List<Vector2Int> turns)
+        // Le prix de cette maille pour la charrette ; pour un piéton, le même partout.
+        private int CostAt(Vector2Int cell)
+        {
+            return _pace == null ? 0 : _pace.CostAt(_grid.IndexOf(cell));
+        }
+
+        /// <summary>Les deux bouts du morceau d'escalier, et entre eux les mailles où il change de direction.</summary>
+        private static void TurnsOf(IReadOnlyList<Vector2Int> cells, int first, int last, List<Vector2Int> turns)
         {
             turns.Clear();
-            turns.Add(cells[0]);
-            for (int i = 1; i < cells.Count - 1; i++)
+            turns.Add(cells[first]);
+            for (int i = first + 1; i < last; i++)
             {
                 if (cells[i] - cells[i - 1] != cells[i + 1] - cells[i])
                     turns.Add(cells[i]);
             }
-            if (cells.Count > 1)
-                turns.Add(cells[cells.Count - 1]);
+            if (last > first)
+                turns.Add(cells[last]);
         }
 
         /// <summary>
@@ -73,7 +105,7 @@ namespace Diciela.Simulation.Land
             for (int i = 2; i < points.Count; i++)
             {
                 Vector2Int next = points[i];
-                if (!StraightLine.IsClear(_grid, fold, next))
+                if (!StraightLine.IsClear(_grid, fold, next, _pace, _highestCost))
                 {
                     fold = FurthestSeen(fold, seen, next);
                     pulled.Add(fold);
@@ -99,7 +131,7 @@ namespace Diciela.Simulation.Land
             while (hidden - seen > 1)
             {
                 int middle = (seen + hidden) / 2;
-                if (StraightLine.IsClear(_grid, eye, from + step * middle))
+                if (StraightLine.IsClear(_grid, eye, from + step * middle, _pace, _highestCost))
                     seen = middle;
                 else
                     hidden = middle;
