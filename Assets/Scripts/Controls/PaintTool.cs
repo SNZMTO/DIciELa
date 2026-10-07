@@ -105,11 +105,11 @@ namespace Diciela.Controls
             Changed(IsActive && Options.Resize(notches), _canvas.ForgetDot);
         }
 
-        /// <summary>Vise le sol sous ce point de l'écran ; pendant un geste, le prolonge jusque-là.</summary>
-        public void AimAt(Vector2 screenPoint)
+        /// <summary>Vise le sol sous ce point, aimanté ou non ; pendant un geste, le prolonge jusque-là.</summary>
+        public void AimAt(Vector2 screenPoint, bool magnet = true)
         {
             if (IsActive)
-                _canvas.AimAt(screenPoint);
+                _canvas.AimAt(screenPoint, magnet);
         }
 
         /// <summary>Le pointeur ne vise plus le sol ; un geste en cours attend qu'il y revienne.</summary>

@@ -542,8 +542,11 @@
   entière dans la Place, sans en chevaucher une autre ; on la tourne comme une construction à la pose (R). La charrette
   s'y gare l'avant au bord avant de la marque. Un timon de 2,2 m.
 - **Règle.** L'outil de la Place en mode « place de charrette » : un cadre blanc suit le pointeur, sa pointe vers
-  l'avant de la charrette ; près d'une place déjà posée, il s'aimante à côté d'elle, au même cap, l'avant libre (Ctrl
-  tenu coupe l'aimant) ; un clic le pose ; un clic sur une place posée la retire (la bulle le dit au survol).
+  l'avant de la charrette ; près de la place libre à côté d'une place déjà posée, à droite ou à gauche, il s'y aimante
+  (décision 220) : côte à côte, au même cap, l'avant aligné et libre ; Ctrl tenu coupe l'aimant ; un clic le pose ; un
+  clic sur une place posée la retire (la bulle le dit au survol).
+- **Défaut.** L'aimant prend le cadre à 1,5 m de la place libre ; deux places aimantées gardent 0,8 m entre elles (au
+  moins la diagonale d'une maille, pour qu'elles ne se touchent pas).
 - **Règle.** Retirer une place de charrette emporte sa consigne ; sa charrette, garée et vide, rentre chez elle. Une
   charrette qu'un charretier vient chercher, en route, qui porte des marchandises, ou vers qui l'on en porte, garde sa
   place : on la vide d'abord.

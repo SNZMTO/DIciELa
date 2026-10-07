@@ -191,7 +191,7 @@ place.outil.suite.Brush,"Glisse pour peindre ; Ctrl + molette change la taille."
 place.outil.suite.Eraser,"Glisse pour gommer ; Ctrl + molette change la taille.","Drag to erase; Ctrl + wheel changes the size."
 place.outil.suite.Trace,"Clique pour poser des points : le tracé les relie. Glisse un point pour le déplacer ; clique le dernier pour tracer.","Click to place points: the line joins them. Drag a point to move it; click the last one to lay it."
 place.outil.suite.Shape,"Choisis la forme dessous, puis glisse pour la tracer.","Pick the shape below, then drag to draw it."
-place.outil.suite.CartSpot,"Clique pour poser une place de charrette, R la tourne ; clique une place pour la retirer.","Click to place a cart spot, R turns it; click a spot to remove it."
+place.outil.suite.CartSpot,"Clique pour poser une place de charrette, R la tourne ; près d'une place posée, elle s'y colle (Ctrl tenu la libère) ; clique une place pour la retirer.","Click to place a cart spot, R turns it; near a placed spot, it snaps beside it (hold Ctrl to free it); click a spot to remove it."
 place.forme.Disc,Cercle,Circle
 place.forme.Box,Rectangle,Rectangle
 place.forme.Polygon,Polygone,Polygon
