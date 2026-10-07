@@ -100,6 +100,14 @@ namespace Diciela.Data
         [Tooltip("La longueur des axes que l'épingle de la symétrie montre au sol, de part et d'autre, en mètres.")]
         [SerializeField, Range(0.5f, 20f)] private float _pinAxisMeters = 3f;
 
+        [Tooltip("À combien de mètres de la place libre à côté d'une place de charrette posée le pointeur s'y " +
+                 "aimante.")]
+        [SerializeField, Range(0f, 10f)] private float _cartMagnetMeters = 1.5f;
+
+        [Tooltip("L'écart entre deux places de charrette aimantées, en mètres : au moins la diagonale d'une maille (0,71 m " +
+                 "pour des mailles de 50 cm), sinon elles se toucheraient.")]
+        [SerializeField, Range(0f, 5f)] private float _cartSpotGapMeters = 0.8f;
+
         [Tooltip("Le voile de la Place sur le sol, en mode construction, du matériau translucide.")]
         [SerializeField] private Color _zoneVeilColor = new Color(1f, 0.97f, 0.9f, 0.22f);
 
@@ -139,6 +147,8 @@ namespace Diciela.Data
         public int StartStarBranches => _startStarBranches;
         public Vector2Int StarBranchesRange => _starBranchesRange;
         public float PinAxisMeters => _pinAxisMeters;
+        public float CartMagnetMeters => _cartMagnetMeters;
+        public float CartSpotGapMeters => _cartSpotGapMeters;
         public Color ZoneVeilColor => _zoneVeilColor;
         public Color OutlineColor => _outlineColor;
         public float OutlineWidthMeters => _outlineWidthMeters;

@@ -1,9 +1,8 @@
 using Diciela.Controls;
-using Diciela.Simulation;
-using Diciela.Simulation.Core;
 using Diciela.Simulation.Land;
 using NUnit.Framework;
 using UnityEngine;
+using static Diciela.Tests.PlayMode.TestPaint;
 
 namespace Diciela.Tests.PlayMode
 {
@@ -34,16 +33,16 @@ namespace Diciela.Tests.PlayMode
             paths.Options.Choose(PaintSymmetry.Star);
             paths.Options.ChooseStar(4);
             DragPin(paths, 0f, 0f);
-            Assert.AreEqual(0f, Vector2.Distance(Ground(0f, 0f), paths.Options.PinCenter), 0.01f,
+            Assert.AreEqual(0f, Vector2.Distance(GroundAt(0f, 0f), paths.Options.PinCenter), 0.01f,
                 "L'épingle glissée suit le pointeur.");
 
-            Click(paths, 6f, 0f);
+            _test.ClickAt(paths, 6f, 0f);
             _test.World.Step();
-            Assert.AreEqual(FloorState.Planned, StateAt(6f, 0f), "Le rond du pinceau…");
-            Assert.AreEqual(FloorState.Planned, StateAt(0f, -6f), "… et ses copies, d'un quart de tour en quart de tour…");
-            Assert.AreEqual(FloorState.Planned, StateAt(-6f, 0f));
-            Assert.AreEqual(FloorState.Planned, StateAt(0f, 6f));
-            Assert.AreEqual(FloorState.None, StateAt(4.2f, 4.2f), "… et rien entre elles.");
+            Assert.AreEqual(FloorState.Planned, _test.FloorAt(6f, 0f), "Le rond du pinceau…");
+            Assert.AreEqual(FloorState.Planned, _test.FloorAt(0f, -6f), "… et ses copies, d'un quart de tour en quart de tour…");
+            Assert.AreEqual(FloorState.Planned, _test.FloorAt(-6f, 0f));
+            Assert.AreEqual(FloorState.Planned, _test.FloorAt(0f, 6f));
+            Assert.AreEqual(FloorState.None, _test.FloorAt(4.2f, 4.2f), "… et rien entre elles.");
         }
 
         [Test]
@@ -58,25 +57,25 @@ namespace Diciela.Tests.PlayMode
             paths.RotateBy(-paths.Options.AxisDegrees);
             Assert.AreEqual(0f, paths.Options.AxisDegrees, 0.001f, "R tourne l'axe, ici jusqu'au nord.");
 
-            Click(paths, 4f, 3f);
+            _test.ClickAt(paths, 4f, 3f);
             _test.World.Step();
-            Assert.AreEqual(FloorState.Planned, StateAt(4f, 3f), "Le rond du pinceau…");
-            Assert.AreEqual(FloorState.Planned, StateAt(-4f, 3f), "… et son reflet, de l'autre côté de l'axe nord-sud.");
-            Assert.AreEqual(FloorState.None, StateAt(4f, -3f), "Rien au sud : l'axe ne retourne que l'est et l'ouest.");
-            Assert.AreEqual(FloorState.None, StateAt(-4f, -3f));
+            Assert.AreEqual(FloorState.Planned, _test.FloorAt(4f, 3f), "Le rond du pinceau…");
+            Assert.AreEqual(FloorState.Planned, _test.FloorAt(-4f, 3f), "… et son reflet, de l'autre côté de l'axe nord-sud.");
+            Assert.AreEqual(FloorState.None, _test.FloorAt(4f, -3f), "Rien au sud : l'axe ne retourne que l'est et l'ouest.");
+            Assert.AreEqual(FloorState.None, _test.FloorAt(-4f, -3f));
         }
 
         [Test]
         public void ThePinOfThePlazaStartsInTheMiddleOfItsZone()
         {
             _test = new TestWorld(withPlaza: true);
-            Paint(Box(5f, -3f, 6f, 4f));
+            _test.PaintPlaza(BoxAt(5f, -3f, 6f, 4f));
             PaintTool plaza = _test.Plaza;
             plaza.Take();
             Assert.IsFalse(plaza.Options.HasPin, "Sans symétrie, pas d'épingle.");
             plaza.Options.Choose(PaintSymmetry.Mirror);
             Assert.IsTrue(plaza.Options.HasPin);
-            Assert.AreEqual(0f, Vector2.Distance(Ground(5f, -3f), plaza.Options.PinCenter), 0.01f, "Au milieu de la Place.");
+            Assert.AreEqual(0f, Vector2.Distance(GroundAt(5f, -3f), plaza.Options.PinCenter), 0.01f, "Au milieu de la Place.");
         }
 
         [Test]
@@ -103,7 +102,7 @@ namespace Diciela.Tests.PlayMode
         public void ACartSpotIsLaidWithItsMirroredCopy()
         {
             _test = new TestWorld(withPlaza: true);
-            Paint(Box(0f, 0f, 12f, 8f));
+            _test.PaintPlaza(BoxAt(0f, 0f, 12f, 8f));
             PaintTool plaza = _test.Plaza;
             plaza.Take();
             plaza.Choose(PaintToolMode.Brush);
@@ -112,16 +111,16 @@ namespace Diciela.Tests.PlayMode
             plaza.Choose(PaintToolMode.CartSpot);
             plaza.RotateBy(30f);
 
-            Click(plaza, 3.2f, 0f);
+            _test.ClickAt(plaza, 3.2f, 0f);
             _test.World.Step();
             Assert.AreEqual(2, _test.World.Plaza.Marks.Count, "La place et sa copie.");
             PlazaMark first = _test.World.Plaza.Marks[0];
             PlazaMark second = _test.World.Plaza.Marks[1];
             PlazaMark east = first.Footprint.Center.x > second.Footprint.Center.x ? first : second;
             PlazaMark west = east == first ? second : first;
-            Assert.AreEqual(0f, Vector2.Distance(Ground(3.2f, 0f), east.Footprint.Center), 0.01f);
+            Assert.AreEqual(0f, Vector2.Distance(GroundAt(3.2f, 0f), east.Footprint.Center), 0.01f);
             Assert.AreEqual(30f, east.HeadingDegrees, 0.01f);
-            Assert.AreEqual(0f, Vector2.Distance(Ground(-3.2f, 0f), west.Footprint.Center), 0.01f,
+            Assert.AreEqual(0f, Vector2.Distance(GroundAt(-3.2f, 0f), west.Footprint.Center), 0.01f,
                 "La copie, de l'autre côté de l'axe nord-sud…");
             Assert.AreEqual(330f, west.HeadingDegrees, 0.01f, "… son cap retourné.");
         }
@@ -131,43 +130,8 @@ namespace Diciela.Tests.PlayMode
         {
             Vector2 pin = tool.Options.PinCenter;
             tool.BeginDrawing(_test.OnScreen(new Vector3(pin.x, TestWorld.Center.y, pin.y)));
-            tool.AimAt(OnScreen(east, north));
+            tool.AimAt(_test.OnScreenAt(east, north));
             tool.EndDrawing();
-        }
-
-        // La zone de la Place peinte par son ordre, joué tout de suite.
-        private void Paint(GroundShape shape)
-        {
-            _test.World.Submit(new PaintPlazaCommand(shape));
-            _test.World.Step();
-        }
-
-        // Un rectangle droit de cette taille, à tant de mètres à l'est et au nord du milieu du monde.
-        private static GroundBox Box(float east, float north, float width, float depth)
-        {
-            return new GroundBox(new RotatedRect(Ground(east, north), new Vector2(width, depth), 0f));
-        }
-
-        private static Vector2 Ground(float east, float north)
-        {
-            return new Vector2(TestWorld.Center.x + east, TestWorld.Center.z + north);
-        }
-
-        private Vector2 OnScreen(float east, float north)
-        {
-            return _test.OnScreen(TestWorld.Center + new Vector3(east, 0f, north));
-        }
-
-        // Un clic du joueur à ce point du sol.
-        private void Click(PaintTool tool, float east, float north)
-        {
-            tool.AimAt(OnScreen(east, north));
-            tool.Click();
-        }
-
-        private FloorState StateAt(float east, float north)
-        {
-            return _test.World.Floors.StateAt(_test.World.Grid.CellOf(Ground(east, north)));
         }
     }
 }
