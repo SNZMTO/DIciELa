@@ -7,7 +7,7 @@ namespace Diciela.UI
     /// <summary>
     /// Une rangée de feutres de la barre des outils de sol (décisions 206 et 216) : chacun une valeur, son visage (une
     /// icône ou une vignette), son nom et son usage au survol, sa touche s'il en a une ; celui qui est pris enfoncé. Un
-    /// clic dit sa valeur. La barre en a trois : ce que l'outil pose, ses modes, les formes de son mode Forme.
+    /// clic dit sa valeur. La barre en a une par rangée : ce que l'outil pose, ses modes, et ses options (PaintOptionsRow).
     /// </summary>
     internal sealed class FeltRow<T>
     {
