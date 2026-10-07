@@ -432,15 +432,17 @@
   Pavés, faits par l'atelier de pierre. Un pont est un bout de route posé sur l'eau, d'une rive à l'autre, en ligne
   droite, une fois son idée venue (voir 13) : au mode « Pont » de l'outil Chemins, on appuie sur une rive et l'on tire
   jusqu'à l'autre. Routes et ponts ne se rangent pas : ils s'effacent, par un petit chantier qui rend leurs matériaux.
-- **Règle.** On trace les chemins à l'outil Chemins, comme la Place (voir 11) : le pinceau à main levée, la gomme, le
-  cercle, le rectangle ; une forme part au relâchement, son aperçu vert ou rouge, et la raison s'écrit. Sa sorte se
+- **Règle.** On trace les chemins à l'outil Chemins, avec les outils de la Place (voir 11) : le pinceau à main levée, la
+  gomme, le tracé point par point (droit ou en courbe), les formes (cercle, rectangle, polygone), en symétrie si l'on
+  veut ; l'aperçu est vert ou rouge, et la raison s'écrit. Sa sorte se
   choisit parmi les sols que la ville sait faire, les mêmes que pour la Place (voir 11) : chacun a sa fiche, son
   aspect, son prix, l'idée qui l'apporte et le pas des charrettes. La terre, gratuite, dès le départ ; les pavés avec
   leur idée ; puis, chacun avec la sienne (voir 13), les dalles, les carreaux, les briques et la pierre, payés en
   Pavés, et les planchers, en Planches. On trace partout où l'on marche, la Place comprise. Ce qui se tient là (une
   construction, un arbre, un rocher, l'eau) y fait un trou, qui reste quand on l'enlève, comme sur la Place ; un sol
   déjà posé, bâti ou en fantôme, de n'importe quelle sorte, aussi : pour changer un sol, on l'efface d'abord.
-- **Règle.** Une forme tracée est un chantier dans la file : un fantôme au sol, que les ouvriers bâtissent en se tenant
+- **Règle.** Une forme tracée est un chantier dans la file : un fantôme au sol, à sa texture, pâle (on voit quel sol il
+  sera), que les ouvriers bâtissent en se tenant
   dessus (on y marche), d'un coup, quand son travail est fait ; un chemin pas encore bâti n'accélère personne. La gomme
   efface un fantôme tout de suite ; un chemin bâti s'efface par un petit chantier, et sert jusqu'à sa fin. Un bâtiment
   ne se pose pas sur un chemin, ni sur son fantôme : on l'efface d'abord (« Sur un chemin : efface-le d'abord »).
@@ -491,25 +493,35 @@
   suite ; on y marche (voir 9). Il la décore comme le reste de la ville : il la pave, il y pose des décorations. C'est
   là qu'arrivent les visiteurs et que se tient l'étal, et là que se jouera la run. Elle a des niveaux qui la rendent
   plus cozy, chacun par un petit chantier. La zone ne se voit qu'en mode construction, comme les fantômes.
-- **Règle.** La Place se trace avec des outils : à main levée, guidée, des formes toutes faites, et d'autres qui la
-  retouchent (arrondir les angles…), comme le marché de Manor Lords se trace et comme Planet Zoo façonne ses formes.
-  Aujourd'hui : le pinceau (à main levée ; un clic, un rond), la gomme, le cercle (appui au milieu, on tire le rayon),
-  le rectangle (d'un coin à l'autre, ses côtés tournés comme la caméra, au cran de rotation), et la place de charrette.
+- **Règle.** La Place se trace avec des outils rangés en familles, comme ceux de Photoshop (décision 216) : le pinceau
+  (à main levée ; un clic, un rond) ; la gomme ; le tracé, la forme guidée : un clic pose un point, le tracé passe par
+  tous, en segments droits ou en courbe, de la largeur du pinceau, et l'on ajuste ses points en les glissant avant de le
+  valider ; les formes : le cercle (appui au milieu, on tire le rayon), le rectangle (d'un coin à l'autre, ses côtés
+  tournés comme la caméra, au cran de rotation) et le polygone (coin par coin, comme le marché de Manor Lords se trace,
+  droit ou arrondi) ; et la place de charrette. Tout se trace aussi en symétrie : aucune, en miroir, en double miroir,
+  ou en étoile autour d'un centre, une épingle qu'on glisse où l'on veut ; ce que l'outil trace, gomme ou pose se
+  recopie, les places de charrette comprises, tant qu'il en reste à poser.
 - **Règle.** On pave la Place à son outil : il y trace la zone, ou y pose un sol, au choix. Ses sols sont ceux des
   chemins (voir 9), posés seulement dans la zone, chacun un chantier ; un sol choisi, la gomme efface le sol, dans la
   zone seulement ; la zone choisie, elle gomme la zone. La zone et son sol sont deux choses : tracer, agrandir ou gommer
   la zone ne pose ni n'efface aucun sol, et un sol laissé hors d'une Place réduite reste un sol.
-- **Règle.** Une forme se trace d'un geste et part au relâchement. Pendant le geste, son aperçu montre ce qu'elle
-  ajouterait ou retirerait, vert si elle se trace, rouge sinon, et la raison s'écrit, comme à la pose ; une forme rouge
-  ne part pas. Un clic droit ou Échap abandonnent le geste en cours ; sans geste, ils lâchent l'outil.
+- **Règle.** Un coup de pinceau ou de gomme, un cercle et un rectangle se tracent d'un geste et partent au relâchement ;
+  un tracé part quand on clique son dernier point, un polygone quand on clique son premier, qui le ferme. Pendant le
+  geste, l'aperçu montre ce que la forme ajouterait ou retirerait, vert si elle se trace, rouge sinon, et la raison
+  s'écrit, comme à la pose ; une forme rouge ne part pas. Un clic droit ou Échap abandonnent le geste en cours ; sans
+  geste, ils lâchent l'outil. Une forme partie est faite : pour la changer, on la gomme et on la retrace.
 - **Défaut.** Le pinceau et la gomme : 2 m de rayon au départ, de 0,5 à 6 m, par crans de 0,5 (Ctrl + molette).
+- **Défaut.** L'étoile : de 3 à 8 copies, 4 au départ. L'épingle de symétrie : au départ, au milieu de la zone de la
+  Place, sinon au sol sous le milieu de l'écran ; ses axes suivent les côtés de la caméra, au cran de rotation, et R
+  les tourne (hors du mode place de charrette, où R tourne la place).
 - **Défaut.** Sa superficie est au plus de 450 m² au départ, et de 150 m² de plus par niveau. Trois niveaux ; chacun
   ajoute une place de charrette, du charme et un visiteur par jour. Au départ, une seule zone, d'un seul tenant ;
   plusieurs, plus tard, avec les niveaux.
 - **Règle.** On ne bâtit pas sur la Place : on la pave et on la décore. Ce qui se tient là quand on la peint (une
   construction, un arbre, un rocher) y fait un trou, qui reste quand on l'enlève. Une forme qui la ferait dépasser sa
   superficie, ou la couperait en morceaux, ne se trace pas du tout ; la gomme ne passe pas sous une place de charrette.
-- **À toi.** Ce qu'est la forme guidée ; combien de zones à quel niveau.
+- **À toi.** Combien de zones à quel niveau. Mes choix de la 216, à retourner : une forme partie ne s'ajuste plus ;
+  l'épingle, R qui tourne ses axes, les 4 copies de l'étoile ; l'aimant des places de charrette et Ctrl qui le coupe.
 - **Règle.** L'étal, ce sont des charrettes, comme les étals qui s'installent sur la place du marché de Manor Lords.
   Chaque entrepôt, le campement compris, a sa charrette. La Place a des places de charrette : des marques que le joueur
   pose en mode construction, dans la zone, comme le point d'attelage des caravanes de RimWorld ; chacune appelle la
@@ -528,7 +540,8 @@
   entière dans la Place, sans en chevaucher une autre ; on la tourne comme une construction à la pose (R). La charrette
   s'y gare l'avant au bord avant de la marque. Un timon de 2,2 m.
 - **Règle.** L'outil de la Place en mode « place de charrette » : un cadre blanc suit le pointeur, sa pointe vers
-  l'avant de la charrette ; un clic le pose ; un clic sur une place posée la retire (la bulle le dit au survol).
+  l'avant de la charrette ; près d'une place déjà posée, il s'aimante à côté d'elle, au même cap, l'avant libre (Ctrl
+  tenu coupe l'aimant) ; un clic le pose ; un clic sur une place posée la retire (la bulle le dit au survol).
 - **Règle.** Retirer une place de charrette emporte sa consigne ; sa charrette, garée et vide, rentre chez elle. Une
   charrette qu'un charretier vient chercher, en route, qui porte des marchandises, ou vers qui l'on en porte, garde sa
   place : on la vide d'abord.
@@ -801,18 +814,20 @@
   une icône.
 - **Règle.** L'outil de la Place en main, une barre étroite s'ouvre en bas au centre, à la place du panneau
   Construire : au-dessus de ses modes, ce qu'il pose, la zone (au départ) ou l'un des sols que la ville sait faire,
-  chacun sa vignette, celui qui est pris enfoncé ; ses modes (pinceau, gomme, cercle, rectangle, place de charrette), chacun son icône et
-  sa touche, celui qui est pris enfoncé, son nom et son usage au survol ; dessous, dans des creux de lin, la superficie
-  de la Place sur celle de son niveau (« 312 / 450 m² »), ses places de charrette posées sur celles qu'elle permet, et
-  la taille du pinceau. Les touches des cartes prennent les modes tant que le panneau est fermé. Elle tient entre
-  l'astuce et l'icône des outils dès 1280 × 720.
+  chacun sa vignette, celui qui est pris enfoncé ; ses modes, en familles (pinceau, gomme, tracé, forme, place de
+  charrette), chacun son icône et sa touche, celui qui est pris enfoncé, son nom et son usage au survol ; dessous, les
+  options du mode pris (la taille du pinceau ; droit ou en courbe ; cercle, rectangle ou polygone ; la symétrie et le
+  nombre de l'étoile), puis, dans des creux de lin, la superficie de la Place sur celle de son niveau (« 312 / 450 m² »)
+  et ses places de charrette posées sur celles qu'elle permet. Les touches des cartes prennent les modes tant que le
+  panneau est fermé. Elle tient entre l'astuce et l'icône des outils dès 1280 × 720.
 - **Défaut.** Les modes de l'outil de la Place : les touches 1 à 5, dans l'ordre de la barre. La taille du pinceau :
   Ctrl + molette (la molette seule zoome).
-- **Règle.** L'outil Chemins en main, la même barre s'ouvre : au-dessus de ses modes (pinceau, gomme, cercle,
-  rectangle, et le pont une fois son idée venue), les sortes de sol que la ville sait faire, chacune sa vignette, celle
-  qui est prise enfoncée (au départ, la première) ; dessous, la taille du pinceau. Sa gomme efface tous les sols. Un
-  chemin se voit toujours, comme le sol qu'il est : la terre et les pavés du pack peints sur la carte ; son fantôme, un
-  voile au sol, de la couleur des fantômes ; un chemin qu'on efface garde le sien jusqu'à la fin de son chantier.
+- **Règle.** L'outil Chemins en main, la même barre s'ouvre : au-dessus de ses modes (pinceau, gomme, tracé, forme, et
+  le pont une fois son idée venue), les sortes de sol que la ville sait faire, chacune sa vignette, celle qui est prise
+  enfoncée (au départ, la première) ; dessous, les options du mode pris. Sa gomme efface tous les sols. Un chemin se
+  voit toujours, comme le sol qu'il est : la terre et les pavés du pack peints sur la carte ; son fantôme, sa texture,
+  pâle et translucide, mêlée à la teinte des fantômes ; un chemin qu'on efface garde un voile de la couleur des
+  fantômes jusqu'à la fin de son chantier. L'aperçu du geste reste vert ou rouge, sans texture.
 - **À toi.** La vignette d'un sol (pour l'instant la texture de son calque) et l'icône de Chemins dans la roue (un
   chemin en pointillés) : des remplaçants.
 - **Défaut.** Les modes de l'outil Chemins : les touches 1 à 5, dans l'ordre de la barre. La terre : le calque
@@ -822,8 +837,9 @@
 - **Règle.** La zone de la Place et ses places de charrette se voient en mode construction : le panneau Construire
   ouvert, ou en main une construction, l'outil de la Place, Chemins ou Déplacer. La zone : un voile léger sur le sol et son
   contour ; une place de charrette : un cadre blanc, une pointe vers l'avant de la charrette.
-- **À toi.** Les icônes de la Place (sa carte, ses cinq modes, la vignette de la zone), pour l'instant des remplaçants
-  simples.
+- **À toi.** Les icônes des outils de sol (la carte de la Place, leurs modes et leurs options, l'épingle de symétrie, la
+  vignette de la zone), pour l'instant des remplaçants simples. La part de texture et l'opacité du fantôme d'un sol :
+  des réglages de son matériau.
 - **À toi.** L'icône des Métiers : en attendant, celle de « bâtir ». Les autres questions ouvertes du HUD. Ma reco :
   le bandeau de brique montre les animaux du pack.
 
