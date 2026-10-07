@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Diciela.Data::Diciela.Data.FloorDefinition
   _id: terre
   _nameKey: sol.terre
-  _layer: {fileID: 8574412962073106934, guid: 5c5fd5499c5db18429ced969eeac9676, type: 2}
+  _layer: {fileID: 8574412962073106934, guid: 6c269eb1337625941b2880cdade51bab, type: 2}
   _cartSpeedFactor: 1
