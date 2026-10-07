@@ -356,7 +356,7 @@ mètres carrés), `Place` ne veut dire que poser, la fiche d'un lieu est `Locati
 | le nom d'un habitant (sa clé) | `NameKey` | ouvrir un poste pour lui | `WorkSlots.OpenFor` | un poste sur la fiche d'un lieu | `LocationSheetSlot` |
 | apprendre (une idée) ; appris | `Knowledge.Learn` ; `Learned` | lieu de travail (d'un premier habitant) | `Workplace` | les onglets du panneau | `BuildBarTabs` |
 | fermer un poste | `WorkSlots.Close` | s'installer à son lieu de travail | `Opening.Settle` | la Place (la zone) ; ses règles | `PlazaZone` ; `PlazaChecks` |
-| devants de porte | `Doorways` | une forme peinte (trait, disque, rectangle) | `GroundShape` (`GroundStroke`, `GroundDisc`, `GroundBox`) | une marque (place de charrette) | `PlazaMark` |
+| devants de porte | `Doorways` | une forme peinte (trait, disque, rectangle, polygone) ; une courbe douce | `GroundShape` (`GroundStroke`, `GroundDisc`, `GroundBox`, `GroundPolygon`) ; `GroundSpline` | une marque (place de charrette) | `PlazaMark` |
 | peindre ; gommer la Place | `PaintPlazaCommand` ; `ErasePlazaCommand` | poser par le milieu de sa boîte | `Piece.Centered` | encombrement ; places libres ; ce qui tient encore | `GoodDefinition.Space` ; `FreeSpace` ; `RoomFor` |
 | charrettes de l'étal ; à conduire ; vues | `Carts` ; `CartOffers` ; `CartViews` | conduire ; atteler ; tirer ; garer | `Drive` ; `Hitch` ; `Pull` ; `Park` | cap (au sol) ; poser, retirer une place de charrette | `Heading` ; `AddCartSpotCommand`, `RemoveCartSpotCommand` |
 | déplacer (une construction) ; son sol | `MoveStructureCommand`, `StructureMoves` ; `StructureGround` | déplacée ; déplacement refusé | `StructureMoved` ; `MoveRefused` |
@@ -449,10 +449,12 @@ mètres carrés), `Place` ne veut dire que poser, la fiche d'un lieu est `Locati
   où vont ses sols et son pinceau de départ. L'outil tient son mode, en familles (`PaintToolMode` : pinceau, gomme,
   tracé, forme, place de charrette), son encre (`PaintInks` : la zone, ou l'un des sols que la ville sait faire, dite en
   toutes lettres par `PaintInk` : la zone, un sol, ou rien) et ses options, ce que règle la rangée sous ses modes
-  (`PaintOptions` : la forme du mode Forme, `PaintShape` ; la taille du pinceau ; le cap d'une place de charrette) ; il
-  travaille sur sa surface (`PaintCanvas`) : le geste en cours (`PaintDrawing` : glissé, un trait de pinceau, un
-  cercle, un rectangle, qui part au relâchement ; pointé, un tracé, dont chaque clic pose un point et qui part au clic
-  sur son dernier point), ce que la Place ou les sols répondent à ce qu'il vise, par la même fonction que l'ordre,
+  (`PaintOptions` : la forme du mode Forme, `PaintShape` ; le style d'un tracé ou d'un polygone, `PaintTraceStyle` ; la
+  taille du pinceau ; le cap d'une place de charrette) ; il travaille sur sa surface (`PaintCanvas`) : le geste en cours
+  (`PaintDrawing` : glissé, un trait de pinceau, un cercle, un rectangle, qui part au relâchement ; pointé, un tracé ou
+  un polygone, droit ou en courbe, `GroundSpline`, qui ne part qu'au clic sur le point qui le finit : `PaintPoints`,
+  dont les points posés se prennent à l'écran, à quelques pixels près, par `PaintHandles`, et se déplacent en les
+  glissant), ce que la Place ou les sols répondent à ce qu'il vise, par la même fonction que l'ordre,
   traduit en une seule réponse (`PaintAnswer`) et montré par l'aperçu (`PaintAim`), et les ordres qui en partent
   (`PaintOrders`). Ses gestes (`PaintControls`, leur carte d'actions), pour celui des deux qui est en main, glissent,
   cliquent, tournent par la touche de la pose (`RotateKey`, que la pose partage) et changent la taille du pinceau à Ctrl

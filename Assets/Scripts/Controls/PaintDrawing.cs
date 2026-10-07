@@ -9,33 +9,35 @@ namespace Diciela.Controls
     /// Le geste en cours d'un outil de sol (décisions 206 et 216) : ce qu'on trace, en mètres au sol. Glissé, depuis
     /// l'appui : le pinceau et la gomme gardent un point tous les quelques décimètres (SAVOIR, 2.6) ; le cercle a son
     /// milieu à l'appui et son bord sous le pointeur ; le rectangle va d'un coin à l'autre, ses côtés tournés comme la
-    /// caméra au cran de rotation. Pointé, le tracé : chaque clic pose un point, et un dernier segment suit le pointeur
-    /// jusqu'au clic suivant. La forme ne se refait que quand elle change d'au moins une demi-maille : pas une forme par
-    /// image.
+    /// caméra au cran de rotation. Pointé, un tracé (ouvert) ou un polygone (fermé) : chaque clic pose un point, un
+    /// dernier bout suit le pointeur jusqu'au clic suivant, les points se déplacent, et ils se relient droit ou en courbe.
+    /// La forme glissée ne se refait que quand elle change d'au moins une demi-maille : pas une forme par image.
     /// </summary>
     internal sealed class PaintDrawing
     {
         private readonly List<Vector2> _points = new List<Vector2>();
         private readonly List<Vector2> _traced = new List<Vector2>();
+        private readonly List<Vector2> _curve = new List<Vector2>();
         private PaintToolMode _mode;
         private PaintShape _shape;
         private float _radius;
         private float _boxDegrees;
         private Vector2 _end;
+        private bool _closed;
+        private bool _curved;
+        private bool _settled;
+        private float _step;
 
-        /// <summary>Vrai entre l'appui glissé et le relâchement, ou entre le premier point d'un tracé et son départ.</summary>
+        /// <summary>Vrai entre l'appui glissé et le relâchement, ou entre le premier point d'un geste pointé et son départ.</summary>
         public bool IsDrawing { get; private set; }
 
-        /// <summary>Vrai pour un tracé : il se fait de clics, et ne part pas au relâchement.</summary>
+        /// <summary>Vrai pour un tracé ou un polygone : ils se font de clics, et ne partent pas au relâchement.</summary>
         public bool IsPointed { get; private set; }
 
         /// <summary>La forme tracée jusqu'ici ; null tant qu'elle est trop petite pour couvrir une maille.</summary>
         public GroundShape Shape { get; private set; }
 
-        /// <summary>Le milieu du cercle, ou le premier coin du rectangle : là où l'on a appuyé.</summary>
-        public Vector2 Start => _points.Count > 0 ? _points[0] : Vector2.zero;
-
-        /// <summary>Les points posés d'un tracé, dans l'ordre.</summary>
+        /// <summary>Les points posés d'un geste pointé, dans l'ordre.</summary>
         public IReadOnlyList<Vector2> Points => _points;
 
         /// <summary>
@@ -44,32 +46,56 @@ namespace Diciela.Controls
         /// </summary>
         public void Begin(PaintToolMode mode, PaintShape shape, Vector2 start, float radius, float boxDegrees)
         {
+            End();
             _mode = mode;
             _shape = shape;
             _radius = radius;
             _boxDegrees = boxDegrees;
-            _points.Clear();
             _points.Add(start);
             _end = start;
             IsDrawing = true;
-            IsPointed = false;
             Shape = IsBrush ? new GroundStroke(_points, _radius) : null;
         }
 
-        /// <summary>Pose un point du tracé, de ce rayon ; le premier commence le tracé.</summary>
-        public void AddPoint(Vector2 point, float radius)
+        /// <summary>
+        /// Commence un geste pointé : un tracé de ce rayon, ou un polygone (fermé), droit ou en courbe gardée en segments
+        /// d'au plus step mètres ; ses points viennent des clics (AddPoint).
+        /// </summary>
+        public void BeginPointed(bool closed, bool curved, float radius, float step)
         {
-            if (!IsDrawing)
-            {
-                _mode = PaintToolMode.Trace;
-                _points.Clear();
-                IsDrawing = true;
-                IsPointed = true;
-            }
+            End();
+            _mode = closed ? PaintToolMode.Shape : PaintToolMode.Trace;
+            _closed = closed;
+            _curved = curved;
             _radius = radius;
+            _step = step;
+            IsDrawing = true;
+            IsPointed = true;
+        }
+
+        /// <summary>Pose un point du geste pointé.</summary>
+        public void AddPoint(Vector2 point)
+        {
             _points.Add(point);
             _end = point;
-            Shape = Traced();
+            _settled = false;
+            Shape = Pointed();
+        }
+
+        /// <summary>Déplace ce point posé ; pendant qu'on le tient, le bout qui suit le pointeur se tait.</summary>
+        public void MovePoint(int index, Vector2 to)
+        {
+            _points[index] = to;
+            _settled = true;
+            Shape = Pointed();
+        }
+
+        /// <summary>Relie les points droit, ou en courbe.</summary>
+        public void Restyle(bool curved)
+        {
+            _curved = curved;
+            if (IsPointed)
+                Shape = Pointed();
         }
 
         /// <summary>Le pointeur est à ce point du sol : vrai si la forme a changé.</summary>
@@ -90,7 +116,8 @@ namespace Diciela.Controls
             _end = point;
             if (IsPointed)
             {
-                Shape = Traced();
+                _settled = false;
+                Shape = Pointed();
                 return true;
             }
             GroundShape before = Shape;
@@ -98,13 +125,13 @@ namespace Diciela.Controls
             return Shape != null || before != null;
         }
 
-        /// <summary>Le tracé tel qu'il partira : ses points posés, sans le segment qui suit le pointeur.</summary>
+        /// <summary>Le geste pointé tel qu'il partira : ses points posés, sans le bout qui suit le pointeur.</summary>
         public void Settle()
         {
             if (!IsPointed)
                 return;
-            _end = _points[_points.Count - 1];
-            Shape = Traced();
+            _settled = true;
+            Shape = Pointed();
         }
 
         /// <summary>Le geste est fini ou abandonné : plus de forme.</summary>
@@ -112,19 +139,30 @@ namespace Diciela.Controls
         {
             IsDrawing = false;
             IsPointed = false;
+            _settled = false;
             Shape = null;
             _points.Clear();
         }
 
-        private bool IsBrush => _mode == PaintToolMode.Brush || _mode == PaintToolMode.Eraser;
+        private bool IsBrush => !IsPointed && (_mode == PaintToolMode.Brush || _mode == PaintToolMode.Eraser);
 
-        // Le tracé : ses points posés, puis là où est le pointeur.
-        private GroundShape Traced()
+        // La forme pointée : ses points posés, puis le pointeur (tant qu'il n'est pas posé), droits ou en courbe ; un
+        // polygone attend trois coins.
+        private GroundShape Pointed()
         {
             _traced.Clear();
             _traced.AddRange(_points);
-            _traced.Add(_end);
-            return new GroundStroke(_traced, _radius);
+            if (!_settled)
+                _traced.Add(_end);
+            List<Vector2> line = _traced;
+            if (_curved)
+            {
+                GroundSpline.Sample(_traced, _closed, _step, _curve);
+                line = _curve;
+            }
+            if (_closed)
+                return line.Count >= 3 ? new GroundPolygon(line) : null;
+            return line.Count > 0 ? new GroundStroke(line, _radius) : null;
         }
 
         private GroundShape Disc(float cellSize)

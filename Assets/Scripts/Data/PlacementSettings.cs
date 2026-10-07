@@ -85,6 +85,13 @@ namespace Diciela.Data
                  "point fait partir le tracé.")]
         [SerializeField, Range(2f, 40f)] private float _handlePickPixels = 14f;
 
+        [Tooltip("Le rayon du rond qui montre un point posé d'un tracé ou d'un polygone, en mètres.")]
+        [SerializeField, Range(0.05f, 2f)] private float _handleRadiusMeters = 0.35f;
+
+        [Tooltip("La plus grande longueur des petits segments d'une courbe (un tracé, un polygone arrondi), en mètres : " +
+                 "une demi-maille suffit.")]
+        [SerializeField, Range(0.05f, 2f)] private float _curveStepMeters = 0.25f;
+
         [Tooltip("Le voile de la Place sur le sol, en mode construction, du matériau translucide.")]
         [SerializeField] private Color _zoneVeilColor = new Color(1f, 0.97f, 0.9f, 0.22f);
 
@@ -119,6 +126,8 @@ namespace Diciela.Data
         public float BrushRadiusStepMeters => _brushRadiusStepMeters;
         public float StrokeSpacingMeters => _strokeSpacingMeters;
         public float HandlePickPixels => _handlePickPixels;
+        public float HandleRadiusMeters => _handleRadiusMeters;
+        public float CurveStepMeters => _curveStepMeters;
         public Color ZoneVeilColor => _zoneVeilColor;
         public Color OutlineColor => _outlineColor;
         public float OutlineWidthMeters => _outlineWidthMeters;

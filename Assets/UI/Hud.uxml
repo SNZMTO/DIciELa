@@ -65,6 +65,7 @@
                     <ui:VisualElement name="place-modes" class="place-modes" />
                     <ui:VisualElement class="place-options" picking-mode="Ignore">
                         <ui:VisualElement name="place-formes" class="place-formes bloc-cache" />
+                        <ui:VisualElement name="place-styles" class="place-formes bloc-cache" />
                         <Diciela.UI.Facet name="place-taille-creux" class="creux pan-4 place-valeur" picking-mode="Ignore">
                             <ui:Label name="place-taille" class="libelle" picking-mode="Ignore" />
                         </Diciela.UI.Facet>
