@@ -89,19 +89,5 @@ namespace Diciela.Tests.EditMode
             }
             return inside;
         }
-
-        private static List<Vector2Int> PlannedOf(World world)
-        {
-            var planned = new List<Vector2Int>();
-            for (int x = 0; x < world.Grid.Width; x++)
-            {
-                for (int y = 0; y < world.Grid.Depth; y++)
-                {
-                    if (world.Floors.StateAt(new Vector2Int(x, y)) == FloorState.Planned)
-                        planned.Add(new Vector2Int(x, y));
-                }
-            }
-            return planned;
-        }
     }
 }

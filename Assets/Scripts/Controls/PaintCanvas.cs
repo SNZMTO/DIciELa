@@ -22,7 +22,7 @@ namespace Diciela.Controls
         private readonly PaintDrawing _drawing = new PaintDrawing();
         private readonly PaintAim _target;
         private readonly PaintOrders _orders;
-        private readonly PaintPoints _points;
+        private readonly PaintGrips _grips;
         private Vector2 _aim;
         private Vector2 _aimScreen;
         private bool _aimed;
@@ -35,7 +35,7 @@ namespace Diciela.Controls
             _camera = camera;
             _settings = settings;
             _target = new PaintAim(world, preview);
-            _points = new PaintPoints(_drawing, new PaintHandles(camera, world.Map.Relief, settings));
+            _grips = new PaintGrips(_drawing, world, camera, settings);
             // Un ordre joué ou refusé : la Place a peut-être changé sous le pointeur.
             _orders = new PaintOrders(world, () => Refresh(true));
         }
@@ -63,7 +63,7 @@ namespace Diciela.Controls
             _aim = ground;
             _aimScreen = screenPoint;
             // Un point tenu suit le pointeur ; sinon, le geste en cours se prolonge jusque-là.
-            Refresh(_points.Drag(ground) ||
+            Refresh(_grips.Drag(ground, _tool.Options) ||
                     IsDrawing && _drawing.ExtendTo(ground, _settings.StrokeSpacingMeters, _world.Grid.Metrics.CellSize));
         }
 
@@ -77,11 +77,9 @@ namespace Diciela.Controls
 
         public void Begin(Vector2 screenStart)
         {
-            if (_drawing.IsPointed)
-            {
-                _points.Press(screenStart);
+            // Un point posé ou l'épingle pris ici se glissent ; un geste pointé ne se glisse pas.
+            if (_grips.Press(screenStart, _tool.Options) || _drawing.IsPointed)
                 return;
-            }
             PaintToolMode mode = _tool.Mode;
             if (mode == PaintToolMode.CartSpot || PaintPoints.Wanted(_tool) || !TryGround(screenStart, out Vector2 start))
                 return;
@@ -91,17 +89,17 @@ namespace Diciela.Controls
         }
 
         /// <summary>
-        /// Le relâchement : la forme glissée part en ordre, si la Place l'accepte ; un geste pointé continue, et lâche le
-        /// point qu'il tenait.
+        /// Le relâchement : la forme glissée part en ordre, avec ses copies, si la Place l'accepte ; un geste pointé
+        /// continue ; ce qui était tenu est lâché.
         /// </summary>
         public void End()
         {
-            if (_points.Release())
+            if (_grips.Release())
                 Refresh(true);
             if (!IsDrawing || _drawing.IsPointed)
                 return;
-            GroundShape shape = _drawing.Shape;
-            bool accepted = shape != null && !_target.IsStale && Answer.IsOk;
+            GroundShape shape = _target.Checked;
+            bool accepted = _drawing.Shape != null && !_target.IsStale && Answer.IsOk;
             _drawing.End();
             if (accepted)
                 _orders.SendShape(shape, _tool.Mode == PaintToolMode.Eraser, _tool.Inks, _tool.Entry.Scope);
@@ -127,18 +125,25 @@ namespace Diciela.Controls
             if (mode == PaintToolMode.CartSpot && Hovered != null)
                 _orders.SendRemoval(Hovered);
             else if (mode == PaintToolMode.CartSpot && Answer.IsOk)
-                _orders.SendMark(_aim, _tool.Options.HeadingDegrees);
+                _orders.SendMarks(_target.Copies, _aim, _tool.Options.HeadingDegrees);
             else if ((mode == PaintToolMode.Brush || mode == PaintToolMode.Eraser) && Answer.IsOk)
-                _orders.SendShape(_target.Dot, mode == PaintToolMode.Eraser, _tool.Inks, _tool.Entry.Scope);
+                _orders.SendShape(_target.Checked, mode == PaintToolMode.Eraser, _tool.Inks, _tool.Entry.Scope);
         }
 
         /// <summary>Abandonne le geste en cours ; s'il n'y en a pas, oublie aussi ce qui est visé.</summary>
         public void Abandon(bool forgetAim)
         {
-            _points.Release();
+            _grips.Release();
             _drawing.End();
             if (forgetAim)
                 _aimed = false;
+            Refresh(true);
+        }
+
+        /// <summary>La symétrie a changé : l'épingle se pose où il faut si elle n'est pas encore posée.</summary>
+        public void PlacePin()
+        {
+            _grips.Pin.PlaceByDefault(_tool);
             Refresh(true);
         }
 
@@ -176,13 +181,13 @@ namespace Diciela.Controls
         // raison s'écrit.
         private void ClickPointed()
         {
-            bool finish = _points.Click(_aim, _aimScreen, _tool, _settings.CurveStepMeters);
+            bool finish = _grips.Points.Click(_aim, _aimScreen, _tool, _settings.CurveStepMeters);
             if (finish)
                 _drawing.Settle();
             Refresh(true);
             if (!finish || _target.IsStale || !Answer.IsOk)
                 return;
-            _orders.SendShape(_drawing.Shape, false, _tool.Inks, _tool.Entry.Scope);
+            _orders.SendShape(_target.Checked, false, _tool.Inks, _tool.Entry.Scope);
             _drawing.End();
             Refresh(true);
         }

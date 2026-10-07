@@ -15,6 +15,8 @@ namespace Diciela.Data
         private const string PaintShapeDetailPrefix = "place.forme.suite.";
         private const string PaintStylePrefix = "place.style.";
         private const string PaintStyleDetailPrefix = "place.style.suite.";
+        private const string PaintSymmetryPrefix = "place.symetrie.";
+        private const string PaintSymmetryDetailPrefix = "place.symetrie.suite.";
         private const string DayPhasePrefix = "journee.";
         private const string DayNextPrefix = "journee.suite.";
         private const string DayNotePrefix = "journee.note.";
@@ -70,6 +72,10 @@ namespace Diciela.Data
         public const string PlazaArea = "place.superficie";
         public const string AreaParameter = "{superficie}";
         public const string MaxParameter = "{max}";
+
+        /// <summary>L'usage d'un nombre de copies de l'étoile ({copies} y est remplacé).</summary>
+        public const string PaintStarDetail = "place.etoile.suite";
+        public const string CopiesParameter = "{copies}";
         public const string PlazaMarks = "place.marques";
         public const string MarksParameter = "{marques}";
         public const string PaintBrushSize = "place.taille";
@@ -113,6 +119,18 @@ namespace Diciela.Data
         public static string PaintStyleDetail(string styleName)
         {
             return PaintStyleDetailPrefix + styleName;
+        }
+
+        /// <summary>La clé du nom d'une symétrie, d'après son nom (Mirror → place.symetrie.Mirror).</summary>
+        public static string PaintSymmetry(string symmetryName)
+        {
+            return PaintSymmetryPrefix + symmetryName;
+        }
+
+        /// <summary>La clé de l'usage d'une symétrie (Mirror → place.symetrie.suite.Mirror).</summary>
+        public static string PaintSymmetryDetail(string symmetryName)
+        {
+            return PaintSymmetryDetailPrefix + symmetryName;
         }
 
         /// <summary>La clé de la raison d'un refus sur la Place, d'après son nom (TooLarge → place.refus.TooLarge).</summary>

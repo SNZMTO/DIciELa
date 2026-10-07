@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Diciela.Simulation.Land;
 using UnityEngine;
+using static Diciela.EditorTools.InkStrokes;
 
 namespace Diciela.EditorTools
 {
@@ -8,14 +9,13 @@ namespace Diciela.EditorTools
     /// Les icônes des outils de sol (décisions 206, 209 et 216), à l'encre sur 20 unités : la carte de la Place (une
     /// zone, son contour et deux places de charrette) ; leurs modes : le pinceau, la gomme, le tracé (des points reliés),
     /// la forme (un cercle sur un carré), la place de charrette (un cadre, sa pointe vers l'avant) ; les formes du mode
-    /// Forme : le cercle, le rectangle, le polygone ; les styles d'un tracé : droit, en courbe ; et l'outil Chemins, qui partage la barre : un chemin qui serpente, en
-    /// pointillés. Des remplaçants simples : la maquette n'en a pas. Le menu des images de l'interface les génère avec
-    /// les autres (InterfaceIcons).
+    /// Forme : le cercle, le rectangle, le polygone ; les styles d'un tracé : droit, en courbe ; et l'outil Chemins,
+    /// qui partage la barre : un chemin qui serpente, en pointillés. Des remplaçants simples : la maquette n'en a pas.
+    /// Le menu des images de l'interface les génère avec les autres (InterfaceIcons) ; les traits sont ceux d'InkStrokes.
     /// </summary>
     internal static class PaintIcons
     {
         private const float Size = 20f;
-        private const string Ink = "encre";
 
         public static IEnumerable<InterfaceIcons.Icon> All()
         {
@@ -111,47 +111,6 @@ namespace Diciela.EditorTools
             faces.AddRange(Loop(new[] { 6.4f, 7f, 9.2f, 7f, 9.2f, 13f, 6.4f, 13f }, 0.9f));
             faces.AddRange(Loop(new[] { 11f, 7f, 13.8f, 7f, 13.8f, 13f, 11f, 13f }, 0.9f));
             return faces.ToArray();
-        }
-
-        private static InterfaceIcons.Face Polygon(string color, float opacity, params float[] points)
-        {
-            return new InterfaceIcons.Face(color, opacity, points);
-        }
-
-        // Un trait de cette largeur, de (x1, y1) à (x2, y2), prolongé d'une demi-largeur à chaque bout.
-        private static InterfaceIcons.Face Bar(float x1, float y1, float x2, float y2, float width, float opacity = 1f)
-        {
-            var a = new Vector2(x1, y1);
-            var b = new Vector2(x2, y2);
-            Vector2 along = (b - a).normalized * (width * 0.5f);
-            var side = new Vector2(-along.y, along.x);
-            a -= along;
-            b += along;
-            return Polygon(Ink, opacity, a.x + side.x, a.y + side.y, b.x + side.x, b.y + side.y, b.x - side.x,
-                b.y - side.y, a.x - side.x, a.y - side.y);
-        }
-
-        // Le tour fermé de ces points (x, y à la suite), en traits de cette largeur.
-        private static IEnumerable<InterfaceIcons.Face> Loop(float[] points, float width)
-        {
-            int count = points.Length / 2;
-            for (int i = 0; i < count; i++)
-            {
-                int next = (i + 1) % count;
-                yield return Bar(points[2 * i], points[2 * i + 1], points[2 * next], points[2 * next + 1], width);
-            }
-        }
-
-        private static float[] Circle(float x, float y, float radius, int sides)
-        {
-            var points = new float[sides * 2];
-            for (int i = 0; i < sides; i++)
-            {
-                float angle = 2f * Mathf.PI * i / sides;
-                points[2 * i] = x + Mathf.Cos(angle) * radius;
-                points[2 * i + 1] = y + Mathf.Sin(angle) * radius;
-            }
-            return points;
         }
     }
 }

@@ -12,9 +12,9 @@ namespace Diciela.Tests.PlayMode
     /// Le présentateur de la barre des outils de sol (décisions 206 et 216), sur le petit monde des tests, dont la Place a
     /// 100 m² au plus et deux places de charrette, et une vue qui note ce qu'on lui montre et joue les clics du joueur ;
     /// une table des textes écrite ici. La barre se montre l'outil en main ; ses modes, en familles, dans l'ordre des
-    /// touches ; les formes, au mode Forme seulement ; la superficie et les places de charrette suivent la Place ; la
-    /// taille du pinceau ne se dit qu'au pinceau, à la gomme et au tracé ; un clic sur un mode ou une forme la prend ; un
-    /// ordre refusé en jouant le dit.
+    /// touches ; la superficie et les places de charrette suivent la Place ; la taille du pinceau ne se dit qu'au
+    /// pinceau, à la gomme et au tracé ; un clic sur un mode le prend ; un ordre refusé en jouant le dit. La rangée
+    /// d'options a ses tests (PaintOptionsPresenterTests).
     /// </summary>
     public sealed class PaintBarPresenterTests
     {
@@ -28,6 +28,9 @@ namespace Diciela.Tests.PlayMode
                                      "place.forme.Polygon,Polygone\n" +
                                      "place.style.Straight,Droit\n" +
                                      "place.style.Curved,Courbe\n" +
+                                     "place.symetrie.None,Sans symétrie\n" +
+                                     "place.symetrie.Star,Étoile\n" +
+                                     "place.etoile.suite,{copies} copies\n" +
                                      "place.outil.CartSpot,Place de charrette\n" +
                                      "place.superficie,{superficie} / {max} m²\n" +
                                      "place.marques,{marques} / {max}\n" +
@@ -81,39 +84,6 @@ namespace Diciela.Tests.PlayMode
         }
 
         [Test]
-        public void TheShapesShowOnlyInTheShapeModeAndAClickTakesOne()
-        {
-            _test.Plaza.Take();
-            Assert.IsEmpty(_view.Shapes, "Au pinceau, pas de formes.");
-            _view.Choose(PaintToolMode.Shape);
-            Assert.AreEqual(new[] { "Cercle", "Rectangle" }, new[] { _view.Shapes[0].Name, _view.Shapes[1].Name });
-            Assert.AreEqual(PaintShape.Disc, _view.SelectedShape, "Au départ, le cercle.");
-            Assert.AreEqual("", _view.BrushSize, "Une forme n'a pas de pinceau.");
-            _view.ChooseShape(PaintShape.Box);
-            Assert.AreEqual(PaintShape.Box, _test.Plaza.Options.Shape, "Un clic sur une forme la prend…");
-            Assert.AreEqual(PaintShape.Box, _view.SelectedShape, "… et l'enfonce.");
-            _view.Choose(PaintToolMode.Trace);
-            Assert.IsEmpty(_view.Shapes, "Le tracé n'a pas de formes…");
-            Assert.AreEqual("Ø 4 m", _view.BrushSize, "… mais la largeur du pinceau.");
-        }
-
-        [Test]
-        public void TheStylesShowForATraceAndAPolygonAndAClickTakesOne()
-        {
-            _test.Plaza.Take();
-            Assert.IsEmpty(_view.Styles, "Au pinceau, pas de styles.");
-            _view.Choose(PaintToolMode.Trace);
-            Assert.AreEqual(new[] { "Droit", "Courbe" }, new[] { _view.Styles[0].Name, _view.Styles[1].Name });
-            _view.ChooseStyle(PaintTraceStyle.Curved);
-            Assert.AreEqual(PaintTraceStyle.Curved, _test.Plaza.Options.Style, "Un clic sur un style le prend…");
-            Assert.AreEqual(PaintTraceStyle.Curved, _view.SelectedStyle, "… et l'enfonce.");
-            _view.Choose(PaintToolMode.Shape);
-            Assert.IsEmpty(_view.Styles, "Le cercle n'a pas de style…");
-            _view.ChooseShape(PaintShape.Polygon);
-            Assert.AreEqual(2, _view.Styles.Count, "… le polygone, si.");
-        }
-
-        [Test]
         public void TheValuesFollowThePlaza()
         {
             _test.Plaza.Take();
@@ -154,6 +124,13 @@ namespace Diciela.Tests.PlayMode
                 Assert.IsTrue(texts.Has(TextKeys.PaintMode(mode.ToString())), "Le nom du mode " + mode + " manque.");
                 Assert.IsTrue(texts.Has(TextKeys.PaintModeDetail(mode.ToString())), "L'usage du mode " + mode + " manque.");
             }
+            foreach (PaintSymmetry symmetry in System.Enum.GetValues(typeof(PaintSymmetry)))
+            {
+                Assert.IsTrue(texts.Has(TextKeys.PaintSymmetry(symmetry.ToString())), "La symétrie " + symmetry + " manque.");
+                Assert.IsTrue(texts.Has(TextKeys.PaintSymmetryDetail(symmetry.ToString())),
+                    "L'usage de la symétrie " + symmetry + " manque.");
+            }
+            Assert.IsTrue(texts.Has(TextKeys.PaintStarDetail), "L'usage d'un nombre de l'étoile manque.");
             foreach (PaintTraceStyle style in System.Enum.GetValues(typeof(PaintTraceStyle)))
             {
                 Assert.IsTrue(texts.Has(TextKeys.PaintStyle(style.ToString())), "Le nom du style " + style + " manque.");

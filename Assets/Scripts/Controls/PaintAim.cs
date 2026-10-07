@@ -18,12 +18,17 @@ namespace Diciela.Controls
     {
         private static readonly Vector2Int Nowhere = new Vector2Int(int.MinValue, int.MinValue);
         private static readonly Vector2[] NoPoints = new Vector2[0];
+        private readonly List<GroundCopy> _copies = new List<GroundCopy>();
+        private readonly List<PaintOutline> _outlines = new List<PaintOutline>();
+        private readonly PaintPinView _pin = new PaintPinView();
 
         private readonly World _world;
         private readonly PaintToolPreview _preview;
         private readonly List<Vector2Int> _cells = new List<Vector2Int>();
         private readonly Vector2[] _dotCenter = new Vector2[1];
         private Vector2Int _dotCell = Nowhere;
+        // Le rond du pinceau sous le pointeur, au milieu de sa maille : ce qu'un clic peint ou gomme.
+        private GroundShape _dot;
         private bool _cellsShown;
 
         public PaintAim(World world, PaintToolPreview preview)
@@ -32,10 +37,13 @@ namespace Diciela.Controls
             _preview = preview;
         }
 
-        /// <summary>Le rond du pinceau sous le pointeur, au milieu de sa maille : ce qu'un clic peint ou gomme.</summary>
-        public GroundShape Dot { get; private set; }
-
         public PaintAnswer Answer { get; private set; } = PaintAnswer.Ok;
+
+        /// <summary>Ce que le geste ferait, avec ses copies par symétrie : la forme vérifiée, celle qui partira.</summary>
+        public GroundShape Checked { get; private set; }
+
+        /// <summary>Les copies de la symétrie, la forme elle-même la première.</summary>
+        public IReadOnlyList<GroundCopy> Copies => _copies;
         public PlazaMark Hovered { get; private set; }
 
         /// <summary>Vrai tant que la réponse n'a pas été redemandée depuis le dernier changement.</summary>
@@ -62,26 +70,25 @@ namespace Diciela.Controls
             PaintToolMode mode = tool.Mode;
             float radius = tool.Options.BrushRadius;
             _preview.ShowHandles(_world.Map.Relief, drawing.IsPointed ? drawing.Points : NoPoints);
+            _pin.Show(_preview, _world.Map.Relief, tool.Options);
+            PaintCopies.Fill(tool.Options, _copies);
             if (mode == PaintToolMode.CartSpot)
             {
                 ShowMark(aim, tool.Options.HeadingDegrees);
                 return;
             }
-            if (!drawing.IsDrawing && mode == PaintToolMode.Shape)
-            {
-                Hide();
-                return;
-            }
-            GroundShape shape = drawing.IsDrawing ? drawing.Shape : DotAt(aim, radius);
+            GroundShape shape = drawing.IsDrawing ? drawing.Shape : mode == PaintToolMode.Shape ? null : DotAt(aim, radius);
             if (IsStale)
             {
                 IsStale = false;
                 Hovered = null;
-                Answer = Check(shape, mode == PaintToolMode.Eraser, tool.Inks, tool.Entry.Scope);
+                Checked = PaintCopies.Apply(shape, _copies);
+                Answer = Check(Checked, mode == PaintToolMode.Eraser, tool.Inks, tool.Entry.Scope);
                 ShowCells(Answer.IsOk);
             }
-            _preview.ShowOutline(_world.Map.Relief, Outline(mode, aim, radius, drawing),
-                Answer.IsOk || Answer.ChangesNothing);
+            _outlines.Clear();
+            _outlines.Add(Outline(mode, aim, radius, drawing));
+            _preview.ShowOutlines(_world.Map.Relief, _outlines, Answer.IsOk || Answer.ChangesNothing);
         }
 
         /// <summary>Plus rien n'est visé : l'aperçu se cache.</summary>
@@ -111,8 +118,15 @@ namespace Diciela.Controls
                     Hovered = plaza.Marks[i];
             }
             Answer = Hovered != null ? PaintAnswer.Ok : PaintAnswer.Of(plaza.CheckMark(aim, headingDegrees));
-            RotatedRect footprint = Hovered != null ? Hovered.Footprint : plaza.MarkFootprint(aim, headingDegrees);
-            _preview.ShowOutline(_world.Map.Relief, PaintOutline.Mark(footprint),
+            _outlines.Clear();
+            if (Hovered != null)
+                _outlines.Add(PaintOutline.Mark(Hovered.Footprint));
+            else
+            {
+                foreach (GroundCopy copy in _copies)
+                    _outlines.Add(PaintOutline.Mark(plaza.MarkFootprint(copy.Apply(aim), copy.HeadingOf(headingDegrees))));
+            }
+            _preview.ShowOutlines(_world.Map.Relief, _outlines,
                 Hovered == null && Answer.IsOk);
         }
 
@@ -137,13 +151,13 @@ namespace Diciela.Controls
         private GroundShape DotAt(Vector2 aim, float radius)
         {
             Vector2Int cell = _world.Grid.CellOf(aim);
-            if (cell == _dotCell && Dot != null)
-                return Dot;
+            if (cell == _dotCell && _dot != null)
+                return _dot;
             _dotCell = cell;
             _dotCenter[0] = _world.Grid.CellCenter(cell);
-            Dot = new GroundStroke(_dotCenter, radius);
+            _dot = new GroundStroke(_dotCenter, radius);
             IsStale = true;
-            return Dot;
+            return _dot;
         }
 
         private void ShowCells(bool allowed)

@@ -79,7 +79,7 @@ namespace Diciela.Tests.PlayMode
             PaintTool plaza = _test.Plaza;
             plaza.Take();
             plaza.Choose(PaintToolMode.Shape);
-            plaza.Choose(PaintShape.Polygon);
+            plaza.Options.Choose(PaintShape.Polygon);
             Click(plaza, -3f, -3f);
             Click(plaza, 3f, -3f);
             Click(plaza, 3f, 3f);
@@ -100,7 +100,7 @@ namespace Diciela.Tests.PlayMode
             PaintTool paths = _test.Paths;
             paths.Take();
             paths.Choose(PaintToolMode.Trace);
-            paths.Choose(style);
+            paths.Options.Choose(style);
             Click(paths, -6f, 0f);
             Click(paths, 0f, 4f);
             Click(paths, 6f, 0f);

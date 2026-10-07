@@ -41,12 +41,12 @@ namespace Diciela.EditorTools
                 return;
             AlbumMenu.After(CameraSeconds, () =>
             {
-                tool.Choose(PaintShape.Disc);
+                tool.Options.Choose(PaintShape.Disc);
                 Draw(tool, world, camera, PaintToolMode.Shape, frame.At(Vector2.zero),
                     frame.At(new Vector2(DiscRadius, 0f)));
                 AlbumMenu.After(OrderSeconds, () =>
                 {
-                    tool.Choose(PaintShape.Box);
+                    tool.Options.Choose(PaintShape.Box);
                     Draw(tool, world, camera, PaintToolMode.Shape, frame.At(BoxFrom), frame.At(BoxTo));
                     AlbumMenu.After(OrderSeconds, () =>
                     {
@@ -66,7 +66,7 @@ namespace Diciela.EditorTools
             AlbumMenu.After(CameraSeconds, () =>
             {
                 tool.Choose(PaintToolMode.Shape);
-                tool.Choose(PaintShape.Disc);
+                tool.Options.Choose(PaintShape.Disc);
                 tool.BeginDrawing(OnScreen(world, camera, frame.At(Vector2.zero)));
                 tool.AimAt(OnScreen(world, camera, frame.At(new Vector2(DiscRadius * 2f, 0f))));
                 Debug.Log("DICIELA : mise en scène de l'album : un disque de " + DiscRadius * 2f + " m, " + tool.Answer + ".");

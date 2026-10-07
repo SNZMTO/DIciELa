@@ -10,6 +10,9 @@ namespace Diciela.Simulation.Land
     /// </summary>
     public abstract class GroundShape
     {
+        /// <summary>Cette forme, copiée par symétrie (décision 216).</summary>
+        public abstract GroundShape Copied(GroundCopy copy);
+
         /// <summary>Ajoute à cette liste les mailles du maillage dont le milieu est dans la forme, chacune une fois.</summary>
         internal abstract void CoverCells(NavGrid grid, List<Vector2Int> cells);
 

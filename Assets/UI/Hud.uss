@@ -220,6 +220,11 @@
     justify-content: center;
 }
 
+.place-option-nombre {
+    width: 36px;
+    height: 32px;
+}
+
 .place-valeurs {
     flex-direction: row;
     justify-content: center;
@@ -260,6 +265,22 @@
 
 .place-style-curved {
     background-image: url("Icones/courbe.asset");
+}
+
+.place-symetrie-none {
+    background-image: url("Icones/sans-symetrie.asset");
+}
+
+.place-symetrie-mirror {
+    background-image: url("Icones/miroir.asset");
+}
+
+.place-symetrie-doublemirror {
+    background-image: url("Icones/double-miroir.asset");
+}
+
+.place-symetrie-star {
+    background-image: url("Icones/etoile.asset");
 }
 
 .place-icone-cartspot {

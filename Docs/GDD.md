@@ -498,9 +498,11 @@
   tous, en segments droits ou en courbe, de la largeur du pinceau, et l'on ajuste ses points en les glissant avant de le
   valider ; les formes : le cercle (appui au milieu, on tire le rayon), le rectangle (d'un coin à l'autre, ses côtés
   tournés comme la caméra, au cran de rotation) et le polygone (coin par coin, comme le marché de Manor Lords se trace,
-  droit ou arrondi) ; et la place de charrette. Tout se trace aussi en symétrie : aucune, en miroir, en double miroir,
-  ou en étoile autour d'un centre, une épingle qu'on glisse où l'on veut ; ce que l'outil trace, gomme ou pose se
-  recopie, les places de charrette comprises, tant qu'il en reste à poser.
+  droit ou arrondi) ; et la place de charrette. Tout se trace aussi en symétrie (décision 219) : aucune ; en miroir, par
+  un axe ; en double miroir, par deux axes en croix ; en étoile, tourné à parts égales ; autour d'un centre, une épingle
+  qu'on prend et glisse où l'on veut, et qui se voit avec ses axes. Ce que l'outil trace, gomme ou pose se recopie : une
+  forme et ses copies ne font qu'une, qui se vérifie et part d'un bloc (un sol, en un seul chantier) ; les places de
+  charrette se recopient aussi, chacune la sienne, son cap retourné par un miroir, tant qu'il en reste à poser.
 - **Règle.** On pave la Place à son outil : il y trace la zone, ou y pose un sol, au choix. Ses sols sont ceux des
   chemins (voir 9), posés seulement dans la zone, chacun un chantier ; un sol choisi, la gomme efface le sol, dans la
   zone seulement ; la zone choisie, elle gomme la zone. La zone et son sol sont deux choses : tracer, agrandir ou gommer
@@ -511,9 +513,9 @@
   s'écrit, comme à la pose ; une forme rouge ne part pas. Un clic droit ou Échap abandonnent le geste en cours ; sans
   geste, ils lâchent l'outil. Une forme partie est faite : pour la changer, on la gomme et on la retrace.
 - **Défaut.** Le pinceau et la gomme : 2 m de rayon au départ, de 0,5 à 6 m, par crans de 0,5 (Ctrl + molette).
-- **Défaut.** L'étoile : de 3 à 8 copies, 4 au départ. L'épingle de symétrie : au départ, au milieu de la zone de la
-  Place, sinon au sol sous le milieu de l'écran ; ses axes suivent les côtés de la caméra, au cran de rotation, et R
-  les tourne (hors du mode place de charrette, où R tourne la place).
+- **Défaut.** L'étoile : de 3 à 8 branches, 4 au départ. L'épingle de symétrie : au départ, au milieu de la zone de la
+  Place, sinon au sol sous le milieu de l'écran ; ses axes suivent les côtés de la caméra, au cran de rotation, et R les
+  tourne (hors du mode place de charrette, où R tourne la place).
 - **Défaut.** Sa superficie est au plus de 450 m² au départ, et de 150 m² de plus par niveau. Trois niveaux ; chacun
   ajoute une place de charrette, du charme et un visiteur par jour. Au départ, une seule zone, d'un seul tenant ;
   plusieurs, plus tard, avec les niveaux.
@@ -521,7 +523,7 @@
   construction, un arbre, un rocher) y fait un trou, qui reste quand on l'enlève. Une forme qui la ferait dépasser sa
   superficie, ou la couperait en morceaux, ne se trace pas du tout ; la gomme ne passe pas sous une place de charrette.
 - **À toi.** Combien de zones à quel niveau. Mes choix de la 216, à retourner : une forme partie ne s'ajuste plus ;
-  l'épingle, R qui tourne ses axes, les 4 copies de l'étoile ; l'aimant des places de charrette et Ctrl qui le coupe.
+  l'épingle, R qui tourne ses axes, les 4 branches de l'étoile ; l'aimant des places de charrette et Ctrl qui le coupe.
 - **Règle.** L'étal, ce sont des charrettes, comme les étals qui s'installent sur la place du marché de Manor Lords.
   Chaque entrepôt, le campement compris, a sa charrette. La Place a des places de charrette : des marques que le joueur
   pose en mode construction, dans la zone, comme le point d'attelage des caravanes de RimWorld ; chacune appelle la
@@ -812,14 +814,15 @@
   la prendre met en main les outils de la zone et de ses places de charrette. L'onglet des Métiers paraît donc dès le
   campement installé, et les idées des premiers habitants y ajoutent leurs cartes. Faute de modèle, sa carte montre
   une icône.
-- **Règle.** L'outil de la Place en main, une barre étroite s'ouvre en bas au centre, à la place du panneau
-  Construire : au-dessus de ses modes, ce qu'il pose, la zone (au départ) ou l'un des sols que la ville sait faire,
-  chacun sa vignette, celui qui est pris enfoncé ; ses modes, en familles (pinceau, gomme, tracé, forme, place de
-  charrette), chacun son icône et sa touche, celui qui est pris enfoncé, son nom et son usage au survol ; dessous, les
-  options du mode pris (la taille du pinceau ; droit ou en courbe ; cercle, rectangle ou polygone ; la symétrie et le
-  nombre de l'étoile), puis, dans des creux de lin, la superficie de la Place sur celle de son niveau (« 312 / 450 m² »)
-  et ses places de charrette posées sur celles qu'elle permet. Les touches des cartes prennent les modes tant que le
-  panneau est fermé. Elle tient entre l'astuce et l'icône des outils dès 1280 × 720.
+- **Règle.** L'outil de la Place en main, une barre étroite s'ouvre en bas au centre, à la place du panneau Construire :
+  au-dessus de ses modes, ce qu'il pose, la zone (au départ) ou l'un des sols que la ville sait faire, chacun sa
+  vignette, celui qui est pris enfoncé ; ses modes, en familles (pinceau, gomme, tracé, forme, place de charrette),
+  chacun son icône et sa touche, celui qui est pris enfoncé, son nom et son usage au survol ; dessous, les options du
+  mode pris (la taille du pinceau ; droit ou en courbe ; cercle, rectangle ou polygone), puis les symétries, dans tous
+  les modes, chacune son icône, et, l'étoile prise, ses branches, de 3 à 8, en petits feutres sur leur rangée ; enfin,
+  dans des creux de lin, la superficie de la Place sur celle de son niveau (« 312 / 450 m² ») et ses places de charrette
+  posées sur celles qu'elle permet. Les touches des cartes prennent les modes tant que le panneau est fermé. Elle tient
+  entre l'astuce et l'icône des outils dès 1280 × 720.
 - **Défaut.** Les modes de l'outil de la Place : les touches 1 à 5, dans l'ordre de la barre. La taille du pinceau :
   Ctrl + molette (la molette seule zoome).
 - **Règle.** L'outil Chemins en main, la même barre s'ouvre : au-dessus de ses modes (pinceau, gomme, tracé, forme, et
@@ -837,7 +840,7 @@
 - **Règle.** La zone de la Place et ses places de charrette se voient en mode construction : le panneau Construire
   ouvert, ou en main une construction, l'outil de la Place, Chemins ou Déplacer. La zone : un voile léger sur le sol et son
   contour ; une place de charrette : un cadre blanc, une pointe vers l'avant de la charrette.
-- **À toi.** Les icônes des outils de sol (la carte de la Place, leurs modes et leurs options, l'épingle de symétrie, la
+- **À toi.** Les icônes des outils de sol (la carte de la Place, leurs modes et leurs options, symétries comprises, la
   vignette de la zone), pour l'instant des remplaçants simples. La part de texture et l'opacité du fantôme d'un sol :
   des réglages de son matériau.
 - **À toi.** L'icône des Métiers : en attendant, celle de « bâtir ». Les autres questions ouvertes du HUD. Ma reco :
