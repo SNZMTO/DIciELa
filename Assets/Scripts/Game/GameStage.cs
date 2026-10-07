@@ -162,13 +162,13 @@ namespace Diciela.Game
             _cameraRig.Show(world.Map);
             _cameraRig.Rotate(180f);
             _cameraRig.PullBack();
-            _tools = new TownTools(world, _cameraRig.Camera, _placementPreview, _placeToolPreview, placement, _natureViews,
-                _structureViews);
+            _tools = new TownTools(world, catalog, _cameraRig.Camera, _placementPreview, _placeToolPreview, placement,
+                _natureViews, _structureViews);
             var document = _buildBar.GetComponent<UnityEngine.UIElements.UIDocument>();
             _tooltips = new Tooltips(document);
             var reasons = new ReasonBubble(document);
             _buildBar.Show(catalog, texts, _tools.Placement, _tools.Place, world, _toolControls, reasons);
-            _toolWheel.Show(texts, _toolControls, _tools.Clearing, _buildBar, _tools.Move, _tooltips);
+            _toolWheel.Show(texts, _toolControls, _tools.Clearing, _buildBar, _tools.Move, _tools.Paths, _tooltips);
             _dayBoard.Show(world.Clock, texts, _tooltips);
             _stockPennants.Show(world, catalog, texts, _tooltips);
             _placeSheet.Show(world, texts);
@@ -182,9 +182,9 @@ namespace Diciela.Game
             _chooseControls.Bind(_tools.Choose, _tools.Hand, hud);
             _place = new TownPlace(world, texts, _tools, _buildBar, _placeZoneView, _placeControls,
                 new PlaceBar(document, _tooltips, reasons), _toolControls, hud);
-            _toolControls.Bind(_toolWheel, new CardKeys(_buildBar, _buildBar, _tools.Place));
+            _toolControls.Bind(_toolWheel, new CardKeys(_buildBar, _buildBar, _tools.Place, _tools.Paths));
             _escapeControls.Bind(_placeSheet, _toolWheel, _buildBar, _tools.Placement, _tools.Clearing, _tools.Move,
-                _tools.Place);
+                _tools.Place, _tools.Paths);
         }
     }
 }

@@ -838,6 +838,16 @@
                     "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
+                },
+                {
+                    "name": "Paths",
+                    "type": "Button",
+                    "id": "232ac798-0c9a-49c3-8db5-3b8eb4f123d6",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -992,6 +1002,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "421be387-a193-4f19-9968-5cbc77bd13c8",
+                    "path": "<Keyboard>/#(c)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Paths",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

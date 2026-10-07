@@ -38,7 +38,7 @@ namespace Diciela.Tests.PlayMode
             TestWorld.Fill(_controls, "_gestures", gestures);
 #endif
             holder.SetActive(true);
-            _controls.Bind(_test.Place, new TestInterface(new Rect(0f, 0f, Screen.width, Screen.height * 0.2f)));
+            _controls.Bind(new TestInterface(new Rect(0f, 0f, Screen.width, Screen.height * 0.2f)), _test.Place);
             _test.Place.Take();
         }
 
@@ -85,7 +85,7 @@ namespace Diciela.Tests.PlayMode
             yield return Played();
             yield return PointAt(Ground(4f, 0f));
             Assert.IsTrue(Tool.IsDrawing, "On trace pendant qu'on glisse.");
-            Assert.AreEqual(PlaceResult.Ok, Tool.Result, "L'aperçu dit qu'il se trace.");
+            Assert.AreEqual(PaintAnswer.Ok, Tool.Answer, "L'aperçu dit qu'il se trace.");
             Release(Mouse.leftButton);
             yield return Played();
             Assert.IsFalse(Tool.IsDrawing);
@@ -103,7 +103,7 @@ namespace Diciela.Tests.PlayMode
             Press(Mouse.leftButton);
             yield return Played();
             yield return PointAt(Ground(6f, 0f));
-            Assert.AreEqual(PlaceResult.TooLarge, Tool.Result, "113 m², au-delà des 100 de la Place : rouge.");
+            Assert.AreEqual(PaintAnswer.Of(PlaceResult.TooLarge), Tool.Answer, "113 m², au-delà des 100 de la Place : rouge.");
             Release(Mouse.leftButton);
             yield return Played();
             _test.World.Step();
@@ -133,7 +133,7 @@ namespace Diciela.Tests.PlayMode
             _test.World.Step();
             Tool.Choose(PlaceToolMode.CartSpot);
             yield return PointAt(Ground(0f, 0f));
-            Assert.AreEqual(PlaceResult.Ok, Tool.Result);
+            Assert.AreEqual(PaintAnswer.Ok, Tool.Answer);
             yield return Click(Mouse.leftButton);
             _test.World.Step();
             Assert.AreEqual(1, Zone.Marks.Count, "Le clic pose une place de charrette.");

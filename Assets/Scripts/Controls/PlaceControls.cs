@@ -5,7 +5,8 @@ using UnityEngine.InputSystem;
 namespace Diciela.Controls
 {
     /// <summary>
-    /// Les gestes de l'outil de la Place (décision 206 ; SAVOIR, 2.8) : le pointeur vise ; un glisser du bouton gauche
+    /// Les gestes des outils de sol (décisions 206 et 210 ; SAVOIR, 2.8), l'outil de la Place et l'outil Chemins, pour
+    /// celui des deux qui est en main : le pointeur vise ; un glisser du bouton gauche
     /// trace (un trait, un disque, un rectangle), et le relâcher l'envoie ; un clic peint un rond, pose ou retire une
     /// place de charrette ; R la tourne, bref d'un cran, tenu au degré (RotateKey) ; Ctrl + molette change la taille du
     /// pinceau (la caméra laisse alors la molette) ; un clic droit bref abandonne le geste, ou pose l'outil de côté (Échap
@@ -44,13 +45,28 @@ namespace Diciela.Controls
         private DragGesture _paintGesture;
         private DragGesture _secondaryGesture;
 
-        /// <summary>L'outil que ces gestes pilotent ; null tant qu'aucun monde n'est né.</summary>
-        public PlaceTool Tool { get; private set; }
+        private PlaceTool[] _tools = System.Array.Empty<PlaceTool>();
 
-        /// <summary>Relie les gestes à l'outil de la Place du monde qui vient de naître, et à l'interface ; null les rend muets.</summary>
-        public void Bind(PlaceTool tool, IInterfaceArea interfaceArea)
+        /// <summary>L'outil en main parmi ceux que ces gestes pilotent ; null si aucun ne l'est.</summary>
+        public PlaceTool Tool
         {
-            Tool = tool;
+            get
+            {
+                for (int i = 0; i < _tools.Length; i++)
+                {
+                    if (_tools[i].IsActive)
+                        return _tools[i];
+                }
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Relie les gestes aux outils de sol du monde qui vient de naître, et à l'interface ; sans outil, ils sont muets.
+        /// </summary>
+        public void Bind(IInterfaceArea interfaceArea, params PlaceTool[] tools)
+        {
+            _tools = tools ?? System.Array.Empty<PlaceTool>();
             _interfaceArea = interfaceArea;
             ResetGestures();
         }
@@ -84,7 +100,8 @@ namespace Diciela.Controls
 
         private void LateUpdate()
         {
-            if (Tool == null || !Tool.IsActive)
+            PlaceTool tool = Tool;
+            if (tool == null)
             {
                 // Un appui commencé avant de prendre l'outil ne trace rien, même relâché l'outil en main.
                 _rotateKey.Reset(_rotate.IsPressed());
@@ -100,33 +117,33 @@ namespace Diciela.Controls
             bool canAim = _rotateKey.Update(_rotate.IsPressed(), pointer, _look.ReadValue<Vector2>(), threshold,
                 out float turnPixels, out bool step);
             if (turnPixels != 0f)
-                Tool.RotateBy(turnPixels * _settings.RotationDegreesPerPixel);
+                tool.RotateBy(turnPixels * _settings.RotationDegreesPerPixel);
             if (step)
-                Tool.RotateStep();
+                tool.RotateStep();
 
             float size = _size.ReadValue<float>();
             if (size != 0f && !onInterface)
-                Tool.ResizeBrush(size > 0f ? 1 : -1);
+                tool.ResizeBrush(size > 0f ? 1 : -1);
 
             // Pendant un geste, on vise même au-dessus de l'interface : le trait suit le pointeur jusqu'au relâchement.
             if (canAim)
             {
-                if (onInterface && !Tool.IsDrawing)
-                    Tool.LoseAim();
+                if (onInterface && !tool.IsDrawing)
+                    tool.LoseAim();
                 else
-                    Tool.AimAt(pointer);
+                    tool.AimAt(pointer);
             }
 
             if (_paintGesture.Update(_paint.IsPressed(), pointer, threshold, onInterface))
-                Tool.BeginDrawing(_paintGesture.Start);
-            if (Tool.IsDrawing && !_paintGesture.IsDragging)
-                Tool.EndDrawing();
+                tool.BeginDrawing(_paintGesture.Start);
+            if (tool.IsDrawing && !_paintGesture.IsDragging)
+                tool.EndDrawing();
             if (_paintGesture.Clicked)
-                Tool.Click();
+                tool.Click();
 
             _secondaryGesture.Update(_secondary.IsPressed(), pointer, threshold, onInterface);
             if (_secondaryGesture.Clicked)
-                Tool.Cancel();
+                tool.Cancel();
         }
 
         private void ResetGestures()

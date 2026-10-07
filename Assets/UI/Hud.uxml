@@ -109,6 +109,12 @@
                         <ui:Label name="roue-deplacer-touche" class="touche-texte" picking-mode="Ignore" />
                     </Diciela.UI.Facet>
                 </Diciela.UI.FeltButton>
+                <Diciela.UI.FeltButton name="roue-chemins" class="feutre sable pan-10 roue-outil roue-gauche" picking-mode="Ignore">
+                    <ui:VisualElement class="roue-icone chemins" picking-mode="Ignore" />
+                    <Diciela.UI.Facet class="creux pan-4 touche" picking-mode="Ignore">
+                        <ui:Label name="roue-chemins-touche" class="touche-texte" picking-mode="Ignore" />
+                    </Diciela.UI.Facet>
+                </Diciela.UI.FeltButton>
             </ui:VisualElement>
         </ui:VisualElement>
         <Diciela.UI.Facet name="infobulle" class="bulle infobulle bloc-cache" picking-mode="Ignore">

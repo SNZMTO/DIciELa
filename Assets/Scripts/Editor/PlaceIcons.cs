@@ -6,7 +6,8 @@ namespace Diciela.EditorTools
     /// <summary>
     /// Les icônes de la Place (décision 206), à l'encre sur 20 unités : sa carte (une zone, son contour et deux places de
     /// charrette), et les modes de son outil : le pinceau, la gomme, le cercle, le rectangle, la place de charrette (un
-    /// cadre, sa pointe vers l'avant). Des remplaçants simples : la maquette n'en a pas. Le menu des images de
+    /// cadre, sa pointe vers l'avant) ; et l'outil Chemins (décision 209), qui partage sa barre : un chemin qui serpente,
+    /// en pointillés. Des remplaçants simples : la maquette n'en a pas. Le menu des images de
     /// l'interface les génère avec les autres (InterfaceIcons).
     /// </summary>
     internal static class PlaceIcons
@@ -38,6 +39,12 @@ namespace Diciela.EditorTools
                 Polygon(Ink, 1f, 10f, 4.6f, 12.8f, 8.4f, 7.2f, 8.4f)
             };
             yield return new InterfaceIcons.Icon("place-charrette", Size, spot.ToArray());
+            yield return new InterfaceIcons.Icon("chemins", Size, new[]
+            {
+                Bar(5f, 18f, 7f, 12.5f, 4.5f, 0.45f), Bar(7f, 12.5f, 12.5f, 9f, 4.5f, 0.45f),
+                Bar(12.5f, 9f, 15f, 2.5f, 4.5f, 0.45f), Bar(5.8f, 15.6f, 6.3f, 14.2f, 1.2f),
+                Bar(9.1f, 11.3f, 10.5f, 10.4f, 1.2f), Bar(13.6f, 6.6f, 14.1f, 5.2f, 1.2f)
+            });
         }
 
         // Une zone de forme libre, voilée, son contour, et deux places de charrette côte à côte.
