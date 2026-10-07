@@ -39,6 +39,8 @@ MonoBehaviour:
   _startStarBranches: 4
   _starBranchesRange: {x: 3, y: 8}
   _pinAxisMeters: 3
+  _cartMagnetMeters: 1.5
+  _cartSpotGapMeters: 0.8
   _zoneVeilColor: {r: 1, g: 0.97, b: 0.9, a: 0.22}
   _outlineColor: {r: 1, g: 1, b: 1, a: 0.85}
   _outlineWidthMeters: 0.12

@@ -5,13 +5,14 @@ using UnityEngine.InputSystem;
 namespace Diciela.Controls
 {
     /// <summary>
-    /// Les gestes des outils de sol (décisions 206 et 210 ; SAVOIR, 2.8), l'outil de la Place et l'outil Chemins, pour
-    /// celui des deux qui est en main : le pointeur vise ; un glisser du bouton gauche
-    /// trace (un trait, un disque, un rectangle), et le relâcher l'envoie ; un clic peint un rond, pose ou retire une
-    /// place de charrette ; R la tourne, bref d'un cran, tenu au degré (RotateKey) ; Ctrl + molette change la taille du
-    /// pinceau (la caméra laisse alors la molette) ; un clic droit bref abandonne le geste, ou pose l'outil de côté (Échap
-    /// aussi, par son geste à lui). Un appui qui commence sur l'interface lui appartient. Il lit les actions et appelle
-    /// l'outil, rien d'autre ; il passe après la caméra (ordre 100), comme la pose.
+    /// Les gestes des outils de sol (décisions 206, 210 et 220 ; SAVOIR, 2.8), l'outil de la Place et l'outil Chemins,
+    /// pour celui des deux qui est en main : le pointeur vise ; un glisser du bouton gauche trace (un trait, un disque,
+    /// un rectangle), et le relâcher l'envoie ; un clic peint un rond, pose ou retire une place de charrette, aimantée
+    /// à côté d'une place posée (Ctrl tenu coupe l'aimant) ; R la tourne, bref d'un cran, tenu au degré (RotateKey) ;
+    /// Ctrl + molette change la taille du pinceau (la caméra laisse alors la molette) ; un clic droit bref abandonne le
+    /// geste, ou pose l'outil de côté (Échap aussi, par son geste à lui). Un appui qui commence sur l'interface lui
+    /// appartient. Il lit les actions et appelle l'outil, rien d'autre ; il passe après la caméra (ordre 100), comme la
+    /// pose.
     /// </summary>
     [DefaultExecutionOrder(100)]
     public sealed class PaintControls : MonoBehaviour
@@ -23,6 +24,7 @@ namespace Diciela.Controls
         public const string SecondaryAction = "Secondary";
         public const string PointerAction = "Pointer";
         public const string LookAction = "Look";
+        public const string FreeAction = "Free";
 
         [Tooltip("L'asset d'actions du jeu (Assets/Input).")]
         [SerializeField] private InputActionAsset _actions;
@@ -41,6 +43,7 @@ namespace Diciela.Controls
         private InputAction _secondary;
         private InputAction _pointer;
         private InputAction _look;
+        private InputAction _free;
         private RotateKey _rotateKey;
         private DragGesture _paintGesture;
         private DragGesture _secondaryGesture;
@@ -87,6 +90,7 @@ namespace Diciela.Controls
             _secondary = _map.FindAction(SecondaryAction, true);
             _pointer = _map.FindAction(PointerAction, true);
             _look = _map.FindAction(LookAction, true);
+            _free = _map.FindAction(FreeAction, true);
             _map.Enable();
         }
 
@@ -131,7 +135,7 @@ namespace Diciela.Controls
                 if (onInterface && !tool.IsDrawing)
                     tool.LoseAim();
                 else
-                    tool.AimAt(pointer);
+                    tool.AimAt(pointer, !_free.IsPressed());
             }
 
             if (_paintGesture.Update(_paint.IsPressed(), pointer, threshold, onInterface))

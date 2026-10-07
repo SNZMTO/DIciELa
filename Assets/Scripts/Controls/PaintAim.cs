@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Diciela.Data;
 using Diciela.Simulation;
 using Diciela.Simulation.Core;
 using Diciela.Simulation.Land;
@@ -9,10 +10,10 @@ namespace Diciela.Controls
 {
     /// <summary>
     /// Ce que vise un outil de sol, et ce qu'en disent la Place ou les sols, selon son encre (décisions 206 et 210) :
-    /// la réponse de la même fonction que l'ordre, les mailles que le geste changerait, la place de charrette qu'un
-    /// clic retirerait ; il le montre par l'aperçu. La vérification ne se refait que si quelque chose a changé (la
-    /// forme, la maille visée, la Place, le mode) : le rond du pinceau au repos se refait quand le pointeur change de
-    /// maille, pas à chaque image.
+    /// la réponse de la même fonction que l'ordre, les mailles que le geste changerait ; au mode place de charrette, ce
+    /// qu'en dit sa visée (PaintSpotAim) ; il le montre par l'aperçu. La vérification ne se refait que si quelque chose
+    /// a changé (la forme, la maille visée, la Place, le mode) : le rond du pinceau au repos se refait quand le
+    /// pointeur change de maille, pas à chaque image.
     /// </summary>
     internal sealed class PaintAim
     {
@@ -31,10 +32,11 @@ namespace Diciela.Controls
         private GroundShape _dot;
         private bool _cellsShown;
 
-        public PaintAim(World world, PaintToolPreview preview)
+        public PaintAim(World world, PaintToolPreview preview, PlacementSettings settings)
         {
             _world = world;
             _preview = preview;
+            Spot = new PaintSpotAim(world, settings);
         }
 
         public PaintAnswer Answer { get; private set; } = PaintAnswer.Ok;
@@ -45,6 +47,9 @@ namespace Diciela.Controls
         /// <summary>Les copies de la symétrie, la forme elle-même la première.</summary>
         public IReadOnlyList<GroundCopy> Copies => _copies;
         public PlazaMark Hovered { get; private set; }
+
+        /// <summary>Au mode place de charrette, la place visée ou celle qu'un clic poserait, aimantée ou non.</summary>
+        public PaintSpotAim Spot { get; }
 
         /// <summary>Vrai tant que la réponse n'a pas été redemandée depuis le dernier changement.</summary>
         public bool IsStale { get; private set; } = true;
@@ -63,18 +68,19 @@ namespace Diciela.Controls
         }
 
         /// <summary>
-        /// Montre ce que donnerait cet outil, dans son mode et avec son encre, visant ce point, avec ce geste.
+        /// Montre ce que donnerait cet outil, dans son mode et avec son encre, là où vise ce pointeur, avec ce geste.
         /// </summary>
-        public void Show(PaintTool tool, Vector2 aim, PaintDrawing drawing)
+        public void Show(PaintTool tool, PaintPointer pointer, PaintDrawing drawing)
         {
             PaintToolMode mode = tool.Mode;
+            Vector2 aim = pointer.Ground;
             float radius = tool.Options.BrushRadius;
             _preview.ShowHandles(_world.Map.Relief, drawing.IsPointed ? drawing.Points : NoPoints);
             _pin.Show(_preview, _world.Map.Relief, tool.Options);
             PaintCopies.Fill(tool.Options, _copies);
             if (mode == PaintToolMode.CartSpot)
             {
-                ShowMark(aim, tool.Options.HeadingDegrees);
+                ShowMark(aim, tool.Options.HeadingDegrees, pointer.Magnet);
                 return;
             }
             GroundShape shape = drawing.IsDrawing ? drawing.Shape : mode == PaintToolMode.Shape ? null : DotAt(aim, radius);
@@ -101,8 +107,9 @@ namespace Diciela.Controls
             IsStale = true;
         }
 
-        // Une place de charrette : celle qu'on vise, qu'un clic retirerait, sinon celle qu'un clic poserait ici.
-        private void ShowMark(Vector2 aim, float headingDegrees)
+        // Une place de charrette : celle qu'on vise, qu'un clic retirerait, sinon celle qu'un clic poserait, aimantée ou
+        // non, avec ses copies.
+        private void ShowMark(Vector2 aim, float headingDegrees, bool magnet)
         {
             IsStale = false;
             if (_cellsShown)
@@ -110,24 +117,10 @@ namespace Diciela.Controls
                 _cells.Clear();
                 ShowCells(true);
             }
-            PlazaZone plaza = _world.Plaza;
-            Hovered = null;
-            for (int i = 0; i < plaza.Marks.Count && Hovered == null; i++)
-            {
-                if (plaza.Marks[i].Footprint.Overlaps(aim, 0f))
-                    Hovered = plaza.Marks[i];
-            }
-            Answer = Hovered != null ? PaintAnswer.Ok : PaintAnswer.Of(plaza.CheckMark(aim, headingDegrees));
-            _outlines.Clear();
-            if (Hovered != null)
-                _outlines.Add(PaintOutline.Mark(Hovered.Footprint));
-            else
-            {
-                foreach (GroundCopy copy in _copies)
-                    _outlines.Add(PaintOutline.Mark(plaza.MarkFootprint(copy.Apply(aim), copy.HeadingOf(headingDegrees))));
-            }
-            _preview.ShowOutlines(_world.Map.Relief, _outlines,
-                Hovered == null && Answer.IsOk);
+            Spot.Aim(aim, headingDegrees, magnet, _copies, _outlines);
+            Hovered = Spot.Hovered;
+            Answer = Spot.Answer;
+            _preview.ShowOutlines(_world.Map.Relief, _outlines, Hovered == null && Answer.IsOk);
         }
 
         // Ce que la Place ou les sols disent de cette forme, selon ce que pose l'outil ; les mailles changées dans _cells.
