@@ -436,10 +436,10 @@
   cercle, le rectangle ; une forme part au relâchement, son aperçu vert ou rouge, et la raison s'écrit. Sa sorte se
   choisit parmi les sols que la ville sait faire, les mêmes que pour la Place (voir 11) : chacun a sa fiche, son
   aspect, son prix, l'idée qui l'apporte et le pas des charrettes. La terre, gratuite, dès le départ ; les pavés avec
-  leur idée ; puis, chacun avec la sienne, les dalles, les carreaux, les briques et la pierre, payés en Pavés, et les
-  planchers, en Planches. On trace partout où l'on marche, la Place comprise. Ce qui se tient là (une construction, un
-  arbre, un rocher, l'eau) y fait un trou, qui reste quand on l'enlève, comme sur la Place ; un sol déjà posé, bâti ou
-  en fantôme, de n'importe quelle sorte, aussi : pour changer un sol, on l'efface d'abord.
+  leur idée ; puis, chacun avec la sienne (voir 13), les dalles, les carreaux, les briques et la pierre, payés en
+  Pavés, et les planchers, en Planches. On trace partout où l'on marche, la Place comprise. Ce qui se tient là (une
+  construction, un arbre, un rocher, l'eau) y fait un trou, qui reste quand on l'enlève, comme sur la Place ; un sol
+  déjà posé, bâti ou en fantôme, de n'importe quelle sorte, aussi : pour changer un sol, on l'efface d'abord.
 - **Règle.** Une forme tracée est un chantier dans la file : un fantôme au sol, que les ouvriers bâtissent à ses
   abords, d'un coup, quand son travail est fait ; un chemin pas encore bâti n'accélère personne. La gomme efface un
   fantôme tout de suite ; un chemin bâti s'efface par un petit chantier, et sert jusqu'à sa fin. Un bâtiment ne se pose
@@ -447,8 +447,6 @@
 - **Défaut.** Tracer : 0,01 h de travail d'un débutant par m² (un chemin de 2 × 15 m : 0,3 h, 9 s) ; effacer : la
   moitié. Le pinceau : 1 m de rayon au départ (un chemin de 2 m de large), de 0,5 à 6 m.
 - **Défaut.** Un pont coûte du Bois.
-- **À toi.** Le déclencheur de l'idée de chaque sol après les pavés. Ma reco : des Pavés taillés pour les sols de
-  pierre (50 pour les dalles, 100 pour les carreaux, les briques et la pierre), 50 Planches sciées pour les planchers.
 - **Règle.** Les piétons marchent partout où rien n'est posé, et sur la Place, par le trajet le plus court ; les charrettes vont
   lentement dans l'herbe, plus vite sur la terre, encore plus vite sur un sol dur (les pavés, et tous les sols après
   eux), et qui en tire une prend le trajet le plus rapide pour elle. Une route est un investissement, jamais une
@@ -625,6 +623,9 @@
 | l'atelier de pierre | 50 Pierres extraites |
 | la route pavée | 20 Pavés taillés |
 | le pont | 10 heures de travail sur les chantiers |
+| les dalles | 50 Pavés taillés |
+| les carreaux, les briques, la pierre | 100 Pavés taillés |
+| les planchers | 50 Planches sciées |
 | l'atelier de tissu | 20 Lin récoltés |
 | la cabane du paysagiste | trois champs sauvages récoltés |
 | le banc | 30 Planches sciées |
@@ -829,7 +830,8 @@
   - la loge des bâtisseurs et l'entrepôt ;
   - les champs, le bûcheron, la carrière, la scierie, l'atelier de tissu, l'atelier de pierre (Pavés et créations en
     pierre), la cabane du paysagiste ;
-  - les chantiers et la réserve, les chemins de terre, les routes pavées, les ponts ;
+  - les chantiers et la réserve ; les sols des chemins et de la Place (terre, pavés, dalles, carreaux, briques, pierre,
+    planchers) ; les ponts ;
   - l'eau : le canal ; une roue à eau, des arbres de transmission et la scierie hydraulique ; l'irrigation ;
   - le carnet d'idées et le premier grand projet, la maison de la Chimère ;
   - les décos : bancs, lanternes, arbres, buissons ;
