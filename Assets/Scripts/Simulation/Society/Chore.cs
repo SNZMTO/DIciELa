@@ -46,7 +46,7 @@ namespace Diciela.Simulation.Society
                 new CarryGesture(services.Offers, load),
                 new BuildGesture(services.Offers),
                 new ClearGesture(services.Clearings, load),
-                new DriveGesture(services.Carts),
+                new DriveGesture(services.Carts, services.Pace, services.Grid),
                 new StockGesture(services.Stalls, load)
             };
         }
@@ -93,7 +93,7 @@ namespace Diciela.Simulation.Society
                 return WalkTo(position) ? ChoreOutcome.Continuing : End(ChoreOutcome.Failed);
 
             WalkOutcome outcome = _walk.IsWalking
-                ? _walk.Advance(ref position, _metersPerStep * _gesture.SpeedFactor)
+                ? _walk.Advance(ref position, _metersPerStep * _gesture.SpeedAt(position))
                 : WalkOutcome.Lost;
             if (outcome == WalkOutcome.Lost)
                 return End(ChoreOutcome.Failed);
@@ -139,7 +139,7 @@ namespace Diciela.Simulation.Society
         {
             ChoreGoal goal = _gesture.Goal;
             if (goal.IsCell)
-                return _walk.TryStart(position, goal.Cell);
+                return _walk.TryStart(position, goal.Cell, _gesture.Mover);
             if (goal.Floor != null)
             {
                 goal.Floor.CopyCells(_cells);

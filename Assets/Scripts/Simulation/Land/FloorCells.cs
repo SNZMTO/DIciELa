@@ -8,8 +8,9 @@ namespace Diciela.Simulation.Land
     /// <summary>
     /// Le sol de chaque maille (décision 209) : son état et sa sorte, la vérité des sols, à côté du maillage, sans rien
     /// changer à où l'on marche. Deux octets par maille ; une sorte prend sa place la première fois qu'elle est tracée.
-    /// Il garde aussi la boîte des mailles changées depuis la dernière fois qu'on l'a prise, pour la vue (SAVOIR, 2.5).
-    /// Seuls les sols l'écrivent.
+    /// Il compte, par sorte et par bloc de 1 m (FloorBlocks), les mailles où elle sert (bâtie, ou qu'on efface), pour le
+    /// pas des charrettes et son estimation, et garde la boîte des mailles changées depuis la dernière fois qu'on l'a
+    /// prise, pour la vue (SAVOIR, 2.5). Seuls les sols l'écrivent.
     /// </summary>
     internal sealed class FloorCells
     {
@@ -18,6 +19,9 @@ namespace Diciela.Simulation.Land
         // Par maille, la place de sa sorte dans _kinds ; 0 : pas de sol.
         private readonly byte[] _kind;
         private readonly List<FloorDefinition> _kinds = new List<FloorDefinition> { null };
+        // Par sorte, le nombre de mailles où elle sert.
+        private readonly int[] _serving = new int[byte.MaxValue + 1];
+        private readonly FloorBlocks _blocks;
         private Vector2Int _changedMin;
         private Vector2Int _changedMax;
         private bool _changed;
@@ -27,7 +31,11 @@ namespace Diciela.Simulation.Land
             _grid = grid ?? throw new ArgumentNullException(nameof(grid));
             _state = new byte[grid.Width * grid.Depth];
             _kind = new byte[grid.Width * grid.Depth];
+            _blocks = new FloorBlocks(grid);
         }
+
+        /// <summary>Où servent les sols, à gros grain : par blocs de 1 m.</summary>
+        public FloorBlocks Blocks => _blocks;
 
         public FloorState StateAt(int index)
         {
@@ -38,6 +46,26 @@ namespace Diciela.Simulation.Land
         public FloorDefinition FloorAt(int index)
         {
             return _kinds[_kind[index]];
+        }
+
+        /// <summary>Le nombre de sortes déjà tracées, l'herbe comprise (la sorte 0).</summary>
+        public int KindCount => _kinds.Count;
+
+        public FloorDefinition Kind(int kind)
+        {
+            return _kinds[kind];
+        }
+
+        /// <summary>La place de la sorte du sol de cette maille s'il sert (bâti, ou qu'on efface) ; sinon 0, l'herbe.</summary>
+        public int ServingKindAt(int index)
+        {
+            return IsServing(_state[index]) ? _kind[index] : 0;
+        }
+
+        /// <summary>Vrai si cette sorte sert sur au moins une maille.</summary>
+        public bool Serves(int kind)
+        {
+            return _serving[kind] > 0;
         }
 
         /// <summary>Ce sol est tracé sur cette maille, en fantôme.</summary>
@@ -51,13 +79,16 @@ namespace Diciela.Simulation.Land
         /// <summary>Le sol de cette maille change d'état, sans changer de sorte : bâti, ou qu'on efface.</summary>
         public void Set(int index, FloorState state)
         {
+            Count(index, -1);
             _state[index] = (byte)state;
+            Count(index, 1);
             Touch(index);
         }
 
         /// <summary>Cette maille n'a plus de sol.</summary>
         public void Clear(int index)
         {
+            Count(index, -1);
             _state[index] = (byte)FloorState.None;
             _kind[index] = 0;
             Touch(index);
@@ -82,6 +113,20 @@ namespace Diciela.Simulation.Land
                 throw new InvalidOperationException("Plus de " + byte.MaxValue + " sortes de sol.");
             _kinds.Add(floor);
             return (byte)(_kinds.Count - 1);
+        }
+
+        // Compte ou décompte cette maille chez sa sorte, si elle y sert.
+        private void Count(int index, int sign)
+        {
+            if (!IsServing(_state[index]))
+                return;
+            _serving[_kind[index]] += sign;
+            _blocks.Count(index, sign);
+        }
+
+        private static bool IsServing(byte state)
+        {
+            return state == (byte)FloorState.Built || state == (byte)FloorState.Erasing;
         }
 
         private void Touch(int index)

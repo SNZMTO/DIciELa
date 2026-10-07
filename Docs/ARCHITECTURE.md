@@ -25,7 +25,7 @@ Du bas vers le haut. Le nom de l'assemblage est aussi son namespace.
 |---|---|---|---|
 | les fiches | `Diciela.Data` | `Assets/Scripts/Data` | les classes de fiches, sans logique ; la table des textes |
 | le socle | `Diciela.Simulation.Core` | `Assets/Scripts/Simulation/Core` | le temps ; le hasard par hachage ; la formule et le registre des effets ; la géométrie en mètres et la seule conversion mètre ↔ maille ; les contrats du travail (lieu de travail, tâche à prendre) ; le savoir de la ville |
-| le terrain | `Diciela.Simulation.Land` | `Assets/Scripts/Simulation/Land` | la carte et son état ; les emprises peintes (tracés et plantations) ; les constructions et la réserve ; le maillage, ses chemins et ses distances ; l'eau et la force |
+| le terrain | `Diciela.Simulation.Land` | `Assets/Scripts/Simulation/Land` | la carte et son état ; les emprises peintes (la Place, les sols, les plantations) ; les constructions et la réserve ; le maillage, ses chemins et ses distances, le pas des charrettes ; l'eau et la force |
 | l'économie | `Diciela.Simulation.Economy` | `Assets/Scripts/Simulation/Economy` | les stocks et leurs consignes ; les réservations ; les ateliers ; la culture ; les chantiers ; la valeur des marchandises ; les tâches à prendre |
 | la société | `Diciela.Simulation.Society` | `Assets/Scripts/Simulation/Society` | les habitants et leur journée ; les postes ; les arrivées et les logements ; la nourriture ; l'étal et les visiteurs ; le charme ; la raison d'arrêt d'un lieu |
 | le monde | `Diciela.Simulation` | `Assets/Scripts/Simulation` | le monde (il assemble les systèmes et les fait tourner) ; les ordres ; les déclencheurs ; le déroulé du départ ; la capture et la restauration |
@@ -82,11 +82,12 @@ la société, qui voit tout ce qui est en dessous.
   sait bâtir : au départ, ce que dit le déroulé du départ ; puis les idées), au socle parce que les règles de pose le
   lisent comme le panneau Construire, et plus tard les recettes et les décos (décision 185).
 - **Le terrain.** La carte reçue au lancement (section 10) et son état : arbres et rochers retirés, champs sauvages
-  (désigné, récolté, minuterie de repousse). Les emprises peintes (section 8), la Place la première. Les
+  (désigné, récolté, minuterie de repousse). Les emprises peintes (section 8), la Place la première, puis les sols
+  (`Floors`) et le pas d'une charrette sur eux (`CartPace`). Les
   constructions : bâtiments, décos, la réserve ; les devants de porte, déduits des constructions, que lisent les règles de pose ; le sol que
   tient chaque construction (`StructureGround`), pris à la pose, rendu et repris quand elle change de place
   (`StructureMoves`, l'ordre « déplacer », vérifié par les mêmes règles, la construction déplacée ne comptant pas). Le maillage
-  (SAVOIR 2.1), avec ses îlots, son A*, la ligne tendue qu'on tire d'un trajet, la sortie d'une construction posée sur
+  (SAVOIR 2.1), avec ses îlots, son A* (à chaque façon de se déplacer son prix, `Mover`), la ligne tendue qu'on tire d'un trajet, la sortie d'une construction posée sur
   un piéton et ses distances par la route, écrits pour lui ; il dit seul où l'on marche (sur la Place aussi). L'eau :
   canaux, relief creusé, zones irriguées. La force : réseaux et budget, un moulin bâti consommant qu'il travaille ou
   non.
@@ -95,8 +96,10 @@ la société, qui voit tout ce qui est en dessous.
   sa cause ; une seule fonction « rend à la ville », toujours à une place retenue (une charge en route garde la sienne
   à son départ, décision 178). Les réservations. Les ateliers (recette, avancement). La culture
   des plantations (semis, pousse, graines gardées, récolte). Les chantiers (rang dans la file, livraisons, avancement),
-  et le petit chantier d'un bâtiment qu'on déplace : son premier travail le défait (`StructureState.Moving` : il ne sert
-  plus), défait il saute à la place qu'il retenait, remonté il sert de nouveau, sans nouvelle mise en service.
+  et ce qu'ils bâtissent (`SiteWork`) : une construction posée en fantôme ; le petit chantier d'un bâtiment qu'on
+  déplace (son premier travail le défait, `StructureState.Moving` : il ne sert plus ; défait il saute à la place qu'il
+  retenait ; remonté il sert de nouveau, sans nouvelle mise en service) ; un sol qu'on trace ou qu'on efface (un
+  fantôme gommé quitte la file).
   La production comptée par marchandise. La valeur des marchandises. La publication des tâches à prendre (porter,
   bâtir, retirer un arbre, conduire une charrette). Les charrettes de l'étal et les places de charrette, une par
   marque de la Place (`Carts`, la seule fonction qui change une charrette, écoute les marques posées et retirées ;
@@ -142,9 +145,10 @@ sauvegardé.
 | le travail déjà fait sur un arbre ou un rocher marqué ; qui l'a pris | l'économie | — |
 | une charrette de l'étal : son entrepôt, la place qui l'appelle, garée ou non, ce qu'elle porte ; la consigne de chaque place de charrette | l'économie (`Carts`, `Stalls`) | ce qui manque à une charrette, son surplus |
 | la Place : ses mailles (ce qui a été peint, découpé sur ce qui l'arrêtait), ses marques (où, à quel cap, dans quel ordre), son niveau | le terrain (`PlaceZone`) | le maillage (ses mailles, qu'on traverse, où rien ne se bâtit) ; les places de charrette |
-| tracés et plantations : forme, sorte, état (en chantier, bâti) | le terrain | les coûts du maillage ; les champs, leur surface, leurs postes |
+| les sols : la sorte et l'état (fantôme, bâti, qu'on efface) de chaque maille ; les sols en chantier et leurs mailles | le terrain (`Floors`) | le pas d'une charrette et son prix par maille (`CartPace`) ; les refus de pose sur un chemin |
+| plantations : forme, sorte, état (en chantier, bâti) | le terrain | les champs, leur surface, leurs postes |
 | une construction : sorte, place, angle, niveau, état (fantôme, bâtie, en déplacement avec sa place visée, rangée) | le terrain | le maillage et ses îlots ; les devants de porte ; la réserve ; le logis de la Chimère (la construction bâtie que sa fiche dit être son logis) |
-| un chantier : rang dans la file, livraisons déposées, avancement | l'économie | — |
+| un chantier : ce qu'il bâtit, rang dans la file, livraisons déposées, avancement | l'économie | — |
 | contenu et consigne de chaque stock | l'économie | le stock de la ville |
 | les réservations (quantité promise, place retenue) | l'économie, jamais sauvegardées | — |
 | la culture de chaque plantation : semis, pousse, graines gardées | l'économie | la nourriture (dans la société) |
@@ -234,25 +238,34 @@ sauvegardé.
 - Les compteurs restent chez leur source : l'économie compte la production par marchandise ; la société lève
   `WorkContributed` (habitant, lieu, sorte de lieu, heures) ; les déclencheurs gardent la part de chacun.
 
-## 8. Les emprises peintes : tracés et plantations
+## 8. Les emprises peintes : la Place, les sols, les plantations
 
 - Tout ce qui se peint au sol est une emprise du terrain : la Place, chemins, routes, ponts, canaux, arbres de
-  transmission, plantations. Un seul système de pinceau (SAVOIR 2.6) : on garde le trait découpé, jamais le geste. Une
+  transmission, plantations. Un seul système de pinceau (SAVOIR 2.6) : on garde ce qui a été posé, découpé sur ce qui
+  l'arrête, jamais le geste. Une
   forme peinte (`GroundShape` : un trait, un disque, un rectangle) couvre les mailles dont le milieu est en elle.
 - La Place, la première (décisions 204 et 205) : ses mailles sont sa vérité ; ses règles, une seule fonction par ordre,
   lue par l'ordre et par l'aperçu (`PlaceChecks`), qui y lit aussi les mailles qu'une forme changerait ; ses places de
   charrette, les marques qu'elle tient (`PlaceMarks`).
-- Une emprise a une sorte (une fiche), une forme et un état (en chantier, bâti) ; une route pas encore bâtie
-  n'accélère personne. On ne pose ni ne trace rien sur une plantation : on l'efface d'abord.
+- Les sols (décisions 209, 210 et 213) : une couche à côté du maillage (`Floors`), qui ne change ni où l'on marche ni
+  la version du maillage ; la sorte et l'état de chaque maille sont la vérité (`FloorCells`) ; leurs règles, une seule
+  fonction par ordre (`FloorChecks`), à deux entrées (`FloorScope` : partout, ou dans la zone de la Place). Un tracé ou
+  un effacement en cours est un sol en chantier (`FloorPatch`), dans la file des chantiers. Les règles de pose les
+  lisent (`FootprintChecks` : « Sur un chemin : efface-le d'abord »).
+- Une plantation a une sorte (une fiche), une forme et un état (en chantier, bâti). On ne pose ni ne trace rien sur une
+  plantation : on l'efface d'abord.
 - Les champs se déduisent des plantations qui se touchent ; un champ prend l'identité de sa plus ancienne plantation.
   Les places des plants se déduisent sur le maillage : il n'y a pas de second quadrillage.
 - La culture (semis, pousse, graines gardées, récolte) appartient à l'économie, par plantation. Le tas de récolte est
   un stock posé au sol.
-- Le maillage a un coût par façon de se déplacer (piéton, charrette), lu dans les fiches, en entiers.
+- Chaque façon de se déplacer (`Mover`) paie son prix pour entrer dans une maille, en entiers : un piéton 1 partout ;
+  une charrette l'inverse de son pas, que dit `CartPace` d'après le sol qui y sert (un fantôme n'accélère personne) et
+  les fiches. La recherche lit le prix et l'estimation d'une seule façon à la fois (`SearchCosts`) ; celle de la
+  charrette sait où sont les sols (`CartEstimate`, d'après `FloorBlocks` ; SAVOIR 2.1).
 
 ## 9. Les fiches
 
-- Une fiche par chose : marchandise, recette, bâtiment, déco, plante, sorte d'emprise, sorte de tâche, poste,
+- Une fiche par chose : marchandise, recette, bâtiment, déco, plante, sorte de sol, sorte d'emprise, sorte de tâche, poste,
   statistique et sous-statistique, grandeur d'effet, sorte d'habitant, tête, corps, couleur, emplacement et pièce,
   maître, idée et déclencheur, réglages. Les listes ouvertes sont des fiches plutôt que des énumérations : ajouter une sous-statistique, c'est
   ajouter une fiche.
