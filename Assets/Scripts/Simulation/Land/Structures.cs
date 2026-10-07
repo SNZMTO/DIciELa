@@ -20,13 +20,14 @@ namespace Diciela.Simulation.Land
         private readonly StructureGround _ground;
         private int _nextId = 1;
 
-        public Structures(NavGrid grid, Relief relief, SimulationSettings settings, Knowledge knowledge)
+        public Structures(NavGrid grid, Relief relief, SimulationSettings settings, Knowledge knowledge,
+            Floors floors)
         {
             if (ReferenceEquals(grid, null))
                 throw new ArgumentNullException(nameof(grid));
 
             Doorways = new Doorways(grid);
-            _rules = new PlacementRules(grid, relief, settings, this, knowledge);
+            _rules = new PlacementRules(grid, relief, settings, this, knowledge, floors);
             _ground = new StructureGround(grid, Doorways, _rules);
             Moves = new StructureMoves(this, _ground, _rules);
         }

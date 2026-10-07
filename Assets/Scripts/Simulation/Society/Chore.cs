@@ -131,12 +131,20 @@ namespace Diciela.Simulation.Society
             }
         }
 
-        /// <summary>Part vers le but du geste, ou vers ses abords ; faux s'il n'est pas joignable d'ici.</summary>
+        /// <summary>
+        /// Part vers le but du geste, vers ses abords, ou vers l'une des mailles d'un sol en chantier ; faux s'il n'est
+        /// pas joignable d'ici.
+        /// </summary>
         private bool WalkTo(Vector2 position)
         {
             ChoreGoal goal = _gesture.Goal;
             if (goal.IsCell)
                 return _walk.TryStart(position, goal.Cell);
+            if (goal.Floor != null)
+            {
+                goal.Floor.CopyCells(_cells);
+                return _walk.TryStart(position, _cells);
+            }
             if (goal.Structure != null)
                 _walkedTo = goal.Structure.Placement;
             _services.Surroundings.Collect(goal.Footprint, goal.Occupant, _cells);

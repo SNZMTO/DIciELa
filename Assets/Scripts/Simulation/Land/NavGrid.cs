@@ -15,7 +15,7 @@ namespace Diciela.Simulation.Land
     {
         private readonly int[] _occupant;
         // Par maille, vrai si ce qui la couvre se traverse : la Place (décision 204).
-        private readonly bool[] _floor;
+        private readonly bool[] _crossable;
         // Par rangée, la version du maillage où l'une de ses mailles a changé pour la dernière fois.
         private readonly int[] _rowVersion;
 
@@ -28,7 +28,7 @@ namespace Diciela.Simulation.Land
             Width = metrics.CellCount(relief.SizeX);
             Depth = metrics.CellCount(relief.SizeZ);
             _occupant = new int[Width * Depth];
-            _floor = new bool[Width * Depth];
+            _crossable = new bool[Width * Depth];
             _rowVersion = new int[Depth];
         }
 
@@ -69,7 +69,7 @@ namespace Diciela.Simulation.Land
         /// <summary>La même réponse, pour la maille à cette place dans les tableaux du maillage.</summary>
         internal bool IsWalkable(int index)
         {
-            return _occupant[index] == 0 || _floor[index];
+            return _occupant[index] == 0 || _crossable[index];
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace Diciela.Simulation.Land
             {
                 int index = IndexOf(cell);
                 _occupant[index] = occupant;
-                _floor[index] = false;
+                _crossable[index] = false;
                 _rowVersion[cell.y] = Version;
             }
         }
@@ -136,7 +136,7 @@ namespace Diciela.Simulation.Land
             {
                 int index = indices[i];
                 _occupant[index] = occupant;
-                _floor[index] = walkable;
+                _crossable[index] = walkable;
                 _rowVersion[index / Width] = Version;
             }
         }
@@ -154,7 +154,7 @@ namespace Diciela.Simulation.Land
                 if (_occupant[index] != occupant)
                     continue;
                 _occupant[index] = 0;
-                _floor[index] = false;
+                _crossable[index] = false;
                 _rowVersion[cell.y] = Version;
             }
         }

@@ -6,11 +6,13 @@ using Diciela.Simulation.Land;
 namespace Diciela.Simulation.Economy
 {
     /// <summary>
-    /// Les chantiers et leur file (GDD, section 9) : chaque construction posée en fantôme en a un, dans l'ordre où elle
-    /// a été posée, et les chantiers se servent dans cet ordre. Quand le dernier travail est fait, ses matériaux entrent
-    /// dans la construction (ils disparaissent du bilan) et elle devient bâtie ; le monde la met en service à la fin du
-    /// pas (décision 179). Un bâtiment qu'on déplace a son petit chantier (décision 199) : le premier travail le défait,
-    /// défait il saute à sa nouvelle place, remonté il sert de nouveau, sans nouvelle mise en service. Les événements d'un pas attendent la fin de leur couche (ARCHITECTURE, section 5).
+    /// Les chantiers et leur file (GDD, section 9) : chaque construction posée en fantôme en a un, chaque bâtiment qu'on
+    /// déplace (décision 199), chaque sol qu'on trace ou qu'on efface (décision 209), dans l'ordre où l'ordre est venu,
+    /// et les chantiers se servent dans cet ordre. Ce qu'un chantier bâtit (SiteWork) dit ce qui arrive quand on y
+    /// travaille ; quand le dernier travail est fait, ses matériaux entrent dans ce qu'il bâtit (ils disparaissent du
+    /// bilan), et une construction posée, bâtie, est mise en service par le monde à la fin du pas (décision 179). Un sol
+    /// gommé avant d'être bâti quitte la file. Les événements d'un pas attendent la fin de leur couche (ARCHITECTURE,
+    /// section 5).
     /// </summary>
     public sealed class ConstructionSites
     {
@@ -18,23 +20,31 @@ namespace Diciela.Simulation.Economy
         private readonly List<ConstructionSite> _supplied = new List<ConstructionSite>();
         private readonly List<Structure> _finished = new List<Structure>();
         private readonly Structures _structures;
+        private readonly Floors _floors;
         private readonly GoodsLedger _ledger;
         private readonly double _takeDownHours;
         private readonly double _putBackHours;
+        private readonly double _floorHoursPerSquareMeter;
+        private readonly double _floorEraseShare;
 
-        public ConstructionSites(Structures structures, GoodsLedger ledger, SimulationSettings settings)
+        public ConstructionSites(Structures structures, Floors floors, GoodsLedger ledger, SimulationSettings settings)
         {
             if (ReferenceEquals(settings, null))
                 throw new ArgumentNullException(nameof(settings));
             if (ReferenceEquals(structures, null))
                 throw new ArgumentNullException(nameof(structures));
+            if (ReferenceEquals(floors, null))
+                throw new ArgumentNullException(nameof(floors));
             if (ReferenceEquals(ledger, null))
                 throw new ArgumentNullException(nameof(ledger));
 
             _structures = structures;
+            _floors = floors;
             _ledger = ledger;
             _takeDownHours = settings.TakeDownHours;
             _putBackHours = settings.PutBackHours;
+            _floorHoursPerSquareMeter = settings.FloorHoursPerSquareMeter;
+            _floorEraseShare = settings.FloorEraseShare;
         }
 
         /// <summary>Levé quand des matériaux arrivent sur un chantier.</summary>
@@ -52,6 +62,9 @@ namespace Diciela.Simulation.Economy
         /// <summary>Le chantier de cette construction ; null si elle n'en a pas (bâtie, ou dressée dès la pose).</summary>
         public ConstructionSite SiteOf(Structure structure)
         {
+            // Un sol en chantier n'a pas de construction : null ne désigne aucun chantier.
+            if (ReferenceEquals(structure, null))
+                throw new ArgumentNullException(nameof(structure));
             foreach (ConstructionSite site in _queue)
             {
                 if (ReferenceEquals(site.Structure, structure))
@@ -68,7 +81,7 @@ namespace Diciela.Simulation.Economy
         {
             if (structure.State != StructureState.Planned || SiteOf(structure) != null)
                 return;
-            _queue.Add(new ConstructionSite(structure));
+            _queue.Add(new ConstructionSite(new StructureWork(structure, _structures)));
         }
 
         /// <summary>
@@ -79,7 +92,33 @@ namespace Diciela.Simulation.Economy
         {
             if (structure.State != StructureState.Built || !structure.MovingTo.HasValue || SiteOf(structure) != null)
                 return;
-            _queue.Add(ConstructionSite.ForMove(structure, _takeDownHours, _putBackHours));
+            _queue.Add(new ConstructionSite(new MoveWork(structure, _structures.Moves, _takeDownHours, _putBackHours)));
+        }
+
+        /// <summary>
+        /// Un sol vient d'être tracé, ou un sol bâti gommé : son chantier s'ouvre, au bout de la file ; effacer demande
+        /// une part du travail de tracer. Seul le monde l'appelle.
+        /// </summary>
+        internal void TrackFloor(FloorPatch patch)
+        {
+            double hours = _floorHoursPerSquareMeter * (patch.IsErase ? _floorEraseShare : 1d);
+            _queue.Add(new ConstructionSite(new FloorWork(patch, _floors, hours)));
+        }
+
+        /// <summary>
+        /// La gomme a vidé ce sol en fantôme : son chantier quitte la file, et ses ouvriers en partent. Seul le monde
+        /// l'appelle.
+        /// </summary>
+        internal void Drop(FloorPatch patch)
+        {
+            for (int i = 0; i < _queue.Count; i++)
+            {
+                if (!ReferenceEquals(_queue[i].Floor, patch))
+                    continue;
+                _queue[i].MarkFinished();
+                _queue.RemoveAt(i);
+                return;
+            }
         }
 
         /// <summary>Des matériaux en route arrivent sur le chantier.</summary>
@@ -90,42 +129,18 @@ namespace Diciela.Simulation.Economy
                 _supplied.Add(site);
         }
 
-        /// <summary>Ajoute ce travail au chantier ; vrai s'il est fini (il l'était peut-être déjà).</summary>
+        /// <summary>
+        /// Ajoute ce travail au chantier ; vrai s'il est fini (il l'était peut-être déjà). Fini, il quitte la file, ses
+        /// matériaux entrent dans ce qu'il bâtit, et une construction posée attend sa mise en service.
+        /// </summary>
         internal bool Work(ConstructionSite site, double hours)
         {
             if (site.IsFinished)
                 return true;
-            if (site.IsMove)
-                return WorkOnMove(site, hours);
-            if (!site.AddWork(hours))
-                return false;
-            Finish(site);
-            return true;
-        }
-
-        // Le premier travail défait le bâtiment, qui ne sert plus ; défait, il saute à sa nouvelle place ; remonté, il sert
-        // de nouveau, et son petit chantier quitte la file.
-        private bool WorkOnMove(ConstructionSite site, double hours)
-        {
-            Structure structure = site.Structure;
-            if (structure.State == StructureState.Built)
-                _structures.Moves.TakeDown(structure);
             bool done = site.AddWork(hours);
-            if (!site.HasLanded && site.WorkDone >= site.TakeDownHours)
-            {
-                _structures.Moves.Land(structure);
-                site.MarkLanded();
-            }
+            site.Work.Progress(site.WorkDone);
             if (!done)
                 return false;
-            _queue.Remove(site);
-            site.MarkFinished();
-            _structures.Moves.Finish(structure);
-            return true;
-        }
-
-        private void Finish(ConstructionSite site)
-        {
             _queue.Remove(site);
             site.MarkFinished();
             for (int line = 0; line < site.LineCount; line++)
@@ -133,8 +148,10 @@ namespace Diciela.Simulation.Economy
                 if (site.DeliveredAt(line) > 0)
                     _ledger.Destroyed(site.GoodAt(line), site.DeliveredAt(line), GoodsCause.Construction);
             }
-            _structures.Finish(site.Structure);
-            _finished.Add(site.Structure);
+            site.Work.Finish();
+            if (site.Work.Commissions)
+                _finished.Add(site.Structure);
+            return true;
         }
 
         /// <summary>Le monde a mis en service les constructions finies : il les oublie. Seul le monde l'appelle.</summary>

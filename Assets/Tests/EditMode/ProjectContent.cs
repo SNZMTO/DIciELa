@@ -35,7 +35,7 @@ namespace Diciela.Tests.EditMode
 
         /// <summary>
         /// Les clés des textes de la ville au travail : les marchandises, les statistiques, les postes, les arbres et les
-        /// rochers.
+        /// rochers, les sols.
         /// </summary>
         public static void AddTownKeys(Catalog catalog, List<string> keys)
         {
@@ -43,6 +43,8 @@ namespace Diciela.Tests.EditMode
                 keys.Add(good.NameKey);
             foreach (NatureDefinition nature in catalog.Nature)
                 keys.Add(nature.NameKey);
+            foreach (FloorDefinition floor in catalog.Floors)
+                keys.Add(floor.NameKey);
             foreach (StatisticDefinition statistic in catalog.Statistics)
             {
                 keys.Add(statistic.NameKey);

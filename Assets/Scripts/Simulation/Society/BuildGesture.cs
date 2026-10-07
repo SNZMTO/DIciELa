@@ -18,7 +18,7 @@ namespace Diciela.Simulation.Society
         {
             if (!_offers.TryTakeBuilding(island, out _shift))
                 return false;
-            Goal = ChoreGoal.Of(_shift.Site.Structure);
+            Goal = ChoreGoal.Of(_shift.Site);
             return true;
         }
 

@@ -15,6 +15,7 @@ pose.refus.NatureInTheWay,Un arbre ou un rocher est dans le chemin : retire-le d
 pose.refus.Unknown,Pas encore d'idée pour la bâtir,No idea how to build it yet
 pose.refus.Moving,"Elle se déplace déjà : attends qu'elle soit remontée",It is already moving: wait until it is back up
 pose.refus.OnThePlace,"Sur la Place, on ne bâtit pas : on la pave et on la décore","Nothing is built on the Square: pave it and decorate it"
+pose.refus.OnAFloor,Sur un chemin : efface-le d'abord,On a path: erase it first
 corps.chat_a,Chat A,Cat A
 corps.chat_b,Chat B,Cat B
 corps.cochon_a,Cochon A,Pig A
@@ -120,6 +121,7 @@ journee.Evening,Soirée,Evening
 journee.Night,Nuit,Night
 marchandise.bois,Bois,Wood
 marchandise.pierre,Pierre,Stone
+sol.terre,Terre,Dirt
 nature.arbre,Arbre,Tree
 nature.rocher,Rocher,Rock
 statistique.terre,Terre,Land

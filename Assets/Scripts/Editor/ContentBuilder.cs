@@ -130,6 +130,7 @@ namespace Diciela.EditorTools
             EditorAssets.AssignIfMissing(catalog, "_villagerKind", villagers.Kind);
             EditorAssets.AssignIfMissing(catalog, "_cart", cart);
             EditorAssets.AssignIfMissing(catalog, "_place", place);
+            FloorContentBuilder.CreateMissing(catalog, opening);
             AppearanceBuilder.CreateMissing(catalog);
         }
 

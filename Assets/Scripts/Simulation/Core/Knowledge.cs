@@ -5,7 +5,8 @@ using Diciela.Data;
 namespace Diciela.Simulation.Core
 {
     /// <summary>
-    /// Le savoir de la ville (GDD, sections 6 et 13 ; décisions 185 et 190) : les constructions qu'elle sait bâtir. Au
+    /// Le savoir de la ville (GDD, sections 6, 9 et 13 ; décisions 185, 190 et 210) : les constructions qu'elle sait bâtir
+    /// et les sols qu'elle sait tracer. Au
     /// départ, exactement ce que la Chimère sait en arrivant, que dit le déroulé du départ ; puis les idées, qui servent
     /// aussitôt : celle qu'apporte chaque premier habitant, et plus tard celles des déclencheurs. Sans déroulé du départ
     /// (un banc d'essai), rien ne se passe de soi-même : la ville sait tout bâtir. Au socle : les règles de pose le lisent
@@ -38,6 +39,23 @@ namespace Diciela.Simulation.Core
                     return true;
             }
             return _learned.Contains(structure);
+        }
+
+        /// <summary>
+        /// Vrai si la ville sait tracer ce sol (GDD, section 9) : la terre au départ, que dit le déroulé du départ ; les
+        /// autres viendront par leurs idées.
+        /// </summary>
+        public bool Knows(FloorDefinition floor)
+        {
+            if (ReferenceEquals(_opening, null))
+                return true;
+            IReadOnlyList<FloorDefinition> known = _opening.KnownFloors;
+            for (int i = 0; i < known.Count; i++)
+            {
+                if (ReferenceEquals(known[i], floor))
+                    return true;
+            }
+            return false;
         }
 
         /// <summary>

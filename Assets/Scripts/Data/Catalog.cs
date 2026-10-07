@@ -33,6 +33,10 @@ namespace Diciela.Data
                  "décision 204).")]
         [SerializeField] private PlaceDefinition _place;
 
+        [Tooltip("Les sortes de sol, dans l'ordre de la barre des outils Chemins et Place (GDD, section 9 ; décision " +
+                 "210).")]
+        [SerializeField] private List<FloorDefinition> _floors = new List<FloorDefinition>();
+
         [Tooltip("Les sortes d'arbres et de rochers que le développeur peint sur la carte (GDD, section 2).")]
         [SerializeField] private List<NatureDefinition> _nature = new List<NatureDefinition>();
 
@@ -63,6 +67,7 @@ namespace Diciela.Data
         public OpeningDefinition Opening => _opening;
         public CartDefinition Cart => _cart;
         public PlaceDefinition Place => _place;
+        public IReadOnlyList<FloorDefinition> Floors => _floors;
         public IReadOnlyList<NatureDefinition> Nature => _nature;
         public IReadOnlyList<GoodDefinition> Goods => _goods;
         public IReadOnlyList<StatisticDefinition> Statistics => _statistics;
