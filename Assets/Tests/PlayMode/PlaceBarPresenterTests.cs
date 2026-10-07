@@ -37,8 +37,8 @@ namespace Diciela.Tests.PlayMode
         {
             _test = new TestWorld(withPlace: true);
             _view = new NotedPlaceBarView();
-            _presenter = new PlaceBarPresenter(_view, TextTable.Parse(Texts, "fr"), _test.Place, _test.World,
-                new FixedToolKeys());
+            _presenter = new PlaceBarPresenter(_view, TextTable.Parse(Texts, "fr"), _test.Place, _test.Paths,
+                _test.World, new FixedToolKeys());
         }
 
         [TearDown]
@@ -61,13 +61,13 @@ namespace Diciela.Tests.PlayMode
         [Test]
         public void ItsModesComeInTheOrderOfTheirKeys()
         {
+            _test.Place.Take();
             Assert.AreEqual(5, _view.Modes.Count);
             Assert.AreEqual("Pinceau", _view.Modes[0].Name);
             Assert.AreEqual("1", _view.Modes[0].Key);
             Assert.AreEqual("Place de charrette", _view.Modes[4].Name);
             Assert.AreEqual("5", _view.Modes[4].Key);
 
-            _test.Place.Take();
             _view.Choose(PlaceToolMode.Disc);
             Assert.AreEqual(PlaceToolMode.Disc, _test.Place.Mode, "Un clic sur un mode le prend.");
             Assert.AreEqual(PlaceToolMode.Disc, _view.Selected);

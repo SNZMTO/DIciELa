@@ -71,6 +71,9 @@ namespace Diciela.Data
         public const string PlaceBrushSize = "place.taille";
         public const string SizeParameter = "{taille}";
         public const string PlaceRemoveMark = "place.retirer_marque";
+        public const string PlaceZoneInk = "place.zone";
+        public const string PlaceZoneInkDetail = "place.zone.suite";
+        public const string FloorInkDetail = "sol.suite";
 
         /// <summary>La clé du nom d'un mode de l'outil de la Place, d'après son nom (Brush → place.outil.Brush).</summary>
         public static string PlaceMode(string modeName)

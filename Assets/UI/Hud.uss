@@ -163,9 +163,24 @@
     -unity-background-scale-mode: scale-to-fit;
 }
 
-/* La barre de la Place (décision 206), à la place du panneau Construire fermé : ses modes en feutres, chacun son icône
+/* La barre des outils de sol (décisions 206, 210 et 214), la Place et Chemins, à la place du panneau Construire fermé :
+   au-dessus, ce que l'outil pose (la zone, les sols, chacun sa vignette) ; puis ses modes, en feutres, chacun son icône
    et sa touche, son nom et son usage dans l'infobulle ; dessous, la superficie, les places de charrette et la taille du
-   pinceau dans des creux de lin. Étroite et basse, elle tient entre l'astuce et l'icône des outils dès 1280 × 720. */
+   pinceau dans des creux de lin. Étroite, elle tient entre l'astuce et l'icône des outils dès 1280 × 720. */
+.place-encres {
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+/* La vignette d'un sol : la texture de son calque, un remplaçant. */
+.place-encre-vignette {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    -unity-background-scale-mode: scale-and-crop;
+}
+
 .place-modes {
     flex-direction: row;
     justify-content: center;

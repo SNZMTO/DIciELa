@@ -61,13 +61,14 @@
             </Diciela.UI.WoodFrame>
             <Diciela.UI.WoodFrame name="place-barre" class="barre bloc-cache">
                 <ui:VisualElement class="barre-contenu">
+                    <ui:VisualElement name="place-encres" class="place-encres" />
                     <ui:VisualElement name="place-modes" class="place-modes" />
                     <ui:VisualElement class="place-valeurs" picking-mode="Ignore">
-                        <Diciela.UI.Facet class="creux pan-4 place-valeur" picking-mode="Ignore">
+                        <Diciela.UI.Facet name="place-superficie-creux" class="creux pan-4 place-valeur" picking-mode="Ignore">
                             <ui:VisualElement class="place-valeur-icone place-icone-superficie" picking-mode="Ignore" />
                             <ui:Label name="place-superficie" class="libelle" picking-mode="Ignore" />
                         </Diciela.UI.Facet>
-                        <Diciela.UI.Facet class="creux pan-4 place-valeur" picking-mode="Ignore">
+                        <Diciela.UI.Facet name="place-marques-creux" class="creux pan-4 place-valeur" picking-mode="Ignore">
                             <ui:VisualElement class="place-valeur-icone place-icone-cartspot" picking-mode="Ignore" />
                             <ui:Label name="place-marques" class="libelle" picking-mode="Ignore" />
                         </Diciela.UI.Facet>

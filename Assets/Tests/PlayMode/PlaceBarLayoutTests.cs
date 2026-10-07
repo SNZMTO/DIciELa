@@ -78,7 +78,7 @@ namespace Diciela.Tests.PlayMode
                                 world.Paths, tooltips);
                             tip.Show(town.World, texts, null);
                             bar = new PlaceBar(document, tooltips, new ReasonBubble(document));
-                            bar.Show(texts, world.Place, world.World, new FixedToolKeys());
+                            bar.Show(texts, world.Place, world.Paths, world.World, new FixedToolKeys());
                             world.Place.Take();
                             bar.ShowReason(texts.Get(TextKeys.PlaceRefusal(PlaceResult.TooLarge.ToString())));
                         }

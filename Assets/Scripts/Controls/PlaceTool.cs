@@ -37,7 +37,7 @@ namespace Diciela.Controls
             Inks = new PaintInks(entry, world.Knowledge, floors);
             _canvas = new PlaceCanvas(this, world, camera, preview, settings);
             Vector2 range = settings.BrushRadiusRangeMeters;
-            BrushRadius = Mathf.Clamp(settings.BrushRadiusMeters, range.x, range.y);
+            BrushRadius = Mathf.Clamp(entry.StartBrushRadius(settings), range.x, range.y);
         }
 
         public void Dispose()
