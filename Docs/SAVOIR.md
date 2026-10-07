@@ -220,7 +220,12 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   sur une maille de 1 m bouge de quelques centièmes de degré. Un test sur un Terrain tolère cet écart ; la
   simulation lit le relief une fois, en mètres, au lancement.
 - **On repeint par lot** : une route ou un coup de pinceau marque un rectangle sale, et le sol ne se repeint qu'à l'image
-  suivante, sur ce seul rectangle, une seule fois même si dix changements arrivent dans la même image.
+  suivante, sur ce seul rectangle, une seule fois même si dix changements arrivent dans la même image (`FloorPainting`).
+  Un texel prend le calque du sol qui sert sous son milieu, tout entier ; les autres reprennent la peinture de la carte,
+  relue sur le TerrainData d'origine (la copie, elle, a été repeinte). Le calque d'un sol s'ajoute à la copie la
+  première fois qu'il sert (`terrainLayers` réassigné : les poids déjà peints restent, le nouveau calque part de 0).
+  Une boîte où rien ne sert et où rien n'a jamais été peint ne coûte qu'une lecture : la vue part de tout le monde à
+  l'ouverture sans rien écrire.
 - **Les touffes et petites fleurs** sont des objets combinés en lots statiques ; des milliers d'objets séparés font
   ramer.
 
@@ -516,6 +521,9 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 
 ## 3. Pièges de Unity et de C#
 
+- **Une feuille USS importée avant l'image qu'elle cite garde son `url()` vide**, même une fois l'image créée : le
+  test de la roue a vu l'icône de Chemins manquer (étape 57). Générer l'image d'abord, ou retoucher la feuille ensuite
+  (un commentaire suffit), puis `Assets/Refresh`.
 - **Restaurer un fichier suivi par Git LFS** (les images, les maillages) : `git show HEAD:chemin` rend le pointeur, pas
   le fichier ; l'écrire à sa place remplace l'image par trois lignes de texte. Passer par `git show HEAD:chemin | git lfs
   smudge chemin`, vers un fichier à part, puis le copier.
