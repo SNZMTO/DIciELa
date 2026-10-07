@@ -28,19 +28,6 @@ namespace Diciela.Tests.EditMode
         }
 
         [Test]
-        public void ItsCardLeadsAFamilyOfTheBuildPanel()
-        {
-            // Sa carte, première d'une famille du panneau Construire (GDD, section 16), avec son icône faute de modèle.
-            Catalog catalog = ProjectContent.LoadSingle<Catalog>();
-            PlazaDefinition plaza = catalog.Plaza;
-
-            Assert.IsNotNull(plaza.Family, "La fiche de la Place nomme la famille de sa carte.");
-            CollectionAssert.Contains(catalog.Families, plaza.Family, "Cette famille est au catalogue.");
-            Assert.IsNotNull(plaza.Icon, "Sa carte a son icône.");
-            Assert.IsNotEmpty(plaza.NameKey);
-        }
-
-        [Test]
         public void TheStartingStockBuildsTwoCabins()
         {
             Catalog catalog = ProjectContent.LoadSingle<Catalog>();

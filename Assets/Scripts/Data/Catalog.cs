@@ -33,8 +33,8 @@ namespace Diciela.Data
                  "décision 204).")]
         [SerializeField] private PlazaDefinition _plaza;
 
-        [Tooltip("Les sortes de sol, dans l'ordre de la barre des outils Chemins et Place (GDD, section 9 ; décision " +
-                 "210).")]
+        [Tooltip("Les sortes de sol, dans l'ordre de l'éventail des sols de la roue des outils Chemins et Place " +
+                 "(GDD, section 9 ; décisions 210 et 221).")]
         [SerializeField] private List<FloorDefinition> _floors = new List<FloorDefinition>();
 
         [Tooltip("Les sortes d'arbres et de rochers que le développeur peint sur la carte (GDD, section 2).")]

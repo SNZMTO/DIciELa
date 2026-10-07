@@ -13,8 +13,9 @@ namespace Diciela.Game
     /// neuve (GDD, section 6) : l'écran de création dans l'atelier, la Chimère à venir sur son socle, qu'on fait
     /// tourner ; puis, l'ordre de la créer parti, la ville (caméra, HUD, outils, gestes), la caméra tout près de la
     /// Chimère qui naît au point d'arrivée, puis reculée à sa distance de départ. Le monde (constructions, habitants,
-    /// arbres, charrettes) est vu dès l'ouverture (WorldViews) ; la Place, en mode construction (TownPlaza). Toucher un lieu ouvre sa fiche ; Échap ferme la fiche, puis la roue des outils, puis le
-    /// panneau Construire, puis lâche l'outil en main. Il délie et cache tout à la sortie.
+    /// arbres, charrettes) est vu dès l'ouverture (WorldViews) ; la Place, en mode construction (TownPlaza) ; l'outil
+    /// en main, sur sa carte (ToolCard). Toucher un lieu ouvre sa fiche ; Échap ferme la fiche, puis la roue des
+    /// outils, puis le panneau Construire, puis lâche l'outil en main. Il délie et cache tout à la sortie.
     /// </summary>
     public sealed class GameStage : MonoBehaviour
     {
@@ -49,6 +50,7 @@ namespace Diciela.Game
 
         private TownTools _tools;
         private TownPlaza _plaza;
+        private ToolCard _toolCard;
         private SelectionFrame _selectionFrame;
         private Texture2D _portrait;
         private Tooltips _tooltips;
@@ -108,6 +110,8 @@ namespace Diciela.Game
             _escapeControls.Bind();
             _plaza?.Dispose();
             _plaza = null;
+            _toolCard?.Hide();
+            _toolCard = null;
             _selectionFrame?.Dispose();
             _selectionFrame = null;
             if (_tools != null)
@@ -167,9 +171,11 @@ namespace Diciela.Game
             var document = _buildBar.GetComponent<UnityEngine.UIElements.UIDocument>();
             _tooltips = new Tooltips(document);
             var reasons = new ReasonBubble(document);
-            _buildBar.Show(catalog, texts, _tools.Placement, _tools.Plaza, world, _toolControls, reasons);
+            _buildBar.Show(catalog, texts, _tools.Placement, world, _toolControls, reasons);
             _toolWheel.Show(texts, _toolControls, _tools.Clearing, _buildBar, _tools.Move, _tools.Paths, _tools.Plaza,
                 _tooltips);
+            _toolCard = new ToolCard(document);
+            _toolCard.Show(texts, _tools.Clearing, _tools.Move, _tools.Paths, _tools.Plaza, world);
             _dayBoard.Show(world.Clock, texts, _tooltips);
             _stockPennants.Show(world, catalog, texts, _tooltips);
             _locationSheet.Show(world, texts);
@@ -181,8 +187,7 @@ namespace Diciela.Game
             _selectionFrame = new SelectionFrame(document);
             _clearingControls.Bind(_tools.Clearing, _selectionFrame, hud);
             _chooseControls.Bind(_tools.Choose, _tools.Hand, hud);
-            _plaza = new TownPlaza(world, texts, _tools, _buildBar, _plazaZoneView, _paintControls,
-                new PaintBar(document, _tooltips, reasons), _toolControls, hud);
+            _plaza = new TownPlaza(world, _tools, _buildBar, _plazaZoneView, _paintControls, hud);
             _toolControls.Bind(_toolWheel, new CardKeys(_buildBar, _buildBar, _toolWheel));
             _escapeControls.Bind(_locationSheet, _toolWheel, _buildBar, _tools.Hand);
         }

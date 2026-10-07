@@ -35,8 +35,7 @@ namespace Diciela.Tests.PlayMode
             TestWorld.FillList(catalog, "_families", housing);
 #endif
             _view = new NotedBuildBarView();
-            _presenter = new BuildBarPresenter(_view, catalog, TextTable.Parse(Texts, "fr"), _test.Tool,
-                _test.Plaza, _test.World,
+            _presenter = new BuildBarPresenter(_view, catalog, TextTable.Parse(Texts, "fr"), _test.Tool, _test.World,
                 new FixedToolKeys());
         }
 
