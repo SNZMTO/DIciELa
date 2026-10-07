@@ -1,11 +1,11 @@
 # DICIELA — état actuel
 
-**Branches** : `main` : l'étape 57 ; la suivante s'ouvre de `main`.
+**Branches** : `main` : l'étape 58 ; la suivante s'ouvre de `main`.
 
 **Fait** : 23 à 57 ; 52 à 55 (205 à 208) : la Place tracée et vue, puis le ménage ; 56 (209 à 213) : les sols dans la
 simulation, leur chantier, le pas des charrettes et son estimation (100 m en 4,5 ms) ; 57 (214) : les sols peints sur
 la carte et leurs fantômes en voile, l'outil Chemins (roue à gauche, touche C), un seul outil à deux entrées avec la
-Place, la barre partagée (ce qu'on pose au-dessus des modes). **EditMode 275/275, PlayMode 217/217.** Aucune capture
+Place, la barre partagée (ce qu'on pose au-dessus des modes) ; 58 : le script de recompilation dans `Tools/`. **EditMode 275/275, PlayMode 217/217.** Aucune capture
 (Unity n'était pas devant) : l'album attend.
 
 **Prochaine étape : à choisir.** Le pont (211) attend l'eau, qui n'est pas dans la simulation, et la carte à peindre
@@ -24,6 +24,6 @@ barre montre la zone puis la terre au-dessus des modes à l'outil de la Place ; 
 place, plus vite sur la terre ; 1 à 5 changent de mode panneau fermé ; un clic droit abandonne le geste, un second
 lâche l'outil ; « Aller dormir » couche la Chimère ; une raison longue tient dans sa bulle ; la capture du disque.
 **Dette** : `Fusion.uss` répète `:root` ; trois cartes sur l'astuce en 720 p ; des réglages d'interface dans le code ;
-`EQUILIBRAGE.md` sans menu ; « C'est parti » sans menu d'album ; le script de recompilation hors de `Tools/`.
+`EQUILIBRAGE.md` sans menu (rien à rapporter avant les recettes) ; « C'est parti » sans menu d'album.
 **Prompt de la session suivante**
 > Lis CLAUDE.md et Docs/ETAT.md. Choisissons la prochaine étape ; propose-moi le plan court avant de coder.
