@@ -35,7 +35,7 @@ namespace Diciela.Simulation.Land
         Moving = 9,
 
         /// <summary>L'empreinte recouvre la Place : on ne bâtit pas sur elle, on la pave et la décore (décision 205).</summary>
-        OnThePlace = 10,
+        OnThePlaza = 10,
 
         /// <summary>L'empreinte recouvre un sol ou son fantôme : on l'efface d'abord (décision 209).</summary>
         OnAFloor = 11

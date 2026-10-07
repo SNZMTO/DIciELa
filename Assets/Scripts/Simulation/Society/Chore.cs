@@ -138,15 +138,17 @@ namespace Diciela.Simulation.Society
         private bool WalkTo(Vector2 position)
         {
             ChoreGoal goal = _gesture.Goal;
-            if (goal.IsCell)
-                return _walk.TryStart(position, goal.Cell, _gesture.Mover);
-            if (goal.Floor != null)
+            switch (goal.Kind)
             {
-                goal.Floor.CopyCells(_cells);
-                return _walk.TryStart(position, _cells);
+                case ChoreGoalKind.Cell:
+                    return _walk.TryStart(position, goal.Cell, _gesture.Mover);
+                case ChoreGoalKind.Floor:
+                    goal.Floor.CopyCells(_cells);
+                    return _walk.TryStart(position, _cells);
+                case ChoreGoalKind.Structure:
+                    _walkedTo = goal.Structure.Placement;
+                    break;
             }
-            if (goal.Structure != null)
-                _walkedTo = goal.Structure.Placement;
             _services.Surroundings.Collect(goal.Footprint, goal.Occupant, _cells);
             return _walk.TryStart(position, _cells);
         }
@@ -154,9 +156,10 @@ namespace Diciela.Simulation.Society
         // Vrai si la construction qu'il sert a changé de place depuis qu'il est parti vers elle.
         private bool GoalMoved()
         {
-            Structure structure = _gesture.Goal.Structure;
-            return structure != null && (structure.Placement.Center != _walkedTo.Center ||
-                                         structure.Placement.RotationDegrees != _walkedTo.RotationDegrees);
+            ChoreGoal goal = _gesture.Goal;
+            return goal.Kind == ChoreGoalKind.Structure &&
+                   (goal.Structure.Placement.Center != _walkedTo.Center ||
+                    goal.Structure.Placement.RotationDegrees != _walkedTo.RotationDegrees);
         }
 
         private ChoreOutcome End(ChoreOutcome outcome)

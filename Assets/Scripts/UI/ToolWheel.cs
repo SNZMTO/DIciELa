@@ -33,7 +33,7 @@ namespace Diciela.UI
 
         /// <summary>Montre l'icône des outils, la roue fermée ; appelé par le démarrage quand la ville s'ouvre.</summary>
         public void Show(TextTable texts, IToolKeys keys, ClearingTool clearing, IBuildMenu build, MoveTool move,
-            PlaceTool paths, Tooltips tooltips)
+            PaintTool paths, Tooltips tooltips)
         {
             Hide();
             ToolWheelElements elements = ToolWheelElements.Find(_document.rootVisualElement);

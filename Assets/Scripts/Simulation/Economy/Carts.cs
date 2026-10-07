@@ -31,14 +31,14 @@ namespace Diciela.Simulation.Economy
         /// Les charrettes de cette fiche ; sans fiche, aucune construction ne peut en garder. Les places de charrette
         /// naissent et s'en vont avec les marques de cette Place.
         /// </summary>
-        public Carts(CartDefinition definition, PlaceZone place)
+        public Carts(CartDefinition definition, PlazaZone plaza)
         {
-            if (ReferenceEquals(place, null))
-                throw new ArgumentNullException(nameof(place));
+            if (ReferenceEquals(plaza, null))
+                throw new ArgumentNullException(nameof(plaza));
 
             _definition = definition;
-            place.MarkPlaced += OnMarkPlaced;
-            place.MarkRemoved += OnMarkRemoved;
+            plaza.MarkPlaced += OnMarkPlaced;
+            plaza.MarkRemoved += OnMarkRemoved;
         }
 
         /// <summary>Levé quand une charrette naît, rangée à son entrepôt.</summary>
@@ -172,14 +172,14 @@ namespace Diciela.Simulation.Economy
         }
 
         // Une marque posée sur la Place : une place de charrette, qui appellera une charrette (CartOffers).
-        private void OnMarkPlaced(PlaceMark mark)
+        private void OnMarkPlaced(PlazaMark mark)
         {
             _spots.Add(new CartSpot(mark));
         }
 
         // Une marque retirée : la charrette qu'elle avait appelée, que le monde ne laisse partir que garée et vide,
         // retourne chez elle ; la place s'en va avec sa consigne.
-        private void OnMarkRemoved(PlaceMark mark)
+        private void OnMarkRemoved(PlazaMark mark)
         {
             CartSpot spot = FindSpot(mark.Id);
             Cart cart = spot == null ? null : CartAt(spot);

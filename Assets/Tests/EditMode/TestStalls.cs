@@ -33,7 +33,7 @@ namespace Diciela.Tests.EditMode
         {
             TestData.Carts(town.Camp, 1);
             World world = town.WorkingWorld();
-            TestTown.Send(world, new PaintPlaceCommand(new GroundDisc(Center, Radius)));
+            TestTown.Send(world, new PaintPlazaCommand(new GroundDisc(Center, Radius)));
             TestTown.Send(world, new AddCartSpotCommand(Center, East));
             spot = world.Carts.Spots[0];
             return world;

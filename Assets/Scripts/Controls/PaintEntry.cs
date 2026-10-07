@@ -14,19 +14,19 @@ namespace Diciela.Controls
     public sealed class PaintEntry
     {
         /// <summary>L'outil de la Place, pris à sa carte.</summary>
-        public static readonly PaintEntry Place = new PaintEntry(FloorScope.Place, true,
-            settings => settings.BrushRadiusMeters, PlaceToolMode.Brush, PlaceToolMode.Eraser, PlaceToolMode.Disc,
-            PlaceToolMode.Box, PlaceToolMode.CartSpot);
+        public static readonly PaintEntry Plaza = new PaintEntry(FloorScope.Plaza, true,
+            settings => settings.BrushRadiusMeters, PaintToolMode.Brush, PaintToolMode.Eraser, PaintToolMode.Disc,
+            PaintToolMode.Box, PaintToolMode.CartSpot);
 
         /// <summary>L'outil Chemins, pris à la roue (touche C).</summary>
         public static readonly PaintEntry Paths = new PaintEntry(FloorScope.Anywhere, false,
-            settings => settings.PathBrushRadiusMeters, PlaceToolMode.Brush, PlaceToolMode.Eraser, PlaceToolMode.Disc,
-            PlaceToolMode.Box);
+            settings => settings.PathBrushRadiusMeters, PaintToolMode.Brush, PaintToolMode.Eraser, PaintToolMode.Disc,
+            PaintToolMode.Box);
 
         private readonly Func<PlacementSettings, float> _startRadius;
 
         private PaintEntry(FloorScope scope, bool laysTheZone, Func<PlacementSettings, float> startRadius,
-            params PlaceToolMode[] modes)
+            params PaintToolMode[] modes)
         {
             Scope = scope;
             LaysTheZone = laysTheZone;
@@ -41,7 +41,7 @@ namespace Diciela.Controls
         public bool LaysTheZone { get; }
 
         /// <summary>Ses modes, dans l'ordre de la barre et des touches 1 à 5.</summary>
-        public IReadOnlyList<PlaceToolMode> Modes { get; }
+        public IReadOnlyList<PaintToolMode> Modes { get; }
 
         /// <summary>Le rayon du pinceau quand on prend l'outil, d'après ces réglages, en mètres.</summary>
         public float StartBrushRadius(PlacementSettings settings)
@@ -49,7 +49,7 @@ namespace Diciela.Controls
             return _startRadius(settings);
         }
 
-        public bool Allows(PlaceToolMode mode)
+        public bool Allows(PaintToolMode mode)
         {
             for (int i = 0; i < Modes.Count; i++)
             {

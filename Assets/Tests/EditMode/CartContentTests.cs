@@ -14,7 +14,7 @@ namespace Diciela.Tests.EditMode
     public sealed class CartContentTests
     {
         [Test]
-        public void EachWarehouseKeepsItsCartAndThePlaceCallsSome()
+        public void EachWarehouseKeepsItsCartAndThePlazaCallsSome()
         {
             Catalog catalog = ProjectContent.LoadSingle<Catalog>();
             Assert.IsNotNull(catalog.Cart, "Le catalogue n'a pas de charrette.");
@@ -31,8 +31,8 @@ namespace Diciela.Tests.EditMode
                                "compris, a la sienne, et rien d'autre.");
             }
             Assert.IsEmpty(faults, string.Join("\n", faults));
-            Assert.IsNotNull(catalog.Place, "Le catalogue n'a pas de Place.");
-            Assert.Greater(catalog.Place.CartSpotsAt(0), 0, "La Place n'a pas de place de charrette au départ.");
+            Assert.IsNotNull(catalog.Plaza, "Le catalogue n'a pas de Place.");
+            Assert.Greater(catalog.Plaza.CartSpotsAt(0), 0, "La Place n'a pas de place de charrette au départ.");
         }
 
         [Test]

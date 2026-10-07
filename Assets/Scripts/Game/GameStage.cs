@@ -13,7 +13,7 @@ namespace Diciela.Game
     /// neuve (GDD, section 6) : l'écran de création dans l'atelier, la Chimère à venir sur son socle, qu'on fait
     /// tourner ; puis, l'ordre de la créer parti, la ville (caméra, HUD, outils, gestes), la caméra tout près de la
     /// Chimère qui naît au point d'arrivée, puis reculée à sa distance de départ. Le monde (constructions, habitants,
-    /// arbres, charrettes) est vu dès l'ouverture (WorldViews) ; la Place, en mode construction (TownPlace). Toucher un lieu ouvre sa fiche ; Échap ferme la fiche, puis la roue des outils, puis le
+    /// arbres, charrettes) est vu dès l'ouverture (WorldViews) ; la Place, en mode construction (TownPlaza). Toucher un lieu ouvre sa fiche ; Échap ferme la fiche, puis la roue des outils, puis le
     /// panneau Construire, puis lâche l'outil en main. Il délie et cache tout à la sortie.
     /// </summary>
     public sealed class GameStage : MonoBehaviour
@@ -29,7 +29,7 @@ namespace Diciela.Game
         [SerializeField] private ClearingControls _clearingControls;
         [SerializeField] private BuildBar _buildBar;
         [SerializeField] private DayBoard _dayBoard;
-        [SerializeField] private PlaceSheet _placeSheet;
+        [SerializeField] private LocationSheet _locationSheet;
         [SerializeField] private StockPennants _stockPennants;
         [SerializeField] private TipBoard _tipBoard;
         [SerializeField] private EscapeControls _escapeControls;
@@ -40,15 +40,15 @@ namespace Diciela.Game
         [SerializeField] private PreviewControls _previewControls;
         [SerializeField] private ToolWheel _toolWheel;
         [SerializeField] private ToolControls _toolControls;
-        [SerializeField] private PlaceControls _placeControls;
-        [SerializeField] private PlaceZoneView _placeZoneView;
-        [SerializeField] private PlaceToolPreview _placeToolPreview;
+        [SerializeField] private PaintControls _paintControls;
+        [SerializeField] private PlazaZoneView _plazaZoneView;
+        [SerializeField] private PaintToolPreview _paintToolPreview;
 
         // Le portrait de l'astuce : 48 px de l'interface, en triple résolution.
         private const int PortraitPixels = 144;
 
         private TownTools _tools;
-        private TownPlace _place;
+        private TownPlaza _plaza;
         private SelectionFrame _selectionFrame;
         private Texture2D _portrait;
         private Tooltips _tooltips;
@@ -59,12 +59,12 @@ namespace Diciela.Game
                                   _villagerViews != null && _natureViews != null && _placementPreview != null &&
                                   _placementControls != null && _clearingControls != null &&
                                   _chooseControls != null && _buildBar != null && _dayBoard != null &&
-                                  _placeSheet != null && _stockPennants != null && _tipBoard != null &&
+                                  _locationSheet != null && _stockPennants != null && _tipBoard != null &&
                                   _escapeControls != null &&
                                   _creationScreen != null &&
                                   _appearancePreview != null && _confirmControls != null && _atelier != null &&
                                   _previewControls != null && _toolWheel != null && _toolControls != null &&
-                                  _placeControls != null && _placeZoneView != null && _placeToolPreview != null;
+                                  _paintControls != null && _plazaZoneView != null && _paintToolPreview != null;
 
         /// <summary>
         /// Montre ce monde, dont les arbres sont peints sur le Terrain de cette carte, et ouvre l'écran de création ; à la
@@ -106,12 +106,12 @@ namespace Diciela.Game
             _clearingControls.Bind(null, null, null);
             _toolControls.Bind(null, null);
             _escapeControls.Bind();
-            _place?.Dispose();
-            _place = null;
+            _plaza?.Dispose();
+            _plaza = null;
             _selectionFrame?.Dispose();
             _selectionFrame = null;
             if (_tools != null)
-                _tools.Choose.Touched -= _placeSheet.Touch;
+                _tools.Choose.Touched -= _locationSheet.Touch;
             _cameraControls.Bind(null);
             _creationScreen.Hide();
             _appearancePreview.Hide();
@@ -119,7 +119,7 @@ namespace Diciela.Game
             _toolWheel.Hide();
             _buildBar.Hide();
             _dayBoard.Hide();
-            _placeSheet.Hide();
+            _locationSheet.Hide();
             _stockPennants.Hide();
             _tipBoard.Hide();
             _tooltips?.Hide();
@@ -162,29 +162,28 @@ namespace Diciela.Game
             _cameraRig.Show(world.Map);
             _cameraRig.Rotate(180f);
             _cameraRig.PullBack();
-            _tools = new TownTools(world, catalog, _cameraRig.Camera, _placementPreview, _placeToolPreview, placement,
+            _tools = new TownTools(world, catalog, _cameraRig.Camera, _placementPreview, _paintToolPreview, placement,
                 _natureViews, _structureViews);
             var document = _buildBar.GetComponent<UnityEngine.UIElements.UIDocument>();
             _tooltips = new Tooltips(document);
             var reasons = new ReasonBubble(document);
-            _buildBar.Show(catalog, texts, _tools.Placement, _tools.Place, world, _toolControls, reasons);
+            _buildBar.Show(catalog, texts, _tools.Placement, _tools.Plaza, world, _toolControls, reasons);
             _toolWheel.Show(texts, _toolControls, _tools.Clearing, _buildBar, _tools.Move, _tools.Paths, _tooltips);
             _dayBoard.Show(world.Clock, texts, _tooltips);
             _stockPennants.Show(world, catalog, texts, _tooltips);
-            _placeSheet.Show(world, texts);
+            _locationSheet.Show(world, texts);
             _tipBoard.Show(world, texts, _portrait);
             var hud = new HudArea(document);
             _cameraControls.Bind(hud);
             _placementControls.Bind(_tools.Placement, hud, _tools.Move);
-            _tools.Choose.Touched += _placeSheet.Touch;
+            _tools.Choose.Touched += _locationSheet.Touch;
             _selectionFrame = new SelectionFrame(document);
             _clearingControls.Bind(_tools.Clearing, _selectionFrame, hud);
             _chooseControls.Bind(_tools.Choose, _tools.Hand, hud);
-            _place = new TownPlace(world, texts, _tools, _buildBar, _placeZoneView, _placeControls,
-                new PlaceBar(document, _tooltips, reasons), _toolControls, hud);
-            _toolControls.Bind(_toolWheel, new CardKeys(_buildBar, _buildBar, _tools.Place, _tools.Paths));
-            _escapeControls.Bind(_placeSheet, _toolWheel, _buildBar, _tools.Placement, _tools.Clearing, _tools.Move,
-                _tools.Place, _tools.Paths);
+            _plaza = new TownPlaza(world, texts, _tools, _buildBar, _plazaZoneView, _paintControls,
+                new PaintBar(document, _tooltips, reasons), _toolControls, hud);
+            _toolControls.Bind(_toolWheel, new CardKeys(_buildBar, _buildBar, _tools.Plaza, _tools.Paths));
+            _escapeControls.Bind(_locationSheet, _toolWheel, _buildBar, _tools.Hand);
         }
     }
 }

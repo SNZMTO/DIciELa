@@ -306,7 +306,7 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   caméra lit Ctrl par une action à elle et laisse alors la molette ; l'outil lit une liaison « OneModifier » (Ctrl +
   molette). Les crochets de Planet Zoo demandent AltGr en AZERTY.
 - **En bas au centre, à 1280 × 720, il reste environ 400 px** entre l'astuce (416 px, en bas à gauche) et l'icône des
-  outils : une barre qui s'y ouvre se mesure par un test à toutes les tailles d'écran (`PlaceBarLayoutTests`).
+  outils : une barre qui s'y ouvre se mesure par un test à toutes les tailles d'écran (`PaintBarLayoutTests`).
 - **Au lancement, le pointeur vaut (0 ; 0) tant qu'il n'est pas entré dans la vue** : un coin, et le défilement au
   bord ferait filer la vue toute seule. Il ne s'arme qu'une fois le pointeur passé loin des bords ; perdre le focus
   le désarme (`EdgeScroll`).
@@ -349,7 +349,7 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 - **Une place de charrette et sa charrette** : la vue pose l'avant du modèle au bout du timon, devant le point de la
   charrette, et les modèles du pack n'ont pas la même longueur. La marque garde le rectangle que voit le joueur (celui
   de la plus grande charrette) et le point où se gare la charrette s'en déduit : son avant au bord avant de la marque
-  (`PlaceMark.Position`). Chaque modèle tient alors dans la marque, quel qu'il soit.
+  (`PlazaMark.Position`). Chaque modèle tient alors dans la marque, quel qu'il soit.
 - **Une texture de dalles carrées fait un damier** (les dalles du pack, 4 × 4 par motif), même ses blocs tournés d'un
   quart de tour au hasard : le développeur l'a refusée. Une texture irrégulière (galets, pavés ronds) posée à plat, ses
   UV en mètres, se raccorde d'elle-même, sans joint ni grille.
@@ -572,6 +572,10 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   (`_hasBed:` → `_hasCouch:`), puis `Assets/Refresh` ; sinon la fiche perd sa valeur, sans erreur. Un test du contenu
   prouve qu'elle a survécu (le campement a toujours sa couche). `FormerlySerializedAs` ferait de même, mais resterait
   dans le code. Une fiche qu'Unity n'a pas réenregistrée gagne ses champs neufs au prochain enregistrement (`_beds: 0`).
+  Une scène a ses clés aussi (les champs de `GameStage`) : écrire dans le YAML d'une scène fermée seulement, l'éditeur
+  ayant ouvert une autre scène (`open_scene`), et ne rien recompiler ni rafraîchir entre les clés et le code. Renommer un
+  type, c'est renommer son `.cs` et son `.meta` ensemble (`git mv`) : le GUID suit, les composants et les fiches qui le
+  portent restent liés (étape 59).
 - **`ApplyModifiedPropertiesWithoutUndo` ne marque rien si la valeur ne change pas** : faire suivre d'un
   `EditorUtility.SetDirty`, sinon un champ neuf n'atteint jamais le disque.
 - **Ouvrir une scène en mode Single décharge les assets que rien ne tient** : un ScriptableObject chargé avant et gardé

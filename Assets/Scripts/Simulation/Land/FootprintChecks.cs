@@ -38,8 +38,8 @@ namespace Diciela.Simulation.Land
             foreach (Vector2Int cell in _grid.CellsCoveredBy(footprint))
             {
                 int occupant = _grid.OccupantAt(cell);
-                if (occupant == PlaceZone.Occupant)
-                    return PlacementResult.OnThePlace;
+                if (occupant == PlazaZone.Occupant)
+                    return PlacementResult.OnThePlaza;
                 if (occupant > 0 && occupant != self)
                     return PlacementResult.Overlaps;
                 if (occupant < 0)

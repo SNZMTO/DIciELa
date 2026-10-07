@@ -5,7 +5,7 @@ namespace Diciela.Simulation
     /// <summary>
     /// L'ordre « poser une place de charrette » (GDD, section 11 ; décision 204) : une marque sur la Place, à ce milieu,
     /// l'avant de la charrette tourné vers ce cap. Il se vérifie par la même fonction que l'aperçu
-    /// (PlaceZone.CheckMark) ; posée, elle appelle une charrette.
+    /// (PlazaZone.CheckMark) ; posée, elle appelle une charrette.
     /// </summary>
     public sealed class AddCartSpotCommand : Command
     {
@@ -20,7 +20,7 @@ namespace Diciela.Simulation
 
         internal override void Execute(World world)
         {
-            world.Place.AddMark(Position, HeadingDegrees);
+            world.Plaza.AddMark(Position, HeadingDegrees);
         }
     }
 }

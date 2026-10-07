@@ -14,7 +14,7 @@ namespace Diciela.Controls
     /// qu'elle soit unique. Un ordre envoyé attend d'être joué avant le suivant ; posé ou refusé, l'aperçu se refait. Les
     /// gestes et les tests l'appellent par les mêmes méthodes. Celui qui le crée le libère (Dispose).
     /// </summary>
-    public sealed class PlacementTool : IDisposable, IEscapable, IHeldTool, IAimingTool
+    public sealed class PlacementTool : IDisposable, IHeldTool, IAimingTool
     {
         private readonly World _world;
         private readonly GhostAim _ghost;
@@ -106,15 +106,6 @@ namespace Diciela.Controls
                 return false;
             _world.Submit(new PlaceStructureCommand(Current, _ghost.Aim));
             _sent = true;
-            return true;
-        }
-
-        /// <summary>Échap lâche l'outil s'il est en main ; faux s'il ne l'était pas.</summary>
-        public bool Escape()
-        {
-            if (!IsActive)
-                return false;
-            Cancel();
             return true;
         }
 

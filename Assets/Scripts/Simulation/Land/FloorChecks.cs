@@ -17,16 +17,16 @@ namespace Diciela.Simulation.Land
     internal sealed class FloorChecks
     {
         private readonly NavGrid _grid;
-        private readonly PlaceZone _place;
+        private readonly PlazaZone _plaza;
         private readonly Knowledge _knowledge;
         // Le sol de chaque maille, tenu par les sols : ces règles le lisent sans l'écrire.
         private readonly FloorCells _cells;
         private readonly List<Vector2Int> _covered = new List<Vector2Int>();
 
-        public FloorChecks(NavGrid grid, PlaceZone place, Knowledge knowledge, FloorCells cells)
+        public FloorChecks(NavGrid grid, PlazaZone plaza, Knowledge knowledge, FloorCells cells)
         {
             _grid = grid ?? throw new ArgumentNullException(nameof(grid));
-            _place = place ?? throw new ArgumentNullException(nameof(place));
+            _plaza = plaza ?? throw new ArgumentNullException(nameof(plaza));
             _knowledge = knowledge ?? throw new ArgumentNullException(nameof(knowledge));
             _cells = cells ?? throw new ArgumentNullException(nameof(cells));
         }
@@ -67,7 +67,7 @@ namespace Diciela.Simulation.Land
 
         private bool IsInScope(Vector2Int cell, FloorScope scope)
         {
-            return scope == FloorScope.Anywhere || _place.Contains(cell);
+            return scope == FloorScope.Anywhere || _plaza.Contains(cell);
         }
 
         private void Cover(GroundShape shape)

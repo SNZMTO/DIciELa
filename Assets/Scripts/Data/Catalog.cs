@@ -31,7 +31,7 @@ namespace Diciela.Data
 
         [Tooltip("La Place, la zone que le joueur trace, et ce que permet chacun de ses niveaux (GDD, section 11 ; " +
                  "décision 204).")]
-        [SerializeField] private PlaceDefinition _place;
+        [SerializeField] private PlazaDefinition _plaza;
 
         [Tooltip("Les sortes de sol, dans l'ordre de la barre des outils Chemins et Place (GDD, section 9 ; décision " +
                  "210).")]
@@ -66,7 +66,7 @@ namespace Diciela.Data
         public VillagerKindDefinition VillagerKind => _villagerKind;
         public OpeningDefinition Opening => _opening;
         public CartDefinition Cart => _cart;
-        public PlaceDefinition Place => _place;
+        public PlazaDefinition Plaza => _plaza;
         public IReadOnlyList<FloorDefinition> Floors => _floors;
         public IReadOnlyList<NatureDefinition> Nature => _nature;
         public IReadOnlyList<GoodDefinition> Goods => _goods;

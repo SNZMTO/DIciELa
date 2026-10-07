@@ -11,9 +11,9 @@ namespace Diciela.Controls
     /// L'outil « Retirer » (GDD, sections 2 et 16 ; décision 161) : en main, un clic sur un arbre ou un rocher debout le
     /// marque pour être retiré, ou le démarque s'il l'était ; un cadre tiré à la souris marque tous ceux dont le pied est
     /// dedans, du plus proche de son premier coin au plus loin : on les retirera dans cet ordre. Il parle au monde par les
-    /// ordres du joueur ; Échap le lâche. Les gestes et les tests l'appellent par les mêmes méthodes.
+    /// ordres du joueur ; le clic droit et Échap le lâchent. Les gestes et les tests l'appellent par les mêmes méthodes.
     /// </summary>
-    public sealed class ClearingTool : IEscapable, IHeldTool
+    public sealed class ClearingTool : IHeldTool
     {
         private readonly World _world;
         private readonly Camera _camera;
@@ -47,20 +47,19 @@ namespace Diciela.Controls
             HeldChanged?.Invoke();
         }
 
+        /// <summary>Le clic droit : l'outil ne tient rien d'autre que lui-même, il le lâche.</summary>
+        public void Cancel()
+        {
+            PutDown();
+        }
+
         /// <summary>Le lâche tout à fait.</summary>
         public void PutDown()
         {
-            Escape();
-        }
-
-        /// <summary>Le lâche ; faux s'il n'était pas en main.</summary>
-        public bool Escape()
-        {
             if (!IsActive)
-                return false;
+                return;
             IsActive = false;
             HeldChanged?.Invoke();
-            return true;
         }
 
         /// <summary>

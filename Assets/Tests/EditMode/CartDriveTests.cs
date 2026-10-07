@@ -55,7 +55,7 @@ namespace Diciela.Tests.EditMode
             World world = _town.WorkingWorld();
             var changes = new List<CartState>();
             world.Carts.CartChanged += cart => changes.Add(cart.State);
-            TraceThePlace(world);
+            TraceThePlaza(world);
             Assert.AreEqual(2, world.Carts.Spots.Count, "Deux marques, deux places de charrette.");
             Cart cart = world.Carts.All[0];
 
@@ -66,7 +66,7 @@ namespace Diciela.Tests.EditMode
             Assert.IsNull(world.Carts.CartAt(world.Carts.Spots[1]), "Une seule charrette : la seconde place attend.");
             Assert.AreEqual(spot.Position, cart.Position, "Garée à sa place.");
             Assert.AreEqual(spot.HeadingDegrees, cart.HeadingDegrees, 1e-3f, "Tournée comme le dit sa place.");
-            Assert.IsTrue(world.Place.Contains(world.Grid.CellOf(cart.Position)), "Sur la Place.");
+            Assert.IsTrue(world.Plaza.Contains(world.Grid.CellOf(cart.Position)), "Sur la Place.");
             CollectionAssert.AreEqual(new[] { CartState.Pulled, CartState.Parked }, changes,
                 "Attelée, puis garée : la vue l'apprend par ses événements.");
         }
@@ -75,7 +75,7 @@ namespace Diciela.Tests.EditMode
         public void TheCartFollowsItsCarterAtTheEndOfItsShaft()
         {
             World world = _town.WorkingWorld();
-            TraceThePlace(world);
+            TraceThePlaza(world);
             Cart cart = world.Carts.All[0];
             Villager chimera = world.Villagers.Chimera;
 
@@ -102,7 +102,7 @@ namespace Diciela.Tests.EditMode
         public void PullingACartHalvesTheCartersPace()
         {
             World world = _town.WorkingWorld();
-            TraceThePlace(world);
+            TraceThePlaza(world);
             Cart cart = world.Carts.All[0];
             Villager chimera = world.Villagers.Chimera;
 
@@ -126,7 +126,7 @@ namespace Diciela.Tests.EditMode
         public void StoppedOnTheWayTheCartGoesHomeAndItsSpotCallsItAgain()
         {
             World world = _town.WorkingWorld();
-            TraceThePlace(world);
+            TraceThePlaza(world);
             Cart cart = world.Carts.All[0];
             Villager chimera = world.Villagers.Chimera;
             Structure camp = TestTown.CampOf(world);
@@ -146,9 +146,9 @@ namespace Diciela.Tests.EditMode
         }
 
         // La Place, un disque de 7 m de rayon en (20 ; 26), et ses deux places de charrette, côte à côte, l'avant au nord.
-        private static void TraceThePlace(World world)
+        private static void TraceThePlaza(World world)
         {
-            TestTown.Send(world, new PaintPlaceCommand(new GroundDisc(new Vector2(20f, 26f), 7f)));
+            TestTown.Send(world, new PaintPlazaCommand(new GroundDisc(new Vector2(20f, 26f), 7f)));
             TestTown.Send(world, new AddCartSpotCommand(new Vector2(18f, 26f), 0f));
             TestTown.Send(world, new AddCartSpotCommand(new Vector2(23f, 26f), 0f));
         }

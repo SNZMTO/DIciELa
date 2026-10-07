@@ -15,6 +15,7 @@ namespace Diciela.Tests.PlayMode
         private TestWorld _test;
         private EscapeControls _controls;
         private OpenSheet _sheet;
+        private Hand _hand;
 
         /// <summary>Une fiche ouverte, qu'Échap ferme une fois.</summary>
         private sealed class OpenSheet : IEscapable
@@ -42,13 +43,15 @@ namespace Diciela.Tests.PlayMode
 #endif
             holder.SetActive(true);
             _sheet = new OpenSheet();
-            _controls.Bind(_sheet, _test.Tool);
+            _hand = new Hand(_test.Tool);
+            _controls.Bind(_sheet, _hand);
             _test.Tool.Begin(_test.Cabin);
         }
 
         public override void TearDown()
         {
             _controls.enabled = false;
+            _hand.Dispose();
             _test.Dispose();
             base.TearDown();
         }

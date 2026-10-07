@@ -27,11 +27,11 @@ namespace Diciela.Simulation.Land
         private readonly List<FloorResult> _refusals = new List<FloorResult>();
         private int _nextId = 1;
 
-        public Floors(NavGrid grid, PlaceZone place, Knowledge knowledge)
+        public Floors(NavGrid grid, PlazaZone plaza, Knowledge knowledge)
         {
             _grid = grid ?? throw new ArgumentNullException(nameof(grid));
             _cells = new FloorCells(grid);
-            _checks = new FloorChecks(grid, place, knowledge, _cells);
+            _checks = new FloorChecks(grid, plaza, knowledge, _cells);
         }
 
         /// <summary>Levé quand des sols changent, une fois par pas au plus, avec la boîte des mailles changées.</summary>
