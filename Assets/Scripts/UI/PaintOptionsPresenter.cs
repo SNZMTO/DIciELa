@@ -8,7 +8,7 @@ namespace Diciela.UI
     /// <summary>
     /// Le présentateur de la rangée d'options de la barre des outils de sol (décision 216), pour l'outil en main : les
     /// formes au mode Forme ; les styles au tracé, et au polygone du mode Forme ; les symétries dans tous les modes ; le
-    /// nombre de copies à l'étoile. Chaque rangée n'est refaite que quand elle paraît ou disparaît ; ce qui est pris est
+    /// nombre de branches à l'étoile. Chaque rangée n'est refaite que quand elle paraît ou disparaît ; ce qui est pris est
     /// enfoncé. Un clic choisit chez les options de l'outil (PaintOptions).
     /// </summary>
     internal sealed class PaintOptionsPresenter : IDisposable
@@ -70,12 +70,12 @@ namespace Diciela.UI
             if (stars != _starsShown)
             {
                 _starsShown = stars;
-                _view.ShowStars(stars ? PaintBarContent.Stars(_texts, options.StarCopiesRange) : NoStars);
+                _view.ShowStars(stars ? PaintBarContent.Stars(_texts, options.StarBranchesRange) : NoStars);
             }
             _view.SelectShape(options.Shape);
             _view.SelectStyle(options.Style);
             _view.SelectSymmetry(options.Symmetry);
-            _view.SelectStar(options.StarCopies);
+            _view.SelectStar(options.StarBranches);
         }
 
         private void OnShapeChosen(PaintShape shape)
@@ -93,9 +93,9 @@ namespace Diciela.UI
             _held()?.Options.Choose(symmetry);
         }
 
-        private void OnStarChosen(int copies)
+        private void OnStarChosen(int branches)
         {
-            _held()?.Options.ChooseStar(copies);
+            _held()?.Options.ChooseStar(branches);
         }
     }
 }

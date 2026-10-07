@@ -21,7 +21,7 @@ namespace Diciela.UI
         /// <summary>Levé quand le joueur clique une symétrie.</summary>
         event Action<PaintSymmetry> SymmetryChosen;
 
-        /// <summary>Levé quand le joueur clique un nombre de copies de l'étoile.</summary>
+        /// <summary>Levé quand le joueur clique un nombre de branches de l'étoile.</summary>
         event Action<int> StarChosen;
 
         void ShowShapes(IReadOnlyList<PaintBarChoice<PaintShape>> shapes);
@@ -38,6 +38,6 @@ namespace Diciela.UI
 
         void ShowStars(IReadOnlyList<PaintBarChoice<int>> stars);
 
-        void SelectStar(int copies);
+        void SelectStar(int branches);
     }
 }

@@ -210,7 +210,7 @@ place.symetrie.suite.None,"Une seule forme, là où tu traces.","A single shape,
 place.symetrie.suite.Mirror,"Chaque geste se copie de l'autre côté de l'axe. Glisse l'épingle pour la déplacer ; R tourne l'axe.","Every stroke is copied across the axis. Drag the pin to move it; R turns the axis."
 place.symetrie.suite.DoubleMirror,"Chaque geste se copie dans les quatre quarts, autour de deux axes. Glisse l'épingle pour la déplacer ; R tourne les axes.","Every stroke is copied into the four quarters, around two axes. Drag the pin to move it; R turns the axes."
 place.symetrie.suite.Star,"Chaque geste se copie autour de l'épingle, en étoile ; choisis ses branches à côté. Glisse l'épingle pour la déplacer.","Every stroke is copied around the pin, as a star; pick its arms beside. Drag the pin to move it."
-place.etoile.suite,{copies} branches autour de l'épingle.,{copies} arms around the pin.
+place.etoile.suite,{branches} branches autour de l'épingle.,{branches} arms around the pin.
 place.superficie,{superficie} / {max} m²,{superficie} / {max} m²
 place.marques,{marques} / {max},{marques} / {max}
 place.taille,Ø {taille} m,Ø {taille} m

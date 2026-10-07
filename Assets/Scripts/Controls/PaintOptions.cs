@@ -26,7 +26,7 @@ namespace Diciela.Controls
             _changed = changed;
             Vector2 range = settings.BrushRadiusRangeMeters;
             BrushRadius = Mathf.Clamp(startRadius, range.x, range.y);
-            StarCopies = settings.StartStarCopies;
+            StarBranches = settings.StartStarBranches;
         }
 
         /// <summary>La forme du mode Forme.</summary>
@@ -38,11 +38,11 @@ namespace Diciela.Controls
         /// <summary>La symétrie de ce qu'il trace, gomme ou pose.</summary>
         public PaintSymmetry Symmetry { get; private set; }
 
-        /// <summary>Les copies de l'étoile, la forme comprise.</summary>
-        public int StarCopies { get; private set; }
+        /// <summary>Les branches de l'étoile : la forme et ses copies.</summary>
+        public int StarBranches { get; private set; }
 
-        /// <summary>Le moins et le plus de copies de l'étoile.</summary>
-        public Vector2Int StarCopiesRange => _settings.StarCopiesRange;
+        /// <summary>Le moins et le plus de branches de l'étoile.</summary>
+        public Vector2Int StarBranchesRange => _settings.StarBranchesRange;
 
         /// <summary>Vrai une fois l'épingle posée ; avant, la première symétrie la pose où il faut.</summary>
         public bool HasPin { get; private set; }
@@ -86,14 +86,14 @@ namespace Diciela.Controls
             _changed(PaintOptionEffect.PlacePin);
         }
 
-        /// <summary>Donne à l'étoile tant de copies, la forme comprise, dans leurs bornes.</summary>
-        public void ChooseStar(int copies)
+        /// <summary>Donne à l'étoile tant de branches, la forme comprise, dans leurs bornes.</summary>
+        public void ChooseStar(int branches)
         {
-            Vector2Int range = _settings.StarCopiesRange;
-            copies = Mathf.Clamp(copies, range.x, range.y);
-            if (!_active() || copies == StarCopies)
+            Vector2Int range = _settings.StarBranchesRange;
+            branches = Mathf.Clamp(branches, range.x, range.y);
+            if (!_active() || branches == StarBranches)
                 return;
-            StarCopies = copies;
+            StarBranches = branches;
             _changed(PaintOptionEffect.Refresh);
         }
 

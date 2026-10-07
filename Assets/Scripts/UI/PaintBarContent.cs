@@ -56,15 +56,15 @@ namespace Diciela.UI
             return symmetries;
         }
 
-        /// <summary>Les nombres de copies de l'étoile, de ses bornes, chacun son chiffre et son usage.</summary>
+        /// <summary>Les nombres de branches de l'étoile, de ses bornes, chacun son chiffre et son usage.</summary>
         public static List<PaintBarChoice<int>> Stars(TextTable texts, Vector2Int range)
         {
             var stars = new List<PaintBarChoice<int>>();
-            for (int copies = range.x; copies <= range.y; copies++)
+            for (int branches = range.x; branches <= range.y; branches++)
             {
-                string number = copies.ToString(CultureInfo.InvariantCulture);
-                stars.Add(new PaintBarChoice<int>(copies, number,
-                    texts.Get(TextKeys.PaintStarDetail).Replace(TextKeys.CopiesParameter, number), ""));
+                string number = branches.ToString(CultureInfo.InvariantCulture);
+                stars.Add(new PaintBarChoice<int>(branches, number,
+                    texts.Get(TextKeys.PaintStarDetail).Replace(TextKeys.BranchesParameter, number), ""));
             }
             return stars;
         }

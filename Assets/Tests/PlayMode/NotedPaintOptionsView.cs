@@ -39,9 +39,9 @@ namespace Diciela.Tests.PlayMode
             SymmetryChosen?.Invoke(symmetry);
         }
 
-        public void ChooseStar(int copies)
+        public void ChooseStar(int branches)
         {
-            StarChosen?.Invoke(copies);
+            StarChosen?.Invoke(branches);
         }
 
         public void ShowShapes(IReadOnlyList<PaintBarChoice<PaintShape>> shapes)
@@ -83,9 +83,9 @@ namespace Diciela.Tests.PlayMode
             Stars.AddRange(stars);
         }
 
-        public void SelectStar(int copies)
+        public void SelectStar(int branches)
         {
-            SelectedStar = copies;
+            SelectedStar = branches;
         }
     }
 }
