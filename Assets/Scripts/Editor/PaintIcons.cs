@@ -20,27 +20,15 @@ namespace Diciela.EditorTools
         public static IEnumerable<InterfaceIcons.Icon> All()
         {
             yield return new InterfaceIcons.Icon("place", Size, Card());
-            yield return new InterfaceIcons.Icon("pinceau", Size, new[]
-            {
-                Bar(16.5f, 3.5f, 9.5f, 10.5f, 2.2f), Bar(9.8f, 10.2f, 7.6f, 12.4f, 3.4f, 0.6f),
-                Polygon(Ink, 1f, Circle(5.6f, 14.4f, 3.4f, 12))
-            });
-            yield return new InterfaceIcons.Icon("gomme", Size, new[]
-            {
-                Polygon(Ink, 0.5f, 2f, 13f, 11f, 4f, 15.5f, 8.5f, 6.5f, 17.5f),
-                Polygon(Ink, 1f, 2f, 13f, 6.5f, 8.5f, 11f, 13f, 6.5f, 17.5f), Bar(6f, 18.6f, 18f, 18.6f, 1.2f)
-            });
+            yield return new InterfaceIcons.Icon("pinceau", Size, Brush());
+            yield return new InterfaceIcons.Icon("gomme", Size, Eraser());
             var circle = new List<InterfaceIcons.Face> { Polygon(Ink, 0.3f, Circle(10f, 10f, 6.5f, 24)) };
             circle.AddRange(Loop(Circle(10f, 10f, 7.5f, 24), 2f));
             yield return new InterfaceIcons.Icon("cercle", Size, circle.ToArray());
             var box = new List<InterfaceIcons.Face> { Polygon(Ink, 0.3f, 3f, 5f, 17f, 5f, 17f, 15f, 3f, 15f) };
             box.AddRange(Loop(new[] { 3f, 5f, 17f, 5f, 17f, 15f, 3f, 15f }, 2f));
             yield return new InterfaceIcons.Icon("rectangle", Size, box.ToArray());
-            var spot = new List<InterfaceIcons.Face>(Loop(new[] { 6f, 2f, 14f, 2f, 14f, 18f, 6f, 18f }, 1.6f))
-            {
-                Polygon(Ink, 1f, 10f, 4.6f, 12.8f, 8.4f, 7.2f, 8.4f)
-            };
-            yield return new InterfaceIcons.Icon("place-charrette", Size, spot.ToArray());
+            yield return new InterfaceIcons.Icon("place-charrette", Size, Spot());
             yield return new InterfaceIcons.Icon("trace", Size, Trace());
             yield return new InterfaceIcons.Icon("forme", Size, Shapes());
             yield return new InterfaceIcons.Icon("polygone", Size, Pentagon());
@@ -52,6 +40,36 @@ namespace Diciela.EditorTools
                 Bar(12.5f, 9f, 15f, 2.5f, 4.5f, 0.45f), Bar(5.8f, 15.6f, 6.3f, 14.2f, 1.2f),
                 Bar(9.1f, 11.3f, 10.5f, 10.4f, 1.2f), Bar(13.6f, 6.6f, 14.1f, 5.2f, 1.2f)
             });
+        }
+
+        // Le pinceau, ses poils en bas à gauche.
+        internal static InterfaceIcons.Face[] Brush()
+        {
+            return new[]
+            {
+                Bar(16.5f, 3.5f, 9.5f, 10.5f, 2.2f), Bar(9.8f, 10.2f, 7.6f, 12.4f, 3.4f, 0.6f),
+                Polygon(Ink, 1f, Circle(5.6f, 14.4f, 3.4f, 12))
+            };
+        }
+
+        // La gomme, penchée, sur le trait qu'elle efface.
+        internal static InterfaceIcons.Face[] Eraser()
+        {
+            return new[]
+            {
+                Polygon(Ink, 0.5f, 2f, 13f, 11f, 4f, 15.5f, 8.5f, 6.5f, 17.5f),
+                Polygon(Ink, 1f, 2f, 13f, 6.5f, 8.5f, 11f, 13f, 6.5f, 17.5f), Bar(6f, 18.6f, 18f, 18.6f, 1.2f)
+            };
+        }
+
+        // La place de charrette : un cadre, sa pointe vers l'avant.
+        internal static InterfaceIcons.Face[] Spot()
+        {
+            var spot = new List<InterfaceIcons.Face>(Loop(new[] { 6f, 2f, 14f, 2f, 14f, 18f, 6f, 18f }, 1.6f))
+            {
+                Polygon(Ink, 1f, 10f, 4.6f, 12.8f, 8.4f, 7.2f, 8.4f)
+            };
+            return spot.ToArray();
         }
 
         // Le tracé : quatre points, reliés de segments droits.

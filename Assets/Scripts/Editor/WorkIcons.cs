@@ -57,7 +57,7 @@ namespace Diciela.EditorTools
         }
 
         // Le marteau, la tête en haut à droite.
-        private static InterfaceIcons.Face[] Hammer()
+        internal static InterfaceIcons.Face[] Hammer()
         {
             return new[]
             {
@@ -67,7 +67,7 @@ namespace Diciela.EditorTools
         }
 
         // La hache, au manche aussi épais que celui du marteau.
-        private static InterfaceIcons.Face[] Axe()
+        internal static InterfaceIcons.Face[] Axe()
         {
             return new[]
             {
