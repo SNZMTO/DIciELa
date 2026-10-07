@@ -42,7 +42,7 @@ namespace Diciela.UI
             _shapes.Chosen += shape => ShapeChosen?.Invoke(shape);
             _styles.Chosen += style => StyleChosen?.Invoke(style);
             _symmetries.Chosen += symmetry => SymmetryChosen?.Invoke(symmetry);
-            _stars.Chosen += copies => StarChosen?.Invoke(copies);
+            _stars.Chosen += branches => StarChosen?.Invoke(branches);
         }
 
         public event Action<PaintShape> ShapeChosen;
@@ -88,9 +88,9 @@ namespace Diciela.UI
             _starsRow.EnableInClassList(StyleClasses.Hidden, stars.Count == 0);
         }
 
-        public void SelectStar(int copies)
+        public void SelectStar(int branches)
         {
-            _stars.Select(copies);
+            _stars.Select(branches);
         }
 
         /// <summary>Vide et cache toutes les rangées.</summary>

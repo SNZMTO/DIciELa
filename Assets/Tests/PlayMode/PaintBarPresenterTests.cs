@@ -30,7 +30,7 @@ namespace Diciela.Tests.PlayMode
                                      "place.style.Curved,Courbe\n" +
                                      "place.symetrie.None,Sans symétrie\n" +
                                      "place.symetrie.Star,Étoile\n" +
-                                     "place.etoile.suite,{copies} copies\n" +
+                                     "place.etoile.suite,{branches} branches\n" +
                                      "place.outil.CartSpot,Place de charrette\n" +
                                      "place.superficie,{superficie} / {max} m²\n" +
                                      "place.marques,{marques} / {max}\n" +

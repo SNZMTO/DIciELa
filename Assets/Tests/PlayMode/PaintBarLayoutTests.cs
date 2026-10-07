@@ -18,6 +18,7 @@ namespace Diciela.Tests.PlayMode
     /// Au-dessus d'elle, la bulle des raisons dit la plus longue (« La Place dépasserait sa superficie… ») : plus large
     /// que la bulle, elle passe à la ligne au lieu d'en déborder. C'est le vrai HUD (sa mise en page, la feuille du jeu,
     /// sa taille), avec les textes du projet, le petit monde des tests pour la Place et celui du campement pour l'astuce.
+    /// Au mode Place de charrette, ses rangées d'options vides ne laissent pas de trou.
     /// </summary>
     public sealed class PaintBarLayoutTests
     {
@@ -90,6 +91,13 @@ namespace Diciela.Tests.PlayMode
                             yield return null;
                         Check(document.rootVisualElement, screen, faults);
                     }
+
+                    // Au mode Place de charrette, sans symétrie : les formes, les styles, la taille et l'étoile se cachent.
+                    world.Plaza.Choose(PaintToolMode.CartSpot);
+                    world.Plaza.Options.Choose(PaintSymmetry.None);
+                    for (int frame = 0; frame < SettleFrames; frame++)
+                        yield return null;
+                    CheckEmptyRows(document.rootVisualElement, faults);
                 }
                 finally
                 {
@@ -108,6 +116,26 @@ namespace Diciela.Tests.PlayMode
 #else
             yield break;
 #endif
+        }
+
+        // Une rangée d'options dont tout est caché ne prend aucune place, ni hauteur ni marge : la barre n'a pas de trou.
+        private static void CheckEmptyRows(VisualElement root, List<string> faults)
+        {
+            int empty = 0;
+            root.Q("place-barre").Query(className: "place-options").ForEach(row =>
+            {
+                foreach (VisualElement child in row.Children())
+                {
+                    if (child.resolvedStyle.display != DisplayStyle.None)
+                        return;
+                }
+                empty++;
+                if (row.layout.height > Tolerance || row.resolvedStyle.marginTop > Tolerance)
+                    faults.Add("Une rangée d'options vide prend de la place (" + row.layout + ", marge " +
+                               row.resolvedStyle.marginTop + ").");
+            });
+            if (empty == 0)
+                faults.Add("Au mode Place de charrette, aucune rangée d'options n'est vide : le test ne vérifie rien.");
         }
 
         private static void Check(VisualElement root, Vector2Int screen, List<string> faults)

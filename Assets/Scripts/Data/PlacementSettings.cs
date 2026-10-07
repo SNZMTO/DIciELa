@@ -92,10 +92,10 @@ namespace Diciela.Data
                  "une demi-maille suffit.")]
         [SerializeField, Range(0.05f, 2f)] private float _curveStepMeters = 0.25f;
 
-        [Tooltip("Les copies de l'étoile (la forme comprise), au départ, puis au moins et au plus.")]
-        [SerializeField, Range(2, 12)] private int _startStarCopies = 4;
+        [Tooltip("Les branches de l'étoile (la forme comprise), au départ, puis au moins et au plus.")]
+        [SerializeField, Range(2, 12)] private int _startStarBranches = 4;
 
-        [SerializeField] private Vector2Int _starCopiesRange = new Vector2Int(3, 8);
+        [SerializeField] private Vector2Int _starBranchesRange = new Vector2Int(3, 8);
 
         [Tooltip("La longueur des axes que l'épingle de la symétrie montre au sol, de part et d'autre, en mètres.")]
         [SerializeField, Range(0.5f, 20f)] private float _pinAxisMeters = 3f;
@@ -136,8 +136,8 @@ namespace Diciela.Data
         public float HandlePickPixels => _handlePickPixels;
         public float HandleRadiusMeters => _handleRadiusMeters;
         public float CurveStepMeters => _curveStepMeters;
-        public int StartStarCopies => _startStarCopies;
-        public Vector2Int StarCopiesRange => _starCopiesRange;
+        public int StartStarBranches => _startStarBranches;
+        public Vector2Int StarBranchesRange => _starBranchesRange;
         public float PinAxisMeters => _pinAxisMeters;
         public Color ZoneVeilColor => _zoneVeilColor;
         public Color OutlineColor => _outlineColor;
