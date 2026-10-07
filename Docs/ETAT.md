@@ -19,8 +19,8 @@ marchaient pas ; le prix au m² des sols qui se paient (GDD 9 ; ma reco : 1 Pav�
 escalier de la zone ; combien de zones à quel niveau ; les remplaçants (icônes des outils, vignette d'un sol) ;
 l'astuce, qui ne parle pas de tracer la Place ; « Run In Background » ; peindre la carte ; les modèles de la loge et de
 l'entrepôt ; les icônes des Métiers, des tâches ; le fanion des arbres ; le bandeau ; la voix de la Chimère ; les noms.
-**À vérifier par toi, à la souris** : P prend la Place : sa carte paraît, le curseur devient un pinceau couleur pêche,
-sa pointe sur le pointeur ; sur l'interface, la flèche revient ; Tab tenu, la roue s'ouvre sous le pointeur, pousser
+**À vérifier par toi, à la souris** (sur la vue Game) : P prend la Place, sa carte paraît ; le curseur, un pinceau, a
+un halo pêche (la hache, menthe), le cercle d'aperçu centré sur ses poils ; sur l'interface, la flèche revient ; Tab tenu, la roue s'ouvre sous le pointeur, pousser
 plus loin déplie un éventail, relâcher prend ; 1 à 8, le même deux fois ; la molette dans la roue ; un clic sur la
 carte ouvre la roue ; une place de charrette hors de la zone : croix rouge au curseur, raison sur la carte ; Retirer,
 Déplacer, une construction en main : hache, main, marteau ; un chemin de terre a les facettes de l'herbe.
