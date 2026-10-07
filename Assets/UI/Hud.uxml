@@ -70,6 +70,12 @@
                             <ui:Label name="place-taille" class="libelle" picking-mode="Ignore" />
                         </Diciela.UI.Facet>
                     </ui:VisualElement>
+                    <ui:VisualElement class="place-options" picking-mode="Ignore">
+                        <ui:VisualElement name="place-symetries" class="place-formes bloc-cache" />
+                    </ui:VisualElement>
+                    <ui:VisualElement class="place-options" picking-mode="Ignore">
+                        <ui:VisualElement name="place-etoiles" class="place-formes bloc-cache" />
+                    </ui:VisualElement>
                     <ui:VisualElement class="place-valeurs" picking-mode="Ignore">
                         <Diciela.UI.Facet name="place-superficie-creux" class="creux pan-4 place-valeur" picking-mode="Ignore">
                             <ui:VisualElement class="place-valeur-icone place-icone-superficie" picking-mode="Ignore" />

@@ -43,6 +43,32 @@ namespace Diciela.UI
             return styles;
         }
 
+        /// <summary>Les symétries, dans leur ordre, chacune son nom et son usage ; sans touche.</summary>
+        public static List<PaintBarChoice<PaintSymmetry>> Symmetries(TextTable texts)
+        {
+            var symmetries = new List<PaintBarChoice<PaintSymmetry>>();
+            foreach (PaintSymmetry symmetry in (PaintSymmetry[])Enum.GetValues(typeof(PaintSymmetry)))
+            {
+                string name = symmetry.ToString();
+                symmetries.Add(new PaintBarChoice<PaintSymmetry>(symmetry, texts.Get(TextKeys.PaintSymmetry(name)),
+                    texts.Get(TextKeys.PaintSymmetryDetail(name)), ""));
+            }
+            return symmetries;
+        }
+
+        /// <summary>Les nombres de copies de l'étoile, de ses bornes, chacun son chiffre et son usage.</summary>
+        public static List<PaintBarChoice<int>> Stars(TextTable texts, Vector2Int range)
+        {
+            var stars = new List<PaintBarChoice<int>>();
+            for (int copies = range.x; copies <= range.y; copies++)
+            {
+                string number = copies.ToString(CultureInfo.InvariantCulture);
+                stars.Add(new PaintBarChoice<int>(copies, number,
+                    texts.Get(TextKeys.PaintStarDetail).Replace(TextKeys.CopiesParameter, number), ""));
+            }
+            return stars;
+        }
+
         /// <summary>Les formes du mode Forme, dans leur ordre, chacune son nom et son usage ; sans touche.</summary>
         public static List<PaintBarChoice<PaintShape>> Shapes(TextTable texts)
         {

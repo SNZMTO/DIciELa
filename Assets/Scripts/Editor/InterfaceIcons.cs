@@ -81,6 +81,8 @@ namespace Diciela.EditorTools
                 yield return row;
             foreach (Icon paintIcon in PaintIcons.All())
                 yield return paintIcon;
+            foreach (Icon symmetryIcon in SymmetryIcons.All())
+                yield return symmetryIcon;
             // Les flèches d'un choix : deux chevrons à l'encre.
             yield return new Icon("precedent", 20f, new[] { F("encre", 12.5f, 3.5f, 15f, 6f, 11f, 10f, 15f, 14f, 12.5f, 16.5f, 6f, 10f) });
             yield return new Icon("suivant", 20f, new[] { F("encre", 7.5f, 3.5f, 14f, 10f, 7.5f, 16.5f, 5f, 14f, 9f, 10f, 5f, 6f) });

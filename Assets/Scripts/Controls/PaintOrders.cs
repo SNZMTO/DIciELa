@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Diciela.Simulation;
 using Diciela.Simulation.Land;
 using UnityEngine;
@@ -6,12 +7,12 @@ using UnityEngine;
 namespace Diciela.Controls
 {
     /// <summary>
-    /// Les ordres d'un outil de sol (décisions 206 et 210) : peindre ou gommer une forme, la zone ou un sol, poser ou
-    /// retirer une place de charrette. Chaque ordre joué lève un événement de la Place ou des sols (ils ont changé, une
-    /// place est posée ou retirée, ou un refus) : il le dit à l'outil, qui redemande son aperçu. Un sol qui finit de se
-    /// bâtir lève aussi le sien : l'aperçu se refait, et un clic attendu repart un peu plus tôt, sans dommage (un ordre
-    /// qui ne change rien est refusé). Un clic attend que le précédent soit joué ; un trait
-    /// relâché part toujours, l'ordre se vérifiant de lui-même. Celui qui le crée le libère (Dispose).
+    /// Les ordres d'un outil de sol (décisions 206, 210 et 216) : peindre ou gommer une forme, la zone ou un sol, poser
+    /// ou retirer une place de charrette, avec leurs copies par symétrie. Chaque ordre joué lève un événement de la
+    /// Place ou des sols (ils ont changé, une place est posée ou retirée, ou un refus) : il le dit à l'outil, qui
+    /// redemande son aperçu. Un sol qui finit de se bâtir lève aussi le sien : l'aperçu se refait, et un clic attendu
+    /// repart un peu plus tôt, sans dommage (un ordre qui ne change rien est refusé). Un clic attend que le précédent
+    /// soit joué ; un trait relâché part toujours, l'ordre se vérifiant de lui-même. Celui qui le crée le libère (Dispose).
     /// </summary>
     internal sealed class PaintOrders : IDisposable
     {
@@ -55,10 +56,14 @@ namespace Diciela.Controls
                 Send(new TraceFloorCommand(shape, ink.Floor, scope));
         }
 
-        /// <summary>Pose une place de charrette à ce milieu, l'avant de sa charrette tourné vers ce cap.</summary>
-        public void SendMark(Vector2 center, float headingDegrees)
+        /// <summary>
+        /// Pose une place de charrette à ce milieu, l'avant de sa charrette tourné vers ce cap, et ses copies par symétrie
+        /// (la première est elle-même) ; chacune se vérifie en se jouant.
+        /// </summary>
+        public void SendMarks(IReadOnlyList<GroundCopy> copies, Vector2 center, float headingDegrees)
         {
-            Send(new AddCartSpotCommand(center, headingDegrees));
+            foreach (GroundCopy copy in copies)
+                Send(new AddCartSpotCommand(copy.Apply(center), copy.HeadingOf(headingDegrees)));
         }
 
         /// <summary>Retire cette place de charrette.</summary>

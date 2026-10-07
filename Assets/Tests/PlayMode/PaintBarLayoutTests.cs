@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Diciela.Controls;
 using Diciela.Data;
 using Diciela.Simulation.Land;
 using Diciela.UI;
@@ -12,11 +13,11 @@ namespace Diciela.Tests.PlayMode
 {
     /// <summary>
     /// La barre de la Place à toutes les tailles d'écran (décision 206), rendue hors écran de 1280 × 720 à la 4K, l'outil
-    /// de la Place en main : elle tient au milieu du bas, à 24 px, dans l'écran, sans chevaucher l'astuce (en bas à
-    /// gauche) ni l'icône des outils (en bas à droite). Au-dessus d'elle, la bulle des raisons dit la plus longue (« La
-    /// Place dépasserait sa superficie… ») : plus large que la bulle, elle passe à la ligne au lieu d'en déborder. C'est le
-    /// vrai HUD (sa mise en page, la feuille du jeu, sa taille), avec les textes du projet, le petit monde des tests pour
-    /// la Place et celui du campement pour l'astuce.
+    /// de la Place en main, à sa plus large (le polygone et ses styles, l'étoile et ses nombres) : elle tient au milieu
+    /// du bas, à 24 px, dans l'écran, sans chevaucher l'astuce (en bas à gauche) ni l'icône des outils (en bas à droite).
+    /// Au-dessus d'elle, la bulle des raisons dit la plus longue (« La Place dépasserait sa superficie… ») : plus large
+    /// que la bulle, elle passe à la ligne au lieu d'en déborder. C'est le vrai HUD (sa mise en page, la feuille du jeu,
+    /// sa taille), avec les textes du projet, le petit monde des tests pour la Place et celui du campement pour l'astuce.
     /// </summary>
     public sealed class PaintBarLayoutTests
     {
@@ -80,6 +81,9 @@ namespace Diciela.Tests.PlayMode
                             bar = new PaintBar(document, tooltips, new ReasonBubble(document));
                             bar.Show(texts, world.Plaza, world.Paths, world.World, new FixedToolKeys());
                             world.Plaza.Take();
+                            world.Plaza.Choose(PaintToolMode.Shape);
+                            world.Plaza.Options.Choose(PaintShape.Polygon);
+                            world.Plaza.Options.Choose(PaintSymmetry.Star);
                             bar.ShowReason(texts.Get(TextKeys.PlazaRefusal(PlazaResult.TooLarge.ToString())));
                         }
                         for (int frame = 0; frame < SettleFrames; frame++)

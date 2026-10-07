@@ -12,7 +12,7 @@ namespace Diciela.Tests.EditMode
     /// <summary>
     /// Ce que partagent les tests des sols (FloorTests, FloorEraseTests), sur le monde plat de 40 m aux mailles de 50 cm :
     /// un monde qui note les refus, tracer par l'ordre du joueur, un trait et un rectangle tout faits, l'état d'un sol en
-    /// un point, le seul chantier de la file, et l'oracle de la surface en fantôme, comptée maille à maille.
+    /// un point, le seul chantier de la file, et l'oracle de la surface en fantôme, relevée maille à maille.
     /// </summary>
     internal static class TestFloors
     {
@@ -58,16 +58,22 @@ namespace Diciela.Tests.EditMode
         /// <summary>Les mailles en fantôme de toute la carte, comptées une à une : l'oracle de la surface d'un sol.</summary>
         public static int PlannedCells(World world)
         {
-            int count = 0;
+            return PlannedOf(world).Count;
+        }
+
+        /// <summary>Les mailles en fantôme de toute la carte, relevées une à une.</summary>
+        public static List<Vector2Int> PlannedOf(World world)
+        {
+            var planned = new List<Vector2Int>();
             for (int x = 0; x < world.Grid.Width; x++)
             {
                 for (int y = 0; y < world.Grid.Depth; y++)
                 {
                     if (world.Floors.StateAt(new Vector2Int(x, y)) == FloorState.Planned)
-                        count++;
+                        planned.Add(new Vector2Int(x, y));
                 }
             }
-            return count;
+            return planned;
         }
     }
 }

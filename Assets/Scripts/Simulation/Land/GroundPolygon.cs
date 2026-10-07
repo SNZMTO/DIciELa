@@ -25,6 +25,14 @@ namespace Diciela.Simulation.Land
 
         public IReadOnlyList<Vector2> Corners => _corners;
 
+        public override GroundShape Copied(GroundCopy copy)
+        {
+            var corners = new Vector2[_corners.Length];
+            for (int i = 0; i < corners.Length; i++)
+                corners[i] = copy.Apply(_corners[i]);
+            return new GroundPolygon(corners);
+        }
+
         internal override void CoverCells(NavGrid grid, List<Vector2Int> cells)
         {
             Vector2 min = _corners[0], max = min;

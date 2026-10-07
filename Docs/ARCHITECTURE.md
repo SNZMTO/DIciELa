@@ -356,7 +356,7 @@ mètres carrés), `Place` ne veut dire que poser, la fiche d'un lieu est `Locati
 | le nom d'un habitant (sa clé) | `NameKey` | ouvrir un poste pour lui | `WorkSlots.OpenFor` | un poste sur la fiche d'un lieu | `LocationSheetSlot` |
 | apprendre (une idée) ; appris | `Knowledge.Learn` ; `Learned` | lieu de travail (d'un premier habitant) | `Workplace` | les onglets du panneau | `BuildBarTabs` |
 | fermer un poste | `WorkSlots.Close` | s'installer à son lieu de travail | `Opening.Settle` | la Place (la zone) ; ses règles | `PlazaZone` ; `PlazaChecks` |
-| devants de porte | `Doorways` | une forme peinte (trait, disque, rectangle, polygone) ; une courbe douce | `GroundShape` (`GroundStroke`, `GroundDisc`, `GroundBox`, `GroundPolygon`) ; `GroundSpline` | une marque (place de charrette) | `PlazaMark` |
+| devants de porte | `Doorways` | une forme peinte (trait, disque, rectangle, polygone) ; une courbe douce ; une copie par symétrie ; plusieurs formes d'un geste | `GroundShape` (`GroundStroke`, `GroundDisc`, `GroundBox`, `GroundPolygon`) ; `GroundSpline` ; `GroundCopy` ; `GroundUnion` | une marque (place de charrette) | `PlazaMark` |
 | peindre ; gommer la Place | `PaintPlazaCommand` ; `ErasePlazaCommand` | poser par le milieu de sa boîte | `Piece.Centered` | encombrement ; places libres ; ce qui tient encore | `GoodDefinition.Space` ; `FreeSpace` ; `RoomFor` |
 | charrettes de l'étal ; à conduire ; vues | `Carts` ; `CartOffers` ; `CartViews` | conduire ; atteler ; tirer ; garer | `Drive` ; `Hitch` ; `Pull` ; `Park` | cap (au sol) ; poser, retirer une place de charrette | `Heading` ; `AddCartSpotCommand`, `RemoveCartSpotCommand` |
 | déplacer (une construction) ; son sol | `MoveStructureCommand`, `StructureMoves` ; `StructureGround` | déplacée ; déplacement refusé | `StructureMoved` ; `MoveRefused` |
@@ -443,30 +443,37 @@ mètres carrés), `Place` ne veut dire que poser, la fiche d'un lieu est `Locati
   vise un arbre par la boîte de son modèle et marque ce que contient le cadre qu'on tire, que l'interface dessine
   (`ISelectionFrame`). Un panneau ouvert rend la ville muette ; les conteneurs plein écran de l'interface ne captent pas le pointeur. Les gestes ne
   connaissent pas l'interface : elle leur dit seulement où elle est (`IInterfaceArea`), et `Game` les relie.
-- **Les outils de sol** (décisions 206, 210, 214 et 216) : un seul outil en main (`PaintTool`) à deux entrées
+- **Les outils de sol** (décisions 206, 210, 214, 216 et 219) : un seul outil en main (`PaintTool`) à deux entrées
   (`PaintEntry`), l'outil de la Place, pris à la carte de la Place, que le panneau Construire met en tête de la famille
   que nomme sa fiche (`BuildBarCards`), et l'outil Chemins, pris à la roue. L'entrée dit ses modes, s'il pose la zone,
   où vont ses sols et son pinceau de départ. L'outil tient son mode, en familles (`PaintToolMode` : pinceau, gomme,
   tracé, forme, place de charrette), son encre (`PaintInks` : la zone, ou l'un des sols que la ville sait faire, dite en
   toutes lettres par `PaintInk` : la zone, un sol, ou rien) et ses options, ce que règle la rangée sous ses modes
   (`PaintOptions` : la forme du mode Forme, `PaintShape` ; le style d'un tracé ou d'un polygone, `PaintTraceStyle` ; la
-  taille du pinceau ; le cap d'une place de charrette) ; il travaille sur sa surface (`PaintCanvas`) : le geste en cours
-  (`PaintDrawing` : glissé, un trait de pinceau, un cercle, un rectangle, qui part au relâchement ; pointé, un tracé ou
-  un polygone, droit ou en courbe, `GroundSpline`, qui ne part qu'au clic sur le point qui le finit : `PaintPoints`,
-  dont les points posés se prennent à l'écran, à quelques pixels près, par `PaintHandles`, et se déplacent en les
-  glissant), ce que la Place ou les sols répondent à ce qu'il vise, par la même fonction que l'ordre,
-  traduit en une seule réponse (`PaintAnswer`) et montré par l'aperçu (`PaintAim`), et les ordres qui en partent
-  (`PaintOrders`). Ses gestes (`PaintControls`, leur carte d'actions), pour celui des deux qui est en main, glissent,
-  cliquent, tournent par la touche de la pose (`RotateKey`, que la pose partage) et changent la taille du pinceau à Ctrl
-  + molette, que la caméra laisse alors. Les touches des cartes passent par un aiguillage (`CardKeys`) : le panneau
-  ouvert, ses cartes ; sinon, les modes de l'outil de sol en main. La vue montre la zone (`PlazaZoneView`) et l'aperçu
-  de l'outil (`PaintToolPreview`) en calques posés sur le relief (`GroundOverlay`, `DrapedMesh` : un seul maillage par
-  calque, refait quand la Place change) ; l'interface, une seule barre pour les deux outils (`PaintBar`, dont chaque
-  rangée de feutres est une `FeltRow` : ce qu'il pose, ses modes, ses formes ; `PaintBarPresenter`, ce qu'elle montre
-  de l'outil en main : `PaintBarContent`, chaque choix une `PaintBarChoice`) ; la raison d'un refus, de la pose, de la
-  Place ou des sols, passe par une seule bulle (`ReasonBubble`), où parle le dernier qui a quelque chose à dire (pour la
-  barre, `PaintBarReasons`). `Game` relie la barre, les gestes et la zone, qui ne se voit qu'en mode construction
-  (`TownPlaza`).
+  symétrie, `PaintSymmetry`, son épingle, ses axes et les branches de l'étoile ; la taille du pinceau ; le cap d'une
+  place de charrette). Ce que la barre choisit se choisit chez les options, l'outil en main, et l'outil s'y fait
+  (`PaintOptionEffect` : abandonner le geste, le redessiner, poser l'épingle). Il travaille sur sa surface
+  (`PaintCanvas`) : le geste en cours (`PaintDrawing` : glissé, un trait de pinceau, un cercle, un rectangle, qui part
+  au relâchement ; pointé, un tracé ou un polygone, droit ou en courbe, `GroundSpline`, qui ne part qu'au clic sur le
+  point qui le finit : `PaintPoints`), ce qu'on prend et glisse (`PaintGrips` : les points posés, `PaintPoints`, et
+  l'épingle, `PaintPin`, pris à l'écran, à quelques pixels près, par `PaintHandles`), ce que la Place ou les sols
+  répondent à ce qu'il vise, par la même fonction que l'ordre, traduit en une seule réponse (`PaintAnswer`) et montré
+  par l'aperçu (`PaintAim`, l'épingle par `PaintPinView`), et les ordres qui en partent (`PaintOrders`). La symétrie
+  recopie ce qu'il trace, gomme ou pose (`PaintCopies` : la forme elle-même, puis ses copies, chacune un `GroundCopy`,
+  tournée ou retournée autour de l'épingle) : une forme et ses copies ne font qu'une (`GroundUnion`), vérifiée et
+  envoyée d'un seul ordre, chaque maille une fois ; une place de charrette et ses copies, chacune son ordre. Ses gestes
+  (`PaintControls`, leur carte d'actions), pour celui des deux qui est en main, glissent, cliquent, tournent par la
+  touche de la pose (`RotateKey`, que la pose partage) et changent la taille du pinceau à Ctrl + molette, que la caméra
+  laisse alors. Les touches des cartes passent par un aiguillage (`CardKeys`) : le panneau ouvert, ses cartes ; sinon,
+  les modes de l'outil de sol en main. La vue montre la zone (`PlazaZoneView`) et l'aperçu de l'outil
+  (`PaintToolPreview`) en calques posés sur le relief (`GroundOverlay`, `DrapedMesh` : un seul maillage par calque,
+  refait quand la Place change) ; l'interface, une seule barre pour les deux outils (`PaintBar`, dont chaque rangée de
+  feutres est une `FeltRow` : ce qu'il pose, ses modes ; `PaintBarPresenter`, ce qu'elle montre de l'outil en main :
+  `PaintBarContent`, chaque choix une `PaintBarChoice` ; sa rangée d'options, les formes, les styles, les symétries et
+  les branches de l'étoile, a sa vue, `PaintOptionsRow`, et son présentateur, `PaintOptionsPresenter`) ; la raison d'un
+  refus, de la pose, de la Place ou des sols, passe par une seule bulle (`ReasonBubble`), où parle le dernier qui a
+  quelque chose à dire (pour la barre, `PaintBarReasons`). `Game` relie la barre, les gestes et la zone, qui ne se voit
+  qu'en mode construction (`TownPlaza`).
 - **Les sols vus** (décisions 214 et 216) : un sol qui sert (bâti, ou qu'on efface) se peint dans le sol de la carte, du
   calque de sa fiche (`FloorPainting` : sur la copie du Terrain, par lot, à la fin de l'image ; la peinture d'origine
   relue sur l'original) ; un sol en chantier se voit en fantôme, à la texture de son calque (`FloorGhosts` : un calque

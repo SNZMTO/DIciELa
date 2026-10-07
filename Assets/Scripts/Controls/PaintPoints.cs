@@ -48,10 +48,11 @@ namespace Diciela.Controls
             return false;
         }
 
-        /// <summary>L'appui à ce point de l'écran : prend le point posé qui est dessous, s'il y en a un.</summary>
-        public void Press(Vector2 screen)
+        /// <summary>L'appui à ce point de l'écran : vrai s'il prend un point posé du geste pointé.</summary>
+        public bool Press(Vector2 screen)
         {
             _held = _drawing.IsPointed ? _handles.At(_drawing.Points, screen) : -1;
+            return _held >= 0;
         }
 
         /// <summary>Le pointeur est à ce point du sol : le point tenu le suit ; vrai s'il en tenait un.</summary>
