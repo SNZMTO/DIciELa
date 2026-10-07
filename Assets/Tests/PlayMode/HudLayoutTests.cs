@@ -56,7 +56,7 @@ namespace Diciela.Tests.PlayMode
                 document.visualTreeAsset = layout;
                 var bar = host.AddComponent<BuildBar>();
                 var day = host.AddComponent<DayBoard>();
-                var sheet = host.AddComponent<PlaceSheet>();
+                var sheet = host.AddComponent<LocationSheet>();
                 var stock = host.AddComponent<StockPennants>();
                 var tip = host.AddComponent<TipBoard>();
                 var wheel = host.AddComponent<ToolWheel>();
@@ -82,7 +82,7 @@ namespace Diciela.Tests.PlayMode
                             yield return null;
                             TextTable texts = TextTable.Parse(settings.Texts.text, settings.Language);
                             var tooltips = new Tooltips(document);
-                            bar.Show(catalog, texts, world.Tool, world.Place, world.World, new FixedToolKeys(),
+                            bar.Show(catalog, texts, world.Tool, world.Plaza, world.World, new FixedToolKeys(),
                                 new ReasonBubble(document));
                             bar.Open();
                             wheel.Show(texts, new FixedToolKeys(), world.Clearing, bar, world.Mover, world.Paths, tooltips);

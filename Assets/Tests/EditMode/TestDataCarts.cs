@@ -40,21 +40,21 @@ namespace Diciela.Tests.EditMode
         /// La Place (décision 204) : au départ, au plus tant de mètres carrés et tant de places de charrette ; ses niveaux,
         /// ceux de sa fiche par défaut.
         /// </summary>
-        public static PlaceDefinition Place(float startAreaSquareMeters, int startCartSpots)
+        public static PlazaDefinition Plaza(float startAreaSquareMeters, int startCartSpots)
         {
-            PlaceDefinition place = ScriptableObject.CreateInstance<PlaceDefinition>();
-            var serialized = new SerializedObject(place);
+            PlazaDefinition plaza = ScriptableObject.CreateInstance<PlazaDefinition>();
+            var serialized = new SerializedObject(plaza);
             Property(serialized, "_startAreaSquareMeters").floatValue = startAreaSquareMeters;
             Property(serialized, "_startCartSpots").intValue = startCartSpots;
             serialized.ApplyModifiedPropertiesWithoutUndo();
-            return place;
+            return plaza;
         }
 
         /// <summary>Donne à ce catalogue cette Place.</summary>
-        public static void UsePlace(Catalog catalog, PlaceDefinition place)
+        public static void UsePlaza(Catalog catalog, PlazaDefinition plaza)
         {
             var serialized = new SerializedObject(catalog);
-            Property(serialized, "_place").objectReferenceValue = place;
+            Property(serialized, "_plaza").objectReferenceValue = plaza;
             serialized.ApplyModifiedPropertiesWithoutUndo();
         }
 

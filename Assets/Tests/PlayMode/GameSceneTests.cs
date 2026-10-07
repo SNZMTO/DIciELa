@@ -74,7 +74,7 @@ namespace Diciela.Tests.PlayMode
                 yield return null;
             }
             Assert.IsNotNull(runner?.World, "Le monde de la scène de test n'est pas né.");
-            Object.FindAnyObjectByType<Diciela.UI.PlaceSheet>().GetComponent<UIDocument>()
+            Object.FindAnyObjectByType<Diciela.UI.LocationSheet>().GetComponent<UIDocument>()
                 .rootVisualElement.Q("fiche").RemoveFromHierarchy();
             LogAssert.Expect(LogType.Exception, new Regex("La fiche d'un lieu ne trouve pas ses éléments"));
 

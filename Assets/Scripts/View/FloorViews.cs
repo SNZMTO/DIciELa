@@ -81,7 +81,7 @@ namespace Diciela.View
         private void RebuildGhosts()
         {
             _ghostsStale = false;
-            _built.Begin(_world.Map.Relief, _settings.PlaceLiftMeters);
+            _built.Begin(_world.Map.Relief, _settings.OverlayLiftMeters);
             bool any = false;
             IReadOnlyList<ConstructionSite> queue = _world.ConstructionSites.Queue;
             for (int i = 0; i < queue.Count; i++)

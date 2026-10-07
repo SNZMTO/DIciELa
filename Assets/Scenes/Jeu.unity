@@ -277,7 +277,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fbb34176ca15d29439a8b059d0d1b1a8, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Diciela.UI::Diciela.UI.PlaceSheet
+  m_EditorClassIdentifier: Diciela.UI::Diciela.UI.LocationSheet
 --- !u!114 &250348216
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -434,7 +434,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7e55ebfdce620154e8c13e50c4d468dd, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Diciela.Controls::Diciela.Controls.PlaceControls
+  m_EditorClassIdentifier: Diciela.Controls::Diciela.Controls.PaintControls
   _actions: {fileID: -944628639613478452, guid: ce45850f9084e5e49a79d052550d59e4, type: 3}
   _settings: {fileID: 11400000, guid: 204ab065def165f4086048326d8c8426, type: 2}
   _gestures: {fileID: 11400000, guid: 9e430839a075b79499fb905491d5c58f, type: 2}
@@ -449,7 +449,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9a371d7cb9809d549886d412ae6306a0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Diciela.View::Diciela.View.PlaceToolPreview
+  m_EditorClassIdentifier: Diciela.View::Diciela.View.PaintToolPreview
   _settings: {fileID: 11400000, guid: 204ab065def165f4086048326d8c8426, type: 2}
 --- !u!114 &490857174
 MonoBehaviour:
@@ -462,7 +462,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7d5e0b05e81fc074f9343f188e7c94b2, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Diciela.View::Diciela.View.PlaceZoneView
+  m_EditorClassIdentifier: Diciela.View::Diciela.View.PlazaZoneView
   _settings: {fileID: 11400000, guid: 204ab065def165f4086048326d8c8426, type: 2}
 --- !u!4 &490857175
 Transform:
@@ -728,7 +728,7 @@ MonoBehaviour:
   _clearingControls: {fileID: 1823210986}
   _buildBar: {fileID: 250348210}
   _dayBoard: {fileID: 250348214}
-  _placeSheet: {fileID: 250348215}
+  _locationSheet: {fileID: 250348215}
   _stockPennants: {fileID: 250348216}
   _tipBoard: {fileID: 250348217}
   _escapeControls: {fileID: 456663518}
@@ -739,9 +739,9 @@ MonoBehaviour:
   _previewControls: {fileID: 61688054}
   _toolWheel: {fileID: 250348218}
   _toolControls: {fileID: 472345068}
-  _placeControls: {fileID: 490857172}
-  _placeZoneView: {fileID: 490857174}
-  _placeToolPreview: {fileID: 490857173}
+  _paintControls: {fileID: 490857172}
+  _plazaZoneView: {fileID: 490857174}
+  _paintToolPreview: {fileID: 490857173}
 --- !u!1 &1209326656
 GameObject:
   m_ObjectHideFlags: 0

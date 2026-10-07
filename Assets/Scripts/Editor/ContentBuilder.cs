@@ -23,7 +23,7 @@ namespace Diciela.EditorTools
         private const string ChimeraPath = "Assets/Data/Habitants/Chimere.asset";
         private const string OpeningPath = "Assets/Data/Depart.asset";
         private const string CartPath = "Assets/Data/Charrette.asset";
-        private const string PlacePath = "Assets/Data/Place.asset";
+        private const string PlazaPath = "Assets/Data/Place.asset";
 
         // Les modèles du pack des charrettes de l'étal (décision 198) : les quatre ; chaque charrette en tire un.
         private const string CartModelsPath = "Assets/Synty/PolygonFantasyVillage/Prefabs/Vehicles/SM_Veh_Cart_0";
@@ -67,10 +67,10 @@ namespace Diciela.EditorTools
             });
             // La Place (décision 204) : une zone que le joueur trace ; sa fiche dit ce que permet chacun de ses niveaux,
             // ses réglages, ceux de la fiche par défaut.
-            PlaceDefinition place = EditorAssets.CreateIfMissing<PlaceDefinition>(PlacePath, fiche => { });
+            PlazaDefinition plaza = EditorAssets.CreateIfMissing<PlazaDefinition>(PlazaPath, fiche => { });
             // Sa carte, la première des Métiers (GDD, section 16), et son icône faute de modèle (décision 206).
-            EditorAssets.AssignIfMissing(place, "_family", trades.Family);
-            EditorAssets.AssignIfMissing(place, "_icon",
+            EditorAssets.AssignIfMissing(plaza, "_family", trades.Family);
+            EditorAssets.AssignIfMissing(plaza, "_icon",
                 EditorAssets.Load<UnityEngine.UIElements.VectorImage>(InterfaceIconBuilder.Folder + "/place.asset"));
             // La charrette de l'étal (décisions 194 et 198) : 20 places, les quatre charrettes du pack ; ses autres
             // réglages, ceux de sa fiche par défaut.
@@ -129,7 +129,7 @@ namespace Diciela.EditorTools
             EditorAssets.AssignIfMissing(catalog, "_chimeraKind", chimera);
             EditorAssets.AssignIfMissing(catalog, "_villagerKind", villagers.Kind);
             EditorAssets.AssignIfMissing(catalog, "_cart", cart);
-            EditorAssets.AssignIfMissing(catalog, "_place", place);
+            EditorAssets.AssignIfMissing(catalog, "_plaza", plaza);
             FloorContentBuilder.CreateMissing(catalog, opening);
             AppearanceBuilder.CreateMissing(catalog);
         }

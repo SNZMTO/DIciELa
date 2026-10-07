@@ -24,32 +24,32 @@ namespace Diciela.UI
         private readonly IBuildBarView _view;
         private readonly TextTable _texts;
         private readonly PlacementTool _placement;
-        private readonly PlaceTool _place;
+        private readonly PaintTool _plaza;
         private readonly World _world;
         private readonly BuildBarTabs _tabs;
         private readonly BuildBarCards _cards;
         private readonly List<BuildBarFamily> _families = new List<BuildBarFamily>();
 
         public BuildBarPresenter(IBuildBarView view, Catalog catalog, TextTable texts, PlacementTool placement,
-            PlaceTool place, World world, IToolKeys keys)
+            PaintTool plaza, World world, IToolKeys keys)
         {
             if (view == null || catalog == null || ReferenceEquals(texts, null) || ReferenceEquals(placement, null) ||
-                ReferenceEquals(place, null) || ReferenceEquals(world, null) || keys == null)
+                ReferenceEquals(plaza, null) || ReferenceEquals(world, null) || keys == null)
                 throw new ArgumentException("Le panneau Construire a besoin de sa vue, du catalogue, des textes, " +
                                             "de l'outil de pose, de celui de la Place, du monde et des touches.");
 
             _view = view;
             _texts = texts;
             _placement = placement;
-            _place = place;
+            _plaza = plaza;
             _world = world;
             var offer = new BuildBarOffer(catalog, world);
             _tabs = new BuildBarTabs(catalog, offer);
-            _cards = new BuildBarCards(texts, catalog.Place, offer, keys);
+            _cards = new BuildBarCards(texts, catalog.Plaza, offer, keys);
             _view.FamilyChosen += OnFamilyChosen;
             _view.StructureChosen += OnStructureChosen;
             _placement.HeldChanged += OnHeldChanged;
-            _place.HeldChanged += OnHeldChanged;
+            _plaza.HeldChanged += OnHeldChanged;
             _placement.ResultChanged += OnResultChanged;
             _world.Structures.StructurePlaced += OnStructuresChanged;
             _world.Structures.StructureBuilt += OnStructuresChanged;
@@ -67,7 +67,7 @@ namespace Diciela.UI
             _view.FamilyChosen -= OnFamilyChosen;
             _view.StructureChosen -= OnStructureChosen;
             _placement.HeldChanged -= OnHeldChanged;
-            _place.HeldChanged -= OnHeldChanged;
+            _plaza.HeldChanged -= OnHeldChanged;
             _placement.ResultChanged -= OnResultChanged;
             _world.Structures.StructurePlaced -= OnStructuresChanged;
             _world.Structures.StructureBuilt -= OnStructuresChanged;
@@ -152,8 +152,8 @@ namespace Diciela.UI
         private void OnStructureChosen(int index)
         {
             StructureDefinition structure = _cards.StructureAt(index);
-            if (_cards.IsPlace(index))
-                _place.Take();
+            if (_cards.IsPlaza(index))
+                _plaza.Take();
             else if (structure != null)
                 _placement.Begin(structure);
             else
@@ -163,7 +163,7 @@ namespace Diciela.UI
 
         private void OnHeldChanged()
         {
-            _view.SelectStructure(_place.IsActive && _cards.HasPlace ? 0 : _cards.IndexOf(_placement.Current));
+            _view.SelectStructure(_plaza.IsActive && _cards.HasPlaza ? 0 : _cards.IndexOf(_placement.Current));
         }
 
         private void OnResultChanged()

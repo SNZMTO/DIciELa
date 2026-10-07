@@ -24,9 +24,8 @@ namespace Diciela.EditorTools
         private static readonly Color Brick = new Color(0.7f, 0.28f, 0.28f);
         private static readonly Color DarkBrick = new Color(0.45f, 0.17f, 0.17f);
 
-        // Le panneau : 768 px de côté, des coins de 64 px que la découpe en neuf garde intacts.
+        // Le panneau : 768 px de côté ; ses coins de 64 px, la découpe en neuf de Creation.uss (.panel) les garde intacts.
         private const int PanelSize = 768;
-        private const int PanelCorner = 64;
 
         public static void CreateAll()
         {

@@ -16,7 +16,7 @@ namespace Diciela.Game
     internal sealed class TownTools : IDisposable
     {
         public TownTools(World world, Catalog catalog, Camera camera, PlacementPreview preview,
-            PlaceToolPreview placePreview, PlacementSettings settings, NatureViews nature, StructureViews structures)
+            PaintToolPreview paintPreview, PlacementSettings settings, NatureViews nature, StructureViews structures)
         {
             if (ReferenceEquals(world, null))
                 throw new ArgumentNullException(nameof(world));
@@ -25,19 +25,19 @@ namespace Diciela.Game
             Clearing = new ClearingTool(world, camera, nature);
             Choose = new ChooseTool(camera, structures);
             Move = new MoveTool(world, camera, structures, preview, settings);
-            Place = new PlaceTool(world, camera, placePreview, settings, PaintEntry.Place, catalog.Floors);
-            Paths = new PlaceTool(world, camera, placePreview, settings, PaintEntry.Paths, catalog.Floors);
-            Hand = new Hand(Placement, Clearing, Move, Place, Paths);
+            Plaza = new PaintTool(world, camera, paintPreview, settings, PaintEntry.Plaza, catalog.Floors);
+            Paths = new PaintTool(world, camera, paintPreview, settings, PaintEntry.Paths, catalog.Floors);
+            Hand = new Hand(Placement, Clearing, Move, Plaza, Paths);
         }
 
         public PlacementTool Placement { get; }
         public ClearingTool Clearing { get; }
         public ChooseTool Choose { get; }
         public MoveTool Move { get; }
-        public PlaceTool Place { get; }
+        public PaintTool Plaza { get; }
 
         /// <summary>L'outil Chemins : le même que celui de la Place, à son autre entrée (décision 210).</summary>
-        public PlaceTool Paths { get; }
+        public PaintTool Paths { get; }
         public Hand Hand { get; }
 
         /// <summary>Lâche ce qui est en main et cesse de suivre le monde.</summary>
@@ -48,8 +48,8 @@ namespace Diciela.Game
             Placement.Dispose();
             Move.PutDown();
             Move.Dispose();
-            Place.PutDown();
-            Place.Dispose();
+            Plaza.PutDown();
+            Plaza.Dispose();
             Paths.PutDown();
             Paths.Dispose();
         }

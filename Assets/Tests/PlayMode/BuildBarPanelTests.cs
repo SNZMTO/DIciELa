@@ -33,18 +33,18 @@ namespace Diciela.Tests.PlayMode
             _test = new TestWorld();
             var housing = _test.Keep(ScriptableObject.CreateInstance<StructureFamilyDefinition>());
             var trades = _test.Keep(ScriptableObject.CreateInstance<StructureFamilyDefinition>());
-            var place = _test.Keep(ScriptableObject.CreateInstance<PlaceDefinition>());
+            var plaza = _test.Keep(ScriptableObject.CreateInstance<PlazaDefinition>());
             var catalog = _test.Keep(ScriptableObject.CreateInstance<Catalog>());
 #if UNITY_EDITOR
             TestWorld.Fill(housing, "_nameKey", "famille.logement");
             TestWorld.Fill(trades, "_nameKey", "famille.metiers");
             TestWorld.FillList(housing, "_structures", _test.Camp, _test.Cabin);
-            TestWorld.Fill(place, "_family", trades);
+            TestWorld.Fill(plaza, "_family", trades);
             TestWorld.FillList(catalog, "_families", housing, trades);
-            TestWorld.Fill(catalog, "_place", place);
+            TestWorld.Fill(catalog, "_plaza", plaza);
 #endif
             _view = new NotedBuildBarView();
-            _presenter = new BuildBarPresenter(_view, catalog, TextTable.Parse(Texts, "fr"), _test.Tool, _test.Place,
+            _presenter = new BuildBarPresenter(_view, catalog, TextTable.Parse(Texts, "fr"), _test.Tool, _test.Plaza,
                 _test.World, new FixedToolKeys());
         }
 
@@ -63,7 +63,7 @@ namespace Diciela.Tests.PlayMode
         }
 
         [Test]
-        public void TheTradesTabComesWithTheCampAndThePlaceLeadsIt()
+        public void TheTradesTabComesWithTheCampAndThePlazaLeadsIt()
         {
             Assert.AreEqual(new[] { "Logement" }, _view.Families, "Le campement d'abord.");
 
@@ -76,18 +76,18 @@ namespace Diciela.Tests.PlayMode
         }
 
         [Test]
-        public void TakingThePlaceCardPutsItsToolInHand()
+        public void TakingThePlazaCardPutsItsToolInHand()
         {
             PlaceTheCamp();
             _presenter.Open();
             _view.Open(1);
 
             _view.Choose(0);
-            Assert.IsTrue(_test.Place.IsActive, "La carte met l'outil de la Place en main…");
+            Assert.IsTrue(_test.Plaza.IsActive, "La carte met l'outil de la Place en main…");
             Assert.IsFalse(_view.IsShownOpen, "… ferme le panneau…");
             Assert.AreEqual(0, _view.Selected, "… et reste enfoncée.");
 
-            _test.Place.PutDown();
+            _test.Plaza.PutDown();
             Assert.AreEqual(-1, _view.Selected);
         }
 

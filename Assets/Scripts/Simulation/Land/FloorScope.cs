@@ -10,6 +10,6 @@ namespace Diciela.Simulation.Land
         Anywhere = 0,
 
         /// <summary>Seulement dans la zone de la Place : l'outil de la Place.</summary>
-        Place = 1
+        Plaza = 1
     }
 }
