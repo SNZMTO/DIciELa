@@ -4,11 +4,12 @@ using UnityEngine;
 namespace Diciela.EditorTools
 {
     /// <summary>
-    /// Les icônes de la Place (décision 206), à l'encre sur 20 unités : sa carte (une zone, son contour et deux places de
-    /// charrette), et les modes de son outil : le pinceau, la gomme, le cercle, le rectangle, la place de charrette (un
-    /// cadre, sa pointe vers l'avant) ; et l'outil Chemins (décision 209), qui partage sa barre : un chemin qui serpente,
-    /// en pointillés. Des remplaçants simples : la maquette n'en a pas. Le menu des images de
-    /// l'interface les génère avec les autres (InterfaceIcons).
+    /// Les icônes des outils de sol (décisions 206, 209 et 216), à l'encre sur 20 unités : la carte de la Place (une
+    /// zone, son contour et deux places de charrette) ; leurs modes : le pinceau, la gomme, le tracé (des points reliés),
+    /// la forme (un cercle sur un carré), la place de charrette (un cadre, sa pointe vers l'avant) ; les formes du mode
+    /// Forme : le cercle, le rectangle ; et l'outil Chemins, qui partage la barre : un chemin qui serpente, en
+    /// pointillés. Des remplaçants simples : la maquette n'en a pas. Le menu des images de l'interface les génère avec
+    /// les autres (InterfaceIcons).
     /// </summary>
     internal static class PaintIcons
     {
@@ -39,12 +40,37 @@ namespace Diciela.EditorTools
                 Polygon(Ink, 1f, 10f, 4.6f, 12.8f, 8.4f, 7.2f, 8.4f)
             };
             yield return new InterfaceIcons.Icon("place-charrette", Size, spot.ToArray());
+            yield return new InterfaceIcons.Icon("trace", Size, Trace());
+            yield return new InterfaceIcons.Icon("forme", Size, Shapes());
             yield return new InterfaceIcons.Icon("chemins", Size, new[]
             {
                 Bar(5f, 18f, 7f, 12.5f, 4.5f, 0.45f), Bar(7f, 12.5f, 12.5f, 9f, 4.5f, 0.45f),
                 Bar(12.5f, 9f, 15f, 2.5f, 4.5f, 0.45f), Bar(5.8f, 15.6f, 6.3f, 14.2f, 1.2f),
                 Bar(9.1f, 11.3f, 10.5f, 10.4f, 1.2f), Bar(13.6f, 6.6f, 14.1f, 5.2f, 1.2f)
             });
+        }
+
+        // Le tracé : quatre points, reliés de segments droits.
+        private static InterfaceIcons.Face[] Trace()
+        {
+            float[] points = { 3f, 16f, 8f, 6.5f, 13f, 12.5f, 17f, 4f };
+            var faces = new List<InterfaceIcons.Face>();
+            for (int i = 0; i + 3 < points.Length; i += 2)
+                faces.Add(Bar(points[i], points[i + 1], points[i + 2], points[i + 3], 1.4f, 0.7f));
+            for (int i = 0; i + 1 < points.Length; i += 2)
+                faces.Add(Polygon(Ink, 1f, Circle(points[i], points[i + 1], 1.9f, 10)));
+            return faces.ToArray();
+        }
+
+        // La forme : un cercle voilé, posé sur un carré.
+        private static InterfaceIcons.Face[] Shapes()
+        {
+            float[] square = { 8f, 8f, 17.5f, 8f, 17.5f, 17.5f, 8f, 17.5f };
+            var faces = new List<InterfaceIcons.Face> { Polygon(Ink, 0.3f, square) };
+            faces.AddRange(Loop(square, 1.6f));
+            faces.Add(Polygon(Ink, 0.3f, Circle(7f, 7f, 4.6f, 20)));
+            faces.AddRange(Loop(Circle(7f, 7f, 4.6f, 20), 1.6f));
+            return faces.ToArray();
         }
 
         // Une zone de forme libre, voilée, son contour, et deux places de charrette côte à côte.

@@ -11,6 +11,8 @@ namespace Diciela.Data
         private const string FloorRefusalPrefix = "sol.refus.";
         private const string PaintModePrefix = "place.outil.";
         private const string PaintModeDetailPrefix = "place.outil.suite.";
+        private const string PaintShapePrefix = "place.forme.";
+        private const string PaintShapeDetailPrefix = "place.forme.suite.";
         private const string DayPhasePrefix = "journee.";
         private const string DayNextPrefix = "journee.suite.";
         private const string DayNotePrefix = "journee.note.";
@@ -75,16 +77,28 @@ namespace Diciela.Data
         public const string PlazaZoneInkDetail = "place.zone.suite";
         public const string FloorInkDetail = "sol.suite";
 
-        /// <summary>La clé du nom d'un mode de l'outil de la Place, d'après son nom (Brush → place.outil.Brush).</summary>
+        /// <summary>La clé du nom d'un mode d'un outil de sol, d'après son nom (Brush → place.outil.Brush).</summary>
         public static string PaintMode(string modeName)
         {
             return PaintModePrefix + modeName;
         }
 
-        /// <summary>La clé de l'usage d'un mode de l'outil de la Place (Brush → place.outil.suite.Brush).</summary>
+        /// <summary>La clé de l'usage d'un mode d'un outil de sol (Brush → place.outil.suite.Brush).</summary>
         public static string PaintModeDetail(string modeName)
         {
             return PaintModeDetailPrefix + modeName;
+        }
+
+        /// <summary>La clé du nom d'une forme du mode Forme, d'après son nom (Disc → place.forme.Disc).</summary>
+        public static string PaintShape(string shapeName)
+        {
+            return PaintShapePrefix + shapeName;
+        }
+
+        /// <summary>La clé de l'usage d'une forme du mode Forme (Disc → place.forme.suite.Disc).</summary>
+        public static string PaintShapeDetail(string shapeName)
+        {
+            return PaintShapeDetailPrefix + shapeName;
         }
 
         /// <summary>La clé de la raison d'un refus sur la Place, d'après son nom (TooLarge → place.refus.TooLarge).</summary>

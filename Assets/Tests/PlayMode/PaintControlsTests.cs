@@ -79,7 +79,7 @@ namespace Diciela.Tests.PlayMode
         [UnityTest]
         public IEnumerator ADragTracesADiscSentAtTheRelease()
         {
-            Tool.Choose(PaintToolMode.Disc);
+            Tool.Choose(PaintToolMode.Shape);
             yield return PointAt(Ground(0f, 0f));
             Press(Mouse.leftButton);
             yield return Played();
@@ -98,7 +98,7 @@ namespace Diciela.Tests.PlayMode
         [UnityTest]
         public IEnumerator AShapeTooLargeForThePlazaIsNotSent()
         {
-            Tool.Choose(PaintToolMode.Disc);
+            Tool.Choose(PaintToolMode.Shape);
             yield return PointAt(Ground(0f, 0f));
             Press(Mouse.leftButton);
             yield return Played();
@@ -151,24 +151,24 @@ namespace Diciela.Tests.PlayMode
             Tool.Choose(PaintToolMode.CartSpot);
             yield return PointAt(Ground(0f, 0f));
             yield return Click(Keyboard.rKey);
-            Assert.AreEqual(_test.Settings.RotationStepDegrees, Tool.HeadingDegrees, 0.01f, "R bref : un cran.");
+            Assert.AreEqual(_test.Settings.RotationStepDegrees, Tool.Options.HeadingDegrees, 0.01f, "R bref : un cran.");
 
             Tool.Choose(PaintToolMode.Brush);
-            float before = Tool.BrushRadius;
+            float before = Tool.Options.BrushRadius;
             Press(Keyboard.leftCtrlKey);
             yield return Played();
             Set(Mouse.scroll, new Vector2(0f, 120f));
             yield return Played();
             Release(Keyboard.leftCtrlKey);
             yield return Played();
-            Assert.AreEqual(before + _test.Settings.BrushRadiusStepMeters, Tool.BrushRadius, 0.001f,
+            Assert.AreEqual(before + _test.Settings.BrushRadiusStepMeters, Tool.Options.BrushRadius, 0.001f,
                 "Ctrl + un cran de molette : le pinceau grandit d'un cran.");
         }
 
         [UnityTest]
         public IEnumerator ARightClickAbandonsTheShapeThenPutsTheToolDown()
         {
-            Tool.Choose(PaintToolMode.Disc);
+            Tool.Choose(PaintToolMode.Shape);
             yield return PointAt(Ground(0f, 0f));
             Press(Mouse.leftButton);
             yield return Played();

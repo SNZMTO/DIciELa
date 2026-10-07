@@ -6,22 +6,22 @@ using Diciela.Simulation.Land;
 namespace Diciela.Controls
 {
     /// <summary>
-    /// L'entrée d'un outil de sol (décision 210) : un seul outil, deux entrées. L'outil de la Place pose la zone, ou un sol
-    /// dans la zone, et a cinq modes (pinceau, gomme, cercle, rectangle, place de charrette) ; l'outil Chemins pose un sol
-    /// partout où l'on marche, et a quatre modes. Chacune dit ses modes, dans l'ordre de la barre et des touches, si elle
-    /// pose la zone, où vont ses sols, et la taille de son pinceau au départ.
+    /// L'entrée d'un outil de sol (décisions 210 et 216) : un seul outil, deux entrées. L'outil de la Place pose la zone,
+    /// ou un sol dans la zone, et a cinq modes (pinceau, gomme, tracé, forme, place de charrette) ; l'outil Chemins pose un
+    /// sol partout où l'on marche, et a les quatre premiers. Chacune dit ses modes, dans l'ordre de la barre et des
+    /// touches, si elle pose la zone, où vont ses sols, et la taille de son pinceau au départ.
     /// </summary>
     public sealed class PaintEntry
     {
         /// <summary>L'outil de la Place, pris à sa carte.</summary>
         public static readonly PaintEntry Plaza = new PaintEntry(FloorScope.Plaza, true,
-            settings => settings.BrushRadiusMeters, PaintToolMode.Brush, PaintToolMode.Eraser, PaintToolMode.Disc,
-            PaintToolMode.Box, PaintToolMode.CartSpot);
+            settings => settings.BrushRadiusMeters, PaintToolMode.Brush, PaintToolMode.Eraser, PaintToolMode.Trace,
+            PaintToolMode.Shape, PaintToolMode.CartSpot);
 
         /// <summary>L'outil Chemins, pris à la roue (touche C).</summary>
         public static readonly PaintEntry Paths = new PaintEntry(FloorScope.Anywhere, false,
-            settings => settings.PathBrushRadiusMeters, PaintToolMode.Brush, PaintToolMode.Eraser, PaintToolMode.Disc,
-            PaintToolMode.Box);
+            settings => settings.PathBrushRadiusMeters, PaintToolMode.Brush, PaintToolMode.Eraser, PaintToolMode.Trace,
+            PaintToolMode.Shape);
 
         private readonly Func<PlacementSettings, float> _startRadius;
 

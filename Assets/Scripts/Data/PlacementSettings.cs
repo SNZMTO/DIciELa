@@ -64,7 +64,7 @@ namespace Diciela.Data
         [Tooltip("La hauteur du fanion, en mètres, planté au pied de l'arbre ou du rocher marqué.")]
         [SerializeField, Range(0.5f, 5f)] private float _markHeightMeters = 1.8f;
 
-        [Header("La Place (décision 206)")]
+        [Header("Les outils de sol (décisions 206 et 216)")]
         [Tooltip("Le rayon du pinceau et de la gomme quand on prend l'outil de la Place, en mètres.")]
         [SerializeField, Range(0.25f, 10f)] private float _brushRadiusMeters = 2f;
 
@@ -80,6 +80,10 @@ namespace Diciela.Data
 
         [Tooltip("L'écart entre deux points d'un trait de pinceau, en mètres (SAVOIR, 2.6 : quelques décimètres).")]
         [SerializeField, Range(0.05f, 2f)] private float _strokeSpacingMeters = 0.3f;
+
+        [Tooltip("À l'écran, à combien de pixels d'un point de tracé le pointeur le prend : un clic sur le dernier " +
+                 "point fait partir le tracé.")]
+        [SerializeField, Range(2f, 40f)] private float _handlePickPixels = 14f;
 
         [Tooltip("Le voile de la Place sur le sol, en mode construction, du matériau translucide.")]
         [SerializeField] private Color _zoneVeilColor = new Color(1f, 0.97f, 0.9f, 0.22f);
@@ -114,6 +118,7 @@ namespace Diciela.Data
         public Vector2 BrushRadiusRangeMeters => _brushRadiusRangeMeters;
         public float BrushRadiusStepMeters => _brushRadiusStepMeters;
         public float StrokeSpacingMeters => _strokeSpacingMeters;
+        public float HandlePickPixels => _handlePickPixels;
         public Color ZoneVeilColor => _zoneVeilColor;
         public Color OutlineColor => _outlineColor;
         public float OutlineWidthMeters => _outlineWidthMeters;

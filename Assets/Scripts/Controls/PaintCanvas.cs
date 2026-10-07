@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Diciela.Data;
 using Diciela.Simulation;
 using Diciela.Simulation.Land;
@@ -8,10 +9,10 @@ using UnityEngine;
 namespace Diciela.Controls
 {
     /// <summary>
-    /// Là où travaille un outil de sol (décisions 206 et 210) : ce qu'il vise au sol, le geste en cours (PaintDrawing), ce
-    /// qu'en disent la Place ou les sols, montré par l'aperçu (PaintAim), et les ordres qui en partent (PaintOrders). Il
-    /// lit chez l'outil ce que celui-ci tient (son mode, son encre, son pinceau, son cap, s'il est en main) et n'en garde
-    /// aucune copie.
+    /// Là où travaille un outil de sol (décisions 206, 210 et 216) : ce qu'il vise au sol, le geste en cours
+    /// (PaintDrawing), ce qu'en disent la Place ou les sols, montré par l'aperçu (PaintAim), et les ordres qui en partent
+    /// (PaintOrders). Il lit chez l'outil ce que celui-ci tient (son mode, son encre, ses options, s'il est en main) et n'en
+    /// garde aucune copie.
     /// </summary>
     internal sealed class PaintCanvas : IDisposable
     {
@@ -23,6 +24,7 @@ namespace Diciela.Controls
         private readonly PaintAim _target;
         private readonly PaintOrders _orders;
         private Vector2 _aim;
+        private Vector2 _aimScreen;
         private bool _aimed;
 
         public PaintCanvas(PaintTool tool, World world, Camera camera, PaintToolPreview preview,
@@ -58,6 +60,7 @@ namespace Diciela.Controls
             }
             _aimed = true;
             _aim = ground;
+            _aimScreen = screenPoint;
             Refresh(IsDrawing && _drawing.ExtendTo(ground, _settings.StrokeSpacingMeters,
                 _world.Grid.Metrics.CellSize));
         }
@@ -72,16 +75,18 @@ namespace Diciela.Controls
 
         public void Begin(Vector2 screenStart)
         {
-            if (_tool.Mode == PaintToolMode.CartSpot || !TryGround(screenStart, out Vector2 start))
+            PaintToolMode mode = _tool.Mode;
+            bool dragged = mode != PaintToolMode.CartSpot && mode != PaintToolMode.Trace;
+            if (!dragged || !TryGround(screenStart, out Vector2 start))
                 return;
-            _drawing.Begin(_tool.Mode, start, _tool.BrushRadius, BoxDegrees());
+            _drawing.Begin(mode, _tool.Options.Shape, start, _tool.Options.BrushRadius, BoxDegrees());
             Refresh(true);
         }
 
-        /// <summary>Le relâchement : la forme tracée part en ordre, si la Place l'accepte.</summary>
+        /// <summary>Le relâchement : la forme glissée part en ordre, si la Place l'accepte ; un tracé, lui, continue.</summary>
         public void End()
         {
-            if (!IsDrawing)
+            if (!IsDrawing || _drawing.IsPointed)
                 return;
             GroundShape shape = _drawing.Shape;
             bool accepted = shape != null && !_target.IsStale && Answer.IsOk;
@@ -91,16 +96,26 @@ namespace Diciela.Controls
             Refresh(true);
         }
 
-        /// <summary>Un clic : un rond du pinceau ; poser une place de charrette, ou retirer celle qu'on vise.</summary>
+        /// <summary>
+        /// Un clic : un rond du pinceau ; un point du tracé, ou son départ sur son dernier point ; poser une place de
+        /// charrette, ou retirer celle qu'on vise.
+        /// </summary>
         public void Click()
         {
-            if (!_aimed || IsDrawing || _orders.IsWaiting || _target.IsStale)
+            if (!_aimed || _orders.IsWaiting)
                 return;
             PaintToolMode mode = _tool.Mode;
+            if (mode == PaintToolMode.Trace)
+            {
+                ClickTrace();
+                return;
+            }
+            if (IsDrawing || _target.IsStale)
+                return;
             if (mode == PaintToolMode.CartSpot && Hovered != null)
                 _orders.SendRemoval(Hovered);
             else if (mode == PaintToolMode.CartSpot && Answer.IsOk)
-                _orders.SendMark(_aim, _tool.HeadingDegrees);
+                _orders.SendMark(_aim, _tool.Options.HeadingDegrees);
             else if ((mode == PaintToolMode.Brush || mode == PaintToolMode.Eraser) && Answer.IsOk)
                 _orders.SendShape(_target.Dot, mode == PaintToolMode.Eraser, _tool.Inks, _tool.Entry.Scope);
         }
@@ -135,6 +150,34 @@ namespace Diciela.Controls
             Answer = _target.Answer;
             Hovered = _target.Hovered;
             ResultChanged?.Invoke();
+        }
+
+        // Un clic du tracé : son premier point, un point de plus, ou, sur son dernier point, son départ. Refusé, il reste,
+        // et la raison s'écrit.
+        private void ClickTrace()
+        {
+            if (!IsDrawing || !OnLastPoint())
+            {
+                _drawing.AddPoint(_aim, _tool.Options.BrushRadius);
+                Refresh(true);
+                return;
+            }
+            _drawing.Settle();
+            Refresh(true);
+            if (_target.IsStale || !Answer.IsOk)
+                return;
+            _orders.SendShape(_drawing.Shape, false, _tool.Inks, _tool.Entry.Scope);
+            _drawing.End();
+            Refresh(true);
+        }
+
+        // Vrai si le pointeur est, à l'écran, sur le dernier point posé du tracé.
+        private bool OnLastPoint()
+        {
+            IReadOnlyList<Vector2> points = _drawing.Points;
+            Vector3 screen = _camera.WorldToScreenPoint(_world.Map.Relief.GroundAt(points[points.Count - 1]));
+            float pick = _settings.HandlePickPixels;
+            return screen.z > 0f && ((Vector2)screen - _aimScreen).sqrMagnitude <= pick * pick;
         }
 
         // Le cap des côtés d'un rectangle : celui de la caméra, au cran de rotation, pour que des rectangles tracés de la

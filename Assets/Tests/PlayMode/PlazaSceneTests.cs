@@ -77,8 +77,8 @@ namespace Diciela.Tests.PlayMode
             Assert.IsFalse(root.Q("place-barre").ClassListContains(Hidden), "… montre sa barre…");
             Assert.IsTrue(zone.transform.Find("Voile de la Place").gameObject.activeSelf, "… et la zone.");
 
-            TestHud.Click(root.Q("place-modes")[(int)PaintToolMode.Disc]);
-            Assert.AreEqual(PaintToolMode.Disc, tool.Mode, "Un mode se prend à la barre.");
+            TestHud.Click(root.Q("place-modes")[(int)PaintToolMode.Shape]);
+            Assert.AreEqual(PaintToolMode.Shape, tool.Mode, "Un mode se prend à la barre (la forme : le cercle).");
             Camera camera = Object.FindAnyObjectByType<CameraRig>().Camera;
             Vector2 center = FirstClearDisc(world, world.Structures.ChimeraHome.Placement.Center);
             tool.BeginDrawing(OnScreen(camera, world, center));

@@ -443,23 +443,28 @@ mètres carrés), `Place` ne veut dire que poser, la fiche d'un lieu est `Locati
   vise un arbre par la boîte de son modèle et marque ce que contient le cadre qu'on tire, que l'interface dessine
   (`ISelectionFrame`). Un panneau ouvert rend la ville muette ; les conteneurs plein écran de l'interface ne captent pas le pointeur. Les gestes ne
   connaissent pas l'interface : elle leur dit seulement où elle est (`IInterfaceArea`), et `Game` les relie.
-- **Les outils de sol** (décisions 206, 210 et 214) : un seul outil en main (`PaintTool`) à deux entrées (`PaintEntry`),
-  l'outil de la Place, pris à la carte de la Place, que le panneau Construire met en tête de la famille que nomme sa
-  fiche (`BuildBarCards`), et l'outil Chemins, pris à la roue. L'entrée dit ses modes, s'il pose la zone, où vont ses
-  sols et son pinceau de départ. L'outil tient son mode (`PaintToolMode`), son encre (`PaintInks` : la zone, ou l'un
-  des sols que la ville sait faire, dite en toutes lettres par `PaintInk` : la zone, un sol, ou rien), la taille de son pinceau et le cap d'une place de charrette ; il travaille sur sa
-  surface (`PaintCanvas`) : le geste en cours (`PaintDrawing` : un trait, un disque, un rectangle), ce que la Place ou
-  les sols répondent à ce qu'il vise, par la même fonction que l'ordre, traduit en une seule réponse (`PaintAnswer`) et
-  montré par l'aperçu (`PaintAim`), et les ordres qui en partent (`PaintOrders`). Ses gestes (`PaintControls`, leur
-  carte d'actions), pour celui des deux qui est en main, glissent, cliquent, tournent par la touche de la pose
-  (`RotateKey`, que la pose partage) et changent la taille du pinceau à Ctrl + molette, que la caméra laisse alors. Les
-  touches des cartes passent par un aiguillage (`CardKeys`) : le panneau ouvert, ses cartes ; sinon, les modes de
-  l'outil de sol en main. La vue montre la zone (`PlazaZoneView`) et l'aperçu de l'outil (`PaintToolPreview`) en
-  calques posés sur le relief (`GroundOverlay`, `DrapedMesh` : un seul maillage par calque, refait quand la Place
-  change) ; l'interface, une seule barre pour les deux outils (`PaintBar`, `PaintBarPresenter`, ce qu'elle montre de
-  l'outil en main : `PaintBarContent`) ; la raison d'un refus, de la pose, de la Place ou des sols, passe par une seule
-  bulle (`ReasonBubble`), où parle le dernier qui a quelque chose à dire. `Game` relie la barre, les gestes et la
-  zone, qui ne se voit qu'en mode construction (`TownPlaza`).
+- **Les outils de sol** (décisions 206, 210, 214 et 216) : un seul outil en main (`PaintTool`) à deux entrées
+  (`PaintEntry`), l'outil de la Place, pris à la carte de la Place, que le panneau Construire met en tête de la famille
+  que nomme sa fiche (`BuildBarCards`), et l'outil Chemins, pris à la roue. L'entrée dit ses modes, s'il pose la zone,
+  où vont ses sols et son pinceau de départ. L'outil tient son mode, en familles (`PaintToolMode` : pinceau, gomme,
+  tracé, forme, place de charrette), son encre (`PaintInks` : la zone, ou l'un des sols que la ville sait faire, dite en
+  toutes lettres par `PaintInk` : la zone, un sol, ou rien) et ses options, ce que règle la rangée sous ses modes
+  (`PaintOptions` : la forme du mode Forme, `PaintShape` ; la taille du pinceau ; le cap d'une place de charrette) ; il
+  travaille sur sa surface (`PaintCanvas`) : le geste en cours (`PaintDrawing` : glissé, un trait de pinceau, un
+  cercle, un rectangle, qui part au relâchement ; pointé, un tracé, dont chaque clic pose un point et qui part au clic
+  sur son dernier point), ce que la Place ou les sols répondent à ce qu'il vise, par la même fonction que l'ordre,
+  traduit en une seule réponse (`PaintAnswer`) et montré par l'aperçu (`PaintAim`), et les ordres qui en partent
+  (`PaintOrders`). Ses gestes (`PaintControls`, leur carte d'actions), pour celui des deux qui est en main, glissent,
+  cliquent, tournent par la touche de la pose (`RotateKey`, que la pose partage) et changent la taille du pinceau à Ctrl
+  + molette, que la caméra laisse alors. Les touches des cartes passent par un aiguillage (`CardKeys`) : le panneau
+  ouvert, ses cartes ; sinon, les modes de l'outil de sol en main. La vue montre la zone (`PlazaZoneView`) et l'aperçu
+  de l'outil (`PaintToolPreview`) en calques posés sur le relief (`GroundOverlay`, `DrapedMesh` : un seul maillage par
+  calque, refait quand la Place change) ; l'interface, une seule barre pour les deux outils (`PaintBar`, dont chaque
+  rangée de feutres est une `FeltRow` : ce qu'il pose, ses modes, ses formes ; `PaintBarPresenter`, ce qu'elle montre
+  de l'outil en main : `PaintBarContent`, chaque choix une `PaintBarChoice`) ; la raison d'un refus, de la pose, de la
+  Place ou des sols, passe par une seule bulle (`ReasonBubble`), où parle le dernier qui a quelque chose à dire (pour la
+  barre, `PaintBarReasons`). `Game` relie la barre, les gestes et la zone, qui ne se voit qu'en mode construction
+  (`TownPlaza`).
 - **Les sols vus** (décisions 214 et 216) : un sol qui sert (bâti, ou qu'on efface) se peint dans le sol de la carte, du
   calque de sa fiche (`FloorPainting` : sur la copie du Terrain, par lot, à la fin de l'image ; la peinture d'origine
   relue sur l'original) ; un sol en chantier se voit en fantôme, à la texture de son calque (`FloorGhosts` : un calque

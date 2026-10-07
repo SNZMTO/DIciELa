@@ -184,14 +184,18 @@ outils.infobulle.suite,"Ou tiens {touche} : la roue s'ouvre sous le pointeur.","
 place.nom,Place,Square
 place.outil.Brush,Pinceau,Brush
 place.outil.Eraser,Gomme,Eraser
-place.outil.Disc,Cercle,Circle
-place.outil.Box,Rectangle,Rectangle
+place.outil.Trace,Tracé,Line
+place.outil.Shape,Forme,Shape
 place.outil.CartSpot,Place de charrette,Cart spot
 place.outil.suite.Brush,"Glisse pour peindre ; Ctrl + molette change la taille.","Drag to paint; Ctrl + wheel changes the size."
 place.outil.suite.Eraser,"Glisse pour gommer ; Ctrl + molette change la taille.","Drag to erase; Ctrl + wheel changes the size."
-place.outil.suite.Disc,"Appuie au centre, puis glisse jusqu'au bord.","Press at the center, then drag to the edge."
-place.outil.suite.Box,Glisse d'un coin à l'autre.,Drag from one corner to the other.
+place.outil.suite.Trace,"Clique pour poser des points : le tracé les relie. Clique le dernier point pour le tracer.","Click to place points: the line joins them. Click the last point to lay it."
+place.outil.suite.Shape,"Choisis la forme dessous, puis glisse pour la tracer.","Pick the shape below, then drag to draw it."
 place.outil.suite.CartSpot,"Clique pour poser une place de charrette, R la tourne ; clique une place pour la retirer.","Click to place a cart spot, R turns it; click a spot to remove it."
+place.forme.Disc,Cercle,Circle
+place.forme.Box,Rectangle,Rectangle
+place.forme.suite.Disc,"Appuie au centre, puis glisse jusqu'au bord.","Press at the center, then drag to the edge."
+place.forme.suite.Box,Glisse d'un coin à l'autre.,Drag from one corner to the other.
 place.superficie,{superficie} / {max} m²,{superficie} / {max} m²
 place.marques,{marques} / {max},{marques} / {max}
 place.taille,Ø {taille} m,Ø {taille} m
