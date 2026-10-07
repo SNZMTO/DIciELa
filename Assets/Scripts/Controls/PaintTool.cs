@@ -27,16 +27,13 @@ namespace Diciela.Controls
         public PaintTool(World world, Camera camera, PaintToolPreview preview, PlacementSettings settings,
             PaintEntry entry, IReadOnlyList<FloorDefinition> floors)
         {
-            if (ReferenceEquals(world, null))
-                throw new ArgumentNullException(nameof(world));
-            if (camera == null || preview == null || settings == null)
-                throw new ArgumentException("L'outil de la Place a besoin d'une caméra, d'un aperçu et de ses réglages.");
-
+            if (ReferenceEquals(world, null) || camera == null || preview == null || settings == null)
+                throw new ArgumentException("L'outil de sol a besoin du monde, d'une caméra, d'un aperçu et de ses réglages.");
             _settings = settings;
             Entry = entry ?? throw new ArgumentNullException(nameof(entry));
             Mode = entry.Modes[0];
             Inks = new PaintInks(entry, world.Knowledge, floors);
-            Options = new PaintOptions(settings, entry.StartBrushRadius(settings));
+            Options = new PaintOptions(settings, entry.StartBrushRadius(settings), () => IsActive, OnOptionChanged);
             _canvas = new PaintCanvas(this, world, camera, preview, settings);
         }
 
@@ -64,7 +61,7 @@ namespace Diciela.Controls
         /// <summary>Ce qu'il pose : la zone ou un sol, et les sols que la ville sait faire.</summary>
         public PaintInks Inks { get; }
 
-        /// <summary>Ses options : la forme, la taille du pinceau, le cap de la place de charrette.</summary>
+        /// <summary>Ses options : la forme, le style, la symétrie, la taille du pinceau, le cap de la place de charrette.</summary>
         public PaintOptions Options { get; }
 
         /// <summary>La réponse de la Place ou des sols à ce qu'il vise ; Ok quand rien n'est visé.</summary>
@@ -100,18 +97,6 @@ namespace Diciela.Controls
         public void ChooseInk(PaintInk ink)
         {
             Changed(IsActive && Inks.Choose(ink), () => _canvas.Abandon(false));
-        }
-
-        /// <summary>Change la forme du mode Forme ; le geste en cours est abandonné.</summary>
-        public void Choose(PaintShape shape)
-        {
-            Changed(IsActive && Options.Choose(shape), () => _canvas.Abandon(false));
-        }
-
-        /// <summary>Un tracé ou un polygone droit, ou en courbe ; celui qu'on trace se redessine.</summary>
-        public void Choose(PaintTraceStyle style)
-        {
-            Changed(IsActive && Options.Choose(style), _canvas.Restyle);
         }
 
         /// <summary>Grandit (positif) ou rapetisse le pinceau d'autant de crans, dans ses bornes.</summary>
@@ -153,17 +138,20 @@ namespace Diciela.Controls
                 _canvas.Click();
         }
 
-        /// <summary>Tourne la place de charrette d'un cran (GDD, section 11 : comme une construction, R).</summary>
+        /// <summary>
+        /// Tourne d'un cran (R) : la place de charrette, comme une construction (GDD, section 11), ou, hors de ce mode, les
+        /// axes d'une symétrie.
+        /// </summary>
         public void RotateStep()
         {
             RotateBy(_settings.RotationStepDegrees);
         }
 
-        /// <summary>Tourne la place de charrette de cet angle, en degrés ; positif, vers l'est.</summary>
+        /// <summary>Tourne de cet angle, en degrés, vers l'est : la place de charrette, ou les axes d'une symétrie.</summary>
         public void RotateBy(float degrees)
         {
-            Options.Rotate(degrees);
-            if (IsActive && Mode == PaintToolMode.CartSpot)
+            Options.Turn(degrees, Mode == PaintToolMode.CartSpot);
+            if (IsActive)
                 _canvas.Refresh(true);
         }
 
@@ -176,7 +164,21 @@ namespace Diciela.Controls
                 PutDown();
         }
 
-        // Si une option a changé, la surface s'y fait (abandon du geste, nouveau style, nouveau pinceau) et la barre le dit.
+        // Une option choisie à la barre : la surface s'y fait, et la barre le dit.
+        private void OnOptionChanged(PaintOptionEffect effect)
+        {
+            if (effect == PaintOptionEffect.Abandon)
+                _canvas.Abandon(false);
+            else if (effect == PaintOptionEffect.Restyle)
+                _canvas.Restyle();
+            else if (effect == PaintOptionEffect.PlacePin)
+                _canvas.PlacePin();
+            else
+                _canvas.Refresh(true);
+            HeldChanged?.Invoke();
+        }
+
+        // Si l'encre ou le pinceau a changé, la surface s'y fait (abandon du geste, nouveau rond) et la barre le dit.
         private void Changed(bool changed, Action follow)
         {
             if (!changed)

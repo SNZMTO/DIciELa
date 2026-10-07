@@ -18,6 +18,11 @@ namespace Diciela.Simulation.Land
         public Vector2 Center { get; }
         public float Radius { get; }
 
+        public override GroundShape Copied(GroundCopy copy)
+        {
+            return new GroundDisc(copy.Apply(Center), Radius);
+        }
+
         internal override void CoverCells(NavGrid grid, List<Vector2Int> cells)
         {
             var reach = new Vector2(Radius, Radius);

@@ -17,6 +17,11 @@ namespace Diciela.Simulation.Land
 
         public RotatedRect Rect { get; }
 
+        public override GroundShape Copied(GroundCopy copy)
+        {
+            return new GroundBox(new RotatedRect(copy.Apply(Rect.Center), Rect.Size, copy.HeadingOf(Rect.RotationDegrees)));
+        }
+
         internal override void CoverCells(NavGrid grid, List<Vector2Int> cells)
         {
             Vector2 min = Rect.Corner(0), max = min;

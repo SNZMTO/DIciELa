@@ -30,6 +30,14 @@ namespace Diciela.Simulation.Land
         public IReadOnlyList<Vector2> Points => _points;
         public float HalfWidth { get; }
 
+        public override GroundShape Copied(GroundCopy copy)
+        {
+            var points = new Vector2[_points.Length];
+            for (int i = 0; i < points.Length; i++)
+                points[i] = copy.Apply(_points[i]);
+            return new GroundStroke(points, HalfWidth);
+        }
+
         internal override void CoverCells(NavGrid grid, List<Vector2Int> cells)
         {
             _seen.Clear();

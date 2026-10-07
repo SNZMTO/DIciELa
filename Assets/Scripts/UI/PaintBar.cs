@@ -10,28 +10,22 @@ namespace Diciela.UI
     /// <summary>
     /// La barre des outils de sol, en bas au centre, à la place du panneau Construire (décisions 206, 210, 214 et 216) :
     /// un cadre de bois ; au-dessus, ce que l'outil peut poser en feutres, la zone (son icône) ou un sol (sa vignette) ;
-    /// puis ses modes en familles, chacun son icône et sa touche ; dessous, ses options : les formes du mode Forme, le
-    /// style d'un tracé ou d'un polygone, la taille du pinceau ; puis, dans des creux de lin, la superficie et les places de charrette ; ce qui est pris est
+    /// puis ses modes en familles, chacun son icône et sa touche ; dessous, sa rangée d'options (PaintOptionsRow) et la
+    /// taille du pinceau ; puis, dans des creux de lin, la superficie et les places de charrette. Ce qui est pris est
     /// enfoncé, le nom et l'usage de chaque feutre dans l'infobulle, un creux vide caché. La raison d'un refus passe par
     /// la bulle des raisons. C'est la vue (le bloc « place-barre » de Hud.uxml) ; son présentateur décide.
     /// </summary>
     public sealed class PaintBar : IPaintBarView
     {
         private static readonly string[] ModeClasses = { "feutre", "sable", "pan-10", "place-mode" };
-        private static readonly string[] OptionClasses = { "feutre", "sable", "pan-10", "place-option" };
         private const string IconClass = "place-mode-icone";
         private const string ModeIconPrefix = "place-icone-";
-        private const string ShapeIconPrefix = "place-forme-";
-        private const string StyleIconPrefix = "place-style-";
         private const string ZoneIconClass = "place-icone-superficie";
         private const string InkPictureClass = "place-encre-vignette";
         private readonly VisualElement _bar;
-        private readonly VisualElement _shapesRow;
-        private readonly VisualElement _stylesRow;
         private readonly FeltRow<PaintInk> _inks;
         private readonly FeltRow<PaintToolMode> _modes;
-        private readonly FeltRow<PaintShape> _shapes;
-        private readonly FeltRow<PaintTraceStyle> _styles;
+        private readonly PaintOptionsRow _options;
         private readonly VisualElement _areaHollow;
         private readonly Label _area;
         private readonly VisualElement _marksHollow;
@@ -47,33 +41,28 @@ namespace Diciela.UI
             _bar = root?.Q("place-barre");
             VisualElement inks = root?.Q("place-encres");
             VisualElement modes = root?.Q("place-modes");
-            _shapesRow = root?.Q("place-formes");
-            _stylesRow = root?.Q("place-styles");
             _areaHollow = root?.Q("place-superficie-creux");
             _area = root?.Q<Label>("place-superficie");
             _marksHollow = root?.Q("place-marques-creux");
             _marks = root?.Q<Label>("place-marques");
             _sizeHollow = root?.Q("place-taille-creux");
             _size = root?.Q<Label>("place-taille");
-            if (_bar == null || inks == null || modes == null || _shapesRow == null || _stylesRow == null ||
-                _areaHollow == null || _area == null || _marksHollow == null || _marks == null || _sizeHollow == null ||
-                _size == null || tooltips == null || reasons == null)
+            if (_bar == null || inks == null || modes == null || _areaHollow == null || _area == null ||
+                _marksHollow == null || _marks == null || _sizeHollow == null || _size == null || tooltips == null ||
+                reasons == null)
                 throw new InvalidOperationException("La barre des outils de sol ne trouve pas ses éléments (UXML).");
             _reasons = reasons;
             _inks = new FeltRow<PaintInk>(inks, tooltips, ModeClasses);
             _modes = new FeltRow<PaintToolMode>(modes, tooltips, ModeClasses);
-            _shapes = new FeltRow<PaintShape>(_shapesRow, tooltips, OptionClasses);
-            _styles = new FeltRow<PaintTraceStyle>(_stylesRow, tooltips, OptionClasses);
+            _options = new PaintOptionsRow(root, tooltips);
             _inks.Chosen += ink => InkChosen?.Invoke(ink);
             _modes.Chosen += mode => ModeChosen?.Invoke(mode);
-            _shapes.Chosen += shape => ShapeChosen?.Invoke(shape);
-            _styles.Chosen += style => StyleChosen?.Invoke(style);
         }
 
         public event Action<PaintToolMode> ModeChosen;
-        public event Action<PaintShape> ShapeChosen;
-        public event Action<PaintTraceStyle> StyleChosen;
         public event Action<PaintInk> InkChosen;
+
+        public IPaintOptionsView Options => _options;
 
         /// <summary>
         /// Relie la barre aux outils de sol de ce monde, l'outil de la Place et l'outil Chemins ; cachée tant qu'aucun n'est
@@ -92,8 +81,7 @@ namespace Diciela.UI
             _presenter = null;
             _inks.Clear();
             _modes.Clear();
-            ShowShapes(Array.Empty<PaintBarChoice<PaintShape>>());
-            ShowStyles(Array.Empty<PaintBarChoice<PaintTraceStyle>>());
+            _options.Clear();
             ShowShown(false);
         }
 
@@ -141,26 +129,6 @@ namespace Diciela.UI
             _modes.Select(mode);
         }
 
-        public void ShowShapes(IReadOnlyList<PaintBarChoice<PaintShape>> shapes)
-        {
-            ShowOptions(_shapes, _shapesRow, shapes, ShapeIconPrefix);
-        }
-
-        public void SelectShape(PaintShape shape)
-        {
-            _shapes.Select(shape);
-        }
-
-        public void ShowStyles(IReadOnlyList<PaintBarChoice<PaintTraceStyle>> styles)
-        {
-            ShowOptions(_styles, _stylesRow, styles, StyleIconPrefix);
-        }
-
-        public void SelectStyle(PaintTraceStyle style)
-        {
-            _styles.Select(style);
-        }
-
         public void ShowValues(string area, string marks, string brushSize)
         {
             _area.text = area;
@@ -174,20 +142,6 @@ namespace Diciela.UI
         public void ShowReason(string text)
         {
             _reasons.Say(this, text);
-        }
-
-        // Une rangée d'options en petits feutres, chacun l'icône de sa valeur ; vide, elle se cache.
-        private static void ShowOptions<T>(FeltRow<T> row, VisualElement element, IReadOnlyList<PaintBarChoice<T>> choices,
-            string iconPrefix)
-        {
-            row.Clear();
-            foreach (PaintBarChoice<T> choice in choices)
-            {
-                VisualElement face = Styled.With(new VisualElement(), IconClass,
-                    iconPrefix + choice.Value.ToString().ToLowerInvariant());
-                row.Add(choice.Value, face, choice.Name, choice.Detail, choice.Key);
-            }
-            element.EnableInClassList(StyleClasses.Hidden, choices.Count == 0);
         }
     }
 }
