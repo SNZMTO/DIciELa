@@ -38,6 +38,10 @@ namespace Diciela.Data
                  "l'aperçu de pose aussi, de ses couleurs.")]
         [SerializeField] private Material _siteGhostMaterial;
 
+        [Tooltip("Le fantôme d'un sol en chantier (Diciela/SolFantome) : sa part de texture et son opacité s'y règlent ; " +
+                 "chaque sorte de sol en a une copie, à la texture de son calque.")]
+        [SerializeField] private Material _floorGhostMaterial;
+
         [Tooltip("Sur un chantier et dans l'aperçu, le seuil où se détoure un matériau du pack transparent par mélange " +
                  "(le bord d'un chaume) : sa texture y est pleine ou vide.")]
         [SerializeField, Range(0.05f, 0.95f)] private float _blendedCutoff = 0.5f;
@@ -97,6 +101,7 @@ namespace Diciela.Data
         public Color PlannedColor => _plannedColor;
         public Material SiteMaterial => _siteMaterial;
         public Material SiteGhostMaterial => _siteGhostMaterial;
+        public Material FloorGhostMaterial => _floorGhostMaterial;
         public float BlendedCutoff => _blendedCutoff;
         public float WaveAmplitude => _waveAmplitude;
         public float WaveLength => _waveLength;

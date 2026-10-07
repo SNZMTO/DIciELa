@@ -13,11 +13,11 @@ using Object = UnityEngine.Object;
 namespace Diciela.Tests.PlayMode
 {
     /// <summary>
-    /// Les sols vus (décisions 209 et 213), par le chemin du joueur, sur un Terrain d'essai de 40 × 40 m peint d'un seul
-    /// calque, l'herbe (64 texels de côté, 62,5 cm chacun), dont la partie joue sur une copie : un chemin tracé se voit en
-    /// voile ; bâti par la Chimère, il se peint du calque de sa fiche, la terre, ajouté à la copie ; des pavés bâtis
-    /// ensuite ajoutent leur calque sans défaire la terre ; un chemin effacé rend la peinture de la carte. L'original
-    /// n'est jamais touché.
+    /// Les sols vus (décisions 209, 213 et 216), par le chemin du joueur, sur un Terrain d'essai de 40 × 40 m peint d'un
+    /// seul calque, l'herbe (64 texels de côté, 62,5 cm chacun), dont la partie joue sur une copie : un chemin tracé se
+    /// voit en fantôme, à la texture de son calque, posée en tuiles comme sur le Terrain ; bâti par la Chimère, il se peint
+    /// du calque de sa fiche, la terre, ajouté à la copie ; des pavés bâtis ensuite ajoutent leur calque sans défaire la
+    /// terre ; un chemin qu'on efface se voile, puis rend la peinture de la carte. L'original n'est jamais touché.
     /// </summary>
     public sealed class FloorViewsTests
     {
@@ -39,6 +39,8 @@ namespace Diciela.Tests.PlayMode
             _copy = Keep(Object.Instantiate(_original));
             Terrain terrain = Keep(Terrain.CreateTerrainGameObject(_copy)).GetComponent<Terrain>();
             _dirt = Floor("terre", Layer("terre"));
+            _dirt.Layer.tileSize = new Vector2(2f, 4f);
+            _dirt.Layer.tileOffset = new Vector2(1f, 0f);
             _paving = Floor("paves", Layer("paves"));
             _town = new TestCampTown(true, null, builds: true);
             _town.KnowsFloors(_dirt, _paving);
@@ -46,6 +48,7 @@ namespace Diciela.Tests.PlayMode
 #if UNITY_EDITOR
             TestWorld.Fill(settings, "_translucentMaterial",
                 Keep(new Material(Shader.Find("Universal Render Pipeline/Lit"))));
+            TestWorld.Fill(settings, "_floorGhostMaterial", Keep(new Material(Shader.Find("Diciela/SolFantome"))));
 #endif
             _views = Keep(new GameObject("Sols de test")).AddComponent<FloorViews>();
             _views.Show(_town.World, terrain, _original, settings);
@@ -64,17 +67,23 @@ namespace Diciela.Tests.PlayMode
         }
 
         [UnityTest]
-        public IEnumerator AFloorIsAVeilThenItsLayerThenTheMapAgain()
+        public IEnumerator AFloorIsAGhostAtItsTextureThenItsLayerThenTheMapAgain()
         {
             World world = _town.World;
             Trace(world, 30f, _dirt);
             yield return null;
-            Assert.IsTrue(Ghosts().activeSelf, "Tracé, le chemin se voit en voile.");
+            GameObject dirtGhost = Child("Fantôme du sol terre");
+            Assert.IsTrue(dirtGhost.activeSelf, "Tracé, le chemin se voit en fantôme…");
+            Material ghost = dirtGhost.GetComponent<MeshRenderer>().sharedMaterial;
+            Assert.AreSame(_dirt.Layer.diffuseTexture, ghost.GetTexture("_BaseMap"), "… à la texture de son calque…");
+            Assert.AreEqual(new Vector2(0.5f, 0.25f), ghost.GetTextureScale("_BaseMap"), "… en tuiles de 2 × 4 m…");
+            Assert.AreEqual(new Vector2(0.5f, 0f), ghost.GetTextureOffset("_BaseMap"), "… décalées comme sur le Terrain.");
+            Assert.IsFalse(Child("Voile des sols").activeSelf, "Un chemin qu'on trace n'est pas voilé.");
             Assert.AreEqual(1, _copy.alphamapLayers, "Pas encore bâti : rien n'est peint.");
 
             BuildAll(world);
             yield return null;
-            Assert.IsFalse(Ghosts().activeSelf, "Bâti, il n'a plus de voile…");
+            Assert.IsFalse(dirtGhost.activeSelf, "Bâti, il n'a plus de fantôme…");
             Assert.AreEqual(2, _copy.alphamapLayers, "… et le calque de la terre s'ajoute à la copie.");
             CollectionAssert.AreEqual(new[] { 0f, 1f }, WeightsAt(20f, 30f), "Le chemin, de terre.");
             CollectionAssert.AreEqual(new[] { 1f, 0f }, WeightsAt(20f, 20f), "À côté, l'herbe de la carte.");
@@ -89,7 +98,7 @@ namespace Diciela.Tests.PlayMode
                 new Vector2(30f, 4f), 0f)), FloorScope.Anywhere));
             world.Step();
             yield return null;
-            Assert.IsTrue(Ghosts().activeSelf, "Qu'on l'efface, il se voile…");
+            Assert.IsTrue(Child("Voile des sols").activeSelf, "Qu'on l'efface, il se voile de la couleur des fantômes…");
             CollectionAssert.AreEqual(new[] { 0f, 1f, 0f }, WeightsAt(20f, 30f), "… et sert jusqu'à la fin.");
             BuildAll(world);
             yield return null;
@@ -113,9 +122,11 @@ namespace Diciela.Tests.PlayMode
             Assert.IsEmpty(world.ConstructionSites.Queue, "Les chantiers sont bâtis.");
         }
 
-        private GameObject Ghosts()
+        private GameObject Child(string name)
         {
-            return _views.transform.Find("Fantômes des sols").gameObject;
+            Transform child = _views.transform.Find(name);
+            Assert.IsNotNull(child, "La vue des sols n'a pas « " + name + " ».");
+            return child.gameObject;
         }
 
         // Les poids des calques du texel de la copie sous ce point.

@@ -20,6 +20,7 @@ MonoBehaviour:
   _plannedColor: {r: 0.7, g: 0.85, b: 1, a: 0.45}
   _siteMaterial: {fileID: 2100000, guid: 2e861400a205bf3448939bce69df84ff, type: 2}
   _siteGhostMaterial: {fileID: 2100000, guid: 967ef1b5395006a4d919f283fb6f4cb9, type: 2}
+  _floorGhostMaterial: {fileID: 2100000, guid: bb3b1e900a9e3464bbad3d358e3d542b, type: 2}
   _blendedCutoff: 0.5
   _waveAmplitude: 0.08
   _waveLength: 1.6
