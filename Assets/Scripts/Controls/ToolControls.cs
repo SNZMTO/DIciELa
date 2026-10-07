@@ -5,12 +5,13 @@ using UnityEngine.InputSystem;
 namespace Diciela.Controls
 {
     /// <summary>
-    /// Les gestes des outils (GDD, section 16 ; décisions 168 et 184) : tenir la touche de la roue l'ouvre autour du
+    /// Les gestes des outils (GDD, section 16 ; décisions 168, 184 et 221) : tenir la touche de la roue l'ouvre autour du
     /// pointeur et la fait suivre où il vise, image après image ; la relâcher choisit. La touche d'un outil le choisit
     /// tout droit : chacun a la sienne, dans la table des outils (ToolAction). Les touches 1 à 9 prennent les cartes du
-    /// panneau Construire ouvert, ou les modes de l'outil de la Place en main (décision 206 : l'interface aiguille). Les
-    /// touches se lisent sur l'asset d'actions, d'où la roue et les cartes tirent aussi leurs noms. Il lit les actions et
-    /// parle à la roue et aux cartes, rien d'autre ; il passe après la caméra (ordre 100), comme les autres gestes.
+    /// panneau Construire ouvert, ou les cases de la roue de l'outil de sol en main (l'interface aiguille). Le curseur des
+    /// outils suit le pointeur, image après image. Les touches se lisent sur l'asset d'actions, d'où la roue et les
+    /// cartes tirent aussi leurs noms. Il lit les actions et parle à la roue, aux cartes et au curseur, rien d'autre ; il
+    /// passe après la caméra (ordre 100), comme les autres gestes.
     /// </summary>
     [DefaultExecutionOrder(100)]
     public sealed class ToolControls : MonoBehaviour, IToolKeys
@@ -27,6 +28,7 @@ namespace Diciela.Controls
 
         private IToolWheel _wheel;
         private ICardPicker _cards;
+        private IToolCursor _cursor;
         private InputActionMap _map;
         private InputAction _wheelKey;
         private InputAction _pointer;
@@ -36,11 +38,14 @@ namespace Diciela.Controls
         private Action<InputAction.CallbackContext>[] _taken;
         private bool _held;
 
-        /// <summary>Relie les gestes à la roue et aux cartes de la ville qui vient de s'ouvrir ; null les rend muets.</summary>
-        public void Bind(IToolWheel wheel, ICardPicker cards)
+        /// <summary>
+        /// Relie les gestes à la roue, aux cartes et au curseur de la ville qui vient de s'ouvrir ; null les rend muets.
+        /// </summary>
+        public void Bind(IToolWheel wheel, ICardPicker cards, IToolCursor cursor)
         {
             _wheel = wheel;
             _cards = cards;
+            _cursor = cursor;
             _held = false;
         }
 
@@ -125,8 +130,10 @@ namespace Diciela.Controls
 
         private void LateUpdate()
         {
+            Vector2 pointer = _pointer.ReadValue<Vector2>();
             if (_held && _wheel != null)
-                _wheel.PointAt(_pointer.ReadValue<Vector2>());
+                _wheel.PointAt(pointer);
+            _cursor?.FollowTo(pointer);
         }
 
         private void OnWheelPressed(InputAction.CallbackContext context)

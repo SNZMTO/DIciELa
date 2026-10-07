@@ -150,6 +150,27 @@
     --ombre-y: 5;
 }
 
+/* Une pastille du curseur : un petit octogone de lin cerclé d'encre, qui porte un réglage de l'outil en main. */
+.pastille {
+    --face: #FBF3E4;
+    --lisere: #4A2E3B;
+    --lisere-largeur: 2;
+    --pan: 6;
+}
+
+/* La pastille d'un refus : de la brique cerclée de lin, une croix de lin. */
+.pastille.refus-pastille {
+    --face: #B34747;
+    --lisere: #FBF3E4;
+}
+
+/* La teinte d'un curseur : la couleur de son outil, posée sur son halo blanc. */
+.teinte.beurre { -unity-background-image-tint-color: #F8DE95; }
+.teinte.menthe { -unity-background-image-tint-color: #BFE3C6; }
+.teinte.ciel { -unity-background-image-tint-color: #B7D9EE; }
+.teinte.sable { -unity-background-image-tint-color: #EFD3A4; }
+.teinte.peche { -unity-background-image-tint-color: #F9C7A5; }
+
 /* La bulle d'une infobulle : du lin dans un liseré de paille. */
 .bulle {
     --face: #FBF3E4;

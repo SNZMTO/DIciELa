@@ -98,5 +98,23 @@
             <ui:Label name="infobulle-titre" class="libelle" picking-mode="Ignore" />
             <ui:Label name="infobulle-suite" class="sous-titre" picking-mode="Ignore" />
         </Diciela.UI.Facet>
+        <ui:VisualElement name="curseur" class="curseur bloc-cache" picking-mode="Ignore">
+            <ui:VisualElement name="curseur-icone" class="curseur-icone" picking-mode="Ignore" />
+            <ui:VisualElement class="curseur-pastilles" picking-mode="Ignore">
+                <Diciela.UI.Facet name="curseur-sol" class="pastille curseur-pastille bloc-cache" picking-mode="Ignore">
+                    <ui:VisualElement class="curseur-pastille-icone" picking-mode="Ignore" />
+                </Diciela.UI.Facet>
+                <Diciela.UI.Facet name="curseur-forme" class="pastille curseur-pastille bloc-cache" picking-mode="Ignore">
+                    <ui:VisualElement class="curseur-pastille-icone" picking-mode="Ignore" />
+                </Diciela.UI.Facet>
+                <Diciela.UI.Facet name="curseur-symetrie" class="pastille curseur-pastille bloc-cache" picking-mode="Ignore">
+                    <ui:VisualElement class="curseur-pastille-icone" picking-mode="Ignore" />
+                </Diciela.UI.Facet>
+                <Diciela.UI.Facet name="curseur-refus" class="pastille refus-pastille curseur-pastille bloc-cache" picking-mode="Ignore">
+                    <ui:VisualElement class="curseur-refus-trait curseur-refus-montant" picking-mode="Ignore" />
+                    <ui:VisualElement class="curseur-refus-trait curseur-refus-descendant" picking-mode="Ignore" />
+                </Diciela.UI.Facet>
+            </ui:VisualElement>
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
