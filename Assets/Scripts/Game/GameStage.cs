@@ -75,7 +75,7 @@ namespace Diciela.Game
             Action started, Action failed)
         {
             _worldViews = new WorldViews(_structureViews, _villagerViews, _natureViews, transform);
-            _worldViews.Show(world, map);
+            _worldViews.Show(world, map, placement);
             _atelier.Show();
             _appearancePreview.Stand(_atelier.Spot);
             _creationScreen.Show(catalog, texts, _appearancePreview, world, () =>
