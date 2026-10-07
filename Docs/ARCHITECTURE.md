@@ -387,7 +387,8 @@ code.
   des ordres.
 - **La copie de travail du Terrain.** Ce qui modifie le sol en jeu travaille sur une copie en mémoire (`Instantiate`
   du TerrainData, donnée au Terrain et au TerrainCollider), jamais enregistrée : modifier le Terrain en Play le
-  modifierait pour de bon. Le rangement du Terrain dans Git est dans SAVOIR 2.5.
+  modifierait pour de bon. L'original reste lisible (`MapScene.OriginalGround`) : la peinture d'origine d'un sol
+  effacé s'y relit. Le rangement du Terrain dans Git est dans SAVOIR 2.5.
 - **La sauvegarde.** Chaque système donne et reprend son état sous forme d'instantanés, des données simples distinctes
   de ses classes vivantes et définies dans sa couche. `Persistence` en fait du JSON (Newtonsoft), l'écrit de façon
   atomique et convertit les vieux fichiers sur le JSON lui-même ; elle reçoit son dossier, elle ne le cherche pas. Le
@@ -436,19 +437,27 @@ code.
   vise un arbre par la boîte de son modèle et marque ce que contient le cadre qu'on tire, que l'interface dessine
   (`ISelectionFrame`). Un panneau ouvert rend la ville muette ; les conteneurs plein écran de l'interface ne captent pas le pointeur. Les gestes ne
   connaissent pas l'interface : elle leur dit seulement où elle est (`IInterfaceArea`), et `Game` les relie.
-- **L'outil de la Place** (décision 206) est un outil en main de plus (`PlaceTool`), pris à la carte de la Place, que
-  le panneau Construire met en tête de la famille que nomme la fiche de la Place (`BuildBarCards`). Il tient son mode
-  (`PlaceToolMode`), la taille de son pinceau et le cap d'une place de charrette ; il travaille sur sa surface
-  (`PlaceCanvas`) : le geste en cours (`PlaceDrawing` : un trait, un disque, un rectangle), ce que la Place répond à ce
-  qu'il vise, par la même fonction que l'ordre, montré par l'aperçu (`PlaceAim`), et les ordres qui en partent
-  (`PlaceOrders`). Ses gestes (`PlaceControls`, leur carte d'actions) glissent, cliquent, tournent par la touche de la
-  pose (`RotateKey`, que la pose partage) et changent la taille du pinceau à Ctrl + molette, que la caméra laisse alors.
-  Les touches des cartes passent par un aiguillage (`CardKeys`) : le panneau ouvert, ses cartes ; sinon, les modes de
-  l'outil de la Place. La vue montre la zone (`PlaceZoneView`) et l'aperçu de l'outil (`PlaceToolPreview`) en calques
-  posés sur le relief (`GroundOverlay`, `DrapedMesh` : un seul maillage par calque, refait quand la Place change) ;
-  l'interface, sa barre (`PlaceBar`, `PlaceBarPresenter`) ; la raison d'un refus, de la pose comme de la Place, passe
-  par une seule bulle (`ReasonBubble`), où parle le dernier qui a quelque chose à dire. `Game` relie la barre, les
-  gestes et la zone, qui ne se voit qu'en mode construction (`TownPlace`).
+- **Les outils de sol** (décisions 206, 210 et 214) : un seul outil en main (`PlaceTool`) à deux entrées (`PaintEntry`),
+  l'outil de la Place, pris à la carte de la Place, que le panneau Construire met en tête de la famille que nomme sa
+  fiche (`BuildBarCards`), et l'outil Chemins, pris à la roue. L'entrée dit ses modes, s'il pose la zone, où vont ses
+  sols et son pinceau de départ. L'outil tient son mode (`PlaceToolMode`), son encre (`PaintInks` : la zone, ou l'un
+  des sols que la ville sait faire), la taille de son pinceau et le cap d'une place de charrette ; il travaille sur sa
+  surface (`PlaceCanvas`) : le geste en cours (`PlaceDrawing` : un trait, un disque, un rectangle), ce que la Place ou
+  les sols répondent à ce qu'il vise, par la même fonction que l'ordre, traduit en une seule réponse (`PaintAnswer`) et
+  montré par l'aperçu (`PlaceAim`), et les ordres qui en partent (`PlaceOrders`). Ses gestes (`PlaceControls`, leur
+  carte d'actions), pour celui des deux qui est en main, glissent, cliquent, tournent par la touche de la pose
+  (`RotateKey`, que la pose partage) et changent la taille du pinceau à Ctrl + molette, que la caméra laisse alors. Les
+  touches des cartes passent par un aiguillage (`CardKeys`) : le panneau ouvert, ses cartes ; sinon, les modes de
+  l'outil de sol en main. La vue montre la zone (`PlaceZoneView`) et l'aperçu de l'outil (`PlaceToolPreview`) en
+  calques posés sur le relief (`GroundOverlay`, `DrapedMesh` : un seul maillage par calque, refait quand la Place
+  change) ; l'interface, une seule barre pour les deux outils (`PlaceBar`, `PlaceBarPresenter`, ce qu'elle montre de
+  l'outil en main : `PlaceBarContent`) ; la raison d'un refus, de la pose, de la Place ou des sols, passe par une seule
+  bulle (`ReasonBubble`), où parle le dernier qui a quelque chose à dire. `Game` relie la barre, les gestes et la
+  zone, qui ne se voit qu'en mode construction (`TownPlace`).
+- **Les sols vus** (décision 214) : un sol qui sert se peint dans le sol de la carte, du calque de sa fiche
+  (`FloorPainting` : sur la copie du Terrain, par lot, à la fin de l'image ; la peinture d'origine relue sur
+  l'original) ; un sol en chantier se voit en voile, de la couleur des fantômes (`FloorViews`, né avec les vues du
+  monde, `WorldViews`).
 - **L'ouverture d'une partie** : la scène du démarrage (`GameStage`) montre le monde (constructions, habitants) et ouvre
   l'écran de création dans l'atelier (`Atelier` : un décor généré loin de la carte, sa lumière, sa caméra) ; l'aperçu
   (`AppearancePreview`) s'y tient sur le socle, et les gestes de l'atelier (`PreviewControls`, leur propre carte
