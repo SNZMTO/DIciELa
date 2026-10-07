@@ -38,6 +38,9 @@ namespace Diciela.Controls
         /// <summary>Vrai à l'image où le bouton est relâché sans avoir glissé : un clic.</summary>
         public bool Clicked { get; private set; }
 
+        /// <summary>Vrai à l'image où le bouton est relâché après avoir glissé : la fin du glisser.</summary>
+        public bool Dropped { get; private set; }
+
         /// <summary>
         /// Suit le bouton et le pointeur ; <paramref name="onInterface"/> dit si le pointeur est sur l'interface. Vrai
         /// à l'image où le glisser commence.
@@ -46,9 +49,11 @@ namespace Diciela.Controls
         {
             Delta = Vector2.zero;
             Clicked = false;
+            Dropped = false;
             if (!pressed)
             {
                 Clicked = _pressed && !IsDragging && !_elsewhere;
+                Dropped = IsDragging;
                 _pressed = false;
                 IsDragging = false;
                 return false;
