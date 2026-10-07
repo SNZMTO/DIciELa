@@ -775,6 +775,12 @@
   des outils, dit ce qu'on tient, ses nombres (la taille du pinceau, la superficie de la Place, ses places de charrette,
   le coût d'une construction, les arbres marqués) et la raison d'un refus ; elle ne paraît qu'un outil en main et
   s'efface quand la roue est ouverte. Chaque outil a sa couleur, sur sa case, son curseur et sa carte.
+- **Défaut.** La carte (décision 223) : un feutre de lin, qui se clique ; l'icône de l'outil sur une tuile de sa
+  couleur, son nom et, pour un outil de sol, son mode ; puis des puces : ce qu'il pose (sauf au mode place de
+  charrette), la taille du pinceau (au pinceau, à la gomme et au tracé), la forme, le style d'un tracé ou d'un
+  polygone, la symétrie quand il y en a une (l'étoile avec ses branches), et, pour la Place, sa superficie et ses places
+  de charrette ; pour Retirer, combien d'arbres et de rochers sont marqués ; pour Déplacer, la construction qu'on tient.
+  Les puces et la raison s'écrivent en petit (15 px) ; une raison en brique, ce qu'un clic ferait en douce.
 - **Règle.** Les animations sont courtes (200 ms au plus) et n'arrêtent jamais un geste : la roue s'ouvre en ressort,
   ses cases l'une après l'autre, et se retourne comme une pièce d'un étage à l'autre ; la case visée grossit et se
   dandine ; un éventail se déplie depuis sa case ; l'icône choisie saute de la roue au curseur, qui fait un petit «

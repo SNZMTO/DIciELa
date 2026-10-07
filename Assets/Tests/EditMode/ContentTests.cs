@@ -89,7 +89,8 @@ namespace Diciela.Tests.EditMode
                 TextKeys.BuildToolDetail, TextKeys.ClearingTool, TextKeys.ClearingToolDetail, TextKeys.ToolsTooltip,
                 TextKeys.ToolsTooltipDetail, TextKeys.CardBeds, TextKeys.PlazaArea, TextKeys.PlazaMarks,
                 TextKeys.PathsTool, TextKeys.PathsToolDetail, TextKeys.PaintBrushSize, TextKeys.PlazaRemoveMark,
-                TextKeys.PlazaZoneInk, TextKeys.PlazaZoneInkDetail, TextKeys.FloorInkDetail, catalog.Plaza.NameKey
+                TextKeys.PlazaZoneInk, TextKeys.PlazaZoneInkDetail, TextKeys.FloorInkDetail, TextKeys.CardMarked,
+                TextKeys.CardStar
             });
             foreach (DayPhase phase in Enum.GetValues(typeof(DayPhase)))
             {

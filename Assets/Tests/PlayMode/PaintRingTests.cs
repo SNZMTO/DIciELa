@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Diciela.Controls;
 using Diciela.Data;
 using Diciela.UI;
@@ -117,11 +118,22 @@ namespace Diciela.Tests.PlayMode
 #if UNITY_EDITOR
             var settings = BuildBarTests.LoadSingle<InterfaceSettings>();
             TextTable texts = TextTable.Parse(settings.Texts.text, settings.Language);
-            foreach (string key in new[]
-                     {
-                         TextKeys.PlazaTool, TextKeys.PlazaToolDetail, TextKeys.WheelBack, TextKeys.WheelBackDetail,
-                         TextKeys.WheelSymmetry, TextKeys.WheelSymmetryDetail, TextKeys.WheelInk, TextKeys.WheelInkDetail
-                     })
+            var keys = new List<string>
+            {
+                TextKeys.PlazaTool, TextKeys.PlazaToolDetail, TextKeys.WheelBack, TextKeys.WheelBackDetail,
+                TextKeys.WheelSymmetry, TextKeys.WheelSymmetryDetail, TextKeys.WheelInk, TextKeys.WheelInkDetail,
+                TextKeys.PaintStarDetail
+            };
+            foreach (PaintToolMode mode in System.Enum.GetValues(typeof(PaintToolMode)))
+                keys.AddRange(new[] { TextKeys.PaintMode(mode.ToString()), TextKeys.PaintModeDetail(mode.ToString()) });
+            foreach (PaintShape shape in System.Enum.GetValues(typeof(PaintShape)))
+                keys.AddRange(new[] { TextKeys.PaintShape(shape.ToString()), TextKeys.PaintShapeDetail(shape.ToString()) });
+            foreach (PaintTraceStyle style in System.Enum.GetValues(typeof(PaintTraceStyle)))
+                keys.AddRange(new[] { TextKeys.PaintStyle(style.ToString()), TextKeys.PaintStyleDetail(style.ToString()) });
+            foreach (PaintSymmetry symmetry in System.Enum.GetValues(typeof(PaintSymmetry)))
+                keys.AddRange(new[]
+                    { TextKeys.PaintSymmetry(symmetry.ToString()), TextKeys.PaintSymmetryDetail(symmetry.ToString()) });
+            foreach (string key in keys)
                 Assert.IsTrue(texts.Has(key), "Le texte « " + key + " » manque.");
 #endif
         }

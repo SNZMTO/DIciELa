@@ -6,9 +6,9 @@ namespace Diciela.UI
 {
     /// <summary>
     /// Ce que le panneau Construire propose : ce qui se pose encore (la ville sait le bâtir, et une construction unique
-    /// n'est pas déjà posée), et la carte de la Place, en tête de la famille que sa fiche nomme (GDD, section 16 ;
-    /// décision 206). Le campement d'abord (GDD, section 6) : tant que la Chimère n'a pas de logis, il ne propose que son
-    /// logis, si le catalogue en a un ; c'est une consigne du panneau, pas une règle des ordres (décision 95).
+    /// n'est pas déjà posée). Le campement d'abord (GDD, section 6) : tant que la Chimère n'a pas de logis, il ne
+    /// propose que son logis, si le catalogue en a un, et la roue ne propose pas la Place (décision 221) ; c'est une
+    /// consigne de l'interface, pas une règle des ordres (décision 95).
     /// </summary>
     internal sealed class BuildBarOffer
     {
@@ -31,23 +31,12 @@ namespace Diciela.UI
             return structure.IsChimeraHome || HomeIsPlaced;
         }
 
-        /// <summary>
-        /// Vrai si le panneau propose la carte de la Place dans cette famille, maintenant : dès le campement posé, en tête
-        /// de la famille que nomme sa fiche.
-        /// </summary>
-        public bool OffersPlazaIn(StructureFamilyDefinition family)
-        {
-            return OffersPlaza && family != null && ReferenceEquals(family, _plaza.Family);
-        }
-
         /// <summary>Vrai si la ville propose la Place, maintenant : dès le campement posé.</summary>
         public bool OffersPlaza => _plaza != null && HomeIsPlaced;
 
         /// <summary>Vrai si le panneau propose une carte de cette famille ; sinon, son onglet ne paraît pas.</summary>
         public bool Offers(StructureFamilyDefinition family)
         {
-            if (OffersPlazaIn(family))
-                return true;
             IReadOnlyList<StructureDefinition> structures = family.Structures;
             for (int i = 0; i < structures.Count; i++)
             {

@@ -10,7 +10,7 @@ namespace Diciela.EditorTools
     /// zone, son contour et deux places de charrette) ; leurs modes : le pinceau, la gomme, le tracé (des points reliés),
     /// la forme (un cercle sur un carré), la place de charrette (un cadre, sa pointe vers l'avant) ; les formes du mode
     /// Forme : le cercle, le rectangle, le polygone ; les styles d'un tracé : droit, en courbe ; et l'outil Chemins,
-    /// qui partage la barre : un chemin qui serpente, en pointillés. Des remplaçants simples : la maquette n'en a pas.
+    /// qui partage leur roue : un chemin qui serpente, en pointillés. Des remplaçants simples : la maquette n'en a pas.
     /// Le menu des images de l'interface les génère avec les autres (InterfaceIcons) ; les traits sont ceux d'InkStrokes.
     /// </summary>
     internal static class PaintIcons

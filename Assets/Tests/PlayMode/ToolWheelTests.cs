@@ -13,8 +13,9 @@ namespace Diciela.Tests.PlayMode
     /// <summary>
     /// La vue de la roue (décisions 168 et 221), dans un HUD de test, montrée, cachée, puis montrée de nouveau, comme à
     /// une deuxième partie : elle ne s'est branchée qu'une fois, si bien qu'un clic sur l'icône ouvre la roue ; cachée,
-    /// l'icône n'a plus d'infobulle ; ouverte, chaque outil montre son image. Les clics et les survols sont des événements
-    /// de la souris envoyés au panneau, au milieu de l'élément, dans le repère du panneau.
+    /// l'icône n'a plus d'infobulle ; ouverte, chaque outil montre son image ; un clic sur la carte de l'outil en main
+    /// l'ouvre sur ses réglages, et la carte s'efface tant qu'elle est ouverte. Les clics et les survols sont des
+    /// événements de la souris envoyés au panneau, au milieu de l'élément, dans le repère du panneau.
     /// </summary>
     public sealed class ToolWheelTests
     {
@@ -27,6 +28,7 @@ namespace Diciela.Tests.PlayMode
                                      "outils.infobulle.suite,Ou tiens {touche}\n";
         private const string ClosedClass = "roue-fermee";
         private const string HiddenClass = "bloc-cache";
+        private const string FadedClass = "carte-outil-effacee";
         private const string ToolClass = "roue-outil";
         private const string PictureClass = "roue-icone";
         private const int SettleFrames = 3;
@@ -128,6 +130,43 @@ namespace Diciela.Tests.PlayMode
                 }
                 finally
                 {
+                    wheel.Hide();
+                }
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator TheCardOpensTheSettingsOfTheToolInHandAndFadesWhileTheWheelIsOpen()
+        {
+            using (var test = new TestWorld(withPlaza: true))
+            {
+                UIDocument document = TestHud.WithWheel(test);
+                yield return null;
+                var wheel = document.GetComponent<ToolWheel>();
+                var card = new ToolCard(document);
+                TextTable texts = TextTable.Parse(Texts, "fr");
+                wheel.Show(texts, new FixedToolKeys(), test.Clearing, new NotedBuildMenu(), test.Mover, test.Paths,
+                    test.Plaza, new Tooltips(document));
+                card.Show(texts, test.Clearing, test.Mover, test.Paths, test.Plaza, test.World);
+                test.Plaza.Take();
+                for (int frame = 0; frame < SettleFrames; frame++)
+                    yield return null;
+                VisualElement root = document.rootVisualElement;
+                VisualElement onCard = root.Q("carte-outil");
+                try
+                {
+                    Assert.IsFalse(onCard.ClassListContains(HiddenClass), "La Place en main, sa carte paraît.");
+                    TestHud.Click(onCard);
+                    Assert.IsFalse(root.Q("roue").ClassListContains(ClosedClass), "Un clic sur la carte ouvre la roue…");
+                    Assert.IsNotNull(root.Q("roue-cases").Q(className: "place-icone-brush"),
+                        "… sur les réglages de la Place.");
+                    Assert.IsTrue(onCard.ClassListContains(FadedClass), "La carte s'efface tant que la roue est ouverte…");
+                    Assert.IsTrue(wheel.Escape());
+                    Assert.IsFalse(onCard.ClassListContains(FadedClass), "… et revient quand elle se ferme.");
+                }
+                finally
+                {
+                    card.Hide();
                     wheel.Hide();
                 }
             }

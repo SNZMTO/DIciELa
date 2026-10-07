@@ -17,6 +17,3 @@ MonoBehaviour:
   _startCartSpots: 2
   _cartSpotsPerLevel: 1
   _levels: 3
-  _family: {fileID: 11400000, guid: c814cea85372b9c468fbe02e92b932e8, type: 2}
-  _nameKey: place.nom
-  _icon: {fileID: 11400000, guid: 9ae705011d4ca52419a366b4c096de73, type: 2}

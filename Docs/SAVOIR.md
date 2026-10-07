@@ -306,7 +306,9 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   caméra lit Ctrl par une action à elle et laisse alors la molette ; l'outil lit une liaison « OneModifier » (Ctrl +
   molette). Les crochets de Planet Zoo demandent AltGr en AZERTY.
 - **En bas au centre, à 1280 × 720, il reste environ 400 px** entre l'astuce (416 px, en bas à gauche) et l'icône des
-  outils : une barre qui s'y ouvre se mesure par un test à toutes les tailles d'écran (`PaintBarLayoutTests`).
+  outils ; en bas à droite, sous une fiche haute (celle du campement : 459 px), moins de 220 px : la carte de l'outil
+  en main, pleine, en texte de 18 px, en faisait 245 et touchait la fiche ; en petit (15 px), elle tient. Tout ce qui
+  s'ouvre en bas se mesure par le test de mise en page, à toutes les tailles d'écran (`HudLayoutTests`).
 - **Au lancement, le pointeur vaut (0 ; 0) tant qu'il n'est pas entré dans la vue** : un coin, et le défilement au
   bord ferait filer la vue toute seule. Il ne s'arme qu'une fois le pointeur passé loin des bords ; perdre le focus
   le désarme (`EdgeScroll`).

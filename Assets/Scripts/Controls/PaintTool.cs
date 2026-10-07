@@ -164,7 +164,7 @@ namespace Diciela.Controls
                 PutDown();
         }
 
-        // Une option choisie à la barre : la surface s'y fait, et la barre le dit.
+        // Une option choisie à la roue : la surface s'y fait, et la carte le dit.
         private void OnOptionChanged(PaintOptionEffect effect)
         {
             if (effect == PaintOptionEffect.Abandon)
@@ -178,7 +178,7 @@ namespace Diciela.Controls
             HeldChanged?.Invoke();
         }
 
-        // Si l'encre ou le pinceau a changé, la surface s'y fait (abandon du geste, nouveau rond) et la barre le dit.
+        // Si l'encre ou le pinceau a changé, la surface s'y fait (abandon du geste, nouveau rond) et la carte le dit.
         private void Changed(bool changed, Action follow)
         {
             if (!changed)

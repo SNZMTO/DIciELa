@@ -158,159 +158,6 @@
     -unity-background-scale-mode: scale-and-crop;
 }
 
-/* Une carte sans modèle à photographier (la Place) : son icône, entière, au milieu de la vignette. */
-.carte-vignette-icone {
-    -unity-background-scale-mode: scale-to-fit;
-}
-
-/* La barre des outils de sol (décisions 206, 210, 214 et 216), la Place et Chemins, à la place du panneau Construire
-   fermé : au-dessus, ce que l'outil pose (la zone, les sols, chacun sa vignette) ; puis ses modes en familles, en
-   feutres, chacun son icône et sa touche, son nom et son usage dans l'infobulle ; dessous, les options du mode pris (les
-   formes du mode Forme et le style d'un tracé ou d'un polygone en petits feutres, la taille du pinceau) ; puis la superficie et les places de charrette dans des
-   creux de lin. Étroite, elle tient entre l'astuce et l'icône des outils dès 1280 × 720. */
-.place-encres {
-    flex-direction: row;
-    justify-content: center;
-    margin-bottom: 10px;
-}
-
-/* La vignette d'un sol : la texture de son calque, un remplaçant. */
-.place-encre-vignette {
-    width: 36px;
-    height: 36px;
-    border-radius: 6px;
-    -unity-background-scale-mode: scale-and-crop;
-}
-
-.place-modes {
-    flex-direction: row;
-    justify-content: center;
-}
-
-.place-mode {
-    width: 56px;
-    height: 56px;
-    margin: 0 5px;
-    align-items: center;
-    justify-content: center;
-}
-
-.place-mode-icone {
-    width: 32px;
-    height: 32px;
-}
-
-.place-options {
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-}
-
-/* L'écart va aux rangées qui se voient : une rangée d'options vide (toutes cachées) ne prend aucune place. */
-.place-options > * {
-    margin-top: 10px;
-}
-
-.place-formes {
-    flex-direction: row;
-    margin-left: 6px;
-    margin-right: 6px;
-}
-
-.place-option {
-    width: 44px;
-    height: 44px;
-    margin: 0 4px;
-    align-items: center;
-    justify-content: center;
-}
-
-.place-option-nombre {
-    width: 36px;
-    height: 32px;
-}
-
-.place-valeurs {
-    flex-direction: row;
-    justify-content: center;
-    margin-top: 8px;
-}
-
-.place-icone-brush {
-    background-image: url("Icones/pinceau.asset");
-}
-
-.place-icone-eraser {
-    background-image: url("Icones/gomme.asset");
-}
-
-.place-icone-trace {
-    background-image: url("Icones/trace.asset");
-}
-
-.place-icone-shape {
-    background-image: url("Icones/forme.asset");
-}
-
-.place-forme-disc {
-    background-image: url("Icones/cercle.asset");
-}
-
-.place-forme-box {
-    background-image: url("Icones/rectangle.asset");
-}
-
-.place-forme-polygon {
-    background-image: url("Icones/polygone.asset");
-}
-
-.place-style-straight {
-    background-image: url("Icones/droit.asset");
-}
-
-.place-style-curved {
-    background-image: url("Icones/courbe.asset");
-}
-
-.place-symetrie-none {
-    background-image: url("Icones/sans-symetrie.asset");
-}
-
-.place-symetrie-mirror {
-    background-image: url("Icones/miroir.asset");
-}
-
-.place-symetrie-doublemirror {
-    background-image: url("Icones/double-miroir.asset");
-}
-
-.place-symetrie-star {
-    background-image: url("Icones/etoile.asset");
-}
-
-.place-icone-cartspot {
-    background-image: url("Icones/place-charrette.asset");
-}
-
-.place-icone-superficie {
-    background-image: url("Icones/place.asset");
-}
-
-.place-valeur {
-    flex-direction: row;
-    align-items: center;
-    height: 40px;
-    margin-left: 4px;
-    margin-right: 4px;
-    padding: 0 8px;
-}
-
-.place-valeur-icone {
-    width: 20px;
-    height: 20px;
-    margin-right: 5px;
-}
-
 .onglet {
     min-width: 188px;
     height: 56px;
@@ -550,6 +397,93 @@
     justify-content: center;
 }
 
+/* La carte de l'outil en main (décision 221), à gauche de l'icône des outils, en bas : un feutre de lin ; l'icône de
+   l'outil sur une tuile de sa couleur ; son nom et son mode ; ses puces, qui passent à la ligne ; la raison d'un refus.
+   Sa largeur est fixe : une raison qui revient à la ligne dans un bloc qui rétrécit sortirait du cadre. Elle s'efface
+   tant que la roue est ouverte. */
+.carte-outil {
+    position: absolute;
+    right: 100px;
+    bottom: 24px;
+    width: 400px;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px 14px 13px 10px;
+}
+
+.carte-outil-effacee {
+    opacity: 0.16;
+}
+
+.carte-outil-tuile {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+}
+
+.carte-outil-icone {
+    width: 36px;
+    height: 36px;
+}
+
+.carte-outil-textes {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0;
+    margin-left: 12px;
+}
+
+/* Son nom, puis son mode, qui passe dessous s'il ne tient pas à côté. */
+.carte-outil-tete {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.carte-outil-ligne {
+    flex-direction: row;
+    align-items: center;
+}
+
+.carte-outil-point {
+    width: 4px;
+    height: 4px;
+    margin: 2px 8px 0 8px;
+    background-color: var(--douce);
+}
+
+.carte-outil-mode-icone {
+    width: 24px;
+    height: 24px;
+    margin-right: 4px;
+}
+
+.carte-outil-puces {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.carte-outil-puce {
+    flex-direction: row;
+    align-items: center;
+    height: 26px;
+    margin: 4px 4px 0 0;
+    padding: 0 7px;
+}
+
+.carte-outil-puce-icone {
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+}
+
+.carte-outil-raison {
+    margin-top: 4px;
+    white-space: normal;
+}
+
 /* La roue (décision 221) : un fond plein écran qui prend le pointeur tant qu'elle est ouverte ; autour du point où elle
    s'ouvre, un plateau octogonal (huit côtés, huit cases), chaque case à sa place fixe, sur un cercle de --rayon px, la
    bulle de ce qu'on vise au milieu ; la case visée grossit et déplie ses options en jetons, sur un cercle de
@@ -679,6 +613,68 @@
 /* La case Outils, en bas à gauche de la roue d'un outil : elle retourne la roue sur les outils. */
 .roue-retour {
     background-image: url("Icones/outils.asset");
+}
+
+/* Les icônes des outils de sol (PaintIconClasses) : chaque mode, chaque forme, chaque style de tracé, chaque
+   symétrie, la zone ; la roue et la carte les posent. */
+.place-icone-brush {
+    background-image: url("Icones/pinceau.asset");
+}
+
+.place-icone-eraser {
+    background-image: url("Icones/gomme.asset");
+}
+
+.place-icone-trace {
+    background-image: url("Icones/trace.asset");
+}
+
+.place-icone-shape {
+    background-image: url("Icones/forme.asset");
+}
+
+.place-forme-disc {
+    background-image: url("Icones/cercle.asset");
+}
+
+.place-forme-box {
+    background-image: url("Icones/rectangle.asset");
+}
+
+.place-forme-polygon {
+    background-image: url("Icones/polygone.asset");
+}
+
+.place-style-straight {
+    background-image: url("Icones/droit.asset");
+}
+
+.place-style-curved {
+    background-image: url("Icones/courbe.asset");
+}
+
+.place-symetrie-none {
+    background-image: url("Icones/sans-symetrie.asset");
+}
+
+.place-symetrie-mirror {
+    background-image: url("Icones/miroir.asset");
+}
+
+.place-symetrie-doublemirror {
+    background-image: url("Icones/double-miroir.asset");
+}
+
+.place-symetrie-star {
+    background-image: url("Icones/etoile.asset");
+}
+
+.place-icone-cartspot {
+    background-image: url("Icones/place-charrette.asset");
+}
+
+.place-icone-superficie {
+    background-image: url("Icones/place.asset");
 }
 
 .roue-bulle {

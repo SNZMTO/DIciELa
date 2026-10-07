@@ -59,41 +59,29 @@
                     <ui:VisualElement name="families" class="onglets" />
                 </ui:VisualElement>
             </Diciela.UI.WoodFrame>
-            <Diciela.UI.WoodFrame name="place-barre" class="barre bloc-cache">
-                <ui:VisualElement class="barre-contenu">
-                    <ui:VisualElement name="place-encres" class="place-encres" />
-                    <ui:VisualElement name="place-modes" class="place-modes" />
-                    <ui:VisualElement class="place-options" picking-mode="Ignore">
-                        <ui:VisualElement name="place-formes" class="place-formes bloc-cache" />
-                        <ui:VisualElement name="place-styles" class="place-formes bloc-cache" />
-                        <Diciela.UI.Facet name="place-taille-creux" class="creux pan-4 place-valeur" picking-mode="Ignore">
-                            <ui:Label name="place-taille" class="libelle" picking-mode="Ignore" />
-                        </Diciela.UI.Facet>
-                    </ui:VisualElement>
-                    <ui:VisualElement class="place-options" picking-mode="Ignore">
-                        <ui:VisualElement name="place-symetries" class="place-formes bloc-cache" />
-                    </ui:VisualElement>
-                    <ui:VisualElement class="place-options" picking-mode="Ignore">
-                        <ui:VisualElement name="place-etoiles" class="place-formes bloc-cache" />
-                    </ui:VisualElement>
-                    <ui:VisualElement class="place-valeurs" picking-mode="Ignore">
-                        <Diciela.UI.Facet name="place-superficie-creux" class="creux pan-4 place-valeur" picking-mode="Ignore">
-                            <ui:VisualElement class="place-valeur-icone place-icone-superficie" picking-mode="Ignore" />
-                            <ui:Label name="place-superficie" class="libelle" picking-mode="Ignore" />
-                        </Diciela.UI.Facet>
-                        <Diciela.UI.Facet name="place-marques-creux" class="creux pan-4 place-valeur" picking-mode="Ignore">
-                            <ui:VisualElement class="place-valeur-icone place-icone-cartspot" picking-mode="Ignore" />
-                            <ui:Label name="place-marques" class="libelle" picking-mode="Ignore" />
-                        </Diciela.UI.Facet>
-                    </ui:VisualElement>
-                </ui:VisualElement>
-            </Diciela.UI.WoodFrame>
         </ui:VisualElement>
         <Diciela.UI.FeltButton name="outils" class="feutre sable pan-10 outils bloc-cache">
             <ui:VisualElement class="outils-icone" picking-mode="Ignore" />
             <Diciela.UI.Facet class="creux pan-4 touche" picking-mode="Ignore">
                 <ui:Label name="outils-touche" class="touche-texte" picking-mode="Ignore" />
             </Diciela.UI.Facet>
+        </Diciela.UI.FeltButton>
+        <Diciela.UI.FeltButton name="carte-outil" class="feutre lin pan-10 carte-outil bloc-cache">
+            <Diciela.UI.Facet name="carte-outil-tuile" class="applique pan-6 carte-outil-tuile" picking-mode="Ignore">
+                <ui:VisualElement name="carte-outil-icone" class="carte-outil-icone" picking-mode="Ignore" />
+            </Diciela.UI.Facet>
+            <ui:VisualElement class="carte-outil-textes" picking-mode="Ignore">
+                <ui:VisualElement class="carte-outil-tete" picking-mode="Ignore">
+                    <ui:Label name="carte-outil-nom" class="nom" picking-mode="Ignore" />
+                    <ui:VisualElement name="carte-outil-mode" class="carte-outil-ligne" picking-mode="Ignore">
+                        <ui:VisualElement class="carte-outil-point" picking-mode="Ignore" />
+                        <ui:VisualElement name="carte-outil-mode-icone" class="carte-outil-mode-icone" picking-mode="Ignore" />
+                        <ui:Label name="carte-outil-mode-nom" class="nom" picking-mode="Ignore" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="carte-outil-puces" class="carte-outil-puces" picking-mode="Ignore" />
+                <ui:Label name="carte-outil-raison" class="petit carte-outil-raison bloc-cache" picking-mode="Ignore" />
+            </ui:VisualElement>
         </Diciela.UI.FeltButton>
         <ui:VisualElement name="roue" class="roue roue-fermee" picking-mode="Ignore">
             <ui:VisualElement name="roue-centre" class="roue-centre" picking-mode="Ignore">
