@@ -21,6 +21,14 @@ namespace Diciela.Tests.EditMode
             return floor;
         }
 
+        /// <summary>Change les heures de travail d'un débutant pour tracer un mètre carré de sol.</summary>
+        public static void FloorHours(SimulationSettings settings, float hoursPerSquareMeter)
+        {
+            var serialized = new SerializedObject(settings);
+            Property(serialized, "_floorHoursPerSquareMeter").floatValue = hoursPerSquareMeter;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+        }
+
         /// <summary>Dit, dans ce déroulé du départ, les sols que la ville sait tracer au départ.</summary>
         public static void KnowsFloors(OpeningDefinition opening, params FloorDefinition[] floors)
         {

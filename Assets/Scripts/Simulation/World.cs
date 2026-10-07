@@ -33,9 +33,10 @@ namespace Diciela.Simulation
             Nature = new Nature(Grid, map.Nature);
             Place = new PlaceZone(Grid, catalog.Place, catalog.Cart);
             Islands = new Islands(Grid);
-            PathFinder = new PathFinder(Grid, Islands);
             Knowledge = new Knowledge(catalog.Opening);
             Floors = new Floors(Grid, Place, Knowledge);
+            CartPace = new CartPace(Grid, Floors, catalog.Cart);
+            PathFinder = new PathFinder(Grid, Islands, CartPace);
             Structures = new Structures(Grid, map.Relief, settings, Knowledge, Floors);
             var surroundings = new Surroundings(Grid);
             Ledger = new GoodsLedger();
@@ -48,8 +49,9 @@ namespace Diciela.Simulation
             Stalls = new Stalls(Warehouses);
             WorkSlots = new WorkSlots();
             Housing = new Housing(Structures, Structures.Rules);
-            var services = new VillagerServices(Clock, Grid, Islands, PathFinder, surroundings, offers, Clearings,
-                new CartOffers(Carts, reach, Grid), new StallOffers(Carts, Stalls, Warehouses, reach, Grid),
+            var services = new VillagerServices(Clock, Grid, Islands, PathFinder, CartPace, surroundings, offers,
+                Clearings, new CartOffers(Carts, reach, Grid),
+                new StallOffers(Carts, Stalls, Warehouses, reach, Grid),
                 new StatisticTable(catalog.Statistics, settings), settings);
             Villagers = new Villagers(services, Structures, Housing);
             _opening = new Opening(catalog.Opening, catalog.VillagerKind);
@@ -87,6 +89,9 @@ namespace Diciela.Simulation
 
         /// <summary>Les sols : chemins, routes et sols de la Place, tracés à leurs outils, en chantier ou bâtis.</summary>
         public Floors Floors { get; }
+
+        /// <summary>Le pas d'une charrette tirée sur chaque maille : l'herbe, ou le sol qui y sert.</summary>
+        public CartPace CartPace { get; }
 
         /// <summary>Les arbres et les rochers à retirer, comme tâches à prendre, et le travail déjà fait sur eux.</summary>
         public ClearingOffers Clearings { get; }

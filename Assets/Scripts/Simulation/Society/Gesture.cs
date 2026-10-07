@@ -1,4 +1,5 @@
 using System;
+using Diciela.Simulation.Land;
 using UnityEngine;
 
 namespace Diciela.Simulation.Society
@@ -23,8 +24,17 @@ namespace Diciela.Simulation.Society
         /// </summary>
         public abstract GestureStep Arrive(Vector2 position, bool workTime);
 
-        /// <summary>Son pas, en part du pas de l'habitant : moins vite s'il tire quelque chose.</summary>
-        public virtual float SpeedFactor => 1f;
+        /// <summary>Comment il se déplace : à pied, ou en tirant une charrette ; le trajet se cherche pour lui.</summary>
+        public virtual Mover Mover => Mover.OnFoot;
+
+        /// <summary>
+        /// Son pas, ici, en part du pas de l'habitant : s'il tire quelque chose, selon le sol où il marche. Relu à chaque
+        /// pas de la marche.
+        /// </summary>
+        public virtual float SpeedAt(Vector2 position)
+        {
+            return 1f;
+        }
 
         /// <summary>L'habitant a marché jusqu'ici : ce qu'il tire le suit.</summary>
         public virtual void Walked(Vector2 position)
