@@ -8,9 +8,9 @@ using Diciela.View;
 namespace Diciela.Game
 {
     /// <summary>
-    /// La Place en ville (décision 206) : sa barre, ses gestes, et sa zone vue en mode construction (GDD, section 11 :
-    /// « comme les fantômes ») : le panneau Construire ouvert, ou en main une construction, l'outil de la Place ou
-    /// Déplacer. Né à l'ouverture de la ville, libéré à sa sortie.
+    /// La Place en ville (décisions 206 et 210) : sa barre, les gestes des outils de sol, et sa zone vue en mode
+    /// construction (GDD, sections 11 et 16 : « comme les fantômes ») : le panneau Construire ouvert, ou en main une
+    /// construction, l'outil de la Place, Chemins ou Déplacer. Né à l'ouverture de la ville, libéré à sa sortie.
     /// </summary>
     internal sealed class TownPlace : IDisposable
     {
@@ -30,10 +30,11 @@ namespace Diciela.Game
             _bar = bar;
             _zone.Show(world);
             _bar.Show(texts, tools.Place, world, keys);
-            _controls.Bind(tools.Place, hud);
+            _controls.Bind(hud, tools.Place, tools.Paths);
             _menu.OpenChanged += ShowZone;
             _tools.Placement.HeldChanged += ShowZone;
             _tools.Place.HeldChanged += ShowZone;
+            _tools.Paths.HeldChanged += ShowZone;
             _tools.Move.HeldChanged += ShowZone;
             ShowZone();
         }
@@ -43,15 +44,17 @@ namespace Diciela.Game
             _menu.OpenChanged -= ShowZone;
             _tools.Placement.HeldChanged -= ShowZone;
             _tools.Place.HeldChanged -= ShowZone;
+            _tools.Paths.HeldChanged -= ShowZone;
             _tools.Move.HeldChanged -= ShowZone;
-            _controls.Bind(null, null);
+            _controls.Bind(null);
             _bar.Hide();
             _zone.Hide();
         }
 
         private void ShowZone()
         {
-            _zone.SetShown(_menu.IsOpen || _tools.Placement.IsActive || _tools.Place.IsActive || _tools.Move.IsActive);
+            _zone.SetShown(_menu.IsOpen || _tools.Placement.IsActive || _tools.Place.IsActive || _tools.Paths.IsActive ||
+                           _tools.Move.IsActive);
         }
     }
 }

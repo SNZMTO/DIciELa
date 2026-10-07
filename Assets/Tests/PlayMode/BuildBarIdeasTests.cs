@@ -55,7 +55,7 @@ namespace Diciela.Tests.PlayMode
             TestWorld.Fill(preview, "_settings", settings);
             TestWorld.Fill(placePreview, "_settings", settings);
 #endif
-            _place = new PlaceTool(_town.World, camera, placePreview, settings);
+            _place = new PlaceTool(_town.World, camera, placePreview, settings, PaintEntry.Place, _town.Catalog.Floors);
             _view = new NotedBuildBarView();
             _presenter = new BuildBarPresenter(_view, _town.Catalog, TextTable.Parse(Texts, "fr"),
                 new PlacementTool(_town.World, camera, preview, settings), _place, _town.World, new FixedToolKeys());

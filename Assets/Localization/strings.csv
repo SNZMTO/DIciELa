@@ -177,6 +177,8 @@ outil.retirer,Retirer,Remove
 outil.retirer.suite,"Clique sur un arbre ou un rocher pour le marquer à retirer, ou le démarquer ; glisse pour en marquer plusieurs.","Click a tree or a rock to mark it for removal, or unmark it; drag to mark several."
 outil.deplacer,Déplacer,Move
 outil.deplacer.suite,"Clique sur une construction, puis pose‑la ailleurs ; R la tourne, clic droit la repose.","Click a building, then place it elsewhere; R turns it, right click puts it back."
+outil.chemins,Chemins,Paths
+outil.chemins.suite,"Trace des chemins partout où l'on marche ; les charrettes y vont plus vite.","Lay paths wherever people walk; carts go faster on them."
 outils.infobulle,Outils,Tools
 outils.infobulle.suite,"Ou tiens {touche} : la roue s'ouvre sous le pointeur.","Or hold {touche}: the wheel opens under the pointer."
 place.nom,Place,Square
@@ -203,4 +205,6 @@ place.refus.MarksOverlap,Elle chevauche une autre place de charrette,It overlaps
 place.refus.TooManyMarks,Toutes les places de charrette sont posées,All cart spots are placed
 place.refus.NoRoomToPark,"Devant elle, on ne peut pas se tenir pour la garer",There is no room in front of it to park
 place.refus.UnknownMark,Cette place de charrette n'existe plus,This cart spot no longer exists
+sol.refus.Nothing,Rien ne change ici,Nothing changes here
+sol.refus.Unknown,Pas encore d'idée pour ce sol,No idea for this ground yet
 place.refus.CartBusy,"Sa charrette arrive, ou porte encore des marchandises","Its cart is coming, or still carries goods"

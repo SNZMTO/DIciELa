@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Diciela.Data;
 using Diciela.Simulation;
 using Diciela.Simulation.Land;
@@ -8,20 +9,22 @@ using UnityEngine;
 namespace Diciela.Controls
 {
     /// <summary>
-    /// L'outil de la Place (GDD, section 11 ; décision 206), pris à la carte de la Place : peindre et gommer au pinceau,
-    /// tracer un disque ou un rectangle, poser ou retirer une place de charrette (PlaceToolMode). Il tient son mode, la
-    /// taille de son pinceau et le cap de la place de charrette ; il travaille sur sa surface (PlaceCanvas) : un geste
-    /// glissé est une forme, et une forme est un ordre, envoyé au relâchement ; pendant le geste, l'aperçu montre ce
-    /// qu'elle changerait, par la même fonction que l'ordre, et une forme refusée ne part pas. Un clic peint ou gomme un
-    /// rond du pinceau, pose une place de charrette, ou retire celle qu'on vise. Les gestes et les tests l'appellent par
-    /// les mêmes méthodes. Celui qui le crée le libère (Dispose).
+    /// Un outil de sol (GDD, sections 9 et 11 ; décisions 206 et 210) : un seul outil, deux entrées (PaintEntry), l'outil
+    /// de la Place, pris à sa carte, et l'outil Chemins, pris à la roue. Peindre et gommer au pinceau, tracer un disque ou
+    /// un rectangle, poser ou retirer une place de charrette (PlaceToolMode) ; ce qu'il pose, la zone ou un sol, est son
+    /// encre (PaintInks). Il tient son mode, son encre, la taille de son pinceau et le cap de la place de charrette ; il
+    /// travaille sur sa surface (PlaceCanvas) : un geste glissé est une forme, et une forme est un ordre, envoyé au
+    /// relâchement ; pendant le geste, l'aperçu montre ce qu'elle changerait, par la même fonction que l'ordre, et une
+    /// forme refusée ne part pas. Les gestes et les tests l'appellent par les mêmes méthodes. Celui qui le crée le libère.
     /// </summary>
     public sealed class PlaceTool : IDisposable, IEscapable, IHeldTool
     {
         private readonly PlacementSettings _settings;
         private readonly PlaceCanvas _canvas;
 
-        public PlaceTool(World world, Camera camera, PlaceToolPreview preview, PlacementSettings settings)
+        /// <summary>Un outil de sol de cette entrée, qui pose la zone (si l'entrée la pose) ou l'un de ces sols.</summary>
+        public PlaceTool(World world, Camera camera, PlaceToolPreview preview, PlacementSettings settings,
+            PaintEntry entry, IReadOnlyList<FloorDefinition> floors)
         {
             if (ReferenceEquals(world, null))
                 throw new ArgumentNullException(nameof(world));
@@ -29,6 +32,9 @@ namespace Diciela.Controls
                 throw new ArgumentException("L'outil de la Place a besoin d'une caméra, d'un aperçu et de ses réglages.");
 
             _settings = settings;
+            Entry = entry ?? throw new ArgumentNullException(nameof(entry));
+            Mode = entry.Modes[0];
+            Inks = new PaintInks(entry, world.Knowledge, floors);
             _canvas = new PlaceCanvas(this, world, camera, preview, settings);
             Vector2 range = settings.BrushRadiusRangeMeters;
             BrushRadius = Mathf.Clamp(settings.BrushRadiusMeters, range.x, range.y);
@@ -58,8 +64,14 @@ namespace Diciela.Controls
         /// <summary>Le cap de la place de charrette en main, comme une construction à la pose.</summary>
         public float HeadingDegrees { get; private set; }
 
-        /// <summary>La réponse de la Place à ce qu'il vise ; Ok quand rien n'est visé.</summary>
-        public PlaceResult Result => _canvas.Result;
+        /// <summary>Son entrée : l'outil de la Place, ou l'outil Chemins.</summary>
+        public PaintEntry Entry { get; }
+
+        /// <summary>Ce qu'il pose : la zone ou un sol, et les sols que la ville sait faire.</summary>
+        public PaintInks Inks { get; }
+
+        /// <summary>La réponse de la Place ou des sols à ce qu'il vise ; Ok quand rien n'est visé.</summary>
+        public PaintAnswer Answer => _canvas.Answer;
 
         /// <summary>La place de charrette sous le pointeur, qu'un clic retirerait ; null s'il n'y en a pas.</summary>
         public PlaceMark HoveredMark => _canvas.Hovered;
@@ -72,16 +84,26 @@ namespace Diciela.Controls
             if (IsActive)
                 return;
             IsActive = true;
+            Inks.Refresh();
             _canvas.Refresh(true);
             HeldChanged?.Invoke();
         }
 
-        /// <summary>Change de mode ; le geste en cours est abandonné.</summary>
+        /// <summary>Change de mode, s'il est le sien ; le geste en cours est abandonné.</summary>
         public void Choose(PlaceToolMode mode)
         {
-            if (!IsActive || (mode == Mode && !IsDrawing))
+            if (!IsActive || !Entry.Allows(mode) || (mode == Mode && !IsDrawing))
                 return;
             Mode = mode;
+            _canvas.Abandon(false);
+            HeldChanged?.Invoke();
+        }
+
+        /// <summary>Change ce qu'il pose : ce sol, ou la zone (null) ; le geste en cours est abandonné.</summary>
+        public void ChooseFloor(FloorDefinition floor)
+        {
+            if (!IsActive || !Inks.Choose(floor))
+                return;
             _canvas.Abandon(false);
             HeldChanged?.Invoke();
         }

@@ -41,9 +41,9 @@ namespace Diciela.Tests.PlayMode
                 var wheel = document.GetComponent<ToolWheel>();
                 TextTable texts = TextTable.Parse(Texts, "fr");
                 var build = new NotedBuildMenu();
-                wheel.Show(texts, new FixedToolKeys(), test.Clearing, build, test.Mover, new Tooltips(document));
+                wheel.Show(texts, new FixedToolKeys(), test.Clearing, build, test.Mover, test.Paths, new Tooltips(document));
                 wheel.Hide();
-                wheel.Show(texts, new FixedToolKeys(), test.Clearing, build, test.Mover, new Tooltips(document));
+                wheel.Show(texts, new FixedToolKeys(), test.Clearing, build, test.Mover, test.Paths, new Tooltips(document));
                 for (int frame = 0; frame < SettleFrames; frame++)
                     yield return null;
                 VisualElement root = document.rootVisualElement;
@@ -73,7 +73,7 @@ namespace Diciela.Tests.PlayMode
                 var wheel = document.GetComponent<ToolWheel>();
                 var tooltips = new Tooltips(document);
                 wheel.Show(TextTable.Parse(Texts, "fr"), new FixedToolKeys(), test.Clearing, new NotedBuildMenu(),
-                    test.Mover, tooltips);
+                    test.Mover, test.Paths, tooltips);
                 for (int frame = 0; frame < SettleFrames; frame++)
                     yield return null;
                 VisualElement root = document.rootVisualElement;
@@ -102,7 +102,7 @@ namespace Diciela.Tests.PlayMode
                 yield return null;
                 var wheel = document.GetComponent<ToolWheel>();
                 wheel.Show(TextTable.Parse(Texts, "fr"), new FixedToolKeys(), test.Clearing, new NotedBuildMenu(),
-                    test.Mover, new Tooltips(document));
+                    test.Mover, test.Paths, new Tooltips(document));
                 for (int frame = 0; frame < SettleFrames; frame++)
                     yield return null;
                 VisualElement root = document.rootVisualElement;

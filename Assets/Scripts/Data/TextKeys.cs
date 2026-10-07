@@ -8,6 +8,7 @@ namespace Diciela.Data
     {
         private const string PlacementRefusalPrefix = "pose.refus.";
         private const string PlaceRefusalPrefix = "place.refus.";
+        private const string FloorRefusalPrefix = "sol.refus.";
         private const string PlaceModePrefix = "place.outil.";
         private const string PlaceModeDetailPrefix = "place.outil.suite.";
         private const string DayPhasePrefix = "journee.";
@@ -42,6 +43,8 @@ namespace Diciela.Data
         public const string ClearingToolDetail = "outil.retirer.suite";
         public const string MoveTool = "outil.deplacer";
         public const string MoveToolDetail = "outil.deplacer.suite";
+        public const string PathsTool = "outil.chemins";
+        public const string PathsToolDetail = "outil.chemins.suite";
         public const string ToolsTooltip = "outils.infobulle";
         public const string ToolsTooltipDetail = "outils.infobulle.suite";
         public const string KeyParameter = "{touche}";
@@ -85,6 +88,12 @@ namespace Diciela.Data
         public static string PlaceRefusal(string reasonName)
         {
             return PlaceRefusalPrefix + reasonName;
+        }
+
+        /// <summary>La clé de la raison d'un refus sur les sols, d'après son nom (Unknown → sol.refus.Unknown).</summary>
+        public static string FloorRefusal(string reasonName)
+        {
+            return FloorRefusalPrefix + reasonName;
         }
 
         /// <summary>La clé de la raison d'un refus de pose, d'après son nom (OutsideMap → pose.refus.OutsideMap).</summary>

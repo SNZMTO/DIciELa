@@ -15,7 +15,8 @@ namespace Diciela.UI
         {
             new WheelTool("roue-construire", TextKeys.BuildTool, TextKeys.BuildToolDetail),
             new WheelTool("roue-retirer", TextKeys.ClearingTool, TextKeys.ClearingToolDetail),
-            new WheelTool("roue-deplacer", TextKeys.MoveTool, TextKeys.MoveToolDetail)
+            new WheelTool("roue-deplacer", TextKeys.MoveTool, TextKeys.MoveToolDetail),
+            new WheelTool("roue-chemins", TextKeys.PathsTool, TextKeys.PathsToolDetail)
         };
 
         public readonly string ElementName;

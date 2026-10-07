@@ -529,6 +529,11 @@
     top: 0;
 }
 
+.roue-gauche {
+    left: -132px;
+    top: 0;
+}
+
 .roue-icone {
     width: 46px;
     height: 46px;
@@ -547,6 +552,11 @@
 /* Quatre flèches qui partent du milieu : l'outil Déplacer, à droite de la roue. */
 .fleches {
     background-image: url("Icones/deplacer.asset");
+}
+
+/* Un chemin qui serpente, en pointillés : l'outil Chemins, à gauche de la roue (un remplaçant simple). */
+.chemins {
+    background-image: url("Icones/chemins.asset");
 }
 
 .roue-bulle {

@@ -8,14 +8,15 @@ using UnityEngine;
 namespace Diciela.Game
 {
     /// <summary>
-    /// Les outils de la ville (ARCHITECTURE, section 11) : poser, retirer, déplacer, choisir, tracer la Place, et la main,
+    /// Les outils de la ville (ARCHITECTURE, section 11) : poser, retirer, déplacer, choisir, tracer la Place et ses sols,
+    /// tracer les chemins, et la main,
     /// qui n'en tient qu'un à la fois ; nés à l'ouverture de la ville, libérés à sa sortie. Les gestes et l'interface les
     /// reçoivent d'ici.
     /// </summary>
     internal sealed class TownTools : IDisposable
     {
-        public TownTools(World world, Camera camera, PlacementPreview preview, PlaceToolPreview placePreview,
-            PlacementSettings settings, NatureViews nature, StructureViews structures)
+        public TownTools(World world, Catalog catalog, Camera camera, PlacementPreview preview,
+            PlaceToolPreview placePreview, PlacementSettings settings, NatureViews nature, StructureViews structures)
         {
             if (ReferenceEquals(world, null))
                 throw new ArgumentNullException(nameof(world));
@@ -24,8 +25,9 @@ namespace Diciela.Game
             Clearing = new ClearingTool(world, camera, nature);
             Choose = new ChooseTool(camera, structures);
             Move = new MoveTool(world, camera, structures, preview, settings);
-            Place = new PlaceTool(world, camera, placePreview, settings);
-            Hand = new Hand(Placement, Clearing, Move, Place);
+            Place = new PlaceTool(world, camera, placePreview, settings, PaintEntry.Place, catalog.Floors);
+            Paths = new PlaceTool(world, camera, placePreview, settings, PaintEntry.Paths, catalog.Floors);
+            Hand = new Hand(Placement, Clearing, Move, Place, Paths);
         }
 
         public PlacementTool Placement { get; }
@@ -33,6 +35,9 @@ namespace Diciela.Game
         public ChooseTool Choose { get; }
         public MoveTool Move { get; }
         public PlaceTool Place { get; }
+
+        /// <summary>L'outil Chemins : le même que celui de la Place, à son autre entrée (décision 210).</summary>
+        public PlaceTool Paths { get; }
         public Hand Hand { get; }
 
         /// <summary>Lâche ce qui est en main et cesse de suivre le monde.</summary>
@@ -45,6 +50,8 @@ namespace Diciela.Game
             Move.Dispose();
             Place.PutDown();
             Place.Dispose();
+            Paths.PutDown();
+            Paths.Dispose();
         }
     }
 }

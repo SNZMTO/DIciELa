@@ -15,8 +15,9 @@ namespace Diciela.Tests.PlayMode
     /// qu'on lui donne) ; la caméra de gestion qui le montre ; l'aperçu, les constructions vues, une cabane de 4 × 4 m
     /// (un cube d'un mètre pour modèle), un campement de 3 × 3 m (unique, logis de la Chimère, dressé dès la pose ; une
     /// boîte de 3 × 2,5 × 3 m pour modèle), l'outil de pose, l'outil « Retirer » (sans arbre vu : la carte n'en a pas),
-    /// l'outil Déplacer et l'outil de la Place, avec son aperçu ; la Place n'a sa fiche (100 m² au plus, deux places de
-    /// charrette) et la charrette la sienne que si on la demande.
+    /// l'outil Déplacer, l'outil de la Place et l'outil Chemins, avec leur aperçu ; la Place n'a sa fiche (100 m² au plus,
+    /// deux places de charrette) et la charrette la sienne que si on la demande, et le catalogue un sol (la terre), que
+    /// la ville sait tracer (sans déroulé du départ, elle sait tout), aussi.
     /// Les fiches ont leurs valeurs par défaut, remplies par SerializedObject, le chemin de l'Inspector.
     /// </summary>
     internal sealed class TestWorld : IDisposable
@@ -25,7 +26,7 @@ namespace Diciela.Tests.PlayMode
 
         private readonly List<Object> _created = new List<Object>();
 
-        public TestWorld(Relief relief = null, bool withPlace = false)
+        public TestWorld(Relief relief = null, bool withPlace = false, bool withFloor = false)
         {
             var simulation = Keep(ScriptableObject.CreateInstance<SimulationSettings>());
             Settings = Keep(ScriptableObject.CreateInstance<PlacementSettings>());
@@ -44,6 +45,12 @@ namespace Diciela.Tests.PlayMode
             var map = new MapDescription(relief ?? new Relief(100f, 100f, 2, 2, new[] { 10f, 10f, 10f, 10f }));
             var catalog = Keep(ScriptableObject.CreateInstance<Catalog>());
 #if UNITY_EDITOR
+            if (withFloor)
+            {
+                Floor = Keep(ScriptableObject.CreateInstance<FloorDefinition>());
+                Fill(Floor, "_id", "terre");
+                FillList(catalog, "_floors", Floor);
+            }
             if (withPlace)
             {
                 var place = Keep(ScriptableObject.CreateInstance<PlaceDefinition>());
@@ -85,7 +92,8 @@ namespace Diciela.Tests.PlayMode
             Tool = new PlacementTool(World, Camera, Preview, Settings);
             Clearing = new ClearingTool(World, Camera, Keep(new GameObject("Arbres de test")).AddComponent<NatureViews>());
             Mover = new MoveTool(World, Camera, Views, Preview, Settings);
-            Place = new PlaceTool(World, Camera, PlacePreview, Settings);
+            Place = new PlaceTool(World, Camera, PlacePreview, Settings, PaintEntry.Place, catalog.Floors);
+            Paths = new PlaceTool(World, Camera, PlacePreview, Settings, PaintEntry.Paths, catalog.Floors);
         }
 
         public World World { get; }
@@ -100,6 +108,12 @@ namespace Diciela.Tests.PlayMode
         public MoveTool Mover { get; }
         public PlaceToolPreview PlacePreview { get; }
         public PlaceTool Place { get; }
+
+        /// <summary>Le sol du catalogue, la terre ; null si le test ne l'a pas demandé.</summary>
+        public FloorDefinition Floor { get; }
+
+        /// <summary>L'outil Chemins : sans sol au catalogue, il ne trace rien, mais se prend et se lâche.</summary>
+        public PlaceTool Paths { get; }
 
         /// <summary>Le point de l'écran où l'on voit ce point du sol.</summary>
         public Vector2 OnScreen(Vector3 ground)

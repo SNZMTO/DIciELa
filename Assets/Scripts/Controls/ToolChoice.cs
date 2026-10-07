@@ -5,6 +5,7 @@ namespace Diciela.Controls
     {
         Build = 0,
         Clear = 1,
-        Move = 2
+        Move = 2,
+        Paths = 3
     }
 }

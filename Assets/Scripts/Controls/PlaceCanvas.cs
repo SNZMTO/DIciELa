@@ -8,9 +8,10 @@ using UnityEngine;
 namespace Diciela.Controls
 {
     /// <summary>
-    /// Là où travaille l'outil de la Place (décision 206) : ce qu'il vise au sol, le geste en cours (PlaceDrawing), ce
-    /// que la Place en dit, montré par l'aperçu (PlaceAim), et les ordres qui en partent (PlaceOrders). Il lit chez
-    /// l'outil ce que celui-ci tient (son mode, son pinceau, son cap, s'il est en main) et n'en garde aucune copie.
+    /// Là où travaille un outil de sol (décisions 206 et 210) : ce qu'il vise au sol, le geste en cours (PlaceDrawing), ce
+    /// qu'en disent la Place ou les sols, montré par l'aperçu (PlaceAim), et les ordres qui en partent (PlaceOrders). Il
+    /// lit chez l'outil ce que celui-ci tient (son mode, son encre, son pinceau, son cap, s'il est en main) et n'en garde
+    /// aucune copie.
     /// </summary>
     internal sealed class PlaceCanvas : IDisposable
     {
@@ -39,7 +40,7 @@ namespace Diciela.Controls
         /// <summary>Levé quand la réponse à ce qui est visé change, ou la place de charrette qu'un clic retirerait.</summary>
         public event Action ResultChanged;
 
-        public PlaceResult Result { get; private set; }
+        public PaintAnswer Answer { get; private set; } = PaintAnswer.Ok;
         public PlaceMark Hovered { get; private set; }
         public bool IsDrawing => _drawing.IsDrawing;
 
@@ -83,10 +84,10 @@ namespace Diciela.Controls
             if (!IsDrawing)
                 return;
             GroundShape shape = _drawing.Shape;
-            bool accepted = shape != null && !_target.IsStale && Result == PlaceResult.Ok;
+            bool accepted = shape != null && !_target.IsStale && Answer.IsOk;
             _drawing.End();
             if (accepted)
-                _orders.SendShape(shape, _tool.Mode == PlaceToolMode.Eraser);
+                _orders.SendShape(shape, _tool.Mode == PlaceToolMode.Eraser, _tool.Inks, _tool.Entry.Scope);
             Refresh(true);
         }
 
@@ -98,10 +99,10 @@ namespace Diciela.Controls
             PlaceToolMode mode = _tool.Mode;
             if (mode == PlaceToolMode.CartSpot && Hovered != null)
                 _orders.SendRemoval(Hovered);
-            else if (mode == PlaceToolMode.CartSpot && Result == PlaceResult.Ok)
+            else if (mode == PlaceToolMode.CartSpot && Answer.IsOk)
                 _orders.SendMark(_aim, _tool.HeadingDegrees);
-            else if ((mode == PlaceToolMode.Brush || mode == PlaceToolMode.Eraser) && Result == PlaceResult.Ok)
-                _orders.SendShape(_target.Dot, mode == PlaceToolMode.Eraser);
+            else if ((mode == PlaceToolMode.Brush || mode == PlaceToolMode.Eraser) && Answer.IsOk)
+                _orders.SendShape(_target.Dot, mode == PlaceToolMode.Eraser, _tool.Inks, _tool.Entry.Scope);
         }
 
         /// <summary>Abandonne le geste en cours ; s'il n'y en a pas, oublie aussi ce qui est visé.</summary>
@@ -126,12 +127,12 @@ namespace Diciela.Controls
             if (changed)
                 _target.Invalidate();
             if (_tool.IsActive && _aimed)
-                _target.Show(_tool.Mode, _aim, _tool.BrushRadius, _tool.HeadingDegrees, _drawing);
+                _target.Show(_tool, _aim, _drawing);
             else
                 _target.Hide();
-            if (_target.Result == Result && ReferenceEquals(_target.Hovered, Hovered))
+            if (_target.Answer == Answer && ReferenceEquals(_target.Hovered, Hovered))
                 return;
-            Result = _target.Result;
+            Answer = _target.Answer;
             Hovered = _target.Hovered;
             ResultChanged?.Invoke();
         }

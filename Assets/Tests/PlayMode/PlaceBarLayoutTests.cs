@@ -75,7 +75,7 @@ namespace Diciela.Tests.PlayMode
                             TextTable texts = TextTable.Parse(settings.Texts.text, settings.Language);
                             var tooltips = new Tooltips(document);
                             wheel.Show(texts, new FixedToolKeys(), world.Clearing, new NotedBuildMenu(), world.Mover,
-                                tooltips);
+                                world.Paths, tooltips);
                             tip.Show(town.World, texts, null);
                             bar = new PlaceBar(document, tooltips, new ReasonBubble(document));
                             bar.Show(texts, world.Place, world.World, new FixedToolKeys());

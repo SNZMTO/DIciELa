@@ -65,7 +65,7 @@ namespace Diciela.EditorTools
                 tool.Choose(PlaceToolMode.Disc);
                 tool.BeginDrawing(OnScreen(world, camera, frame.At(Vector2.zero)));
                 tool.AimAt(OnScreen(world, camera, frame.At(new Vector2(DiscRadius * 2f, 0f))));
-                Debug.Log("DICIELA : mise en scène de l'album : un disque de " + DiscRadius * 2f + " m, " + tool.Result + ".");
+                Debug.Log("DICIELA : mise en scène de l'album : un disque de " + DiscRadius * 2f + " m, " + tool.Answer + ".");
             });
         }
 
@@ -125,7 +125,7 @@ namespace Diciela.EditorTools
             tool.BeginDrawing(OnScreen(world, camera, points[0]));
             for (int i = 1; i < points.Length; i++)
                 tool.AimAt(OnScreen(world, camera, points[i]));
-            PlaceResult result = tool.Result;
+            PaintAnswer result = tool.Answer;
             tool.EndDrawing();
             Debug.Log("DICIELA : mise en scène de l'album : " + mode + ", " + result + ".");
         }

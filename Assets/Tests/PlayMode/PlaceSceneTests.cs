@@ -83,7 +83,7 @@ namespace Diciela.Tests.PlayMode
             Vector2 center = FirstClearDisc(world, world.Structures.ChimeraHome.Placement.Center);
             tool.BeginDrawing(OnScreen(camera, world, center));
             tool.AimAt(OnScreen(camera, world, center + new Vector2(DiscRadius, 0f)));
-            Assert.AreEqual(PlaceResult.Ok, tool.Result, "L'aperçu dit que le disque se trace.");
+            Assert.AreEqual(PaintAnswer.Ok, tool.Answer, "L'aperçu dit que le disque se trace.");
             tool.EndDrawing();
             yield return Until(() => world.Place.CellCount > 0, "Le disque part au relâchement.");
             Assert.AreEqual(Mathf.PI * DiscRadius * DiscRadius, world.Place.AreaSquareMeters, 15f);
@@ -93,7 +93,7 @@ namespace Diciela.Tests.PlayMode
 
             TestHud.Click(root.Q("place-modes")[(int)PlaceToolMode.CartSpot]);
             tool.AimAt(OnScreen(camera, world, center));
-            Assert.AreEqual(PlaceResult.Ok, tool.Result, "Une place de charrette tient au milieu du disque.");
+            Assert.AreEqual(PaintAnswer.Ok, tool.Answer, "Une place de charrette tient au milieu du disque.");
             tool.Click();
             yield return Until(() => world.Place.Marks.Count == 1, "Le clic la pose.");
 
