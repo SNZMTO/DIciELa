@@ -1,4 +1,5 @@
 using System;
+using Diciela.Data;
 using Diciela.Simulation;
 using Diciela.View;
 using UnityEngine;
@@ -8,8 +9,9 @@ namespace Diciela.Game
 {
     /// <summary>
     /// Ce qu'on voit du monde (ARCHITECTURE, section 11) : ses constructions, ses habitants, ses arbres et ses rochers, ses
-    /// charrettes ; montrés ensemble à l'ouverture, suivis ensemble à chaque image, cachés ensemble à la sortie. Les trois
-    /// premières vues sont dans la scène du jeu ; celle des charrettes naît ici, sous la scène du démarrage.
+    /// charrettes, ses sols ; montrés ensemble à l'ouverture, suivis ensemble à chaque image, cachés ensemble à la sortie.
+    /// Les trois premières vues sont dans la scène du jeu ; celles des charrettes et des sols naissent ici, sous la scène
+    /// du démarrage.
     /// </summary>
     internal sealed class WorldViews
     {
@@ -18,6 +20,7 @@ namespace Diciela.Game
         private readonly NatureViews _nature;
         private readonly Transform _parent;
         private CartViews _carts;
+        private FloorViews _floors;
 
         public WorldViews(StructureViews structures, VillagerViews villagers, NatureViews nature, Transform parent)
         {
@@ -27,8 +30,11 @@ namespace Diciela.Game
             _parent = parent != null ? parent : throw new ArgumentNullException(nameof(parent));
         }
 
-        /// <summary>Montre ce monde, dont les arbres sont peints sur le Terrain de cette carte.</summary>
-        public void Show(World world, MapScene map)
+        /// <summary>
+        /// Montre ce monde, dont les arbres et les sols sont peints sur le Terrain de cette carte ; les fantômes des sols
+        /// du matériau et de la couleur de ces réglages de la pose.
+        /// </summary>
+        public void Show(World world, MapScene map, PlacementSettings placement)
         {
             _structures.Show(world.Structures, world.ConstructionSites, world.Map.Relief);
             _villagers.Show(world.Villagers, world.Map.Relief);
@@ -37,6 +43,10 @@ namespace Diciela.Game
             holder.transform.SetParent(_parent, false);
             _carts = holder.AddComponent<CartViews>();
             _carts.Show(world.Carts, world.Map.Relief);
+            var floors = new GameObject("Sols");
+            floors.transform.SetParent(_parent, false);
+            _floors = floors.AddComponent<FloorViews>();
+            _floors.Show(world, map.Terrain, map.OriginalGround, placement);
         }
 
         /// <summary>Donne aux habitants et aux charrettes la fraction du pas en cours, et les secondes de l'image.</summary>
@@ -56,6 +66,9 @@ namespace Diciela.Game
             if (_carts != null)
                 Object.Destroy(_carts.gameObject);
             _carts = null;
+            if (_floors != null)
+                Object.Destroy(_floors.gameObject);
+            _floors = null;
         }
     }
 }
