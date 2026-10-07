@@ -775,6 +775,11 @@
   des outils, dit ce qu'on tient, ses nombres (la taille du pinceau, la superficie de la Place, ses places de charrette,
   le coût d'une construction, les arbres marqués) et la raison d'un refus ; elle ne paraît qu'un outil en main et
   s'efface quand la roue est ouverte. Chaque outil a sa couleur, sur sa case, son curseur et sa carte.
+- **Défaut.** Le curseur (décision 224) : 40 px, la silhouette de l'outil, cerclée d'un halo à la couleur de son outil,
+  sa pointe là où il agit. Le pinceau, la gomme, la plume (le tracé), le viseur (la forme) et la place de charrette pour
+  les outils de sol ; le marteau pour une construction en main, la hache pour Retirer, la main pour Déplacer. Ses
+  pastilles, en bas à droite : ce qu'il pose (sauf au mode place de charrette), la forme ou le style du tracé, la
+  symétrie ; la croix, de la brique cerclée de lin. Pendant qu'on tourne la vue à la souris, ni curseur ni flèche.
 - **Défaut.** La carte (décision 223) : un feutre de lin, qui se clique ; l'icône de l'outil sur une tuile de sa
   couleur, son nom et, pour un outil de sol, son mode ; puis des puces : ce qu'il pose (sauf au mode place de
   charrette), la taille du pinceau (au pinceau, à la gomme et au tracé), la forme, le style d'un tracé ou d'un

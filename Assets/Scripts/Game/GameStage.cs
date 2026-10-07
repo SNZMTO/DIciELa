@@ -14,7 +14,7 @@ namespace Diciela.Game
     /// tourner ; puis, l'ordre de la créer parti, la ville (caméra, HUD, outils, gestes), la caméra tout près de la
     /// Chimère qui naît au point d'arrivée, puis reculée à sa distance de départ. Le monde (constructions, habitants,
     /// arbres, charrettes) est vu dès l'ouverture (WorldViews) ; la Place, en mode construction (TownPlaza) ; l'outil
-    /// en main, sur sa carte (ToolCard). Toucher un lieu ouvre sa fiche ; Échap ferme la fiche, puis la roue des
+    /// en main, à sa carte et à son curseur. Toucher un lieu ouvre sa fiche ; Échap ferme la fiche, puis la roue des
     /// outils, puis le panneau Construire, puis lâche l'outil en main. Il délie et cache tout à la sortie.
     /// </summary>
     public sealed class GameStage : MonoBehaviour
@@ -51,6 +51,7 @@ namespace Diciela.Game
         private TownTools _tools;
         private TownPlaza _plaza;
         private ToolCard _toolCard;
+        private ToolCursor _toolCursor;
         private SelectionFrame _selectionFrame;
         private Texture2D _portrait;
         private Tooltips _tooltips;
@@ -106,12 +107,14 @@ namespace Diciela.Game
             _placementControls.Bind(null, null);
             _chooseControls.Bind(null, null, null);
             _clearingControls.Bind(null, null, null);
-            _toolControls.Bind(null, null);
+            _toolControls.Bind(null, null, null);
             _escapeControls.Bind();
             _plaza?.Dispose();
             _plaza = null;
             _toolCard?.Hide();
             _toolCard = null;
+            _toolCursor?.Hide();
+            _toolCursor = null;
             _selectionFrame?.Dispose();
             _selectionFrame = null;
             if (_tools != null)
@@ -188,7 +191,9 @@ namespace Diciela.Game
             _clearingControls.Bind(_tools.Clearing, _selectionFrame, hud);
             _chooseControls.Bind(_tools.Choose, _tools.Hand, hud);
             _plaza = new TownPlaza(world, _tools, _buildBar, _plazaZoneView, _paintControls, hud);
-            _toolControls.Bind(_toolWheel, new CardKeys(_buildBar, _buildBar, _toolWheel));
+            _toolCursor = new ToolCursor(document);
+            _toolCursor.Show(_tools.Placement, _tools.Clearing, _tools.Move, _tools.Paths, _tools.Plaza, hud);
+            _toolControls.Bind(_toolWheel, new CardKeys(_buildBar, _buildBar, _toolWheel), _toolCursor);
             _escapeControls.Bind(_locationSheet, _toolWheel, _buildBar, _tools.Hand);
         }
     }

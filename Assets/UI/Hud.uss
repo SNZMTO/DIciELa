@@ -484,6 +484,95 @@
     white-space: normal;
 }
 
+/* Le curseur des outils (décision 221) : au-dessus de tout, et le pointeur le traverse ; placé par translate à chaque
+   image, jamais par left et top, qui referaient la mise en page. Sa silhouette, à la couleur de son outil ; ses
+   pastilles en bas à droite ; la croix d'un refus. */
+.curseur {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 40px;
+    height: 40px;
+}
+
+.curseur-icone {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 40px;
+    height: 40px;
+}
+
+.curseur-pastilles {
+    position: absolute;
+    left: 28px;
+    top: 30px;
+    flex-direction: row;
+}
+
+.curseur-pastille {
+    width: 20px;
+    height: 20px;
+    margin-right: 2px;
+    align-items: center;
+    justify-content: center;
+}
+
+.curseur-pastille-icone {
+    width: 13px;
+    height: 13px;
+}
+
+.curseur-refus-trait {
+    position: absolute;
+    left: 4px;
+    top: 8.5px;
+    width: 12px;
+    height: 3px;
+    background-color: var(--lin);
+}
+
+.curseur-refus-montant {
+    rotate: 45deg;
+}
+
+.curseur-refus-descendant {
+    rotate: -45deg;
+}
+
+/* Les silhouettes des curseurs (CursorIcons), leur pointe dans ToolCursorShapes. */
+.curseur-marteau {
+    background-image: url("Icones/curseur-marteau.asset");
+}
+
+.curseur-hache {
+    background-image: url("Icones/curseur-hache.asset");
+}
+
+.curseur-main {
+    background-image: url("Icones/curseur-main.asset");
+}
+
+.curseur-pinceau {
+    background-image: url("Icones/curseur-pinceau.asset");
+}
+
+.curseur-gomme {
+    background-image: url("Icones/curseur-gomme.asset");
+}
+
+.curseur-plume {
+    background-image: url("Icones/curseur-plume.asset");
+}
+
+.curseur-viseur {
+    background-image: url("Icones/curseur-viseur.asset");
+}
+
+.curseur-place-charrette {
+    background-image: url("Icones/curseur-place-charrette.asset");
+}
+
 /* La roue (décision 221) : un fond plein écran qui prend le pointeur tant qu'elle est ouverte ; autour du point où elle
    s'ouvre, un plateau octogonal (huit côtés, huit cases), chaque case à sa place fixe, sur un cercle de --rayon px, la
    bulle de ce qu'on vise au milieu ; la case visée grossit et déplie ses options en jetons, sur un cercle de

@@ -302,6 +302,10 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   en main se posait). L'interface retient donc l'image où un de ses éléments a pris un appui (`HudArea`, à l'écoute de
   sa racine en descendant) et dit cet appui à elle, même l'élément disparu. Les gestes lus en `Update` (la caméra)
   passent avant la distribution, et voient encore l'élément.
+- **La flèche du système a deux maîtres** (étape 67) : le curseur des outils, dessiné par le jeu, la cache tant
+  qu'il se montre ; un geste qui tient le curseur (tourner à la souris, `CursorGrip`) la cache, la verrouille, puis la
+  rend. Le curseur des outils ne la touche pas tant qu'elle est verrouillée, et se cache lui-même ; il la rend dès
+  qu'il se cache et quand la ville se ferme (fin du Play comprise), sinon le développeur perd son pointeur.
 - **La molette a deux maîtres** : seule, elle zoome ; Ctrl tenu, elle va à l'outil en main (la taille du pinceau). La
   caméra lit Ctrl par une action à elle et laisse alors la molette ; l'outil lit une liaison « OneModifier » (Ctrl +
   molette). Les crochets de Planet Zoo demandent AltGr en AZERTY.
@@ -642,6 +646,10 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   `PointerUpEvent.GetPooled(Event)`, la cible donnée, un `Event` de souris dont `mousePosition` est le milieu de
   l'élément dans le repère du panneau (origine en haut, sans conversion). Un toucher (`GetPooled(Touch)`) n'a pas
   déclenché le `Clickable` d'un bouton. Un survol : `PointerEnterEvent.GetPooled(Event)`.
+- **Une icône vectorielle ne se juge qu'en jeu** (étape 67) : les triangles d'une `VectorImage` rendus tels quels hors
+  d'Unity donnent des pleins et des pointes qui n'existent pas (un cadre rempli, un rond en étoile) : le shader
+  d'Unity déplace les bords pour l'anticrénelage et taille les arrondis (les sommets marqués d'un cercle). Pour voir
+  une icône, la capturer en jeu.
 - **Une feuille de style qui nomme une icône pas encore générée** garde une référence vide (« Invalid asset path » dans le
   journal, à son import) et affiche le triangle jaune d'Unity, même une fois l'icône créée. La réimporter (la retoucher,
   ou `set_selection --paths '["…uss"]'` puis le menu `Assets/Reimport`) ne suffit pas tout de suite : l'éditeur garde

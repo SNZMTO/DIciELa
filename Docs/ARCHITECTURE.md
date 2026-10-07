@@ -349,6 +349,7 @@ mètres carrés), `Place` ne veut dire que poser, la fiche d'un lieu est `Locati
 | la main (un seul outil) | `Hand` | outil de la roue (ses gestes ; son allure) | `ToolAction` ; `WheelTool` | boutons de la fiche | `LocationSheetActions`, `LocationSheetAction` |
 | case, éventail, option (de la roue) | `WheelSlot`, `WheelFan`, `WheelOption` | portes de la roue (l'icône, la carte) | `WheelDoors` | carte de l'outil en main ; puce | `ToolCard` ; `ToolCardChip` |
 | roue d'un outil de sol ; ses éventails | `PaintRing` ; `PaintRingOptions` | icônes des outils de sol | `PaintIconClasses` | chiffre d'une case de la roue | `IRingKeys` |
+| curseur des outils (ses gestes ; sa vue) | `IToolCursor` ; `ToolCursor` | silhouette et pointe (d'un curseur) | `ToolCursorShape` (`ToolCursorShapes`) | allure (d'un curseur) | `ToolCursorLook` |
 | couche (où la Chimère dort) | `HasCouch`, `CouchFeet` | stock de départ | `StartingGoods` ; `GoodsCause.StartingStock` | classes de style posées par le code | `StyleClasses` |
 | mettre en service (l'opération du monde) | `Commissioning` | chantiers finis (à mettre en service) | `ConstructionSites.Finished` | reprendre ses mailles (un pied debout) | `NavGrid.Reclaim` |
 | tronçons (d'une rangée du maillage) | `FreeRuns` | ligne du chantier (côté rendu) | `SiteLine` | stock de la ville changé | `CityStockChanged` |
@@ -438,14 +439,14 @@ mètres carrés), `Place` ne veut dire que poser, la fiche d'un lieu est `Locati
   (`GroundAim`), pour la pose, Déplacer et la Place. La roue des outils les prend (décision 221) : Retirer, Déplacer,
   Chemins et la Place en main, ou Construire, qui ouvre le panneau Construire, dont une carte met la construction en
   main ; ses gestes (`ToolControls` : la touche de la roue tenue, celle de chaque outil) ne la connaissent que par
-  `IToolWheel`, et elle lit leurs touches par `IToolKeys`. Ses outils sont décrits par deux tables, au rang de leur
-  choix (`ToolChoice`) : `ToolAction` pour les gestes (l'action, sa touche d'origine, que lit aussi le monteur des
-  actions), `WheelTool` pour l'interface (l'élément, le nom, l'usage) ; ce que fait chaque outil n'est écrit que dans le
-  présentateur de la roue, et ce que fait chaque case de la roue d'un outil de sol dans `PaintRing`. L'outil « Retirer »
-  vise un arbre par la boîte de son modèle et marque ce que contient le cadre qu'on tire, que l'interface dessine
-  (`ISelectionFrame`). Un panneau ouvert rend la ville muette ; les conteneurs plein écran de l'interface ne captent pas
-  le pointeur. Les gestes ne connaissent pas l'interface : elle leur dit seulement où elle est (`IInterfaceArea`), et
-  `Game` les relie.
+  `IToolWheel`, mènent le curseur des outils par `IToolCursor`, et elle lit leurs touches par `IToolKeys`. Ses outils
+  sont décrits par deux tables, au rang de leur choix (`ToolChoice`) : `ToolAction` pour les gestes (l'action, sa touche
+  d'origine, que lit aussi le monteur des actions), `WheelTool` pour l'interface (l'élément, le nom, l'usage) ; ce que
+  fait chaque outil n'est écrit que dans le présentateur de la roue, et ce que fait chaque case de la roue d'un outil de
+  sol dans `PaintRing`. L'outil « Retirer » vise un arbre par la boîte de son modèle et marque ce que contient le cadre
+  qu'on tire, que l'interface dessine (`ISelectionFrame`). Un panneau ouvert rend la ville muette ; les conteneurs plein
+  écran de l'interface ne captent pas le pointeur. Les gestes ne connaissent pas l'interface : elle leur dit seulement
+  où elle est (`IInterfaceArea`), et `Game` les relie.
 - **Les outils de sol** (décisions 206, 210, 214, 216, 219 et 220) : un seul outil en main (`PaintTool`) à deux entrées
   (`PaintEntry`), l'outil de la Place et l'outil Chemins, pris à la roue. L'entrée dit ses modes, s'il pose la zone, où
   vont ses sols et son pinceau de départ. L'outil tient son mode, en familles (`PaintToolMode` : pinceau, gomme, tracé,
@@ -508,7 +509,9 @@ mètres carrés), `Place` ne veut dire que poser, la fiche d'un lieu est `Locati
   l'autre, `WheelPicture`), ses mesures, lues dans la feuille de style (`WheelMeasures`), sa géométrie (`WheelGeometry`)
   et ses deux portes (`WheelDoors` : l'icône des outils, la carte) ; la carte de l'outil en main, `ToolCard` (son
   présentateur, `ToolCardPresenter`, qui écoute les outils et le monde ; ses puces, `ToolCardContent`, chacune une
-  `ToolCardChip` ; ses raisons, `ToolCardReasons`) ; la raison d'un refus de pose, dans sa bulle (`ReasonBubble`),
+  `ToolCardChip` ; ses raisons, `ToolCardReasons`) ; le curseur des outils, `ToolCursor`, au-dessus de tout, qui cache
+  la flèche du système tant qu'il se montre (son présentateur, `ToolCursorPresenter` ; ses silhouettes et leur pointe,
+  `ToolCursorShapes` ; son allure, `ToolCursorLook`) ; la raison d'un refus de pose, dans sa bulle (`ReasonBubble`),
   jusqu'à ce que Construire passe à la roue ; la journée, `DayBoard` ; la fiche du lieu touché, `LocationSheet` ; le
   stock en fanions, `StockPennants` ; l'astuce, `TipBoard`, dont le portrait est pris à l'atelier par la vue,
   `Portrait`) ; une seule bulle sert d'infobulle à tous (`Tooltips`), chaque vue dit ce qu'elle montre au survol. Une

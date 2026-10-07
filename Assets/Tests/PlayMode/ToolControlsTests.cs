@@ -11,7 +11,8 @@ namespace Diciela.Tests.PlayMode
     /// <summary>
     /// Les gestes des outils, joués par un clavier et une souris simulés sur les vraies actions du jeu (décision 168) :
     /// tenir Tab ouvre la roue sous le pointeur et la fait suivre où il vise ; relâcher choisit là où il vise ; B et X
-    /// choisissent tout droit ; les touches 1 à 9 prennent les cartes (décision 184) ; sans roue, rien ne part. Les noms
+    /// choisissent tout droit ; les touches 1 à 9 prennent les cartes (décision 184) ; le curseur suit le pointeur, image
+    /// après image (décision 221) ; sans roue, rien ne part. Les noms
     /// des touches se lisent sur les liaisons ; la table des outils suit l'ordre des choix et l'asset du jeu.
     /// </summary>
     public sealed class ToolControlsTests : GestureFixture
@@ -21,6 +22,18 @@ namespace Diciela.Tests.PlayMode
         private ToolControls _controls;
         private NotedWheel _wheel;
         private NotedCards _cards;
+        private NotedCursor _cursor;
+
+        /// <summary>Un curseur qui note où on le mène.</summary>
+        private sealed class NotedCursor : IToolCursor
+        {
+            public Vector2? Followed;
+
+            public void FollowTo(Vector2 screenPoint)
+            {
+                Followed = screenPoint;
+            }
+        }
 
         /// <summary>Des cartes qui notent celles qu'on prend.</summary>
         private sealed class NotedCards : ICardPicker
@@ -75,7 +88,8 @@ namespace Diciela.Tests.PlayMode
             _holder.SetActive(true);
             _wheel = new NotedWheel();
             _cards = new NotedCards();
-            _controls.Bind(_wheel, _cards);
+            _cursor = new NotedCursor();
+            _controls.Bind(_wheel, _cards, _cursor);
         }
 
         public override void TearDown()
@@ -104,6 +118,17 @@ namespace Diciela.Tests.PlayMode
         }
 
         [UnityTest]
+        public IEnumerator TheCursorFollowsThePointer()
+        {
+            Set(Mouse.position, new Vector2(300f, 200f));
+            yield return Played();
+            Assert.AreEqual(new Vector2(300f, 200f), _cursor.Followed, "Le curseur suit le pointeur…");
+            Set(Mouse.position, new Vector2(420f, 260f));
+            yield return Played();
+            Assert.AreEqual(new Vector2(420f, 260f), _cursor.Followed, "… image après image.");
+        }
+
+        [UnityTest]
         public IEnumerator EachToolHasItsOwnKey()
         {
             yield return Click(Keyboard.bKey);
@@ -126,7 +151,8 @@ namespace Diciela.Tests.PlayMode
         [UnityTest]
         public IEnumerator WithoutAWheelNothingHappens()
         {
-            _controls.Bind(null, null);
+            _controls.Bind(null, null, null);
+            _cursor.Followed = null;
 
             yield return Click(Keyboard.tabKey);
             yield return Click(Keyboard.bKey);
@@ -136,6 +162,7 @@ namespace Diciela.Tests.PlayMode
             Assert.IsNull(_wheel.Released);
             Assert.IsEmpty(_wheel.Chosen);
             Assert.IsEmpty(_cards.Taken);
+            Assert.IsNull(_cursor.Followed, "Sans curseur, rien ne le mène.");
         }
 
         [Test]
