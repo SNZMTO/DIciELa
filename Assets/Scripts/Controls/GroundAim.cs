@@ -18,5 +18,14 @@ namespace Diciela.Controls
             ground = new Vector2(point.x, point.z);
             return hit;
         }
+
+        /// <summary>
+        /// Le cap des côtés du sol vus de cette caméra, au cran de rotation : des rectangles tracés de la même vue
+        /// s'alignent (décision 206).
+        /// </summary>
+        public static float SideDegrees(Camera camera, float stepDegrees)
+        {
+            return Mathf.Repeat(Mathf.Round(camera.transform.eulerAngles.y / stepDegrees) * stepDegrees, 360f);
+        }
     }
 }

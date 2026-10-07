@@ -12,11 +12,13 @@ namespace Diciela.Tests.PlayMode
     {
         public event Action<PaintToolMode> ModeChosen;
         public event Action<PaintShape> ShapeChosen;
+        public event Action<PaintTraceStyle> StyleChosen;
         public event Action<PaintInk> InkChosen;
 
         public bool IsShown { get; private set; }
         public List<PaintBarChoice<PaintToolMode>> Modes { get; } = new List<PaintBarChoice<PaintToolMode>>();
         public List<PaintBarChoice<PaintShape>> Shapes { get; } = new List<PaintBarChoice<PaintShape>>();
+        public List<PaintBarChoice<PaintTraceStyle>> Styles { get; } = new List<PaintBarChoice<PaintTraceStyle>>();
         public List<PaintBarInk> Inks { get; } = new List<PaintBarInk>();
         public PaintInk SelectedInk { get; private set; }
 
@@ -24,6 +26,7 @@ namespace Diciela.Tests.PlayMode
         public int InksShown { get; private set; }
         public PaintToolMode Selected { get; private set; }
         public PaintShape SelectedShape { get; private set; }
+        public PaintTraceStyle SelectedStyle { get; private set; }
         public string Area { get; private set; } = "";
         public string Marks { get; private set; } = "";
         public string BrushSize { get; private set; } = "";
@@ -39,6 +42,12 @@ namespace Diciela.Tests.PlayMode
         public void ChooseShape(PaintShape shape)
         {
             ShapeChosen?.Invoke(shape);
+        }
+
+        /// <summary>Le clic du joueur sur un style de tracé.</summary>
+        public void ChooseStyle(PaintTraceStyle style)
+        {
+            StyleChosen?.Invoke(style);
         }
 
         /// <summary>Le clic du joueur sur ce qu'il veut poser : la zone, ou un sol.</summary>
@@ -84,6 +93,17 @@ namespace Diciela.Tests.PlayMode
         public void SelectShape(PaintShape shape)
         {
             SelectedShape = shape;
+        }
+
+        public void ShowStyles(IReadOnlyList<PaintBarChoice<PaintTraceStyle>> styles)
+        {
+            Styles.Clear();
+            Styles.AddRange(styles);
+        }
+
+        public void SelectStyle(PaintTraceStyle style)
+        {
+            SelectedStyle = style;
         }
 
         public void ShowValues(string area, string marks, string brushSize)

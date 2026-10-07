@@ -99,28 +99,25 @@ namespace Diciela.Controls
         /// <summary>Change ce qu'il pose : la zone, ou un sol ; le geste en cours est abandonné.</summary>
         public void ChooseInk(PaintInk ink)
         {
-            if (!IsActive || !Inks.Choose(ink))
-                return;
-            _canvas.Abandon(false);
-            HeldChanged?.Invoke();
+            Changed(IsActive && Inks.Choose(ink), () => _canvas.Abandon(false));
         }
 
         /// <summary>Change la forme du mode Forme ; le geste en cours est abandonné.</summary>
         public void Choose(PaintShape shape)
         {
-            if (!IsActive || !Options.Choose(shape))
-                return;
-            _canvas.Abandon(false);
-            HeldChanged?.Invoke();
+            Changed(IsActive && Options.Choose(shape), () => _canvas.Abandon(false));
+        }
+
+        /// <summary>Un tracé ou un polygone droit, ou en courbe ; celui qu'on trace se redessine.</summary>
+        public void Choose(PaintTraceStyle style)
+        {
+            Changed(IsActive && Options.Choose(style), _canvas.Restyle);
         }
 
         /// <summary>Grandit (positif) ou rapetisse le pinceau d'autant de crans, dans ses bornes.</summary>
         public void ResizeBrush(int notches)
         {
-            if (!IsActive || !Options.Resize(notches))
-                return;
-            _canvas.ForgetDot();
-            HeldChanged?.Invoke();
+            Changed(IsActive && Options.Resize(notches), _canvas.ForgetDot);
         }
 
         /// <summary>Vise le sol sous ce point de l'écran ; pendant un geste, le prolonge jusque-là.</summary>
@@ -177,6 +174,15 @@ namespace Diciela.Controls
                 _canvas.Abandon(false);
             else
                 PutDown();
+        }
+
+        // Si une option a changé, la surface s'y fait (abandon du geste, nouveau style, nouveau pinceau) et la barre le dit.
+        private void Changed(bool changed, Action follow)
+        {
+            if (!changed)
+                return;
+            follow();
+            HeldChanged?.Invoke();
         }
 
         /// <summary>Le lâche tout à fait, avec le geste en cours.</summary>
