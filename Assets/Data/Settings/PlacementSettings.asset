@@ -34,6 +34,8 @@ MonoBehaviour:
   _brushRadiusStepMeters: 0.5
   _strokeSpacingMeters: 0.3
   _handlePickPixels: 14
+  _handleRadiusMeters: 0.35
+  _curveStepMeters: 0.25
   _zoneVeilColor: {r: 1, g: 0.97, b: 0.9, a: 0.22}
   _outlineColor: {r: 1, g: 1, b: 1, a: 0.85}
   _outlineWidthMeters: 0.12

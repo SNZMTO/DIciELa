@@ -30,6 +30,19 @@ namespace Diciela.UI
             return modes;
         }
 
+        /// <summary>Les styles d'un tracé ou d'un polygone, dans leur ordre, chacun son nom et son usage ; sans touche.</summary>
+        public static List<PaintBarChoice<PaintTraceStyle>> Styles(TextTable texts)
+        {
+            var styles = new List<PaintBarChoice<PaintTraceStyle>>();
+            foreach (PaintTraceStyle style in (PaintTraceStyle[])Enum.GetValues(typeof(PaintTraceStyle)))
+            {
+                string name = style.ToString();
+                styles.Add(new PaintBarChoice<PaintTraceStyle>(style, texts.Get(TextKeys.PaintStyle(name)),
+                    texts.Get(TextKeys.PaintStyleDetail(name)), ""));
+            }
+            return styles;
+        }
+
         /// <summary>Les formes du mode Forme, dans leur ordre, chacune son nom et son usage ; sans touche.</summary>
         public static List<PaintBarChoice<PaintShape>> Shapes(TextTable texts)
         {

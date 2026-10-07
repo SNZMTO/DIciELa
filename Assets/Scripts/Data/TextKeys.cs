@@ -13,6 +13,8 @@ namespace Diciela.Data
         private const string PaintModeDetailPrefix = "place.outil.suite.";
         private const string PaintShapePrefix = "place.forme.";
         private const string PaintShapeDetailPrefix = "place.forme.suite.";
+        private const string PaintStylePrefix = "place.style.";
+        private const string PaintStyleDetailPrefix = "place.style.suite.";
         private const string DayPhasePrefix = "journee.";
         private const string DayNextPrefix = "journee.suite.";
         private const string DayNotePrefix = "journee.note.";
@@ -99,6 +101,18 @@ namespace Diciela.Data
         public static string PaintShapeDetail(string shapeName)
         {
             return PaintShapeDetailPrefix + shapeName;
+        }
+
+        /// <summary>La clé du nom d'un style de tracé, d'après son nom (Curved → place.style.Curved).</summary>
+        public static string PaintStyle(string styleName)
+        {
+            return PaintStylePrefix + styleName;
+        }
+
+        /// <summary>La clé de l'usage d'un style de tracé (Curved → place.style.suite.Curved).</summary>
+        public static string PaintStyleDetail(string styleName)
+        {
+            return PaintStyleDetailPrefix + styleName;
         }
 
         /// <summary>La clé de la raison d'un refus sur la Place, d'après son nom (TooLarge → place.refus.TooLarge).</summary>

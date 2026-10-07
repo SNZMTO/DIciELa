@@ -4,9 +4,9 @@ using UnityEngine;
 namespace Diciela.Simulation.Land
 {
     /// <summary>
-    /// Une forme qu'on peint au sol, ou qu'on y gomme (décision 204 ; SAVOIR, 2.6) : un trait à main levée, un disque,
-    /// un rectangle. Elle ne dit que les mailles qu'elle couvre, celles du maillage dont le milieu est en elle ; ce qui
-    /// l'arrête (une construction, un arbre, un rocher) se décide chez qui la peint.
+    /// Une forme qu'on peint au sol, ou qu'on y gomme (décisions 204 et 216 ; SAVOIR, 2.6) : un trait (à main levée, ou
+    /// un tracé), un disque, un rectangle, un polygone. Elle ne dit que les mailles qu'elle couvre, celles du maillage
+    /// dont le milieu est en elle ; ce qui l'arrête (une construction, un arbre, un rocher) se décide chez qui la peint.
     /// </summary>
     public abstract class GroundShape
     {

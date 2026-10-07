@@ -17,6 +17,7 @@ namespace Diciela.Controls
     internal sealed class PaintAim
     {
         private static readonly Vector2Int Nowhere = new Vector2Int(int.MinValue, int.MinValue);
+        private static readonly Vector2[] NoPoints = new Vector2[0];
 
         private readonly World _world;
         private readonly PaintToolPreview _preview;
@@ -60,6 +61,7 @@ namespace Diciela.Controls
         {
             PaintToolMode mode = tool.Mode;
             float radius = tool.Options.BrushRadius;
+            _preview.ShowHandles(_world.Map.Relief, drawing.IsPointed ? drawing.Points : NoPoints);
             if (mode == PaintToolMode.CartSpot)
             {
                 ShowMark(aim, tool.Options.HeadingDegrees);

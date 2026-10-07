@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Diciela.Simulation.Land;
 using UnityEngine;
 
 namespace Diciela.EditorTools
@@ -7,7 +8,7 @@ namespace Diciela.EditorTools
     /// Les icônes des outils de sol (décisions 206, 209 et 216), à l'encre sur 20 unités : la carte de la Place (une
     /// zone, son contour et deux places de charrette) ; leurs modes : le pinceau, la gomme, le tracé (des points reliés),
     /// la forme (un cercle sur un carré), la place de charrette (un cadre, sa pointe vers l'avant) ; les formes du mode
-    /// Forme : le cercle, le rectangle ; et l'outil Chemins, qui partage la barre : un chemin qui serpente, en
+    /// Forme : le cercle, le rectangle, le polygone ; les styles d'un tracé : droit, en courbe ; et l'outil Chemins, qui partage la barre : un chemin qui serpente, en
     /// pointillés. Des remplaçants simples : la maquette n'en a pas. Le menu des images de l'interface les génère avec
     /// les autres (InterfaceIcons).
     /// </summary>
@@ -42,6 +43,9 @@ namespace Diciela.EditorTools
             yield return new InterfaceIcons.Icon("place-charrette", Size, spot.ToArray());
             yield return new InterfaceIcons.Icon("trace", Size, Trace());
             yield return new InterfaceIcons.Icon("forme", Size, Shapes());
+            yield return new InterfaceIcons.Icon("polygone", Size, Pentagon());
+            yield return new InterfaceIcons.Icon("droit", Size, Line(false));
+            yield return new InterfaceIcons.Icon("courbe", Size, Line(true));
             yield return new InterfaceIcons.Icon("chemins", Size, new[]
             {
                 Bar(5f, 18f, 7f, 12.5f, 4.5f, 0.45f), Bar(7f, 12.5f, 12.5f, 9f, 4.5f, 0.45f),
@@ -70,6 +74,31 @@ namespace Diciela.EditorTools
             faces.AddRange(Loop(square, 1.6f));
             faces.Add(Polygon(Ink, 0.3f, Circle(7f, 7f, 4.6f, 20)));
             faces.AddRange(Loop(Circle(7f, 7f, 4.6f, 20), 1.6f));
+            return faces.ToArray();
+        }
+
+        // Le polygone : cinq coins, voilé, son contour.
+        private static InterfaceIcons.Face[] Pentagon()
+        {
+            float[] corners = { 10f, 2.5f, 17.5f, 8f, 14.5f, 17f, 5.5f, 17f, 2.5f, 8f };
+            var faces = new List<InterfaceIcons.Face> { Polygon(Ink, 0.3f, corners) };
+            faces.AddRange(Loop(corners, 1.6f));
+            return faces.ToArray();
+        }
+
+        // Un trait par quatre points : droit, ou en courbe douce, la même que celle des tracés (GroundSpline).
+        private static InterfaceIcons.Face[] Line(bool curved)
+        {
+            var points = new List<Vector2>
+            {
+                new Vector2(2.5f, 15.5f), new Vector2(8f, 5f), new Vector2(12f, 14f), new Vector2(17.5f, 4.5f)
+            };
+            var line = new List<Vector2>(points);
+            if (curved)
+                GroundSpline.Sample(points, false, 0.5f, line);
+            var faces = new List<InterfaceIcons.Face>();
+            for (int i = 0; i + 1 < line.Count; i++)
+                faces.Add(Bar(line[i].x, line[i].y, line[i + 1].x, line[i + 1].y, 1.6f));
             return faces.ToArray();
         }
 

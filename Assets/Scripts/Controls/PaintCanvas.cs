@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Diciela.Data;
 using Diciela.Simulation;
 using Diciela.Simulation.Land;
@@ -23,6 +22,7 @@ namespace Diciela.Controls
         private readonly PaintDrawing _drawing = new PaintDrawing();
         private readonly PaintAim _target;
         private readonly PaintOrders _orders;
+        private readonly PaintPoints _points;
         private Vector2 _aim;
         private Vector2 _aimScreen;
         private bool _aimed;
@@ -35,6 +35,7 @@ namespace Diciela.Controls
             _camera = camera;
             _settings = settings;
             _target = new PaintAim(world, preview);
+            _points = new PaintPoints(_drawing, new PaintHandles(camera, world.Map.Relief, settings));
             // Un ordre joué ou refusé : la Place a peut-être changé sous le pointeur.
             _orders = new PaintOrders(world, () => Refresh(true));
         }
@@ -61,8 +62,9 @@ namespace Diciela.Controls
             _aimed = true;
             _aim = ground;
             _aimScreen = screenPoint;
-            Refresh(IsDrawing && _drawing.ExtendTo(ground, _settings.StrokeSpacingMeters,
-                _world.Grid.Metrics.CellSize));
+            // Un point tenu suit le pointeur ; sinon, le geste en cours se prolonge jusque-là.
+            Refresh(_points.Drag(ground) ||
+                    IsDrawing && _drawing.ExtendTo(ground, _settings.StrokeSpacingMeters, _world.Grid.Metrics.CellSize));
         }
 
         public void LoseAim()
@@ -75,17 +77,27 @@ namespace Diciela.Controls
 
         public void Begin(Vector2 screenStart)
         {
-            PaintToolMode mode = _tool.Mode;
-            bool dragged = mode != PaintToolMode.CartSpot && mode != PaintToolMode.Trace;
-            if (!dragged || !TryGround(screenStart, out Vector2 start))
+            if (_drawing.IsPointed)
+            {
+                _points.Press(screenStart);
                 return;
-            _drawing.Begin(mode, _tool.Options.Shape, start, _tool.Options.BrushRadius, BoxDegrees());
+            }
+            PaintToolMode mode = _tool.Mode;
+            if (mode == PaintToolMode.CartSpot || PaintPoints.Wanted(_tool) || !TryGround(screenStart, out Vector2 start))
+                return;
+            _drawing.Begin(mode, _tool.Options.Shape, start, _tool.Options.BrushRadius,
+                GroundAim.SideDegrees(_camera, _settings.RotationStepDegrees));
             Refresh(true);
         }
 
-        /// <summary>Le relâchement : la forme glissée part en ordre, si la Place l'accepte ; un tracé, lui, continue.</summary>
+        /// <summary>
+        /// Le relâchement : la forme glissée part en ordre, si la Place l'accepte ; un geste pointé continue, et lâche le
+        /// point qu'il tenait.
+        /// </summary>
         public void End()
         {
+            if (_points.Release())
+                Refresh(true);
             if (!IsDrawing || _drawing.IsPointed)
                 return;
             GroundShape shape = _drawing.Shape;
@@ -97,17 +109,17 @@ namespace Diciela.Controls
         }
 
         /// <summary>
-        /// Un clic : un rond du pinceau ; un point du tracé, ou son départ sur son dernier point ; poser une place de
-        /// charrette, ou retirer celle qu'on vise.
+        /// Un clic : un rond du pinceau ; un point d'un tracé ou d'un polygone, ou son départ sur le point qui le finit ;
+        /// poser une place de charrette, ou retirer celle qu'on vise.
         /// </summary>
         public void Click()
         {
             if (!_aimed || _orders.IsWaiting)
                 return;
             PaintToolMode mode = _tool.Mode;
-            if (mode == PaintToolMode.Trace)
+            if (PaintPoints.Wanted(_tool))
             {
-                ClickTrace();
+                ClickPointed();
                 return;
             }
             if (IsDrawing || _target.IsStale)
@@ -123,9 +135,17 @@ namespace Diciela.Controls
         /// <summary>Abandonne le geste en cours ; s'il n'y en a pas, oublie aussi ce qui est visé.</summary>
         public void Abandon(bool forgetAim)
         {
+            _points.Release();
             _drawing.End();
             if (forgetAim)
                 _aimed = false;
+            Refresh(true);
+        }
+
+        /// <summary>Le style a changé : le geste pointé en cours se relie droit, ou en courbe.</summary>
+        public void Restyle()
+        {
+            _drawing.Restyle(_tool.Options.Style == PaintTraceStyle.Curved);
             Refresh(true);
         }
 
@@ -152,40 +172,19 @@ namespace Diciela.Controls
             ResultChanged?.Invoke();
         }
 
-        // Un clic du tracé : son premier point, un point de plus, ou, sur son dernier point, son départ. Refusé, il reste,
-        // et la raison s'écrit.
-        private void ClickTrace()
+        // Un clic d'un geste pointé : un point de plus, ou le départ, sur le point qui le finit. Refusé, il reste, et la
+        // raison s'écrit.
+        private void ClickPointed()
         {
-            if (!IsDrawing || !OnLastPoint())
-            {
-                _drawing.AddPoint(_aim, _tool.Options.BrushRadius);
-                Refresh(true);
-                return;
-            }
-            _drawing.Settle();
+            bool finish = _points.Click(_aim, _aimScreen, _tool, _settings.CurveStepMeters);
+            if (finish)
+                _drawing.Settle();
             Refresh(true);
-            if (_target.IsStale || !Answer.IsOk)
+            if (!finish || _target.IsStale || !Answer.IsOk)
                 return;
             _orders.SendShape(_drawing.Shape, false, _tool.Inks, _tool.Entry.Scope);
             _drawing.End();
             Refresh(true);
-        }
-
-        // Vrai si le pointeur est, à l'écran, sur le dernier point posé du tracé.
-        private bool OnLastPoint()
-        {
-            IReadOnlyList<Vector2> points = _drawing.Points;
-            Vector3 screen = _camera.WorldToScreenPoint(_world.Map.Relief.GroundAt(points[points.Count - 1]));
-            float pick = _settings.HandlePickPixels;
-            return screen.z > 0f && ((Vector2)screen - _aimScreen).sqrMagnitude <= pick * pick;
-        }
-
-        // Le cap des côtés d'un rectangle : celui de la caméra, au cran de rotation, pour que des rectangles tracés de la
-        // même vue s'alignent.
-        private float BoxDegrees()
-        {
-            float step = _settings.RotationStepDegrees;
-            return Mathf.Repeat(Mathf.Round(_camera.transform.eulerAngles.y / step) * step, 360f);
         }
 
         private bool TryGround(Vector2 screenPoint, out Vector2 ground)

@@ -166,7 +166,7 @@
 /* La barre des outils de sol (décisions 206, 210, 214 et 216), la Place et Chemins, à la place du panneau Construire
    fermé : au-dessus, ce que l'outil pose (la zone, les sols, chacun sa vignette) ; puis ses modes en familles, en
    feutres, chacun son icône et sa touche, son nom et son usage dans l'infobulle ; dessous, les options du mode pris (les
-   formes du mode Forme en petits feutres, la taille du pinceau) ; puis la superficie et les places de charrette dans des
+   formes du mode Forme et le style d'un tracé ou d'un polygone en petits feutres, la taille du pinceau) ; puis la superficie et les places de charrette dans des
    creux de lin. Étroite, elle tient entre l'astuce et l'icône des outils dès 1280 × 720. */
 .place-encres {
     flex-direction: row;
@@ -209,6 +209,7 @@
 
 .place-formes {
     flex-direction: row;
+    margin: 0 6px;
 }
 
 .place-option {
@@ -247,6 +248,18 @@
 
 .place-forme-box {
     background-image: url("Icones/rectangle.asset");
+}
+
+.place-forme-polygon {
+    background-image: url("Icones/polygone.asset");
+}
+
+.place-style-straight {
+    background-image: url("Icones/droit.asset");
+}
+
+.place-style-curved {
+    background-image: url("Icones/courbe.asset");
 }
 
 .place-icone-cartspot {

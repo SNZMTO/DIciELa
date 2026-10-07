@@ -25,6 +25,9 @@ namespace Diciela.Tests.PlayMode
                                      "place.outil.Shape,Forme\n" +
                                      "place.forme.Disc,Cercle\n" +
                                      "place.forme.Box,Rectangle\n" +
+                                     "place.forme.Polygon,Polygone\n" +
+                                     "place.style.Straight,Droit\n" +
+                                     "place.style.Curved,Courbe\n" +
                                      "place.outil.CartSpot,Place de charrette\n" +
                                      "place.superficie,{superficie} / {max} m²\n" +
                                      "place.marques,{marques} / {max}\n" +
@@ -95,6 +98,22 @@ namespace Diciela.Tests.PlayMode
         }
 
         [Test]
+        public void TheStylesShowForATraceAndAPolygonAndAClickTakesOne()
+        {
+            _test.Plaza.Take();
+            Assert.IsEmpty(_view.Styles, "Au pinceau, pas de styles.");
+            _view.Choose(PaintToolMode.Trace);
+            Assert.AreEqual(new[] { "Droit", "Courbe" }, new[] { _view.Styles[0].Name, _view.Styles[1].Name });
+            _view.ChooseStyle(PaintTraceStyle.Curved);
+            Assert.AreEqual(PaintTraceStyle.Curved, _test.Plaza.Options.Style, "Un clic sur un style le prend…");
+            Assert.AreEqual(PaintTraceStyle.Curved, _view.SelectedStyle, "… et l'enfonce.");
+            _view.Choose(PaintToolMode.Shape);
+            Assert.IsEmpty(_view.Styles, "Le cercle n'a pas de style…");
+            _view.ChooseShape(PaintShape.Polygon);
+            Assert.AreEqual(2, _view.Styles.Count, "… le polygone, si.");
+        }
+
+        [Test]
         public void TheValuesFollowThePlaza()
         {
             _test.Plaza.Take();
@@ -125,7 +144,7 @@ namespace Diciela.Tests.PlayMode
         }
 
         [Test]
-        public void EveryModeAndShapeHasItsNameAndUseInTheGameTexts()
+        public void EveryModeShapeAndStyleHasItsNameAndUseInTheGameTexts()
         {
 #if UNITY_EDITOR
             var settings = BuildBarTests.LoadSingle<InterfaceSettings>();
@@ -134,6 +153,12 @@ namespace Diciela.Tests.PlayMode
             {
                 Assert.IsTrue(texts.Has(TextKeys.PaintMode(mode.ToString())), "Le nom du mode " + mode + " manque.");
                 Assert.IsTrue(texts.Has(TextKeys.PaintModeDetail(mode.ToString())), "L'usage du mode " + mode + " manque.");
+            }
+            foreach (PaintTraceStyle style in System.Enum.GetValues(typeof(PaintTraceStyle)))
+            {
+                Assert.IsTrue(texts.Has(TextKeys.PaintStyle(style.ToString())), "Le nom du style " + style + " manque.");
+                Assert.IsTrue(texts.Has(TextKeys.PaintStyleDetail(style.ToString())),
+                    "L'usage du style " + style + " manque.");
             }
             foreach (PaintShape shape in System.Enum.GetValues(typeof(PaintShape)))
             {

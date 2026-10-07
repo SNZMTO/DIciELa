@@ -6,9 +6,10 @@ using UnityEngine;
 namespace Diciela.View
 {
     /// <summary>
-    /// L'aperçu de l'outil de la Place (décision 206) : les mailles que le geste ajouterait ou retirerait, et le tour de
-    /// la forme (le cercle du pinceau, le disque, le rectangle, la place de charrette), vert si le geste se fait, rouge
-    /// sinon, comme l'aperçu de la pose. Il ne décide de rien : l'outil lui dit quoi montrer. Les mailles ne se refont
+    /// L'aperçu d'un outil de sol (décisions 206 et 216) : les mailles que le geste ajouterait ou retirerait, le tour de la
+    /// forme (le cercle du pinceau, le disque, le rectangle, la place de charrette), vert si le geste se fait, rouge sinon,
+    /// comme l'aperçu de la pose ; et les points posés d'un tracé ou d'un polygone, un rond chacun, qu'on prend pour les
+    /// déplacer. Il ne décide de rien : l'outil lui dit quoi montrer. Les mailles ne se refont
     /// que quand l'outil les redemande, le tour que quand il change.
     /// </summary>
     public sealed class PaintToolPreview : MonoBehaviour
@@ -19,6 +20,7 @@ namespace Diciela.View
         private readonly DrapedMesh _built = new DrapedMesh();
         private GroundOverlay _cells;
         private GroundOverlay _outline;
+        private GroundOverlay _handles;
         private PaintOutline _shownOutline;
         private bool _outlineAllowed;
 
@@ -63,11 +65,27 @@ namespace Diciela.View
             _outline.Apply(_built);
         }
 
+        /// <summary>Montre les points posés d'un tracé ou d'un polygone, chacun un rond ; aucun point les cache.</summary>
+        public void ShowHandles(Relief relief, IReadOnlyList<Vector2> points)
+        {
+            EnsureOverlays();
+            _handles.SetVisible(points.Count > 0);
+            if (points.Count == 0)
+                return;
+            _handles.SetColor(_settings.OutlineColor);
+            // Les ronds au-dessus des lignes, qu'on les voie sur le tour.
+            _built.Begin(relief, _settings.OverlayLiftMeters * 3f);
+            for (int i = 0; i < points.Count; i++)
+                _built.AddCircle(points[i], _settings.HandleRadiusMeters, _settings.OutlineWidthMeters);
+            _handles.Apply(_built);
+        }
+
         /// <summary>Cache tout l'aperçu : l'outil n'est plus en main, ou ne vise plus le sol.</summary>
         public void Hide()
         {
             _cells?.SetVisible(false);
             _outline?.SetVisible(false);
+            _handles?.SetVisible(false);
             _shownOutline = PaintOutline.None;
         }
 
@@ -75,8 +93,10 @@ namespace Diciela.View
         {
             _cells?.Destroy();
             _outline?.Destroy();
+            _handles?.Destroy();
             _cells = null;
             _outline = null;
+            _handles = null;
         }
 
         private void EnsureOverlays()
@@ -87,6 +107,7 @@ namespace Diciela.View
                 throw new System.InvalidOperationException("L'aperçu de la Place n'a pas sa fiche de réglages de la pose.");
             _cells = new GroundOverlay("Aperçu des mailles", transform, _settings.TranslucentMaterial, 2);
             _outline = new GroundOverlay("Aperçu du tour", transform, _settings.TranslucentMaterial, 3);
+            _handles = new GroundOverlay("Aperçu des points", transform, _settings.TranslucentMaterial, 4);
         }
 
         private static bool Same(PaintOutline a, PaintOutline b)

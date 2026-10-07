@@ -1,7 +1,8 @@
 # DICIELA — état actuel
 
 **Branches** : `main` : l'étape 59. Empilées sans fusion tant que tu ne les as pas vues, chacune ouverte de la
-précédente : `etape-60-fantome-sols` (le fantôme texturé, 216), `etape-61-barre-familles` (familles, tracé, 217).
+précédente : `etape-60-fantome-sols` (le fantôme texturé, 216), `etape-61-barre-familles` (familles, tracé, 217),
+`etape-62-courbes` (la courbe, le polygone, les points qu'on glisse, 218).
 
 **Fait** : 23 à 59 ; 52 à 57 (205 à 214) : la Place, les sols (simulation et carte), le pas des charrettes, l'outil
 Chemins et l'outil de sol à deux entrées ; 58 : `Tools/compile.sh` ; 59 (215) : un mot, un sens dans le code (`Plaza`,

@@ -8,9 +8,9 @@ namespace Diciela.Tests.PlayMode
     /// <summary>
     /// Les deux entrées de l'outil de sol (décisions 210 et 216), sur le petit monde des tests, appelées comme leurs gestes
     /// les appellent : l'outil Chemins pose le premier sol connu, partout, en quatre modes ; l'outil de la Place pose la
-    /// zone, ou un sol choisi, seulement dans la zone ; sans sol connu, l'outil Chemins se prend, mais ne trace rien ; un
-    /// tracé pose ses points d'un clic chacun, et part au clic sur son dernier point, en segments droits. Le monde ne joue
-    /// ses pas que quand le test le dit : rien ne part avant.
+    /// zone, ou un sol choisi, seulement dans la zone ; sans sol connu, l'outil Chemins se prend, mais ne trace rien. Le
+    /// monde ne joue ses pas que quand le test le dit : rien ne part avant. Les gestes pointés ont leurs tests à part
+    /// (PaintPointsTests).
     /// </summary>
     public sealed class PaintToolsTests
     {
@@ -75,35 +75,6 @@ namespace Diciela.Tests.PlayMode
             Assert.AreEqual(FloorState.None, StateAt(0f));
         }
 
-        [Test]
-        public void ATraceLaysItsStraightSegmentsWhenItsLastPointIsClicked()
-        {
-            _test = new TestWorld(withPlaza: true, withFloor: true);
-            PaintTool paths = _test.Paths;
-            paths.Take();
-            paths.Choose(PaintToolMode.Trace);
-            Click(paths, -6f, 0f);
-            Click(paths, 0f, 0f);
-            Click(paths, 0f, 6f);
-            _test.World.Step();
-            Assert.IsEmpty(_test.World.ConstructionSites.Queue, "Tant qu'on pose des points, rien ne part.");
-            Assert.IsTrue(paths.IsDrawing);
-
-            Click(paths, 0f, 6f);
-            _test.World.Step();
-            Assert.AreEqual(FloorState.Planned, StateAt(-3f, 0f), "Le premier segment…");
-            Assert.AreEqual(FloorState.Planned, StateAt(0f, 3f), "… et le second…");
-            Assert.AreEqual(FloorState.None, StateAt(-3f, 3f), "… droits : rien dans le coin d'en face.");
-            Assert.IsFalse(paths.IsDrawing, "Parti, le tracé est fini.");
-        }
-
-        // Un clic du joueur à ce point du sol, à tant de mètres à l'est et au nord du milieu du monde.
-        private void Click(PaintTool tool, float east, float north)
-        {
-            tool.AimAt(_test.OnScreen(TestWorld.Center + new Vector3(east, 0f, north)));
-            tool.Click();
-        }
-
         // Un disque tiré du milieu du monde (décalé de x mètres vers l'est) jusqu'à ce rayon, relâché ; puis un pas.
         private void Draw(PaintTool tool, float x, float radius)
         {
@@ -119,9 +90,9 @@ namespace Diciela.Tests.PlayMode
             return _test.OnScreen(TestWorld.Center + new Vector3(east, 0f, 0f));
         }
 
-        private FloorState StateAt(float east, float north = 0f)
+        private FloorState StateAt(float east)
         {
-            Vector3 point = TestWorld.Center + new Vector3(east, 0f, north);
+            Vector3 point = TestWorld.Center + new Vector3(east, 0f, 0f);
             return _test.World.Floors.StateAt(_test.World.Grid.CellOf(new Vector2(point.x, point.z)));
         }
     }

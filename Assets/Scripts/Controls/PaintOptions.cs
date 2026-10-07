@@ -5,8 +5,9 @@ namespace Diciela.Controls
 {
     /// <summary>
     /// Les réglages d'un outil de sol qui ne tiennent à aucun geste (décision 216), ceux de la rangée d'options de sa
-    /// barre : la forme du mode Forme, la taille du pinceau (dans ses bornes, par crans), et le cap de la place de
-    /// charrette, qu'on tourne comme une construction à la pose. Seul son outil les change, qui le dit.
+    /// barre : la forme du mode Forme, le style d'un tracé ou d'un polygone (droit ou en courbe), la taille du pinceau
+    /// (dans ses bornes, par crans), et le cap de la place de charrette, qu'on tourne comme une construction à la pose.
+    /// Seul son outil les change, qui le dit.
     /// </summary>
     public sealed class PaintOptions
     {
@@ -22,6 +23,9 @@ namespace Diciela.Controls
         /// <summary>La forme du mode Forme.</summary>
         public PaintShape Shape { get; private set; }
 
+        /// <summary>Comment un tracé et un polygone relient leurs points.</summary>
+        public PaintTraceStyle Style { get; private set; }
+
         /// <summary>Le rayon du pinceau, de la gomme et du tracé, en mètres.</summary>
         public float BrushRadius { get; private set; }
 
@@ -34,6 +38,15 @@ namespace Diciela.Controls
             if (shape == Shape)
                 return false;
             Shape = shape;
+            return true;
+        }
+
+        /// <summary>Prend ce style ; vrai s'il change.</summary>
+        internal bool Choose(PaintTraceStyle style)
+        {
+            if (style == Style)
+                return false;
+            Style = style;
             return true;
         }
 
