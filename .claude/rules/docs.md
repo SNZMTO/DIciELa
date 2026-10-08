@@ -17,6 +17,9 @@ paths:
   garde son histoire. Son en-tête dit comment on le tient.
 - **`ARCHITECTURE.md`** : les couches, qui possède quoi, les règles de passage ; le « comment faire » reste dans
   `SAVOIR.md`, par renvois.
+- **`REMPLACANTS.md`** : l'inventaire des remplaçants (une image que le code dessine faute de mieux, un modèle en
+  boîte, un texte neutre), chacun avec ce qu'il montre, où on le voit et comment le remplacer ; un nouveau s'y ajoute le
+  jour même, un remplacé en sort. Le GDD n'en garde que la règle (« À toi … remplaçants »).
 - **`EQUILIBRAGE.md`** : généré par un menu `DICIELA/…`, jamais retouché à la main ; régénéré en fin d'étape quand les
   chiffres bougent.
 - **`ETAT.md`** : 30 lignes au plus : branche, étape, ce qui marche, ce qui est à vérifier par le développeur, la
