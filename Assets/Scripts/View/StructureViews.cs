@@ -14,7 +14,8 @@ namespace Diciela.View
     /// une ligne qui suit le travail fait, son fantôme au-dessus ; bâtie, le modèle tel quel. Déplacée, elle montre sa
     /// nouvelle place en fantôme, se défait, saute, puis se remonte (décision 201) : chaque moment refait sa vue
     /// (StructureView). En prévision, chaque chantier se montre fini (décision 228). On touche une construction en
-    /// visant son modèle, pas le sol : vu de biais, le toit d'une maison cache le sol derrière elle.
+    /// visant le modèle qu'on voit, pas le sol : vu de biais, le toit d'une maison cache le sol derrière elle ; en
+    /// prévision, une construction qu'on déplace se touche à sa nouvelle place, où on la voit.
     /// </summary>
     public sealed class StructureViews : MonoBehaviour
     {
@@ -94,8 +95,9 @@ namespace Diciela.View
             foreach (StructureView shown in _shown)
             {
                 // Les modèles ne sont ni agrandis ni réduits : les distances restent en mètres, comparables entre elles.
-                var local = new Ray(shown.Transform.InverseTransformPoint(ray.origin),
-                    shown.Transform.InverseTransformDirection(ray.direction));
+                Transform seen = shown.Seen(_foresight);
+                var local = new Ray(seen.InverseTransformPoint(ray.origin),
+                    seen.InverseTransformDirection(ray.direction));
                 if (shown.LocalBox.IntersectRay(local, out float distance) && distance < nearest)
                 {
                     nearest = distance;
