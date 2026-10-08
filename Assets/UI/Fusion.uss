@@ -87,11 +87,6 @@
     font-size: 24px;
 }
 
-.cout {
-    -unity-font-definition: url("Polices/Nunito-Black.ttf");
-    font-size: 20px;
-}
-
 /* Ce que dit un bouton. */
 .action {
     font-size: 20px;

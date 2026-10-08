@@ -14,14 +14,13 @@ namespace Diciela.Tests.PlayMode
     /// <summary>
     /// Le HUD à toutes les tailles d'écran (GDD, section 16 ; décision 144), rendu hors écran de 1280 × 720 à la 4K,
     /// écrans larges compris : la journée tient au coin haut-gauche, à 24 px du bord et 20 du haut ; la fiche du
-    /// campement, ouverte, au coin haut-droit ; le stock en fanions au milieu du haut, à 24 px ; le panneau Construire,
-    /// ouvert, au milieu du bas, à 24 px ; l'icône des outils au coin bas-droit, à 24 px ; tout reste dans l'écran,
-    /// sans que deux blocs se chevauchent. La roue tient dans l'écran, ouverte au coin sur l'icône des outils ; la
-    /// Place en main, le panneau fermé, sa carte pleine (une étoile, une raison) tient à 24 px du bas, à côté de
-    /// l'icône, sans toucher l'astuce ni la fiche, et sa roue, son éventail des formes déplié vers le coin. C'est le
-    /// vrai HUD (sa mise en page, la feuille du jeu, ses vues, ses présentateurs, sa taille), avec le catalogue et les
-    /// textes du projet, et le petit monde du campement pour la fiche et les fanions. Les marges attendues sont celles
-    /// du GDD.
+    /// campement, ouverte, au coin haut-droit ; le stock en fanions au milieu du haut, à 24 px ; l'icône des outils au
+    /// coin bas-droit, à 24 px ; l'astuce au coin bas-gauche ; tout reste dans l'écran, sans que deux blocs se
+    /// chevauchent. La roue tient dans l'écran, ouverte au coin sur l'icône des outils ; la Place en main, sa carte
+    /// pleine (une étoile, une raison) tient à 24 px du bas, à côté de l'icône, sans toucher l'astuce ni la fiche, et
+    /// sa roue, son éventail des formes déplié vers le coin. C'est le vrai HUD (sa mise en page, la feuille du jeu, ses
+    /// vues, ses présentateurs, sa taille), avec les textes du projet, et le petit monde du campement pour la fiche et
+    /// les fanions. Les marges attendues sont celles du GDD.
     /// </summary>
     public sealed class HudLayoutTests
     {
@@ -39,8 +38,7 @@ namespace Diciela.Tests.PlayMode
 #if UNITY_EDITOR
             var theme = UnityEditor.AssetDatabase.LoadAssetAtPath<ThemeStyleSheet>("Assets/UI/Theme.tss");
             var layout = UnityEditor.AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UI/Hud.uxml");
-            var settings = BuildBarTests.LoadSingle<InterfaceSettings>();
-            var catalog = BuildBarTests.LoadSingle<Catalog>();
+            var settings = TestAssets.LoadSingle<InterfaceSettings>();
             var faults = new List<string>();
             using (var world = new TestWorld(withPlaza: true))
             using (var town = new TestCampTown())
@@ -53,7 +51,6 @@ namespace Diciela.Tests.PlayMode
                 var document = host.AddComponent<UIDocument>();
                 document.panelSettings = panel;
                 document.visualTreeAsset = layout;
-                var bar = host.AddComponent<BuildBar>();
                 var day = host.AddComponent<DayBoard>();
                 var sheet = host.AddComponent<LocationSheet>();
                 var stock = host.AddComponent<StockPennants>();
@@ -82,13 +79,11 @@ namespace Diciela.Tests.PlayMode
                             yield return null;
                             TextTable texts = TextTable.Parse(settings.Texts.text, settings.Language);
                             var tooltips = new Tooltips(document);
-                            bar.Show(catalog, texts, world.Tool, world.World, new FixedToolKeys(),
-                                new ReasonBubble(document));
                             card = new ToolCard(document);
-                            card.Show(texts, world.Clearing, world.Mover, world.Paths, world.Plaza, world.World);
-                            bar.Open();
-                            wheel.Show(texts, new FixedToolKeys(), world.Clearing, bar, world.Mover, world.Paths,
-                                world.Plaza, tooltips);
+                            card.Show(texts, world.Tool, world.Clearing, world.Mover, world.Paths, world.Plaza,
+                                world.World);
+                            wheel.Show(texts, new FixedToolKeys(), world.Catalog, world.World, world.Tool,
+                                world.Clearing, world.Mover, world.Paths, world.Plaza, tooltips);
                             day.Show(world.World.Clock, texts, tooltips);
                             town.InstallTheCamp();
                             stock.Show(town.World, town.Catalog, texts, tooltips);
@@ -105,7 +100,6 @@ namespace Diciela.Tests.PlayMode
                         TestHud.CheckWheel(document.rootVisualElement, screen, faults);
                         wheel.Escape();
                         // La Place en main, sa carte pleine : une étoile, et la raison d'un ordre refusé.
-                        bar.Close();
                         world.Plaza.Take();
                         world.Plaza.Options.Choose(PaintSymmetry.Star);
                         world.World.Submit(new RemoveCartSpotCommand(99));
@@ -120,7 +114,6 @@ namespace Diciela.Tests.PlayMode
                         TestHud.CheckWheel(document.rootVisualElement, screen, faults);
                         wheel.Escape();
                         world.Plaza.PutDown();
-                        bar.Open();
                     }
                 }
                 finally
@@ -133,7 +126,6 @@ namespace Diciela.Tests.PlayMode
                     }
                     card?.Hide();
                     wheel.Hide();
-                    bar.Hide();
                     day.Hide();
                     sheet.Hide();
                     stock.Hide();

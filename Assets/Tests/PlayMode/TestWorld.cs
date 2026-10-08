@@ -60,6 +60,7 @@ namespace Diciela.Tests.PlayMode
             }
 #endif
             World = new World(simulation, map, catalog);
+            Catalog = catalog;
 
             var rig = Keep(new GameObject("Caméra de test", typeof(Camera))).AddComponent<CameraRig>();
             Preview = Keep(new GameObject("Aperçu de test")).AddComponent<PlacementPreview>();
@@ -97,6 +98,11 @@ namespace Diciela.Tests.PlayMode
         }
 
         public World World { get; }
+
+        /// <summary>
+        /// Le catalogue du monde : sans famille, tant que le test ne lui en range pas (TestFamilies).
+        /// </summary>
+        public Catalog Catalog { get; }
         public PlacementSettings Settings { get; }
         public Camera Camera { get; }
         public PlacementPreview Preview { get; }
@@ -119,26 +125,6 @@ namespace Diciela.Tests.PlayMode
         public Vector2 OnScreen(Vector3 ground)
         {
             return Camera.WorldToScreenPoint(ground);
-        }
-
-        /// <summary>
-        /// Pose, par l'ordre du joueur, une haie de 2 × 2 m en (70 ; 70), dont le modèle est un quad vêtu de ce matériau :
-        /// un chantier ; rend sa vue, la dernière des constructions vues.
-        /// </summary>
-        public Transform PlaceASiteDressedIn(Material material)
-        {
-            GameObject model = Keep(GameObject.CreatePrimitive(PrimitiveType.Quad));
-            model.GetComponent<MeshRenderer>().sharedMaterial = material;
-            var hedge = Keep(ScriptableObject.CreateInstance<StructureDefinition>());
-#if UNITY_EDITOR
-            Fill(hedge, "_id", "haie");
-            Fill(hedge, "_widthMeters", 2f);
-            Fill(hedge, "_depthMeters", 2f);
-            Fill(hedge, "_model", model);
-#endif
-            World.Submit(new PlaceStructureCommand(hedge, new Placement(new Vector2(70f, 70f), 0f)));
-            World.Step();
-            return Views.transform.GetChild(Views.transform.childCount - 1);
         }
 
         /// <summary>Garde une chose créée pour le test, détruite avec le monde.</summary>

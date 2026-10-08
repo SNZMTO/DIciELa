@@ -42,12 +42,11 @@ namespace Diciela.Tests.PlayMode
                 yield return null;
                 var wheel = document.GetComponent<ToolWheel>();
                 TextTable texts = TextTable.Parse(Texts, "fr");
-                var build = new NotedBuildMenu();
-                wheel.Show(texts, new FixedToolKeys(), test.Clearing, build, test.Mover, test.Paths, test.Plaza,
-                    new Tooltips(document));
+                wheel.Show(texts, new FixedToolKeys(), test.Catalog, test.World, test.Tool, test.Clearing, test.Mover,
+                    test.Paths, test.Plaza, new Tooltips(document));
                 wheel.Hide();
-                wheel.Show(texts, new FixedToolKeys(), test.Clearing, build, test.Mover, test.Paths, test.Plaza,
-                    new Tooltips(document));
+                wheel.Show(texts, new FixedToolKeys(), test.Catalog, test.World, test.Tool, test.Clearing, test.Mover,
+                    test.Paths, test.Plaza, new Tooltips(document));
                 for (int frame = 0; frame < SettleFrames; frame++)
                     yield return null;
                 VisualElement root = document.rootVisualElement;
@@ -76,8 +75,8 @@ namespace Diciela.Tests.PlayMode
                 yield return null;
                 var wheel = document.GetComponent<ToolWheel>();
                 var tooltips = new Tooltips(document);
-                wheel.Show(TextTable.Parse(Texts, "fr"), new FixedToolKeys(), test.Clearing, new NotedBuildMenu(),
-                    test.Mover, test.Paths, test.Plaza, tooltips);
+                wheel.Show(TextTable.Parse(Texts, "fr"), new FixedToolKeys(), test.Catalog, test.World, test.Tool,
+                    test.Clearing, test.Mover, test.Paths, test.Plaza, tooltips);
                 for (int frame = 0; frame < SettleFrames; frame++)
                     yield return null;
                 VisualElement root = document.rootVisualElement;
@@ -100,14 +99,14 @@ namespace Diciela.Tests.PlayMode
         [UnityTest]
         public IEnumerator OpenedEachToolShowsItsPicture()
         {
-            using (var test = new TestWorld())
+            // Un catalogue avec une Place, sans logis à poser : la ville la propose déjà.
+            using (var test = new TestWorld(withPlaza: true))
             {
                 UIDocument document = TestHud.WithWheel(test);
                 yield return null;
                 var wheel = document.GetComponent<ToolWheel>();
-                wheel.Show(TextTable.Parse(Texts, "fr"), new FixedToolKeys(), test.Clearing, new NotedBuildMenu(),
-                    test.Mover, test.Paths, test.Plaza,
-                    new Tooltips(document));
+                wheel.Show(TextTable.Parse(Texts, "fr"), new FixedToolKeys(), test.Catalog, test.World, test.Tool,
+                    test.Clearing, test.Mover, test.Paths, test.Plaza, new Tooltips(document));
                 for (int frame = 0; frame < SettleFrames; frame++)
                     yield return null;
                 VisualElement root = document.rootVisualElement;
@@ -145,9 +144,9 @@ namespace Diciela.Tests.PlayMode
                 var wheel = document.GetComponent<ToolWheel>();
                 var card = new ToolCard(document);
                 TextTable texts = TextTable.Parse(Texts, "fr");
-                wheel.Show(texts, new FixedToolKeys(), test.Clearing, new NotedBuildMenu(), test.Mover, test.Paths,
-                    test.Plaza, new Tooltips(document));
-                card.Show(texts, test.Clearing, test.Mover, test.Paths, test.Plaza, test.World);
+                wheel.Show(texts, new FixedToolKeys(), test.Catalog, test.World, test.Tool, test.Clearing, test.Mover,
+                    test.Paths, test.Plaza, new Tooltips(document));
+                card.Show(texts, test.Tool, test.Clearing, test.Mover, test.Paths, test.Plaza, test.World);
                 test.Plaza.Take();
                 for (int frame = 0; frame < SettleFrames; frame++)
                     yield return null;

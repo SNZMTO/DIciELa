@@ -582,6 +582,10 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   ayant ouvert une autre scène (`open_scene`), et ne rien recompiler ni rafraîchir entre les clés et le code. Renommer un
   type, c'est renommer son `.cs` et son `.meta` ensemble (`git mv`) : le GUID suit, les composants et les fiches qui le
   portent restent liés (étape 59).
+- **Supprimer un composant, c'est aussi le retirer des scènes** : son script parti, il reste sur son objet, sans script
+  (« The referenced script on this Behaviour is missing »). Le monteur de scène retire ces restes de l'objet qu'il
+  monte (`GameObjectUtility.RemoveMonoBehavioursWithMissingScript`), puis `Monter les scènes` enregistre ; un champ
+  sérialisé disparu (`_buildBar` de `GameStage`) s'efface de lui-même à l'enregistrement (étape 69).
 - **`ApplyModifiedPropertiesWithoutUndo` ne marque rien si la valeur ne change pas** : faire suivre d'un
   `EditorUtility.SetDirty`, sinon un champ neuf n'atteint jamais le disque.
 - **Ouvrir une scène en mode Single décharge les assets que rien ne tient** : un ScriptableObject chargé avant et gardé

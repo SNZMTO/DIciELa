@@ -61,11 +61,11 @@ namespace Diciela.UI
         }
 
         /// <summary>Relie la carte aux outils de ce monde ; cachée tant qu'aucun n'est en main.</summary>
-        public void Show(TextTable texts, ClearingTool clearing, MoveTool move, PaintTool paths, PaintTool plaza,
-            World world)
+        public void Show(TextTable texts, PlacementTool placement, ClearingTool clearing, MoveTool move,
+            PaintTool paths, PaintTool plaza, World world)
         {
             Hide();
-            _presenter = new ToolCardPresenter(this, texts, clearing, move, paths, plaza, world);
+            _presenter = new ToolCardPresenter(this, texts, placement, clearing, move, paths, plaza, world);
         }
 
         /// <summary>Cache la carte et oublie le monde.</summary>
@@ -86,7 +86,7 @@ namespace Diciela.UI
             _leaving = _card.schedule.Execute(HideNow).StartingIn(LeaveMs);
         }
 
-        public void ShowTool(string icon, string pastel, string name, string modeIcon, string mode)
+        public void ShowTool(HudFace icon, string pastel, string name, HudFace modeIcon, string mode)
         {
             if (pastel != _pastel)
             {
@@ -96,9 +96,9 @@ namespace Diciela.UI
                     _tile.AddToClassList(pastel);
                 _pastel = pastel;
             }
-            WheelPicture.Paint(_icon, IconClass, icon, null);
+            icon.Paint(_icon, IconClass);
             _name.text = name;
-            WheelPicture.Paint(_modeIcon, ModeIconClass, modeIcon, null);
+            modeIcon.Paint(_modeIcon, ModeIconClass);
             _mode.text = mode;
             _modeLine.EnableInClassList(StyleClasses.Hidden, string.IsNullOrEmpty(mode));
             if (_leaving != null)

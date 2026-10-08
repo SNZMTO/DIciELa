@@ -47,7 +47,7 @@ jeu.
 
 | Icône (`Assets/UI/Icones/…`) | Ce qu'elle montre | Où tu la vois |
 |---|---|---|
-| `batir`, en attendant | un marteau (l'icône de la tâche « bâtir ») | l'onglet des Métiers du panneau Construire |
+| `batir`, en attendant | un marteau (l'icône de la tâche « bâtir ») | la case des Métiers dans la roue de Construire |
 | `conduire` | une charrette | la tâche « conduire » d'un poste |
 | `garnir` | un panier | la tâche « garnir » d'un poste |
 
@@ -70,8 +70,8 @@ jeu.
 | Le fanion d'un arbre marqué | un mât et une flamme, translucides | au pied d'un arbre ou d'un rocher marqué à retirer | `Assets/Scripts/View/MarkMesh.cs` ; le pack a cinq drapeaux, `SM_Prop_Flag_01` à `05` |
 | Le cadre d'une place de charrette | un cadre blanc et sa pointe | sur la Place, en mode construction | `Assets/Scripts/View/DrapedMesh.cs` |
 | Le cadre de sélection | un rectangle de lin translucide bordé de bois | quand on glisse avec Retirer | `.cadre-selection`, dans `Assets/UI/Hud.uss` |
-| L'entrepôt | une boîte à sa taille, sa porte marquée | dans la ville ; sa vignette au panneau Construire | le champ « Source Model » de sa fiche (`Assets/Data/Structures/Entrepot.asset`) |
-| La loge des bâtisseurs | une boîte à sa taille, sa porte marquée | dans la ville ; sa vignette au panneau Construire | le champ « Source Model » de sa fiche (`Assets/Data/Structures/Loge.asset`) |
+| L'entrepôt | une boîte à sa taille, sa porte marquée | dans la ville ; sa vignette dans la roue de Construire et sur la carte | le champ « Source Model » de sa fiche (`Assets/Data/Structures/Entrepot.asset`) |
+| La loge des bâtisseurs | une boîte à sa taille, sa porte marquée | dans la ville ; sa vignette dans la roue de Construire et sur la carte | le champ « Source Model » de sa fiche (`Assets/Data/Structures/Loge.asset`) |
 
 Pour une construction : le champ « Source Model » de sa fiche reçoit un bâtiment du pack ou ta composition, puis les menus
 `DICIELA/Contenu/Préparer les modèles` (le modèle posé dans le jeu) et `DICIELA/Interface/Photographier les

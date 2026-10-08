@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Diciela.UI;
+using UnityEngine;
 
 namespace Diciela.Tests.PlayMode
 {
@@ -11,6 +12,7 @@ namespace Diciela.Tests.PlayMode
         public string Pastel { get; private set; } = "";
         public string Name { get; private set; } = "";
         public string ModeIcon { get; private set; } = "";
+        public Texture2D ModePicture { get; private set; }
         public string Mode { get; private set; } = "";
         public List<ToolCardChip> Chips { get; } = new List<ToolCardChip>();
         public string Reason { get; private set; } = "";
@@ -24,13 +26,14 @@ namespace Diciela.Tests.PlayMode
             IsShown = false;
         }
 
-        public void ShowTool(string icon, string pastel, string name, string modeIcon, string mode)
+        public void ShowTool(HudFace icon, string pastel, string name, HudFace modeIcon, string mode)
         {
             IsShown = true;
-            Icon = icon;
+            Icon = icon.IconClass;
             Pastel = pastel;
             Name = name;
-            ModeIcon = modeIcon;
+            ModeIcon = modeIcon.IconClass;
+            ModePicture = modeIcon.Picture;
             Mode = mode;
         }
 

@@ -161,6 +161,8 @@ fiche.poste_libre,Libre,Free
 fiche.dormir,Aller dormir,Go to sleep
 fiche.reveiller,Réveiller,Wake up
 carte.lits,{lits} lits,{lits} beds
+construction.cout,{nombre} {marchandise},{nombre} {marchandise}
+liste.separateur,", ",", "
 fanion.infobulle,"{marchandise}, dans le stock de la ville","{marchandise}, in the town's stock"
 journee.suite.Work,"Travail, puis soirée","Work, then evening"
 journee.suite.Evening,"Soirée, puis nuit","Evening, then night"
@@ -172,7 +174,7 @@ astuce.campement,"Ouvre les outils, en bas à droite, puis Construire : installe
 astuce.poste,"Clique sur le campement, puis sur « Y mettre la Chimère » : à ce poste, elle porte, bâtit et défriche.","Click the camp, then on ""Put the Chimera here"": at this post, she carries, builds and clears."
 astuce.cabane,"Pose une cabane : la Chimère y portera le Bois et la Pierre, puis la bâtira.","Place a cabin: the Chimera will carry the Wood and the Stone there, then build it."
 outil.construire,Construire,Build
-outil.construire.suite,"Choisis une construction, puis pose‑la dans la ville.","Pick a building, then place it in the town."
+outil.construire.suite,"Prends en main une construction à poser ; sa roue en choisit une autre.","Take a building in hand to place; its wheel picks another."
 outil.retirer,Retirer,Remove
 outil.retirer.suite,"Clique sur un arbre ou un rocher pour le marquer à retirer, ou le démarquer ; glisse pour en marquer plusieurs.","Click a tree or a rock to mark it for removal, or unmark it; drag to mark several."
 outil.deplacer,Déplacer,Move
@@ -187,6 +189,7 @@ roue.symetrie,Symétrie,Symmetry
 roue.symetrie.suite,"Ce que tu traces se recopie autour de l'épingle ; pousse plus loin pour choisir.","What you draw is copied around the pin; push further to choose."
 roue.sol,Sol,Ground
 roue.sol.suite,"Ce que tu poses ; pousse plus loin pour choisir.","What you lay; push further to choose."
+roue.famille.suite,"Ses constructions ; pousse plus loin pour choisir.","Its buildings; push further to choose."
 carte.outil.marques,{nombre} à retirer,{nombre} to remove
 carte.outil.etoile,"Étoile, {branches} branches","Star, {branches} arms"
 outils.infobulle,Outils,Tools

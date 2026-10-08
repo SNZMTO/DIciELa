@@ -89,12 +89,12 @@ namespace Diciela.UI
             _hasLook = true;
             _tip = look.Tip;
             _at = new Vector2(float.NaN, float.NaN);
-            WheelPicture.Paint(_icon, IconClass, look.Silhouette, null);
+            HudFace.Styled(look.Silhouette).Paint(_icon, IconClass);
             _icon.AddToClassList(TintClass);
             _icon.AddToClassList(look.Pastel);
-            Badge(_ink, look.InkIcon, look.InkPicture);
-            Badge(_form, look.FormIcon, null);
-            Badge(_symmetry, look.SymmetryIcon, null);
+            Badge(_ink, look.Ink);
+            Badge(_form, HudFace.Styled(look.FormIcon));
+            Badge(_symmetry, HudFace.Styled(look.SymmetryIcon));
             if (look.Silhouette == _silhouette && look.Pastel == _pastel)
                 return;
             _silhouette = look.Silhouette;
@@ -155,12 +155,11 @@ namespace Diciela.UI
                 Cursor.visible = !shown;
         }
 
-        private static void Badge(VisualElement badge, string icon, Texture2D picture)
+        private static void Badge(VisualElement badge, HudFace face)
         {
-            bool shown = icon.Length > 0 || picture != null;
-            badge.EnableInClassList(StyleClasses.Hidden, !shown);
-            if (shown)
-                WheelPicture.Paint(badge[0], BadgeIconClass, icon, picture);
+            badge.EnableInClassList(StyleClasses.Hidden, face.IsEmpty);
+            if (!face.IsEmpty)
+                face.Paint(badge[0], BadgeIconClass);
         }
     }
 }

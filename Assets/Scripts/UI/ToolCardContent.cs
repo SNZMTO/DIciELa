@@ -13,10 +13,12 @@ namespace Diciela.UI
     /// style d'un tracé ou d'un polygone, la symétrie quand il y en a une (l'étoile avec ses branches), et, pour
     /// l'outil de la Place, sa superficie sur celle de son niveau et ses places de charrette sur celles qu'elle permet.
     /// « Retirer » : combien d'arbres et de rochers sont marqués. Déplacer : la construction qu'on tient, sa photo et
-    /// son nom.
+    /// son nom. Une construction en main : ses lits, puis son coût, une puce par marchandise, son icône et combien.
     /// </summary>
     internal static class ToolCardContent
     {
+        private const string BedIcon = "icone-lit";
+
         public static void Paint(PaintTool tool, PlazaZone plaza, TextTable texts, List<ToolCardChip> chips)
         {
             chips.Clear();
@@ -24,36 +26,49 @@ namespace Diciela.UI
             PaintOptions options = tool.Options;
             PaintInk ink = tool.Inks.Chosen;
             if (mode != PaintToolMode.CartSpot && !ink.IsNone)
-                chips.Add(ink.IsZone
-                    ? new ToolCardChip(PaintIconClasses.Zone, null, texts.Get(TextKeys.PlazaZoneInk))
-                    : new ToolCardChip("", PaintIconClasses.Picture(ink.Floor), texts.Get(ink.Floor.NameKey)));
+                chips.Add(new ToolCardChip(PaintIconClasses.Ink(ink),
+                    texts.Get(ink.IsZone ? TextKeys.PlazaZoneInk : ink.Floor.NameKey)));
             if (mode == PaintToolMode.Brush || mode == PaintToolMode.Eraser || mode == PaintToolMode.Trace)
-                chips.Add(new ToolCardChip("", null, texts.Get(TextKeys.PaintBrushSize).Replace(TextKeys.SizeParameter,
+                chips.Add(new ToolCardChip(default, texts.Get(TextKeys.PaintBrushSize).Replace(TextKeys.SizeParameter,
                     (options.BrushRadius * 2f).ToString("0.#", CultureInfo.InvariantCulture))));
             if (mode == PaintToolMode.Shape)
-                chips.Add(new ToolCardChip(PaintIconClasses.Shape(options.Shape), null,
+                chips.Add(new ToolCardChip(HudFace.Styled(PaintIconClasses.Shape(options.Shape)),
                     texts.Get(TextKeys.PaintShape(options.Shape.ToString()))));
             if (mode == PaintToolMode.Trace || mode == PaintToolMode.Shape && options.Shape == PaintShape.Polygon)
-                chips.Add(new ToolCardChip(PaintIconClasses.Style(options.Style), null,
+                chips.Add(new ToolCardChip(HudFace.Styled(PaintIconClasses.Style(options.Style)),
                     texts.Get(TextKeys.PaintStyle(options.Style.ToString()))));
             if (options.Symmetry != PaintSymmetry.None)
-                chips.Add(new ToolCardChip(PaintIconClasses.Symmetry(options.Symmetry), null,
+                chips.Add(new ToolCardChip(HudFace.Styled(PaintIconClasses.Symmetry(options.Symmetry)),
                     Symmetry(options, texts)));
             if (!tool.Entry.LaysTheZone)
                 return;
-            chips.Add(new ToolCardChip(PaintIconClasses.Zone, null, texts.Get(TextKeys.PlazaArea)
+            chips.Add(new ToolCardChip(HudFace.Styled(PaintIconClasses.Zone), texts.Get(TextKeys.PlazaArea)
                 .Replace(TextKeys.AreaParameter, Whole(plaza.AreaSquareMeters))
                 .Replace(TextKeys.MaxParameter, Whole(plaza.MaxAreaSquareMeters))));
-            chips.Add(new ToolCardChip(PaintIconClasses.Mode(PaintToolMode.CartSpot), null,
+            chips.Add(new ToolCardChip(HudFace.Styled(PaintIconClasses.Mode(PaintToolMode.CartSpot)),
                 texts.Get(TextKeys.PlazaMarks)
                 .Replace(TextKeys.MarksParameter, plaza.Marks.Count.ToString(CultureInfo.InvariantCulture))
                 .Replace(TextKeys.MaxParameter, plaza.MaxMarks.ToString(CultureInfo.InvariantCulture))));
         }
 
+        public static void Build(StructureDefinition structure, TextTable texts, List<ToolCardChip> chips)
+        {
+            chips.Clear();
+            string beds = StructureTexts.Beds(structure, texts);
+            if (beds.Length > 0)
+                chips.Add(new ToolCardChip(HudFace.Styled(BedIcon), beds));
+            foreach (GoodAmount goods in structure.Cost)
+            {
+                if (goods.Good != null)
+                    chips.Add(new ToolCardChip(HudFace.Of(goods.Good.Icon),
+                        goods.Amount.ToString(CultureInfo.InvariantCulture)));
+            }
+        }
+
         public static void Clearing(Nature nature, TextTable texts, List<ToolCardChip> chips)
         {
             chips.Clear();
-            chips.Add(new ToolCardChip("", null, texts.Get(TextKeys.CardMarked)
+            chips.Add(new ToolCardChip(default, texts.Get(TextKeys.CardMarked)
                 .Replace(TextKeys.CountParameter, nature.Marked.Count.ToString(CultureInfo.InvariantCulture))));
         }
 
@@ -62,7 +77,8 @@ namespace Diciela.UI
         {
             chips.Clear();
             if (moving != null)
-                chips.Add(new ToolCardChip("", moving.Definition.Picture, texts.Get(moving.Definition.NameKey)));
+                chips.Add(new ToolCardChip(HudFace.Photo(moving.Definition.Picture),
+                    texts.Get(moving.Definition.NameKey)));
         }
 
         private static string Symmetry(PaintOptions options, TextTable texts)

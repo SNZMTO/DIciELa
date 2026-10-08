@@ -176,7 +176,10 @@ namespace Diciela.Tests.PlayMode
             return good;
         }
 
-        private static void FillGoods(Object target, string field, params GoodAmount[] amounts)
+        /// <summary>
+        /// Remplit une liste de marchandises comptées d'une fiche (un coût, un stock), comme l'Inspector.
+        /// </summary>
+        internal static void FillGoods(Object target, string field, params GoodAmount[] amounts)
         {
             var serialized = new UnityEditor.SerializedObject(target);
             UnityEditor.SerializedProperty list = serialized.FindProperty(field);

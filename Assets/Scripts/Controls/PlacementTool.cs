@@ -55,6 +55,12 @@ namespace Diciela.Controls
         /// <summary>La construction en cours de pose ; null quand l'outil est au repos.</summary>
         public StructureDefinition Current { get; private set; }
 
+        /// <summary>
+        /// La dernière construction prise en main, qu'elle le soit encore ou non ; null avant la première. Reprendre
+        /// l'outil, c'est la reprendre (GDD, section 16 : un outil se reprend avec ses derniers réglages).
+        /// </summary>
+        public StructureDefinition Last { get; private set; }
+
         public bool IsActive => !ReferenceEquals(Current, null);
 
         /// <summary>L'angle de la construction en main, en degrés depuis le nord vers l'est ; il reste d'une pose à l'autre.</summary>
@@ -73,6 +79,7 @@ namespace Diciela.Controls
 
             _ghost.Clear();
             Current = definition;
+            Last = definition;
             HeldChanged?.Invoke();
         }
 

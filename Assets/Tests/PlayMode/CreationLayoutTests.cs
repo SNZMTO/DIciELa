@@ -30,7 +30,7 @@ namespace Diciela.Tests.PlayMode
 #if UNITY_EDITOR
             var theme = UnityEditor.AssetDatabase.LoadAssetAtPath<ThemeStyleSheet>("Assets/UI/Theme.tss");
             var layout = UnityEditor.AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UI/Creation.uxml");
-            var settings = BuildBarTests.LoadSingle<InterfaceSettings>();
+            var settings = TestAssets.LoadSingle<InterfaceSettings>();
             var faults = new List<string>();
             using (var world = new TestWorld())
             {

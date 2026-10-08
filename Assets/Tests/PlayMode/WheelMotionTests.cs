@@ -31,9 +31,8 @@ namespace Diciela.Tests.PlayMode
                 UIDocument document = TestHud.WithWheel(test);
                 yield return null;
                 var wheel = document.GetComponent<ToolWheel>();
-                var build = new NotedBuildMenu();
-                wheel.Show(TextTable.Parse("clé,fr\n", "fr"), new FixedToolKeys(), test.Clearing, build, test.Mover,
-                    test.Paths, test.Plaza, new Tooltips(document));
+                wheel.Show(TextTable.Parse("clé,fr\n", "fr"), new FixedToolKeys(), test.Catalog, test.World, test.Tool,
+                    test.Clearing, test.Mover, test.Paths, test.Plaza, new Tooltips(document));
                 yield return TestHud.Settle();
                 VisualElement root = document.rootVisualElement;
                 VisualElement center = root.Q("roue-centre");
@@ -79,9 +78,9 @@ namespace Diciela.Tests.PlayMode
                 var wheel = document.GetComponent<ToolWheel>();
                 var card = new ToolCard(document);
                 TextTable texts = TextTable.Parse("clé,fr\n", "fr");
-                wheel.Show(texts, new FixedToolKeys(), test.Clearing, new NotedBuildMenu(), test.Mover, test.Paths,
-                    test.Plaza, new Tooltips(document));
-                card.Show(texts, test.Clearing, test.Mover, test.Paths, test.Plaza, test.World);
+                wheel.Show(texts, new FixedToolKeys(), test.Catalog, test.World, test.Tool, test.Clearing, test.Mover,
+                    test.Paths, test.Plaza, new Tooltips(document));
+                card.Show(texts, test.Tool, test.Clearing, test.Mover, test.Paths, test.Plaza, test.World);
                 test.Plaza.Take();
                 yield return TestHud.Settle();
                 VisualElement root = document.rootVisualElement;

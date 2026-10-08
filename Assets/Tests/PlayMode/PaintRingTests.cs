@@ -25,7 +25,7 @@ namespace Diciela.Tests.PlayMode
             _test = new TestWorld(withPlaza: true, withFloor: true);
             _view = new NotedToolWheelView();
             _presenter = new ToolWheelPresenter(_view, TextTable.Parse("clé,fr\n", "fr"), new FixedToolKeys(),
-                _test.Clearing, new NotedBuildMenu(), _test.Mover, _test.Paths, _test.Plaza);
+                _test.Catalog, _test.World, _test.Tool, _test.Clearing, _test.Mover, _test.Paths, _test.Plaza);
         }
 
         [TearDown]
@@ -116,7 +116,7 @@ namespace Diciela.Tests.PlayMode
         public void TheGameTextsNameEverythingTheWheelShows()
         {
 #if UNITY_EDITOR
-            var settings = BuildBarTests.LoadSingle<InterfaceSettings>();
+            var settings = TestAssets.LoadSingle<InterfaceSettings>();
             TextTable texts = TextTable.Parse(settings.Texts.text, settings.Language);
             var keys = new List<string>
             {

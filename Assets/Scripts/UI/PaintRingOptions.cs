@@ -33,14 +33,14 @@ namespace Diciela.UI
             if (mode == PaintToolMode.Trace)
             {
                 foreach (PaintTraceStyle style in Styles)
-                    options.Add(new WheelOption(PaintIconClasses.Style(style), null,
+                    options.Add(new WheelOption(HudFace.Styled(PaintIconClasses.Style(style)),
                         _texts.Get(TextKeys.PaintStyle(style.ToString())),
                         _texts.Get(TextKeys.PaintStyleDetail(style.ToString())), tool.Options.Style == style));
             }
             else if (mode == PaintToolMode.Shape)
             {
                 foreach (PaintShape shape in Shapes)
-                    options.Add(new WheelOption(PaintIconClasses.Shape(shape), null,
+                    options.Add(new WheelOption(HudFace.Styled(PaintIconClasses.Shape(shape)),
                         _texts.Get(TextKeys.PaintShape(shape.ToString())),
                         _texts.Get(TextKeys.PaintShapeDetail(shape.ToString())), tool.Options.Shape == shape));
             }
@@ -58,7 +58,7 @@ namespace Diciela.UI
                 string detail = star
                     ? _texts.Get(TextKeys.PaintStarDetail).Replace(TextKeys.BranchesParameter, branches)
                     : _texts.Get(TextKeys.PaintSymmetryDetail(symmetry.ToString()));
-                options.Add(new WheelOption(PaintIconClasses.Symmetry(symmetry), null,
+                options.Add(new WheelOption(HudFace.Styled(PaintIconClasses.Symmetry(symmetry)),
                     _texts.Get(TextKeys.PaintSymmetry(symmetry.ToString())), detail, tool.Options.Symmetry == symmetry,
                     star ? branches : ""));
             }
@@ -73,9 +73,9 @@ namespace Diciela.UI
             {
                 bool chosen = ink.Equals(tool.Inks.Chosen);
                 options.Add(ink.IsZone
-                    ? new WheelOption(PaintIconClasses.Zone, null, _texts.Get(TextKeys.PlazaZoneInk),
+                    ? new WheelOption(PaintIconClasses.Ink(ink), _texts.Get(TextKeys.PlazaZoneInk),
                         _texts.Get(TextKeys.PlazaZoneInkDetail), chosen)
-                    : new WheelOption("", PaintIconClasses.Picture(ink.Floor), _texts.Get(ink.Floor.NameKey),
+                    : new WheelOption(PaintIconClasses.Ink(ink), _texts.Get(ink.Floor.NameKey),
                         _texts.Get(TextKeys.FloorInkDetail), chosen));
             }
             return options;

@@ -11,9 +11,9 @@ namespace Diciela.Tests.PlayMode
     /// <summary>
     /// Les gestes des outils, joués par un clavier et une souris simulés sur les vraies actions du jeu (décision 168) :
     /// tenir Tab ouvre la roue sous le pointeur et la fait suivre où il vise ; relâcher choisit là où il vise ; B et X
-    /// choisissent tout droit ; les touches 1 à 9 prennent les cartes (décision 184) ; le curseur suit le pointeur,
-    /// image après image (décision 221) ; sans roue, rien ne part. Les noms des touches se lisent sur les liaisons ; la
-    /// table des outils suit l'ordre des choix et l'asset du jeu.
+    /// choisissent tout droit ; les chiffres prennent les cases de la roue de l'outil en main (décision 226) ; le
+    /// curseur suit le pointeur, image après image (décision 221) ; sans roue, rien ne part. Les noms des touches se
+    /// lisent sur les liaisons ; la table des outils suit l'ordre des choix et l'asset du jeu.
     /// </summary>
     public sealed class ToolControlsTests : GestureFixture
     {
@@ -21,7 +21,6 @@ namespace Diciela.Tests.PlayMode
         private InputActionAsset _actions;
         private ToolControls _controls;
         private NotedWheel _wheel;
-        private NotedCards _cards;
         private NotedCursor _cursor;
 
         /// <summary>Un curseur qui note où on le mène.</summary>
@@ -35,21 +34,11 @@ namespace Diciela.Tests.PlayMode
             }
         }
 
-        /// <summary>Des cartes qui notent celles qu'on prend.</summary>
-        private sealed class NotedCards : ICardPicker
-        {
-            public readonly List<int> Taken = new List<int>();
-
-            public void TakeCard(int index)
-            {
-                Taken.Add(index);
-            }
-        }
-
         /// <summary>Une roue qui note ce que les gestes lui disent.</summary>
         private sealed class NotedWheel : IToolWheel
         {
             public readonly List<ToolChoice> Chosen = new List<ToolChoice>();
+            public readonly List<int> Taken = new List<int>();
             public Vector2? Opened;
             public Vector2? Released;
             public Vector2? Pointed;
@@ -73,6 +62,11 @@ namespace Diciela.Tests.PlayMode
             {
                 Chosen.Add(choice);
             }
+
+            public void TakeSlot(int index)
+            {
+                Taken.Add(index);
+            }
         }
 
         public override void Setup()
@@ -87,9 +81,8 @@ namespace Diciela.Tests.PlayMode
 #endif
             _holder.SetActive(true);
             _wheel = new NotedWheel();
-            _cards = new NotedCards();
             _cursor = new NotedCursor();
-            _controls.Bind(_wheel, _cards, _cursor);
+            _controls.Bind(_wheel, _cursor);
         }
 
         public override void TearDown()
@@ -139,19 +132,19 @@ namespace Diciela.Tests.PlayMode
         }
 
         [UnityTest]
-        public IEnumerator TheDigitKeysTakeTheCards()
+        public IEnumerator TheDigitKeysTakeTheSlots()
         {
             yield return Click(Keyboard.digit1Key);
             yield return Click(Keyboard.digit9Key);
 
-            Assert.AreEqual(new[] { 0, 8 }, _cards.Taken, "1 prend la première carte, 9 la neuvième.");
-            Assert.IsEmpty(_wheel.Chosen, "Une touche de carte ne choisit pas d'outil.");
+            Assert.AreEqual(new[] { 0, 8 }, _wheel.Taken, "1 prend la première case, 9 la neuvième.");
+            Assert.IsEmpty(_wheel.Chosen, "Un chiffre ne choisit pas d'outil.");
         }
 
         [UnityTest]
         public IEnumerator WithoutAWheelNothingHappens()
         {
-            _controls.Bind(null, null, null);
+            _controls.Bind(null, null);
             _cursor.Followed = null;
 
             yield return Click(Keyboard.tabKey);
@@ -161,7 +154,7 @@ namespace Diciela.Tests.PlayMode
             Assert.IsNull(_wheel.Opened);
             Assert.IsNull(_wheel.Released);
             Assert.IsEmpty(_wheel.Chosen);
-            Assert.IsEmpty(_cards.Taken);
+            Assert.IsEmpty(_wheel.Taken);
             Assert.IsNull(_cursor.Followed, "Sans curseur, rien ne le mène.");
         }
 
