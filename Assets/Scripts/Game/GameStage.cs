@@ -10,12 +10,13 @@ namespace Diciela.Game
 {
     /// <summary>
     /// Ce que le démarrage montre d'un monde et relie aux gestes (ARCHITECTURE, section 11), dans l'ordre d'une partie
-    /// neuve (GDD, section 6) : l'écran de création dans l'atelier, la Chimère à venir sur son socle, qu'on fait
-    /// tourner ; puis, l'ordre de la créer parti, la ville (caméra, HUD, outils, gestes), la caméra tout près de la
-    /// Chimère qui naît au point d'arrivée, puis reculée à sa distance de départ. Le monde (constructions, habitants,
-    /// arbres, charrettes) est vu dès l'ouverture (WorldViews) ; la Place, en mode construction (TownPlaza) ; l'outil
-    /// en main, à sa carte et à son curseur. Toucher un lieu ouvre sa fiche ; Échap ferme la fiche, puis la roue des
-    /// outils, puis défait le geste en cours, puis lâche l'outil en main. Il délie et cache tout à la sortie.
+    /// neuve (GDD, section 6) : l'écran de création dans l'atelier (CreationStage) ; puis, l'ordre de créer la Chimère
+    /// parti, la ville (caméra, HUD, outils, gestes), la caméra tout près de la Chimère qui naît au point d'arrivée,
+    /// puis reculée à sa distance de départ. Le monde (constructions, habitants, arbres, charrettes, sols) est vu dès
+    /// l'ouverture (WorldViews) ; la Place, en mode construction (TownPlaza) ; l'outil en main, à sa carte et à son
+    /// curseur ; la ville à venir, en prévision (TownForesight). Toucher un lieu ouvre sa fiche ; Échap ferme la fiche,
+    /// puis la roue des outils, puis défait le geste en cours, puis lâche l'outil en main. Il délie et cache tout à la
+    /// sortie.
     /// </summary>
     public sealed class GameStage : MonoBehaviour
     {
@@ -33,6 +34,8 @@ namespace Diciela.Game
         [SerializeField] private StockPennants _stockPennants;
         [SerializeField] private TipBoard _tipBoard;
         [SerializeField] private EscapeControls _escapeControls;
+        [SerializeField] private ForesightControls _foresightControls;
+        [SerializeField] private ForesightFilter _foresightFilter;
         [SerializeField] private CreationScreen _creationScreen;
         [SerializeField] private AppearancePreview _appearancePreview;
         [SerializeField] private ConfirmControls _confirmControls;
@@ -55,6 +58,8 @@ namespace Diciela.Game
         private Texture2D _portrait;
         private Tooltips _tooltips;
         private WorldViews _worldViews;
+        private CreationStage _creation;
+        private TownForesight _foresight;
 
         /// <summary>Vrai si la scène a toutes ses vues et tous ses gestes.</summary>
         public bool IsComplete => _cameraRig != null && _cameraControls != null && _structureViews != null &&
@@ -62,7 +67,7 @@ namespace Diciela.Game
                                   _placementControls != null && _clearingControls != null &&
                                   _chooseControls != null && _dayBoard != null &&
                                   _locationSheet != null && _stockPennants != null && _tipBoard != null &&
-                                  _escapeControls != null &&
+                                  _escapeControls != null && _foresightControls != null && _foresightFilter != null &&
                                   _creationScreen != null &&
                                   _appearancePreview != null && _confirmControls != null && _atelier != null &&
                                   _previewControls != null && _toolWheel != null && _toolControls != null &&
@@ -78,17 +83,15 @@ namespace Diciela.Game
         {
             _worldViews = new WorldViews(_structureViews, _villagerViews, _natureViews, transform);
             _worldViews.Show(world, map, placement);
-            _atelier.Show();
-            _appearancePreview.Stand(_atelier.Spot);
-            _creationScreen.Show(catalog, texts, _appearancePreview, world, () =>
+            _creation ??= new CreationStage(_creationScreen, _appearancePreview, _atelier, _previewControls,
+                _confirmControls);
+            _creation.Show(catalog, texts, world, () =>
             {
                 if (TryOpenTown(world, catalog, texts, placement))
                     started();
                 else
                     failed();
             });
-            _previewControls.Bind(_appearancePreview, _creationScreen);
-            _confirmControls.Bind(_creationScreen.Confirm);
         }
 
         /// <summary>Donne aux habitants et aux charrettes vus, et à la journée, la fraction du pas en cours.</summary>
@@ -101,8 +104,9 @@ namespace Diciela.Game
         /// <summary>Délie et cache tout ce qui a pu être montré : chaque Hide accepte de n'avoir rien à cacher.</summary>
         public void Close()
         {
-            _confirmControls.Bind(null);
-            _previewControls.Bind(null, null);
+            _creation?.Hide();
+            _foresight?.Dispose();
+            _foresight = null;
             _placementControls.Bind(null, null);
             _chooseControls.Bind(null, null, null);
             _clearingControls.Bind(null, null, null);
@@ -119,9 +123,6 @@ namespace Diciela.Game
             if (_tools != null)
                 _tools.Choose.Touched -= _locationSheet.Touch;
             _cameraControls.Bind(null);
-            _creationScreen.Hide();
-            _appearancePreview.Hide();
-            _atelier.Hide();
             _toolWheel.Hide();
             _dayBoard.Hide();
             _locationSheet.Hide();
@@ -157,13 +158,9 @@ namespace Diciela.Game
 
         private void OpenTown(World world, Catalog catalog, TextTable texts, PlacementSettings placement)
         {
-            _confirmControls.Bind(null);
-            _previewControls.Bind(null, null);
-            _creationScreen.Hide();
             // Le portrait de l'astuce, pris à l'atelier avant qu'il se cache (décision 154).
-            _portrait = _appearancePreview.TakePortrait(PortraitPixels);
-            _appearancePreview.Hide();
-            _atelier.Hide();
+            _portrait = _creation.TakePortrait(PortraitPixels);
+            _creation.Hide();
             _cameraRig.Show(world.Map);
             _cameraRig.Rotate(180f);
             _cameraRig.PullBack();
@@ -191,6 +188,8 @@ namespace Diciela.Game
             _toolCursor.Show(_tools.Placement, _tools.Clearing, _tools.Move, _tools.Paths, _tools.Plaza, hud);
             _toolControls.Bind(_toolWheel, _toolCursor);
             _escapeControls.Bind(_locationSheet, _toolWheel, _tools.Hand);
+            _foresight = new TownForesight(_worldViews, _foresightFilter, _foresightControls, document, texts,
+                _tooltips);
         }
     }
 }

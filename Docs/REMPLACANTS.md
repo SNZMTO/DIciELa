@@ -25,6 +25,7 @@ vectorielle reste nette à toute taille ; un PNG marche aussi, s'il fait deux à
 | `cercle`, `rectangle`, `polygone` | les formes du mode Forme | l'éventail de la case Forme ; la carte |
 | `droit`, `courbe` | les styles d'un tracé | l'éventail de la case Tracé ; la carte |
 | `sans-symetrie`, `miroir`, `double-miroir`, `etoile` | les symétries | la case Symétrie et son éventail ; la carte |
+| `prevision` | une bulle de pensée à l'encre, une maison claire dedans | le bouton lavande de la prévision, au-dessus de l'icône des outils |
 
 ## Les curseurs
 
@@ -70,6 +71,7 @@ jeu.
 | Le fanion d'un arbre marqué | un mât et une flamme, translucides | au pied d'un arbre ou d'un rocher marqué à retirer | `Assets/Scripts/View/MarkMesh.cs` ; le pack a cinq drapeaux, `SM_Prop_Flag_01` à `05` |
 | Le cadre d'une place de charrette | un cadre blanc et sa pointe | sur la Place, en mode construction | `Assets/Scripts/View/DrapedMesh.cs` |
 | Le cadre de sélection | un rectangle de lin translucide bordé de bois | quand on glisse avec Retirer | `.cadre-selection`, dans `Assets/UI/Hud.uss` |
+| La rêverie de la prévision | un filtre : couleurs adoucies, bords de l'écran voilés de lavande, en fondu | en prévision (V) | l'animation où la Chimère se projette, avec le pack d'animations ; le filtre se règle dans `Assets/Art/Reverie.asset` |
 | L'entrepôt | une boîte à sa taille, sa porte marquée | dans la ville ; sa vignette dans la roue de Construire et sur la carte | le champ « Source Model » de sa fiche (`Assets/Data/Structures/Entrepot.asset`) |
 | La loge des bâtisseurs | une boîte à sa taille, sa porte marquée | dans la ville ; sa vignette dans la roue de Construire et sur la carte | le champ « Source Model » de sa fiche (`Assets/Data/Structures/Loge.asset`) |
 

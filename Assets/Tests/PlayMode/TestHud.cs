@@ -88,7 +88,8 @@ namespace Diciela.Tests.PlayMode
         /// <summary>
         /// Ajoute aux fautes ce qui cloche des blocs du HUD : la journée au coin haut-gauche, à 24 px du bord et 20 du
         /// haut ; la fiche ouverte au coin haut-droit ; les fanions au milieu du haut, à 24 px ; l'icône des outils au
-        /// coin bas-droit ; l'astuce au coin bas-gauche ; un bloc hors de l'écran, ou deux blocs qui se chevauchent.
+        /// coin bas-droit, le bouton de la prévision au-dessus d'elle, sur son milieu ; l'astuce au coin bas-gauche ;
+        /// un bloc hors de l'écran, ou deux blocs qui se chevauchent.
         /// </summary>
         public static void CheckBlocks(VisualElement root, Vector2Int screen, List<string> faults)
         {
@@ -97,6 +98,7 @@ namespace Diciela.Tests.PlayMode
             // L'icône des outils par sa place, sans l'enfoncement de son feutre (translate), qui s'anime quand la roue
             // se ferme.
             Rect tools = root.Q("outils").layout;
+            Rect foresight = root.Q("prevision").layout;
             Rect sheet = root.Q("fiche").worldBound;
             Rect stock = root.Q(className: "stock-corps").worldBound;
             Rect tip = root.Q("astuce").worldBound;
@@ -113,7 +115,9 @@ namespace Diciela.Tests.PlayMode
                 faults.Add(at + "les fanions ne sont pas au milieu, à 24 px du haut (" + stock + ").");
             if (Mathf.Abs(tip.xMin - Side) > Tolerance || Mathf.Abs(room.height - tip.yMax - Bottom) > Tolerance)
                 faults.Add(at + "l'astuce n'est pas à 24 px du bord et du bas (" + tip + " dans " + room + ").");
-            Rect[] blocks = { day, stock, sheet, tip, tools };
+            if (Mathf.Abs(foresight.center.x - tools.center.x) > Tolerance || foresight.yMax >= tools.yMin)
+                faults.Add(at + "la prévision n'est pas au-dessus des outils (" + foresight + ", " + tools + ").");
+            Rect[] blocks = { day, stock, sheet, tip, tools, foresight };
             foreach (Rect block in blocks)
             {
                 if (block.xMin < 0f || block.yMin < 0f || block.xMax > room.width || block.yMax > room.height)
@@ -150,7 +154,8 @@ namespace Diciela.Tests.PlayMode
 
         /// <summary>
         /// Ajoute aux fautes ce qui cloche de la carte de l'outil en main : cachée, hors de l'écran, pas à 24 px du bas,
-        /// ou sur l'icône des outils, l'astuce ou la fiche. Sa place, sans le soulèvement de son feutre (translate).
+        /// ou sur l'icône des outils, la prévision, l'astuce ou la fiche. Sa place, sans le soulèvement de son feutre
+        /// (translate).
         /// </summary>
         public static void CheckCard(VisualElement root, Vector2Int screen, List<string> faults)
         {
@@ -164,7 +169,7 @@ namespace Diciela.Tests.PlayMode
                 faults.Add(at + "la carte sort de l'écran (" + box + " dans " + room + ").");
             if (Mathf.Abs(room.height - box.yMax - Bottom) > Tolerance)
                 faults.Add(at + "la carte n'est pas à 24 px du bas (" + box + " dans " + room + ").");
-            foreach (string other in new[] { "outils", "astuce", "fiche" })
+            foreach (string other in new[] { "outils", "prevision", "astuce", "fiche" })
             {
                 if (box.Overlaps(root.Q(other).layout))
                     faults.Add(at + "la carte chevauche « " + other + " » (" + box + ", " + root.Q(other).layout + ").");

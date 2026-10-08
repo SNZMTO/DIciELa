@@ -370,7 +370,8 @@ mètres carrés), `Place` ne veut dire que poser, la fiche d'un lieu est `Locati
 | la touche qui tourne | `RotateKey` | un calque posé sur le sol ; son maillage | `GroundOverlay` ; `DrapedMesh` | la Place en ville (sa barre, ses gestes, sa zone) | `TownPlaza` |
 | forme lissée (de mailles) ; son dedans ; son bord | `CellField` ; `ContourMesh` ; `ContourLines` (`ContourSquares`) | distance à un sol ; bruit du sol | `CellDistance` ; `GroundNoise` | ce qu'un sol peint couvre ; le mélange des calques | `FloorWeights` ; `FloorBlend` (`FloorTexels`) |
 | liant (d'un sol) ; effilochage | `BorderLayer`, `BorderMeters` ; `FrayMeters`, `FrayScaleMeters` (`FloorDefinition`) | formes toutes faites (d'un maillage drapé) | `DrapedShapes` | arrondi ; douceur du bord | `GroundRoundingMeters` ; `FloorEdgeSoftnessMeters` (`PlacementSettings`) |
-| viser le sol ; le fantôme qui suit le pointeur | `GroundAim` ; `GhostAim` | | | | |
+| viser le sol ; le fantôme qui suit le pointeur | `GroundAim` ; `GhostAim` | écran de création (sa scène, au démarrage) | `CreationStage` | | |
+| prévision ; ce qu'elle cache de la nature | `Foresight` ; `ForeseenNature` | filtre de rêverie ; son profil | `ForesightFilter` ; `Reverie.asset` (`ReverieBuilder`) | geste ; bouton ; branchement (de la prévision) | `ForesightControls` ; `ForesightButton` ; `TownForesight` |
 
 ## 10. La carte, les scènes et la sauvegarde
 
@@ -487,8 +488,19 @@ mètres carrés), `Place` ne veut dire que poser, la fiche d'un lieu est `Locati
   lissée (`FloorGhosts` : un calque par sorte de sol, sa copie du matériau du shader `Diciela/SolFantome`, la tuile
   posée comme sur le Terrain, depuis son origine, mêlée à la teinte des fantômes) ; un sol qu'on efface, en voile de la
   couleur des fantômes (`FloorViews`, né avec les vues du monde, `WorldViews`).
+- **La prévision** (décision 228) : un état de la vue (`Foresight`), que `Game` crée à l'ouverture de la ville et
+  relie (`TownForesight`) à son geste, V (`ForesightControls`), à son bouton au-dessus de l'icône des outils
+  (`ForesightButton`), au filtre de rêverie (`ForesightFilter` : un volume de filtres global, au-dessus de celui de la
+  carte, son profil une fiche, `Assets/Art/Reverie.asset`, qui entre et sort en fondu sans que la pause l'arrête) et
+  aux vues du monde (`WorldViews.ShowForesight`). En prévision, chaque vue montre la ville une fois ses chantiers
+  finis : `StructureViews` monte la ligne de chaque chantier tout en haut et cache son fantôme (une construction qu'on
+  déplace, déjà bâtie à sa nouvelle place) ; `FloorViews` peint les sols tracés et plus ceux qu'on efface
+  (`FloorWeights.Serves`), sans fantôme ; `NatureViews` cache ce qui est marqué, fanions compris (`ForeseenNature`
+  garde la taille de leurs instances du Terrain pour la leur rendre). La simulation n'en sait rien : on y construit par
+  les mêmes ordres, et le temps continue.
 - **L'ouverture d'une partie** : la scène du démarrage (`GameStage`) montre le monde (constructions, habitants) et ouvre
-  l'écran de création dans l'atelier (`Atelier` : un décor généré loin de la carte, sa lumière, sa caméra) ; l'aperçu
+  l'écran de création dans l'atelier (`CreationStage`, qui le montre, prend le portrait de la Chimère et le cache ;
+  `Atelier` : un décor généré loin de la carte, sa lumière, sa caméra) ; l'aperçu
   (`AppearancePreview`) s'y tient sur le socle, et les gestes de l'atelier (`PreviewControls`, leur propre carte
   d'actions) le font tourner. Une seule caméra rend à la fois : celle de la ville reste éteinte tant qu'elle ne montre
   pas la carte. La validation envoie l'ordre « créer la Chimère », cache l'atelier, ouvre la ville (caméra, barre, gestes
@@ -520,7 +532,7 @@ mètres carrés), `Place` ne veut dire que poser, la fiche d'un lieu est `Locati
   système tant qu'il se montre (son présentateur, `ToolCursorPresenter` ; ses silhouettes et leur pointe,
   `ToolCursorShapes` ; son allure, `ToolCursorLook`) ; la journée, `DayBoard` ; la fiche du lieu touché,
   `LocationSheet` ; le stock en fanions, `StockPennants` ; l'astuce, `TipBoard`, dont le portrait est pris à l'atelier
-  par la vue, `Portrait`) ; une seule bulle sert d'infobulle à tous (`Tooltips`), chaque vue dit ce qu'elle montre au
+  par la vue, `Portrait` ; le bouton de la prévision, `ForesightButton`) ; une seule bulle sert d'infobulle à tous (`Tooltips`), chaque vue dit ce qu'elle montre au
   survol. Une vue se branche quand la ville s'ouvre (`Show`) et se débranche quand elle se ferme (`Hide`) : ses boutons,
   ses rappels, ses infobulles (une infobulle donnée se retire). Le démarrage donne à la journée, à chaque image, la
   fraction du pas en cours. Tout le HUD dit aux gestes où il est (`HudArea`) ; l'outil « choisir » dit ce qu'on a

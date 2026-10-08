@@ -17,6 +17,7 @@ namespace Diciela.View
         private FloorPainting _painting;
         private FloorGhosts _ghosts;
         private bool _ghostsStale;
+        private bool _foresight;
 
         /// <summary>
         /// Suit les sols de ce monde : peints sur ce Terrain (la copie en mémoire de la carte, dont la peinture d'origine
@@ -34,7 +35,7 @@ namespace Diciela.View
             _ghosts.PlaceOn(terrain);
             _world.Floors.FloorsChanged += OnFloorsChanged;
             // Ce qui sert déjà se peint, ce qui est en chantier se voit en fantôme : la vue part de l'état du monde.
-            _painting.MarkServing();
+            _painting.MarkFloors();
             _ghostsStale = true;
         }
 
@@ -46,6 +47,7 @@ namespace Diciela.View
             _world = null;
             _painting = null;
             _ghostsStale = false;
+            _foresight = false;
             _ghosts?.Hide();
         }
 
@@ -56,10 +58,25 @@ namespace Diciela.View
             _ghosts = null;
         }
 
+        /// <summary>
+        /// En prévision, les sols se montrent finis : peints tels qu'ils seront, sans fantôme ; sinon, tels qu'ils sont
+        /// (décision 228).
+        /// </summary>
+        public void ShowForesight(bool on)
+        {
+            if (_painting == null || on == _foresight)
+                return;
+            _foresight = on;
+            _painting.Foresee(on);
+            if (on)
+                _ghosts.Hide();
+            _ghostsStale = !on;
+        }
+
         private void OnFloorsChanged(RectInt cells)
         {
             _painting.Mark(cells);
-            _ghostsStale = true;
+            _ghostsStale = !_foresight;
         }
 
         private void LateUpdate()

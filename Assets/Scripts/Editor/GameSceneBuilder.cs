@@ -23,6 +23,7 @@ namespace Diciela.EditorTools
         private const string PreviewObjectName = "Aperçu de la Chimère";
         private const string ConfirmObjectName = "Valider";
         private const string EscapeObjectName = "Échap";
+        private const string ForesightObjectName = "Prévision";
         private const string TurnObjectName = "Tourner la Chimère";
         private const string ToolsObjectName = "Outils";
 
@@ -88,6 +89,7 @@ namespace Diciela.EditorTools
             {
                 EditorAssets.AssignIfMissing(stage, "_cameraRig", rig);
                 EditorAssets.AssignIfMissing(stage, "_cameraControls", rig.GetComponent<CameraControls>());
+                EditorAssets.AssignIfMissing(stage, "_foresightFilter", rig.GetComponent<ForesightFilter>());
             }
             PlacementBuilder.EnsureIn(scene, runner, stage);
             EditorAssets.AssignIfMissing(stage, "_villagerViews",
@@ -102,6 +104,10 @@ namespace Diciela.EditorTools
             EditorAssets.AssignIfMissing(escape, "_actions",
                 EditorAssets.Load<UnityEngine.InputSystem.InputActionAsset>(InputActionsBuilder.ActionsPath));
             EditorAssets.AssignIfMissing(stage, "_escapeControls", escape);
+            ForesightControls foresight = EditorAssets.FindOrCreate<ForesightControls>(scene, ForesightObjectName);
+            EditorAssets.AssignIfMissing(foresight, "_actions",
+                EditorAssets.Load<UnityEngine.InputSystem.InputActionAsset>(InputActionsBuilder.ActionsPath));
+            EditorAssets.AssignIfMissing(stage, "_foresightControls", foresight);
             ToolControls tools = EditorAssets.FindOrCreate<ToolControls>(scene, ToolsObjectName);
             EditorAssets.AssignIfMissing(tools, "_actions",
                 EditorAssets.Load<UnityEngine.InputSystem.InputActionAsset>(InputActionsBuilder.ActionsPath));

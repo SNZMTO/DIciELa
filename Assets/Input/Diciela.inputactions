@@ -1215,6 +1215,35 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Foresight",
+            "id": "0d020b26-9a6c-4c89-9551-1f73cad4290e",
+            "actions": [
+                {
+                    "name": "Toggle",
+                    "type": "Button",
+                    "id": "14ddd47f-53a8-44e9-90bf-cad1ec52065a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "7064533e-2c8e-475c-ab9f-2af96ae2cfd0",
+                    "path": "<Keyboard>/#(v)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Toggle",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []

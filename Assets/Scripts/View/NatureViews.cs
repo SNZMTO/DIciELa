@@ -13,7 +13,8 @@ namespace Diciela.View
     /// joue une copie, chacun retrouvé par le numéro de son instance. Retiré, il disparaît : sa taille passe à 0, sans
     /// renuméroter les autres. Marqué, un fanion se dresse à son pied (remplaçant simple, du matériau translucide) ; tous
     /// les fanions se dessinent d'un seul appel instancié par image, refaits seulement quand les marques changent : des
-    /// centaines ne coûtent presque rien. On vise un arbre par la boîte de son modèle (NatureBoxes). La vue suit les
+    /// centaines ne coûtent presque rien. En prévision, ce qu'on a marqué est déjà parti, fanions compris
+    /// (ForeseenNature ; décision 228). On vise un arbre par la boîte de son modèle (NatureBoxes). La vue suit les
     /// événements de la simulation, jamais une photographie.
     /// </summary>
     public sealed class NatureViews : MonoBehaviour
@@ -28,6 +29,7 @@ namespace Diciela.View
         [SerializeField] private PlacementSettings _settings;
 
         private readonly List<Matrix4x4> _marks = new List<Matrix4x4>();
+        private readonly ForeseenNature _foreseen = new ForeseenNature();
         private Nature _nature;
         private Terrain _terrain;
         private IReadOnlyList<int> _instances;
@@ -37,6 +39,7 @@ namespace Diciela.View
         private Material _material;
         private RenderParams _params;
         private bool _marksChanged;
+        private bool _foresight;
 
         /// <summary>
         /// Montre les arbres et les rochers de ce monde, peints sur ce Terrain (null : aucun n'est peint), chacun à
@@ -86,6 +89,7 @@ namespace Diciela.View
         /// <summary>Cesse de suivre le monde et ne dessine plus rien.</summary>
         public void Hide()
         {
+            ShowForesight(false);
             if (_nature != null)
             {
                 _nature.ItemMarked -= OnMarksChanged;
@@ -116,9 +120,25 @@ namespace Diciela.View
             return _boxes != null && _boxes.TryPick(ray, out picked);
         }
 
+        /// <summary>En prévision, ce qu'on a marqué est déjà parti ; sinon, il est là, son fanion au pied.</summary>
+        public void ShowForesight(bool on)
+        {
+            _foresight = on;
+            Foresee();
+        }
+
         private void OnDestroy()
         {
             Hide();
+        }
+
+        // Cache ce qui est marqué, en prévision ; sinon, rend tout ce qu'elle cachait.
+        private void Foresee()
+        {
+            if (_terrain == null || _nature == null)
+                return;
+            _foreseen.Hide(_terrain.terrainData, _instances,
+                _foresight ? _nature.Marked : Array.Empty<NatureItem>());
         }
 
         private void LateUpdate()
@@ -127,6 +147,8 @@ namespace Diciela.View
                 return;
             if (_marksChanged)
                 RebuildMarks();
+            if (_foresight)
+                return;
             for (int start = 0; start < _marks.Count; start += BatchSize)
                 Graphics.RenderMeshInstanced(_params, _mesh, 0, _marks, Math.Min(BatchSize, _marks.Count - start), start);
         }
@@ -134,10 +156,13 @@ namespace Diciela.View
         private void OnMarksChanged(NatureItem item)
         {
             _marksChanged = true;
+            if (_foresight)
+                Foresee();
         }
 
         private void OnItemRemoved(NatureItem item)
         {
+            _foreseen.Forget(item);
             HideTree(item);
             _marksChanged = true;
         }
