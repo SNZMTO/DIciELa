@@ -12,6 +12,6 @@ namespace Diciela.Controls
         string KeyOf(ToolChoice choice);
 
         /// <summary>La touche de la case de ce rang (0 : la première) ; vide si elle n'en a pas.</summary>
-        string KeyOfCard(int index);
+        string KeyOfSlot(int index);
     }
 }
