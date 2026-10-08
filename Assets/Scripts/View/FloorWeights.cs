@@ -42,9 +42,11 @@ namespace Diciela.View
 
         /// <summary>
         /// Lit les sols qui servent sur ces mailles (la région, et ce qui peut peindre jusqu'à elle), lissés sur ce
-        /// rayon en mailles, leur bord fondu sur cette douceur en mètres ; vrai si l'un d'eux touche la région.
+        /// rayon en mailles, leur bord fondu sur cette douceur en mètres ; vrai si l'un d'eux touche la région. En
+        /// prévision, ce sont les sols tels qu'ils seront une fois leurs chantiers finis (Serves).
         /// </summary>
-        public bool Build(Floors floors, NavGrid grid, RectInt cells, int radiusCells, float softnessMeters)
+        public bool Build(Floors floors, NavGrid grid, RectInt cells, int radiusCells, float softnessMeters,
+            bool foresight)
         {
             _count = 0;
             float size = grid.Metrics.CellSize;
@@ -58,8 +60,7 @@ namespace Diciela.View
                     var cell = new Vector2Int(x, y);
                     if (!grid.Contains(cell))
                         continue;
-                    FloorState state = floors.StateAt(cell);
-                    if (state != FloorState.Built && state != FloorState.Erasing)
+                    if (!Serves(floors.StateAt(cell), foresight))
                         continue;
                     FloorDefinition floor = floors.FloorAt(cell);
                     if (floor == null || floor.Layer == null)
@@ -96,6 +97,17 @@ namespace Diciela.View
                 return 0f;
             float distance = sort.Distance.Sample(Fray(point, sort, sort.Seed ^ BorderSeed));
             return 1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(width - _softness, width + _softness, distance));
+        }
+
+        /// <summary>
+        /// Vrai si un sol dans cet état se peint : bâti, ou qu'on efface (il sert jusqu'à la fin de son chantier) ; en
+        /// prévision (décision 228), bâti ou tracé, et plus celui qu'on efface.
+        /// </summary>
+        public static bool Serves(FloorState state, bool foresight)
+        {
+            if (state == FloorState.Built)
+                return true;
+            return foresight ? state == FloorState.Planned : state == FloorState.Erasing;
         }
 
         // Le point où lire le champ ou la distance : déplacé par le bruit de la sorte, de son effilochage au plus.

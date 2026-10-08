@@ -93,6 +93,37 @@ namespace Diciela.EditorTools
                 F("encre", 10f, 12.5f, 12.5f, 10f, 26f, 23.5f, 23.5f, 26f),
                 F("encre", 23.5f, 10f, 26f, 12.5f, 12.5f, 26f, 10f, 23.5f)
             });
+            yield return Foresight();
+        }
+
+        // La prévision (décision 228) : une bulle de pensée à l'encre, faite de trois ronds et de deux points, une
+        // maison claire dedans. Un remplaçant simple (REMPLACANTS.md), sur 20 unités comme l'icône des outils, sa
+        // voisine.
+        private static Icon Foresight()
+        {
+            return new Icon("prevision", 20f, new[]
+            {
+                F("encre", Circle(6.5f, 9.5f, 3.6f)), F("encre", Circle(11f, 6.6f, 4.6f)),
+                F("encre", Circle(15.2f, 9.6f, 3.4f)), F("encre", 6.5f, 9.5f, 15.2f, 9.5f, 15.2f, 13f, 6.5f, 13f),
+                F("encre", Circle(4.6f, 15.6f, 1.5f)), F("encre", Circle(2.4f, 18.2f, 1f)),
+                new Face("#FBF3E4", 0.95f, 11f, 5f, 14.6f, 8.4f, 13.4f, 8.4f, 13.4f, 11.8f, 8.6f, 11.8f, 8.6f, 8.4f,
+                    7.4f, 8.4f),
+                F("encre", 10.2f, 9.6f, 11.8f, 9.6f, 11.8f, 11.8f, 10.2f, 11.8f)
+            });
+        }
+
+        // Un rond de seize côtés autour de ce point.
+        private static float[] Circle(float x, float y, float radius)
+        {
+            const int sides = 16;
+            var points = new float[sides * 2];
+            for (int i = 0; i < sides; i++)
+            {
+                float angle = i * 2f * System.MathF.PI / sides;
+                points[2 * i] = x + radius * System.MathF.Cos(angle);
+                points[2 * i + 1] = y + radius * System.MathF.Sin(angle);
+            }
+            return points;
         }
 
         // Une bûche vue de bout : l'écorce, le bois, son ombre, le cœur.

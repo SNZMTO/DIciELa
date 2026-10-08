@@ -279,6 +279,25 @@
     justify-content: center;
 }
 
+/* La prévision (décision 228) : son bouton au-dessus de l'icône des outils, centré sur elle, un feutre lavande, sa
+   touche sur une étiquette de lin ; enfoncé tant qu'elle dure. */
+.prevision {
+    position: absolute;
+    right: 32px;
+    bottom: 104px;
+    width: 48px;
+    height: 48px;
+    padding-bottom: 3px;
+    align-items: center;
+    justify-content: center;
+}
+
+.prevision-icone {
+    width: 32px;
+    height: 32px;
+    background-image: url("Icones/prevision.asset");
+}
+
 /* La carte de l'outil en main (décision 221), à gauche de l'icône des outils, en bas : un feutre de lin ; l'icône de
    l'outil sur une tuile de sa couleur ; son nom et son mode ; ses puces, qui passent à la ligne ; la raison d'un refus.
    Sa largeur est fixe : une raison qui revient à la ligne dans un bloc qui rétrécit sortirait du cadre. Elle s'efface

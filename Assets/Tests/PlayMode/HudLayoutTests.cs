@@ -4,6 +4,7 @@ using Diciela.Controls;
 using Diciela.Data;
 using Diciela.Simulation;
 using Diciela.UI;
+using Diciela.View;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -15,12 +16,12 @@ namespace Diciela.Tests.PlayMode
     /// Le HUD à toutes les tailles d'écran (GDD, section 16 ; décision 144), rendu hors écran de 1280 × 720 à la 4K,
     /// écrans larges compris : la journée tient au coin haut-gauche, à 24 px du bord et 20 du haut ; la fiche du
     /// campement, ouverte, au coin haut-droit ; le stock en fanions au milieu du haut, à 24 px ; l'icône des outils au
-    /// coin bas-droit, à 24 px ; l'astuce au coin bas-gauche ; tout reste dans l'écran, sans que deux blocs se
-    /// chevauchent. La roue tient dans l'écran, ouverte au coin sur l'icône des outils ; la Place en main, sa carte
-    /// pleine (une étoile, une raison) tient à 24 px du bas, à côté de l'icône, sans toucher l'astuce ni la fiche, et
-    /// sa roue, son éventail des formes déplié vers le coin. C'est le vrai HUD (sa mise en page, la feuille du jeu, ses
-    /// vues, ses présentateurs, sa taille), avec les textes du projet, et le petit monde du campement pour la fiche et
-    /// les fanions. Les marges attendues sont celles du GDD.
+    /// coin bas-droit, à 24 px, le bouton de la prévision au-dessus ; l'astuce au coin bas-gauche ; tout reste dans
+    /// l'écran, sans que deux blocs se chevauchent. La roue tient dans l'écran, ouverte au coin sur l'icône des
+    /// outils ; la Place en main, sa carte pleine (une étoile, une raison) tient à 24 px du bas, à côté de l'icône,
+    /// sans toucher la prévision, l'astuce ni la fiche, et sa roue, son éventail des formes déplié vers le coin. C'est
+    /// le vrai HUD (sa mise en page, la feuille du jeu, ses vues, ses présentateurs, sa taille), avec les textes du
+    /// projet, et le petit monde du campement pour la fiche et les fanions. Les marges attendues sont celles du GDD.
     /// </summary>
     public sealed class HudLayoutTests
     {
@@ -61,6 +62,7 @@ namespace Diciela.Tests.PlayMode
                 TestWorld.Fill(scale, "_settings", settings);
                 RenderTexture target = null;
                 ToolCard card = null;
+                ForesightButton foresight = null;
                 try
                 {
                     foreach (Vector2Int screen in Screens)
@@ -90,6 +92,8 @@ namespace Diciela.Tests.PlayMode
                             sheet.Show(town.World, texts);
                             sheet.Touch(town.PlacedCamp);
                             tip.Show(town.World, texts, null);
+                            foresight = new ForesightButton(document);
+                            foresight.Show(new Foresight(), texts, tooltips, "V");
                         }
                         for (int frame = 0; frame < SettleFrames; frame++)
                             yield return null;
@@ -125,6 +129,7 @@ namespace Diciela.Tests.PlayMode
                         Object.Destroy(target);
                     }
                     card?.Hide();
+                    foresight?.Hide();
                     wheel.Hide();
                     day.Hide();
                     sheet.Hide();

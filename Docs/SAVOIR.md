@@ -768,6 +768,9 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   cacheraient la vraie panne. Il ne suppose rien de la vue du jeu : sa forme suit la disposition des fenêtres du
   développeur (une vue haute et étroite cache ce qui est à 10 m sur le côté) ; ce qu'il doit voir, il le pose droit
   devant la caméra, et il attend qu'elle ait fini de reculer.
+- **Un chantier sans heures de travail est fini dès sa pose** : son avancement vaut 1 (`ConstructionSite.Progress`),
+  et sa ligne, une image passée, monte tout en haut. La cabane du petit monde des tests n'en a pas : un test qui
+  regarde la ligne d'un chantier vivant donne des heures à sa construction.
 - **Une contre-épreuve** pour un test de règle : retirer la règle un instant, relancer, voir le test échouer. Un test
   qui reste vert sans sa règle ne vérifie rien (un stock en déplacement : la mesure partait après la première prise).
 - **Une campagne ne doit jamais toucher la vraie partie** ni les assets du projet.

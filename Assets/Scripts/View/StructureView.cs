@@ -10,7 +10,7 @@ namespace Diciela.View
     /// elle sert ; un chantier dont la ligne monte avec le travail fait, quand elle attend d'être bâtie ou qu'on la remonte
     /// à sa nouvelle place ; un chantier dont la ligne descend, pendant qu'on la défait. Pendant un déplacement, jusqu'à
     /// ce qu'elle saute, le fantôme de sa nouvelle place, qu'on ne touche pas. La vue se refait à chaque moment d'un
-    /// déplacement, d'après l'état de la construction.
+    /// déplacement, d'après l'état de la construction. En prévision, elle se montre comme si son chantier était fini.
     /// </summary>
     internal sealed class StructureView
     {
@@ -58,11 +58,24 @@ namespace Diciela.View
             _targetFill = aiming ? new SiteFill(_target, _materials, _ghosts) : null;
         }
 
-        /// <summary>La ligne du chantier suit le travail fait ; le fantôme de la nouvelle place reste un fantôme.</summary>
-        public void Follow()
+        /// <summary>
+        /// La ligne du chantier suit le travail fait ; le fantôme de la nouvelle place reste un fantôme. En prévision,
+        /// tout est fini (décision 228) : le chantier bâti, la construction qu'on déplace déjà à sa nouvelle place,
+        /// bâtie.
+        /// </summary>
+        public void Follow(bool foresight)
         {
-            _fill?.Show(Progress());
-            _targetFill?.Show(0d);
+            if (_fill != null)
+            {
+                _fill.SetGhostShown(!foresight);
+                _fill.Show(foresight ? 1d : Progress());
+            }
+            if (_targetFill == null)
+                return;
+            if (_model.activeSelf == foresight)
+                _model.SetActive(!foresight);
+            _targetFill.SetGhostShown(!foresight);
+            _targetFill.Show(foresight ? 1d : 0d);
         }
 
         /// <summary>Retire ses modèles.</summary>
