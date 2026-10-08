@@ -13,8 +13,8 @@ namespace Diciela.View
     /// d'être bâtie, une construction est un chantier qui monte (GDD, section 9 ; décision 166) : sa vraie matière sous
     /// une ligne qui suit le travail fait, son fantôme au-dessus ; bâtie, le modèle tel quel. Déplacée, elle montre sa
     /// nouvelle place en fantôme, se défait, saute, puis se remonte (décision 201) : chaque moment refait sa vue
-    /// (StructureView). On touche une construction en visant son modèle, pas le sol : vu de biais, le toit d'une maison
-    /// cache le sol derrière elle.
+    /// (StructureView). En prévision, chaque chantier se montre fini (décision 228). On touche une construction en
+    /// visant son modèle, pas le sol : vu de biais, le toit d'une maison cache le sol derrière elle.
     /// </summary>
     public sealed class StructureViews : MonoBehaviour
     {
@@ -27,6 +27,7 @@ namespace Diciela.View
         private Relief _relief;
         private SiteMaterials _siteMaterials;
         private SiteGhosts _siteGhosts;
+        private bool _foresight;
 
         /// <summary>Montre les constructions de ce monde, puis suit celles qu'on pose, qu'on bâtit ou qu'on déplace.</summary>
         public void Show(Structures structures, ConstructionSites sites, Relief relief)
@@ -72,6 +73,7 @@ namespace Diciela.View
             _structures = null;
             _sites = null;
             _relief = null;
+            _foresight = false;
             foreach (StructureView shown in _shown)
                 shown.Forget();
             _shown.Clear();
@@ -103,13 +105,19 @@ namespace Diciela.View
             return picked != null;
         }
 
+        /// <summary>En prévision, chaque chantier se montre fini ; sinon, tel qu'il est (décision 228).</summary>
+        public void ShowForesight(bool on)
+        {
+            _foresight = on;
+        }
+
         // La ligne de chaque chantier suit son travail fait ; la vague, elle, tourne seule dans le shader.
         private void LateUpdate()
         {
             if (_sites == null)
                 return;
             foreach (StructureView shown in _shown)
-                shown.Follow();
+                shown.Follow(_foresight);
         }
 
         private void OnDestroy()

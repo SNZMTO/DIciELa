@@ -70,6 +70,10 @@ namespace Diciela.EditorTools
             // Échap a son geste à lui, une pile (décision 152).
             added += Button(Map(asset, EscapeControls.MapName), EscapeControls.BackAction, "<Keyboard>/escape");
 
+            // La prévision (décision 228) : V, un raccourci mnémonique (« voir »), lié au caractère (SAVOIR,
+            // section 3).
+            added += Button(Map(asset, ForesightControls.MapName), ForesightControls.ToggleAction, "<Keyboard>/#(v)");
+
             // Toucher ce qu'on voit : le clic gauche, quand aucun outil n'est en main.
             InputActionMap choose = Map(asset, ChooseControls.MapName);
             added += Button(choose, ChooseControls.TouchAction, "<Mouse>/leftButton") +

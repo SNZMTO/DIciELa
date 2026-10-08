@@ -57,6 +57,18 @@ namespace Diciela.Game
                 _carts.Follow(stepFraction, deltaSeconds);
         }
 
+        /// <summary>
+        /// En prévision, le monde se voit tel qu'il sera une fois tous ses chantiers finis : constructions bâties, sols
+        /// peints, arbres marqués et sols effacés partis (décision 228) ; sinon, tel qu'il est.
+        /// </summary>
+        public void ShowForesight(bool on)
+        {
+            _structures.ShowForesight(on);
+            _nature.ShowForesight(on);
+            if (_floors != null)
+                _floors.ShowForesight(on);
+        }
+
         /// <summary>Cache tout ce qu'on montrait ; chaque vue accepte de n'avoir rien à cacher.</summary>
         public void Hide()
         {

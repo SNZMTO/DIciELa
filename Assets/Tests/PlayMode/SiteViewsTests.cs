@@ -112,7 +112,7 @@ namespace Diciela.Tests.PlayMode
         }
 
         // La hauteur de la ligne de ce rendu : la valeur propre que lisent les shaders du chantier, en bits de flottant.
-        private static float LineOf(MeshRenderer renderer)
+        internal static float LineOf(MeshRenderer renderer)
         {
             return BitConverter.Int32BitsToSingle(unchecked((int)renderer.GetShaderUserValue()));
         }

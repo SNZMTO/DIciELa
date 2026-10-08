@@ -33,6 +33,7 @@ MonoBehaviour:
   _scrollPerNotch: 1
   _zoomSmoothing: 0.12
   _edgeScrollPixels: 12
+  _foresightBlendSeconds: 0.2
   _atelierIdleSeconds: 3
   _atelierSwayDegrees: 12
   _atelierSwaySeconds: 6

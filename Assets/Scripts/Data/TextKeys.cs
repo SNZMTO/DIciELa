@@ -56,6 +56,9 @@ namespace Diciela.Data
         public const string ToolsTooltip = "outils.infobulle";
         public const string ToolsTooltipDetail = "outils.infobulle.suite";
         public const string KeyParameter = "{touche}";
+        // L'infobulle du bouton de la prévision (décision 228), où {touche} est remplacé par sa touche.
+        public const string ForesightTooltip = "prevision.infobulle";
+        public const string ForesightTooltipDetail = "prevision.infobulle.suite";
 
         /// <summary>Les cases de la roue d'un outil de sol qui ne sont pas des modes (décision 221).</summary>
         public const string WheelBack = "roue.outils";

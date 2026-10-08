@@ -6,17 +6,19 @@ namespace Diciela.View
     /// <summary>
     /// Un chantier vu (décision 166) : son modèle deux fois, au même endroit. La vraie matière (le shader
     /// Diciela/Chantier) ne garde que ce qui est sous la ligne ; le fantôme (Diciela/ChantierFantome, de la couleur du
-    /// fantôme, TranslucentModel) ne garde que ce qui est au-dessus, et porte la lueur et les étincelles. L'un et l'autre
-    /// détourent ce que l'original détoure (des feuilles et leurs tiges, le bord d'un chaume), et dessinent les mêmes
-    /// faces. La ligne monte avec l'avancement, de la base de la boîte du modèle (ses fondations comprises) à son sommet,
-    /// et ondule. Sa hauteur est la valeur propre de chaque rendu (SiteLine) : aucun matériau n'est créé par chantier,
-    /// aucun bloc de propriétés ne l'éloigne du SRP Batcher (décision 181). Ce qui n'est pas un maillage (une fumée du
-    /// pack) attend la fin du chantier.
+    /// fantôme, TranslucentModel) ne garde que ce qui est au-dessus, et porte la lueur et les étincelles. L'un et
+    /// l'autre détourent ce que l'original détoure (des feuilles et leurs tiges, le bord d'un chaume), et dessinent les
+    /// mêmes faces. La ligne monte avec l'avancement, de la base de la boîte du modèle (ses fondations comprises) à son
+    /// sommet, et ondule. Sa hauteur est la valeur propre de chaque rendu (SiteLine) : aucun matériau n'est créé par
+    /// chantier, aucun bloc de propriétés ne l'éloigne du SRP Batcher (décision 181). Ce qui n'est pas un maillage (une
+    /// fumée du pack) attend la fin du chantier. En prévision, le chantier se montre fini : sa ligne tout en haut, son
+    /// fantôme caché (décision 228).
     /// </summary>
     internal sealed class SiteFill
     {
         private readonly List<Renderer> _built = new List<Renderer>();
         private readonly TranslucentModel _ghost;
+        private readonly GameObject _ghostRoot;
         private readonly float _bottom;
         private readonly float _height;
         // La part montrée : la ligne ne change que quand elle change.
@@ -54,7 +56,15 @@ namespace Diciela.View
             _bottom = box.min.y;
             _height = box.size.y;
             _ghost = new TranslucentModel(ghost, ghosts);
+            _ghostRoot = ghost;
             Show(0d);
+        }
+
+        /// <summary>Cache le fantôme, en prévision, ou le remontre.</summary>
+        public void SetGhostShown(bool shown)
+        {
+            if (_ghostRoot.activeSelf != shown)
+                _ghostRoot.SetActive(shown);
         }
 
         /// <summary>Monte la ligne à cette part du travail faite, de 0 (rien de bâti) à 1.</summary>

@@ -195,6 +195,8 @@ carte.outil.marques,{nombre} à retirer,{nombre} to remove
 carte.outil.etoile,"Étoile, {branches} branches","Star, {branches} arms"
 outils.infobulle,Outils,Tools
 outils.infobulle.suite,"Ou tiens {touche} : la roue s'ouvre sous le pointeur.","Or hold {touche}: the wheel opens under the pointer."
+prevision.infobulle,Prévision,Foresight
+prevision.infobulle.suite,"La ville comme si tous ses chantiers étaient finis. Ou appuie sur {touche}.","The town as if all its building sites were done. Or press {touche}."
 place.outil.Brush,Pinceau,Brush
 place.outil.Eraser,Gomme,Eraser
 place.outil.Trace,Tracé,Line

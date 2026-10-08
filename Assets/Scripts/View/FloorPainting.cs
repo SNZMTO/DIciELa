@@ -32,6 +32,7 @@ namespace Diciela.View
         private bool _isDirty;
         private RectInt _painted;
         private bool _hasPainted;
+        private bool _foresight;
 
         /// <summary>
         /// Peint les sols de ce monde sur ce Terrain (sa copie), dont la peinture d'origine est sur original : leurs
@@ -61,8 +62,22 @@ namespace Diciela.View
             _isDirty = true;
         }
 
-        /// <summary>Marque tout ce qui sert déjà : la vue part de l'état du monde.</summary>
-        public void MarkServing()
+        /// <summary>
+        /// En prévision, les sols se peignent tels qu'ils seront une fois leurs chantiers finis (décision 228) : tout
+        /// ce qui porte un sol se repeint.
+        /// </summary>
+        public void Foresee(bool on)
+        {
+            if (on == _foresight)
+                return;
+            _foresight = on;
+            MarkFloors();
+        }
+
+        /// <summary>
+        /// Marque tout ce qui porte un sol, bâti, tracé ou qu'on efface : la vue part de l'état du monde.
+        /// </summary>
+        public void MarkFloors()
         {
             var min = new Vector2Int(int.MaxValue, int.MaxValue);
             var max = new Vector2Int(int.MinValue, int.MinValue);
@@ -71,8 +86,7 @@ namespace Diciela.View
                 for (int x = 0; x < _grid.Width; x++)
                 {
                     var cell = new Vector2Int(x, y);
-                    FloorState state = _floors.StateAt(cell);
-                    if (state != FloorState.Built && state != FloorState.Erasing)
+                    if (_floors.StateAt(cell) == FloorState.None)
                         continue;
                     min = Vector2Int.Min(min, cell);
                     max = Vector2Int.Max(max, cell);
@@ -103,7 +117,7 @@ namespace Diciela.View
             if (texels.width <= 0 || texels.height <= 0)
                 return;
             RectInt around = FloorTexels.OnGrid(_grid, FloorTexels.Expand(tile, _reach));
-            bool serves = _weights.Build(_floors, _grid, around, _radius, _softness);
+            bool serves = _weights.Build(_floors, _grid, around, _radius, _softness, _foresight);
             if (!serves && !(_hasPainted && _painted.Overlaps(texels)))
                 return;
             _blend.Paint(_terrain, _original, _weights, texels);

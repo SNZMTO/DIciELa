@@ -55,6 +55,12 @@
                 <ui:Label name="outils-touche" class="touche-texte" picking-mode="Ignore" />
             </Diciela.UI.Facet>
         </Diciela.UI.FeltButton>
+        <Diciela.UI.FeltButton name="prevision" class="feutre lavande pan-8 prevision bloc-cache">
+            <ui:VisualElement class="prevision-icone" picking-mode="Ignore" />
+            <Diciela.UI.Facet class="creux pan-4 touche" picking-mode="Ignore">
+                <ui:Label name="prevision-touche" class="touche-texte" picking-mode="Ignore" />
+            </Diciela.UI.Facet>
+        </Diciela.UI.FeltButton>
         <Diciela.UI.FeltButton name="carte-outil" class="feutre lin pan-10 carte-outil bloc-cache">
             <Diciela.UI.Facet name="carte-outil-tuile" class="applique pan-6 carte-outil-tuile" picking-mode="Ignore">
                 <ui:VisualElement name="carte-outil-icone" class="carte-outil-icone" picking-mode="Ignore" />
