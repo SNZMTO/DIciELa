@@ -1,9 +1,8 @@
 namespace Diciela.Controls
 {
     /// <summary>
-    /// Ce qu'Échap peut refermer ou lâcher (GDD, section 16) : la fiche ouverte, la roue des outils, le panneau
-    /// Construire, l'outil en main. Chacun dit s'il s'en
-    /// est servi ; le geste « Échap » s'arrête au premier qui répond oui.
+    /// Ce qu'Échap peut refermer, lâcher ou éteindre (GDD, section 16) : la fiche ouverte, la roue des outils, l'outil
+    /// en main, la prévision. Chacun dit s'il s'en est servi ; le geste « Échap » s'arrête au premier qui répond oui.
     /// </summary>
     public interface IEscapable
     {
