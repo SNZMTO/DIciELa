@@ -12,18 +12,21 @@ namespace Diciela.UI
     /// feutre de lin ; à gauche, l'icône de l'outil sur une tuile de sa couleur ; à droite, son nom (et le mode d'un
     /// outil de sol, son icône et son nom), ses puces dans des creux de lin, qui passent à la ligne, puis la raison
     /// d'un refus en brique, ou ce qu'un clic ferait, en douce. Sa largeur est fixe : une raison qui revient à la ligne
-    /// dans un bloc qui rétrécit sortirait du cadre. Cachée les mains vides. La roue en fait sa seconde porte
-    /// (WheelDoors) : un clic l'ouvre sur les réglages de l'outil en main, et la carte s'efface tant qu'elle est
-    /// ouverte. C'est la vue (le bloc « carte-outil » de Hud.uxml) ; son présentateur décide.
+    /// dans un bloc qui rétrécit sortirait du cadre. Cachée les mains vides ; elle glisse quand on prend ou lâche un
+    /// outil, et ses nombres défilent (ToolCardChips ; décision 225). La roue en fait sa seconde porte (WheelDoors) :
+    /// un clic l'ouvre sur les réglages de l'outil en main, et la carte s'efface tant qu'elle est ouverte. C'est la vue
+    /// (le bloc « carte-outil » de Hud.uxml) ; son présentateur décide.
     /// </summary>
     public sealed class ToolCard : IToolCardView
     {
         private const string IconClass = "carte-outil-icone";
         private const string ModeIconClass = "carte-outil-mode-icone";
-        private const string ChipIconClass = "carte-outil-puce-icone";
         private const string RefusalClass = "refus";
         private const string SoftClass = "douce";
-        private static readonly string[] ChipClasses = { "creux", "pan-4", "carte-outil-puce" };
+        private const string EnterClass = "carte-outil-entree";
+        private const string LeaveClass = "carte-outil-sortie";
+        // Le temps de glisser hors de l'écran, avant de se cacher (la transition de « carte-outil-sortie »).
+        private const long LeaveMs = 160;
 
         private readonly VisualElement _card;
         private readonly VisualElement _tile;
@@ -32,10 +35,11 @@ namespace Diciela.UI
         private readonly VisualElement _modeLine;
         private readonly VisualElement _modeIcon;
         private readonly Label _mode;
-        private readonly VisualElement _chips;
+        private readonly ToolCardChips _chips;
         private readonly Label _reason;
         private string _pastel = "";
         private ToolCardPresenter _presenter;
+        private IVisualElementScheduledItem _leaving;
 
         public ToolCard(UIDocument document)
         {
@@ -47,12 +51,13 @@ namespace Diciela.UI
             _modeLine = root?.Q("carte-outil-mode");
             _modeIcon = root?.Q("carte-outil-mode-icone");
             _mode = root?.Q<Label>("carte-outil-mode-nom");
-            _chips = root?.Q("carte-outil-puces");
+            VisualElement chips = root?.Q("carte-outil-puces");
             _reason = root?.Q<Label>("carte-outil-raison");
             if (_card == null || _tile == null || _icon == null || _name == null || _modeLine == null ||
-                _modeIcon == null || _mode == null || _chips == null || _reason == null)
+                _modeIcon == null || _mode == null || chips == null || _reason == null)
                 throw new InvalidOperationException("La carte de l'outil en main ne trouve pas ses éléments (UXML).");
-            ShowNothing();
+            _chips = new ToolCardChips(chips);
+            HideNow();
         }
 
         /// <summary>Relie la carte aux outils de ce monde ; cachée tant qu'aucun n'est en main.</summary>
@@ -69,12 +74,16 @@ namespace Diciela.UI
             _presenter?.Dispose();
             _presenter = null;
             _chips.Clear();
-            ShowNothing();
+            HideNow();
         }
 
+        /// <summary>Les mains vides : la carte glisse hors de l'écran, puis se cache.</summary>
         public void ShowNothing()
         {
-            _card.AddToClassList(StyleClasses.Hidden);
+            if (_card.ClassListContains(StyleClasses.Hidden) || _leaving != null)
+                return;
+            _card.AddToClassList(LeaveClass);
+            _leaving = _card.schedule.Execute(HideNow).StartingIn(LeaveMs);
         }
 
         public void ShowTool(string icon, string pastel, string name, string modeIcon, string mode)
@@ -92,21 +101,23 @@ namespace Diciela.UI
             WheelPicture.Paint(_modeIcon, ModeIconClass, modeIcon, null);
             _mode.text = mode;
             _modeLine.EnableInClassList(StyleClasses.Hidden, string.IsNullOrEmpty(mode));
-            _card.RemoveFromClassList(StyleClasses.Hidden);
+            if (_leaving != null)
+            {
+                // Un outil repris pendant qu'elle part : elle revient, sans repartir de loin.
+                _leaving.Pause();
+                _leaving = null;
+                _card.RemoveFromClassList(LeaveClass);
+            }
+            else if (_card.ClassListContains(StyleClasses.Hidden))
+            {
+                _card.RemoveFromClassList(StyleClasses.Hidden);
+                HudMotion.Enter(_card, EnterClass);
+            }
         }
 
-        /// <summary>Montre ces puces : les creux déjà faits sont repeints, les autres faits ou cachés.</summary>
         public void ShowChips(IReadOnlyList<ToolCardChip> chips)
         {
-            while (_chips.childCount < chips.Count)
-                _chips.Add(NewChip());
-            for (int i = 0; i < _chips.childCount; i++)
-            {
-                VisualElement chip = _chips[i];
-                chip.EnableInClassList(StyleClasses.Hidden, i >= chips.Count);
-                if (i < chips.Count)
-                    Paint(chip, chips[i]);
-            }
+            _chips.Show(chips);
         }
 
         public void ShowReason(string text, bool refusal)
@@ -117,21 +128,13 @@ namespace Diciela.UI
             _reason.EnableInClassList(StyleClasses.Hidden, string.IsNullOrEmpty(text));
         }
 
-        private static VisualElement NewChip()
+        // Se cache tout de suite, sans glisser.
+        private void HideNow()
         {
-            Facet chip = Styled.With(new Facet { pickingMode = PickingMode.Ignore }, ChipClasses);
-            chip.Add(new VisualElement { pickingMode = PickingMode.Ignore });
-            chip.Add(Styled.Text("", "petit"));
-            return chip;
-        }
-
-        // Le visage d'une puce : son icône ou sa vignette, cachée si elle n'a ni l'une ni l'autre, et son texte.
-        private static void Paint(VisualElement chip, ToolCardChip content)
-        {
-            VisualElement face = chip[0];
-            WheelPicture.Paint(face, ChipIconClass, content.Icon, content.Picture);
-            face.EnableInClassList(StyleClasses.Hidden, content.Icon.Length == 0 && content.Picture == null);
-            ((Label)chip[1]).text = content.Text;
+            _leaving?.Pause();
+            _leaving = null;
+            _card.RemoveFromClassList(LeaveClass);
+            _card.AddToClassList(StyleClasses.Hidden);
         }
     }
 }

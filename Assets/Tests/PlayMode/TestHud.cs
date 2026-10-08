@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using Diciela.UI;
 using UnityEngine;
@@ -40,6 +41,16 @@ namespace Diciela.Tests.PlayMode
 #else
             throw new System.NotSupportedException("Le HUD de test se monte dans l'éditeur.");
 #endif
+        }
+
+        /// <summary>
+        /// Attend que les mouvements de l'interface (200 ms au plus, décision 225) soient finis : ce qu'on mesure ou
+        /// clique ensuite est à sa place.
+        /// </summary>
+        public static IEnumerator Settle()
+        {
+            yield return new WaitForSecondsRealtime(0.3f);
+            yield return null;
         }
 
         /// <summary>Un événement de la souris en ce point du panneau, du bouton gauche.</summary>

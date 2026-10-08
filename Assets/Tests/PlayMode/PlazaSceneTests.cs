@@ -77,7 +77,7 @@ namespace Diciela.Tests.PlayMode
             tool.EndDrawing();
             yield return Until(() => world.Plaza.CellCount > 0, "Le disque part au relâchement.");
             Assert.AreEqual(Mathf.PI * DiscRadius * DiscRadius, world.Plaza.AreaSquareMeters, 15f);
-            yield return null;
+            yield return TestHud.Settle();
             string area = Mathf.RoundToInt(world.Plaza.AreaSquareMeters) + " / ";
             Assert.IsTrue(root.Q("carte-outil-puces").Query<Label>().ToList().Exists(chip => chip.text.StartsWith(area)),
                 "La carte dit la superficie.");
@@ -90,6 +90,7 @@ namespace Diciela.Tests.PlayMode
             yield return Until(() => world.Plaza.Marks.Count == 1, "Le clic la pose.");
 
             tool.Cancel();
+            yield return TestHud.Settle();
             Assert.IsFalse(tool.IsActive, "Sans geste en cours, le clic droit lâche l'outil…");
             Assert.IsTrue(card.ClassListContains(Hidden), "… sa carte se cache…");
             Assert.IsFalse(zone.transform.Find("Voile de la Place").gameObject.activeSelf, "… et la zone aussi.");
@@ -101,8 +102,7 @@ namespace Diciela.Tests.PlayMode
         // Clique, une fois la roue ouverte posée, la case qui porte cette icône.
         private static IEnumerator ClickSlot(VisualElement root, string icon)
         {
-            yield return null;
-            yield return null;
+            yield return TestHud.Settle();
             VisualElement face = root.Q("roue-cases").Q(className: icon);
             Assert.IsNotNull(face, "La roue ouverte a la case « " + icon + " ».");
             TestHud.Click(face.parent);

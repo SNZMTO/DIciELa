@@ -775,6 +775,10 @@
   des outils, dit ce qu'on tient, ses nombres (la taille du pinceau, la superficie de la Place, ses places de charrette,
   le coût d'une construction, les arbres marqués) et la raison d'un refus ; elle ne paraît qu'un outil en main et
   s'efface quand la roue est ouverte. Chaque outil a sa couleur, sur sa case, son curseur et sa carte.
+- **Défaut.** Les mouvements (décision 225) : la roue s'ouvre en 180 ms, ses cases à 10 ms d'écart, les jetons d'un
+  éventail à 15 ms ; la case visée se dandine en 140 ms ; l'icône prise vole en 180 ms ; le pop du curseur et la carte
+  qui glisse, 160 à 180 ms ; l'éclaboussure et un nombre qui défile, 200 ms. L'éclaboussure suit un geste qui agit (un
+  ordre parti, une construction prise pour la déplacer), pas un clic sans effet.
 - **Défaut.** Le curseur (décision 224) : 40 px, la silhouette de l'outil, cerclée d'un halo à la couleur de son outil,
   sa pointe là où il agit. Le pinceau, la gomme, la plume (le tracé), le viseur (la forme) et la place de charrette pour
   les outils de sol ; le marteau pour une construction en main, la hache pour Retirer, la main pour Déplacer. Ses

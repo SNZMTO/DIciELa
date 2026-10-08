@@ -42,6 +42,9 @@ namespace Diciela.Controls
         /// <summary>Levé quand la réponse à ce qui est visé change, ou la place de charrette qu'un clic retirerait.</summary>
         public event Action ResultChanged;
 
+        /// <summary>Levé quand un ordre part.</summary>
+        public event Action Acted { add => _orders.Sent += value; remove => _orders.Sent -= value; }
+
         public PaintAnswer Answer { get; private set; } = PaintAnswer.Ok;
         public PlazaMark Hovered { get; private set; }
         public bool IsDrawing => _drawing.IsDrawing;

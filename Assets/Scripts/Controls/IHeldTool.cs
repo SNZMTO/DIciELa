@@ -16,6 +16,9 @@ namespace Diciela.Controls
         /// <summary>Levé quand on le prend en main, qu'on le lâche, ou qu'on change ce qu'il tient.</summary>
         event Action HeldChanged;
 
+        /// <summary>Levé quand il agit sur la ville : un ordre part, ou il prend ce qu'on touche (décision 225).</summary>
+        event Action Acted;
+
         /// <summary>Le clic droit : défait ce qu'il tient, sinon le lâche.</summary>
         void Cancel();
 
