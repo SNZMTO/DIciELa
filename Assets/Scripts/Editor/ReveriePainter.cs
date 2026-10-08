@@ -15,9 +15,9 @@ namespace Diciela.EditorTools
         // L'opacité du voile au milieu de l'écran, puis à ses bords ; le fondu de l'un à l'autre commence à cette part
         // du chemin du milieu au bord et finit un peu au-delà, dans les coins. La puissance arrondit les coins du
         // rectangle.
-        private const float MiddleOpacity = 0.06f;
-        private const float EdgeOpacity = 0.5f;
-        private const float FadeStart = 0.62f;
+        private const float MiddleOpacity = 0.03f;
+        private const float EdgeOpacity = 0.32f;
+        private const float FadeStart = 0.66f;
         private const float FadeEnd = 1.1f;
         private const float Roundness = 4f;
 

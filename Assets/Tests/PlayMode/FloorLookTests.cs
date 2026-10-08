@@ -9,17 +9,20 @@ using UnityEngine.TestTools;
 namespace Diciela.Tests.PlayMode
 {
     /// <summary>
-    /// L'aspect des sols peints (décision 227), par le chemin du joueur, sur le banc des sols (TestFloorBench) peint à
-    /// 128 texels de côté (31,25 cm chacun) : un disque de 3 m de rayon, tracé puis bâti par la Chimère. Un
-    /// sol au bord lisse est rond et fondu (des texels mêlés tout autour de son bord, aucun à plus de 45 cm de son
-    /// cercle) ; des pavés sont cernés de leur liant, une bande de 80 cm, puis l'herbe revient ; un bord qui
-    /// s'effiloche s'écarte de son cercle ici et là. Tous les poids d'un texel font un.
+    /// L'aspect des sols peints (décisions 227 et 232), par le chemin du joueur, sur le banc des sols (TestFloorBench)
+    /// peint à 128 texels de côté (31,25 cm chacun) : un disque de 3 m de rayon, tracé puis bâti par la Chimère. Un sol
+    /// au bord lisse se fond sur la largeur de son fondu, centrée sur son bord (mi-terre mi-herbe en moyenne sur le
+    /// cercle, plus de cent texels mêlés autour, rien de mêlé au-delà d'un demi-fondu) ; des pavés se fondent dans leur
+    /// liant, qui se fond à son tour dans l'herbe au bout de sa bande ; un bord qui s'effiloche s'écarte de son cercle
+    /// ici et là. Le disque est fait de mailles d'un demi-mètre : on laisse 30 cm entre son cercle et ses mailles. Tous
+    /// les poids d'un texel font un.
     /// </summary>
     public sealed class FloorLookTests
     {
         private const int Resolution = 128;
         private const float Radius = 3f;
         private const float TexelMeters = TestFloorBench.SideMeters / Resolution;
+        private const float Tolerance = 0.3f;
         private static readonly Vector2 Center = new Vector2(20f, 30f);
         private TestFloorBench _bench;
         private TerrainLayer _binder;
@@ -38,38 +41,54 @@ namespace Diciela.Tests.PlayMode
         }
 
         [UnityTest]
-        public IEnumerator ASmoothFloorIsRoundAndFadesAtItsEdge()
+        public IEnumerator ASmoothFloorFadesWideAroundItsEdge()
         {
-            FloorDefinition dirt = Floor("terre", null, 0f);
+            const float fade = 1f;
+            FloorDefinition dirt = Floor("terre", null, 0f, fade);
             yield return Build(dirt);
-            int dirtLayer = 1, blended = 0;
+            int dirtLayer = 1, blended = 0, onEdge = 0;
+            float edgeSum = 0f;
             ForEachTexel((distance, weights) =>
             {
-                if (distance < Radius - 0.45f)
-                    Assert.GreaterOrEqual(weights[dirtLayer], 0.95f,
-                        "Dedans, à " + distance + " m du milieu : la terre.");
-                else if (distance > Radius + 0.45f)
-                    Assert.LessOrEqual(weights[dirtLayer], 0.05f, "Dehors, à " + distance + " m du milieu : l'herbe.");
-                else if (weights[dirtLayer] > 0.05f && weights[dirtLayer] < 0.95f)
+                float share = weights[dirtLayer];
+                if (distance < Radius - fade / 2f - Tolerance)
+                    Assert.GreaterOrEqual(share, 0.95f, "Dedans, à " + distance + " m du milieu : la terre.");
+                else if (distance > Radius + fade / 2f + Tolerance)
+                    Assert.LessOrEqual(share, 0.05f, "Dehors, à " + distance + " m du milieu : l'herbe.");
+                if (Mathf.Abs(distance - Radius) < 0.15f)
+                {
+                    edgeSum += share;
+                    onEdge++;
+                }
+                if (share > 0.05f && share < 0.95f)
                     blended++;
             });
-            Assert.GreaterOrEqual(blended, 12, "Le bord se fond tout autour du cercle, sans marches de texel.");
+            Assert.Greater(onEdge, 0, "Des texels sur le cercle.");
+            Assert.That(edgeSum / onEdge, Is.InRange(0.35f, 0.65f),
+                "Sur le cercle, mi-terre mi-herbe en moyenne : le fondu est centré sur le bord.");
+            Assert.GreaterOrEqual(blended, 100, "Le fondu est large : plus de cent texels mêlés autour du cercle.");
         }
 
         [UnityTest]
-        public IEnumerator PavingsAreBoundToTheGrassByTheirBinder()
+        public IEnumerator PavingsFadeIntoTheirBinderThenTheBinderIntoTheGrass()
         {
-            FloorDefinition paving = Floor("paves", _binder, 0f);
+            const float fade = 0.5f, width = 1.5f, binderFade = 1f;
+            FloorDefinition paving = Floor("paves", _binder, 0f, fade, width, binderFade);
             yield return Build(paving);
             int pavingLayer = 1, binderLayer = 2;
             Assert.AreEqual(3, _bench.Copy.alphamapLayers, "Les pavés et leur liant s'ajoutent à la copie.");
             ForEachTexel((distance, weights) =>
             {
-                if (distance < Radius - 0.45f)
+                float edge = distance - Radius;
+                if (edge < -fade / 2f - Tolerance)
                     Assert.GreaterOrEqual(weights[pavingLayer], 0.95f, "Dedans : les pavés.");
-                else if (distance > Radius + 0.2f && distance < Radius + 0.5f)
-                    Assert.GreaterOrEqual(weights[binderLayer], 0.8f, "Juste autour, à " + distance + " m : le liant.");
-                else if (distance > Radius + 1.5f)
+                else if (Mathf.Abs(edge) < 0.1f)
+                    Assert.LessOrEqual(weights[0], 0.05f, "Sur leur bord, les pavés se fondent dans leur liant.");
+                else if (edge > fade / 2f + Tolerance && edge < width - binderFade / 2f - Tolerance)
+                    Assert.GreaterOrEqual(weights[binderLayer], 0.8f, "Autour, à " + distance + " m : le liant.");
+                else if (Mathf.Abs(edge - width) < 0.1f)
+                    Assert.That(weights[0], Is.InRange(0.1f, 0.9f), "Au bout du liant, il se fond dans l'herbe.");
+                else if (edge > width + binderFade / 2f + Tolerance)
                     Assert.GreaterOrEqual(weights[0], 0.99f, "Plus loin, à " + distance + " m : l'herbe.");
             });
         }
@@ -77,7 +96,7 @@ namespace Diciela.Tests.PlayMode
         [UnityTest]
         public IEnumerator AFrayingEdgeWandersAroundItsCircle()
         {
-            FloorDefinition dirt = Floor("terre", null, FloorDefinition.MaxFrayMeters);
+            FloorDefinition dirt = Floor("terre", null, FloorDefinition.MaxFrayMeters, 1f);
             yield return Build(dirt);
             int wandering = 0;
             ForEachTexel((distance, weights) =>
@@ -125,14 +144,18 @@ namespace Diciela.Tests.PlayMode
             }
         }
 
-        // Un sol de son propre calque, de ce liant (null : aucun) large de 80 cm, et qui s'effiloche de tant.
-        private FloorDefinition Floor(string id, TerrainLayer binder, float fray)
+        // Un sol de son propre calque, qui s'effiloche de tant et se fond sur tant ; de ce liant (null : aucun), de
+        // cette largeur, qui se fond sur tant.
+        private FloorDefinition Floor(string id, TerrainLayer binder, float fray, float fade, float width = 0.8f,
+            float binderFade = 1f)
         {
             FloorDefinition floor = _bench.Floor(id, _bench.Layer(id));
 #if UNITY_EDITOR
             TestWorld.Fill(floor, "_borderLayer", binder);
-            TestWorld.Fill(floor, "_borderMeters", 0.8f);
+            TestWorld.Fill(floor, "_borderMeters", width);
+            TestWorld.Fill(floor, "_borderFadeMeters", binderFade);
             TestWorld.Fill(floor, "_frayMeters", fray);
+            TestWorld.Fill(floor, "_fadeMeters", fade);
 #endif
             return floor;
         }

@@ -46,4 +46,3 @@ MonoBehaviour:
   _outlineWidthMeters: 0.12
   _overlayLiftMeters: 0.05
   _groundRoundingMeters: 0.5
-  _floorEdgeSoftnessMeters: 0.15

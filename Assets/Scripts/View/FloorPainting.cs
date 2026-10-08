@@ -8,7 +8,7 @@ namespace Diciela.View
     /// <summary>
     /// Les sols peints dans le sol de la carte (GDD, sections 9 et 16 ; décisions 214 et 227 ; SAVOIR, 2.5) : sur la
     /// copie en mémoire du Terrain, chaque texel prend de chaque sol qui sert (bâti, ou qu'on efface) ce qu'il en
-    /// couvre, son bord arrondi, fondu et effiloché, puis de son liant ce qu'en couvre la bande autour de lui
+    /// couvre, son bord fondu et effiloché, puis de son liant ce qu'en couvre la bande autour de lui
     /// (FloorWeights), et de la carte le reste (FloorBlend) ; l'original n'est jamais touché. On repeint par lot, par
     /// carreaux : les changements marquent une boîte, repeinte une seule fois quand on le demande, avec tout ce qu'un
     /// sol peut toucher autour d'elle. Un carreau où rien ne sert, et où rien n'a jamais été peint, ne coûte qu'une
@@ -26,7 +26,6 @@ namespace Diciela.View
         private readonly FloorWeights _weights = new FloorWeights();
         private readonly FloorBlend _blend = new FloorBlend();
         private readonly int _radius;
-        private readonly float _softness;
         private readonly int _reach;
         private RectInt _dirty;
         private bool _isDirty;
@@ -36,10 +35,9 @@ namespace Diciela.View
 
         /// <summary>
         /// Peint les sols de ce monde sur ce Terrain (sa copie), dont la peinture d'origine est sur original : leurs
-        /// formes arrondies sur ce rayon, leur bord fondu sur cette douceur, en mètres.
+        /// bords lissés sur ce rayon, en mètres.
         /// </summary>
-        public FloorPainting(Terrain terrain, TerrainData original, Floors floors, NavGrid grid, float roundingMeters,
-            float softnessMeters)
+        public FloorPainting(Terrain terrain, TerrainData original, Floors floors, NavGrid grid, float roundingMeters)
         {
             _terrain = terrain != null ? terrain : throw new ArgumentNullException(nameof(terrain));
             _original = original != null ? original : throw new ArgumentNullException(nameof(original));
@@ -47,9 +45,10 @@ namespace Diciela.View
             _grid = grid ?? throw new ArgumentNullException(nameof(grid));
             float size = grid.Metrics.CellSize;
             _radius = CellField.RadiusCells(roundingMeters, size);
-            _softness = softnessMeters;
-            // Jusqu'où un sol peint : son liant le plus large, son bord le plus effiloché, son flou, et une marge.
-            float reach = FloorDefinition.MaxBorderMeters + FloorDefinition.MaxFrayMeters + softnessMeters;
+            // Jusqu'où un sol peint : son liant le plus large et la moitié de son fondu, son bord le plus effiloché,
+            // son flou, et une marge.
+            float reach = FloorDefinition.MaxBorderMeters + FloorDefinition.MaxFadeMeters / 2f +
+                          FloorDefinition.MaxFrayMeters;
             _reach = Mathf.CeilToInt(reach / size) + 2 * _radius + 2;
         }
 
@@ -117,7 +116,7 @@ namespace Diciela.View
             if (texels.width <= 0 || texels.height <= 0)
                 return;
             RectInt around = FloorTexels.OnGrid(_grid, FloorTexels.Expand(tile, _reach));
-            bool serves = _weights.Build(_floors, _grid, around, _radius, _softness, _foresight);
+            bool serves = _weights.Build(_floors, _grid, around, _radius, _foresight);
             if (!serves && !(_hasPainted && _painted.Overlaps(texels)))
                 return;
             _blend.Paint(_terrain, _original, _weights, texels);

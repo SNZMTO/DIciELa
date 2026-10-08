@@ -103,6 +103,11 @@ En cas de doute, `unity list` (les outils du paquet `com.unity.pipeline`) ou la 
   ajouter un objet ou un volume (`create_gameobject`, `add_component`, `set_component_properties`, une fiche se
   désignant par `{"path": "Assets/…"}`), rendre, puis rouvrir `Jeu` : `open_scene` ne demande pas d'enregistrer, et
   ce qu'on a ajouté est perdu.
+- **Voir ce que le jeu peint, sans Play ni Unity devant** : un test PlayMode jetable, jamais committé, monte le banc
+  du système (par exemple `TestFloorBench`, ses calques remplacés par ceux du pack), rend une caméra à la main
+  (`Camera.Render` dans une RenderTexture, `ReadPixels`, `EncodeToPNG`) vers un fichier du dossier de travail, hors
+  du projet, avec un soleil posé par le test ; on le lance avec la campagne PlayMode, puis on le supprime et on
+  recompile.
 - **Captures** : `capture_game_view --source screen --width 1600 --height 900 --save_path Assets/Temp/x.png` (en Play ;
   2400 × 1350 marche encore, 3840 × 2160 rend une image noire ou périmée ; l'image est la vue Game rééchantillonnée à
   la taille demandée : si la vue n'a pas ce rapport, l'image est étirée (juger les proportions avec prudence) ;
