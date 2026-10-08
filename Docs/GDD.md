@@ -786,20 +786,25 @@
   symétrie ; la croix, de la brique cerclée de lin. Pendant qu'on tourne la vue à la souris, ni curseur ni flèche.
 - **Défaut.** La carte (décision 223) : un feutre de lin, qui se clique ; l'icône de l'outil sur une tuile de sa
   couleur, son nom et, pour un outil de sol, son mode ; puis des puces : ce qu'il pose (sauf au mode place de
-  charrette), la taille du pinceau (au pinceau, à la gomme et au tracé), la forme, le style d'un tracé ou d'un
-  polygone, la symétrie quand il y en a une (l'étoile avec ses branches), et, pour la Place, sa superficie et ses places
-  de charrette ; pour Retirer, combien d'arbres et de rochers sont marqués ; pour Déplacer, la construction qu'on tient.
-  Les puces et la raison s'écrivent en petit (15 px) ; une raison en brique, ce qu'un clic ferait en douce.
+  charrette), la taille du pinceau (au pinceau, à la gomme et au tracé), la forme, le style d'un tracé ou d'un polygone,
+  la symétrie quand il y en a une (l'étoile avec ses branches), et, pour la Place, sa superficie et ses places de
+  charrette ; pour Retirer, combien d'arbres et de rochers sont marqués ; pour Déplacer, la construction qu'on tient ;
+  pour une construction en main, sa photo et son nom en guise de mode, ses lits, puis son coût, une puce par
+  marchandise. Les puces et la raison s'écrivent en petit (15 px) ; une raison en brique, ce qu'un clic ferait en douce.
 - **Règle.** Les animations sont courtes (200 ms au plus) et n'arrêtent jamais un geste : la roue s'ouvre en ressort,
   ses cases l'une après l'autre, et se retourne comme une pièce d'un étage à l'autre ; la case visée grossit et se
   dandine ; un éventail se déplie depuis sa case ; l'icône choisie saute de la roue au curseur, qui fait un petit «
   pop » ; un clic laisse une éclaboussure ; la carte glisse quand on prend ou lâche un outil, et ses nombres défilent.
-- **Règle.** On choisit quoi construire à la roue de Construire : ses familles autour du plateau, chacune de son pastel
-  avec son icône (une famille qui ne propose rien ne paraît pas) ; poussée plus loin, une famille déplie ses
-  constructions en éventail, chacune sa vignette (une photo de son modèle) ; la bulle du milieu dit son nom, ce qu'elle
-  offre (« 2 lits ») et ce qu'elle coûte. Relâcher la met en main ; la carte redit ce qu'on pose et son coût.
-- **Défaut.** Les familles de Construire : les chiffres, à leur place dans la roue ; le même deux fois, la construction
-  suivante de la famille.
+- **Règle.** On choisit quoi construire à la roue de Construire, qui s'ouvre une construction en main : ses familles
+  autour du plateau, chacune de son pastel avec son icône (une famille qui ne propose rien ne paraît pas, mais garde sa
+  place) ; poussée plus loin, une famille déplie ses constructions en éventail, chacune sa vignette (une photo de son
+  modèle) ; la bulle du milieu dit son nom, ce qu'elle offre (« 2 lits ») et ce qu'elle coûte. Relâcher la met en main ;
+  prendre sa famille la garde en main. La carte redit ce qu'on pose, ses lits, son coût, et pourquoi la pose est
+  refusée.
+- **Défaut.** Construire (décision 226) : le prendre met en main la dernière construction prise, si elle se pose encore,
+  sinon la première proposée (au départ, le campement) ; le reprendre la lâche. Ses familles à la place que donne leur
+  rang dans le catalogue : en haut, à droite, en bas, à gauche, puis les diagonales (sept au plus). Les chiffres, à leur
+  place dans la roue ; le même deux fois, la construction suivante de la famille.
 - **Règle.** La journée montre le jour, sa phase et une jauge : le travail, la soirée et la nuit hachurée, chacun à
   sa part de la journée ; ce qui est passé est plus sombre ; un repère marque l'heure.
 - **Règle.** L'interface se lit à toutes les tailles d'écran. Elle grossit avec la hauteur de l'écran, à partir d'une
@@ -868,8 +873,8 @@
   `Path_01`, les pavés moussus du chemin du pack. Les autres sols : des calques faits des images du pack (pavés bruns,
   dalles, carreaux, briques, pierre grise, planchers), rangés hors du pack, avec leurs fiches.
 - **Règle.** La zone de la Place et ses places de charrette se voient en mode construction : en main une construction,
-  l'outil de la Place, Chemins ou Déplacer, ou la roue de Construire ouverte. La zone : un voile léger sur le sol et son
-  contour ; une place de charrette : un cadre blanc, une pointe vers l'avant de la charrette.
+  l'outil de la Place, Chemins ou Déplacer. La zone : un voile léger sur le sol et son contour ; une place de
+  charrette : un cadre blanc, une pointe vers l'avant de la charrette.
 - **À toi.** Les icônes et les curseurs des outils (leurs cases, leurs options, symétries comprises, la vignette de la
   zone), pour l'instant des remplaçants simples. La part de texture et l'opacité du fantôme d'un sol : des réglages de
   son matériau.

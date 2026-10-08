@@ -67,11 +67,9 @@ namespace Diciela.Tests.PlayMode
                     Assert.IsFalse(UnityEditor.AssetDatabase.Contains(terrain), "La partie joue sur une copie du sol.");
 #endif
 
-                    var bar = TestOpening.FindIn<BuildBar>(ScenePaths.GameTest);
-                    bar.Open();
-                    bar.TakeCard(0);
+                    TestOpening.FindIn<ToolWheel>(ScenePaths.GameTest).Choose(ToolChoice.Build);
                     StructureDefinition held = controls.Tool.Current;
-                    Assert.IsTrue(held != null && held.IsChimeraHome, "La première carte est le campement.");
+                    Assert.IsTrue(held != null && held.IsChimeraHome, "Construire prend d'abord le campement.");
                     controls.Tool.AimAt(TestOpening.FindIn<CameraRig>(ScenePaths.GameTest).Camera.pixelRect.center);
                     Assert.IsTrue(controls.Tool.Confirm(), "Le centre de la carte de test est libre.");
                     for (int frame = 0; frame < MaxFrames && _placed < session; frame++)

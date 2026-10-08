@@ -116,7 +116,7 @@ namespace Diciela.UI
                 felt.userData = slot.Pastel;
             }
             felt.EnableInClassList(StyleClasses.Open, slot.IsOn);
-            WheelPicture.Paint(felt[0], "roue-icone", slot.Icon, slot.Picture);
+            slot.Face.Paint(felt[0], "roue-icone");
             ((Label)felt[1][0]).text = slot.Key;
             felt[1].EnableInClassList(StyleClasses.Hidden, slot.Key.Length == 0);
         }

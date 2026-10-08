@@ -56,13 +56,13 @@ namespace Diciela.UI
             return chip;
         }
 
-        // Le visage d'une puce : son icône ou sa vignette, cachée si elle n'a ni l'une ni l'autre, et son texte.
+        // Le visage d'une puce : son icône ou sa vignette, cachée si elle n'en a pas, et son texte.
         private void Paint(int index, ToolCardChip content)
         {
             VisualElement chip = _row[index];
             VisualElement face = chip[0];
-            WheelPicture.Paint(face, ChipIconClass, content.Icon, content.Picture);
-            face.EnableInClassList(StyleClasses.Hidden, content.Icon.Length == 0 && content.Picture == null);
+            content.Face.Paint(face, ChipIconClass);
+            face.EnableInClassList(StyleClasses.Hidden, content.Face.IsEmpty);
             Write(index, (Label)chip[1], content.Text);
         }
 

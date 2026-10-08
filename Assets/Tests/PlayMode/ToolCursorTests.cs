@@ -34,8 +34,8 @@ namespace Diciela.Tests.PlayMode
                 UIDocument document = TestHud.WithWheel(test);
                 yield return null;
                 var wheel = document.GetComponent<ToolWheel>();
-                wheel.Show(TextTable.Parse("clé,fr\n", "fr"), new FixedToolKeys(), test.Clearing, new NotedBuildMenu(),
-                    test.Mover, test.Paths, test.Plaza, new Tooltips(document));
+                wheel.Show(TextTable.Parse("clé,fr\n", "fr"), new FixedToolKeys(), test.Catalog, test.World, test.Tool,
+                    test.Clearing, test.Mover, test.Paths, test.Plaza, new Tooltips(document));
                 var cursor = new ToolCursor(document);
                 cursor.Show(test.Tool, test.Clearing, test.Mover, test.Paths, test.Plaza, new HudArea(document));
                 VisualElement root = document.rootVisualElement;

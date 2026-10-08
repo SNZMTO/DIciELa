@@ -45,7 +45,7 @@ namespace Diciela.Tests.PlayMode
 #if UNITY_EDITOR
             yield return UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode(ScenePaths.GameTest,
                 new LoadSceneParameters(LoadSceneMode.Additive));
-            catalog = BuildBarTests.LoadSingle<Catalog>();
+            catalog = TestAssets.LoadSingle<Catalog>();
 #endif
             yield return TestOpening.Confirm(MaxFrames);
             World world = Object.FindAnyObjectByType<GameRunner>().World;

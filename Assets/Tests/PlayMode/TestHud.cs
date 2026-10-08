@@ -87,15 +87,13 @@ namespace Diciela.Tests.PlayMode
 
         /// <summary>
         /// Ajoute aux fautes ce qui cloche des blocs du HUD : la journée au coin haut-gauche, à 24 px du bord et 20 du
-        /// haut ; la fiche ouverte au coin haut-droit ; les fanions au milieu du haut, à 24 px ; le panneau Construire
-        /// ouvert au milieu du bas, à 24 px ; l'icône des outils au coin bas-droit ; l'astuce au coin bas-gauche ; un bloc
-        /// hors de l'écran, ou deux blocs qui se chevauchent.
+        /// haut ; la fiche ouverte au coin haut-droit ; les fanions au milieu du haut, à 24 px ; l'icône des outils au
+        /// coin bas-droit ; l'astuce au coin bas-gauche ; un bloc hors de l'écran, ou deux blocs qui se chevauchent.
         /// </summary>
         public static void CheckBlocks(VisualElement root, Vector2Int screen, List<string> faults)
         {
             Rect room = root.panel.visualTree.layout;
             Rect day = root.Q("journee").worldBound;
-            Rect bar = root.Q("bar").worldBound;
             // L'icône des outils par sa place, sans l'enfoncement de son feutre (translate), qui s'anime quand la roue
             // se ferme.
             Rect tools = root.Q("outils").layout;
@@ -105,10 +103,6 @@ namespace Diciela.Tests.PlayMode
             string at = screen.x + " × " + screen.y + " : ";
             if (Mathf.Abs(day.xMin - Side) > Tolerance || Mathf.Abs(day.yMin - Top) > Tolerance)
                 faults.Add(at + "la journée n'est pas à 24 px du bord et 20 du haut (" + day + ").");
-            if (Mathf.Abs(room.height - bar.yMax - Bottom) > Tolerance)
-                faults.Add(at + "la barre n'est pas à 24 px du bas (" + bar + " dans " + room + ").");
-            if (Mathf.Abs(bar.center.x - room.width * 0.5f) > Tolerance)
-                faults.Add(at + "la barre n'est pas au milieu (" + bar + " dans " + room + ").");
             if (Mathf.Abs(room.width - tools.xMax - Side) > Tolerance ||
                 Mathf.Abs(room.height - tools.yMax - Bottom) > Tolerance)
                 faults.Add(at + "l'icône des outils n'est pas à 24 px du bord et du bas (" + tools + " dans " + room +
@@ -119,7 +113,7 @@ namespace Diciela.Tests.PlayMode
                 faults.Add(at + "les fanions ne sont pas au milieu, à 24 px du haut (" + stock + ").");
             if (Mathf.Abs(tip.xMin - Side) > Tolerance || Mathf.Abs(room.height - tip.yMax - Bottom) > Tolerance)
                 faults.Add(at + "l'astuce n'est pas à 24 px du bord et du bas (" + tip + " dans " + room + ").");
-            Rect[] blocks = { day, stock, sheet, bar, tip, tools };
+            Rect[] blocks = { day, stock, sheet, tip, tools };
             foreach (Rect block in blocks)
             {
                 if (block.xMin < 0f || block.yMin < 0f || block.xMax > room.width || block.yMax > room.height)

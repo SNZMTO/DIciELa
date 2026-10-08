@@ -5,13 +5,13 @@ using UnityEngine.InputSystem;
 namespace Diciela.Controls
 {
     /// <summary>
-    /// Les gestes des outils (GDD, section 16 ; décisions 168, 184 et 221) : tenir la touche de la roue l'ouvre autour du
+    /// Les gestes des outils (GDD, section 16 ; décisions 221 et 226) : tenir la touche de la roue l'ouvre autour du
     /// pointeur et la fait suivre où il vise, image après image ; la relâcher choisit. La touche d'un outil le choisit
-    /// tout droit : chacun a la sienne, dans la table des outils (ToolAction). Les touches 1 à 9 prennent les cartes du
-    /// panneau Construire ouvert, ou les cases de la roue de l'outil de sol en main (l'interface aiguille). Le curseur des
-    /// outils suit le pointeur, image après image. Les touches se lisent sur l'asset d'actions, d'où la roue et les
-    /// cartes tirent aussi leurs noms. Il lit les actions et parle à la roue, aux cartes et au curseur, rien d'autre ; il
-    /// passe après la caméra (ordre 100), comme les autres gestes.
+    /// tout droit : chacun a la sienne, dans la table des outils (ToolAction). Les chiffres prennent les cases de la
+    /// roue de l'outil en main (leurs actions s'appellent « Card1 » à « Card9 »). Le curseur des outils suit le
+    /// pointeur, image après image. Les touches se lisent sur l'asset d'actions, d'où la roue tire aussi leurs noms. Il
+    /// lit les actions et parle à la roue et au curseur, rien d'autre ; il passe après la caméra (ordre 100), comme les
+    /// autres gestes.
     /// </summary>
     [DefaultExecutionOrder(100)]
     public sealed class ToolControls : MonoBehaviour, IToolKeys
@@ -20,14 +20,15 @@ namespace Diciela.Controls
         public const string WheelAction = "Wheel";
         public const string PointerAction = "Pointer";
 
-        /// <summary>Le nombre de cartes qu'une touche prend : de 1 à 9.</summary>
+        /// <summary>
+        /// Le nombre de chiffres qui prennent une case : de 1 à 9 (la roue en a huit ; le 9 ne prend rien).
+        /// </summary>
         public const int CardKeys = 9;
 
         [Tooltip("L'asset d'actions du jeu (Assets/Input).")]
         [SerializeField] private InputActionAsset _actions;
 
         private IToolWheel _wheel;
-        private ICardPicker _cards;
         private IToolCursor _cursor;
         private InputActionMap _map;
         private InputAction _wheelKey;
@@ -39,17 +40,16 @@ namespace Diciela.Controls
         private bool _held;
 
         /// <summary>
-        /// Relie les gestes à la roue, aux cartes et au curseur de la ville qui vient de s'ouvrir ; null les rend muets.
+        /// Relie les gestes à la roue et au curseur de la ville qui vient de s'ouvrir ; null les rend muets.
         /// </summary>
-        public void Bind(IToolWheel wheel, ICardPicker cards, IToolCursor cursor)
+        public void Bind(IToolWheel wheel, IToolCursor cursor)
         {
             _wheel = wheel;
-            _cards = cards;
             _cursor = cursor;
             _held = false;
         }
 
-        /// <summary>Le nom, dans la carte « Tools », de l'action qui prend la carte de ce rang (0 : « Card1 »).</summary>
+        /// <summary>Le nom, dans la carte « Tools », de l'action du chiffre de ce rang (0 : « Card1 »).</summary>
         public static string CardAction(int index)
         {
             return "Card" + (index + 1);
@@ -107,7 +107,7 @@ namespace Diciela.Controls
             {
                 int index = i;
                 _cardKeys[i] = _map.FindAction(CardAction(i), true);
-                _taken[i] = _ => _cards?.TakeCard(index);
+                _taken[i] = _ => _wheel?.TakeSlot(index);
                 _cardKeys[i].performed += _taken[i];
             }
             _map.Enable();

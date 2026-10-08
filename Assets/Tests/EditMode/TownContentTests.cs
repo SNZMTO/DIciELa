@@ -8,9 +8,8 @@ namespace Diciela.Tests.EditMode
     /// Le contenu du départ et de la ville au travail, lu dans le projet sans rien écrire : le logis de la Chimère, le
     /// campement (un entrepôt qui reçoit le stock de départ et ouvre un poste), ce que la Chimère sait bâtir en arrivant
     /// (son campement, et rien hors du catalogue), les premiers habitants (un par statistique, chacun son humain), les
-    /// statistiques
-    /// (chaque sous-statistique dans une seule), les tâches (chacune lit une sous-statistique du catalogue), les coûts
-    /// (des marchandises du catalogue).
+    /// statistiques (chaque sous-statistique dans une seule), les tâches (chacune lit une sous-statistique du
+    /// catalogue), les coûts (des marchandises du catalogue), les familles (chacune sa case dans la roue de Construire).
     /// </summary>
     public sealed class TownContentTests
     {
@@ -34,6 +33,14 @@ namespace Diciela.Tests.EditMode
                 }
             }
             Assert.AreEqual(1, homes.Count, "Le catalogue doit avoir un seul logis de la Chimère : le campement.");
+        }
+
+        [Test]
+        public void EveryFamilyHasItsPlaceInTheBuildWheel()
+        {
+            // La roue de Construire a huit cases, dont la case Outils (décision 226) : sept familles au plus.
+            Assert.LessOrEqual(ProjectContent.LoadSingle<Catalog>().Families.Count, 7,
+                "Une famille de trop n'aurait pas de case dans la roue de Construire.");
         }
 
         [Test]

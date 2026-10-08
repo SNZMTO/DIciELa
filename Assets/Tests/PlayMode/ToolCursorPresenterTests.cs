@@ -57,7 +57,7 @@ namespace Diciela.Tests.PlayMode
             _test.Plaza.Take();
             Assert.AreEqual("curseur-pinceau", _view.Look?.Silhouette);
             Assert.AreEqual("peche", _view.Look?.Pastel);
-            Assert.AreEqual("place-icone-superficie", _view.Look?.InkIcon, "La zone, au départ.");
+            Assert.AreEqual("place-icone-superficie", _view.Look?.Ink.IconClass, "La zone, au départ.");
             Assert.AreEqual("", _view.Look?.FormIcon);
             Assert.AreEqual("", _view.Look?.SymmetryIcon, "Sans symétrie, pas de pastille.");
 
@@ -72,7 +72,7 @@ namespace Diciela.Tests.PlayMode
 
             _test.Plaza.Choose(PaintToolMode.CartSpot);
             Assert.AreEqual("curseur-place-charrette", _view.Look?.Silhouette);
-            Assert.AreEqual("", _view.Look?.InkIcon, "Une place de charrette ne pose ni zone ni sol.");
+            Assert.AreEqual("", _view.Look?.Ink.IconClass, "Une place de charrette ne pose ni zone ni sol.");
         }
 
         [Test]

@@ -23,7 +23,7 @@ namespace Diciela.Tests.PlayMode
 #if UNITY_EDITOR
             var theme = UnityEditor.AssetDatabase.LoadAssetAtPath<ThemeStyleSheet>("Assets/UI/Theme.tss");
             var layout = UnityEditor.AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UI/Hud.uxml");
-            var settings = BuildBarTests.LoadSingle<InterfaceSettings>();
+            var settings = TestAssets.LoadSingle<InterfaceSettings>();
             using (var town = new TestCampTown())
             {
                 var panel = town.Keep(ScriptableObject.CreateInstance<PanelSettings>());
