@@ -15,6 +15,14 @@
 
 ## Les captures
 
+### 08/10/2026 — étape 73 : les sols peints plus fin
+
+Pas une capture du jeu : le même gros plan du banc d'essai des sols, rendu dans le moteur avec les calques du pack. À
+gauche, la peinture à 62 cm le texel, dont le bord fait des marches ; à droite, à 31 cm, son bord lisse et rond. Le
+jeu peint ses sols à 24 cm, plus fin encore. À reprendre en capture, en jeu.
+
+![Le bord des pavés, peint à 62 cm puis à 31 cm le texel](Album/2026-10-08_etape-73_sols-fins.jpg)
+
 ### 08/10/2026 — étapes 70 à 72 : les sols qui se fondent, la rêverie de la prévision
 
 Pas de vue témoin : Unity n'a jamais été au premier plan, et le Play ne tourne pas derrière. Ce ne sont pas des captures

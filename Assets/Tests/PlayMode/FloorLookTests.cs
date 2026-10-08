@@ -10,18 +10,17 @@ namespace Diciela.Tests.PlayMode
 {
     /// <summary>
     /// L'aspect des sols peints (décisions 227 et 232), par le chemin du joueur, sur le banc des sols (TestFloorBench)
-    /// peint à 128 texels de côté (31,25 cm chacun) : un disque de 3 m de rayon, tracé puis bâti par la Chimère. Un sol
-    /// au bord lisse se fond sur la largeur de son fondu, centrée sur son bord (mi-terre mi-herbe en moyenne sur le
-    /// cercle, plus de cent texels mêlés autour, rien de mêlé au-delà d'un demi-fondu) ; des pavés se fondent dans leur
-    /// liant, qui se fond à son tour dans l'herbe au bout de sa bande ; un bord qui s'effiloche s'écarte de son cercle
-    /// ici et là. Le disque est fait de mailles d'un demi-mètre : on laisse 30 cm entre son cercle et ses mailles. Tous
-    /// les poids d'un texel font un.
+    /// peint à 128 texels de côté, sa copie plus fine (décision 233) : un disque de 3 m de rayon, tracé puis bâti par
+    /// la Chimère. Un sol au bord lisse se fond sur la largeur de son fondu, centrée sur son bord (mi-terre mi-herbe en
+    /// moyenne sur le cercle, plus de 8 m² mêlés autour, rien de mêlé au-delà d'un demi-fondu) ; des pavés se fondent
+    /// dans leur liant, qui se fond à son tour dans l'herbe au bout de sa bande ; un bord qui s'effiloche s'écarte de
+    /// son cercle ici et là. Le disque est fait de mailles d'un demi-mètre : on laisse 30 cm entre son cercle et ses
+    /// mailles. Tous les poids d'un texel font un.
     /// </summary>
     public sealed class FloorLookTests
     {
         private const int Resolution = 128;
         private const float Radius = 3f;
-        private const float TexelMeters = TestFloorBench.SideMeters / Resolution;
         private const float Tolerance = 0.3f;
         private static readonly Vector2 Center = new Vector2(20f, 30f);
         private TestFloorBench _bench;
@@ -66,7 +65,9 @@ namespace Diciela.Tests.PlayMode
             Assert.Greater(onEdge, 0, "Des texels sur le cercle.");
             Assert.That(edgeSum / onEdge, Is.InRange(0.35f, 0.65f),
                 "Sur le cercle, mi-terre mi-herbe en moyenne : le fondu est centré sur le bord.");
-            Assert.GreaterOrEqual(blended, 100, "Le fondu est large : plus de cent texels mêlés autour du cercle.");
+            float texel = TestFloorBench.SideMeters / _bench.Copy.alphamapResolution;
+            Assert.GreaterOrEqual(blended * texel * texel, 8f,
+                "Le fondu est large : plus de 8 m² mêlés autour du cercle.");
         }
 
         [UnityTest]
@@ -119,16 +120,18 @@ namespace Diciela.Tests.PlayMode
             yield return null;
         }
 
-        // Chaque texel à moins de 6 m du milieu : sa distance au milieu, et ses poids, qui font un.
+        // Chaque texel de la copie à moins de 6 m du milieu : sa distance au milieu, et ses poids, qui font un.
         private void ForEachTexel(System.Action<float, float[]> check)
         {
-            float[,,] weights = _bench.Copy.GetAlphamaps(0, 0, Resolution, Resolution);
+            int resolution = _bench.Copy.alphamapResolution;
+            float texelMeters = TestFloorBench.SideMeters / resolution;
+            float[,,] weights = _bench.Copy.GetAlphamaps(0, 0, resolution, resolution);
             var texel = new float[weights.GetLength(2)];
-            for (int y = 0; y < Resolution; y++)
+            for (int y = 0; y < resolution; y++)
             {
-                for (int x = 0; x < Resolution; x++)
+                for (int x = 0; x < resolution; x++)
                 {
-                    var point = new Vector2((x + 0.5f) * TexelMeters, (y + 0.5f) * TexelMeters);
+                    var point = new Vector2((x + 0.5f) * texelMeters, (y + 0.5f) * texelMeters);
                     float distance = Vector2.Distance(point, Center);
                     if (distance > 6f)
                         continue;

@@ -886,10 +886,10 @@
   comme l'herbe du pack, pour que ses facettes aient la taille de celles de l'herbe (décision 222) ; les pavés :
   `Path_01`, les pavés moussus du chemin du pack. Les autres sols : des calques faits des images du pack (pavés bruns,
   dalles, carreaux, briques, pierre grise, planchers), rangés hors du pack, avec leurs fiches.
-- **Défaut.** Le rendu des sols (décisions 227 et 232) : leurs formes arrondies sur 50 cm ; chaque sol se fond sur la
-  largeur de son fondu, centrée sur son bord. La terre : fondue sur 1 m dans l'herbe, effilochée de 35 cm en festons
-  d'1,5 m, sans liant. Les pavés : fondus sur 50 cm dans leur liant, effilochés de 40 cm, cernés de 80 cm de terre,
-  elle-même fondue sur 1,2 m dans l'herbe.
+- **Défaut.** Le rendu des sols (décisions 227, 232 et 233) : peints à 25 cm le texel (la carte, elle, est peinte à 49
+  cm) ; leurs formes arrondies sur 50 cm ; chaque sol se fond sur la largeur de son fondu, centrée sur son bord. La
+  terre : fondue sur 1 m dans l'herbe, effilochée de 35 cm en festons d'1,5 m, sans liant. Les pavés : fondus sur 50 cm
+  dans leur liant, effilochés de 40 cm, cernés de 80 cm de terre, elle-même fondue sur 1,2 m dans l'herbe.
 - **Règle.** La zone de la Place et ses places de charrette se voient en mode construction : en main une construction,
   l'outil de la Place, Chemins ou Déplacer. La zone : un voile léger sur le sol et son contour, lissés comme les sols,
   sans escalier ; une place de charrette : un cadre blanc, une pointe vers l'avant de la charrette.

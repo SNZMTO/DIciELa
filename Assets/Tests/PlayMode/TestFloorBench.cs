@@ -12,9 +12,9 @@ namespace Diciela.Tests.PlayMode
 {
     /// <summary>
     /// Le banc des sols vus : un Terrain d'essai de 40 × 40 m peint d'un seul calque, l'herbe, à la résolution de
-    /// peinture choisie, dont la partie joue sur une copie (l'original n'est jamais touché) ; le petit monde du
-    /// campement, dont la Chimère bâtit ; la vue des sols, ses fantômes d'un matériau d'essai. Ce qu'il crée part avec
-    /// lui.
+    /// peinture choisie (ou comme le test la peint d'abord), dont la partie joue sur une copie (l'original n'est jamais
+    /// touché) ; le petit monde du campement, dont la Chimère bâtit ; la vue des sols, ses fantômes d'un matériau
+    /// d'essai. Ce qu'il crée part avec lui.
     /// </summary>
     internal sealed class TestFloorBench : IDisposable
     {
@@ -22,11 +22,12 @@ namespace Diciela.Tests.PlayMode
         private const int MaxSteps = 6000;
         private readonly List<Object> _created = new List<Object>();
 
-        public TestFloorBench(int alphamapResolution)
+        public TestFloorBench(int alphamapResolution, Action<TestFloorBench> paint = null)
         {
             Original = Keep(new TerrainData { heightmapResolution = 33, alphamapResolution = alphamapResolution });
             Original.size = new Vector3(SideMeters, 10f, SideMeters);
             Original.terrainLayers = new[] { Layer("herbe") };
+            paint?.Invoke(this);
             Copy = Keep(Object.Instantiate(Original));
             Terrain terrain = Keep(Terrain.CreateTerrainGameObject(Copy)).GetComponent<Terrain>();
             Town = new TestCampTown(true, null, builds: true);

@@ -242,6 +242,12 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   (`ContourSquares`) : chaque carré entre quatre coins garde ses coins dedans et les points où ses côtés passent le
   niveau moitié, un polygone convexe en éventail (`ContourMesh`) ; le bord se chaîne d'un carré au voisin par le côté
   qu'ils partagent (`ContourLines`), une selle se tranchant par la moyenne de ses coins.
+- **La finesse de la peinture borne l'arrondi d'un sol** : le Terrain montre chaque texel, et un bord ne s'arrondit
+  pas sous sa taille. La carte se peint à 49 cm le texel ; la copie où se peignent les sols s'affine à l'ouverture
+  (`TerrainData.alphamapResolution`, une puissance de deux : changer la résolution efface la peinture), sa peinture
+  reprise de la carte au milieu de chaque texel, par morceaux pour borner la mémoire (`MapPaint`) ; là où un sol s'en
+  va, la peinture de la carte se relit de même. Deux fois plus fin coûte quatre fois la mémoire de la peinture. Les
+  poids d'une peinture de Terrain tiennent sur 8 bits : un test les compare à un centième près.
 - **Les touffes et petites fleurs** sont des objets combinés en lots statiques ; des milliers d'objets séparés font
   ramer.
 
