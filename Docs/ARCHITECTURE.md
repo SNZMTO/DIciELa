@@ -494,10 +494,11 @@ mètres carrés), `Place` ne veut dire que poser, la fiche d'un lieu est `Locati
   global, au-dessus de celui de la carte, son profil une fiche, `Assets/Art/Reverie.asset`, qui entre et sort en fondu
   sans que la pause l'arrête) et aux vues du monde (`WorldViews.ShowForesight`). En prévision, chaque vue montre la
   ville une fois ses chantiers finis : `StructureViews` monte la ligne de chaque chantier tout en haut et cache son
-  fantôme (une construction qu'on déplace, déjà bâtie à sa nouvelle place) ; `FloorViews` peint les sols tracés et plus
-  ceux qu'on efface (`FloorWeights.Serves`), sans fantôme ; `NatureViews` cache ce qui est marqué, fanions compris
-  (`ForeseenNature` garde la taille de leurs instances du Terrain pour la leur rendre). La simulation n'en sait rien :
-  on y construit par les mêmes ordres, et le temps continue.
+  fantôme (une construction qu'on déplace, déjà bâtie à sa nouvelle place, où l'on vise son modèle pour la toucher :
+  `StructureView.Seen`) ; `FloorViews` peint les sols tracés et plus ceux qu'on efface (`FloorWeights.Serves`), sans
+  fantôme ; `NatureViews` cache ce qui est marqué, fanions compris (`ForeseenNature` garde la taille de leurs instances
+  du Terrain pour la leur rendre). La simulation n'en sait rien : on y construit par les mêmes ordres, et le temps
+  continue.
 - **L'ouverture d'une partie** : la scène du démarrage (`GameStage`) montre le monde (constructions, habitants) et ouvre
   l'écran de création dans l'atelier (`CreationStage`, qui le montre, prend le portrait de la Chimère et le cache ;
   `Atelier` : un décor généré loin de la carte, sa lumière, sa caméra) ; l'aperçu

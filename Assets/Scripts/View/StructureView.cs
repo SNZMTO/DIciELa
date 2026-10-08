@@ -38,8 +38,14 @@ namespace Diciela.View
 
         public Structure Structure { get; }
 
-        /// <summary>Le modèle à sa place : celui qu'on vise pour la toucher.</summary>
-        public Transform Transform => _model.transform;
+        /// <summary>
+        /// Le modèle qu'on voit, celui qu'on vise pour la toucher : à sa place ; en prévision, celui d'une construction
+        /// qu'on déplace, déjà à sa nouvelle place (décision 228).
+        /// </summary>
+        public Transform Seen(bool foresight)
+        {
+            return foresight && _target != null ? _target.transform : _model.transform;
+        }
 
         /// <summary>La boîte de ses maillages, dans le repère du modèle ; vide sans maillage : on ne la touche pas.</summary>
         public Bounds LocalBox { get; private set; }
