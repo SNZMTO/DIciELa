@@ -29,7 +29,8 @@ namespace Diciela.View
             if (settings == null || settings.TranslucentMaterial == null || settings.FloorGhostMaterial == null)
                 throw new System.InvalidOperationException("Les sols vus n'ont pas leur fiche de réglages de la pose.");
             _world = world;
-            _painting = new FloorPainting(terrain, original, world.Floors, world.Grid, settings.GroundRoundingMeters);
+            _painting = new FloorPainting(terrain, original, world.Floors, world.Grid, settings.GroundRoundingMeters,
+                settings.GroundPaintTexelMeters);
             _ghosts ??= new FloorGhosts(transform, settings);
             _ghosts.PlaceOn(terrain);
             _world.Floors.FloorsChanged += OnFloorsChanged;

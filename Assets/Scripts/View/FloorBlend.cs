@@ -8,8 +8,9 @@ namespace Diciela.View
     /// <summary>
     /// Le mélange des calques d'une boîte de texels (décision 227) : chaque texel prend ce que couvrent les sols qui
     /// servent (FloorWeights), puis ce que couvrent leurs liants (le plus large, quand deux sols partagent le leur),
-    /// puis la peinture de la carte, lue sur l'original, pour le reste ; ses poids font toujours un. Le calque d'un
-    /// sol, ou celui de son liant, qui manque à la copie s'y ajoute. Ses tableaux servent d'une boîte à l'autre.
+    /// puis la peinture de la carte, lue sur l'original à la finesse de la copie (MapPaint), pour le reste ; ses poids
+    /// font toujours un. Le calque d'un sol, ou celui de son liant, qui manque à la copie s'y ajoute. Ses tableaux
+    /// servent d'une boîte à l'autre.
     /// </summary>
     internal sealed class FloorBlend
     {
@@ -28,7 +29,7 @@ namespace Diciela.View
             PrepareLayers(data, weights);
             float[,,] mixed = data.GetAlphamaps(texels.x, texels.y, texels.width, texels.height);
             float[,,] map = original.alphamapLayers > 0
-                ? original.GetAlphamaps(texels.x, texels.y, texels.width, texels.height)
+                ? MapPaint.Read(original, data.alphamapResolution, texels)
                 : null;
             int layers = mixed.GetLength(2), mapLayers = map != null ? map.GetLength(2) : 0;
             for (int y = 0; y < texels.height; y++)
