@@ -809,10 +809,10 @@
   construire, comme le personnage d'Animal Crossing qui se projette : les constructions en chantier se voient bâties,
   une construction qu'on déplace est déjà à sa nouvelle place, les sols tracés sont peints, et ce qu'on retire (les
   arbres et rochers marqués, les sols qu'on efface) est déjà parti. Le temps continue, et l'on y construit comme
-  ailleurs : ce qu'on pose ou trace s'y voit aussitôt fini. Un filtre de rêverie dit qu'on regarde la ville à venir :
-  des couleurs plus douces et plus claires, les bords de l'écran voilés de lavande. On l'allume et l'éteint par sa
-  touche ou par son bouton, au-dessus de l'icône des outils, qui reste enfoncé tant qu'elle dure ; Échap l'éteint aussi,
-  en dernier dans sa pile.
+  ailleurs : ce qu'on pose ou trace s'y voit aussitôt fini, et l'on y touche ce qu'on voit. Un filtre de rêverie dit
+  qu'on regarde la ville à venir : des couleurs plus douces et plus claires, les bords de l'écran voilés de lavande. On
+  l'allume et l'éteint par sa touche ou par son bouton, au-dessus de l'icône des outils, qui reste enfoncé tant qu'elle
+  dure ; Échap l'éteint aussi, en dernier dans sa pile.
 - **Défaut.** La prévision (décision 228) : V ; son bouton, un feutre lavande ; le filtre entre et sort en 0,2 s.
 - **À toi.** L'animation où la Chimère se projette, avec le pack d'animations : le filtre de rêverie la remplace en
   attendant.
