@@ -8,10 +8,11 @@ using UnityEngine;
 namespace Diciela.View
 {
     /// <summary>
-    /// Les fantômes des sols en chantier (décision 216) : chaque sorte de sol qu'on trace a son calque, à la texture de sa
-    /// fiche (Diciela/SolFantome : la tuile posée comme le Terrain pose ses calques, depuis son origine, mêlée à la teinte
-    /// des fantômes) ; un sol qu'on efface, et une sorte sans texture, se voient en voile de la couleur des fantômes.
-    /// Chaque sorte a sa copie du matériau, faite à son premier fantôme ; tout est détruit avec la vue.
+    /// Les fantômes des sols en chantier (décisions 216 et 227) : chaque sorte de sol qu'on trace a son calque, à la
+    /// texture de sa fiche (Diciela/SolFantome : la tuile posée comme le Terrain pose ses calques, depuis son origine,
+    /// mêlée à la teinte des fantômes) ; un sol qu'on efface, et une sorte sans texture, se voient en voile de la
+    /// couleur des fantômes. Leurs formes sont lissées comme celles des sols peints (CellField). Chaque sorte a sa
+    /// copie du matériau, faite à son premier fantôme ; tout est détruit avec la vue.
     /// </summary>
     internal sealed class FloorGhosts
     {
@@ -28,6 +29,9 @@ namespace Diciela.View
         private readonly Dictionary<FloorDefinition, Ghost> _ghosts = new Dictionary<FloorDefinition, Ghost>();
         private readonly List<FloorDefinition> _kinds = new List<FloorDefinition>();
         private readonly List<Vector2Int> _cells = new List<Vector2Int>();
+        private readonly List<Vector2Int> _patch = new List<Vector2Int>();
+        private readonly CellField _field = new CellField();
+        private readonly ContourMesh _fill = new ContourMesh();
         private readonly DrapedMesh _built = new DrapedMesh();
         private Vector3 _origin;
 
@@ -60,9 +64,8 @@ namespace Diciela.View
         {
             IReadOnlyList<ConstructionSite> queue = world.ConstructionSites.Queue;
             // Le voile : ce qu'on efface, et les sortes sans texture ; les sortes à texture sont notées pour la suite.
-            _built.Begin(world.Map.Relief, _settings.OverlayLiftMeters);
             _kinds.Clear();
-            bool veiled = false;
+            _cells.Clear();
             for (int i = 0; i < queue.Count; i++)
             {
                 FloorPatch patch = queue[i].Floor;
@@ -74,12 +77,10 @@ namespace Diciela.View
                         _kinds.Add(patch.Floor);
                     continue;
                 }
-                patch.CopyCells(_cells);
-                _built.AddCells(_cells, world.Grid);
-                veiled |= _cells.Count > 0;
+                patch.CopyCells(_patch);
+                _cells.AddRange(_patch);
             }
-            _veil.Apply(_built);
-            _veil.SetVisible(veiled);
+            _veil.SetVisible(Draw(world, _veil));
 
             foreach (KeyValuePair<FloorDefinition, Ghost> pair in _ghosts)
                 pair.Value.Overlay.SetVisible(false);
@@ -109,20 +110,28 @@ namespace Diciela.View
         private void RebuildKind(World world, FloorDefinition kind)
         {
             IReadOnlyList<ConstructionSite> queue = world.ConstructionSites.Queue;
-            _built.Begin(world.Map.Relief, _settings.OverlayLiftMeters);
-            bool any = false;
+            _cells.Clear();
             for (int i = 0; i < queue.Count; i++)
             {
                 FloorPatch patch = queue[i].Floor;
                 if (patch == null || patch.IsErase || !ReferenceEquals(patch.Floor, kind))
                     continue;
-                patch.CopyCells(_cells);
-                _built.AddCells(_cells, world.Grid);
-                any |= _cells.Count > 0;
+                patch.CopyCells(_patch);
+                _cells.AddRange(_patch);
             }
             Ghost ghost = GhostOf(kind);
-            ghost.Overlay.Apply(_built);
-            ghost.Overlay.SetVisible(any);
+            ghost.Overlay.SetVisible(Draw(world, ghost.Overlay));
+        }
+
+        // Dessine les mailles notées dans _cells sur ce calque, lissées ; vrai s'il y en a.
+        private bool Draw(World world, GroundOverlay overlay)
+        {
+            float size = world.Grid.Metrics.CellSize;
+            _field.Build(_cells, size, CellField.RadiusCells(_settings.GroundRoundingMeters, size));
+            _built.Begin(world.Map.Relief, _settings.OverlayLiftMeters);
+            _fill.AddFill(_built, _field);
+            overlay.Apply(_built);
+            return _cells.Count > 0;
         }
 
         private static bool HasTexture(FloorPatch patch)

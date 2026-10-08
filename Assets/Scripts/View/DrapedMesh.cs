@@ -7,25 +7,21 @@ using UnityEngine.Rendering;
 namespace Diciela.View
 {
     /// <summary>
-    /// Un maillage posé sur le relief (décision 206) : des mailles du maillage en carrés qui partagent leurs coins, des
-    /// traits en bandes fines, des pointes ; chaque sommet à la hauteur du relief, un peu au-dessus pour ne pas se mêler
-    /// au sol. Un trait se coupe tous les demi-mètres pour suivre les pentes. Ses listes servent d'une construction à
-    /// l'autre : rien n'est alloué une fois à leur taille.
+    /// Un maillage posé sur le relief (décisions 206 et 227) : des faces dont les sommets se partagent par leur clé (le
+    /// dedans d'un contour lissé, ContourMesh), des traits en bandes fines, des lignes brisées aux angles joints, des
+    /// pointes ; chaque sommet à la hauteur du relief, un peu au-dessus pour ne pas se mêler au sol. Un trait se coupe
+    /// tous les demi-mètres pour suivre les pentes. Ses listes servent d'une construction à l'autre : rien n'est alloué
+    /// une fois à leur taille.
     /// </summary>
     internal sealed class DrapedMesh
     {
         // Un trait suit le relief par morceaux de cette longueur, en mètres.
-        private const float Step = 0.5f;
-
-        // La pointe d'une place de charrette, en parts de sa demi-largeur : son écart au bord avant, sa longueur, sa
-        // demi-base.
-        private const float TipMargin = 0.2f;
-        private const float TipLength = 0.6f;
-        private const float TipHalfBase = 0.45f;
+        internal const float Step = 0.5f;
 
         private readonly List<Vector3> _vertices = new List<Vector3>();
         private readonly List<int> _triangles = new List<int>();
-        private readonly Dictionary<int, int> _corners = new Dictionary<int, int>();
+        private readonly Dictionary<long, int> _shared = new Dictionary<long, int>();
+        private readonly List<Vector2> _line = new List<Vector2>();
         private Relief _relief;
         private float _lift;
 
@@ -36,25 +32,66 @@ namespace Diciela.View
             _lift = lift;
             _vertices.Clear();
             _triangles.Clear();
-            _corners.Clear();
+            _shared.Clear();
         }
 
-        /// <summary>Des mailles du maillage, en carrés qui se touchent : deux voisines partagent leurs deux coins.</summary>
-        public void AddCells(IReadOnlyList<Vector2Int> cells, NavGrid grid)
+        /// <summary>
+        /// Le sommet qui porte cette clé, posé en ce point la première fois qu'on le demande : deux faces qui le citent
+        /// le partagent.
+        /// </summary>
+        public int Point(long key, Vector2 position)
         {
-            float size = grid.Metrics.CellSize;
-            int stride = grid.Width + 1;
-            for (int i = 0; i < cells.Count; i++)
+            if (_shared.TryGetValue(key, out int index))
+                return index;
+            index = _vertices.Count;
+            _vertices.Add(Ground(position));
+            _shared.Add(key, index);
+            return index;
+        }
+
+        /// <summary>
+        /// Une face de ces trois sommets, dans le sens des aiguilles d'une montre vus d'en haut : sa face visible.
+        /// </summary>
+        public void AddFace(int a, int b, int c)
+        {
+            AddTriangle(a, b, c);
+        }
+
+        /// <summary>
+        /// Une ligne brisée de cette largeur par ces points, fermée ou non : ses angles se joignent en onglet (la
+        /// pointe bornée au double de la demi-largeur), chaque côté coupé tous les demi-mètres pour suivre les pentes.
+        /// </summary>
+        public void AddPolyline(IReadOnlyList<Vector2> points, bool closed, float width)
+        {
+            _line.Clear();
+            int count = points.Count;
+            for (int i = 0; i < count; i++)
             {
-                Vector2Int cell = cells[i];
-                Vector2 min = grid.CellCenter(cell) - new Vector2(size, size) * 0.5f;
-                int a = Corner(cell.x, cell.y, stride, min);
-                int b = Corner(cell.x + 1, cell.y, stride, min + new Vector2(size, 0f));
-                int c = Corner(cell.x + 1, cell.y + 1, stride, min + new Vector2(size, size));
-                int d = Corner(cell.x, cell.y + 1, stride, min + new Vector2(0f, size));
-                // Vus d'en haut, dans le sens des aiguilles d'une montre : la face visible pour Unity.
-                AddTriangle(a, d, c);
-                AddTriangle(a, c, b);
+                _line.Add(points[i]);
+                if (!closed && i == count - 1)
+                    break;
+                Vector2 next = points[(i + 1) % count];
+                int pieces = Mathf.CeilToInt(Vector2.Distance(points[i], next) / Step);
+                for (int piece = 1; piece < pieces; piece++)
+                    _line.Add(Vector2.Lerp(points[i], next, (float)piece / pieces));
+            }
+            if (_line.Count < 2)
+                return;
+            float half = width * 0.5f;
+            int first = _vertices.Count, total = _line.Count;
+            for (int i = 0; i < total; i++)
+            {
+                Vector2 offset = Miter(i, closed, half);
+                _vertices.Add(Ground(_line[i] + offset));
+                _vertices.Add(Ground(_line[i] - offset));
+            }
+            int sides = closed ? total : total - 1;
+            for (int i = 0; i < sides; i++)
+            {
+                int l0 = first + 2 * i, r0 = l0 + 1;
+                int l1 = first + 2 * ((i + 1) % total), r1 = l1 + 1;
+                AddTriangle(l0, l1, r1);
+                AddTriangle(l0, r1, r0);
             }
         }
 
@@ -86,41 +123,6 @@ namespace Diciela.View
             }
         }
 
-        /// <summary>Le tour d'un rectangle tourné, en traits de cette largeur.</summary>
-        public void AddOutline(RotatedRect rect, float width)
-        {
-            for (int corner = 0; corner < 4; corner++)
-                AddSegment(rect.Corner(corner), rect.Corner((corner + 1) % 4), width);
-        }
-
-        /// <summary>Le tour d'un cercle, en traits de cette largeur, d'au moins seize côtés.</summary>
-        public void AddCircle(Vector2 center, float radius, float width)
-        {
-            int sides = Mathf.Clamp(Mathf.CeilToInt(2f * Mathf.PI * radius / Step), 16, 128);
-            Vector2 previous = center + new Vector2(radius, 0f);
-            for (int i = 1; i <= sides; i++)
-            {
-                float angle = 2f * Mathf.PI * i / sides;
-                Vector2 next = center + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius;
-                AddSegment(previous, next, width);
-                previous = next;
-            }
-        }
-
-        /// <summary>
-        /// Une place de charrette : son cadre, et une pointe près de son bord avant, vers où l'avant de la charrette se
-        /// gare (un remplaçant simple, comme le fanion des arbres).
-        /// </summary>
-        public void AddMark(RotatedRect footprint, float width)
-        {
-            AddOutline(footprint, width);
-            float halfWidth = footprint.Size.x * 0.5f, halfLength = footprint.Size.y * 0.5f;
-            Vector2 tip = footprint.ToWorld(new Vector2(0f, halfLength - halfWidth * TipMargin));
-            float back = halfLength - halfWidth * (TipMargin + TipLength);
-            AddTip(tip, footprint.ToWorld(new Vector2(-halfWidth * TipHalfBase, back)),
-                footprint.ToWorld(new Vector2(halfWidth * TipHalfBase, back)));
-        }
-
         /// <summary>Une pointe pleine : sa pointe, et les deux coins de sa base.</summary>
         public void AddTip(Vector2 tip, Vector2 baseLeft, Vector2 baseRight)
         {
@@ -142,15 +144,29 @@ namespace Diciela.View
             mesh.RecalculateBounds();
         }
 
-        private int Corner(int x, int y, int stride, Vector2 position)
+        // Le décalage du bord gauche de la ligne en ce point : la moyenne des normales des côtés qui s'y touchent,
+        // allongée pour garder la demi-largeur de chaque côté, bornée au double ; un bout ouvert garde la normale de
+        // son côté.
+        private Vector2 Miter(int i, bool closed, float half)
         {
-            int key = x + y * stride;
-            if (_corners.TryGetValue(key, out int index))
-                return index;
-            index = _vertices.Count;
-            _vertices.Add(Ground(position));
-            _corners.Add(key, index);
-            return index;
+            int total = _line.Count;
+            bool hasPrevious = closed || i > 0, hasNext = closed || i < total - 1;
+            Vector2 before = hasPrevious ? Normal(_line[(i - 1 + total) % total], _line[i]) : Vector2.zero;
+            Vector2 after = hasNext ? Normal(_line[i], _line[(i + 1) % total]) : Vector2.zero;
+            Vector2 sum = before + after;
+            if (sum.sqrMagnitude < 1e-8f)
+                return (hasPrevious ? before : after) * half;
+            Vector2 miter = sum.normalized;
+            float along = Vector2.Dot(miter, hasPrevious ? before : after);
+            return miter * Mathf.Min(half / Mathf.Max(along, 1e-3f), 2f * half);
+        }
+
+        // La normale gauche du côté de a à b, de longueur 1 ; nulle pour un côté sans longueur.
+        private static Vector2 Normal(Vector2 a, Vector2 b)
+        {
+            Vector2 along = b - a;
+            float length = along.magnitude;
+            return length < 1e-6f ? Vector2.zero : new Vector2(-along.y, along.x) / length;
         }
 
         private Vector3 Ground(Vector2 point)
