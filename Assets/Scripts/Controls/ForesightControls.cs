@@ -5,11 +5,12 @@ using UnityEngine.InputSystem;
 namespace Diciela.Controls
 {
     /// <summary>
-    /// Le geste de la prévision (GDD, section 16 ; décision 228) : V la bascule, liée au caractère (SAVOIR, section 3).
-    /// Le démarrage lui donne la prévision de la ville à son ouverture, et la lui reprend à sa sortie ; sans elle, le
-    /// geste est muet. Il lit l'action, rien d'autre.
+    /// Le geste de la prévision (GDD, section 16 ; décisions 228 et 229) : V la bascule, liée au caractère (SAVOIR,
+    /// section 3) ; Échap l'éteint, en dernier dans sa pile (EscapeControls). Le démarrage lui donne la prévision de la
+    /// ville à son ouverture, et la lui reprend à sa sortie ; sans elle, le geste est muet. Il lit l'action, rien
+    /// d'autre.
     /// </summary>
-    public sealed class ForesightControls : MonoBehaviour
+    public sealed class ForesightControls : MonoBehaviour, IEscapable
     {
         public const string MapName = "Foresight";
         public const string ToggleAction = "Toggle";
@@ -28,6 +29,15 @@ namespace Diciela.Controls
         public void Bind(Foresight foresight)
         {
             _foresight = foresight;
+        }
+
+        /// <summary>Éteint la prévision si elle dure ; sinon, Échap passe à la suite de sa pile.</summary>
+        public bool Escape()
+        {
+            if (_foresight == null || !_foresight.IsOn)
+                return false;
+            _foresight.Set(false);
+            return true;
         }
 
         private void OnEnable()

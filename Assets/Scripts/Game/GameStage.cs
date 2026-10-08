@@ -15,8 +15,8 @@ namespace Diciela.Game
     /// puis reculée à sa distance de départ. Le monde (constructions, habitants, arbres, charrettes, sols) est vu dès
     /// l'ouverture (WorldViews) ; la Place, en mode construction (TownPlaza) ; l'outil en main, à sa carte et à son
     /// curseur ; la ville à venir, en prévision (TownForesight). Toucher un lieu ouvre sa fiche ; Échap ferme la fiche,
-    /// puis la roue des outils, puis défait le geste en cours, puis lâche l'outil en main. Il délie et cache tout à la
-    /// sortie.
+    /// puis la roue des outils, puis défait le geste en cours, puis lâche l'outil en main, puis éteint la prévision. Il
+    /// délie et cache tout à la sortie.
     /// </summary>
     public sealed class GameStage : MonoBehaviour
     {
@@ -187,7 +187,7 @@ namespace Diciela.Game
             _toolCursor = new ToolCursor(document);
             _toolCursor.Show(_tools.Placement, _tools.Clearing, _tools.Move, _tools.Paths, _tools.Plaza, hud);
             _toolControls.Bind(_toolWheel, _toolCursor);
-            _escapeControls.Bind(_locationSheet, _toolWheel, _tools.Hand);
+            _escapeControls.Bind(_locationSheet, _toolWheel, _tools.Hand, _foresightControls);
             _foresight = new TownForesight(_worldViews, _foresightFilter, _foresightControls, document, texts,
                 _tooltips);
         }

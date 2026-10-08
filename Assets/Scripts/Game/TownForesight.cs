@@ -8,10 +8,11 @@ using UnityEngine.UIElements;
 namespace Diciela.Game
 {
     /// <summary>
-    /// La prévision de la ville (GDD, section 16 ; décision 228) : V ou son bouton, au-dessus de l'icône des outils, la
-    /// basculent ; en prévision, le monde se voit tel qu'il sera une fois tous ses chantiers finis (WorldViews), sous
-    /// le filtre de rêverie (ForesightFilter). Le temps continue, et l'on y construit comme ailleurs. Branchée à
-    /// l'ouverture de la ville ; à sa sortie, elle s'éteint et se débranche.
+    /// La prévision de la ville (GDD, section 16 ; décisions 228 et 229) : V ou son bouton, au-dessus de l'icône des
+    /// outils, la basculent, et Échap l'éteint, en dernier dans sa pile ; en prévision, le monde se voit tel qu'il sera
+    /// une fois tous ses chantiers finis (WorldViews), sous le filtre de rêverie (ForesightFilter). Le temps continue,
+    /// et l'on y construit comme ailleurs. Branchée à l'ouverture de la ville ; à sa sortie, elle s'éteint et se
+    /// débranche.
     /// </summary>
     internal sealed class TownForesight : IDisposable
     {

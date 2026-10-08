@@ -488,16 +488,16 @@ mètres carrés), `Place` ne veut dire que poser, la fiche d'un lieu est `Locati
   lissée (`FloorGhosts` : un calque par sorte de sol, sa copie du matériau du shader `Diciela/SolFantome`, la tuile
   posée comme sur le Terrain, depuis son origine, mêlée à la teinte des fantômes) ; un sol qu'on efface, en voile de la
   couleur des fantômes (`FloorViews`, né avec les vues du monde, `WorldViews`).
-- **La prévision** (décision 228) : un état de la vue (`Foresight`), que `Game` crée à l'ouverture de la ville et
-  relie (`TownForesight`) à son geste, V (`ForesightControls`), à son bouton au-dessus de l'icône des outils
-  (`ForesightButton`), au filtre de rêverie (`ForesightFilter` : un volume de filtres global, au-dessus de celui de la
-  carte, son profil une fiche, `Assets/Art/Reverie.asset`, qui entre et sort en fondu sans que la pause l'arrête) et
-  aux vues du monde (`WorldViews.ShowForesight`). En prévision, chaque vue montre la ville une fois ses chantiers
-  finis : `StructureViews` monte la ligne de chaque chantier tout en haut et cache son fantôme (une construction qu'on
-  déplace, déjà bâtie à sa nouvelle place) ; `FloorViews` peint les sols tracés et plus ceux qu'on efface
-  (`FloorWeights.Serves`), sans fantôme ; `NatureViews` cache ce qui est marqué, fanions compris (`ForeseenNature`
-  garde la taille de leurs instances du Terrain pour la leur rendre). La simulation n'en sait rien : on y construit par
-  les mêmes ordres, et le temps continue.
+- **La prévision** (décisions 228 et 229) : un état de la vue (`Foresight`), que `Game` crée à l'ouverture de la ville
+  et relie (`TownForesight`) à son geste, V (`ForesightControls`, qu'Échap trouve en dernier dans sa pile), à son bouton
+  au-dessus de l'icône des outils (`ForesightButton`), au filtre de rêverie (`ForesightFilter` : un volume de filtres
+  global, au-dessus de celui de la carte, son profil une fiche, `Assets/Art/Reverie.asset`, qui entre et sort en fondu
+  sans que la pause l'arrête) et aux vues du monde (`WorldViews.ShowForesight`). En prévision, chaque vue montre la
+  ville une fois ses chantiers finis : `StructureViews` monte la ligne de chaque chantier tout en haut et cache son
+  fantôme (une construction qu'on déplace, déjà bâtie à sa nouvelle place) ; `FloorViews` peint les sols tracés et plus
+  ceux qu'on efface (`FloorWeights.Serves`), sans fantôme ; `NatureViews` cache ce qui est marqué, fanions compris
+  (`ForeseenNature` garde la taille de leurs instances du Terrain pour la leur rendre). La simulation n'en sait rien :
+  on y construit par les mêmes ordres, et le temps continue.
 - **L'ouverture d'une partie** : la scène du démarrage (`GameStage`) montre le monde (constructions, habitants) et ouvre
   l'écran de création dans l'atelier (`CreationStage`, qui le montre, prend le portrait de la Chimère et le cache ;
   `Atelier` : un décor généré loin de la carte, sa lumière, sa caméra) ; l'aperçu
@@ -537,7 +537,7 @@ mètres carrés), `Place` ne veut dire que poser, la fiche d'un lieu est `Locati
   ses rappels, ses infobulles (une infobulle donnée se retire). Le démarrage donne à la journée, à chaque image, la
   fraction du pas en cours. Tout le HUD dit aux gestes où il est (`HudArea`) ; l'outil « choisir » dit ce qu'on a
   touché, et le démarrage le relie à la fiche. Échap est une pile (`EscapeControls`) : la fiche, la roue, puis la main
-  (`Hand`), dont l'outil défait ce qu'il tient ou se lâche.
+  (`Hand`), dont l'outil défait ce qu'il tient ou se lâche, puis la prévision (`ForesightControls`).
 - **Aucun état statique modifiable** dans la simulation : le registre, le catalogue et les textes sont des objets
   créés par `Game`. Le Play de ce projet ne recharge ni le code ni la scène : `Game` crée le monde, la table des textes
   et l'outil de pose, et les libère à la sortie (les outils de l'éditeur lisent le monde en cours par
