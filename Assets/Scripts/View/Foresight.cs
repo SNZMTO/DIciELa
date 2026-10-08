@@ -3,10 +3,10 @@ using System;
 namespace Diciela.View
 {
     /// <summary>
-    /// La prévision (GDD, section 16 ; décision 228) : une vue où la ville se montre comme si tous ses chantiers
+    /// La prévision (GDD, section 16 ; décisions 228 à 230) : une vue où la ville se montre comme si tous ses chantiers
     /// étaient finis, pour mieux s'y projeter et construire. Ce n'est qu'une vue : la simulation n'en sait rien, le
-    /// temps continue, on y construit. Un seul interrupteur, qu'allument la touche de la prévision et son icône ; les
-    /// vues du monde, le filtre de rêverie et l'icône écoutent quand il change.
+    /// temps continue, on y construit. Un seul interrupteur, qu'allument sa touche et son bouton, qu'Échap éteint ; les
+    /// vues du monde, le voile de rêverie et le bouton écoutent quand il change.
     /// </summary>
     public sealed class Foresight
     {

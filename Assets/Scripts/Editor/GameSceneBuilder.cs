@@ -89,7 +89,6 @@ namespace Diciela.EditorTools
             {
                 EditorAssets.AssignIfMissing(stage, "_cameraRig", rig);
                 EditorAssets.AssignIfMissing(stage, "_cameraControls", rig.GetComponent<CameraControls>());
-                EditorAssets.AssignIfMissing(stage, "_foresightFilter", rig.GetComponent<ForesightFilter>());
             }
             PlacementBuilder.EnsureIn(scene, runner, stage);
             EditorAssets.AssignIfMissing(stage, "_villagerViews",

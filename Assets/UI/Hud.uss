@@ -279,6 +279,26 @@
     justify-content: center;
 }
 
+/* Le voile de rêverie de la prévision (décision 230) : sur tout l'écran, sous le reste du HUD, l'image générée d'une
+   lavande pâle, légère au milieu et dense vers les bords ; il paraît et s'efface en fondu de 0,2 s. */
+.reverie {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("Images/Reverie.png");
+    -unity-background-scale-mode: stretch-to-fill;
+    opacity: 0;
+    transition-property: opacity;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-out-cubic;
+}
+
+.reverie.reverie-visible {
+    opacity: 1;
+}
+
 /* La prévision (décision 228) : son bouton au-dessus de l'icône des outils, centré sur elle, un feutre lavande, sa
    touche sur une étiquette de lin ; enfoncé tant qu'elle dure. */
 .prevision {
