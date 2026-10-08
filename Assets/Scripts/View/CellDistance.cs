@@ -4,10 +4,10 @@ using UnityEngine;
 namespace Diciela.View
 {
     /// <summary>
-    /// La distance de chaque maille d'une région à un ensemble de mailles, en mètres, de milieu à milieu (décision
-    /// 227) : celle du chanfrein, en deux passes, un pas droit valant un côté de maille, un pas en diagonale sa
-    /// diagonale. Elle donne la bande du liant autour d'un sol (FloorWeights). Ses tableaux servent d'une distance à
-    /// l'autre.
+    /// La distance de chaque maille d'une région à un ensemble de mailles, en mètres, de milieu à milieu (décisions
+    /// 227 et 232) : celle du chanfrein, en deux passes, un pas droit valant un côté de maille, un pas en diagonale sa
+    /// diagonale. Prise aux mailles d'un sol et aux autres, elle donne le bord d'un sol peint, son fondu et la bande
+    /// de son liant (FloorWeights). Ses tableaux servent d'une distance à l'autre.
     /// </summary>
     internal sealed class CellDistance
     {
@@ -35,6 +35,15 @@ namespace Diciela.View
             int x = cell.x - _cells.xMin, y = cell.y - _cells.yMin;
             if (x >= 0 && y >= 0 && x < _cells.width && y < _cells.height)
                 _distances[x + y * _cells.width] = 0f;
+        }
+
+        /// <summary>La distance au milieu de cette maille ; l'infini hors de la région.</summary>
+        public float At(Vector2Int cell)
+        {
+            int x = cell.x - _cells.xMin, y = cell.y - _cells.yMin;
+            if (x < 0 || y < 0 || x >= _cells.width || y >= _cells.height)
+                return float.PositiveInfinity;
+            return _distances[x + y * _cells.width];
         }
 
         /// <summary>

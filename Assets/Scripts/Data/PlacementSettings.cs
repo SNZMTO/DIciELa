@@ -125,10 +125,6 @@ namespace Diciela.Data
                  "rayon, sans escalier.")]
         [SerializeField, Range(0.25f, 2f)] private float _groundRoundingMeters = 0.5f;
 
-        [Tooltip("La douceur du bord d'un sol peint et de son liant, en mètres : sur cette largeur, il se fond " +
-                 "dans ce qui l'entoure ; le Terrain l'adoucit encore d'un texel.")]
-        [SerializeField, Range(0.02f, 1f)] private float _floorEdgeSoftnessMeters = 0.15f;
-
         public float RotationStepDegrees => _rotationStepDegrees;
         public float RotationDegreesPerPixel => _rotationDegreesPerPixel;
         public Material TranslucentMaterial => _translucentMaterial;
@@ -163,6 +159,5 @@ namespace Diciela.Data
         public float OutlineWidthMeters => _outlineWidthMeters;
         public float OverlayLiftMeters => _overlayLiftMeters;
         public float GroundRoundingMeters => _groundRoundingMeters;
-        public float FloorEdgeSoftnessMeters => _floorEdgeSoftnessMeters;
     }
 }

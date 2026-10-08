@@ -227,18 +227,21 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   la copie la première fois qu'il sert (`terrainLayers` réassigné : les poids déjà peints restent, le nouveau calque
   part de 0). Une boîte où rien ne sert et où rien n'a jamais été peint ne coûte qu'une lecture : la vue part de tout le
   monde à l'ouverture sans rien écrire.
-- **Un texel qui prend un sol tout entier fait des blocs** (étape 70) : à 49 cm le texel, un trait rond devenait un
-  escalier que le Terrain floutait. Le sol se peint d'après la forme lissée de ses mailles (`CellField`) : un flou
-  binomial de quelques mailles, séparable (en x puis en y), dont le niveau moitié suit un bord droit à sa place exacte
-  et arrondit les coins ; chaque texel prend ce champ, passé par un fondu étroit (`smoothstep`) : le bord est net et
-  rond, et le Terrain l'adoucit d'un texel. Le bord s'effiloche en lisant le champ en un point déplacé par un bruit doux
-  (déformation de domaine : deux bruits de valeur, `GroundNoise`), le même au même point. Le liant suit la distance au
-  sol, celle du chanfrein en deux passes (`CellDistance` : un pas droit vaut une maille, un pas en diagonale sa
-  diagonale), assez juste pour une bande effilochée. Ce qui s'empile sur le sol (le voile de la Place, son contour, les
-  fantômes, l'aperçu) suit le même champ, par la méthode des « carrés qui marchent » (`ContourSquares`) : chaque carré
-  entre quatre coins garde ses coins dedans et les points où ses côtés passent le niveau moitié, un polygone convexe en
-  éventail (`ContourMesh`) ; le bord se chaîne d'un carré au voisin par le côté qu'ils partagent (`ContourLines`), une
-  selle se tranchant par la moyenne de ses coins.
+- **Un texel qui prend un sol tout entier fait des blocs** : à 49 cm le texel, un trait rond devenait un escalier que le
+  Terrain floutait. Un sol se peint d'après sa distance à son bord, négative dedans, et se fond sur une largeur centrée
+  sur ce bord (`smoothstep`), comme la démo du pack, dont le Terrain n'a aucun mélange par hauteur : tout est dans la
+  peinture, large et irrégulière. Près du bord, cette distance vient de la forme lissée de ses mailles (`CellField` : un
+  flou binomial séparable, en x puis en y ; au rayon d'une maille, le champ passe de 1 à 0 sur deux mailles, centrées
+  sur le bord) : son niveau moitié suit un bord droit à sa place exacte, arrondit les coins et efface l'escalier d'un
+  bord en diagonale. Plus loin, où le champ ne bouge plus, elle vient de deux distances du chanfrein (`CellDistance`, en
+  deux passes : un pas droit vaut une maille, un pas en diagonale sa diagonale), aux mailles du sol et aux autres ; près
+  du bord, elle garderait l'escalier des mailles. Le bord s'effiloche en lisant ces distances en un point déplacé par un
+  bruit doux (déformation de domaine : deux bruits de valeur, `GroundNoise`), le même au même point. Un effilochage trop
+  faible laisse au liant une largeur régulière, qui se lit comme un liseré. Ce qui s'empile sur le sol (le voile de la
+  Place, son contour, les fantômes, l'aperçu) suit le même champ, par la méthode des « carrés qui marchent »
+  (`ContourSquares`) : chaque carré entre quatre coins garde ses coins dedans et les points où ses côtés passent le
+  niveau moitié, un polygone convexe en éventail (`ContourMesh`) ; le bord se chaîne d'un carré au voisin par le côté
+  qu'ils partagent (`ContourLines`), une selle se tranchant par la moyenne de ses coins.
 - **Les touffes et petites fleurs** sont des objets combinés en lots statiques ; des milliers d'objets séparés font
   ramer.
 

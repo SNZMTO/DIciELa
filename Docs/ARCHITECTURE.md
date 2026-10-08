@@ -369,7 +369,7 @@ mètres carrés), `Place` ne veut dire que poser, la fiche d'un lieu est `Locati
 | les places de charrette de la Place | `PlazaMarks` | outil de la Place ; ses modes ; sa surface ; son geste | `PaintTool` ; `PaintToolMode` ; `PaintCanvas` ; `PaintDrawing` | dernière construction prise | `Last` (`PlacementTool`) |
 | la touche qui tourne | `RotateKey` | un calque posé sur le sol ; son maillage | `GroundOverlay` ; `DrapedMesh` | la Place en ville (sa barre, ses gestes, sa zone) | `TownPlaza` |
 | forme lissée (de mailles) ; son dedans ; son bord | `CellField` ; `ContourMesh` ; `ContourLines` (`ContourSquares`) | distance à un sol ; bruit du sol | `CellDistance` ; `GroundNoise` | ce qu'un sol peint couvre ; le mélange des calques | `FloorWeights` ; `FloorBlend` (`FloorTexels`) |
-| liant (d'un sol) ; effilochage | `BorderLayer`, `BorderMeters` ; `FrayMeters`, `FrayScaleMeters` (`FloorDefinition`) | formes toutes faites (d'un maillage drapé) | `DrapedShapes` | arrondi ; douceur du bord | `GroundRoundingMeters` ; `FloorEdgeSoftnessMeters` (`PlacementSettings`) |
+| liant (d'un sol) ; effilochage | `BorderLayer`, `BorderMeters` ; `FrayMeters`, `FrayScaleMeters` (`FloorDefinition`) | formes toutes faites (d'un maillage drapé) | `DrapedShapes` | arrondi ; fondu (d'un sol, de son liant) | `GroundRoundingMeters` (`PlacementSettings`) ; `FadeMeters`, `BorderFadeMeters` (`FloorDefinition`) |
 | viser le sol ; le fantôme qui suit le pointeur | `GroundAim` ; `GhostAim` | écran de création (sa scène, au démarrage) | `CreationStage` | | |
 | prévision ; ce qu'elle cache de la nature | `Foresight` ; `ForeseenNature` | voile de rêverie ; son image | `ForesightVeil` ; `Reverie.png` (`ReveriePainter`) | geste ; bouton ; branchement (de la prévision) | `ForesightControls` ; `ForesightButton` ; `TownForesight` |
 
@@ -480,14 +480,14 @@ mètres carrés), `Place` ne veut dire que poser, la fiche d'un lieu est `Locati
   `ContourLines` ; décision 227) (`GroundOverlay`, `DrapedMesh` : un seul maillage par calque, refait quand la Place
   change) ; l'interface, sa roue (`PaintRing` ; ses éventails, `PaintRingOptions` ; leurs icônes, `PaintIconClasses`) et
   sa carte (`ToolCard`). `Game` relie les gestes et la zone, qui ne se voit qu'en mode construction (`TownPlaza`).
-- **Les sols vus** (décisions 214, 216 et 227) : un sol qui sert (bâti, ou qu'on efface) se peint dans le sol de la
+- **Les sols vus** (décisions 214, 216, 227 et 232) : un sol qui sert (bâti, ou qu'on efface) se peint dans le sol de la
   carte, du calque de sa fiche (`FloorPainting` : sur la copie du Terrain, par lot et par carreaux, à la fin de
-  l'image ; chaque texel prend ce qu'il couvre du sol, d'après la forme lissée de ses mailles, son bord fondu et
-  effiloché, puis de son liant, la bande autour de lui, `FloorWeights` ; le reste revient à la peinture d'origine, relue
-  sur l'original, `FloorBlend`) ; un sol en chantier se voit en fantôme, à la texture de son calque, de la même forme
-  lissée (`FloorGhosts` : un calque par sorte de sol, sa copie du matériau du shader `Diciela/SolFantome`, la tuile
-  posée comme sur le Terrain, depuis son origine, mêlée à la teinte des fantômes) ; un sol qu'on efface, en voile de la
-  couleur des fantômes (`FloorViews`, né avec les vues du monde, `WorldViews`).
+  l'image ; chaque texel prend ce qu'il couvre du sol d'après sa distance à son bord, fondu sur la largeur que dit sa
+  fiche et effiloché, puis de son liant, la bande autour de lui, fondue à son tour, `FloorWeights` ; le reste revient à
+  la peinture d'origine, relue sur l'original, `FloorBlend`) ; un sol en chantier se voit en fantôme, à la texture de
+  son calque, de la même forme lissée (`FloorGhosts` : un calque par sorte de sol, sa copie du matériau du shader
+  `Diciela/SolFantome`, la tuile posée comme sur le Terrain, depuis son origine, mêlée à la teinte des fantômes) ; un
+  sol qu'on efface, en voile de la couleur des fantômes (`FloorViews`, né avec les vues du monde, `WorldViews`).
 - **La prévision** (décisions 228 à 230) : un état de la vue (`Foresight`), que `Game` crée à l'ouverture de la ville et
   relie (`TownForesight`) à son geste, V (`ForesightControls`, qu'Échap trouve en dernier dans sa pile), à son bouton
   au-dessus de l'icône des outils (`ForesightButton`), au voile de rêverie (`ForesightVeil` : une image générée sur tout

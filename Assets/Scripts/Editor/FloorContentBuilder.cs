@@ -30,10 +30,13 @@ namespace Diciela.EditorTools
         private const string PackPavingLayerPath =
             "Assets/Synty/PolygonFantasyVillage/Materials/Terrain/Path_01.terrainlayer";
 
-        // Les pavés : un sol dur (GDD, section 9), la bande de terre de la démo autour d'eux, un bord peu effiloché.
+        // Les pavés : un sol dur (GDD, section 9), la bande de terre de la démo autour d'eux, qui va et vient : leur
+        // bord s'effiloche et se fond vite dans la terre, elle-même fondue plus large dans l'herbe (décision 232).
         private const float PavingCartSpeed = 1.5f;
         private const float PavingBorderMeters = 0.8f;
-        private const float PavingFrayMeters = 0.25f;
+        private const float PavingFrayMeters = 0.4f;
+        private const float PavingFadeMeters = 0.5f;
+        private const float PavingBorderFadeMeters = 1.2f;
 
         public static void CreateMissing(Catalog catalog, OpeningDefinition opening)
         {
@@ -74,6 +77,8 @@ namespace Diciela.EditorTools
                 EditorAssets.Property(fiche, "_borderLayer").objectReferenceValue = dirtLayer;
                 EditorAssets.Property(fiche, "_borderMeters").floatValue = PavingBorderMeters;
                 EditorAssets.Property(fiche, "_frayMeters").floatValue = PavingFrayMeters;
+                EditorAssets.Property(fiche, "_fadeMeters").floatValue = PavingFadeMeters;
+                EditorAssets.Property(fiche, "_borderFadeMeters").floatValue = PavingBorderFadeMeters;
                 EditorAssets.Property(fiche, "_cartSpeedFactor").floatValue = PavingCartSpeed;
             });
             EditorAssets.Set(catalog, fiche => Append(EditorAssets.Property(fiche, "_floors"), paving));

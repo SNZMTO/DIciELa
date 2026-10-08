@@ -15,8 +15,10 @@ MonoBehaviour:
   _id: paves
   _nameKey: sol.paves
   _layer: {fileID: 8574412962073106934, guid: a41e8a1d6c8bcee409434e806ad48bf8, type: 2}
+  _fadeMeters: 0.5
   _borderLayer: {fileID: 8574412962073106934, guid: 6c269eb1337625941b2880cdade51bab, type: 2}
   _borderMeters: 0.8
-  _frayMeters: 0.25
+  _borderFadeMeters: 1.2
+  _frayMeters: 0.4
   _frayScaleMeters: 1.5
   _cartSpeedFactor: 1.5
