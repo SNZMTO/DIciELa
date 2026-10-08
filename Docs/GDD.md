@@ -813,8 +813,8 @@
   qu'on regarde la ville à venir : des couleurs plus douces et plus claires, les bords de l'écran voilés de lavande. On
   l'allume et l'éteint par sa touche ou par son bouton, au-dessus de l'icône des outils, qui reste enfoncé tant qu'elle
   dure ; Échap l'éteint aussi, en dernier dans sa pile.
-- **Défaut.** La prévision (décisions 228 et 230) : V ; son bouton, un feutre lavande ; son voile, une lavande pâle sur
-  tout l'écran, presque transparente au milieu (6 %), dense aux bords (50 %), qui entre et sort en 0,2 s.
+- **Défaut.** La prévision (décisions 228, 230 et 231) : V ; son bouton, un feutre lavande ; son voile, une lavande pâle
+  sur tout l'écran, presque transparente au milieu (3 %), plus dense aux bords (32 %), qui entre et sort en 0,2 s.
 - **À toi.** L'animation où la Chimère se projette, avec le pack d'animations : le voile de rêverie la remplace en
   attendant.
 - **Règle.** La journée montre le jour, sa phase et une jauge : le travail, la soirée et la nuit hachurée, chacun à
@@ -875,19 +875,21 @@
   permet.
 - **Règle.** La roue de Chemins : les mêmes cases, sans la place de charrette (le 5 sera le pont, une fois son idée
   venue), ses sols ceux que la ville sait faire (au départ, le premier). Sa gomme efface tous les sols. Un chemin se
-  voit toujours, comme le sol qu'il est : la terre et les pavés du pack peints sur la carte, aux formes arrondies, au
-  bord fondu et effiloché, cernés de leur liant s'ils en ont un (la terre autour des pavés, comme dans la démo du
-  pack) ; son fantôme, sa texture, pâle et translucide, mêlée à la teinte des fantômes ; un chemin qu'on efface garde un
-  voile de la couleur des fantômes jusqu'à la fin de son chantier. L'aperçu du geste reste vert ou rouge, sans texture.
+  voit toujours, comme le sol qu'il est : la terre et les pavés du pack peints sur la carte, aux formes arrondies, qui
+  se fondent dans ce qui les entoure comme peints au pinceau doux, leur bord effiloché, cernés de leur liant s'ils en
+  ont un (la terre autour des pavés, comme dans la démo du pack), qui se fond à son tour dans l'herbe ; son fantôme, sa
+  texture, pâle et translucide, mêlée à la teinte des fantômes ; un chemin qu'on efface garde un voile de la couleur des
+  fantômes jusqu'à la fin de son chantier. L'aperçu du geste reste vert ou rouge, sans texture.
 - **À toi.** La vignette d'un sol (pour l'instant la texture de son calque) et l'icône de Chemins dans la roue (un
   chemin en pointillés) : des remplaçants.
 - **Défaut.** La terre : une copie du calque `Village_Dirt_01` du pack, rangée hors du pack, qui se répète tous les 5 m
   comme l'herbe du pack, pour que ses facettes aient la taille de celles de l'herbe (décision 222) ; les pavés :
   `Path_01`, les pavés moussus du chemin du pack. Les autres sols : des calques faits des images du pack (pavés bruns,
   dalles, carreaux, briques, pierre grise, planchers), rangés hors du pack, avec leurs fiches.
-- **Défaut.** Le rendu des sols (décision 227) : leurs formes arrondies sur 50 cm, leur bord fondu sur 15 cm ; la terre,
-  effilochée de 35 cm en festons d'1,5 m, sans liant ; les pavés, effilochés de 25 cm, cernés de 80 cm de terre, leur
-  liant.
+- **Défaut.** Le rendu des sols (décisions 227 et 232) : leurs formes arrondies sur 50 cm ; chaque sol se fond sur la
+  largeur de son fondu, centrée sur son bord. La terre : fondue sur 1 m dans l'herbe, effilochée de 35 cm en festons
+  d'1,5 m, sans liant. Les pavés : fondus sur 50 cm dans leur liant, effilochés de 40 cm, cernés de 80 cm de terre,
+  elle-même fondue sur 1,2 m dans l'herbe.
 - **Règle.** La zone de la Place et ses places de charrette se voient en mode construction : en main une construction,
   l'outil de la Place, Chemins ou Déplacer. La zone : un voile léger sur le sol et son contour, lissés comme les sols,
   sans escalier ; une place de charrette : un cadre blanc, une pointe vers l'avant de la charrette.
