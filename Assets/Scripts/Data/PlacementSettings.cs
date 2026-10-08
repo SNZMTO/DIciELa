@@ -125,6 +125,11 @@ namespace Diciela.Data
                  "rayon, sans escalier.")]
         [SerializeField, Range(0.25f, 2f)] private float _groundRoundingMeters = 0.5f;
 
+        [Tooltip("La finesse de la peinture des sols, en mètres par texel au plus (décision 233) : la copie du sol " +
+                 "de la carte, où se peignent les sols, s'affine jusque-là, en puissance de deux, sans toucher la " +
+                 "carte. Deux fois plus fine, des bords deux fois plus ronds, mais quatre fois sa mémoire.")]
+        [SerializeField, Range(0.1f, 1f)] private float _groundPaintTexelMeters = 0.25f;
+
         public float RotationStepDegrees => _rotationStepDegrees;
         public float RotationDegreesPerPixel => _rotationDegreesPerPixel;
         public Material TranslucentMaterial => _translucentMaterial;
@@ -159,5 +164,6 @@ namespace Diciela.Data
         public float OutlineWidthMeters => _outlineWidthMeters;
         public float OverlayLiftMeters => _overlayLiftMeters;
         public float GroundRoundingMeters => _groundRoundingMeters;
+        public float GroundPaintTexelMeters => _groundPaintTexelMeters;
     }
 }

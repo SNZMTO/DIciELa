@@ -35,14 +35,17 @@ namespace Diciela.View
 
         /// <summary>
         /// Peint les sols de ce monde sur ce Terrain (sa copie), dont la peinture d'origine est sur original : leurs
-        /// bords lissés sur ce rayon, en mètres.
+        /// bords lissés sur ce rayon, la copie affinée jusqu'à cette taille de texel, en mètres.
         /// </summary>
-        public FloorPainting(Terrain terrain, TerrainData original, Floors floors, NavGrid grid, float roundingMeters)
+        public FloorPainting(Terrain terrain, TerrainData original, Floors floors, NavGrid grid, float roundingMeters,
+            float texelMeters)
         {
             _terrain = terrain != null ? terrain : throw new ArgumentNullException(nameof(terrain));
             _original = original != null ? original : throw new ArgumentNullException(nameof(original));
             _floors = floors ?? throw new ArgumentNullException(nameof(floors));
             _grid = grid ?? throw new ArgumentNullException(nameof(grid));
+            // Plus fine que la carte, la copie arrondit les bords des sols (décision 233).
+            MapPaint.Refine(terrain.terrainData, original, MapPaint.ResolutionFor(terrain.terrainData, texelMeters));
             float size = grid.Metrics.CellSize;
             _radius = CellField.RadiusCells(roundingMeters, size);
             // Jusqu'où un sol peint : son liant le plus large et la moitié de son fondu, son bord le plus effiloché,
