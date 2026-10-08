@@ -49,17 +49,6 @@
                 <ui:Label name="astuce-texte" class="prose astuce-texte" />
             </ui:VisualElement>
         </Diciela.UI.WoodFrame>
-        <ui:VisualElement name="bas" class="bas" picking-mode="Ignore">
-            <Diciela.UI.Facet name="reason" class="bulle raison bloc-cache" picking-mode="Ignore">
-                <ui:Label name="reason-text" class="libelle" picking-mode="Ignore" />
-            </Diciela.UI.Facet>
-            <Diciela.UI.WoodFrame name="bar" class="barre bloc-cache">
-                <ui:VisualElement class="barre-contenu">
-                    <ui:VisualElement name="structures" class="cartes" />
-                    <ui:VisualElement name="families" class="onglets" />
-                </ui:VisualElement>
-            </Diciela.UI.WoodFrame>
-        </ui:VisualElement>
         <Diciela.UI.FeltButton name="outils" class="feutre sable pan-10 outils bloc-cache">
             <ui:VisualElement class="outils-icone" picking-mode="Ignore" />
             <Diciela.UI.Facet class="creux pan-4 touche" picking-mode="Ignore">

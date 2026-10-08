@@ -56,124 +56,6 @@
     margin-top: 10px;
 }
 
-/* En bas au centre : la raison d'un refus de pose, puis la barre de construction. */
-
-.bas {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 24px;
-    align-items: center;
-}
-
-.raison {
-    margin-bottom: 12px;
-    max-width: 416px;
-}
-
-/* Une raison plus large que la bulle passe à la ligne, centrée, au lieu d'en déborder. */
-.raison .libelle {
-    white-space: normal;
-    -unity-text-align: upper-center;
-}
-
-.barre-contenu {
-    align-items: center;
-    padding: 21px 18px;
-}
-
-.cartes {
-    flex-direction: row;
-    justify-content: center;
-}
-
-.onglets {
-    flex-direction: row;
-    justify-content: center;
-    margin-top: 12px;
-}
-
-.carte {
-    width: 188px;
-    margin: 0 6px;
-    padding: 10px 10px 13px 10px;
-    align-items: center;
-}
-
-/* Le nom d'une carte, et à côté ce qu'elle offre (ses lits) ; à l'étroit, les lits passent dessous, au milieu. UI
-   Toolkit n'a pas d'écart (gap) : chaque élément a 6 px de chaque côté, que la marge négative de la ligne rend. */
-.carte-titre {
-    align-self: stretch;
-    margin: 0 -6px;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Ses textes perdent les retraits que le thème d'Unity donne à chaque texte : l'écart est celui de la maquette. */
-.carte-titre .unity-label {
-    margin: 0;
-    padding: 0;
-}
-
-.carte-titre > .carte-nom, .carte-titre > .carte-lits {
-    margin: 1px 6px;
-}
-
-.carte-lits {
-    flex-direction: row;
-    align-items: center;
-}
-
-.carte-lits-icone {
-    width: 22px;
-    height: 22px;
-    margin-right: 5px;
-    background-image: url("Icones/lit.asset");
-}
-
-.carte-cout {
-    flex-direction: row;
-    justify-content: center;
-    margin-top: 6px;
-}
-
-.carte-cout-ligne {
-    flex-direction: row;
-    align-items: center;
-    margin: 0 8px;
-}
-
-.carte-cout-icone {
-    width: 24px;
-    height: 24px;
-    margin-right: 5px;
-}
-
-.carte-vignette {
-    align-self: stretch;
-    height: 120px;
-    margin-bottom: 8px;
-    -unity-background-scale-mode: scale-and-crop;
-}
-
-.onglet {
-    min-width: 188px;
-    height: 56px;
-    margin: 0 6px;
-    padding: 0 16px 3px 16px;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-}
-
-.onglet-icone {
-    width: 34px;
-    height: 34px;
-    margin-right: 8px;
-}
-
 /* La fiche du lieu touché, en haut à droite ; le menu, quand il viendra, se posera au-dessus. */
 
 .fiche {
@@ -498,6 +380,11 @@
     width: 16px;
     height: 16px;
     margin-right: 4px;
+}
+
+/* Les lits qu'offre une construction, sur sa carte. */
+.icone-lit {
+    background-image: url("Icones/lit.asset");
 }
 
 .carte-outil-raison {

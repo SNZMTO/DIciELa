@@ -106,7 +106,7 @@ namespace Diciela.UI
 
         private static ToolCursorLook Look(ToolCursorShape shape, ToolChoice choice)
         {
-            return new ToolCursorLook(shape.Silhouette, shape.Tip, WheelTool.Of(choice).Pastel, "", null, "", "");
+            return new ToolCursorLook(shape.Silhouette, shape.Tip, WheelTool.Of(choice).Pastel, default, "", "");
         }
 
         private static ToolCursorLook PaintLook(PaintTool tool, ToolChoice choice)
@@ -119,8 +119,7 @@ namespace Diciela.UI
                 : mode == PaintToolMode.Trace ? PaintIconClasses.Style(options.Style) : "";
             string symmetry = options.Symmetry == PaintSymmetry.None ? "" : PaintIconClasses.Symmetry(options.Symmetry);
             return new ToolCursorLook(shape.Silhouette, shape.Tip, WheelTool.Of(choice).Pastel,
-                ink.IsZone ? PaintIconClasses.Zone : "", ink.Floor != null ? PaintIconClasses.Picture(ink.Floor) : null,
-                form, symmetry);
+                PaintIconClasses.Ink(ink), form, symmetry);
         }
     }
 }

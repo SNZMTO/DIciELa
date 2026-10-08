@@ -75,9 +75,14 @@ namespace Diciela.Data
         public const string StockTooltip = "fanion.infobulle";
         public const string GoodParameter = "{marchandise}";
 
-        // Une carte du panneau Construire (GDD, section 16) : ce qu'elle offre, ses lits ({lits} y est remplacé).
+        // Une construction dans la roue de Construire et sur la carte (GDD, section 16 ; décision 226) : ce qu'elle
+        // offre, ses lits ({lits} y est remplacé) ; ce qu'elle coûte, chaque marchandise avec combien ({nombre} et
+        // {marchandise}), à la suite ; l'usage d'une famille, dans la bulle.
         public const string CardBeds = "carte.lits";
         public const string BedsParameter = "{lits}";
+        public const string CostAmount = "construction.cout";
+        public const string ListSeparator = "liste.separateur";
+        public const string WheelFamilyDetail = "roue.famille.suite";
 
         // La journée, en haut à gauche (GDD, section 16) : son numéro ({jour} y est remplacé).
         public const string DayNumber = "journee.jour";

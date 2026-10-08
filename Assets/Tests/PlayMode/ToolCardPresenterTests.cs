@@ -9,12 +9,14 @@ using UnityEngine;
 namespace Diciela.Tests.PlayMode
 {
     /// <summary>
-    /// Le présentateur de la carte de l'outil en main (décision 221), sur le petit monde des tests, dont la Place a
-    /// 100 m² au plus et deux places de charrette, avec un arbre, et une vue qui note ce qu'on lui montre ; une table des
-    /// textes écrite ici. La carte paraît l'outil en main, à l'icône et à la couleur de sa case dans la roue, et se cache
-    /// les mains vides ; l'outil de la Place dit son mode, ce qu'il pose, la taille du pinceau, sa superficie et ses places
-    /// de charrette, qui suivent la Place ; la forme, son style et la symétrie se disent en puces ; « Retirer » compte
-    /// ce qui est marqué ; Déplacer dit ce qu'on tient et pourquoi il ne se pose pas là ; un ordre refusé en jouant le dit.
+    /// Le présentateur de la carte de l'outil en main (décision 221), sur le petit monde des tests, dont la Place a 100
+    /// m² au plus et deux places de charrette, avec un arbre, et une vue qui note ce qu'on lui montre ; une table des
+    /// textes écrite ici. La carte paraît l'outil en main, à l'icône et à la couleur de sa case dans la roue, et se
+    /// cache les mains vides ; l'outil de la Place dit son mode, ce qu'il pose, la taille du pinceau, sa superficie et
+    /// ses places de charrette, qui suivent la Place ; la forme, son style et la symétrie se disent en puces ;
+    /// « Retirer » compte ce qui est marqué ; Déplacer dit ce qu'on tient et pourquoi il ne se pose pas là ; un ordre
+    /// refusé en jouant le dit ; une construction en main dit son nom, sa photo, ses lits, son coût et pourquoi elle ne
+    /// se pose pas là.
     /// </summary>
     public sealed class ToolCardPresenterTests
     {
@@ -36,6 +38,8 @@ namespace Diciela.Tests.PlayMode
                                      "place.refus.UnknownMark,Cette place de charrette n'existe plus\n" +
                                      "carte.outil.marques,{nombre} à retirer\n" +
                                      "construction.cabane,Cabane\n" +
+                                     "outil.construire,Construire\n" +
+                                     "carte.lits,{lits} lits\n" +
                                      "pose.refus.Overlaps,La place est prise\n";
 
         private NatureDefinition _tree;
@@ -50,8 +54,8 @@ namespace Diciela.Tests.PlayMode
             _test = new TestWorld(withPlaza: true,
                 nature: new[] { new NatureSpot(_tree, new Placement(new Vector2(30f, 70f), 0f)) });
             _view = new NotedToolCardView();
-            _presenter = new ToolCardPresenter(_view, TextTable.Parse(Texts, "fr"), _test.Clearing, _test.Mover,
-                _test.Paths, _test.Plaza, _test.World);
+            _presenter = new ToolCardPresenter(_view, TextTable.Parse(Texts, "fr"), _test.Tool, _test.Clearing,
+                _test.Mover, _test.Paths, _test.Plaza, _test.World);
         }
 
         [TearDown]
@@ -149,6 +153,30 @@ namespace Diciela.Tests.PlayMode
             _test.Mover.AimAt(_test.OnScreen(other + new Vector3(1f, 0f, 1f)));
             Assert.AreEqual("La place est prise", _view.Reason);
             Assert.IsTrue(_view.IsRefusal);
+        }
+
+        [Test]
+        public void AConstructionInHandSaysItsNameItsBedsItsCostAndWhyItCannotGoThere()
+        {
+            var picture = _test.Keep(new Texture2D(4, 4));
+#if UNITY_EDITOR
+            TestWorld.Fill(_test.Cabin, "_picture", picture);
+#endif
+            TestFamilies.Offer(_test.Cabin, 2, new GoodAmount(_test.Good("marchandise.bois"), 10));
+            TestMove.Place(_test, _test.Cabin, TestWorld.Center);
+
+            _test.Tool.Begin(_test.Cabin);
+            Assert.AreEqual("Construire", _view.Name, "La carte dit l'outil…");
+            Assert.AreEqual("marteau", _view.Icon);
+            Assert.AreEqual("Cabane", _view.Mode, "… et ce qu'on pose…");
+            Assert.AreSame(picture, _view.ModePicture, "… avec sa photo.");
+            Assert.AreEqual(new[] { "2 lits", "10" }, _view.ChipTexts, "Ses lits, puis son coût.");
+
+            _test.Tool.AimAt(_test.OnScreen(TestWorld.Center + new Vector3(1f, 0f, 1f)));
+            Assert.AreEqual("La place est prise", _view.Reason);
+            Assert.IsTrue(_view.IsRefusal);
+            _test.Tool.AimAt(_test.OnScreen(TestWorld.Center + new Vector3(0f, 0f, -20f)));
+            Assert.AreEqual("", _view.Reason, "Une place libre, rien à dire.");
         }
 
         [Test]

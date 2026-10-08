@@ -6,16 +6,17 @@ using NUnit.Framework;
 namespace Diciela.Tests.PlayMode
 {
     /// <summary>
-    /// Le présentateur de la roue (décisions 168 et 221), sur le petit monde des tests : ouverte sur les outils, chacun à
-    /// sa place et avec sa touche, la Place seulement une fois proposée ; Construire ouvre le panneau, ou le ferme ;
-    /// Retirer prend l'outil en main, ou le lâche, et ferme le panneau ; la bulle nomme ce qu'on vise ; un outil actif
-    /// reste enfoncé. Une vue et un panneau qui notent, des touches et une table des textes écrites ici.
+    /// Le présentateur de la roue (décisions 221 et 226), sur le petit monde des tests, dont le catalogue a une Place
+    /// et le Logement (le campement, puis la cabane) : ouverte sur les outils, chacun à sa place et avec sa touche, la
+    /// Place seulement une fois le campement posé ; Construire met en main une construction, ou la lâche ; Retirer
+    /// prend l'outil en main, ou le lâche, et lâche la construction en main ; la bulle nomme ce qu'on vise ; un outil
+    /// en main reste enfoncé. Une vue qui note, des touches et une table des textes écrites ici.
     /// </summary>
     public sealed class ToolWheelPresenterTests
     {
         private const string Texts = "clé,fr\n" +
                                      "outil.construire,Construire\n" +
-                                     "outil.construire.suite,Choisis une construction\n" +
+                                     "outil.construire.suite,Prends une construction\n" +
                                      "outil.retirer,Retirer\n" +
                                      "outil.retirer.suite,Marque un arbre\n" +
                                      "outil.place,La Place\n" +
@@ -24,17 +25,16 @@ namespace Diciela.Tests.PlayMode
 
         private TestWorld _test;
         private NotedToolWheelView _view;
-        private NotedBuildMenu _build;
         private ToolWheelPresenter _presenter;
 
         [SetUp]
         public void CreateWheel()
         {
-            _test = new TestWorld();
+            _test = new TestWorld(withPlaza: true);
+            _test.Housing();
             _view = new NotedToolWheelView();
-            _build = new NotedBuildMenu();
-            _presenter = new ToolWheelPresenter(_view, TextTable.Parse(Texts, "fr"), new FixedToolKeys(), _test.Clearing,
-                _build, _test.Mover, _test.Paths, _test.Plaza);
+            _presenter = new ToolWheelPresenter(_view, TextTable.Parse(Texts, "fr"), new FixedToolKeys(), _test.Catalog,
+                _test.World, _test.Tool, _test.Clearing, _test.Mover, _test.Paths, _test.Plaza);
         }
 
         [TearDown]
@@ -46,6 +46,7 @@ namespace Diciela.Tests.PlayMode
         [Test]
         public void OnTheToolsEachHasItsPlaceAndItsKey()
         {
+            _test.PlantTheCamp(_presenter);
             _presenter.Open(true);
             Assert.AreEqual("Tab", _view.WheelKey);
             Assert.AreEqual(("Outils", "Ou tiens Tab"), _presenter.IconTooltip());
@@ -59,41 +60,40 @@ namespace Diciela.Tests.PlayMode
         }
 
         [Test]
-        public void ThePlazaWaitsUntilTheTownOffersIt()
+        public void ThePlazaWaitsUntilTheCampIsPlanted()
         {
-            _build.OffersPlaza = false;
             _presenter.Open(true);
             Assert.AreEqual(4, _view.Ring.Count, "Avant le campement, pas de Place dans la roue…");
             Assert.IsNull(_view.At(7));
             _presenter.Choose(ToolChoice.Plaza);
             Assert.IsFalse(_test.Plaza.IsActive, "… ni par sa touche.");
 
-            _build.OffersPlaza = true;
+            _test.PlantTheCamp(_presenter);
             _presenter.Choose(ToolChoice.Plaza);
             Assert.IsTrue(_test.Plaza.IsActive);
         }
 
         [Test]
-        public void BuildOpensThePanelAndASecondBuildClosesIt()
+        public void BuildTakesAConstructionAndASecondBuildDropsIt()
         {
             _presenter.Open(true);
             Assert.IsFalse(_presenter.Pick(_view.IndexAt(0), -1), "Prendre un outil ferme la roue.");
-            Assert.IsTrue(_build.IsOpen);
+            Assert.AreSame(_test.Camp, _test.Tool.Current, "Construire met en main le campement, proposé d'abord.");
             _presenter.Open(true);
-            Assert.IsTrue(_view.At(0).IsOn, "Le panneau ouvert, Construire reste enfoncé.");
+            Assert.IsTrue(_view.At(0).IsOn, "Une construction en main, Construire reste enfoncé.");
 
             _presenter.Choose(ToolChoice.Build);
-            Assert.IsFalse(_build.IsOpen);
+            Assert.IsFalse(_test.Tool.IsActive, "Un second choix la lâche.");
         }
 
         [Test]
-        public void ClearTakesTheToolClosesThePanelAndASecondClearDropsIt()
+        public void ClearTakesTheToolPutsTheConstructionDownAndASecondClearDropsIt()
         {
-            _build.Open();
+            _presenter.Choose(ToolChoice.Build);
 
             _presenter.Choose(ToolChoice.Clear);
-            Assert.IsTrue(_test.Clearing.IsActive, "Retirer prend l'outil en main.");
-            Assert.IsFalse(_build.IsOpen, "Et ferme le panneau.");
+            Assert.IsTrue(_test.Clearing.IsActive, "Retirer prend l'outil en main…");
+            Assert.IsFalse(_test.Tool.IsActive, "… et lâche la construction.");
             _presenter.Open(true);
             Assert.IsTrue(_view.At(4).IsOn, "En main, Retirer reste enfoncé.");
 
@@ -112,7 +112,7 @@ namespace Diciela.Tests.PlayMode
 
             _presenter.Choose(ToolChoice.Build);
             Assert.IsFalse(_test.Mover.IsActive, "Construire le pose aussi.");
-            Assert.IsTrue(_build.IsOpen);
+            Assert.IsTrue(_test.Tool.IsActive);
         }
 
         [Test]
@@ -123,7 +123,7 @@ namespace Diciela.Tests.PlayMode
             Assert.AreEqual(("Retirer", "Marque un arbre"), _view.Label);
 
             _presenter.Aim(_view.IndexAt(0), -1);
-            Assert.AreEqual(("Construire", "Choisis une construction"), _view.Label);
+            Assert.AreEqual(("Construire", "Prends une construction"), _view.Label);
 
             _presenter.Aim(-1, -1);
             Assert.AreEqual(("", ""), _view.Label);

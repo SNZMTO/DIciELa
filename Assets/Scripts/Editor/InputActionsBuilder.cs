@@ -88,9 +88,8 @@ namespace Diciela.EditorTools
             added += Button(tools, ToolControls.WheelAction, "<Keyboard>/tab");
             foreach (ToolAction tool in ToolAction.All)
                 added += Button(tools, tool.Name, tool.DefaultBinding);
-            // Les cartes du panneau Construire ouvert (décision 184), et les modes de l'outil de la Place en main
-            // (décision 206) : les touches 1 à 9, liées à leur place sur la rangée des chiffres, qu'on atteint sans Maj
-            // en AZERTY aussi.
+            // Les cases de la roue de l'outil en main (décisions 221 et 226) : les touches 1 à 9, liées à leur place
+            // sur la rangée des chiffres, qu'on atteint sans Maj en AZERTY aussi.
             for (int i = 0; i < ToolControls.CardKeys; i++)
                 added += Button(tools, ToolControls.CardAction(i), "<Keyboard>/" + (i + 1));
             added += Pointer(tools, ToolControls.PointerAction);

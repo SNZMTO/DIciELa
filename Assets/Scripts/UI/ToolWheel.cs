@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using Diciela.Controls;
 using Diciela.Data;
+using Diciela.Simulation;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Diciela.UI
 {
     /// <summary>
-    /// La roue (GDD, section 16 ; décisions 168 et 221) : elle s'ouvre autour du pointeur, touche tenue, là où l'on en
+    /// La roue (GDD, section 16 ; décisions 221 et 226) : elle s'ouvre autour du pointeur, touche tenue, là où l'on en
     /// est (son anneau, WheelRing), ou au clic sur l'une de ses deux portes, en bas à droite (WheelDoors) : l'icône des
     /// outils, sur les outils, et la carte de l'outil en main, sur ses réglages. Touche tenue, on choisit en
     /// relâchant ; au clic, on clique, et un appui à côté referme ; la case Outils la retourne sur les outils, ouverte.
@@ -16,7 +17,7 @@ namespace Diciela.UI
     /// ville s'ouvre et se débranche quand elle se ferme, infobulle comprise.
     /// </summary>
     [RequireComponent(typeof(UIDocument))]
-    public sealed class ToolWheel : MonoBehaviour, IToolWheelView, IToolWheel, IRingKeys, IEscapable
+    public sealed class ToolWheel : MonoBehaviour, IToolWheelView, IToolWheel, IEscapable
     {
         private UIDocument _document;
         private ToolWheelElements _elements;
@@ -30,8 +31,8 @@ namespace Diciela.UI
         }
 
         /// <summary>Montre l'icône des outils, la roue fermée ; appelé par le démarrage quand la ville s'ouvre.</summary>
-        public void Show(TextTable texts, IToolKeys keys, ClearingTool clearing, IBuildMenu build, MoveTool move,
-            PaintTool paths, PaintTool plaza, Tooltips tooltips)
+        public void Show(TextTable texts, IToolKeys keys, Catalog catalog, World world, PlacementTool placement,
+            ClearingTool clearing, MoveTool move, PaintTool paths, PaintTool plaza, Tooltips tooltips)
         {
             Hide();
             ToolWheelElements elements = ToolWheelElements.Find(_document.rootVisualElement);
@@ -45,7 +46,8 @@ namespace Diciela.UI
             _ring = new WheelRing(elements);
             _ring.Dismissed += Close;
             _ring.Picked += Pick;
-            _presenter = new ToolWheelPresenter(this, texts, keys, clearing, build, move, paths, plaza);
+            _presenter = new ToolWheelPresenter(this, texts, keys, catalog, world, placement, clearing, move, paths,
+                plaza);
             _ring.AimChanged += _presenter.Aim;
             _ring.Scrolled += _presenter.Scroll;
         }
@@ -108,7 +110,7 @@ namespace Diciela.UI
             _presenter.Choose(choice);
         }
 
-        /// <summary>Le chiffre d'une case de l'outil de sol en main ; la case Outils ouvre la roue des outils.</summary>
+        /// <summary>Un chiffre : une case de la roue de l'outil en main ; la case Outils ouvre les outils.</summary>
         public void TakeSlot(int index)
         {
             if (_presenter != null && _presenter.TakeSlot(index))
@@ -135,10 +137,7 @@ namespace Diciela.UI
 
         public void ShowLabel(string name, string detail)
         {
-            _elements.Label.text = name;
-            _elements.Detail.text = detail;
-            _elements.Detail.EnableInClassList(StyleClasses.Hidden, string.IsNullOrEmpty(detail));
-            _elements.Bubble.EnableInClassList(StyleClasses.Hidden, string.IsNullOrEmpty(name));
+            _elements.ShowLabel(name, detail);
         }
 
         private void OnIconClicked()

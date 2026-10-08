@@ -27,14 +27,14 @@ namespace Diciela.Tests.PlayMode
                 VisualElement drawn = document.rootVisualElement.Q("carte-outil");
                 try
                 {
-                    card.ShowTool("roue-place", "peche", "La Place", "", "");
-                    card.ShowChips(new[] { new ToolCardChip("", null, "10 / 100 m²") });
+                    card.ShowTool(HudFace.Styled("roue-place"), "peche", "La Place", default, "");
+                    card.ShowChips(new[] { new ToolCardChip(default, "10 / 100 m²") });
                     Assert.IsFalse(drawn.ClassListContains(HiddenClass), "Un outil en main : la carte paraît…");
                     Assert.IsTrue(drawn.ClassListContains(EnterClass), "… depuis son état de départ.");
                     yield return TestHud.Settle();
                     Assert.IsFalse(drawn.ClassListContains(EnterClass), "Elle a rejoint sa place.");
 
-                    card.ShowChips(new[] { new ToolCardChip("", null, "40 / 100 m²") });
+                    card.ShowChips(new[] { new ToolCardChip(default, "40 / 100 m²") });
                     Label area = document.rootVisualElement.Q("carte-outil-puces").Q<Label>();
                     Assert.AreEqual("10 / 100 m²", area.text, "Le nombre part de sa valeur d'avant…");
                     yield return TestHud.Settle();
@@ -42,7 +42,7 @@ namespace Diciela.Tests.PlayMode
 
                     card.ShowNothing();
                     Assert.IsFalse(drawn.ClassListContains(HiddenClass), "Lâchée, elle glisse d'abord…");
-                    card.ShowTool("roue-place", "peche", "La Place", "", "");
+                    card.ShowTool(HudFace.Styled("roue-place"), "peche", "La Place", default, "");
                     yield return TestHud.Settle();
                     Assert.IsFalse(drawn.ClassListContains(HiddenClass), "… et reprise en partant, elle reste.");
                     card.ShowNothing();

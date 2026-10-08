@@ -8,16 +8,17 @@ using Diciela.Simulation.Land;
 namespace Diciela.UI
 {
     /// <summary>
-    /// Le présentateur de la carte de l'outil en main (GDD, section 16 ; décision 221) : cachée les mains vides ; sinon
-    /// l'icône, la couleur et le nom de l'outil, ceux de sa case dans la roue (WheelTool), le mode d'un outil de sol,
-    /// ses nombres et ses réglages en puces (ToolCardContent), et ce que disent ses raisons (ToolCardReasons). Il
-    /// écoute les outils, la Place et les arbres marqués : la carte ne photographie jamais. Une construction en main
-    /// n'a pas encore de carte : le panneau Construire et la bulle des raisons la disent.
+    /// Le présentateur de la carte de l'outil en main (GDD, section 16 ; décisions 221 et 226) : cachée les mains
+    /// vides ; sinon l'icône, la couleur et le nom de l'outil, ceux de sa case dans la roue (WheelTool), le mode d'un
+    /// outil de sol ou la construction en main, sa photo et son nom, ses nombres et ses réglages en puces
+    /// (ToolCardContent), et ce que disent ses raisons (ToolCardReasons). Il écoute les outils, la Place et les arbres
+    /// marqués : la carte ne photographie jamais.
     /// </summary>
     public sealed class ToolCardPresenter : IDisposable
     {
         private readonly IToolCardView _view;
         private readonly TextTable _texts;
+        private readonly PlacementTool _placement;
         private readonly ClearingTool _clearing;
         private readonly MoveTool _move;
         private readonly PaintTool _paths;
@@ -27,23 +28,26 @@ namespace Diciela.UI
         private readonly ToolCardReasons _reasons;
         private readonly List<ToolCardChip> _chips = new List<ToolCardChip>();
 
-        public ToolCardPresenter(IToolCardView view, TextTable texts, ClearingTool clearing, MoveTool move,
-            PaintTool paths, PaintTool plaza, World world)
+        public ToolCardPresenter(IToolCardView view, TextTable texts, PlacementTool placement, ClearingTool clearing,
+            MoveTool move, PaintTool paths, PaintTool plaza, World world)
         {
-            if (view == null || ReferenceEquals(texts, null) || ReferenceEquals(clearing, null) ||
-                ReferenceEquals(move, null) || ReferenceEquals(paths, null) || ReferenceEquals(plaza, null) ||
-                ReferenceEquals(world, null))
+            if (view == null || ReferenceEquals(texts, null) || ReferenceEquals(placement, null) ||
+                ReferenceEquals(clearing, null) || ReferenceEquals(move, null) || ReferenceEquals(paths, null) ||
+                ReferenceEquals(plaza, null) || ReferenceEquals(world, null))
                 throw new ArgumentException("La carte de l'outil en main a besoin de sa vue, des textes, des outils " +
-                                            "« Retirer », Déplacer, Chemins et de la Place, et du monde.");
+                                            "de pose, « Retirer », Déplacer, Chemins et de la Place, et du monde.");
             _view = view;
             _texts = texts;
+            _placement = placement;
             _clearing = clearing;
             _move = move;
             _paths = paths;
             _plaza = plaza;
             _zone = world.Plaza;
             _nature = world.Nature;
-            _reasons = new ToolCardReasons(view, texts, HeldPaint, move, world);
+            _reasons = new ToolCardReasons(view, texts, HeldPaint, placement, move, world);
+            _placement.HeldChanged += OnHeldChanged;
+            _placement.ResultChanged += _reasons.Show;
             _clearing.HeldChanged += OnHeldChanged;
             _move.HeldChanged += OnHeldChanged;
             _move.ResultChanged += _reasons.Show;
@@ -62,6 +66,8 @@ namespace Diciela.UI
 
         public void Dispose()
         {
+            _placement.HeldChanged -= OnHeldChanged;
+            _placement.ResultChanged -= _reasons.Show;
             _clearing.HeldChanged -= OnHeldChanged;
             _move.HeldChanged -= OnHeldChanged;
             _move.ResultChanged -= _reasons.Show;
@@ -109,18 +115,25 @@ namespace Diciela.UI
             PaintTool paint = HeldPaint();
             if (paint != null)
             {
-                ShowTitle(paint == _plaza ? ToolChoice.Plaza : ToolChoice.Paths, PaintIconClasses.Mode(paint.Mode),
+                ShowTitle(paint == _plaza ? ToolChoice.Plaza : ToolChoice.Paths,
+                    HudFace.Styled(PaintIconClasses.Mode(paint.Mode)),
                     _texts.Get(TextKeys.PaintMode(paint.Mode.ToString())));
                 ToolCardContent.Paint(paint, _zone, _texts, _chips);
             }
+            else if (_placement.IsActive)
+            {
+                StructureDefinition structure = _placement.Current;
+                ShowTitle(ToolChoice.Build, HudFace.Photo(structure.Picture), _texts.Get(structure.NameKey));
+                ToolCardContent.Build(structure, _texts, _chips);
+            }
             else if (_clearing.IsActive)
             {
-                ShowTitle(ToolChoice.Clear, "", "");
+                ShowTitle(ToolChoice.Clear, default, "");
                 ToolCardContent.Clearing(_nature, _texts, _chips);
             }
             else if (_move.IsActive)
             {
-                ShowTitle(ToolChoice.Move, "", "");
+                ShowTitle(ToolChoice.Move, default, "");
                 ToolCardContent.Move(_move.Moving, _texts, _chips);
             }
             else
@@ -131,10 +144,10 @@ namespace Diciela.UI
             _view.ShowChips(_chips);
         }
 
-        private void ShowTitle(ToolChoice choice, string modeIcon, string mode)
+        private void ShowTitle(ToolChoice choice, HudFace modeIcon, string mode)
         {
             WheelTool tool = WheelTool.Of(choice);
-            _view.ShowTool(tool.Icon, tool.Pastel, _texts.Get(tool.NameKey), modeIcon, mode);
+            _view.ShowTool(HudFace.Styled(tool.Icon), tool.Pastel, _texts.Get(tool.NameKey), modeIcon, mode);
         }
     }
 }

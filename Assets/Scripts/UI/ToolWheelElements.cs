@@ -47,5 +47,16 @@ namespace Diciela.UI
                             found.Label != null && found.Detail != null && found.Slots != null && found.Fan != null && found.Flight != null;
             return complete ? found : null;
         }
+
+        /// <summary>
+        /// Écrit le nom et l'usage de ce qu'on vise dans la bulle ; un nom vide la cache, un usage vide aussi.
+        /// </summary>
+        public void ShowLabel(string name, string detail)
+        {
+            Label.text = name;
+            Detail.text = detail;
+            Detail.EnableInClassList(StyleClasses.Hidden, string.IsNullOrEmpty(detail));
+            Bubble.EnableInClassList(StyleClasses.Hidden, string.IsNullOrEmpty(name));
+        }
     }
 }

@@ -1,13 +1,13 @@
 using Diciela.Controls;
 using Diciela.Data;
-using UnityEngine;
 
 namespace Diciela.UI
 {
     /// <summary>
     /// Les icônes des outils de sol (décision 221), écrites une seule fois pour la roue et la carte : des classes de la
     /// feuille de style déduites des noms, pour chaque mode, chaque forme, chaque style de tracé, chaque symétrie et la
-    /// zone ; et la vignette d'un sol, la texture de son calque (un remplaçant).
+    /// zone ; et le visage de ce qu'un outil pose, la zone ou la vignette d'un sol, la texture de son calque (un
+    /// remplaçant).
     /// </summary>
     internal static class PaintIconClasses
     {
@@ -37,10 +37,16 @@ namespace Diciela.UI
             return "place-symetrie-" + symmetry.ToString().ToLowerInvariant();
         }
 
-        /// <summary>La vignette d'un sol : la texture de son calque ; null s'il n'en a pas.</summary>
-        public static Texture2D Picture(FloorDefinition floor)
+        /// <summary>
+        /// Le visage de ce qu'un outil pose : l'icône de la zone, ou la vignette d'un sol, la texture de son calque ;
+        /// rien pour ce qui ne pose rien.
+        /// </summary>
+        public static HudFace Ink(PaintInk ink)
         {
-            return floor.Layer != null ? floor.Layer.diffuseTexture : null;
+            if (ink.IsZone)
+                return HudFace.Styled(Zone);
+            FloorDefinition floor = ink.Floor;
+            return floor != null && floor.Layer != null ? HudFace.Photo(floor.Layer.diffuseTexture) : default;
         }
     }
 }

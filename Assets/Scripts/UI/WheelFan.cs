@@ -148,7 +148,7 @@ namespace Diciela.UI
                 _pastels[index] = face;
             }
             token.EnableInClassList(StyleClasses.Open, option.IsOn);
-            WheelPicture.Paint(token[0], "roue-jeton-icone", option.Icon, option.Picture);
+            option.Face.Paint(token[0], "roue-jeton-icone");
             var badge = (Facet)token[1];
             ((Label)badge[0]).text = option.Badge;
             badge.EnableInClassList(StyleClasses.Hidden, option.Badge.Length == 0);
