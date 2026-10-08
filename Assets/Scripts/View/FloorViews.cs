@@ -5,10 +5,11 @@ using UnityEngine;
 namespace Diciela.View
 {
     /// <summary>
-    /// Les sols vus (GDD, sections 9 et 16 ; décisions 209, 213 et 216) : un sol qui sert (bâti, ou qu'on efface) se peint
-    /// dans le sol de la carte, de son calque (FloorPainting) ; un sol en chantier se voit en fantôme, à la texture de son
-    /// calque, et un sol qu'on efface en voile de la couleur des fantômes (FloorGhosts), comme le fantôme d'une
-    /// construction. La vue écoute les sols et se refait à la fin de l'image où ils ont changé, une seule fois.
+    /// Les sols vus (GDD, sections 9 et 16 ; décisions 209, 213, 216 et 227) : un sol qui sert (bâti, ou qu'on efface)
+    /// se peint dans le sol de la carte, de son calque, arrondi, effiloché et cerné de son liant (FloorPainting) ; un
+    /// sol en chantier se voit en fantôme, à la texture de son calque, et un sol qu'on efface en voile de la couleur
+    /// des fantômes (FloorGhosts), comme le fantôme d'une construction. La vue écoute les sols et se refait à la fin de
+    /// l'image où ils ont changé, une seule fois.
     /// </summary>
     public sealed class FloorViews : MonoBehaviour
     {
@@ -27,12 +28,13 @@ namespace Diciela.View
             if (settings == null || settings.TranslucentMaterial == null || settings.FloorGhostMaterial == null)
                 throw new System.InvalidOperationException("Les sols vus n'ont pas leur fiche de réglages de la pose.");
             _world = world;
-            _painting = new FloorPainting(terrain, original, world.Floors, world.Grid);
+            _painting = new FloorPainting(terrain, original, world.Floors, world.Grid, settings.GroundRoundingMeters,
+                settings.FloorEdgeSoftnessMeters);
             _ghosts ??= new FloorGhosts(transform, settings);
             _ghosts.PlaceOn(terrain);
             _world.Floors.FloorsChanged += OnFloorsChanged;
             // Ce qui sert déjà se peint, ce qui est en chantier se voit en fantôme : la vue part de l'état du monde.
-            _painting.Mark(new RectInt(0, 0, world.Grid.Width, world.Grid.Depth));
+            _painting.MarkServing();
             _ghostsStale = true;
         }
 

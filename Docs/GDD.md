@@ -863,18 +863,22 @@
   permet.
 - **Règle.** La roue de Chemins : les mêmes cases, sans la place de charrette (le 5 sera le pont, une fois son idée
   venue), ses sols ceux que la ville sait faire (au départ, le premier). Sa gomme efface tous les sols. Un chemin se
-  voit toujours, comme le sol qu'il est : la terre et les pavés du pack peints sur la carte ; son fantôme, sa texture,
-  pâle et translucide, mêlée à la teinte des fantômes ; un chemin qu'on efface garde un voile de la couleur des fantômes
-  jusqu'à la fin de son chantier. L'aperçu du geste reste vert ou rouge, sans texture.
+  voit toujours, comme le sol qu'il est : la terre et les pavés du pack peints sur la carte, aux formes arrondies, au
+  bord fondu et effiloché, cernés de leur liant s'ils en ont un (la terre autour des pavés, comme dans la démo du
+  pack) ; son fantôme, sa texture, pâle et translucide, mêlée à la teinte des fantômes ; un chemin qu'on efface garde un
+  voile de la couleur des fantômes jusqu'à la fin de son chantier. L'aperçu du geste reste vert ou rouge, sans texture.
 - **À toi.** La vignette d'un sol (pour l'instant la texture de son calque) et l'icône de Chemins dans la roue (un
   chemin en pointillés) : des remplaçants.
 - **Défaut.** La terre : une copie du calque `Village_Dirt_01` du pack, rangée hors du pack, qui se répète tous les 5 m
   comme l'herbe du pack, pour que ses facettes aient la taille de celles de l'herbe (décision 222) ; les pavés :
   `Path_01`, les pavés moussus du chemin du pack. Les autres sols : des calques faits des images du pack (pavés bruns,
   dalles, carreaux, briques, pierre grise, planchers), rangés hors du pack, avec leurs fiches.
+- **Défaut.** Le rendu des sols (décision 227) : leurs formes arrondies sur 50 cm, leur bord fondu sur 15 cm ; la terre,
+  effilochée de 35 cm en festons d'1,5 m, sans liant ; les pavés, effilochés de 25 cm, cernés de 80 cm de terre, leur
+  liant.
 - **Règle.** La zone de la Place et ses places de charrette se voient en mode construction : en main une construction,
-  l'outil de la Place, Chemins ou Déplacer. La zone : un voile léger sur le sol et son contour ; une place de
-  charrette : un cadre blanc, une pointe vers l'avant de la charrette.
+  l'outil de la Place, Chemins ou Déplacer. La zone : un voile léger sur le sol et son contour, lissés comme les sols,
+  sans escalier ; une place de charrette : un cadre blanc, une pointe vers l'avant de la charrette.
 - **À toi.** Les icônes et les curseurs des outils (leurs cases, leurs options, symétries comprises, la vignette de la
   zone), pour l'instant des remplaçants simples. La part de texture et l'opacité du fantôme d'un sol : des réglages de
   son matériau.

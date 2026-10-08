@@ -368,6 +368,8 @@ mètres carrés), `Place` ne veut dire que poser, la fiche d'un lieu est `Locati
 | outil Déplacer ; outil qui vise | `MoveTool` ; `IAimingTool` | lâcher (un outil) | `PutDown` | défaite ; en déplacement | `StructureTakenDown` ; `StructureState.Moving` |
 | les places de charrette de la Place | `PlazaMarks` | outil de la Place ; ses modes ; sa surface ; son geste | `PaintTool` ; `PaintToolMode` ; `PaintCanvas` ; `PaintDrawing` | dernière construction prise | `Last` (`PlacementTool`) |
 | la touche qui tourne | `RotateKey` | un calque posé sur le sol ; son maillage | `GroundOverlay` ; `DrapedMesh` | la Place en ville (sa barre, ses gestes, sa zone) | `TownPlaza` |
+| forme lissée (de mailles) ; son dedans ; son bord | `CellField` ; `ContourMesh` ; `ContourLines` (`ContourSquares`) | distance à un sol ; bruit du sol | `CellDistance` ; `GroundNoise` | ce qu'un sol peint couvre ; le mélange des calques | `FloorWeights` ; `FloorBlend` (`FloorTexels`) |
+| liant (d'un sol) ; effilochage | `BorderLayer`, `BorderMeters` ; `FrayMeters`, `FrayScaleMeters` (`FloorDefinition`) | formes toutes faites (d'un maillage drapé) | `DrapedShapes` | arrondi ; douceur du bord | `GroundRoundingMeters` ; `FloorEdgeSoftnessMeters` (`PlacementSettings`) |
 | viser le sol ; le fantôme qui suit le pointeur | `GroundAim` ; `GhostAim` | | | | |
 
 ## 10. La carte, les scènes et la sauvegarde
@@ -473,15 +475,18 @@ mètres carrés), `Place` ne veut dire que poser, la fiche d'un lieu est `Locati
   glissent, cliquent, tournent par la touche de la pose (`RotateKey`, que la pose partage) et changent la taille du
   pinceau à Ctrl + molette, que la caméra laisse alors. Les chiffres prennent les cases de la roue de l'outil en main
   (`IToolWheel.TakeSlot`). La vue montre la zone (`PlazaZoneView`) et l'aperçu de l'outil (`PaintToolPreview`) en
-  calques posés sur le relief (`GroundOverlay`, `DrapedMesh` : un seul maillage par calque, refait quand la Place
+  calques posés sur le relief, d'après la forme lissée de leurs mailles (`CellField`, son dedans `ContourMesh`, son bord
+  `ContourLines` ; décision 227) (`GroundOverlay`, `DrapedMesh` : un seul maillage par calque, refait quand la Place
   change) ; l'interface, sa roue (`PaintRing` ; ses éventails, `PaintRingOptions` ; leurs icônes, `PaintIconClasses`) et
   sa carte (`ToolCard`). `Game` relie les gestes et la zone, qui ne se voit qu'en mode construction (`TownPlaza`).
-- **Les sols vus** (décisions 214 et 216) : un sol qui sert (bâti, ou qu'on efface) se peint dans le sol de la carte, du
-  calque de sa fiche (`FloorPainting` : sur la copie du Terrain, par lot, à la fin de l'image ; la peinture d'origine
-  relue sur l'original) ; un sol en chantier se voit en fantôme, à la texture de son calque (`FloorGhosts` : un calque
-  par sorte de sol, sa copie du matériau du shader `Diciela/SolFantome`, la tuile posée comme sur le Terrain, depuis son
-  origine, mêlée à la teinte des fantômes) ; un sol qu'on efface, en voile de la couleur des fantômes (`FloorViews`, né
-  avec les vues du monde, `WorldViews`).
+- **Les sols vus** (décisions 214, 216 et 227) : un sol qui sert (bâti, ou qu'on efface) se peint dans le sol de la
+  carte, du calque de sa fiche (`FloorPainting` : sur la copie du Terrain, par lot et par carreaux, à la fin de
+  l'image ; chaque texel prend ce qu'il couvre du sol, d'après la forme lissée de ses mailles, son bord fondu et
+  effiloché, puis de son liant, la bande autour de lui, `FloorWeights` ; le reste revient à la peinture d'origine, relue
+  sur l'original, `FloorBlend`) ; un sol en chantier se voit en fantôme, à la texture de son calque, de la même forme
+  lissée (`FloorGhosts` : un calque par sorte de sol, sa copie du matériau du shader `Diciela/SolFantome`, la tuile
+  posée comme sur le Terrain, depuis son origine, mêlée à la teinte des fantômes) ; un sol qu'on efface, en voile de la
+  couleur des fantômes (`FloorViews`, né avec les vues du monde, `WorldViews`).
 - **L'ouverture d'une partie** : la scène du démarrage (`GameStage`) montre le monde (constructions, habitants) et ouvre
   l'écran de création dans l'atelier (`Atelier` : un décor généré loin de la carte, sa lumière, sa caméra) ; l'aperçu
   (`AppearancePreview`) s'y tient sur le socle, et les gestes de l'atelier (`PreviewControls`, leur propre carte

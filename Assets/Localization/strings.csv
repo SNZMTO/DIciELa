@@ -122,6 +122,7 @@ journee.Night,Nuit,Night
 marchandise.bois,Bois,Wood
 marchandise.pierre,Pierre,Stone
 sol.terre,Terre,Dirt
+sol.paves,Pavés,Cobblestones
 nature.arbre,Arbre,Tree
 nature.rocher,Rocher,Rock
 statistique.terre,Terre,Land

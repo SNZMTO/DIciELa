@@ -45,3 +45,5 @@ MonoBehaviour:
   _outlineColor: {r: 1, g: 1, b: 1, a: 0.85}
   _outlineWidthMeters: 0.12
   _overlayLiftMeters: 0.05
+  _groundRoundingMeters: 0.5
+  _floorEdgeSoftnessMeters: 0.15
