@@ -5,10 +5,10 @@ using UnityEngine.UIElements;
 namespace Diciela.UI
 {
     /// <summary>
-    /// Les mesures de la roue que donne la feuille de style (décisions 176 et 221), lues sur son fond : l'écart au bord de
-    /// l'écran (--marge), le rayon du cercle des cases (--rayon), celui des éventails (--rayon-eventail) et l'écart de
-    /// leurs options (--ecart), en pixels et en degrés ; et ce qui s'en déduit : le seuil au-delà duquel on vise une
-    /// option, et la portée de la roue autour de son centre, éventails compris.
+    /// Les mesures de la roue que donne la feuille de style (décisions 176 et 221), lues sur son fond : l'écart au bord
+    /// de l'écran (--marge), le rayon du cercle des cases (--rayon), celui des éventails (--rayon-eventail) et l'écart
+    /// de leurs options (--ecart), en pixels et en degrés ; et ce qui s'en déduit : le seuil au-delà duquel on vise une
+    /// option, la portée de la roue autour de son centre, éventails compris, et le centre où elle s'ouvre.
     /// </summary>
     internal sealed class WheelMeasures
     {
@@ -46,6 +46,18 @@ namespace Diciela.UI
                     return Mathf.Max(reach, FanRadius + TokenOverhang);
             }
             return reach;
+        }
+
+        /// <summary>
+        /// Le centre de la roue ouverte en ce point de cette pièce : ramené pour que ces cases, éventails compris, tiennent
+        /// à la marge du bord.
+        /// </summary>
+        public Vector2 CenterFor(Vector2 at, Rect room, IReadOnlyList<WheelSlot> slots)
+        {
+            float margin = Margin;
+            var inside = Rect.MinMaxRect(room.xMin + margin, room.yMin + margin, room.xMax - margin, room.yMax - margin);
+            float reach = Reach(slots);
+            return WheelGeometry.Clamped(at, new Rect(-reach, -reach, reach * 2f, reach * 2f), inside);
         }
 
         private float Length(CustomStyleProperty<float> property, float fallback)

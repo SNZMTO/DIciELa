@@ -4,8 +4,8 @@ namespace Diciela.UI
 {
     /// <summary>
     /// Les éléments de la roue dans Hud.uxml, trouvés par leur nom : ses deux portes, l'icône des outils et sa touche,
-    /// et la carte de l'outil en main ; le fond plein écran, le centre, le plateau, la bulle et ses deux lignes, et les
-    /// boîtes où la roue range ses cases et l'éventail de la case visée.
+    /// et la carte de l'outil en main ; le fond plein écran, le centre, le plateau, la bulle et ses deux lignes, les
+    /// boîtes où la roue range ses cases et l'éventail de la case visée, et l'icône qui vole vers le curseur.
     /// </summary>
     internal sealed class ToolWheelElements
     {
@@ -22,6 +22,7 @@ namespace Diciela.UI
             Detail = root.Q<Label>("roue-suite");
             Slots = root.Q("roue-cases");
             Fan = root.Q("roue-eventail");
+            Flight = root.Q("roue-vol");
         }
 
         public FeltButton Icon { get; }
@@ -35,6 +36,7 @@ namespace Diciela.UI
         public Label Detail { get; }
         public VisualElement Slots { get; }
         public VisualElement Fan { get; }
+        public VisualElement Flight { get; }
 
         /// <summary>Les éléments de la roue sous cette racine ; null s'il en manque un.</summary>
         public static ToolWheelElements Find(VisualElement root)
@@ -42,7 +44,7 @@ namespace Diciela.UI
             var found = new ToolWheelElements(root);
             bool complete = found.Icon != null && found.IconKey != null && found.Card != null && found.Wheel != null &&
                             found.Center != null && found.Plate != null && found.Bubble != null &&
-                            found.Label != null && found.Detail != null && found.Slots != null && found.Fan != null;
+                            found.Label != null && found.Detail != null && found.Slots != null && found.Fan != null && found.Flight != null;
             return complete ? found : null;
         }
     }

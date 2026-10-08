@@ -9,14 +9,12 @@ using UnityEngine;
 namespace Diciela.Controls
 {
     /// <summary>
-    /// Un outil de sol (GDD, sections 9 et 11 ; décisions 206, 210 et 216) : un seul outil, deux entrées (PaintEntry),
-    /// l'outil de la Place, pris à sa carte, et l'outil Chemins, pris à la roue. Ses modes, en familles (PaintToolMode) :
-    /// peindre et gommer au pinceau, tracer point par point, tracer une forme, poser ou retirer une place de charrette ;
-    /// ce qu'il pose, la zone ou un sol, est son encre (PaintInks) ; ses réglages sans geste, ses options (PaintOptions).
-    /// Il travaille sur sa surface (PaintCanvas) : une forme est un ordre, envoyé au relâchement d'un geste glissé, ou au
-    /// clic sur le dernier point d'un tracé ; pendant le geste, l'aperçu montre ce qu'elle changerait, par la même
-    /// fonction que l'ordre, et une forme refusée ne part pas. Les gestes et les tests l'appellent par les mêmes méthodes.
-    /// Celui qui le crée le libère.
+    /// Un outil de sol (GDD, sections 9 et 11 ; décisions 206, 210, 216 et 221) : un seul outil, deux entrées
+    /// (PaintEntry), l'outil de la Place et l'outil Chemins, pris à la roue. Ses modes (PaintToolMode), son encre, la
+    /// zone ou un sol (PaintInks), ses réglages sans geste (PaintOptions). Il travaille sur sa surface (PaintCanvas) :
+    /// une forme est un ordre, envoyé au relâchement d'un geste glissé ou au clic sur le dernier point d'un tracé ;
+    /// l'aperçu la juge par la même fonction que l'ordre, et une forme refusée ne part pas. Les gestes et les tests
+    /// l'appellent par les mêmes méthodes. Celui qui le crée le libère.
     /// </summary>
     public sealed class PaintTool : IDisposable, IHeldTool
     {
@@ -46,11 +44,10 @@ namespace Diciela.Controls
         public event Action HeldChanged;
 
         /// <summary>Levé quand la réponse à ce qu'il vise change, ou la place de charrette qu'un clic retirerait.</summary>
-        public event Action ResultChanged
-        {
-            add => _canvas.ResultChanged += value;
-            remove => _canvas.ResultChanged -= value;
-        }
+        public event Action ResultChanged { add => _canvas.ResultChanged += value; remove => _canvas.ResultChanged -= value; }
+
+        /// <summary>Levé quand un ordre part.</summary>
+        public event Action Acted { add => _canvas.Acted += value; remove => _canvas.Acted -= value; }
 
         public bool IsActive { get; private set; }
         public PaintToolMode Mode { get; private set; }

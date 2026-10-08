@@ -11,9 +11,9 @@ namespace Diciela.Tests.PlayMode
     /// <summary>
     /// Les gestes des outils, joués par un clavier et une souris simulés sur les vraies actions du jeu (décision 168) :
     /// tenir Tab ouvre la roue sous le pointeur et la fait suivre où il vise ; relâcher choisit là où il vise ; B et X
-    /// choisissent tout droit ; les touches 1 à 9 prennent les cartes (décision 184) ; le curseur suit le pointeur, image
-    /// après image (décision 221) ; sans roue, rien ne part. Les noms
-    /// des touches se lisent sur les liaisons ; la table des outils suit l'ordre des choix et l'asset du jeu.
+    /// choisissent tout droit ; les touches 1 à 9 prennent les cartes (décision 184) ; le curseur suit le pointeur,
+    /// image après image (décision 221) ; sans roue, rien ne part. Les noms des touches se lisent sur les liaisons ; la
+    /// table des outils suit l'ordre des choix et l'asset du jeu.
     /// </summary>
     public sealed class ToolControlsTests : GestureFixture
     {

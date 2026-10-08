@@ -34,6 +34,9 @@ namespace Diciela.Controls
         /// <summary>Vrai entre l'envoi d'un ordre et son issue.</summary>
         public bool IsWaiting { get; private set; }
 
+        /// <summary>Levé quand un ordre part.</summary>
+        public event Action Sent;
+
         public void Dispose()
         {
             _world.Plaza.PlazaChanged -= OnPlayed;
@@ -76,6 +79,7 @@ namespace Diciela.Controls
         {
             _world.Submit(order);
             IsWaiting = true;
+            Sent?.Invoke();
         }
 
         private void OnPlayed()

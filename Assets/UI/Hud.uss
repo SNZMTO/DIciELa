@@ -415,6 +415,27 @@
     opacity: 0.16;
 }
 
+/* Elle glisse quand on prend un outil (depuis la droite, petite et transparente) et quand on le lâche (décision 225),
+   autour de son coin bas-droit, près de l'icône des outils ; elle s'efface en fondu quand la roue s'ouvre. */
+.feutre.carte-outil {
+    transform-origin: right bottom;
+    transition-property: translate, scale, opacity;
+    transition-duration: 0.16s, 0.16s, 0.16s;
+    transition-timing-function: ease-out-cubic, ease-out-back, ease-out-cubic;
+}
+
+.feutre.carte-outil.carte-outil-entree {
+    translate: 18px 0;
+    scale: 0.9 0.9;
+    opacity: 0;
+    transition-duration: 0s;
+}
+
+.feutre.carte-outil.carte-outil-sortie {
+    translate: 18px 0;
+    opacity: 0;
+}
+
 .carte-outil-tuile {
     width: 48px;
     height: 48px;
@@ -493,6 +514,43 @@
     top: 0;
     width: 40px;
     height: 40px;
+}
+
+/* Le pop du curseur quand l'outil change : il part gros et revient en ressort, autour de sa pointe (décision 225). */
+.curseur {
+    transition-property: scale;
+    transition-duration: 0.18s;
+    transition-timing-function: ease-out-back;
+}
+
+.curseur.curseur-pop {
+    scale: 1.45 1.45;
+    transition-duration: 0s;
+}
+
+/* L'éclaboussure d'un geste qui agit : un anneau à la couleur de l'outil, qui s'ouvre et s'efface (décision 225) ;
+   au repos, grand et transparent. */
+.eclaboussure {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 28px;
+    height: 28px;
+    margin-left: -14px;
+    margin-top: -14px;
+    border-radius: 14px;
+    border-width: 3px;
+    scale: 1.7 1.7;
+    opacity: 0;
+    transition-property: scale, opacity;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-out-cubic;
+}
+
+.eclaboussure.eclaboussure-depart {
+    scale: 0.2 0.2;
+    opacity: 1;
+    transition-duration: 0s;
 }
 
 .curseur-icone {
@@ -593,6 +651,71 @@
 
 .roue-fermee {
     visibility: hidden;
+}
+
+/* Ses mouvements (décision 225), 200 ms au plus : elle s'ouvre en ressort, petite, penchée et transparente, ses cases
+   l'une après l'autre, ses jetons depuis leur case ; elle se retourne comme une pièce d'un étage à l'autre ; la case
+   qu'on se met à viser grossit et se dandine. Les feutres de la roue ont leurs propres transitions, plus précises que
+   celle du feutre (le soulèvement). */
+.roue-centre {
+    transition-property: scale, rotate, opacity;
+    transition-duration: 0.18s, 0.18s, 0.12s;
+    transition-timing-function: ease-out-back, ease-out-back, ease-out-cubic;
+}
+
+.roue-centre.roue-entree {
+    scale: 0.55 0.55;
+    rotate: -12deg;
+    opacity: 0;
+    transition-duration: 0s;
+}
+
+.roue-centre.roue-retournee {
+    scale: 0.05 1;
+    transition-duration: 0s;
+}
+
+.feutre.roue-outil, .feutre.roue-jeton {
+    transition-property: translate, scale, opacity, rotate;
+    transition-duration: 0.12s, 0.13s, 0.13s, 0.07s;
+    transition-timing-function: ease-out-cubic, ease-out-back, ease-out-cubic, ease-in-out-sine;
+}
+
+.feutre.roue-outil.roue-entree, .feutre.roue-jeton.roue-entree {
+    scale: 0.2 0.2;
+    opacity: 0;
+    transition-duration: 0s;
+}
+
+.dandine-gauche {
+    rotate: -9deg;
+}
+
+.dandine-droite {
+    rotate: 6deg;
+}
+
+/* L'icône prise saute de la roue au curseur : posée sur sa case, grossie, elle file vers le pointeur en rapetissant et
+   s'efface ; au repos, petite et transparente. */
+.roue-vol {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 46px;
+    height: 46px;
+    margin-left: -23px;
+    margin-top: -23px;
+    scale: 0.5 0.5;
+    opacity: 0;
+    transition-property: translate, scale, opacity;
+    transition-duration: 0.18s;
+    transition-timing-function: ease-in-cubic;
+}
+
+.roue-vol.roue-vol-depart {
+    scale: 1.25 1.25;
+    opacity: 1;
+    transition-duration: 0s;
 }
 
 .roue-centre {

@@ -6,40 +6,34 @@ using UnityEngine.UIElements;
 namespace Diciela.UI
 {
     /// <summary>
-    /// L'anneau de la roue (décisions 168, 176 et 221) : ses cases autour d'un centre (WheelSlots), l'éventail de la case
-    /// visée (WheelFan), à leurs mesures (WheelMeasures), et le fond plein écran qui prend le pointeur, ouvert. Il s'ouvre en
-    /// un point du panneau, ramené pour tenir dans l'écran, éventails compris. Touche tenue, on vise une case par la
-    /// direction où l'on bouge le pointeur depuis ce point, une option en poussant jusqu'à l'éventail ; au clic, par le
-    /// survol. Un appui sur le fond le congédie ; la molette, sur lui, se dit. Fermé, il reste en page, invisible.
+    /// L'anneau de la roue (décisions 168, 176 et 221) : le fond plein écran qui prend le pointeur, ouvert, et le centre
+    /// où la roue s'ouvre, ramené pour tenir dans l'écran, éventails compris (WheelMeasures) ; ses cases et l'éventail de
+    /// la case visée, ce qu'on y vise et ce qu'on y prend, sont ses cibles (WheelTargets). Elle s'ouvre en ressort, ses
+    /// cases l'une après l'autre, et se retourne comme une pièce quand elle change d'étage (décision 225). Un appui sur
+    /// le fond la congédie ; la molette, sur lui, se dit. Fermée, elle reste en page, invisible.
     /// </summary>
     internal sealed class WheelRing : IDisposable
     {
         private const string ClosedClass = "roue-fermee";
+        private const string EnterClass = "roue-entree";
+        private const string FlipClass = "roue-retournee";
 
         private readonly VisualElement _wheel;
         private readonly VisualElement _center;
-        private readonly WheelSlots _felts;
-        private readonly WheelFan _fan;
         private readonly WheelMeasures _measures;
-        private readonly List<Vector2> _slotCenters = new List<Vector2>();
+        private readonly WheelTargets _targets;
         private readonly EventCallback<PointerDownEvent> _onBackground;
         private readonly EventCallback<WheelEvent> _onScroll;
-        private IReadOnlyList<WheelSlot> _slots = Array.Empty<WheelSlot>();
         private Vector2 _openedAt;
         private Vector2 _centerPoint;
-        private int _fanSlot = -1;
+        private bool _held;
 
-        public WheelRing(VisualElement wheel, VisualElement center, VisualElement slots, VisualElement fan)
+        public WheelRing(ToolWheelElements elements)
         {
-            _wheel = wheel;
-            _center = center;
-            _measures = new WheelMeasures(wheel);
-            _felts = new WheelSlots(slots);
-            _felts.Hovered += slot => AimByHover(slot, -1);
-            _felts.Clicked += slot => Picked?.Invoke(slot, -1);
-            _fan = new WheelFan(fan);
-            _fan.Hovered += option => AimByHover(_fanSlot, option);
-            _fan.Clicked += option => Picked?.Invoke(_fanSlot, option);
+            _wheel = elements.Wheel;
+            _center = elements.Center;
+            _measures = new WheelMeasures(_wheel);
+            _targets = new WheelTargets(elements, _measures);
             _onBackground = e =>
             {
                 if (e.target == _wheel)
@@ -56,10 +50,18 @@ namespace Diciela.UI
         }
 
         /// <summary>Levé quand la case visée ou l'option visée change : leurs rangs, -1 pour aucune.</summary>
-        public event Action<int, int> AimChanged;
+        public event Action<int, int> AimChanged
+        {
+            add => _targets.AimChanged += value;
+            remove => _targets.AimChanged -= value;
+        }
 
-        /// <summary>Levé quand on clique une case (option -1) ou un jeton : leurs rangs.</summary>
-        public event Action<int, int> Picked;
+        /// <summary>Levé quand on prend une case (option -1) ou une option : au clic, ou au relâchement de la touche.</summary>
+        public event Action<int, int> Picked
+        {
+            add => _targets.Picked += value;
+            remove => _targets.Picked -= value;
+        }
 
         /// <summary>Levé quand on tourne la molette sur la roue ouverte : +1 vers le haut, -1 vers le bas.</summary>
         public event Action<int> Scrolled;
@@ -73,42 +75,38 @@ namespace Diciela.UI
         /// Vrai si l'anneau s'est ouvert par la touche tenue : on y vise par la direction du pointeur ; faux, on y clique
         /// (aussi après la case Outils, qui le garde ouvert).
         /// </summary>
-        public bool IsHeld { get; set; }
+        public bool IsHeld
+        {
+            get => _held;
+            set
+            {
+                _held = value;
+                _targets.ByHover = IsOpen && !value;
+            }
+        }
 
-        public int AimedSlot { get; private set; } = -1;
-        public int AimedOption { get; private set; } = -1;
-
-        /// <summary>Montre ces cases : refaites si leurs places changent, sinon mises à jour sur place, la visée gardée.</summary>
+        /// <summary>Montre ces cases ; ouvert, il se retourne quand elles changent d'étage.</summary>
         public void Show(IReadOnlyList<WheelSlot> slots)
         {
-            _slots = slots;
-            if (_felts.Show(slots, _measures.SlotRadius))
-            {
-                _fanSlot = -1;
-                _fan.Clear();
-                Aim(-1, -1);
-            }
-            else if (_fanSlot >= 0)
-                ShowFan(_fanSlot);
-            _felts.SetPickable(IsOpen);
+            if (_targets.Show(slots) && IsOpen)
+                HudMotion.Enter(_center, FlipClass);
         }
 
         /// <summary>Ouvre l'anneau autour de ce point du panneau, ramené pour qu'il tienne dans l'écran.</summary>
         public void Open(Vector2 at, bool held)
         {
             Rect room = _wheel.worldBound;
-            float margin = _measures.Margin;
-            var inside = Rect.MinMaxRect(room.xMin + margin, room.yMin + margin, room.xMax - margin, room.yMax - margin);
-            float reach = _measures.Reach(_slots);
             _openedAt = at;
-            _centerPoint = WheelGeometry.Clamped(at, new Rect(-reach, -reach, reach * 2f, reach * 2f), inside);
+            _centerPoint = _measures.CenterFor(at, room, _targets.Slots);
             _center.style.left = _centerPoint.x - room.xMin;
             _center.style.top = _centerPoint.y - room.yMin;
             IsOpen = true;
             IsHeld = held;
             _wheel.RemoveFromClassList(ClosedClass);
             SetPickable(true);
-            Aim(-1, -1);
+            _targets.Aim(-1, -1);
+            HudMotion.Enter(_center, EnterClass);
+            _targets.Enter();
         }
 
         public void Close()
@@ -117,7 +115,7 @@ namespace Diciela.UI
             IsHeld = false;
             _wheel.AddToClassList(ClosedClass);
             SetPickable(false);
-            Aim(-1, -1);
+            _targets.Aim(-1, -1);
         }
 
         /// <summary>Ferme l'anneau et le débranche de ses éléments.</summary>
@@ -128,71 +126,28 @@ namespace Diciela.UI
             _wheel.UnregisterCallback(_onScroll);
         }
 
-        /// <summary>
-        /// Touche tenue, le pointeur en ce point du panneau : l'option de l'éventail ouvert s'il y pousse, sinon la case
-        /// dans sa direction depuis le point d'ouverture ; rien tant qu'il reste près de ce point.
-        /// </summary>
+        /// <summary>Touche tenue, le pointeur en ce point du panneau : la case ou l'option visée suit.</summary>
         public void AimAt(Vector2 pointer)
         {
-            if (_fanSlot >= 0)
-            {
-                int option = WheelGeometry.AimedOption(_centerPoint, _slots[_fanSlot].Place * 45f,
-                    _slots[_fanSlot].Options.Count, _measures.FanStep, _measures.FanThreshold, pointer);
-                if (option >= 0)
-                {
-                    Aim(_fanSlot, option);
-                    return;
-                }
-            }
-            _slotCenters.Clear();
-            foreach (WheelSlot slot in _slots)
-                _slotCenters.Add(_centerPoint + WheelGeometry.OnCircle(slot.Place * 45f, _measures.SlotRadius));
-            Aim(WheelGeometry.Aimed(_openedAt, _centerPoint, _slotCenters, pointer), -1);
+            _targets.AimAt(_openedAt, _centerPoint, pointer);
         }
 
-        private void AimByHover(int slot, int option)
+        /// <summary>Touche tenue, au relâchement : prend ce qu'on vise, comme un clic ; faux si l'on ne vise rien.</summary>
+        public bool PickAimed()
         {
-            if (IsOpen && !IsHeld && slot >= 0)
-                Aim(slot, option);
+            return _targets.PickAimed();
         }
 
-        // Marque la case et l'option visées, ouvre l'éventail de la case si elle a des options, et le dit si ça change.
-        private void Aim(int slot, int option)
+        /// <summary>L'icône prise saute vers le pointeur, touche tenue ; au clic, elle s'efface sur place.</summary>
+        public void Fly(int slot, int option)
         {
-            if (slot >= _slots.Count)
-                slot = -1;
-            if (slot != _fanSlot)
-            {
-                if (slot >= 0 && _slots[slot].Options.Count > 0)
-                    ShowFan(slot);
-                else
-                {
-                    _fanSlot = -1;
-                    _fan.Clear();
-                }
-            }
-            _fan.Aim(slot == _fanSlot ? option : -1);
-            _felts.Aim(slot);
-            if (slot == AimedSlot && option == AimedOption)
-                return;
-            AimedSlot = slot;
-            AimedOption = option;
-            AimChanged?.Invoke(slot, option);
-        }
-
-        private void ShowFan(int slot)
-        {
-            _fanSlot = slot;
-            _fan.Show(_slots[slot].Options, _slots[slot].Place * 45f, _measures.FanRadius, _measures.FanStep,
-                _slots[slot].Pastel);
-            _fan.SetPickable(IsOpen);
+            _targets.Fly(slot, option, IsHeld);
         }
 
         private void SetPickable(bool pickable)
         {
             _wheel.pickingMode = pickable ? PickingMode.Position : PickingMode.Ignore;
-            _felts.SetPickable(pickable);
-            _fan.SetPickable(pickable);
+            _targets.SetPickable(pickable);
         }
     }
 }

@@ -6,10 +6,11 @@ using UnityEngine;
 namespace Diciela.Tests.PlayMode
 {
     /// <summary>
-    /// Le présentateur du curseur des outils (décision 221), sur le petit monde des tests (une Place, la terre) et une vue
-    /// qui note ce qu'on lui montre. Les mains vides, la flèche ; chaque outil sa silhouette, à la couleur de sa case dans
-    /// la roue ; l'outil de la Place montre en pastilles ce qu'il pose, sa forme ou son style, sa symétrie ; la croix
-    /// rouge dit qu'un geste serait refusé : une place de charrette hors de la Place, une construction sur une autre.
+    /// Le présentateur du curseur des outils (décision 221), sur le petit monde des tests (une Place, la terre) et une
+    /// vue qui note ce qu'on lui montre. Les mains vides, la flèche ; chaque outil sa silhouette, à la couleur de sa
+    /// case dans la roue ; l'outil de la Place montre en pastilles ce qu'il pose, sa forme ou son style, sa symétrie ;
+    /// la croix rouge dit qu'un geste serait refusé : une place de charrette hors de la Place, une construction sur une
+    /// autre ; un geste qui agit (une cabane posée, une construction touchée pour la déplacer) laisse une éclaboussure.
     /// </summary>
     public sealed class ToolCursorPresenterTests
     {
@@ -72,6 +73,18 @@ namespace Diciela.Tests.PlayMode
             _test.Plaza.Choose(PaintToolMode.CartSpot);
             Assert.AreEqual("curseur-place-charrette", _view.Look?.Silhouette);
             Assert.AreEqual("", _view.Look?.InkIcon, "Une place de charrette ne pose ni zone ni sol.");
+        }
+
+        [Test]
+        public void AGestureThatActsLeavesASplash()
+        {
+            TestMove.Place(_test, _test.Cabin, TestWorld.Center);
+            Assert.AreEqual(1, _view.Splashes, "La cabane posée : l'ordre est parti.");
+            _test.Mover.Take();
+            TestMove.Touch(_test, TestWorld.Center + new Vector3(30f, 0f, 30f), 0.5f);
+            Assert.AreEqual(1, _view.Splashes, "Rien sous le pointeur : rien ne part, pas d'éclaboussure.");
+            Assert.IsTrue(TestMove.Touch(_test, TestWorld.Center, 0.5f));
+            Assert.AreEqual(2, _view.Splashes, "La cabane touchée pour la déplacer.");
         }
 
         [Test]

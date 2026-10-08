@@ -6,10 +6,11 @@ namespace Diciela.UI
 {
     /// <summary>
     /// Le présentateur du curseur des outils (GDD, section 16 ; décision 221) : la flèche les mains vides ; sinon la
-    /// silhouette de l'outil en main (ToolCursorShapes), à la couleur de sa case dans la roue (WheelTool), et pour un outil
-    /// de sol ses pastilles : ce qu'il pose (sauf au mode place de charrette), la forme du mode Forme ou le style d'un
-    /// tracé, la symétrie quand il y en a une ; la croix rouge quand le geste serait refusé, comme le disent l'aperçu et
-    /// la carte. Il écoute les outils : le curseur ne photographie jamais.
+    /// silhouette de l'outil en main (ToolCursorShapes), à la couleur de sa case dans la roue (WheelTool), et pour un
+    /// outil de sol ses pastilles : ce qu'il pose (sauf au mode place de charrette), la forme du mode Forme ou le style
+    /// d'un tracé, la symétrie quand il y en a une ; la croix rouge quand le geste serait refusé, comme le disent
+    /// l'aperçu et la carte ; une éclaboussure quand l'outil agit, qu'un ordre part (décision 225). Il écoute les
+    /// outils : le curseur ne photographie jamais.
     /// </summary>
     public sealed class ToolCursorPresenter : IDisposable
     {
@@ -42,6 +43,11 @@ namespace Diciela.UI
             _paths.ResultChanged += ShowRefused;
             _plaza.HeldChanged += OnHeldChanged;
             _plaza.ResultChanged += ShowRefused;
+            _placement.Acted += _view.Splash;
+            _clearing.Acted += _view.Splash;
+            _move.Acted += _view.Splash;
+            _paths.Acted += _view.Splash;
+            _plaza.Acted += _view.Splash;
             OnHeldChanged();
         }
 
@@ -56,6 +62,11 @@ namespace Diciela.UI
             _paths.ResultChanged -= ShowRefused;
             _plaza.HeldChanged -= OnHeldChanged;
             _plaza.ResultChanged -= ShowRefused;
+            _placement.Acted -= _view.Splash;
+            _clearing.Acted -= _view.Splash;
+            _move.Acted -= _view.Splash;
+            _paths.Acted -= _view.Splash;
+            _plaza.Acted -= _view.Splash;
             _view.ShowArrow();
         }
 

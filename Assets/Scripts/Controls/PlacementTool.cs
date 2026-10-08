@@ -42,6 +42,9 @@ namespace Diciela.Controls
         /// <summary>Levé quand la construction en main change : choisie, ou posée de côté.</summary>
         public event Action HeldChanged;
 
+        /// <summary>Levé quand l'ordre de poser part.</summary>
+        public event Action Acted;
+
         /// <summary>Levé quand la réponse des règles de pose à la place visée change.</summary>
         public event Action ResultChanged
         {
@@ -106,6 +109,7 @@ namespace Diciela.Controls
                 return false;
             _world.Submit(new PlaceStructureCommand(Current, _ghost.Aim));
             _sent = true;
+            Acted?.Invoke();
             return true;
         }
 

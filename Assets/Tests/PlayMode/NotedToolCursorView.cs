@@ -10,6 +10,9 @@ namespace Diciela.Tests.PlayMode
 
         public bool IsRefused { get; private set; }
 
+        /// <summary>Combien d'éclaboussures le présentateur a demandées.</summary>
+        public int Splashes { get; private set; }
+
         public void ShowArrow()
         {
             Look = null;
@@ -23,6 +26,11 @@ namespace Diciela.Tests.PlayMode
         public void ShowRefused(bool refused)
         {
             IsRefused = refused;
+        }
+
+        public void Splash()
+        {
+            Splashes++;
         }
     }
 }

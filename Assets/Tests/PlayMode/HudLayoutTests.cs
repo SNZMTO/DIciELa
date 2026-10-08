@@ -101,8 +101,7 @@ namespace Diciela.Tests.PlayMode
                         TestHud.CheckBlocks(document.rootVisualElement, screen, faults);
                         Vector2 icon = document.rootVisualElement.Q("outils").worldBound.center;
                         wheel.OpenAt(TestHud.OnScreen(document.rootVisualElement, icon));
-                        for (int frame = 0; frame < SettleFrames; frame++)
-                            yield return null;
+                        yield return TestHud.Settle();
                         TestHud.CheckWheel(document.rootVisualElement, screen, faults);
                         wheel.Escape();
                         // La Place en main, sa carte pleine : une étoile, et la raison d'un ordre refusé.
@@ -111,13 +110,11 @@ namespace Diciela.Tests.PlayMode
                         world.Plaza.Options.Choose(PaintSymmetry.Star);
                         world.World.Submit(new RemoveCartSpotCommand(99));
                         world.World.Step();
-                        for (int frame = 0; frame < SettleFrames; frame++)
-                            yield return null;
+                        yield return TestHud.Settle();
                         TestHud.CheckCard(document.rootVisualElement, screen, faults);
                         wheel.OpenAt(TestHud.OnScreen(document.rootVisualElement, icon));
                         wheel.PointAt(TestHud.OnScreen(document.rootVisualElement, icon + new Vector2(212f, 212f)));
-                        for (int frame = 0; frame < SettleFrames; frame++)
-                            yield return null;
+                        yield return TestHud.Settle();
                         if (document.rootVisualElement.Query(className: "roue-jeton").ToList().Count == 0)
                             faults.Add(screen.x + " × " + screen.y + " : l'éventail des formes ne s'est pas déplié.");
                         TestHud.CheckWheel(document.rootVisualElement, screen, faults);

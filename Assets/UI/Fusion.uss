@@ -164,6 +164,13 @@
     --lisere: #FBF3E4;
 }
 
+/* L'éclaboussure d'un outil : la lèvre de son feutre, plus sombre que son pastel, pour se voir sur l'herbe. */
+.eclaboussure.beurre { border-color: #D8BB69; }
+.eclaboussure.menthe { border-color: #9AC6A3; }
+.eclaboussure.ciel { border-color: #8DB8D3; }
+.eclaboussure.sable { border-color: #CFAE78; }
+.eclaboussure.peche { border-color: #DCA27C; }
+
 /* La teinte d'un curseur : la couleur de son outil, posée sur son halo blanc. */
 .teinte.beurre { -unity-background-image-tint-color: #F8DE95; }
 .teinte.menthe { -unity-background-image-tint-color: #BFE3C6; }

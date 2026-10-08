@@ -98,6 +98,8 @@
             <ui:Label name="infobulle-titre" class="libelle" picking-mode="Ignore" />
             <ui:Label name="infobulle-suite" class="sous-titre" picking-mode="Ignore" />
         </Diciela.UI.Facet>
+        <ui:VisualElement name="roue-vol" class="roue-vol" picking-mode="Ignore" />
+        <ui:VisualElement name="curseur-eclaboussure" class="eclaboussure" picking-mode="Ignore" />
         <ui:VisualElement name="curseur" class="curseur bloc-cache" picking-mode="Ignore">
             <ui:VisualElement name="curseur-icone" class="curseur-icone" picking-mode="Ignore" />
             <ui:VisualElement class="curseur-pastilles" picking-mode="Ignore">

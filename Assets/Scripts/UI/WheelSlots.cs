@@ -7,17 +7,22 @@ namespace Diciela.UI
 {
     /// <summary>
     /// Les cases de l'anneau de la roue (décision 221) : un feutre par case, à sa place sur le cercle, son icône ou sa
-    /// vignette, sa touche, son pastel, enfoncé si elle est prise, grossi si on la vise. On y vise au survol, on y clique.
-    /// Il refait ses feutres quand les places changent, sinon les met à jour sur place.
+    /// vignette, sa touche, son pastel, enfoncé si elle est prise, grossi si on la vise, et qui se dandine quand on se
+    /// met à la viser ; à l'ouverture, elles paraissent l'une après l'autre (décision 225). On y vise au survol, on y
+    /// clique. Il refait ses feutres quand les places changent, sinon les met à jour sur place.
     /// </summary>
     internal sealed class WheelSlots
     {
         private const string AimedClass = "vise";
+        private const string EnterClass = "roue-entree";
+        // L'écart entre deux cases qui paraissent : huit cases tiennent dans les 200 ms d'un mouvement.
+        private const long StaggerMs = 10;
         private static readonly string[] SlotClasses = { "feutre", "pan-10", "roue-outil" };
 
         private readonly VisualElement _box;
         private readonly List<FeltButton> _felts = new List<FeltButton>();
         private readonly List<int> _places = new List<int>();
+        private int _aimed = -1;
 
         public WheelSlots(VisualElement box)
         {
@@ -43,11 +48,27 @@ namespace Diciela.UI
             return !samePlaces;
         }
 
-        /// <summary>Marque la case visée (-1 : aucune).</summary>
+        /// <summary>Marque la case visée (-1 : aucune) ; une case qu'on se met à viser se dandine.</summary>
         public void Aim(int slot)
         {
             for (int i = 0; i < _felts.Count; i++)
                 _felts[i].EnableInClassList(AimedClass, i == slot);
+            if (slot != _aimed && slot >= 0 && slot < _felts.Count)
+                HudMotion.Wobble(_felts[slot]);
+            _aimed = slot;
+        }
+
+        /// <summary>Les cases paraissent l'une après l'autre.</summary>
+        public void Enter()
+        {
+            for (int i = 0; i < _felts.Count; i++)
+                HudMotion.Enter(_felts[i], EnterClass, i * StaggerMs);
+        }
+
+        /// <summary>Le visage de cette case : son icône ou sa vignette ; null hors des cases.</summary>
+        public VisualElement FaceAt(int slot)
+        {
+            return slot >= 0 && slot < _felts.Count ? _felts[slot][0] : null;
         }
 
         public void SetPickable(bool pickable)
@@ -61,6 +82,7 @@ namespace Diciela.UI
             _box.Clear();
             _felts.Clear();
             _places.Clear();
+            _aimed = -1;
             for (int i = 0; i < slots.Count; i++)
             {
                 int index = i;

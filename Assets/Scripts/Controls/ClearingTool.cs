@@ -35,6 +35,9 @@ namespace Diciela.Controls
         /// <summary>Levé quand on prend l'outil en main, ou qu'on le lâche.</summary>
         public event Action HeldChanged;
 
+        /// <summary>Levé quand un ordre de marquer ou de démarquer part.</summary>
+        public event Action Acted;
+
         /// <summary>Vrai tant qu'il est en main.</summary>
         public bool IsActive { get; private set; }
 
@@ -72,6 +75,7 @@ namespace Diciela.Controls
                 return false;
             int[] ids = { item.Id };
             _world.Submit(item.IsMarked ? (Command)new UnmarkForClearingCommand(ids) : new MarkForClearingCommand(ids));
+            Acted?.Invoke();
             return true;
         }
 
@@ -103,6 +107,7 @@ namespace Diciela.Controls
             for (int i = 0; i < ids.Length; i++)
                 ids[i] = _framed[i].Value;
             _world.Submit(new MarkForClearingCommand(ids));
+            Acted?.Invoke();
             return ids.Length;
         }
     }

@@ -55,6 +55,9 @@ namespace Diciela.Controls
         /// </summary>
         public event Action HeldChanged;
 
+        /// <summary>Levé quand on touche la construction à déplacer, puis quand l'ordre de la déplacer part.</summary>
+        public event Action Acted;
+
         /// <summary>Levé quand la réponse des règles de pose à la place visée change.</summary>
         public event Action ResultChanged
         {
@@ -120,6 +123,7 @@ namespace Diciela.Controls
                 return false;
             _world.Submit(new MoveStructureCommand(Moving.Id, _ghost.Aim));
             _sent = true;
+            Acted?.Invoke();
             return true;
         }
 
@@ -150,6 +154,7 @@ namespace Diciela.Controls
             Moving = picked;
             _ghost.Restart(picked.Placement.RotationDegrees);
             HeldChanged?.Invoke();
+            Acted?.Invoke();
             return true;
         }
 
