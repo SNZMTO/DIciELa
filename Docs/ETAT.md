@@ -5,9 +5,9 @@ attendent que tu les voies ; bonnes, `git fetch . etape-71-prevision:main` les f
 **Fait** : 23 à 59 (jusqu'à la 215) ; 60 à 64 (216 à 220), les outils de sol revus ; 65 (222), la terre à l'échelle de
 l'herbe ; 66 (221, 223), la roue à étages ; 67 (224), le curseur ; 68 (225), les mouvements ; 69 (226), Construire dans
 la roue ; 70 (227), le rendu des sols : formes arrondies, bord fondu et effiloché, liant, plus de blocs ni d'escalier ;
-les pavés ont leur fiche et leur liant, mais attendent leur idée ; 71 (228, 229), la prévision : V, ou le bouton lavande
-au-dessus des outils, montre la ville une fois ses chantiers finis (constructions bâties, chemins tracés peints, arbres
-marqués et sols effacés partis), sous un filtre de rêverie ; on y construit, le temps continue ; Échap l'éteint.
+les pavés ont leur fiche et leur liant, mais attendent leur idée ; 71 (228 à 230), la prévision : V, ou le bouton
+lavande au-dessus des outils, montre la ville une fois ses chantiers finis (constructions bâties, chemins tracés peints,
+arbres marqués et sols effacés partis), sous un voile de rêverie ; on y construit, le temps continue ; Échap l'éteint.
 Maquette : https://claude.ai/artifact/QFQ7LJV7kPvMF3FCY1U8RN
 **EditMode 288/288, PlayMode 250/250.** Aucune capture : un jeu était au premier plan ; l'album attend (70 et 71).
 **Prochaine étape : 72**, selon tes retours sur les sols et la prévision ; d'abord les captures de l'album, Unity au

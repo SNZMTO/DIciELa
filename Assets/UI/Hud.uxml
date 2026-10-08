@@ -1,6 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements">
     <Style src="Hud.uss" />
     <ui:VisualElement name="screen" class="ecran" picking-mode="Ignore">
+        <ui:VisualElement name="reverie" class="reverie" picking-mode="Ignore" />
         <Diciela.UI.WoodFrame name="journee" class="journee bloc-cache">
             <ui:VisualElement class="journee-contenu">
                 <Diciela.UI.Facet class="applique ciel pan-6 journee-tuile">
