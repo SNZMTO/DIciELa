@@ -12,13 +12,11 @@ l'interface.
 **Prochaine étape : 68, les animations** (la roue en ressort, la case visée qui se dandine, le curseur qui fait « pop »,
 la carte qui glisse, ses nombres qui défilent), puis 69 Construire dans la roue (sa carte et son coût ; d'ici là, une
 construction en main n'a pas de carte, et la raison d'un refus de pose reste dans sa bulle). Le pont (211) attend l'eau.
-**À toi** : la roue, la carte et le curseur, à l'usage ; les silhouettes des curseurs (la main, la plume, le viseur :
-des remplaçants) ; Maj qui inverse le geste (essayé dans la maquette) ; mes choix des 216 à 224 ; quels outils ne
-marchaient pas ; le prix au m² des sols qui se paient (GDD 9 ; ma reco : 1 Pavé pour 2 m²) ; mes choix des 206, 209 à
-214 ; la phrase neutre des idées ; le découpage retourné et la charrette qu'on vient chercher (208) ; le contour en
-escalier de la zone ; combien de zones à quel niveau ; les remplaçants (icônes des outils, vignette d'un sol) ;
-l'astuce, qui ne parle pas de tracer la Place ; « Run In Background » ; peindre la carte ; les modèles de la loge et de
-l'entrepôt ; les icônes des Métiers, des tâches ; le fanion des arbres ; le bandeau ; la voix de la Chimère ; les noms.
+**À toi** : les remplaçants, tous dans `Docs/REMPLACANTS.md` ; la roue, la carte et le curseur, à l'usage ; Maj qui
+inverse le geste (essayé dans la maquette) ; mes choix des 216 à 224 ; quels outils ne marchaient pas ; le prix au m²
+des sols qui se paient (GDD 9 ; ma reco : 1 Pavé pour 2 m²) ; mes choix des 206, 209 à 214 ; le découpage retourné et la
+charrette qu'on vient chercher (208) ; le contour en escalier de la zone ; combien de zones à quel niveau ; l'astuce,
+qui ne parle pas de tracer la Place ; « Run In Background » ; peindre la carte ; le bandeau.
 **À vérifier par toi, à la souris** (sur la vue Game) : P prend la Place, sa carte paraît ; le curseur, un pinceau, a un
 halo pêche (la hache, menthe), le cercle d'aperçu centré sur ses poils ; sur l'interface, la flèche revient ; Tab tenu,
 la roue : pousser déplie un éventail, relâcher prend ; 1 à 8, le même deux fois ; la molette dans la roue ; un clic sur

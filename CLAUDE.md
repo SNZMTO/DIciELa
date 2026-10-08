@@ -18,6 +18,8 @@
 - `Docs/DECISIONS.md` : les décisions numérotées, avec leur date et leur raison.
 - `Docs/SAVOIR.md` : les solutions éprouvées et les pièges connus, à lire quand on conçoit le système concerné.
 - `Docs/ALBUM.md` : l'évolution du jeu en captures, la plus récente en haut ; il dit comment on le tient.
+- `Docs/REMPLACANTS.md` : les remplaçants à remplacer (icônes dessinées par le code, modèles en boîte, textes neutres) ;
+  tout nouveau remplaçant s'y ajoute le jour même.
 - `Docs/EQUILIBRAGE.md` : le rapport d'équilibrage, généré par un menu `DICIELA/…`, jamais retouché à la main.
 - Les procédures (`.claude/skills/`) : `unity-cli`, `verifier`, `fin-de-session`, `pack-synty`. Les règles par dossier
   (`.claude/rules/`) se chargent seules quand on touche ces fichiers.
