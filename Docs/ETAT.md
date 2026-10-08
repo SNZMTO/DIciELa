@@ -23,6 +23,7 @@ quel ; le bouton lavande fait de même et reste enfoncé ; en prévision, une ca
 chemin de terre bâti : rond, son bord effiloché, sans blocs ; la Place tracée : son voile et son contour arrondis.
 **Dette** : `Fusion.uss` répète `:root` ; trois cartes sur l'astuce en 720 p ; des réglages d'interface dans le code ;
 `EQUILIBRAGE.md` sans menu ; « C'est parti » sans menu d'album ; les chiffres s'appellent `Card1` à `Card9` dans
-l'asset d'actions ; trois scènes `Assets/InitTestScene…` laissées par le lanceur de tests (hors Git), à supprimer.
+l'asset d'actions ; trois scènes `Assets/InitTestScene…` laissées par le lanceur de tests (hors Git), à supprimer ; en
+prévision, une construction qu'on déplace se touche encore à son ancienne place, invisible, pas à la nouvelle.
 **Prompt de la session suivante**
 > Lis CLAUDE.md et Docs/ETAT.md. J'ai regardé les sols et la prévision : voici mes retours.
