@@ -2,8 +2,9 @@ namespace Diciela.UI
 {
     /// <summary>
     /// Ce que le présentateur du curseur des outils attend de sa vue (MVP ; décision 221) : la flèche du système, les
-    /// mains vides ; sinon l'allure du curseur de l'outil en main ; et la croix rouge d'un geste qui serait refusé. Où il
-    /// se montre (sur la ville, pas sur l'interface), la vue le sait, image après image.
+    /// mains vides ; sinon l'allure du curseur de l'outil en main ; la croix rouge d'un geste qui serait refusé ; et
+    /// l'éclaboussure d'un geste qui agit (décision 225). Où il se montre (sur la ville, pas sur l'interface), la vue
+    /// le sait, image après image.
     /// </summary>
     public interface IToolCursorView
     {
@@ -15,5 +16,8 @@ namespace Diciela.UI
 
         /// <summary>Montre la croix rouge, ou la cache.</summary>
         void ShowRefused(bool refused);
+
+        /// <summary>L'outil a agi : une éclaboussure, là où est le pointeur.</summary>
+        void Splash();
     }
 }

@@ -7,19 +7,27 @@ namespace Diciela.UI
 {
     /// <summary>
     /// L'éventail d'une case de la roue (décision 221) : ses options en jetons de feutre, au-delà du plateau, autour du
-    /// cap de leur case, à l'écart que donne la feuille de style ; l'option prise est enfoncée, à la couleur de son outil,
-    /// les autres de lin ; une pastille dit un nombre (les branches de l'étoile). On y vise au survol, on y clique. Il
-    /// refait ses jetons quand leur nombre change, sinon les met à jour sur place.
+    /// cap de leur case, à l'écart que donne la feuille de style ; l'option prise est enfoncée, à la couleur de son
+    /// outil, les autres de lin ; une pastille dit un nombre (les branches de l'étoile). Neuf, il se déplie depuis sa
+    /// case, ses jetons l'un après l'autre (décision 225) ; un jeton qui se déplie ignore le pointeur jusqu'à sa place,
+    /// sinon, parti de la case, il prendrait le clic qu'on y fait. On y vise au survol, on y clique. Il refait ses
+    /// jetons quand leur nombre change, sinon les met à jour sur place.
     /// </summary>
     internal sealed class WheelFan
     {
         private const string AimedClass = "vise";
         private const string LinenClass = "lin";
+        private const string EnterClass = "roue-entree";
+        private const long StaggerMs = 15;
+        // Le temps qu'un jeton met à rejoindre sa place : son état de départ, puis sa transition (Hud.uss).
+        private const long UnfoldMs = 16 + 130;
         private static readonly string[] TokenClasses = { "feutre", "pan-10", "roue-jeton" };
 
         private readonly VisualElement _box;
         private readonly List<FeltButton> _tokens = new List<FeltButton>();
         private readonly List<string> _pastels = new List<string>();
+        private readonly List<bool> _unfolding = new List<bool>();
+        private bool _pickable;
 
         public WheelFan(VisualElement box)
         {
@@ -34,10 +42,14 @@ namespace Diciela.UI
 
         public int Count => _tokens.Count;
 
-        /// <summary>Montre ces options autour de ce cap, sur ce cercle, écartées de step degrés, à ce pastel.</summary>
+        /// <summary>
+        /// Montre ces options autour de ce cap, sur ce cercle, écartées de step degrés, à ce pastel ; dépliées depuis leur
+        /// case, sur son cercle, si son rayon est donné (positif).
+        /// </summary>
         public void Show(IReadOnlyList<WheelOption> options, float slotDegrees, float radius, float stepDegrees,
-            string pastel)
+            string pastel, float unfoldFrom)
         {
+            Vector2 from = WheelGeometry.OnCircle(slotDegrees, unfoldFrom);
             if (options.Count != _tokens.Count)
                 Rebuild(options.Count);
             for (int i = 0; i < options.Count; i++)
@@ -48,7 +60,15 @@ namespace Diciela.UI
                 token.style.left = at.x;
                 token.style.top = at.y;
                 Paint(i, options[i], pastel);
+                if (unfoldFrom > 0f)
+                    Unfold(i, from - at, i * StaggerMs);
             }
+        }
+
+        /// <summary>Le visage de ce jeton : son icône ou sa vignette ; null hors des jetons.</summary>
+        public VisualElement FaceAt(int option)
+        {
+            return option >= 0 && option < _tokens.Count ? _tokens[option][0] : null;
         }
 
         /// <summary>Marque le jeton visé (-1 : aucun).</summary>
@@ -63,12 +83,15 @@ namespace Diciela.UI
             _box.Clear();
             _tokens.Clear();
             _pastels.Clear();
+            _unfolding.Clear();
         }
 
+        /// <summary>Les jetons prennent le pointeur, ou non ; un jeton qui se déplie l'ignore jusqu'à sa place.</summary>
         public void SetPickable(bool pickable)
         {
-            foreach (FeltButton token in _tokens)
-                token.pickingMode = pickable ? PickingMode.Position : PickingMode.Ignore;
+            _pickable = pickable;
+            for (int i = 0; i < _tokens.Count; i++)
+                _tokens[i].pickingMode = pickable && !_unfolding[i] ? PickingMode.Position : PickingMode.Ignore;
         }
 
         private void Rebuild(int count)
@@ -88,7 +111,26 @@ namespace Diciela.UI
                 _box.Add(token);
                 _tokens.Add(token);
                 _pastels.Add("");
+                _unfolding.Add(false);
             }
+        }
+
+        // Un jeton part de sa case, petit et transparent, et rejoint sa place après ce retard ; il ignore le pointeur
+        // jusque-là.
+        private void Unfold(int index, Vector2 offset, long delayMs)
+        {
+            FeltButton token = _tokens[index];
+            _unfolding[index] = true;
+            token.pickingMode = PickingMode.Ignore;
+            HudMotion.Enter(token, EnterClass, delayMs, () => token.style.translate = new Translate(offset.x, offset.y),
+                () => token.style.translate = StyleKeyword.Null);
+            token.schedule.Execute(() =>
+            {
+                if (index >= _tokens.Count || _tokens[index] != token)
+                    return;
+                _unfolding[index] = false;
+                token.pickingMode = _pickable ? PickingMode.Position : PickingMode.Ignore;
+            }).StartingIn(UnfoldMs + delayMs);
         }
 
         // Le visage d'un jeton : son icône ou sa vignette, sa pastille, son feutre (enfoncé et à la couleur de l'outil

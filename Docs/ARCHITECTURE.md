@@ -350,6 +350,7 @@ mètres carrés), `Place` ne veut dire que poser, la fiche d'un lieu est `Locati
 | case, éventail, option (de la roue) | `WheelSlot`, `WheelFan`, `WheelOption` | portes de la roue (l'icône, la carte) | `WheelDoors` | carte de l'outil en main ; puce | `ToolCard` ; `ToolCardChip` |
 | roue d'un outil de sol ; ses éventails | `PaintRing` ; `PaintRingOptions` | icônes des outils de sol | `PaintIconClasses` | chiffre d'une case de la roue | `IRingKeys` |
 | curseur des outils (ses gestes ; sa vue) | `IToolCursor` ; `ToolCursor` | silhouette et pointe (d'un curseur) | `ToolCursorShape` (`ToolCursorShapes`) | allure (d'un curseur) | `ToolCursorLook` |
+| mouvements de l'interface | `HudMotion` | cibles de la roue ; l'icône qui vole | `WheelTargets` ; `WheelFlight` | un outil agit (un ordre part) | `Acted` (`IHeldTool`) |
 | couche (où la Chimère dort) | `HasCouch`, `CouchFeet` | stock de départ | `StartingGoods` ; `GoodsCause.StartingStock` | classes de style posées par le code | `StyleClasses` |
 | mettre en service (l'opération du monde) | `Commissioning` | chantiers finis (à mettre en service) | `ConstructionSites.Finished` | reprendre ses mailles (un pied debout) | `NavGrid.Reclaim` |
 | tronçons (d'une rangée du maillage) | `FreeRuns` | ligne du chantier (côté rendu) | `SiteLine` | stock de la ville changé | `CityStockChanged` |
@@ -504,22 +505,24 @@ mètres carrés), `Place` ne veut dire que poser, la fiche d'un lieu est `Locati
 - **Le HUD** est un seul document (`Hud.uxml`, sa mise en page dans `Hud.uss`), sur l'objet « Interface » : chaque bloc
   a sa vue, qui cherche son sous-arbre par son nom, et son présentateur (le panneau Construire, `BuildBar`, ouvert à la
   demande par `IBuildMenu`, dont les onglets et les cartes se font dans `BuildBarElements` ; la roue des outils,
-  `ToolWheel`, ses éléments `ToolWheelElements`, son anneau `WheelRing` (ses cases, `WheelSlots`, chacune un
-  `WheelSlot` ; l'éventail de la case visée, `WheelFan`, chaque option une `WheelOption` ; le visage de l'une ou de
-  l'autre, `WheelPicture`), ses mesures, lues dans la feuille de style (`WheelMeasures`), sa géométrie (`WheelGeometry`)
-  et ses deux portes (`WheelDoors` : l'icône des outils, la carte) ; la carte de l'outil en main, `ToolCard` (son
-  présentateur, `ToolCardPresenter`, qui écoute les outils et le monde ; ses puces, `ToolCardContent`, chacune une
-  `ToolCardChip` ; ses raisons, `ToolCardReasons`) ; le curseur des outils, `ToolCursor`, au-dessus de tout, qui cache
-  la flèche du système tant qu'il se montre (son présentateur, `ToolCursorPresenter` ; ses silhouettes et leur pointe,
-  `ToolCursorShapes` ; son allure, `ToolCursorLook`) ; la raison d'un refus de pose, dans sa bulle (`ReasonBubble`),
-  jusqu'à ce que Construire passe à la roue ; la journée, `DayBoard` ; la fiche du lieu touché, `LocationSheet` ; le
-  stock en fanions, `StockPennants` ; l'astuce, `TipBoard`, dont le portrait est pris à l'atelier par la vue,
-  `Portrait`) ; une seule bulle sert d'infobulle à tous (`Tooltips`), chaque vue dit ce qu'elle montre au survol. Une
-  vue se branche quand la ville s'ouvre (`Show`) et se débranche quand elle se ferme (`Hide`) : ses boutons, ses
-  rappels, ses infobulles (une infobulle donnée se retire). Le démarrage donne à la journée, à chaque image, la fraction
-  du pas en cours. Tout le HUD dit aux gestes où il est (`HudArea`) ; l'outil « choisir » dit ce qu'on a touché, et le
-  démarrage le relie à la fiche. Échap est une pile (`EscapeControls`) : la fiche, la roue, le panneau Construire, puis
-  la main (`Hand`), dont l'outil défait ce qu'il tient ou se lâche.
+  `ToolWheel`, ses éléments `ToolWheelElements`, son anneau `WheelRing` et ses cibles, `WheelTargets` (ses cases,
+  `WheelSlots`, chacune un `WheelSlot` ; l'éventail de la case visée, `WheelFan`, chaque option une `WheelOption` ; le
+  visage de l'une ou de l'autre, `WheelPicture` ; l'icône prise qui vole vers le curseur, `WheelFlight`), ses mesures,
+  lues dans la feuille de style (`WheelMeasures`), sa géométrie (`WheelGeometry`) et ses deux portes (`WheelDoors` :
+  l'icône des outils, la carte) ; la carte de l'outil en main, `ToolCard` (son présentateur, `ToolCardPresenter`, qui
+  écoute les outils et le monde ; ses puces, `ToolCardContent`, chacune une `ToolCardChip`, rangées par
+  `ToolCardChips` ; ses raisons, `ToolCardReasons`) ; les mouvements, faits des transitions de la feuille de style,
+  `HudMotion` (décision 225) ; le curseur des outils, `ToolCursor`, au-dessus de tout, qui cache la flèche du système
+  tant qu'il se montre (son présentateur, `ToolCursorPresenter` ; ses silhouettes et leur pointe, `ToolCursorShapes` ;
+  son allure, `ToolCursorLook`) ; la raison d'un refus de pose, dans sa bulle (`ReasonBubble`), jusqu'à ce que
+  Construire passe à la roue ; la journée, `DayBoard` ; la fiche du lieu touché, `LocationSheet` ; le stock en fanions,
+  `StockPennants` ; l'astuce, `TipBoard`, dont le portrait est pris à l'atelier par la vue, `Portrait`) ; une seule
+  bulle sert d'infobulle à tous (`Tooltips`), chaque vue dit ce qu'elle montre au survol. Une vue se branche quand la
+  ville s'ouvre (`Show`) et se débranche quand elle se ferme (`Hide`) : ses boutons, ses rappels, ses infobulles (une
+  infobulle donnée se retire). Le démarrage donne à la journée, à chaque image, la fraction du pas en cours. Tout le HUD
+  dit aux gestes où il est (`HudArea`) ; l'outil « choisir » dit ce qu'on a touché, et le démarrage le relie à la fiche.
+  Échap est une pile (`EscapeControls`) : la fiche, la roue, le panneau Construire, puis la main (`Hand`), dont l'outil
+  défait ce qu'il tient ou se lâche.
 - **Aucun état statique modifiable** dans la simulation : le registre, le catalogue et les textes sont des objets
   créés par `Game`. Le Play de ce projet ne recharge ni le code ni la scène : `Game` crée le monde, la table des textes
   et l'outil de pose, et les libère à la sortie (les outils de l'éditeur lisent le monde en cours par

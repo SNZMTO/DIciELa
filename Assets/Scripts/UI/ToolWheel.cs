@@ -42,7 +42,7 @@ namespace Diciela.UI
             _doors = new WheelDoors(elements, tooltips, () => _presenter != null ? _presenter.IconTooltip() : ("", ""));
             _doors.IconClicked += OnIconClicked;
             _doors.CardClicked += OnCardClicked;
-            _ring = new WheelRing(elements.Wheel, elements.Center, elements.Slots, elements.Fan);
+            _ring = new WheelRing(elements);
             _ring.Dismissed += Close;
             _ring.Picked += Pick;
             _presenter = new ToolWheelPresenter(this, texts, keys, clearing, build, move, paths, plaza);
@@ -96,9 +96,7 @@ namespace Diciela.UI
             if (_ring == null || !_ring.IsOpen || !_ring.IsHeld)
                 return;
             _ring.AimAt(ToPanel(screenPoint));
-            if (_ring.AimedSlot >= 0)
-                Pick(_ring.AimedSlot, _ring.AimedOption);
-            else
+            if (!_ring.PickAimed())
                 Close();
         }
 
@@ -166,7 +164,7 @@ namespace Diciela.UI
             Open(onTools ? _doors.IconCenter : _doors.CardCenter, false);
         }
 
-        // Une case ou une option prise : la roue se ferme, sauf la case Outils, qui la retourne et la garde ouverte.
+        // Une case ou une option prise : son icône saute au curseur, la roue se ferme ; la case Outils la retourne, ouverte.
         private void Pick(int slot, int option)
         {
             if (_presenter == null)
@@ -174,7 +172,10 @@ namespace Diciela.UI
             if (_presenter.Pick(slot, option))
                 _ring.IsHeld = false;
             else
+            {
+                _ring.Fly(slot, option);
                 Close();
+            }
         }
 
         private void Open(Vector2 at, bool held)

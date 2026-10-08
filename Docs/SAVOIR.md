@@ -646,6 +646,19 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   `PointerUpEvent.GetPooled(Event)`, la cible donnée, un `Event` de souris dont `mousePosition` est le milieu de
   l'élément dans le repère du panneau (origine en haut, sans conversion). Un toucher (`GetPooled(Touch)`) n'a pas
   déclenché le `Clickable` d'un bouton. Un survol : `PointerEnterEvent.GetPooled(Event)`.
+- **Un mouvement en USS** (étape 68) : pas d'images clés, seulement des transitions. Un élément prend un état de
+  départ par une classe à durée nulle, qu'on retire à l'image suivante (16 ms plus tard, `HudMotion`) : ajoutée et
+  retirée dans la même image, rien ne bouge ; et rien ne transitionne depuis `display: none` (on retire `bloc-cache`
+  et on pose la classe de départ dans la même image). Un retard de transition se pose au moment où l'on retire la
+  classe de départ, pas avant : posé avec elle, il retarderait aussi l'arrivée dans l'état de départ.
+- **La spécificité des transitions** : `.feutre` pose déjà `transition-property` ; une règle `.roue-outil` a la
+  même spécificité, et l'ordre entre la feuille du thème et celle du document n'est pas sûr. Écrire `.feutre.roue-outil`.
+- **`TimerState.deltaTime`, c'est `now - start`, et `start` est le passage précédent** d'une minuterie d'UI
+  Toolkit, pas son départ : pour savoir où en est un mouvement, additionner `deltaTime` d'un passage à l'autre.
+- **Le clic d'un bouton d'UI Toolkit se décide au relâchement, sur « l'élément sous le pointeur » du panneau**
+  (`Clickable`) : un élément qui vient se poser sur le bouton entre l'appui et le relâchement lui vole le clic, même
+  dans un test qui envoie ses évènements au bouton. Au survol d'une case, son éventail se dépliait depuis elle et ses
+  jetons la couvraient : un élément qui arrive ignore le pointeur jusqu'à sa place (`WheelFan`).
 - **Une icône vectorielle ne se juge qu'en jeu** (étape 67) : les triangles d'une `VectorImage` rendus tels quels hors
   d'Unity donnent des pleins et des pointes qui n'existent pas (un cadre rempli, un rond en étoile) : le shader
   d'Unity déplace les bords pour l'anticrénelage et taille les arrondis (les sommets marqués d'un cercle). Pour voir
