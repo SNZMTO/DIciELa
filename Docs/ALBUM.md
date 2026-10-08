@@ -15,6 +15,19 @@
 
 ## Les captures
 
+### 08/10/2026 — étapes 70 à 72 : les sols qui se fondent, la rêverie de la prévision
+
+Pas de vue témoin : Unity n'a jamais été au premier plan, et le Play ne tourne pas derrière. Ce ne sont pas des captures
+du jeu. En haut, un rendu du banc d'essai des sols dans le moteur, hors jeu, sans la lumière ni les filtres de la carte,
+avec les calques du pack : un chemin de terre qui se fond sur un mètre dans l'herbe, son bord irrégulier, sans escalier
+même en diagonale ; des pavés qui se fondent dans leur bande de terre, elle-même fondue dans l'herbe, et qui va et
+vient. En bas, le voile de rêverie de la prévision, composé sur un rendu de la démo du pack, avant (à gauche) et
+allégé (à droite) : les bords de l'écran voilés de lavande, le milieu net. À reprendre en capture, en jeu.
+
+![Le fondu des sols, rendu du banc d'essai](Album/2026-10-08_etape-72_fondu-sols.jpg)
+
+![Le voile de rêverie, avant et allégé](Album/2026-10-08_etape-72_voile-reverie.jpg)
+
 ### 06/10/2026 — étapes 52 à 55 : la Place qu'on trace
 
 La vue témoin ne change pas. La Place n'est plus une construction : c'est une zone qu'on trace à côté du campement,
