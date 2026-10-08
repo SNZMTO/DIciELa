@@ -811,10 +811,11 @@
   arbres et rochers marqués, les sols qu'on efface) est déjà parti. Le temps continue, et l'on y construit comme
   ailleurs : ce qu'on pose ou trace s'y voit aussitôt fini. Un filtre de rêverie dit qu'on regarde la ville à venir :
   des couleurs plus douces et plus claires, les bords de l'écran voilés de lavande. On l'allume et l'éteint par sa
-  touche ou par son bouton, au-dessus de l'icône des outils, qui reste enfoncé tant qu'elle dure.
+  touche ou par son bouton, au-dessus de l'icône des outils, qui reste enfoncé tant qu'elle dure ; Échap l'éteint aussi,
+  en dernier dans sa pile.
 - **Défaut.** La prévision (décision 228) : V ; son bouton, un feutre lavande ; le filtre entre et sort en 0,2 s.
 - **À toi.** L'animation où la Chimère se projette, avec le pack d'animations : le filtre de rêverie la remplace en
-  attendant. Échap éteint-il la prévision ? Ma reco : oui, en dernier dans sa pile, après avoir lâché l'outil en main.
+  attendant.
 - **Règle.** La journée montre le jour, sa phase et une jauge : le travail, la soirée et la nuit hachurée, chacun à
   sa part de la journée ; ce qui est passé est plus sombre ; un repère marque l'heure.
 - **Règle.** L'interface se lit à toutes les tailles d'écran. Elle grossit avec la hauteur de l'écran, à partir d'une
@@ -847,8 +848,8 @@
   et qui les tient (le nom d'un poste écrit une fois pour des postes pareils, puis chacun par son nom, ou « Libre »),
   son bouton ; au logis de la Chimère, « Aller dormir » ou « Réveiller ». Une seule fiche
   à la fois : la nouvelle remplace l'ancienne ; toucher autre chose, ou le sol, la ferme, comme sa croix. Échap ferme
-  d'abord la fiche, puis la roue, puis défait le geste en cours, puis lâche l'outil en main ; plus tard, il
-  ouvrira le menu. L'interface ne prend pas le focus du clavier.
+  d'abord la fiche, puis la roue, puis défait le geste en cours, puis lâche l'outil en main, puis éteint la prévision ;
+  plus tard, il ouvrira le menu. L'interface ne prend pas le focus du clavier.
 - **Règle.** L'outil « Retirer » en main, un clic sur un arbre ou un rocher le marque, ou le démarque ; glisser tire un
   cadre, et le relâcher marque tout ce dont le pied est dedans, du plus proche de son premier coin au plus loin. Un
   arbre marqué porte un fanion à son pied. Un clic droit bref le pose de côté, comme une carte ; glissé, il reste à la
