@@ -24,7 +24,7 @@ namespace Diciela.Tests.PlayMode
             }
         }
 
-        public string KeyOfCard(int index)
+        public string KeyOfSlot(int index)
         {
             return index >= 0 && index < 9 ? (index + 1).ToString() : "";
         }

@@ -94,8 +94,8 @@ namespace Diciela.EditorTools
                 added += Button(tools, tool.Name, tool.DefaultBinding);
             // Les cases de la roue de l'outil en main (décisions 221 et 226) : les touches 1 à 9, liées à leur place
             // sur la rangée des chiffres, qu'on atteint sans Maj en AZERTY aussi.
-            for (int i = 0; i < ToolControls.CardKeys; i++)
-                added += Button(tools, ToolControls.CardAction(i), "<Keyboard>/" + (i + 1));
+            for (int i = 0; i < ToolControls.SlotKeys; i++)
+                added += Button(tools, ToolControls.SlotAction(i), "<Keyboard>/" + (i + 1));
             added += Pointer(tools, ToolControls.PointerAction);
 
             // Valider ce que l'interface propose : Entrée, celle du pavé numérique comprise.

@@ -8,7 +8,7 @@ namespace Diciela.Controls
     /// Les gestes des outils (GDD, section 16 ; décisions 221 et 226) : tenir la touche de la roue l'ouvre autour du
     /// pointeur et la fait suivre où il vise, image après image ; la relâcher choisit. La touche d'un outil le choisit
     /// tout droit : chacun a la sienne, dans la table des outils (ToolAction). Les chiffres prennent les cases de la
-    /// roue de l'outil en main (leurs actions s'appellent « Card1 » à « Card9 »). Le curseur des outils suit le
+    /// roue de l'outil en main (leurs actions s'appellent « Slot1 » à « Slot9 »). Le curseur des outils suit le
     /// pointeur, image après image. Les touches se lisent sur l'asset d'actions, d'où la roue tire aussi leurs noms. Il
     /// lit les actions et parle à la roue et au curseur, rien d'autre ; il passe après la caméra (ordre 100), comme les
     /// autres gestes.
@@ -23,7 +23,7 @@ namespace Diciela.Controls
         /// <summary>
         /// Le nombre de chiffres qui prennent une case : de 1 à 9 (la roue en a huit ; le 9 ne prend rien).
         /// </summary>
-        public const int CardKeys = 9;
+        public const int SlotKeys = 9;
 
         [Tooltip("L'asset d'actions du jeu (Assets/Input).")]
         [SerializeField] private InputActionAsset _actions;
@@ -35,7 +35,7 @@ namespace Diciela.Controls
         private InputAction _pointer;
         private InputAction[] _tools;
         private Action<InputAction.CallbackContext>[] _chosen;
-        private InputAction[] _cardKeys;
+        private InputAction[] _slotKeys;
         private Action<InputAction.CallbackContext>[] _taken;
         private bool _held;
 
@@ -49,10 +49,10 @@ namespace Diciela.Controls
             _held = false;
         }
 
-        /// <summary>Le nom, dans la carte « Tools », de l'action du chiffre de ce rang (0 : « Card1 »).</summary>
-        public static string CardAction(int index)
+        /// <summary>Le nom, dans la carte « Tools », de l'action du chiffre de ce rang (0 : « Slot1 »).</summary>
+        public static string SlotAction(int index)
         {
-            return "Card" + (index + 1);
+            return "Slot" + (index + 1);
         }
 
         public string WheelKey => Key(WheelAction);
@@ -63,13 +63,13 @@ namespace Diciela.Controls
         }
 
         /// <summary>
-        /// La touche d'une carte, liée à sa place sur la rangée des chiffres : elle se lit sur le nom de cette place
+        /// La touche d'une case, liée à sa place sur la rangée des chiffres : elle se lit sur le nom de cette place
         /// (« 1 »), pas sur le caractère qu'elle tape sur ce clavier (« & » en AZERTY).
         /// </summary>
-        public string KeyOfCard(int index)
+        public string KeyOfSlot(int index)
         {
-            InputAction action = index >= 0 && index < CardKeys && _actions != null
-                ? _actions.FindAction(MapName + "/" + CardAction(index))
+            InputAction action = index >= 0 && index < SlotKeys && _actions != null
+                ? _actions.FindAction(MapName + "/" + SlotAction(index))
                 : null;
             return action != null && action.bindings.Count > 0
                 ? InputControlPath.ToHumanReadableString(action.bindings[0].effectivePath,
@@ -101,14 +101,14 @@ namespace Diciela.Controls
                 _chosen[i] = _ => _wheel?.Choose(choice);
                 _tools[i].performed += _chosen[i];
             }
-            _cardKeys = new InputAction[CardKeys];
-            _taken = new Action<InputAction.CallbackContext>[CardKeys];
-            for (int i = 0; i < CardKeys; i++)
+            _slotKeys = new InputAction[SlotKeys];
+            _taken = new Action<InputAction.CallbackContext>[SlotKeys];
+            for (int i = 0; i < SlotKeys; i++)
             {
                 int index = i;
-                _cardKeys[i] = _map.FindAction(CardAction(i), true);
+                _slotKeys[i] = _map.FindAction(SlotAction(i), true);
                 _taken[i] = _ => _wheel?.TakeSlot(index);
-                _cardKeys[i].performed += _taken[i];
+                _slotKeys[i].performed += _taken[i];
             }
             _map.Enable();
         }
@@ -121,8 +121,8 @@ namespace Diciela.Controls
             _wheelKey.canceled -= OnWheelReleased;
             for (int i = 0; i < _tools.Length; i++)
                 _tools[i].performed -= _chosen[i];
-            for (int i = 0; i < _cardKeys.Length; i++)
-                _cardKeys[i].performed -= _taken[i];
+            for (int i = 0; i < _slotKeys.Length; i++)
+                _slotKeys[i].performed -= _taken[i];
             _map.Disable();
             _map = null;
             _held = false;

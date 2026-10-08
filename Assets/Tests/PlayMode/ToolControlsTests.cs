@@ -164,9 +164,9 @@ namespace Diciela.Tests.PlayMode
             Assert.AreEqual("Tab", _controls.WheelKey);
             Assert.AreEqual("B", _controls.KeyOf(ToolChoice.Build));
             Assert.AreEqual("X", _controls.KeyOf(ToolChoice.Clear));
-            Assert.AreEqual("1", _controls.KeyOfCard(0));
-            Assert.AreEqual("9", _controls.KeyOfCard(8));
-            Assert.AreEqual("", _controls.KeyOfCard(9), "Dix cartes : la dixième n'a pas de touche.");
+            Assert.AreEqual("1", _controls.KeyOfSlot(0));
+            Assert.AreEqual("9", _controls.KeyOfSlot(8));
+            Assert.AreEqual("", _controls.KeyOfSlot(9), "Dix cases : la dixième n'a pas de touche.");
         }
 
         [Test]

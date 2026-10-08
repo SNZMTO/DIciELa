@@ -147,7 +147,7 @@ namespace Diciela.UI
         // La touche écrite sur cette case : son chiffre.
         private string KeyOf(int place)
         {
-            return _keys.KeyOfCard(place);
+            return _keys.KeyOfSlot(place);
         }
     }
 }

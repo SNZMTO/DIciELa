@@ -512,7 +512,8 @@ mètres carrés), `Place` ne veut dire que poser, la fiche d'un lieu est `Locati
 - **L'interface** suit le patron MVP : un présentateur écoute la simulation et remplit son panneau. Pour les écrans
   chargés (l'étal, la liste des habitants), la liaison de données de UI Toolkit reste possible.
 - **Le dessin de l'interface** (décisions 144 et 145) : une seule feuille, `Assets/UI/Fusion.uss`, importée par le
-  thème, tient les couleurs, les tailles et les polices ; les vues ne posent que ses classes, et les générateurs
+  thème, tient les couleurs, les tailles et les polices ; chaque couleur y est nommée une fois, dans son bloc `:root`,
+  et les règles la reprennent par son nom (`var(--lavande)`) ; les vues ne posent que ses classes, et les générateurs
   d'images lisent ses couleurs. Une façon de dessiner par matière : le cadre de bois (`WoodFrame`) pose sous son
   contenu deux images générées, son ombre et sa face tirée de l'atlas du pack, découpées en neuf (`Cadre.uss`,
   générée avec elles) ; les faces plates (`Facet` : applique, feutre, creux, bulle ; `FeltButton` pour celles qui se
