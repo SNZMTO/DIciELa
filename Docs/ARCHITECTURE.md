@@ -371,7 +371,7 @@ mètres carrés), `Place` ne veut dire que poser, la fiche d'un lieu est `Locati
 | forme lissée (de mailles) ; son dedans ; son bord | `CellField` ; `ContourMesh` ; `ContourLines` (`ContourSquares`) | distance à un sol ; bruit du sol | `CellDistance` ; `GroundNoise` | ce qu'un sol peint couvre ; le mélange des calques | `FloorWeights` ; `FloorBlend` (`FloorTexels`) |
 | liant (d'un sol) ; effilochage | `BorderLayer`, `BorderMeters` ; `FrayMeters`, `FrayScaleMeters` (`FloorDefinition`) | formes toutes faites (d'un maillage drapé) | `DrapedShapes` | arrondi ; douceur du bord | `GroundRoundingMeters` ; `FloorEdgeSoftnessMeters` (`PlacementSettings`) |
 | viser le sol ; le fantôme qui suit le pointeur | `GroundAim` ; `GhostAim` | écran de création (sa scène, au démarrage) | `CreationStage` | | |
-| prévision ; ce qu'elle cache de la nature | `Foresight` ; `ForeseenNature` | filtre de rêverie ; son profil | `ForesightFilter` ; `Reverie.asset` (`ReverieBuilder`) | geste ; bouton ; branchement (de la prévision) | `ForesightControls` ; `ForesightButton` ; `TownForesight` |
+| prévision ; ce qu'elle cache de la nature | `Foresight` ; `ForeseenNature` | voile de rêverie ; son image | `ForesightVeil` ; `Reverie.png` (`ReveriePainter`) | geste ; bouton ; branchement (de la prévision) | `ForesightControls` ; `ForesightButton` ; `TownForesight` |
 
 ## 10. La carte, les scènes et la sauvegarde
 
@@ -488,13 +488,13 @@ mètres carrés), `Place` ne veut dire que poser, la fiche d'un lieu est `Locati
   lissée (`FloorGhosts` : un calque par sorte de sol, sa copie du matériau du shader `Diciela/SolFantome`, la tuile
   posée comme sur le Terrain, depuis son origine, mêlée à la teinte des fantômes) ; un sol qu'on efface, en voile de la
   couleur des fantômes (`FloorViews`, né avec les vues du monde, `WorldViews`).
-- **La prévision** (décisions 228 et 229) : un état de la vue (`Foresight`), que `Game` crée à l'ouverture de la ville
-  et relie (`TownForesight`) à son geste, V (`ForesightControls`, qu'Échap trouve en dernier dans sa pile), à son bouton
-  au-dessus de l'icône des outils (`ForesightButton`), au filtre de rêverie (`ForesightFilter` : un volume de filtres
-  global, au-dessus de celui de la carte, son profil une fiche, `Assets/Art/Reverie.asset`, qui entre et sort en fondu
-  sans que la pause l'arrête) et aux vues du monde (`WorldViews.ShowForesight`). En prévision, chaque vue montre la
-  ville une fois ses chantiers finis : `StructureViews` monte la ligne de chaque chantier tout en haut et cache son
-  fantôme (une construction qu'on déplace, déjà bâtie à sa nouvelle place, où l'on vise son modèle pour la toucher :
+- **La prévision** (décisions 228 à 230) : un état de la vue (`Foresight`), que `Game` crée à l'ouverture de la ville et
+  relie (`TownForesight`) à son geste, V (`ForesightControls`, qu'Échap trouve en dernier dans sa pile), à son bouton
+  au-dessus de l'icône des outils (`ForesightButton`), au voile de rêverie (`ForesightVeil` : une image générée sur tout
+  l'écran, sous le reste du HUD, `ReveriePainter`, qui paraît et s'efface en fondu, une transition de la feuille de
+  style) et aux vues du monde (`WorldViews.ShowForesight`). En prévision, chaque vue montre la ville une fois ses
+  chantiers finis : `StructureViews` monte la ligne de chaque chantier tout en haut et cache son fantôme (une
+  construction qu'on déplace, déjà bâtie à sa nouvelle place, où l'on vise son modèle pour la toucher :
   `StructureView.Seen`) ; `FloorViews` peint les sols tracés et plus ceux qu'on efface (`FloorWeights.Serves`), sans
   fantôme ; `NatureViews` cache ce qui est marqué, fanions compris (`ForeseenNature` garde la taille de leurs instances
   du Terrain pour la leur rendre). La simulation n'en sait rien : on y construit par les mêmes ordres, et le temps
@@ -533,12 +533,13 @@ mètres carrés), `Place` ne veut dire que poser, la fiche d'un lieu est `Locati
   système tant qu'il se montre (son présentateur, `ToolCursorPresenter` ; ses silhouettes et leur pointe,
   `ToolCursorShapes` ; son allure, `ToolCursorLook`) ; la journée, `DayBoard` ; la fiche du lieu touché,
   `LocationSheet` ; le stock en fanions, `StockPennants` ; l'astuce, `TipBoard`, dont le portrait est pris à l'atelier
-  par la vue, `Portrait` ; le bouton de la prévision, `ForesightButton`) ; une seule bulle sert d'infobulle à tous (`Tooltips`), chaque vue dit ce qu'elle montre au
-  survol. Une vue se branche quand la ville s'ouvre (`Show`) et se débranche quand elle se ferme (`Hide`) : ses boutons,
-  ses rappels, ses infobulles (une infobulle donnée se retire). Le démarrage donne à la journée, à chaque image, la
-  fraction du pas en cours. Tout le HUD dit aux gestes où il est (`HudArea`) ; l'outil « choisir » dit ce qu'on a
-  touché, et le démarrage le relie à la fiche. Échap est une pile (`EscapeControls`) : la fiche, la roue, puis la main
-  (`Hand`), dont l'outil défait ce qu'il tient ou se lâche, puis la prévision (`ForesightControls`).
+  par la vue, `Portrait` ; le bouton et le voile de la prévision, `ForesightButton` et `ForesightVeil`) ; une seule
+  bulle sert d'infobulle à tous (`Tooltips`), chaque vue dit ce qu'elle montre au survol. Une vue se branche quand la
+  ville s'ouvre (`Show`) et se débranche quand elle se ferme (`Hide`) : ses boutons, ses rappels, ses infobulles (une
+  infobulle donnée se retire). Le démarrage donne à la journée, à chaque image, la fraction du pas en cours. Tout le HUD
+  dit aux gestes où il est (`HudArea`) ; l'outil « choisir » dit ce qu'on a touché, et le démarrage le relie à la fiche.
+  Échap est une pile (`EscapeControls`) : la fiche, la roue, puis la main (`Hand`), dont l'outil défait ce qu'il tient
+  ou se lâche, puis la prévision (`ForesightControls`).
 - **Aucun état statique modifiable** dans la simulation : le registre, le catalogue et les textes sont des objets
   créés par `Game`. Le Play de ce projet ne recharge ni le code ni la scène : `Game` crée le monde, la table des textes
   et l'outil de pose, et les libère à la sortie (les outils de l'éditeur lisent le monde en cours par

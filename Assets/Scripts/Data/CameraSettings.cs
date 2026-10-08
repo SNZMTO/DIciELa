@@ -81,10 +81,6 @@ namespace Diciela.Data
         [Tooltip("Bande au bord de l'écran qui fait défiler la vue, en pixels (0 : jamais).")]
         [SerializeField, Min(0f)] private float _edgeScrollPixels = 12f;
 
-        [Tooltip("La prévision (décision 228) : le temps du fondu de son filtre de rêverie, quand elle s'allume ou " +
-                 "s'éteint, en secondes.")]
-        [SerializeField, Range(0.01f, 2f)] private float _foresightBlendSeconds = 0.2f;
-
         [Tooltip("L'atelier : sans geste depuis tant de secondes, la Chimère se balance doucement sur son socle.")]
         [SerializeField, Min(0f)] private float _atelierIdleSeconds = 3f;
 
@@ -118,6 +114,5 @@ namespace Diciela.Data
         public float ScrollPerNotch => _scrollPerNotch;
         public float ZoomSmoothing => _zoomSmoothing;
         public float EdgeScrollPixels => _edgeScrollPixels;
-        public float ForesightBlendSeconds => _foresightBlendSeconds;
     }
 }

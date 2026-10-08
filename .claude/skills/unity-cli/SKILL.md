@@ -98,6 +98,11 @@ En cas de doute, `unity list` (les outils du paquet `com.unity.pipeline`) ou la 
 - **Le clavier n'atteint le jeu que si la vue Game a le focus** dans l'éditeur : Unity devant mais un autre panneau
   choisi (Scène, Console…), `simulate_key` répond « Success » et aucune action ne part. `menu --path
   "Window/General/Game"` juste avant les touches.
+- **Un rendu hors Play, sans Unity au premier plan** : `capture_game_view --camera <nom>` rend une caméra telle
+  qu'elle est (sans l'interface). De quoi juger un rendu ou un filtre : ouvrir la démo du pack (`open_scene`), y
+  ajouter un objet ou un volume (`create_gameobject`, `add_component`, `set_component_properties`, une fiche se
+  désignant par `{"path": "Assets/…"}`), rendre, puis rouvrir `Jeu` : `open_scene` ne demande pas d'enregistrer, et
+  ce qu'on a ajouté est perdu.
 - **Captures** : `capture_game_view --source screen --width 1600 --height 900 --save_path Assets/Temp/x.png` (en Play ;
   2400 × 1350 marche encore, 3840 × 2160 rend une image noire ou périmée ; l'image est la vue Game rééchantillonnée à
   la taille demandée : si la vue n'a pas ce rapport, l'image est étirée (juger les proportions avec prudence) ;

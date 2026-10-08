@@ -35,7 +35,6 @@ namespace Diciela.Game
         [SerializeField] private TipBoard _tipBoard;
         [SerializeField] private EscapeControls _escapeControls;
         [SerializeField] private ForesightControls _foresightControls;
-        [SerializeField] private ForesightFilter _foresightFilter;
         [SerializeField] private CreationScreen _creationScreen;
         [SerializeField] private AppearancePreview _appearancePreview;
         [SerializeField] private ConfirmControls _confirmControls;
@@ -67,7 +66,7 @@ namespace Diciela.Game
                                   _placementControls != null && _clearingControls != null &&
                                   _chooseControls != null && _dayBoard != null &&
                                   _locationSheet != null && _stockPennants != null && _tipBoard != null &&
-                                  _escapeControls != null && _foresightControls != null && _foresightFilter != null &&
+                                  _escapeControls != null && _foresightControls != null &&
                                   _creationScreen != null &&
                                   _appearancePreview != null && _confirmControls != null && _atelier != null &&
                                   _previewControls != null && _toolWheel != null && _toolControls != null &&
@@ -188,8 +187,7 @@ namespace Diciela.Game
             _toolCursor.Show(_tools.Placement, _tools.Clearing, _tools.Move, _tools.Paths, _tools.Plaza, hud);
             _toolControls.Bind(_toolWheel, _toolCursor);
             _escapeControls.Bind(_locationSheet, _toolWheel, _tools.Hand, _foresightControls);
-            _foresight = new TownForesight(_worldViews, _foresightFilter, _foresightControls, document, texts,
-                _tooltips);
+            _foresight = new TownForesight(_worldViews, _foresightControls, document, texts, _tooltips);
         }
     }
 }

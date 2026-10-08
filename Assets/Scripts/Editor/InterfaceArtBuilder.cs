@@ -6,16 +6,18 @@ using UnityEngine;
 namespace Diciela.EditorTools
 {
     /// <summary>
-    /// Génère les images de l'interface « fusion » (décision 145) : le cadre de bois, tiré de l'atlas du pack, en triple
-    /// résolution ; son ombre portée ; la feuille qui les découpe en neuf (Cadre.uss), dont les mesures se déduisent des
-    /// peintres ; les icônes ; les images du panneau de bois brun de l'écran de création (MenuArtBuilder, décision 162).
-    /// Réexécutable : tout est refait en place.
+    /// Génère les images de l'interface « fusion » (décision 145) : le cadre de bois, tiré de l'atlas du pack, en
+    /// triple résolution ; son ombre portée ; la feuille qui les découpe en neuf (Cadre.uss), dont les mesures se
+    /// déduisent des peintres ; le voile de rêverie de la prévision (ReveriePainter) ; les icônes ; les images du
+    /// panneau de bois brun de l'écran de création (MenuArtBuilder, décision 162). Réexécutable : tout est refait en
+    /// place.
     /// </summary>
     internal static class InterfaceArtBuilder
     {
         private const string ImageFolder = "Assets/UI/Images";
         private const string FramePath = ImageFolder + "/Cadre.png";
         private const string ShadowPath = ImageFolder + "/CadreOmbre.png";
+        private const string ReveriePath = ImageFolder + "/Reverie.png";
         private const string FrameStylePath = "Assets/UI/Cadre.uss";
 
         [MenuItem("DICIELA/Interface/Générer les images de l'interface")]
@@ -28,13 +30,16 @@ namespace Diciela.EditorTools
             // Le cadre se lit en triple résolution, lissé entre ses tailles ; l'ombre, floue, se lit telle quelle.
             InterfaceImage.Save(FramePath, pixels, pixels, frame.Paint(), true);
             InterfaceImage.Save(ShadowPath, ShadowPainter.Size, ShadowPainter.Size, new ShadowPainter(palette).Paint(), false);
+            var reverie = new ReveriePainter(palette);
+            InterfaceImage.Save(ReveriePath, ReveriePainter.Size, ReveriePainter.Size, reverie.Paint(), false);
             File.WriteAllText(FrameStylePath, FrameStyle());
             AssetDatabase.ImportAsset(FrameStylePath);
             InterfaceIconBuilder.CreateAll(palette);
             MenuArtBuilder.CreateAll();
             AssetDatabase.Refresh();
             Debug.Log("DICIELA : images de l'interface générées : " + FramePath + ", " + ShadowPath + ", " +
-                      FrameStylePath + ", " + InterfaceIconBuilder.Folder + ", " + MenuArtBuilder.Folder + ".");
+                      ReveriePath + ", " + FrameStylePath + ", " + InterfaceIconBuilder.Folder + ", " +
+                      MenuArtBuilder.Folder + ".");
         }
 
         private static string FrameStyle()

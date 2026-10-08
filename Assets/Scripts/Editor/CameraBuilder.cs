@@ -11,9 +11,9 @@ namespace Diciela.EditorTools
 {
     /// <summary>
     /// Installe la caméra de gestion sur la caméra d'une scène racine : la caméra (vue), ses gestes (commandes), ses
-    /// ombres et son brouillard qui suivent le zoom, le filtre de rêverie de la prévision et son profil
-    /// (ReverieBuilder), leurs fiches et l'asset d'actions, et les filtres du rendu (le post-traitement d'URP), sans
-    /// lesquels le rendu du pack ne s'affiche pas. Réexécutable : ce qui est déjà réglé n'est pas touché.
+    /// ombres et son brouillard qui suivent le zoom, leurs fiches et l'asset d'actions, et les filtres du rendu (le
+    /// post-traitement d'URP), sans lesquels le rendu du pack ne s'affiche pas. Réexécutable : ce qui est déjà réglé
+    /// n'est pas touché, et un composant dont le script a disparu (remplacé) s'en va.
     /// </summary>
     internal static class CameraBuilder
     {
@@ -33,6 +33,8 @@ namespace Diciela.EditorTools
             var gestures = EditorAssets.Load<GestureSettings>(DataAssetBuilder.GestureSettingsPath);
             var actions = EditorAssets.Load<InputActionAsset>(InputActionsBuilder.ActionsPath);
 
+            if (GameObjectUtility.RemoveMonoBehavioursWithMissingScript(camera.gameObject) > 0)
+                EditorUtility.SetDirty(camera.gameObject);
             CameraRig rig = EditorAssets.GetOrAdd<CameraRig>(camera.gameObject);
             EditorAssets.AssignIfMissing(rig, "_settings", settings);
 
@@ -44,10 +46,6 @@ namespace Diciela.EditorTools
 
             CameraAtmosphere atmosphere = EditorAssets.GetOrAdd<CameraAtmosphere>(camera.gameObject);
             EditorAssets.AssignIfMissing(atmosphere, "_settings", settings);
-
-            ForesightFilter reverie = EditorAssets.GetOrAdd<ForesightFilter>(camera.gameObject);
-            EditorAssets.AssignIfMissing(reverie, "_settings", settings);
-            EditorAssets.AssignIfMissing(reverie, "_profile", ReverieBuilder.EnsureProfile());
 
             UniversalAdditionalCameraData renderData = camera.GetUniversalAdditionalCameraData();
             if (!renderData.renderPostProcessing)

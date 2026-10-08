@@ -680,6 +680,9 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
   d'Unity donnent des pleins et des pointes qui n'existent pas (un cadre rempli, un rond en étoile) : le shader
   d'Unity déplace les bords pour l'anticrénelage et taille les arrondis (les sommets marqués d'un cercle). Pour voir
   une icône, la capturer en jeu.
+- **Le vignettage d'URP multiplie l'image par sa couleur** : il assombrit et teinte, il ne voile jamais de clair, même
+  d'une couleur pâle (essayé sur la démo du pack). Un voile clair aux bords de l'écran (un rêve, un souvenir) se pose
+  par l'interface : une image en dégradé, étirée sur tout l'écran, sous le HUD, qui ne capte pas le pointeur.
 - **Une feuille de style qui nomme une icône pas encore générée** garde une référence vide (« Invalid asset path » dans le
   journal, à son import) et affiche le triangle jaune d'Unity, même une fois l'icône créée. La réimporter (la retoucher,
   ou `set_selection --paths '["…uss"]'` puis le menu `Assets/Reimport`) ne suffit pas tout de suite : l'éditeur garde
