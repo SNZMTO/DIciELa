@@ -7,10 +7,11 @@ using UnityEngine;
 namespace Diciela.View
 {
     /// <summary>
-    /// La Place vue (GDD, section 11 ; décision 206) : un voile léger sur le sol de la zone, son contour, et ses places de
-    /// charrette en cadres blancs, une pointe vers l'avant, comme les fantômes. Elle ne se voit qu'en mode construction :
-    /// le démarrage dit quand. Elle écoute la Place et ne se refait que quand celle-ci change, et seulement si elle se
-    /// voit ; un seul maillage pour le voile, un pour les lignes, quelle que soit leur taille.
+    /// La Place vue (GDD, section 11 ; décisions 206 et 227) : un voile léger sur le sol de la zone et son contour,
+    /// lissés (CellField : leurs coins arrondis, sans escalier), et ses places de charrette en cadres blancs, une
+    /// pointe vers l'avant, comme les fantômes. Elle ne se voit qu'en mode construction : le démarrage dit quand. Elle
+    /// écoute la Place et ne se refait que quand celle-ci change, et seulement si elle se voit ; un seul maillage pour
+    /// le voile, un pour les lignes, quelle que soit leur taille.
     /// </summary>
     public sealed class PlazaZoneView : MonoBehaviour
     {
@@ -19,6 +20,9 @@ namespace Diciela.View
 
         private readonly DrapedMesh _built = new DrapedMesh();
         private readonly List<Vector2Int> _cells = new List<Vector2Int>();
+        private readonly CellField _field = new CellField();
+        private readonly ContourMesh _fill = new ContourMesh();
+        private readonly ContourLines _outline = new ContourLines();
         private World _world;
         private GroundOverlay _veil;
         private GroundOverlay _lines;
@@ -93,26 +97,16 @@ namespace Diciela.View
             NavGrid grid = _world.Grid;
             Relief relief = _world.Map.Relief;
             plaza.CopyCells(_cells);
+            float size = grid.Metrics.CellSize;
+            _field.Build(_cells, size, CellField.RadiusCells(_settings.GroundRoundingMeters, size));
             _built.Begin(relief, _settings.OverlayLiftMeters);
-            _built.AddCells(_cells, grid);
+            _fill.AddFill(_built, _field);
             _veil.Apply(_built);
 
-            // Le contour : chaque côté de maille qui ne touche pas la Place ; les lignes un peu au-dessus du voile.
+            // Le contour, lissé comme le voile ; les lignes un peu au-dessus de lui.
             _built.Begin(relief, _settings.OverlayLiftMeters * 2f);
-            float width = _settings.OutlineWidthMeters, half = grid.Metrics.CellSize * 0.5f;
-            for (int i = 0; i < _cells.Count; i++)
-            {
-                Vector2Int cell = _cells[i];
-                Vector2 center = grid.CellCenter(cell);
-                if (!plaza.Contains(cell + Vector2Int.left))
-                    _built.AddSegment(center + new Vector2(-half, -half), center + new Vector2(-half, half), width);
-                if (!plaza.Contains(cell + Vector2Int.right))
-                    _built.AddSegment(center + new Vector2(half, -half), center + new Vector2(half, half), width);
-                if (!plaza.Contains(cell + Vector2Int.down))
-                    _built.AddSegment(center + new Vector2(-half, -half), center + new Vector2(half, -half), width);
-                if (!plaza.Contains(cell + Vector2Int.up))
-                    _built.AddSegment(center + new Vector2(-half, half), center + new Vector2(half, half), width);
-            }
+            float width = _settings.OutlineWidthMeters;
+            _outline.AddOutline(_built, _field, width);
             IReadOnlyList<PlazaMark> marks = plaza.Marks;
             for (int i = 0; i < marks.Count; i++)
                 _built.AddMark(marks[i].Footprint, width);

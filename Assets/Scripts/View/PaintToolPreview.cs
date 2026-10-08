@@ -7,12 +7,12 @@ using UnityEngine;
 namespace Diciela.View
 {
     /// <summary>
-    /// L'aperçu d'un outil de sol (décisions 206 et 216) : les mailles que le geste ajouterait ou retirerait, le tour de la
-    /// forme (le cercle du pinceau, le disque, le rectangle, la place de charrette), vert si le geste se fait, rouge sinon,
-    /// comme l'aperçu de la pose, avec les copies d'une place de charrette par symétrie ; les points posés d'un tracé ou
-    /// d'un polygone, un rond chacun, qu'on prend pour les déplacer ; et l'épingle d'une symétrie, avec ses axes. Il ne
-    /// décide de rien : l'outil lui dit quoi montrer. Les mailles ne se refont que quand l'outil les redemande, le tour
-    /// que quand il change.
+    /// L'aperçu d'un outil de sol (décisions 206, 216 et 227) : les mailles que le geste ajouterait ou retirerait,
+    /// lissées, le tour de la forme (le cercle du pinceau, le disque, le rectangle, la place de charrette), vert si le
+    /// geste se fait, rouge sinon, comme l'aperçu de la pose, avec les copies d'une place de charrette par symétrie ;
+    /// les points posés d'un tracé ou d'un polygone, un rond chacun, qu'on prend pour les déplacer ; et l'épingle d'une
+    /// symétrie, avec ses axes. Il ne décide de rien : l'outil lui dit quoi montrer. Les mailles ne se refont que quand
+    /// l'outil les redemande, le tour que quand il change.
     /// </summary>
     public sealed class PaintToolPreview : MonoBehaviour
     {
@@ -20,6 +20,8 @@ namespace Diciela.View
         [SerializeField] private PlacementSettings _settings;
 
         private readonly DrapedMesh _built = new DrapedMesh();
+        private readonly CellField _field = new CellField();
+        private readonly ContourMesh _fill = new ContourMesh();
         private GroundOverlay _cells;
         private GroundOverlay _outline;
         private GroundOverlay _handles;
@@ -37,8 +39,10 @@ namespace Diciela.View
         {
             EnsureOverlays();
             _cells.SetColor(allowed ? _settings.AllowedColor : _settings.RefusedColor);
+            float size = grid.Metrics.CellSize;
+            _field.Build(cells, size, CellField.RadiusCells(_settings.GroundRoundingMeters, size));
             _built.Begin(relief, _settings.OverlayLiftMeters);
-            _built.AddCells(cells, grid);
+            _fill.AddFill(_built, _field);
             _cells.Apply(_built);
             _cells.SetVisible(cells.Count > 0);
         }

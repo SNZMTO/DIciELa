@@ -219,13 +219,26 @@ dette, presque toutes dues aux mêmes causes. Les voici, avec la parade à tenir
 - **Un Terrain range ses hauteurs par marches de 1 / 32 766 de sa hauteur totale** (3 mm pour 100 m) : une pente lue
   sur une maille de 1 m bouge de quelques centièmes de degré. Un test sur un Terrain tolère cet écart ; la
   simulation lit le relief une fois, en mètres, au lancement.
-- **On repeint par lot** : une route ou un coup de pinceau marque un rectangle sale, et le sol ne se repeint qu'à l'image
-  suivante, sur ce seul rectangle, une seule fois même si dix changements arrivent dans la même image (`FloorPainting`).
-  Un texel prend le calque du sol qui sert sous son milieu, tout entier ; les autres reprennent la peinture de la carte,
-  relue sur le TerrainData d'origine (la copie, elle, a été repeinte). Le calque d'un sol s'ajoute à la copie la
-  première fois qu'il sert (`terrainLayers` réassigné : les poids déjà peints restent, le nouveau calque part de 0).
-  Une boîte où rien ne sert et où rien n'a jamais été peint ne coûte qu'une lecture : la vue part de tout le monde à
-  l'ouverture sans rien écrire.
+- **On repeint par lot** : une route ou un coup de pinceau marque un rectangle sale, et le sol ne se repeint qu'à
+  l'image suivante, sur ce rectangle et tout ce qu'un sol peut toucher autour de lui (son liant, son bord effiloché),
+  par carreaux de 16 m, une seule fois même si dix changements arrivent dans la même image (`FloorPainting`). Un texel
+  prend ce qu'il couvre de chaque sol, puis de son liant ; le reste revient à la peinture de la carte, relue sur le
+  TerrainData d'origine (la copie, elle, a été repeinte), et ses poids font toujours un. Le calque d'un sol s'ajoute à
+  la copie la première fois qu'il sert (`terrainLayers` réassigné : les poids déjà peints restent, le nouveau calque
+  part de 0). Une boîte où rien ne sert et où rien n'a jamais été peint ne coûte qu'une lecture : la vue part de tout le
+  monde à l'ouverture sans rien écrire.
+- **Un texel qui prend un sol tout entier fait des blocs** (étape 70) : à 49 cm le texel, un trait rond devenait un
+  escalier que le Terrain floutait. Le sol se peint d'après la forme lissée de ses mailles (`CellField`) : un flou
+  binomial de quelques mailles, séparable (en x puis en y), dont le niveau moitié suit un bord droit à sa place exacte
+  et arrondit les coins ; chaque texel prend ce champ, passé par un fondu étroit (`smoothstep`) : le bord est net et
+  rond, et le Terrain l'adoucit d'un texel. Le bord s'effiloche en lisant le champ en un point déplacé par un bruit doux
+  (déformation de domaine : deux bruits de valeur, `GroundNoise`), le même au même point. Le liant suit la distance au
+  sol, celle du chanfrein en deux passes (`CellDistance` : un pas droit vaut une maille, un pas en diagonale sa
+  diagonale), assez juste pour une bande effilochée. Ce qui s'empile sur le sol (le voile de la Place, son contour, les
+  fantômes, l'aperçu) suit le même champ, par la méthode des « carrés qui marchent » (`ContourSquares`) : chaque carré
+  entre quatre coins garde ses coins dedans et les points où ses côtés passent le niveau moitié, un polygone convexe en
+  éventail (`ContourMesh`) ; le bord se chaîne d'un carré au voisin par le côté qu'ils partagent (`ContourLines`), une
+  selle se tranchant par la moyenne de ses coins.
 - **Les touffes et petites fleurs** sont des objets combinés en lots statiques ; des milliers d'objets séparés font
   ramer.
 

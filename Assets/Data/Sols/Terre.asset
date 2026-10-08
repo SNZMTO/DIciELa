@@ -15,4 +15,8 @@ MonoBehaviour:
   _id: terre
   _nameKey: sol.terre
   _layer: {fileID: 8574412962073106934, guid: 6c269eb1337625941b2880cdade51bab, type: 2}
+  _borderLayer: {fileID: 0}
+  _borderMeters: 0.8
+  _frayMeters: 0.35
+  _frayScaleMeters: 1.5
   _cartSpeedFactor: 1

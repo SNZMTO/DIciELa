@@ -120,6 +120,15 @@ namespace Diciela.Data
         [Tooltip("La hauteur du voile et des lignes au-dessus du relief, en mètres : assez pour ne pas se mêler au sol.")]
         [SerializeField, Range(0f, 0.3f)] private float _overlayLiftMeters = 0.05f;
 
+        [Tooltip("L'arrondi des formes tracées sur le sol, en mètres (décision 227) : la Place, les sols, leurs " +
+                 "fantômes et l'aperçu d'un geste suivent leurs mailles, leurs coins arrondis à peu près de ce " +
+                 "rayon, sans escalier.")]
+        [SerializeField, Range(0.25f, 2f)] private float _groundRoundingMeters = 0.5f;
+
+        [Tooltip("La douceur du bord d'un sol peint et de son liant, en mètres : sur cette largeur, il se fond " +
+                 "dans ce qui l'entoure ; le Terrain l'adoucit encore d'un texel.")]
+        [SerializeField, Range(0.02f, 1f)] private float _floorEdgeSoftnessMeters = 0.15f;
+
         public float RotationStepDegrees => _rotationStepDegrees;
         public float RotationDegreesPerPixel => _rotationDegreesPerPixel;
         public Material TranslucentMaterial => _translucentMaterial;
@@ -153,5 +162,7 @@ namespace Diciela.Data
         public Color OutlineColor => _outlineColor;
         public float OutlineWidthMeters => _outlineWidthMeters;
         public float OverlayLiftMeters => _overlayLiftMeters;
+        public float GroundRoundingMeters => _groundRoundingMeters;
+        public float FloorEdgeSoftnessMeters => _floorEdgeSoftnessMeters;
     }
 }
