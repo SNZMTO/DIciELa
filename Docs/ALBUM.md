@@ -15,6 +15,32 @@
 
 ## Les captures
 
+### 09/10/2026 — étapes 70 à 74 : les chemins de terre et la prévision, en jeu
+
+Des captures du jeu, cette fois. La vue témoin ne change pas : l'étape 74 nomme chaque couleur de l'interface sans en
+changer aucune ; depuis l'étape 71, le bouton lavande de la prévision et sa touche, V, se tiennent au-dessus de
+l'icône des outils. Le campement installé, deux cabanes posées en fantôme et un chemin de terre tracé à l'outil Chemins
+devant l'entrée, droit puis en diagonale : le chemin tracé est une bande gris pâle, ronde à ses bouts. V allume la
+prévision : la ville telle qu'elle sera ses chantiers finis, les cabanes bâties et le chemin peint, sous le voile de
+rêverie allégé à l'étape 72 (lavande aux bords, net au milieu), le bouton enfoncé. La carte n'a encore ni arbre ni
+rocher : pas d'arbre marqué qui disparaît. Puis la Chimère, mise au campement, bâtit le chemin, vu du même point : la
+terre se fond dans l'herbe, sa largeur va et vient. De près, du coude au bout rond (étape 73) : le bord est un fondu
+doux d'un mètre, sans marches ni pixels, même sur la diagonale ; son irrégularité se devine à peine. Ce qu'une capture
+ne montre pas : les pavés et leur bande de terre (étapes 70 et 72), que la ville ne sait pas encore tracer (ils
+viennent avec leur idée) ; les rendus du banc d'essai, plus bas, restent leur seule image.
+
+![La vue témoin](Album/2026-10-09_etape-74_vue-temoin.jpg)
+
+![Deux cabanes en fantôme et un chemin tracé, avant la prévision](Album/2026-10-09_etape-71_avant-la-prevision.jpg)
+
+![En prévision : les cabanes bâties, le chemin peint, le voile de rêverie](Album/2026-10-09_etape-72_en-prevision.jpg)
+
+![Le chemin de terre tracé](Album/2026-10-09_etape-70_chemin-trace.jpg)
+
+![Le même chemin, bâti par la Chimère](Album/2026-10-09_etape-72_chemin-bati.jpg)
+
+![Le chemin bâti, de près : le coude, la diagonale et le bout rond](Album/2026-10-09_etape-73_chemin-de-pres.jpg)
+
 ### 08/10/2026 — étape 73 : les sols peints plus fin
 
 Pas une capture du jeu : le même gros plan du banc d'essai des sols, rendu dans le moteur avec les calques du pack. À
