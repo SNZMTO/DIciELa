@@ -80,7 +80,8 @@ En cas de doute, `unity list` (les outils du paquet `com.unity.pipeline`) ou la 
 ## Le Play, la console, les captures
 
 - **Play au CLI** : `editor_play`, attendre, `console --tail 400` vers un fichier, `editor_stop` (le sien). `simulate_key`
-  ne prend qu'après 5 s de Play ; une touche chiffre s'écrit `Digit3` (`--key 3` est lu comme un index).
+  ne prend qu'après 5 s de Play ; une touche chiffre s'écrit `Digit3` (`--key 3` est lu comme un index). `unity list`
+  ne montre pas `simulate_key`, qui existe pourtant (`Enter`, `V`, `Escape`…).
 - `simulate_key` n'atteint que les actions branchées par `action.performed +=`, jamais celles sondées par
   `WasPressedThisFrame` : pour qu'un geste soit jouable au CLI, lui donner un menu `DICIELA/…`.
 - **La console garde un tampon qui survit aux compilations** : ne lire que les entrées dont le `seq` dépasse le dernier vu
@@ -94,7 +95,9 @@ En cas de doute, `unity list` (les outils du paquet `com.unity.pipeline`) ou la 
   que choisir un panneau d'Unity : si le développeur a une autre application devant (un navigateur, un jeu), Unity
   reste derrière, le Play se fige et la capture `screen` prend ce qui est affiché (la « fenêtre noire » d'une vidéo).
   Avant un Play d'album, lire la fenêtre au premier plan (`GetForegroundWindow` par PowerShell) ; si ce n'est pas
-  Unity, demander au développeur de l'y mettre, ne jamais la lui prendre.
+  Unity, demander au développeur de l'y mettre, ne jamais la lui prendre. Il passe souvent d'une fenêtre à l'autre :
+  un script en arrière-plan attend que Unity reste devant six secondes de suite, puis enchaîne tout le Play d'album
+  d'un trait, en notant la fenêtre au premier plan à chaque capture.
 - **Le clavier n'atteint le jeu que si la vue Game a le focus** dans l'éditeur : Unity devant mais un autre panneau
   choisi (Scène, Console…), `simulate_key` répond « Success » et aucune action ne part. `menu --path
   "Window/General/Game"` juste avant les touches.

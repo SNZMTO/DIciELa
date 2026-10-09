@@ -150,11 +150,19 @@ namespace Diciela.EditorTools
             World world = Object.FindAnyObjectByType<GameRunner>().World;
             Structure home = world.Structures.ChimeraHome;
             Vector2 anchor = home != null ? home.Placement.Center : world.Villagers.Chimera.Position;
+            return camera.WorldToScreenPoint(world.Map.Relief.GroundAt(Around(camera, anchor, around)));
+        }
+
+        /// <summary>
+        /// La place sur la carte de ce point, en mètres autour de cette ancre, vue de la caméra : x vers la droite de
+        /// l'écran, y vers le fond.
+        /// </summary>
+        internal static Vector2 Around(Camera camera, Vector2 anchor, Vector2 around)
+        {
             Vector3 right = Vector3.ProjectOnPlane(camera.transform.right, Vector3.up).normalized;
             Vector3 ahead = Vector3.ProjectOnPlane(camera.transform.forward, Vector3.up).normalized;
             Vector3 flat = right * around.x + ahead * around.y;
-            Vector2 at = anchor + new Vector2(flat.x, flat.z);
-            return camera.WorldToScreenPoint(world.Map.Relief.GroundAt(at));
+            return anchor + new Vector2(flat.x, flat.z);
         }
 
         /// <summary>Joue ce geste dans ce nombre de secondes, si le Play dure encore.</summary>
