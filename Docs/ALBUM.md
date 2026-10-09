@@ -23,8 +23,8 @@ l'icône des outils. Le campement installé, deux cabanes posées en fantôme et
 devant l'entrée, droit puis en diagonale : le chemin tracé est une bande gris pâle, ronde à ses bouts. V allume la
 prévision : la ville telle qu'elle sera ses chantiers finis, les cabanes bâties et le chemin peint, sous le voile de
 rêverie allégé à l'étape 72 (lavande aux bords, net au milieu), le bouton enfoncé. La carte n'a encore ni arbre ni
-rocher : pas d'arbre marqué qui disparaît. Puis la Chimère, mise au campement, bâtit le chemin, vu du même point : la
-terre se fond dans l'herbe, sa largeur va et vient. De près, du coude au bout rond (étape 73) : le bord est un fondu
+rocher : pas d'arbre marqué qui disparaît. Dans une partie neuve, sans cabane, la Chimère mise au campement bâtit le
+même chemin ; vu du même point qu'au tracé, la terre se fond dans l'herbe, sa largeur va et vient. De près, du coude au bout rond (étape 73) : le bord est un fondu
 doux d'un mètre, sans marches ni pixels, même sur la diagonale ; son irrégularité se devine à peine. Ce qu'une capture
 ne montre pas : les pavés et leur bande de terre (étapes 70 et 72), que la ville ne sait pas encore tracer (ils
 viennent avec leur idée) ; les rendus du banc d'essai, plus bas, restent leur seule image.
