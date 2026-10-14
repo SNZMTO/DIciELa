@@ -155,4 +155,7 @@ Assets/Terrain/*.asset  lfs
 # DICIELA : le maillage d'un modèle préparé (la géométrie du pack, fusionnée) pèse des mégaoctets de texte et se refait
 # à chaque préparation : il va en LFS, comme le Terrain (décision 76, SAVOIR 2.9).
 Assets/Art/Modeles/*_Maillage.asset  lfs
+# Les images du README (Tools/vitrine_images.py) restent hors LFS : GitHub les montre telles quelles, et la vitrine
+# publique se passe de LFS.
+Docs/Vitrine/** -filter -diff -merge -text
 * !text !filter !merge !diff
