@@ -33,7 +33,7 @@ CHIFFRES = [("233", "décisions"), ("540", "tests"), ("35", "outils"), ("13", "a
 # Les rubans des sections du README : le nom du fichier, et ce qui y est écrit.
 RUBANS = [
     ("ruban-le-jeu", "Le jeu"),
-    ("ruban-claude-code", "Comment je le construis"),
+    ("ruban-comment-je-le-construis", "Comment je le construis"),
     ("ruban-architecture", "Une architecture qui se vérifie"),
     ("ruban-outils", "Un éditeur qui monte le projet"),
     ("ruban-hors-depot", "Ce qui n'est pas ici"),
