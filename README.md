@@ -4,8 +4,9 @@
 
 > **In English.** DIciELa is a cozy fantasy production‑chain game, still a prototype (Unity 6.6, C#). Little villagers
 > with real jobs run your production chains, you barter at the market stall, and the Chimera, our mascot, lends a paw
-> everywhere. This repository is also a showcase of how it is built: an AI‑assisted workflow with Claude Code, a pure C#
-> simulation whose boundaries are enforced by tests, and editor tools that build the project. Code and docs are in French.
+> everywhere. This repository also shows how it is built: a pure C# simulation whose boundaries are enforced by tests,
+> editor tools that build the project, and a framework that keeps an AI coding assistant on track. Code and docs are in
+> French.
 
 <p align="center"><img src="Docs/Vitrine/ruban-le-jeu.webp" alt="Le jeu" height="56"></p>
 
@@ -26,10 +27,11 @@ après. Toute l'évolution, étape par étape, est dans [l'album](Docs/ALBUM.md)
 
 <p align="center"><img src="Docs/Vitrine/chiffres.webp" alt="233 décisions, 540 tests, 35 outils d'éditeur, 13 assemblages" width="100%"></p>
 
-<p align="center"><img src="Docs/Vitrine/ruban-claude-code.webp" alt="Comment je le construis" height="56"></p>
+<p align="center"><img src="Docs/Vitrine/ruban-comment-je-le-construis.webp" alt="Comment je le construis" height="56"></p>
 
-Le C# est écrit par **Claude Code**. Moi, je conçois le jeu, je tranche, je vérifie en jeu, et surtout je tiens le cadre
-qui garde le projet cohérent d'une session à l'autre. Ce cadre est dans le dépôt, à lire comme le reste :
+DIciELa, c'est mon jeu : le design ([`GDD.md`](Docs/GDD.md)), les décisions, l'architecture et les essais en jeu. Le C#
+s'écrit avec un assistant de code, Claude Code, dans un cadre que j'ai construit pour garder la main sur le projet d'une
+session à l'autre. Ce cadre est dans le dépôt, à lire comme le reste :
 
 - 📜 **Des règles courtes.** [`CLAUDE.md`](CLAUDE.md) tient en moins de 200 lignes. Les règles du C#, des données, des tests
   et des documents vivent dans [`.claude/rules/`](.claude/rules) et ne se chargent que quand on touche ces fichiers.
@@ -40,7 +42,7 @@ qui garde le projet cohérent d'une session à l'autre. Ce cadre est dans le dé
   figerait l'éditeur ou abîmerait la partie en cours, comme un `git checkout` qui rechargerait une scène ouverte.
 - 🧠 **Une mémoire hors de la conversation.** Chaque session commence par [`ETAT.md`](Docs/ETAT.md), trente lignes qui disent
   où on en est. Chaque choix est numéroté, daté et justifié dans [`DECISIONS.md`](Docs/DECISIONS.md), et les pièges connus
-  sont dans [`SAVOIR.md`](Docs/SAVOIR.md). Une règle de jeu qui manque, Claude me la demande au lieu de la deviner.
+  sont dans [`SAVOIR.md`](Docs/SAVOIR.md). Une règle de jeu qui manque, l'assistant la demande au lieu de la deviner.
 - 🪜 **Une étape à la fois.** Une branche par étape, un commit qui ne part jamais sans les tests, et des captures dans
   l'album dès que quelque chose change à l'écran.
 - 🔁 **Repartir de zéro quand il le faut.** Un premier prototype empilait deux versions de chaque chose. Je l'ai arrêté :
