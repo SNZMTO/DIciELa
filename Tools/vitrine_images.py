@@ -118,10 +118,10 @@ def banniere() -> Image.Image:
     titre = ruban("DIciELa", 96)
     image.alpha_composite(titre, (int(milieu * S - titre.width / 2), int(46 * S)))
     dessin = ImageDraw.Draw(image)
-    ecrire(dessin, (milieu * S, 186 * S), "Un Satisfactory fantasy et cozy", police(NUNITO_FORT, 34), LIN)
+    ecrire(dessin, (milieu * S, 186 * S), "Un jeu de gestion fantasy et cozy", police(NUNITO_FORT, 34), LIN)
     lignes = [
-        "On bâtit des chaînes de production tenues par de petits habitants,",
-        "on troque à l'étal, et la Chimère met la patte à tout.",
+        "À terme : des chaînes de production tenues par de petits habitants,",
+        "le troc à l'étal, et la Chimère qui met la patte à tout.",
     ]
     for rang, ligne in enumerate(lignes):
         ecrire(dessin, (milieu * S, (232 + rang * 30) * S), ligne, police(NUNITO, 21), SABLE, (28, 16, 8, 150))

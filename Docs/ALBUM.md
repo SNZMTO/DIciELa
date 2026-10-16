@@ -265,7 +265,7 @@ d'un refus de pose dans une bulle. Nets du 1280 × 720 à la 4K.
 La barbe encadre la bouche de chaque tête ; sous un bec ou un gros museau, elle se réduit au menton. De gauche à
 droite : chat, cochon, grenouille, lapin, oiseau, raton, renard, souris ; de face, de trois quarts, de profil.
 
-![La barbe sur les huit têtes](Album/2026-09-29_etape-13e_barbes.jpg)
+*Planche retirée du dépôt : elle montrait l'art du pack hors du jeu.*
 
 ### 29/09/2026 — étape 13e (fin) : chaque tête garde son museau, la barbe prend la couleur du poil
 
@@ -274,7 +274,7 @@ d'oreilles. En haut, la barbe sur le chat en six couleurs : elle suit maintenant
 oreilles du raton et du renard sur le chat, la souris, le lapin et le cochon, de trois quarts puis de dos : elles
 restent dans la silhouette du crâne.
 
-![La barbe en six couleurs, les oreilles du raton et du renard](Album/2026-09-29_etape-13e_barbe-et-oreilles.jpg)
+*Planche retirée du dépôt : elle montrait l'art du pack hors du jeu.*
 
 ### 29/09/2026 — étape 13e (fin, premier jet) : chaque tête porte son museau
 
@@ -282,7 +282,7 @@ Le museau de chaque animal se détache (le nez et la bouche du chat et du lapin,
 le museau est obligatoire. Chaque ligne, un museau sur les huit têtes : chat, cochon, grenouille, lapin, oiseau, raton
 laveur, renard, souris.
 
-![Les huit museaux sur les huit têtes](Album/2026-09-29_etape-13e_huit-museaux.jpg)
+*Planche retirée du dépôt : elle montrait l'art du pack hors du jeu.*
 
 ### 29/09/2026 — étape 13e (suite) : les museaux se détachent, les oreilles du raton se rapprochent
 
@@ -292,9 +292,7 @@ les huit têtes : le groin, le museau du raton, celui de la souris, le bec, puis
 oreilles du raton sur les huit têtes, de face, de dos, de trois quarts et de profil : sur une tête plus ronde que la
 sienne, elles se rapprochent du milieu au lieu de déborder du crâne.
 
-![Quatre museaux détachés et le groin du pack, sur les huit têtes](Album/2026-09-29_etape-13e_museaux-echanges.jpg)
-
-![Les oreilles du raton sur les huit têtes](Album/2026-09-29_etape-13e_oreilles-du-raton.jpg)
+*Planche retirée du dépôt : elle montrait l'art du pack hors du jeu.*
 
 ### 29/09/2026 — étape 13e : les oreilles et les pièces réglées tête par tête
 
@@ -306,9 +304,7 @@ trois quarts et de dos : la souris aux oreilles du raton, au nœud 1 debout et a
 l'arrière de la tête, rubans dans le dos ; la grenouille B à la couronne et aux boucles pendantes ; l'oiseau au groin
 monté sur le bec et aux anneaux droits.
 
-![Avant, puis après : les oreilles de cochon sur la grenouille, la cape 1 sur le raton](Album/2026-09-29_etape-13e_pieces-avant-apres.jpg)
-
-![Quatre Chimères aux pièces réglées, de face, de trois quarts et de dos](Album/2026-09-29_etape-13e_pieces-reglees.jpg)
+*Planche retirée du dépôt : elle montrait l'art du pack hors du jeu.*
 
 ### 29/09/2026 — étape 13d : proportions et places des pièces
 
@@ -318,7 +314,7 @@ grenouille), les chapeaux, les cheveux et les oreilles du pack ramenés à la me
 de cou et de dos plaqués au corps, une cape à la largeur des épaules. Avant, puis après : les oreilles de raton sur la
 grenouille, la cape 1, la bourse de profil, les oreilles de cochon, le chapeau 1, les cheveux 1.
 
-![Six pièces, avant puis après](Album/2026-09-29_etape-13d_pieces-avant-apres.jpg)
+*Planche retirée du dépôt : elle montrait l'art du pack hors du jeu.*
 
 ### 29/09/2026 — étape 13c : l'atelier de la Chimère
 
@@ -338,11 +334,7 @@ sans oreilles, et chaque paire se pose sur chacune. Le raton nu, puis avec ses o
 huit angles (de dos, deux petites pointes de fourrure restent à la base des oreilles) ; ses oreilles sur les seize
 têtes.
 
-![Le raton nu, puis avec ses oreilles](Album/2026-09-29_etape-13b_raton-nu-et-avec-ses-oreilles.jpg)
-
-![Le raton nu sous huit angles](Album/2026-09-29_etape-13b_raton-nu-sous-huit-angles.jpg)
-
-![Les oreilles du raton sur les seize têtes](Album/2026-09-29_etape-13b_oreilles-du-raton-sur-les-seize-tetes.jpg)
+*Planche retirée du dépôt : elle montrait l'art du pack hors du jeu.*
 
 ### 29/09/2026 — étape 13b : têtes en morceaux, pièces à leur place, menu de bois
 
@@ -356,11 +348,7 @@ soudées) ; les oreilles du lapin B sur les seize.
 
 ![L'écran de création, le menu de bois, le chat et ses oreilles](Album/2026-09-29_etape-13b_ecran-de-creation.jpg)
 
-![Chaque tête avec ses pièces d'office](Album/2026-09-29_etape-13b_tetes-et-leurs-pieces.jpg)
-
-![Le chapeau à fleurs sur les seize têtes](Album/2026-09-29_etape-13b_chapeau-sur-les-seize-tetes.jpg)
-
-![Les oreilles du lapin B sur les seize têtes](Album/2026-09-29_etape-13b_oreilles-de-lapin-sur-les-seize-tetes.jpg)
+*Planche retirée du dépôt : elle montrait l'art du pack hors du jeu.*
 
 ### 29/09/2026 — étape 13 : têtes, corps et couleurs
 

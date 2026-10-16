@@ -1,4 +1,7 @@
 {
+  "attribution": {
+    "sessionUrl": false
+  },
   "permissions": {
     "allow": [
       "Bash(C:/Users/utilisateur/AppData/Local/Unity/bin/unity.exe --no-banner --non-interactive command editor_status *)",
