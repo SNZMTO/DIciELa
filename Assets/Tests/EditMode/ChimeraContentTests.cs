@@ -22,6 +22,17 @@ namespace Diciela.Tests.EditMode
         private const string Pack = "Assets/Synty/";
         private const string Cuts = "Assets/Art/Personnages/";
 
+        /// <summary>Sans le pack ou sans sa découpe (une copie publique du dépôt), ces tests n'ont rien à lire : ils sont
+        /// passés, pas échoués. Dans le dépôt de travail, les deux sont là et les tests tournent.</summary>
+        [SetUp]
+        public void RequireThePackAndItsCut()
+        {
+            if (!AssetDatabase.IsValidFolder("Assets/Synty") || !AssetDatabase.IsValidFolder("Assets/Art/Personnages"))
+            {
+                Assert.Ignore("Le pack n'est pas importé, ou sa découpe n'est pas faite : ce test lit leurs fichiers.");
+            }
+        }
+
         [Test]
         public void TheCatalogLeadsToTheChimeraAndToEverythingHerScreenOffersOnce()
         {
