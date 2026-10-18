@@ -106,6 +106,11 @@ namespace Diciela.Tests.PlayMode
         private static Material Pack(string path)
         {
 #if UNITY_EDITOR
+            // Sans le pack (une copie publique du dépôt), le test est passé, pas échoué ; avec lui, un matériau manquant échoue.
+            if (!UnityEditor.AssetDatabase.IsValidFolder("Assets/Synty"))
+            {
+                Assert.Ignore("Le pack n'est pas importé : ce test lit ses matériaux.");
+            }
             var material = UnityEditor.AssetDatabase.LoadAssetAtPath<Material>(path);
             Assert.IsNotNull(material, "Le pack doit avoir ce matériau (" + path + ").");
             return material;
