@@ -24,14 +24,44 @@ const projet = process.env.CLAUDE_PROJECT_DIR || data.cwd || process.cwd();
 const unity = /unity(\.exe)?["']?\s[^|;&]*\bcommand\s+(\w+)/i.exec(cmd);
 const outil = unity ? unity[2] : '';
 
-// 1. Git : les commandes qui rechargent une scène ouverte dans l'éditeur.
-if (/\bgit\s+stash\b/.test(cmd)) refuse('git stash recharge les scènes ouvertes : committer plutôt, ou demander au développeur.');
-if (/\bgit\s+reset\s+[^|;&]*--hard\b/.test(cmd)) refuse('git reset --hard est interdit : il écrase le travail en cours et recharge les scènes.');
-if (/\bgit\s+checkout\b/.test(cmd) && !/\bgit\s+checkout\s+-b\b/.test(cmd)) {
-  refuse('git checkout change les fichiers sous l\'éditeur ouvert. Nouvelle branche : git switch -c <nom>. Fusion : git fetch . <branche>:main.');
+// 1. Git : les commandes qui changent les fichiers sous l'éditeur ouvert (et rechargent ses scènes), ou en effacent.
+//    Un texte entre guillemets (un message de commit) ou dans un heredoc n'est pas lu, sauf derrière « bash -c » ;
+//    les options globales de git se sautent : « git -C . checkout » est un checkout.
+const MASQUE = 'Q';
+function lisible(commande) {
+  const sansHeredoc = commande.replace(/<<-?\s*(['"]?)(\w+)\1[^\n]*\n[\s\S]*?\n\s*\2(?=\s|$)/g, ' ');
+  const imbriquees = [];
+  const aPlat = sansHeredoc.replace(/"(?:\\.|[^"\\])*"|'[^']*'/g, (cite, decalage, tout) => {
+    if (/\b(?:bash|sh|zsh|pwsh|powershell)(?:\.exe)?\s+(?:-c|-Command)\s*$/i.test(tout.slice(0, decalage))) {
+      imbriquees.push(cite.slice(1, -1));
+    }
+    return MASQUE;
+  });
+  return [aPlat, ...imbriquees.map(lisible)].join(' ; ');
 }
-if (/\bgit\s+switch\b/.test(cmd) && !/\bgit\s+switch\s+(-c|--create)\b/.test(cmd)) {
-  refuse('git switch vers une branche existante change les fichiers sous l\'éditeur. Fusion sans changer de branche : git fetch . <branche>:main.');
+const OPTION_GLOBALE = String.raw`(?:-C|-c|--git-dir|--work-tree|--namespace)(?:=|\s+)\S+|--no-pager|-P|--bare|--literal-pathspecs|--no-optional-locks`;
+const GIT = new RegExp(String.raw`(?:^|[\s;&|(])git((?:\s+(?:${OPTION_GLOBALE}))*)\s+([a-z][a-z-]*)([^|;&\n]*)`, 'g');
+const CHANGE_LES_FICHIERS = ['pull', 'merge', 'rebase', 'cherry-pick', 'revert'];
+for (const [, , sous, reste] of lisible(cmd).matchAll(GIT)) {
+  // Les redirections (2>&1, > fichier) ne sont pas des arguments de git.
+  const args = reste.replace(/\s*\d*>>?&?\s*\S*/g, '').replace(/\s*<\s*\S+/g, '').trim();
+  if (sous === 'stash') refuse('git stash recharge les scènes ouvertes : committer plutôt, ou demander au développeur.');
+  if (sous === 'reset' && /(^|\s)--hard\b/.test(args)) refuse('git reset --hard est interdit : il écrase le travail en cours et recharge les scènes.');
+  if (sous === 'checkout' && !/^-b\s+\S+$/.test(args)) {
+    refuse('git checkout change les fichiers sous l\'éditeur ouvert. Nouvelle branche : git switch -c <nom>. Fusion : git fetch . <branche>:main.');
+  }
+  if (sous === 'switch' && !/^(-c|--create)\s+\S+$/.test(args)) {
+    refuse('git switch vers une branche existante, ou depuis un autre point de départ, change les fichiers sous l\'éditeur. Nouvelle branche depuis ici : git switch -c <nom>. Fusion sans changer de branche : git fetch . <branche>:main.');
+  }
+  if (sous === 'restore' && !(/(^|\s)(--staged|-S)\b/.test(args) && !/(^|\s)(--worktree|-W)\b/.test(args))) {
+    refuse('git restore réécrit des fichiers sous l\'éditeur ouvert : demander au développeur.');
+  }
+  if (CHANGE_LES_FICHIERS.includes(sous)) {
+    refuse('git ' + sous + ' change les fichiers sous l\'éditeur ouvert. Fusion sans changer de branche : git fetch . <branche>:main ; le reste, au développeur.');
+  }
+  if (sous === 'clean' && /(^|\s)(-[a-zA-Z]*f[a-zA-Z]*|--force)\b/.test(args)) {
+    refuse('git clean efface des fichiers que Git ne suit pas : ceux du développeur, le pack, les réglages. Jamais.');
+  }
 }
 
 // 2. Unity CLI : les outils interdits.
