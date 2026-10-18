@@ -1,7 +1,7 @@
 # DICIELA — état actuel
 
-**Branches** : `main` : l'étape 59. 60 à 74 (`etape-60-fantome-sols` à `etape-74-menage`, empilées, sur GitHub)
-attendent que tu les voies ; bonnes, `git fetch . etape-74-menage:main` les fusionne toutes.
+**Branches** : 60 à 74 sont validées (14/10) ; `readme-vitrine` les porte, avec la vitrine publique (README, outils).
+`main` est encore à l'étape 59 : `git fetch . readme-vitrine:main` fusionne le tout.
 **Fait** : 23 à 59 (jusqu'à la 215) ; 60 à 64 (216 à 220), les outils de sol revus ; 65 (222), la terre à l'échelle de
 l'herbe ; 66 (221, 223), la roue à étages ; 67 (224), le curseur ; 68 (225), les mouvements ; 69 (226), Construire dans
 la roue ; 70 (227), les sols arrondis et cernés de leur liant ; 71 (228 à 230), la prévision : V ou le bouton lavande

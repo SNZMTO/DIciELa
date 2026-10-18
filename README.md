@@ -96,11 +96,12 @@ l'album, toujours du même point de vue, pour comparer d'une étape à l'autre.
 <p align="center"><img src="Docs/Vitrine/ruban-hors-depot.webp" alt="Ce qui n'est pas ici" height="56"></p>
 
 L'art vient du pack **POLYGON Fantasy Village** de Synty Studios, acheté sous licence. Aucun modèle, maillage, texture ni
-animation du pack n'est publié, ni les fichiers qu'on en tire (personnages découpés, modèles fusionnés, cadre de
-l'interface) : les outils de l'éditeur les refont à partir du pack. Le dépôt contient en revanche des captures du jeu, les
-vignettes des constructions (des rendus de modèles du pack, que l'interface montre) et trois fichiers de réglages repris de
-la scène de démonstration du pack : la carte, son calque de terre et ses filtres. Il faut donc le pack pour voir le jeu. Ce
-dépôt est une copie de mon dépôt de travail, sans ces fichiers, mise à jour de temps en temps.
+animation du pack n'est publié, ni ce qu'on en tire : les personnages découpés, les modèles fusionnés, le cadre de
+l'interface, les vignettes des constructions et les planches de l'album qui montraient ses pièces hors du jeu. Ils sont
+retirés de tout l'historique de ce dépôt, et les outils de l'éditeur les refont à partir du pack. Restent les captures du jeu
+et trois fichiers de réglages repris de la scène de démonstration du pack, sans aucun de ses objets : la carte (un relief
+vierge et une lumière), son calque de terre et son profil de filtres. Il faut donc le pack pour voir le jeu. Ce dépôt est une
+copie de mon dépôt de travail, mise à jour de temps en temps.
 
 <p align="center"><sub>© 2026 Mateo Sanchez, tous droits réservés : le code est public pour être lu, pas pour être réutilisé
 sans mon accord. Le pack d'art reste la propriété de Synty Studios. Les polices Lilita One et Nunito sont sous licence SIL
