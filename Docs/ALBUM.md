@@ -47,7 +47,7 @@ Pas une capture du jeu : le même gros plan du banc d'essai des sols, rendu dans
 gauche, la peinture à 62 cm le texel, dont le bord fait des marches ; à droite, à 31 cm, son bord lisse et rond. Le
 jeu peint ses sols à 24 cm, plus fin encore. À reprendre en capture, en jeu.
 
-![Le bord des pavés, peint à 62 cm puis à 31 cm le texel](Album/2026-10-08_etape-73_sols-fins.jpg)
+*Planche retirée du dépôt : elle montrait l'art du pack hors du jeu.*
 
 ### 08/10/2026 — étapes 70 à 72 : les sols qui se fondent, la rêverie de la prévision
 
@@ -58,9 +58,9 @@ même en diagonale ; des pavés qui se fondent dans leur bande de terre, elle-m�
 vient. En bas, le voile de rêverie de la prévision, composé sur un rendu de la démo du pack, avant (à gauche) et
 allégé (à droite) : les bords de l'écran voilés de lavande, le milieu net. À reprendre en capture, en jeu.
 
-![Le fondu des sols, rendu du banc d'essai](Album/2026-10-08_etape-72_fondu-sols.jpg)
+*Planche retirée du dépôt : elle montrait l'art du pack hors du jeu.*
 
-![Le voile de rêverie, avant et allégé](Album/2026-10-08_etape-72_voile-reverie.jpg)
+*Planche retirée du dépôt : elle montrait l'art du pack hors du jeu.*
 
 ### 06/10/2026 — étapes 52 à 55 : la Place qu'on trace
 
@@ -360,7 +360,7 @@ milieu, chaque corps sous la tête de l'animal suivant ; devant, les mêmes de d
 
 ![L'écran de création : une pièce et une couleur par ligne](Album/2026-09-29_etape-13_ecran-de-creation.jpg)
 
-![Les têtes et les corps : au naturel, croisés, puis de dos](Album/2026-09-29_etape-13_tetes-et-corps.jpg)
+*Planche retirée du dépôt : elle montrait l'art du pack hors du jeu.*
 
 ### 28/09/2026 — étape 12 : l'écran de création
 
@@ -375,7 +375,7 @@ sur un corps ; les chapeaux y sont redescendus sur les têtes, après une premi�
 
 ![« C'est parti » : la Chimère arrive, la barre paraît, la vue recule](Album/2026-09-28_etape-12_vue-de-depart.jpg)
 
-![La planche de la Chimère : chaque pièce sur un corps](Album/2026-09-28_etape-12_planche-de-la-chimere.jpg)
+*Planche retirée du dépôt : elle montrait l'art du pack hors du jeu.*
 
 ### 28/09/2026 — étape 11 : la tente
 
@@ -433,7 +433,7 @@ préparé, à droite celui du pack, tel quel ; la préparation ne change pas l'a
 
 ![Trois cabanes en fantôme et l'aperçu vert](Album/2026-09-28_etape-8c_pose-trois-cabanes.jpg)
 
-![La planche des modèles : le préparé, puis celui du pack](Album/2026-09-28_etape-8c_planche-des-modeles.jpg)
+*Planche retirée du dépôt : elle montrait l'art du pack hors du jeu.*
 
 ### 27/09/2026 — ménage 4 : la revue, un seul soleil et la nouvelle caméra
 
