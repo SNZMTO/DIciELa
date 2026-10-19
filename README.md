@@ -103,6 +103,20 @@ et trois fichiers de réglages repris de la scène de démonstration du pack, sa
 vierge et une lumière), son calque de terre et son profil de filtres. Il faut donc le pack pour voir le jeu. Ce dépôt est une
 copie de mon dépôt de travail, mise à jour de temps en temps.
 
+### Le faire tourner chez soi
+
+1. **Unity `6000.6.0f1`** exactement (la version de `ProjectSettings/ProjectVersion.txt`), avec le CLI d'Unity :
+   `unity install 6000.6.0f1`, ou le Unity Hub.
+2. **Les tests, sans le pack** : `unity test . --mode EditMode`. Les tests qui lisent le pack ou ce qu'on en tire sont
+   passés, pas échoués : ils tournent dans le dépôt de travail, où le pack est importé.
+3. **Le jeu, avec le pack** : acheter POLYGON Fantasy Village sur l'Asset Store et l'importer, sans rien déplacer, dans
+   `Assets/Synty/` (le dossier est ignoré par Git). Puis, dans le menu `DICIELA` de l'éditeur :
+   `Contenu/Préparer les modèles`, `Contenu/Composer les modèles`, `Interface/Générer les images de l'interface`,
+   `Interface/Photographier les constructions`, `Interface/Générer l'atelier`, `Scènes/Monter les scènes`, et enfin
+   `DICIELA/Jouer` (ou la scène `Assets/Scenes/Jeu.unity`).
+4. **Le cadre Claude Code** : le garde-fou appelle le CLI par `UNITY_CLI` s'il est défini, sinon à son emplacement
+   d'installation (`%LOCALAPPDATA%\Unity\bin`), sinon par le PATH ; `node Tools/garde-unity.test.js` rejoue ses cas.
+
 <p align="center"><sub>© 2026 Mateo Sanchez, tous droits réservés : le code est public pour être lu, pas pour être réutilisé
 sans mon accord. Le pack d'art reste la propriété de Synty Studios. Les polices Lilita One et Nunito sont sous licence SIL
 Open Font, avec leurs licences dans <code>Assets/UI/Polices</code>. Les bandeaux et les plaques de cette page sont faits
