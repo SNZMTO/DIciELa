@@ -5,8 +5,8 @@
 # bornant l'attente à cinq minutes. Rend 0 si tout est vert. Ne part jamais si l'éditeur est en Play.
 set -u
 
-UNITY="C:/Users/utilisateur/AppData/Local/Unity/bin/unity.exe"
-PROJECT="${CLAUDE_PROJECT_DIR:-C:\Users\utilisateur\Projets\DIciELa}"
+UNITY="${UNITY_CLI:-unity}"
+PROJECT="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "$0")/.." && { pwd -W 2>/dev/null || pwd; })}"
 OUT="${1:?donner un dossier de sortie déjà créé}"
 [ -d "$OUT" ] || { echo "Le dossier $OUT n'existe pas : le créer d'abord."; exit 2; }
 

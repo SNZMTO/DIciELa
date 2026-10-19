@@ -4,13 +4,13 @@
   },
   "permissions": {
     "allow": [
-      "Bash(C:/Users/utilisateur/AppData/Local/Unity/bin/unity.exe --no-banner --non-interactive command editor_status *)",
-      "Bash(C:/Users/utilisateur/AppData/Local/Unity/bin/unity.exe --no-banner --non-interactive command console *)",
-      "Bash(C:/Users/utilisateur/AppData/Local/Unity/bin/unity.exe --no-banner --non-interactive command get_console_logs *)",
-      "Bash(C:/Users/utilisateur/AppData/Local/Unity/bin/unity.exe --no-banner --non-interactive command list_open_scenes *)",
-      "Bash(C:/Users/utilisateur/AppData/Local/Unity/bin/unity.exe --no-banner --non-interactive command recompile_status *)",
-      "Bash(C:/Users/utilisateur/AppData/Local/Unity/bin/unity.exe --no-banner --non-interactive command test_status *)",
-      "Bash(C:/Users/utilisateur/AppData/Local/Unity/bin/unity.exe --no-banner --non-interactive command list_tests *)",
+      "Bash(unity --no-banner --non-interactive command editor_status *)",
+      "Bash(unity --no-banner --non-interactive command console *)",
+      "Bash(unity --no-banner --non-interactive command get_console_logs *)",
+      "Bash(unity --no-banner --non-interactive command list_open_scenes *)",
+      "Bash(unity --no-banner --non-interactive command recompile_status *)",
+      "Bash(unity --no-banner --non-interactive command test_status *)",
+      "Bash(unity --no-banner --non-interactive command list_tests *)",
       "Bash(git status*)",
       "Bash(git diff*)",
       "Bash(git log*)"

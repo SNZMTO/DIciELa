@@ -1,7 +1,8 @@
 # Tools/ — les scripts de vérification
 
 Ils se lancent depuis la racine du projet, l'éditeur ouvert sur une scène propre. La procédure `verifier`
-(`.claude/skills/verifier/`) dit quand et dans quel ordre.
+(`.claude/skills/verifier/`) dit quand et dans quel ordre. Ils appellent le CLI d'Unity par `unity` (le PATH) ; la
+variable `UNITY_CLI` en désigne un autre.
 
 | Script | Ce qu'il fait |
 |---|---|
