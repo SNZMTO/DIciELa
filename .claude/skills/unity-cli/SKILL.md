@@ -10,9 +10,9 @@ En cas de doute, `unity list` (les outils du paquet `com.unity.pipeline`) ou la 
 
 ## Appel
 
-- Binaire, hors du PATH, écrit en toutes lettres (les permissions de `.claude/settings.json` ne reconnaissent que cette
-  forme) :
-  `C:/Users/utilisateur/AppData/Local/Unity/bin/unity.exe --no-banner --non-interactive command <outil> --param valeur --project-path "C:\Users\utilisateur\Projets\DIciELa"`
+- Binaire : `unity`, dans le PATH (le CLI s'installe dans `%LOCALAPPDATA%\Unity\bin`), écrit sous cette forme : les
+  permissions de `.claude/settings.json` ne reconnaissent qu'elle. Depuis la racine du projet :
+  `unity --no-banner --non-interactive command <outil> --param valeur --project-path .`
 - Paramètres en `--nom valeur`, jamais `nom=valeur`. `--timeout N` se place **après** le nom de la commande.
 - **Git Bash mange les chemins** : préfixer de `MSYS_NO_PATHCONV=1` toute commande avec `--path`, `--asset` ou
   `--target /Hiérarchie`.

@@ -7,8 +7,8 @@
 # && avant une campagne, jamais par ; ni par un tube.
 set -u
 
-UNITY="C:/Users/utilisateur/AppData/Local/Unity/bin/unity.exe"
-PROJECT="${CLAUDE_PROJECT_DIR:-C:\Users\utilisateur\Projets\DIciELa}"
+UNITY="${UNITY_CLI:-unity}"
+PROJECT="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "$0")/.." && { pwd -W 2>/dev/null || pwd; })}"
 LOG="$(cd "$(dirname "$0")/.." && pwd)/Logs/Editor.log"
 
 run() { MSYS_NO_PATHCONV=1 "$UNITY" --no-banner --non-interactive command "$@" --project-path "$PROJECT" 2>&1; }

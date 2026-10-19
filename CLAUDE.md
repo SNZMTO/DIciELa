@@ -60,8 +60,9 @@
 
 ## Unity CLI : l'essentiel (tout le reste dans la procédure `unity-cli`)
 
-- Binaire, hors du PATH : `C:/Users/utilisateur/AppData/Local/Unity/bin/unity.exe`. Appel type :
-  `C:/Users/utilisateur/AppData/Local/Unity/bin/unity.exe --no-banner --non-interactive command <outil> --param valeur --project-path "C:\Users\utilisateur\Projets\DIciELa"`.
+- Binaire : `unity`, dans le PATH (le CLI s'installe dans `%LOCALAPPDATA%\Unity\bin`). Appel type, depuis la racine du
+  projet : `unity --no-banner --non-interactive command <outil> --param valeur --project-path .`. Les scripts de `Tools/`
+  prennent `UNITY_CLI` s'il est défini.
 - Le CLI est postérieur à mes connaissances : ne jamais inventer une commande ; vérifier dans la procédure ou la doc.
 - **Interdits** (des hooks en bloquent une partie, `.claude/hooks/garde-unity.js`) :
   1. une seule campagne de tests à la fois : `run_tests --timeout 300` redirigé vers un fichier ; sur « timed out »,
