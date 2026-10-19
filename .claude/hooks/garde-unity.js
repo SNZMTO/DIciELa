@@ -6,7 +6,10 @@ const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
 
-const UNITY = 'C:/Users/utilisateur/AppData/Local/Unity/bin/unity.exe';
+// Le CLI d'Unity : UNITY_CLI s'il est donné, sinon celui que le CLI installe dans %LOCALAPPDATA%\Unity\bin, sinon
+// « unity » dans le PATH. Aucun chemin propre à une machine : la copie publique garde un garde-fou qui marche.
+const INSTALLE = process.env.LOCALAPPDATA ? path.join(process.env.LOCALAPPDATA, 'Unity', 'bin', 'unity.exe') : '';
+const UNITY = process.env.UNITY_CLI || (INSTALLE && fs.existsSync(INSTALLE) ? INSTALLE : 'unity');
 
 function refuse(message) {
   process.stderr.write('[garde-unity] ' + message + '\n');
@@ -32,15 +35,18 @@ function lisible(commande) {
   const sansHeredoc = commande.replace(/<<-?\s*(['"]?)(\w+)\1[^\n]*\n[\s\S]*?\n\s*\2(?=\s|$)/g, ' ');
   const imbriquees = [];
   const aPlat = sansHeredoc.replace(/"(?:\\.|[^"\\])*"|'[^']*'/g, (cite, decalage, tout) => {
-    if (/\b(?:bash|sh|zsh|pwsh|powershell)(?:\.exe)?\s+(?:-c|-Command)\s*$/i.test(tout.slice(0, decalage))) {
+    if (/\b(?:bash|sh|zsh|pwsh|powershell|cmd)(?:\.exe)?\s+(?:-c|-Command|\/c)\s*$/i.test(tout.slice(0, decalage))) {
       imbriquees.push(cite.slice(1, -1));
     }
+    // Un git écrit entre guillemets, seul ou par son chemin complet (« "git" », « "C:/…/git.exe" »), reste un git.
+    if (/^["'](?:[^"']*[/\\])?git(?:\.exe)?["']$/i.test(cite)) return ' git';
     return MASQUE;
   });
   return [aPlat, ...imbriquees.map(lisible)].join(' ; ');
 }
 const OPTION_GLOBALE = String.raw`(?:-C|-c|--git-dir|--work-tree|--namespace)(?:=|\s+)\S+|--no-pager|-P|--bare|--literal-pathspecs|--no-optional-locks`;
-const GIT = new RegExp(String.raw`(?:^|[\s;&|(])git((?:\s+(?:${OPTION_GLOBALE}))*)\s+([a-z][a-z-]*)([^|;&\n]*)`, 'g');
+// git se reconnaît aussi par son chemin (/usr/bin/git), avec .exe, ou entre accents graves (\x60 : l'accent grave).
+const GIT = new RegExp(String.raw`(?:^|[\s;&|(\x60/\\])git(?:\.exe)?((?:\s+(?:${OPTION_GLOBALE}))*)\s+([a-z][a-z-]*)([^|;&\n]*)`, 'g');
 const CHANGE_LES_FICHIERS = ['pull', 'merge', 'rebase', 'cherry-pick', 'revert'];
 for (const [, , sous, reste] of lisible(cmd).matchAll(GIT)) {
   // Les redirections (2>&1, > fichier) ne sont pas des arguments de git.

@@ -35,8 +35,15 @@ const REFUSEES = [
   'git status; git checkout main',
   'git status | head -3 && git merge etape-74',
   'bash -c "git checkout main"',
+  'cmd /c "git checkout main"',
+  '"git" checkout main',
+  'git.exe checkout main',
+  '/usr/bin/git checkout main',
+  'echo `git checkout main`',
+  '"C:/Program Files/Git/cmd/git.exe" checkout main',
   'C:/Users/moi/AppData/Local/Unity/bin/unity.exe --no-banner --non-interactive command eval --code "1"',
   'C:/Users/moi/AppData/Local/Unity/bin/unity.exe --no-banner command run_tests --filter Chimera --timeout 300',
+  'unity --no-banner --non-interactive command eval --code "1"',
 ];
 
 const PERMISES = [
@@ -59,7 +66,9 @@ const PERMISES = [
   "git commit -m 'git pull ne sert pas ici'",
   "git commit -F - <<'EOF'\nÉtape 75 : on ne fait pas git checkout\n\ngit merge non plus.\nEOF",
   'echo "git reset --hard" > note.txt',
+  'grep -rn "git" Docs/SAVOIR.md',
   'C:/Users/moi/AppData/Local/Unity/bin/unity.exe --no-banner command run_tests --timeout 300 > sortie.txt',
+  'unity --no-banner --non-interactive command editor_status --project-path .',
 ];
 
 function sortie(commande) {
