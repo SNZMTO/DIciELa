@@ -96,6 +96,9 @@ namespace Diciela.Tests.EditMode
         {
             // Un premier habitant par statistique (GDD, section 6), chacun avec un humain du pack (GDD, section 16) ; ils
             // restent en ville comme habitants ordinaires, qui rentrent dormir la nuit (GDD, section 3).
+            // Les humains sont les modèles du pack, tels quels : sans le pack (une copie publique du dépôt), le test ne
+            // demande pas leur modèle, et vérifie tout le reste.
+            bool pack = UnityEditor.AssetDatabase.IsValidFolder("Assets/Synty");
             Catalog catalog = ProjectContent.LoadSingle<Catalog>();
             Assert.IsNotNull(catalog.VillagerKind, "Le catalogue n'a pas de sorte d'habitant ordinaire.");
             Assert.IsTrue(catalog.VillagerKind.SleepsAtNight, "Les habitants ordinaires rentrent dormir la nuit.");
@@ -103,7 +106,8 @@ namespace Diciela.Tests.EditMode
             foreach (FirstVillagerDefinition first in catalog.Opening.FirstVillagers)
             {
                 Assert.IsNotNull(first, "Le déroulé du départ a un premier habitant vide.");
-                Assert.IsTrue(first.Character != null && first.Character.Model != null, first.Id + " n'a pas son humain.");
+                Assert.IsNotNull(first.Character, first.Id + " n'a pas de fiche de personnage.");
+                Assert.IsTrue(!pack || first.Character.Model != null, first.Id + " n'a pas son humain.");
                 StatisticDefinition statistic = StatisticOf(catalog, first.Strength);
                 Assert.IsNotNull(statistic, first.Id + " est fort dans une sous-statistique hors du catalogue.");
                 Assert.IsFalse(statistics.Contains(statistic), first.Id + " partage sa statistique avec un autre.");

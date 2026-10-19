@@ -38,6 +38,10 @@ namespace Diciela.Tests.EditMode
         [Test]
         public void EachCartModelFitsInACartSpotAndTheLargestFillsIt()
         {
+            // Sans le pack (une copie publique du dépôt), il n'y a pas de charrette à mesurer : le test est passé, pas
+            // échoué. Dans le dépôt de travail, le pack est là et le test tourne.
+            if (!UnityEditor.AssetDatabase.IsValidFolder("Assets/Synty"))
+                Assert.Ignore("Le pack n'est pas importé : ce test mesure ses modèles de charrette.");
             // Le modèle tel que le pack le pose, l'avant vers +z : sa longueur en z, sa largeur en x.
             CartDefinition cart = ProjectContent.LoadSingle<Catalog>().Cart;
             float longest = 0f, widest = 0f;

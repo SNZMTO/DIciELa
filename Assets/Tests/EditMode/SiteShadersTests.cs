@@ -33,6 +33,11 @@ namespace Diciela.Tests.EditMode
             string why = result != 0 && reason != null
                 ? (string)reason.Invoke(null, new object[] { shader, subShader, result })
                 : "";
+            // En mode batch (une campagne sans éditeur ouvert, sur une copie fraîche), Unity n'a pas encore préparé le
+            // shader pour le SRP Batcher et répond « Not initialized » : le test est passé, pas échoué. Dans l'éditeur, il
+            // tourne ; toute autre raison d'incompatibilité échoue comme avant.
+            if (result != 0 && why.StartsWith("Not initialized"))
+                Assert.Ignore(name + " : le SRP Batcher n'est pas initialisé (mode batch) ; ce test se lit dans l'éditeur.");
             Assert.AreEqual(0, result, name + " n'est pas regroupé par le SRP Batcher : " + why);
         }
     }

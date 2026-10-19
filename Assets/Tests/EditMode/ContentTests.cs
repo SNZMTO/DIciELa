@@ -20,6 +20,9 @@ namespace Diciela.Tests.EditMode
         [Test]
         public void TheCatalogReachesEveryStructureOnce()
         {
+            // Les modèles préparés sont tirés du pack (Assets/Art/Modeles) : une copie publique du dépôt ne les a pas, et le
+            // test ne demande alors que le reste du catalogue.
+            bool modelsPrepared = AssetDatabase.IsValidFolder("Assets/Art/Modeles");
             Catalog catalog = ProjectContent.LoadSingle<Catalog>();
             var familyIds = new HashSet<string>();
             var structureIds = new HashSet<string>();
@@ -39,7 +42,7 @@ namespace Diciela.Tests.EditMode
                         faults.Add("La famille « " + family.Id + " » a une construction vide, ou déjà dans une famille.");
                     else if (string.IsNullOrEmpty(structure.Id) || !structureIds.Add(structure.Id))
                         faults.Add(structure.name + " : identifiant vide, ou déjà pris.");
-                    else if (structure.Model == null)
+                    else if (modelsPrepared && structure.Model == null)
                         faults.Add(structure.name + " n'a pas de modèle.");
                 }
             }
@@ -134,7 +137,10 @@ namespace Diciela.Tests.EditMode
             // Le modèle préparé (SAVOIR, 2.9), depuis le pack ou en boîte faute de modèle choisi : un seul maillage, un
             // matériau par sous-maillage, centré sur l'empreinte de la fiche et à sa taille (arrondie au centimètre
             // supérieur), la porte sur la façade, la couche dans l'empreinte. Le campement, sans murs, a sa couche :
-            // sans elle, la Chimère y disparaîtrait en dormant (décision 172).
+            // sans elle, la Chimère y disparaîtrait en dormant (décision 172). Une copie publique du dépôt n'a pas les modèles
+            // tirés du pack (Assets/Art/Modeles) : le test est alors passé, pas échoué.
+            if (!AssetDatabase.IsValidFolder("Assets/Art/Modeles"))
+                Assert.Ignore("Les modèles préparés depuis le pack manquent : ce test les mesure.");
             const float Centimeter = 0.01f;
             var faults = new List<string>();
             foreach (StructureDefinition structure in ProjectContent.LoadSingle<Catalog>().AllStructures())
