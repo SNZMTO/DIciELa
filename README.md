@@ -8,6 +8,7 @@
 > of the finished town. This repository also shows how it is built: a C# simulation with no MonoBehaviour, whose
 > boundaries are enforced by tests, editor tools that build the project, and the framework I set up for Claude Code,
 > which writes the C#. The code is in English, the docs in French.
+> Full English version: [README.en.md](README.en.md).
 
 <p align="center"><img src="Docs/Vitrine/ruban-le-jeu.webp" alt="Le jeu" height="56"></p>
 
